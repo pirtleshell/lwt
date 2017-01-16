@@ -1,5 +1,5 @@
 /**************************************************************
-"Learning with Texts" (LWT) is free and unencumbered software 
+"Learning with Texts" (LWT) is free and unencumbered software
 released into the PUBLIC DOMAIN.
 
 Anyone is free to copy, modify, publish, use, compile, sell, or
@@ -10,19 +10,19 @@ and by any means.
 In jurisdictions that recognize copyright laws, the author or
 authors of this software dedicate any and all copyright
 interest in the software to the public domain. We make this
-dedication for the benefit of the public at large and to the 
-detriment of our heirs and successors. We intend this 
+dedication for the benefit of the public at large and to the
+detriment of our heirs and successors. We intend this
 dedication to be an overt act of relinquishment in perpetuity
 of all present and future rights to this software under
 copyright law.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE 
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
 WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE
-AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS BE LIABLE 
+AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS BE LIABLE
 FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 For more information, please refer to [http://unlicense.org/].
@@ -43,7 +43,7 @@ var SOLUTION = '';
 var ADDFILTER = '';
 var RTL = 0;
 var ANN_ARRAY = {};
- 
+
 /**************************************************************
 LWT jQuery functions
 ***************************************************************/
@@ -83,22 +83,22 @@ function changeImprAnnText() {
 	var elem = $(this).attr('name');
 	var thedata = JSON.stringify($('form').serializeObject());
 	$.post('ajax_save_impr_text.php', { id: textid, elem: elem, data : thedata }
-		, function(d) { 
-				if(d != 'OK') 
-					alert('Saving your changes failed, please reload page and try again!'); 
-			} 
+		, function(d) {
+				if(d != 'OK')
+					alert('Saving your changes failed, please reload page and try again!');
+			}
 	);
 }
- 
+
 function changeImprAnnRadio() {
 	var textid = $('#editimprtextdata').attr('data_id');
 	var elem = $(this).attr('name');
 	var thedata = JSON.stringify($('form').serializeObject());
 	$.post('ajax_save_impr_text.php', { id: textid, elem: elem, data : thedata }
-		, function(d) { 
-				if(d != 'OK') 
-					alert('Saving your changes failed, please reload page and try again!'); 
-			} 
+		, function(d) {
+				if(d != 'OK')
+					alert('Saving your changes failed, please reload page and try again!');
+			}
 	);
 }
 
@@ -110,30 +110,30 @@ function addTermTranslation(wordid,txid,word,lang) {
 		return;
 	}
 	$.post('ajax_add_term_transl.php', { id: wordid, data : thedata, text: word, lang: lang }
-		, function(d) { 
+		, function(d) {
 				if(d == '') {
-					alert('Adding translation to term OR term creation failed, please reload page and try again!'); 
+					alert('Adding translation to term OR term creation failed, please reload page and try again!');
 				} else {
 					do_ajax_edit_impr_text(pagepos,d);
 				}
-			} 
+			}
 	);
 }
 
 function changeTableTestStatus(wordid,up) {
 	$.post('ajax_chg_term_status.php', { id: wordid, data: (up ? 1 : 0) }
-		, function(data) { 
+		, function(data) {
 				if(data != '') {
 					$('#STAT' + wordid).html(data);
 				}
-			} 
+			}
 	);
 }
- 
+
 function check() {
 	var count = 0;
 	$('.notempty').each( function(n) {
-		if($(this).val().trim()=='') count++; 
+		if($(this).val().trim()=='') count++;
 	} );
 	if (count > 0) {
 		alert('ERROR\n\n' + count + ' field(s) - marked with * - must not be empty!');
@@ -148,14 +148,14 @@ function check() {
 			}
 		}
 	} );
-	$('input.checkdicturl').each( function(n) {
-		if($(this).val().trim().length > 0) {
-			if(($(this).val().trim().indexOf('http://') != 0) &&   ($(this).val().trim().indexOf('https://') != 0) &&   ($(this).val().trim().indexOf('*http://') != 0) &&   ($(this).val().trim().indexOf('*https://') != 0) &&   ($(this).val().trim().indexOf('glosbe_api.php') != 0)) {
-				alert('ERROR\n\nField "' + $(this).attr('data_info') + '" must start with "http://" or "https://" or "*http://" or "*https://" or "glosbe_api.php" if not empty.');
-				count++;
-			}
-		}
-	} );
+	// $('input.checkdicturl').each( function(n) {
+	// 	if($(this).val().trim().length > 0) {
+	// 		if(($(this).val().trim().indexOf('http://') != 0) &&   ($(this).val().trim().indexOf('https://') != 0) &&   ($(this).val().trim().indexOf('*http://') != 0) &&   ($(this).val().trim().indexOf('*https://') != 0) &&   ($(this).val().trim().indexOf('glosbe_api.php') != 0)) {
+	// 			alert('ERROR\n\nField "' + $(this).attr('data_info') + '" must start with "http://" or "https://" or "*http://" or "*https://" or "glosbe_api.php" if not empty.');
+	// 			count++;
+	// 		}
+	// 	}
+	// } );
 	$('input.posintnumber').each( function(n) {
 		if ($(this).val().trim().length > 0) {
 			if (! (isInt($(this).val().trim()) && (($(this).val().trim() + 0) > 0))) {
@@ -213,7 +213,7 @@ function markClick() {
 function showallwordsClick() {
 	var option = $('#showallwords:checked').length;
 	var text = $('#thetextid').text();
-	window.parent.frames['ro'].location.href = 
+	window.parent.frames['ro'].location.href =
 		'set_text_mode.php?mode=' + option +
 		'&text=' + text;
 }
@@ -237,7 +237,7 @@ function setTheFocus() {
 
 function word_click_event_do_test_test() {
 	run_overlib_test(
-		WBLINK1, WBLINK2, WBLINK3, 
+		WBLINK1, WBLINK2, WBLINK3,
 		$(this).attr('data_wid'),
 		$(this).attr('data_text'),
 		$(this).attr('data_trans'),
@@ -259,39 +259,39 @@ function keydown_event_do_test_test(e) {
 	}
 	if (OPENED == 0) return true;
 	if (e.which == 38) {  // up : status+1
-		window.parent.frames['ro'].location.href = 
+		window.parent.frames['ro'].location.href =
 			'set_test_status.php?wid=' + WID + '&stchange=1';
 		return false;
 	}
 	if (e.which == 40) {  // down : status-1
-		window.parent.frames['ro'].location.href = 
+		window.parent.frames['ro'].location.href =
 			'set_test_status.php?wid=' + WID + '&stchange=-1';
 		return false;
 	}
 	if (e.which == 27) {  // esc : dont change status
-		window.parent.frames['ro'].location.href = 
+		window.parent.frames['ro'].location.href =
 			'set_test_status.php?wid=' + WID + '&status=' + $('.word').attr('data_status');
 		return false;
 	}
 	for (var i=1; i<=5; i++) {
 		if (e.which == (48+i) || e.which == (96+i)) {  // 1,.. : status=i
-			window.parent.frames['ro'].location.href = 
+			window.parent.frames['ro'].location.href =
 				'set_test_status.php?wid=' + WID + '&status=' + i;
 			return false;
 		}
 	}
 	if (e.which == 73) {  // I : status=98
-		window.parent.frames['ro'].location.href = 
+		window.parent.frames['ro'].location.href =
 			'set_test_status.php?wid=' + WID + '&status=98';
 		return false;
 	}
 	if (e.which == 87) {  // W : status=99
-		window.parent.frames['ro'].location.href = 
+		window.parent.frames['ro'].location.href =
 			'set_test_status.php?wid=' + WID + '&status=99';
 		return false;
 	}
 	if (e.which == 69) {  // E : EDIT
-		window.parent.frames['ro'].location.href = 
+		window.parent.frames['ro'].location.href =
 			'edit_tword.php?wid=' + WID;
 		return false;
 	}
@@ -299,7 +299,7 @@ function keydown_event_do_test_test(e) {
 }
 
 function word_each_do_text_text(i) {
-	this.title = make_tooltip($(this).text(), $(this).attr('data_trans'), 
+	this.title = make_tooltip($(this).text(), $(this).attr('data_trans'),
 		$(this).attr('data_rom'), $(this).attr('data_status'));
 	var wid = $(this).attr('data_wid');
 	if (wid != '') {
@@ -314,8 +314,8 @@ function word_each_do_text_text(i) {
 
 function mword_each_do_text_text(i) {
 	if ($(this).attr('data_status') != '') {
-		this.title = make_tooltip($(this).attr('data_text'), 
-		$(this).attr('data_trans'), $(this).attr('data_rom'), 
+		this.title = make_tooltip($(this).attr('data_text'),
+		$(this).attr('data_trans'), $(this).attr('data_rom'),
 		$(this).attr('data_status'));
 		var wid = $(this).attr('data_wid');
 		if (wid != '') {
@@ -334,7 +334,7 @@ function mword_each_do_text_text(i) {
 }
 
 function word_dblclick_event_do_text_text() {
-	var t = parseInt($("#totalcharcount").text(),10);	
+	var t = parseInt($("#totalcharcount").text(),10);
 	if ( t == 0 ) return;
 	var p = 100 * ($(this).attr('data_pos')-5) / t;
 	if (p < 0) p = 0;
@@ -345,16 +345,16 @@ function word_dblclick_event_do_text_text() {
 function word_click_event_do_text_text() {
 	var status = $(this).attr('data_status');
 	var ann = '';
-	if ((typeof $(this).attr('data_ann')) != 'undefined') 
+	if ((typeof $(this).attr('data_ann')) != 'undefined')
 		ann = $(this).attr('data_ann');
-		
+
 	if ( status < 1 ) {
 		run_overlib_status_unknown(WBLINK1,WBLINK2,WBLINK3,$(this).attr('title'),
 			TID,$(this).attr('data_order'),$(this).text(),$(this).attr('data_mw2'),
 			$(this).attr('data_mw3'),$(this).attr('data_mw4'),$(this).attr('data_mw5'),
 			$(this).attr('data_mw6'),$(this).attr('data_mw7'),$(this).attr('data_mw8'),
 			$(this).attr('data_mw9'),RTL);
-		top.frames['ro'].location.href='edit_word.php?tid=' + TID + '&ord=' + 
+		top.frames['ro'].location.href='edit_word.php?tid=' + TID + '&ord=' +
 			$(this).attr('data_order') + '&wid=';
 	}
 	else if ( status == 99 )
@@ -377,12 +377,12 @@ function word_click_event_do_text_text() {
 			$(this).attr('data_mw8'),$(this).attr('data_mw9'),RTL,ann);
 	return false;
 }
-	
+
 function mword_click_event_do_text_text() {
 	var status = $(this).attr('data_status');
 	if (status != '') {
 		var ann = '';
-		if ((typeof $(this).attr('data_ann')) != 'undefined') 
+		if ((typeof $(this).attr('data_ann')) != 'undefined')
 			ann = $(this).attr('data_ann');
 		run_overlib_multiword(WBLINK1,WBLINK2,WBLINK3,$(this).attr('title'),
 		TID, $(this).attr('data_order'),$(this).attr('data_text'),
@@ -400,7 +400,7 @@ function keydown_event_do_text_text(e) {
 		cClick();
 		return false;
 	}
-	
+
 	if (e.which == 13) {  // return = edit next unknown word
 		$('span.uwordmarked').removeClass('uwordmarked');
 		var unknownwordlist = $('span.status0.word:not(.hide):first');
@@ -410,11 +410,11 @@ function keydown_event_do_text_text(e) {
 		cClick();
 		return false;
 	}
-	
+
 	var knownwordlist = $('span.word:not(.hide):not(.status0)' + ADDFILTER + ',span.mword:not(.hide)' + ADDFILTER);
 	var l_knownwordlist = knownwordlist.size();
 	if (l_knownwordlist == 0) return true;
-	
+
 	// the following only for a non-zero known words list
 	if (e.which == 36) {  // home : known word navigation -> first
 		$('span.kwordmarked').removeClass('kwordmarked');
@@ -423,7 +423,7 @@ function keydown_event_do_text_text(e) {
 		curr.addClass('kwordmarked');
 		$(window).scrollTo(curr,{axis:'y', offset:-150});
 		var ann = '';
-		if ((typeof curr.attr('data_ann')) != 'undefined') 
+		if ((typeof curr.attr('data_ann')) != 'undefined')
 			ann = curr.attr('data_ann');
 		window.parent.frames['ro'].location.href = 'show_word.php?wid=' + curr.attr('data_wid') + '&ann=' + encodeURIComponent(ann);
 		return false;
@@ -435,7 +435,7 @@ function keydown_event_do_text_text(e) {
 		curr.addClass('kwordmarked');
 		$(window).scrollTo(curr,{axis:'y', offset:-150});
 		var ann = '';
-		if ((typeof curr.attr('data_ann')) != 'undefined') 
+		if ((typeof curr.attr('data_ann')) != 'undefined')
 			ann = curr.attr('data_ann');
 		window.parent.frames['ro'].location.href = 'show_word.php?wid=' + curr.attr('data_wid') + '&ann=' + encodeURIComponent(ann);
 		return false;
@@ -448,7 +448,7 @@ function keydown_event_do_text_text(e) {
 		curr.addClass('kwordmarked');
 		$(window).scrollTo(curr,{axis:'y', offset:-150});
 		var ann = '';
-		if ((typeof curr.attr('data_ann')) != 'undefined') 
+		if ((typeof curr.attr('data_ann')) != 'undefined')
 			ann = curr.attr('data_ann');
 		window.parent.frames['ro'].location.href = 'show_word.php?wid=' + curr.attr('data_wid') + '&ann=' + encodeURIComponent(ann);
 		return false;
@@ -461,7 +461,7 @@ function keydown_event_do_text_text(e) {
 		curr.addClass('kwordmarked');
 		$(window).scrollTo(curr,{axis:'y', offset:-150});
 		var ann = '';
-		if ((typeof curr.attr('data_ann')) != 'undefined') 
+		if ((typeof curr.attr('data_ann')) != 'undefined')
 			ann = curr.attr('data_ann');
 		window.parent.frames['ro'].location.href = 'show_word.php?wid=' + curr.attr('data_wid') + '&ann=' + encodeURIComponent(ann);
 		return false;
@@ -471,43 +471,43 @@ function keydown_event_do_text_text(e) {
 	var curr = knownwordlist.eq(TEXTPOS);
 	var wid = curr.attr('data_wid');
 	var ord = curr.attr('data_order');
-	
+
 	// the following only with valid pos.
 	for (var i=1; i<=5; i++) {
 		if (e.which == (48+i) || e.which == (96+i)) {  // 1,.. : status=i
-			window.parent.frames['ro'].location.href = 
+			window.parent.frames['ro'].location.href =
 				'set_word_status.php?wid=' + wid + '&tid=' + TID + '&ord=' + ord + '&status=' + i;
 			return false;
 		}
 	}
 	if (e.which == 73) {  // I : status=98
-		window.parent.frames['ro'].location.href = 
+		window.parent.frames['ro'].location.href =
 			'set_word_status.php?wid=' + wid + '&tid=' + TID + '&ord=' + ord + '&status=98';
 		return false;
 	}
 	if (e.which == 87) {  // W : status=99
-		window.parent.frames['ro'].location.href = 
+		window.parent.frames['ro'].location.href =
 			'set_word_status.php?wid=' + wid + '&tid=' + TID + '&ord=' + ord + '&status=99';
 		return false;
 	}
 	if (e.which == 65) {  // A : set audio pos.
 		var p = curr.attr('data_pos');
-		var t = parseInt($("#totalcharcount").text(),10);	
+		var t = parseInt($("#totalcharcount").text(),10);
 		if ( t == 0 ) return true;
 		p = 100 * (p-5) / t;
 		if (p < 0) p = 0;
 		if (typeof (window.parent.frames['h'].new_pos) == 'function')
 			window.parent.frames['h'].new_pos(p);
-		else 
+		else
 			return true;
 		return false;
 	}
 	if (e.which == 69) { //  E : EDIT
 		if(curr.has('.mword'))
-			window.parent.frames['ro'].location.href = 
+			window.parent.frames['ro'].location.href =
 				'edit_mword.php?wid=' + wid + '&tid=' + TID + '&ord=' + ord;
 		else {
-			window.parent.frames['ro'].location.href = 
+			window.parent.frames['ro'].location.href =
 				'edit_word.php?wid=' + wid + '&tid=' + TID + '&ord=' + ord;
 		}
 		return false;
@@ -522,22 +522,22 @@ function do_ajax_save_setting(k, v) {
 
 function do_ajax_update_media_select() {
 	$('#mediaselect').html('&nbsp; <img src="icn/waiting2.gif" />');
-	$.post('ajax_update_media_select.php', 
-		function(data) { $('#mediaselect').html(data); } 
+	$.post('ajax_update_media_select.php',
+		function(data) { $('#mediaselect').html(data); }
 	);
 }
 
 function do_ajax_show_sentences(lang,word,ctl) {
 	$('#exsent').html('<img src="icn/waiting2.gif" />');
-	$.post('ajax_show_sentences.php', { lang: lang, word: word, ctl: ctl }, 
-		function(data) { $('#exsent').html(data); } 
+	$.post('ajax_show_sentences.php', { lang: lang, word: word, ctl: ctl },
+		function(data) { $('#exsent').html(data); }
 	);
 }
 
 function do_ajax_show_similar_terms() {
 	$('#simwords').html('<img src="icn/waiting2.gif" />');
-	$.post('ajax_show_similar_terms.php', { lang: $('#langfield').val(), word: $('#wordfield').val() }, 
-		function(data) { $('#simwords').html(data); } 
+	$.post('ajax_show_similar_terms.php', { lang: $('#langfield').val(), word: $('#wordfield').val() },
+		function(data) { $('#simwords').html(data); }
 	);
 }
 
@@ -547,7 +547,7 @@ function do_ajax_word_counts() {
 			var textid = $(this).attr('data_id');
 			$(this).html('<img src="icn/waiting2.gif" />');
 			$.post('ajax_word_counts.php', { id: textid },
-				function(data) { 
+				function(data) {
 					var res = eval('(' + data + ')');
 					$('#total-'+textid).html(res[0]);
 					$('#saved-'+textid).html(res[1]);
@@ -562,14 +562,14 @@ function do_ajax_word_counts() {
 function do_ajax_edit_impr_text(pagepos, word) {
 	if (word=='') $('#editimprtextdata').html('<img src="icn/waiting2.gif" />');
 	var textid = $('#editimprtextdata').attr('data_id');
-	$.post('ajax_edit_impr_text.php', { id: textid, word: word }, 
+	$.post('ajax_edit_impr_text.php', { id: textid, word: word },
 		function(data) {
 			// alert(data);
 			eval(data);
-			$.scrollTo(pagepos); 
+			$.scrollTo(pagepos);
 			$('input.impr-ann-text').change(changeImprAnnText);
 			$('input.impr-ann-radio').change(changeImprAnnRadio);
-		} 
+		}
 	);
 }
 
@@ -591,8 +591,8 @@ $.fn.serializeObject = function()
 };
 
 $(document).ready( function() {
-	$('.edit_area').editable('inline_edit.php', 
-		{ 
+	$('.edit_area').editable('inline_edit.php',
+		{
 			type      : 'textarea',
 			indicator : '<img src="icn/indicator.gif">',
 			tooltip   : 'Click to edit...',
@@ -609,17 +609,17 @@ $(document).ready( function() {
 	$('#showallwords').click(showallwordsClick);
 	$('textarea.textarea-noreturn').keydown(textareaKeydown);
 	$('#termtags').tagit(
-		{ 
-			availableTags : TAGS, 
-			fieldName : 'TermTags[TagList][]' 
+		{
+			availableTags : TAGS,
+			fieldName : 'TermTags[TagList][]'
 		}
 	);
 	$('#texttags').tagit(
-		{ 
-			availableTags : TEXTTAGS, 
+		{
+			availableTags : TEXTTAGS,
 			fieldName : 'TextTags[TagList][]'
 		}
-	); 
+	);
 	markClick();
 	setTheFocus();
 	if ($('#simwords').length > 0 && $('#langfield').length > 0 && $('#wordfield').length > 0) {
@@ -627,4 +627,4 @@ $(document).ready( function() {
   	do_ajax_show_similar_terms();
 	}
 	window.setTimeout(noShowAfter3Secs,3000);
-} ); 
+} );
