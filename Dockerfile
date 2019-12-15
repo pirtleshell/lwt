@@ -22,16 +22,21 @@ RUN rm /var/www/html/index.lighttpd.html
 COPY . /tmp/lwt
 RUN cd /tmp/lwt && cp -r * /var/www/html
 RUN rm -r /tmp/lwt
-RUN mv /var/www/html/connect_xampp.inc.php /var/www/html/connect.inc.php
 RUN chmod -R 755 /var/www/html
 
 # Setting a root password for MariaDB so it doesn't try to login with OS credentials
 RUN printf "USE mysql;\nUPDATE user SET plugin='mysql_native_password' WHERE User='root';\nFLUSH PRIVILEGES;\nSET PASSWORD FOR 'root'@'localhost' = PASSWORD('lwt');" > /tmp/fix.sql
 RUN /etc/init.d/mysql start && mysql -u root --password="" < /tmp/fix.sql
 
-CMD /etc/init.d/mysql start && /etc/init.d/lighttpd start && /bin/bash
+# connect.inc.php file with password
+RUN printf '<?php $server = "localhost";\n$userid = "root";\n$passwd = "lwt";\n$dbname = "learning-with-texts"; ?>' > /var/www/html/connect.inc.php
 
 EXPOSE 80
+
+VOLUME  ["/var/lib/mysql"]
+
+CMD /etc/init.d/mysql start && /etc/init.d/lighttpd start && /bin/bash
+
 
 # docker build -t csalg/lwt_fork:latest .
 # docker run -itdp 8010:80 csalg/lwt_fork
