@@ -39,7 +39,7 @@ Plus (at end): Database Connect, .. Select, .. Updates
 
 function get_version() {
 	global $debug;
-	return '2.0.2 (September 07 2021)'  . 
+	return '2.0.3 (February 15 2022)'  . 
 	($debug ? ' <span class="red">DEBUG</span>' : '');
 }
 
@@ -3355,6 +3355,8 @@ function check_update_db() {
 if ($dspltime) get_execution_time();
 
 // Connection, @ suppresses messages from function
+
+@mysqli_report(MYSQLI_REPORT_OFF); // added because mysqli_report default setting in PHP 8.1+ has changed
 
 $DBCONNECTION = @mysqli_connect($server, $userid, $passwd, $dbname);
 
