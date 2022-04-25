@@ -5,6 +5,12 @@ This project's changelog. Versions marked with "-fork" come from the community, 
 For git tags, official releases are marked like "v1.0.0", while unofficial ones are marked like "v1.0.0-fork".
 
 ## [Unreleased]
+### Changed
+* You must not only include ``pgm.js`` to ask the user before exiting but also the new function ``ask_before_exiting``.
+
+### Fixed
+* Many pages were asking before exiting while it was unnecessary.
+
 ### Removed
 * The HTML code documentation is no longer included in the dev branch.
 

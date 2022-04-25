@@ -89,10 +89,10 @@ if (isset($_REQUEST['op'])) {
             else {
 
                 ?>
-           <script type="text/javascript" src="js/unloadformcheck.js" charset="utf-8"></script>    
            <script type="text/javascript">
            //<![CDATA[
-           makeDirty();
+                $(document).ready(ask_before_exiting);
+                makeDirty();
            //]]>
            </script>
            <form enctype="multipart/form-data"  action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
@@ -180,7 +180,9 @@ if (isset($_REQUEST['op'])) {
 
     ?>
 
-    <script type="text/javascript" src="js/unloadformcheck.js" charset="utf-8"></script>            
+    <script type="text/javascript" charset="utf-8">
+         $(document).ready(ask_before_exiting);
+     </script>         
 
     <form enctype="multipart/form-data" class="validate" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
     <table class="tab3" cellspacing="0" cellpadding="5">

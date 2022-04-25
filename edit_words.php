@@ -418,7 +418,9 @@ if (isset($_REQUEST['new']) && isset($_REQUEST['lang'])) {
     ?>
 
     <h4>New Term</h4>
-    <script type="text/javascript" src="js/unloadformcheck.js" charset="utf-8"></script>    
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(ask_before_exiting);
+    </script>  
     <form name="newword" class="validate" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
     <input type="hidden" name="WoLgID" id="langfield" value="<?php echo $_REQUEST['lang']; ?>" />
     <table class="tab3" cellspacing="0" cellpadding="5">
@@ -486,7 +488,9 @@ elseif (isset($_REQUEST['chg'])) {
         ?>
     
      <h4>Edit Term</h4>
-     <script type="text/javascript" src="js/unloadformcheck.js" charset="utf-8"></script>    
+     <script type="text/javascript" charset="utf-8">
+         $(document).ready(ask_before_exiting);
+     </script>
      <form name="editword" class="validate" action="<?php echo $_SERVER['PHP_SELF']; ?>#rec<?php echo $_REQUEST['chg']; ?>" method="post">
      <input type="hidden" name="WoID" value="<?php echo $record['WoID']; ?>" />
      <input type="hidden" name="WoLgID" id="langfield" value="<?php echo $record['WoLgID']; ?>" />

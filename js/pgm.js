@@ -305,13 +305,15 @@ function getTranslationFromGlosbeApi(data){try{$.each(data.tuc,function(i,rows){
  * @license unlicense
  * @author  andreask7 <andreasks7@users.noreply.github.com>
  * @since   1.6.16-fork
+ * @since   2.3.1-fork You should not only include this script to check before unload
+ * 					but also call ask_before_exiting once.
  */
 var DIRTY=0;function askConfirmIfDirty(){if(DIRTY){return'** You have unsaved changes! **'}}
 function makeDirty(){DIRTY=1}
 function resetDirty(){DIRTY=0}
 function tagChanged(_,ui){if(!ui.duringInitialization){DIRTY=1}
 return!0}
-$(document).ready(function(){$('#termtags').tagit({afterTagAdded:tagChanged,afterTagRemoved:tagChanged});$('#texttags').tagit({afterTagAdded:tagChanged,afterTagRemoved:tagChanged});$('input,checkbox,textarea,radio,select').not('#quickmenu').on('change',makeDirty);$(':reset,:submit').on('click',resetDirty);$(window).on('beforeunload',askConfirmIfDirty)});var stIsIE=!1;sorttable={init:function(){if(arguments.callee.done)return;arguments.callee.done=!0;if(_timer)clearInterval(_timer);if(!document.createElement||!document.getElementsByTagName)return;sorttable.DATE_RE=/^(\d\d?)[\/\.-](\d\d?)[\/\.-]((\d\d)?\d\d)$/;forEach(document.getElementsByTagName('table'),function(table){if(table.className.search(/\bsortable\b/)!=-1){sorttable.makeSortable(table)}})},makeSortable:function(table){if(table.getElementsByTagName('thead').length==0){the=document.createElement('thead');the.appendChild(table.rows[0]);table.insertBefore(the,table.firstChild)}
+function ask_before_exiting(){$('#termtags').tagit({afterTagAdded:tagChanged,afterTagRemoved:tagChanged});$('#texttags').tagit({afterTagAdded:tagChanged,afterTagRemoved:tagChanged});$('input,checkbox,textarea,radio,select').not('#quickmenu').on('change',makeDirty);$(':reset,:submit').on('click',resetDirty);$(window).on('beforeunload',askConfirmIfDirty)};var stIsIE=!1;sorttable={init:function(){if(arguments.callee.done)return;arguments.callee.done=!0;if(_timer)clearInterval(_timer);if(!document.createElement||!document.getElementsByTagName)return;sorttable.DATE_RE=/^(\d\d?)[\/\.-](\d\d?)[\/\.-]((\d\d)?\d\d)$/;forEach(document.getElementsByTagName('table'),function(table){if(table.className.search(/\bsortable\b/)!=-1){sorttable.makeSortable(table)}})},makeSortable:function(table){if(table.getElementsByTagName('thead').length==0){the=document.createElement('thead');the.appendChild(table.rows[0]);table.insertBefore(the,table.firstChild)}
 if(table.tHead==null)table.tHead=table.getElementsByTagName('thead')[0];if(table.tHead.rows.length!=1)return;sortbottomrows=[];for(var i=0;i<table.rows.length;i++){if(table.rows[i].className.search(/\bsortbottom\b/)!=-1){sortbottomrows[sortbottomrows.length]=table.rows[i]}}
 if(sortbottomrows){if(table.tFoot==null){tfo=document.createElement('tfoot');table.appendChild(tfo)}
 for(var i=0;i<sortbottomrows.length;i++){tfo.appendChild(sortbottomrows[i])}

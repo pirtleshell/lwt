@@ -227,7 +227,9 @@ if (isset($_REQUEST['chg'])) {
         ?>
     
      <h4>Edit Archived Text</h4>
-     <script type="text/javascript" src="js/unloadformcheck.js" charset="utf-8"></script>    
+     <script type="text/javascript" charset="utf-8">
+         $(document).ready(ask_before_exiting);
+     </script>
      <form class="validate" action="<?php echo $_SERVER['PHP_SELF']; ?>#rec<?php echo $_REQUEST['chg']; ?>" method="post">
      <input type="hidden" name="AtID" value="<?php echo $_REQUEST['chg']; ?>" />
      <table class="tab3" cellspacing="0" cellpadding="5">

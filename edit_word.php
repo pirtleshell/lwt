@@ -289,11 +289,11 @@ else {  // if (! isset($_REQUEST['op']))
     $titletext = ($new ? "New Term" : "Edit Term") . ": " . tohtml($term);
     pagestart_nobody($titletext);
     ?>
-<script type="text/javascript" src="js/unloadformcheck.js" charset="utf-8"></script>
 <script type="text/javascript">
-$(window).on('beforeunload',function() {
-    setTimeout(function() {window.parent.frames['ru'].location.href = 'empty.html';}, 0);
-});
+    $(document).ready(ask_before_exiting);
+    $(window).on('beforeunload',function() {
+        setTimeout(function() {window.parent.frames['ru'].location.href = 'empty.html';}, 0);
+    });
 </script>
     <?php
     $scrdir = getScriptDirectionTag($lang);

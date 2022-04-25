@@ -547,7 +547,9 @@ function edit_texts_new($lid)
     New Text <a target="_blank" href="docs/info.html#howtotext">
     <img src="icn/question-frame.png" title="Help" alt="Help" /></a> 
 </h4>
-<script type="text/javascript" src="js/unloadformcheck.js" charset="utf-8"></script>
+<script type="text/javascript" charset="utf-8">
+    $(document).ready(ask_before_exiting);
+</script>
 <form class="validate" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
     <table class="tab3" cellspacing="0" cellpadding="5">
         <tr>
@@ -646,7 +648,9 @@ function edit_texts_change($txid)
     <img src="icn/question-frame.png" title="Help" alt="Help" />
     </a>
 </h4>
-<script type="text/javascript" src="js/unloadformcheck.js" charset="utf-8"></script>
+<script type="text/javascript" charset="utf-8">
+    $(document).ready(ask_before_exiting);
+</script>
 <form class="validate" action="<?php echo $_SERVER['PHP_SELF']; ?>#rec<?php echo $txid; ?>" method="post">
     <input type="hidden" name="TxID" value="<?php echo $txid; ?>" />
     <table class="tab3" cellspacing="0" cellpadding="5">
