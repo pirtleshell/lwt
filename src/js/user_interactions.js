@@ -234,10 +234,8 @@ function getPhoneticText(text, lang) {
  * @param {number} pitch Pitch value 
  */
 function readTextAloud(text, lang, rate, pitch) {
-    let msg = new SpeechSynthesisUtterance();
-    const trimmed = lang.substring(0, 2);
     let parsed_text;
-    if (trimmed == 'ja') {
+    if (lang.substring(0, 2) == 'ja') {
         parsed_text = getPhoneticText(text, lang);
     } else {
         parsed_text = text;
