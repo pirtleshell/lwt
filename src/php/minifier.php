@@ -66,10 +66,8 @@ function minifyAllJS()
     global $jsFiles;
     $minifier = new Minify\JS();
     foreach ($jsFiles as $path) {
-        $name = basename($path);
         if (file_exists($path)) {
             $minifier->add($path);
-            minifyJS($path, 'js/' . $name);
         }
     }
     // Save minified file to disk

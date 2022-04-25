@@ -13,6 +13,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 
 ### Removed
 * The HTML code documentation is no longer included in the dev branch.
+* The unnecessary JS files were removed since they were all merged in ``js/``.
 
 ## 2.3.0-fork (April 25 2022)
 ### Added

@@ -4306,8 +4306,6 @@ function makeAudioPlayer($audio, $offset=0)
         </td>
     </tr>
 </table>
-<!-- Audio controls before page loading -->
-<!--<script type="text/javascript" src="js/audio_controller.js"></script>-->
 <!-- Audio controls once that page was loaded -->
 <script type="text/javascript">
     //<![CDATA[
@@ -4518,8 +4516,6 @@ function pagestart_nobody($title, $addcss=''): void
     <script type="text/javascript" src="js/jquery-ui.min.js"  charset="utf-8"></script>
     <script type="text/javascript" src="js/jquery.jeditable.mini.js" charset="utf-8"></script>
     <script type="text/javascript" src="js/tag-it.js" charset="utf-8"></script>
-    <!--<script type="text/javascript" src="js/sorttable.js" charset="utf-8"></script>
-    <script type="text/javascript" src="js/countuptimer.js" charset="utf-8"></script>-->
     <script type="text/javascript" src="js/overlib/overlib_mini.js" charset="utf-8"></script>
     <!-- URLBASE : "<?php echo tohtml(url_base()); ?>" -->
     <!-- TBPREF  : "<?php echo tohtml($tbpref);  ?>" -->
@@ -4531,7 +4527,6 @@ function pagestart_nobody($title, $addcss=''): void
         //]]>
     </script>
     <script type="text/javascript" src="js/pgm.js" charset="utf-8"></script>
-    <!--<script type="text/javascript" src="js/jq_pgm.js" charset="utf-8"></script>-->
     
     <title>LWT :: <?php echo tohtml($title); ?></title>
 </head>
