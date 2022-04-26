@@ -15,7 +15,7 @@ require_once __DIR__ . '/../src/php/markdown_converter.php';
 
 ?>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en">
 	<head>
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 
