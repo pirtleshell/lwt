@@ -52,26 +52,26 @@ function do_frameset_mobile_page_content($frame_h_uri, $frame_l_uri, $right_fram
     <iframe id="frame-h-2" src="<?php echo $frame_h_uri; ?>" scrolling="yes" name="h">
     </iframe>
 </div>
-<?php 
+    <?php 
     if ($right_frames) {
-?> 
+        ?> 
 <div id="frame-ro">
     <iframe id="frame-ro-2" src="empty.html" scrolling="yes" name="ro"></iframe>
 </div>
-<?php
+        <?php
     }
-?>
+    ?>
 <div id="frame-l">
     <iframe id="frame-l-2" src="<?php echo $frame_l_uri; ?>" scrolling="yes" name="l">
     </iframe>
 </div>
-<?php 
+    <?php 
     if ($right_frames) {
-?> 
+        ?> 
 <div id="frame-ru">
     <iframe id="frame-ru-2" src="empty.html" scrolling="yes" name="ru"></iframe>
 </div>
-<?php
+        <?php
     }
 }
 
@@ -82,7 +82,7 @@ function do_frameset_mobile_page_content($frame_h_uri, $frame_l_uri, $right_fram
  */
 function do_frameset_mobile_css() 
 {
-?>
+    ?>
 <style type="text/css"> 
     body {
         background-color: #cccccc;
@@ -98,7 +98,7 @@ function do_frameset_mobile_css()
         display: inline-block;    
     }
 </style>
-<?php
+    <?php
 }
 
 
@@ -109,7 +109,8 @@ function do_frameset_mobile_css()
  * 
  * @return void
  */
-function do_frameset_mobile_js($audio=null) {
+function do_frameset_mobile_js($audio=null)
+{
 
     ?>    
     <script type="text/javascript" src="js/jquery.js" charset="utf-8"></script>
@@ -163,4 +164,4 @@ function do_frameset_mobile_js($audio=null) {
     
 }
 
- ?>
+?>

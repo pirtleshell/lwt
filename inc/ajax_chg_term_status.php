@@ -18,11 +18,12 @@ require_once __DIR__ . '/session_utility.php';
  * Check the consistency of the new status.
  * 
  * @param int  $oldstatus Old status
- * @param bool $up True if status should incremented, false if decrementation needed
+ * @param bool $up        True if status should incremented, false if decrementation needed
  * 
  * @return int<1, 5>|98|99 New status in the good number range.
  */
-function get_new_status($oldstatus, $up) {
+function get_new_status($oldstatus, $up)
+{
     $currstatus = $oldstatus;
     if ($up) {
         $currstatus++; // 98,1,2,3,4,5 => 99,2,3,4,5,6
@@ -45,7 +46,7 @@ function get_new_status($oldstatus, $up) {
 /**
  * Save the new word status to the database.
  * 
- * @param int $wid Word ID
+ * @param int $wid        Word ID
  * @param int $currstatus Current status in the good value range. 
  * 
  * @return string|null HTML-formatted string with plus/minus controls if a success. 

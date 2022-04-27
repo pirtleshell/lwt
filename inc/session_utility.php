@@ -20,7 +20,7 @@ require_once 'database_connect.php';
 /**
  * Return the list of all tags.
  * 
- * @param  int $refresh If true, refresh all tags for session
+ * @param int $refresh If true, refresh all tags for session
  * 
  * @global string $tbpref Table name prefix
  * 
@@ -52,7 +52,7 @@ function get_tags($refresh = 0)
 /**
  * Return the list of all text tags.
  * 
- * @param  int $refresh If true, refresh all text tags for session
+ * @param int $refresh If true, refresh all text tags for session
  * 
  * @global string $tbpref Table name prefix
  * 
@@ -61,8 +61,7 @@ function get_tags($refresh = 0)
 function get_texttags($refresh = 0) 
 {
     global $tbpref;
-    if (
-        isset($_SESSION['TEXTTAGS']) 
+    if (isset($_SESSION['TEXTTAGS']) 
         && is_array($_SESSION['TEXTTAGS']) 
         && isset($_SESSION['TBPREF_TEXTTAGS']) 
         && $refresh == 0
@@ -296,11 +295,10 @@ function saveTextTags($tid): void
         "DELETE FROM " . $tbpref . "texttags WHERE TtTxID =" . $tid, 
         ''
     );
-    if (
-        !isset($_REQUEST['TextTags']) ||
-        !is_array($_REQUEST['TextTags']) ||
-        !isset($_REQUEST['TextTags']['TagList']) ||
-        !is_array($_REQUEST['TextTags']['TagList'])
+    if (!isset($_REQUEST['TextTags']) 
+        || !is_array($_REQUEST['TextTags']) 
+        || !isset($_REQUEST['TextTags']['TagList']) 
+        || !is_array($_REQUEST['TextTags']['TagList'])
     ) {
         return;
     }
@@ -338,11 +336,10 @@ function saveArchivedTextTags($tid): void
 {
     global $tbpref;
     runsql("DELETE from " . $tbpref . "archtexttags WHERE AgAtID =" . $tid, '');
-    if (
-        !isset($_REQUEST['TextTags']) ||
-        !is_array($_REQUEST['TextTags']) ||
-        !isset($_REQUEST['TextTags']['TagList']) ||
-        !is_array($_REQUEST['TextTags']['TagList'])
+    if (!isset($_REQUEST['TextTags']) 
+        || !is_array($_REQUEST['TextTags']) 
+        || !isset($_REQUEST['TextTags']['TagList']) 
+        || !is_array($_REQUEST['TextTags']['TagList'])
     ) {
         return;
     }
@@ -1024,8 +1021,7 @@ function get_text_from_rsslink($feed_data, $NfArticleSection, $NfFilterTags, $Nf
             $redirect = substr($redirect[0], 9);
             $feed_host = parse_url(trim($feed_data[$key]['link']));
             foreach ($xPath->query($redirect) as $node) {
-                if (
-                    empty(trim($node->localName)) 
+                if (empty(trim($node->localName)) 
                     || $node->nodeType == XML_TEXT_NODE
                     || !$node->hasAttributes()
                 ) {
@@ -1454,10 +1450,12 @@ function echo_lwt_logo(): void
 function getprefixes(): array 
 {
     $prefix = array();
-    $res = do_mysqli_query(str_replace(
-        '_', 
-        "\\_", 
-        "SHOW TABLES LIKE " . convert_string_to_sqlsyntax_nonull('%_settings'))
+    $res = do_mysqli_query(
+        str_replace(
+            '_', 
+            "\\_", 
+            "SHOW TABLES LIKE " . convert_string_to_sqlsyntax_nonull('%_settings')
+        )
     );
     while ($row = mysqli_fetch_row($res)) {
         $prefix[] = substr($row[0], 0, -9); 
@@ -2460,9 +2458,10 @@ function checkStatusRange($currstatus, $statusrange): bool
 /**
  * Adds HTML attributes to create a filter over words learning status.
  *
- * @param int<0, 5>|98|99|599 $status Word learning status 
- * 599 is a special status combining 5 and 99 statuses.
- * 0 return an empty string 
+ * @param  int<0, 5>|98|99|599 $status Word learning status 
+ *                                     599 is a special status 
+ *                                     combining 5 and 99 statuses.
+ *                                     0 return an empty string 
  * @return string CSS class filter to exclude $status
  */
 function makeStatusClassFilter($status) 
@@ -3096,7 +3095,8 @@ function texttodocount2($textid): string
     $c = get_first_value(
         'SELECT count(DISTINCT LOWER(Ti2Text)) AS value 
         FROM ' . $tbpref . 'textitems2 
-        WHERE Ti2WordCount=1 AND Ti2WoID=0 AND Ti2TxID=' . $textid);
+        WHERE Ti2WordCount=1 AND Ti2WoID=0 AND Ti2TxID=' . $textid
+    );
     if ($c <= 0) {
         return '<span title="To Do" class="status0">&nbsp;' . $c . '&nbsp;</span>'; 
     }
@@ -4019,7 +4019,7 @@ function phonetic_reading($text, $lang)
  * Refresh a text.
  * 
  * @deprecated No longer used, incompatible with new database system.
- * @since 1.6.25-fork Not compatible with the database
+ * @since      1.6.25-fork Not compatible with the database
  */
 function refreshText($word,$tid): string 
 {
@@ -4178,7 +4178,7 @@ function makeVideoPlayer($path, $offset=0): void
 
     if ($online) {
         // Online video player in iframe
-    ?> 
+        ?> 
 <iframe style="width: 100%; height: 30%;" 
 src="<?php echo $url ?>" 
 title="Video player"
@@ -4186,19 +4186,19 @@ frameborder="0"
 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
 allowfullscreen type="text/html">
 </iframe>
-    <?php
+        <?php
     } else {
         // Local video player
         // makeAudioPlayer($path, $offset);
         $type = "video/" . pathinfo($path, PATHINFO_EXTENSION);
         $title = pathinfo($path, PATHINFO_FILENAME);
-    ?>
+        ?>
 <video preload="auto" controls title="<?php echo $title ?>" 
 style="width: 100%; height: 300px; display: block; margin-left: auto; margin-right: auto;">
     <source src="<?php echo $path; ?>" type="<?php echo $type; ?>">
     <p>Your browser does not support video tags.</p>
 </video>
-    <?php
+        <?php
     }
 }
 
@@ -4438,7 +4438,7 @@ function framesetheader($title): void
     @header('Cache-Control: no-cache, must-revalidate, max-age=0');
     @header('Pragma: no-cache');
     ?><!DOCTYPE html>
-<?php echo '<html lang="en">'; ?>
+    <?php echo '<html lang="en">'; ?>
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <link rel="stylesheet" type="text/css" href="<?php print_file_path('css/styles.css');?>" />
@@ -4481,8 +4481,8 @@ function pagestart($title, $close): void
 /**
  * Start a standard page with a complete header and a non-closed body.
  *
- * @param string $title     Title of the page
- * @param string $addcss    Some CSS to be embed in a style tag
+ * @param string $title  Title of the page
+ * @param string $addcss Some CSS to be embed in a style tag
  *
  * @global string $tbpref The database table prefix if true
  * @global int    $debug  Show the requests if true

@@ -39,10 +39,9 @@ function do_ajax_show_sentences($langid, $wid, $word, $ctl)
     );
 }
 
-if (
-    isset($_POST['lang']) && isset($_POST['word']) && 
-    isset($_POST['woid']) && isset($_POST['ctl'])
-    ) {
+if (isset($_POST['lang']) && isset($_POST['word'])  
+    && isset($_POST['woid']) && isset($_POST['ctl'])
+) {
     echo do_ajax_show_sentences(
         (int)$_POST['lang'], $_POST['word'], (int)$_POST['woid'], $_POST['ctl']
     );

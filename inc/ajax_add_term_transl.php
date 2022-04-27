@@ -99,7 +99,7 @@ function edit_term_transl($wid, $new_trans)
 /**
  * Add or edit a term translation.
  * 
- * @param int    $wid Word ID
+ * @param int    $wid  Word ID
  * @param string $data Translation 
  * 
  * @return string Database alteration message

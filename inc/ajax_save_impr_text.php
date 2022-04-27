@@ -18,7 +18,7 @@ require_once __DIR__ . '/session_utility.php';
  * Save data from printed text.
  * 
  * @param int    $textid Text ID
- * @param int    $line Line number to save
+ * @param int    $line   Line number to save
  * @param string $val
  * 
  * @return string Success string
