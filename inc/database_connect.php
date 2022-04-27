@@ -350,7 +350,7 @@ function getSettingWithDefault($key)
     if (isset($val) && $val != '') {
         return trim($val); 
     }
-    if (array_key_exists($key, $dft)) { 
+    if (isset($dft[$key])) { 
         return $dft[$key]['dft']; 
     }
     return '';
@@ -382,7 +382,7 @@ function saveSetting($k, $v)
         WHERE StKey = ' . convert_string_to_sqlsyntax($k), 
         ''
     );
-    if (array_key_exists($k, $dft) && $dft[$k]['num']) {
+    if (isset($dft[$k]) && $dft[$k]['num']) {
         $v = (int)$v;
         if ($v < $dft[$k]['min']) { 
             $v = $dft[$k]['dft']; 

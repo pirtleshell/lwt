@@ -3795,7 +3795,8 @@ function recreate_save_ann($textid, $oldann): ?string
         $oldvals = preg_split('/[\t]/u', $olditem);
         if ($oldvals[0] > -1) {
             $trans = '';
-            if (count($oldvals) > 3) { $trans = $oldvals[3]; 
+            if (count($oldvals) > 3) { 
+                $trans = $oldvals[3]; 
             }
             $oldtrans[$oldvals[0] . "\t" . $oldvals[1]] = $trans;
         }
@@ -3807,9 +3808,10 @@ function recreate_save_ann($textid, $oldann): ?string
         $newvals = preg_split('/[\t]/u', $newitem);
         if ($newvals[0] > -1) {
             $key = $newvals[0] . "\t";
-            if (isset($newvals[1])) { $key .= $newvals[1]; 
+            if (isset($newvals[1])) { 
+                $key .= $newvals[1]; 
             }
-            if (array_key_exists($key, $oldtrans)) {
+            if (isset($oldtrans[$key])) {
                 $newvals[3] = $oldtrans[$key];
             }
             $item = implode("\t", $newvals);
@@ -3820,9 +3822,15 @@ function recreate_save_ann($textid, $oldann): ?string
     }
     runsql(
         'update ' . $tbpref . 'texts set ' .
-        'TxAnnotatedText = ' . convert_string_to_sqlsyntax($ann) . ' where TxID = ' . $textid, ""
+        'TxAnnotatedText = ' . convert_string_to_sqlsyntax($ann) . ' 
+        where TxID = ' . $textid, 
+        ""
     );
-    return get_first_value("select TxAnnotatedText as value from " . $tbpref . "texts where TxID = " . $textid);
+    return get_first_value(
+        "select TxAnnotatedText as value 
+        from " . $tbpref . "texts 
+        where TxID = " . $textid
+    );
 }
 
 // -------------------------------------------------------------
