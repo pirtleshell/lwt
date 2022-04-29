@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * \file
  * \brief Manage active texts
@@ -1015,12 +1014,22 @@ function edit_texts_show_text_row($txrecord, $currentlang, $statuses)
 function edit_texts_texts_form($currentlang, $showCounts, $sql, $recno)
 {
     global $debug;
+    $statuses = get_statuses();
+    $statuses[0]["name"] = 'Unknown';
+    $statuses[0]["abbr"] = 'Ukn';
+    $res = do_mysqli_query($sql);
+    $showCounts = (int)getSettingWithDefault('set-show-text-word-counts');
     
     ?>
 <form name="form2" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 <input type="hidden" name="data" value="" />
 <table class="tab1" cellspacing="0" cellpadding="5">
-    <tr><th class="th1" colspan="2">Multi Actions <img src="icn/lightning.png" title="Multi Actions" alt="Multi Actions" /></th></tr>
+    <tr>
+        <th class="th1" colspan="2">
+            Multi Actions 
+            <img src="icn/lightning.png" title="Multi Actions" alt="Multi Actions" />
+        </th>
+    </tr>
     <tr>
         <td class="td1 center">
             <input type="button" value="Mark All" onclick="selectToggle(true,'form2');" />
@@ -1028,7 +1037,9 @@ function edit_texts_texts_form($currentlang, $showCounts, $sql, $recno)
         </td>
         <td class="td1 center">
             Marked Texts:&nbsp;
-            <select name="markaction" id="markaction" disabled="disabled" onchange="multiActionGo(document.form2, document.form2.markaction);"><?php echo get_multipletextactions_selectoptions(); ?></select>
+            <select name="markaction" id="markaction" disabled="disabled" onchange="multiActionGo(document.form2, document.form2.markaction);">
+                <?php echo get_multipletextactions_selectoptions(); ?>
+            </select>
         </td>
     </tr>
 </table>
@@ -1044,8 +1055,10 @@ function edit_texts_texts_form($currentlang, $showCounts, $sql, $recno)
         <th class="th1 clickable">
             Title [Tags] / Audio:&nbsp;
             <img src="<?php print_file_path('icn/speaker-volume.png'); ?>" title="With Audio" alt="With Audio" />, 
-            Src.Link:&nbsp;<img src="<?php print_file_path('icn/chain.png'); ?>" title="Source Link available" alt="Source Link available" />, 
-            Ann.Text:&nbsp;<img src="icn/tick.png" title="Annotated Text available" alt="Annotated Text available" />
+            Src.Link:&nbsp;
+            <img src="<?php print_file_path('icn/chain.png'); ?>" title="Source Link available" alt="Source Link available" />, 
+            Ann.Text:&nbsp;
+            <img src="icn/tick.png" title="Annotated Text available" alt="Annotated Text available" />
         </th>
         <th class="th1 sorttable_numeric clickable">
             Total<br />Words<br />
@@ -1084,11 +1097,6 @@ function edit_texts_texts_form($currentlang, $showCounts, $sql, $recno)
     if ($debug) { 
         echo $sql; 
     }
-    $statuses = get_statuses();
-    $statuses[0]["name"] = 'Unknown';
-    $statuses[0]["abbr"] = 'Ukn';
-    $res = do_mysqli_query($sql);
-    $showCounts = (int)getSettingWithDefault('set-show-text-word-counts');
     while ($record = mysqli_fetch_assoc($res)) {
         edit_texts_show_text_row($record, $currentlang, $statuses);
     }
@@ -1097,8 +1105,6 @@ function edit_texts_texts_form($currentlang, $showCounts, $sql, $recno)
     ?>
 </tbody>
 </table>
-
-
     <?php 
     edit_texts_other_pages($recno);
     ?>
@@ -1191,20 +1197,32 @@ function edit_texts_display($message)
     ?>
 
 <link rel="stylesheet" type="text/css" href="<?php print_file_path('css/css_charts.css');?>" />
-<p>
-    <a href="<?php echo $_SERVER['PHP_SELF']; ?>?new=1">
-        <img src="icn/plus-button.png" title="New" alt="New" />
-        New Text ...
-    </a> &nbsp; | &nbsp;
-    <a href="long_text_import.php">
-        <img src="icn/plus-button.png" title="Long Text Import" alt="Long Text Import" /> 
-        Long Text Import ...
-    </a> &nbsp; | &nbsp;
-    <a href="do_feeds.php?page=1&amp;check_autoupdate=1">
-        <img src="icn/plus-button.png" title="RSS Import" alt="RSS Import" /> 
-        Newsfeed Import ...
-    </a>
-</p>
+<div style="display: flex; justify-content: space-evenly; width: 850px;">
+    <div>
+        <a href="<?php echo $_SERVER['PHP_SELF']; ?>?new=1">
+            <img src="icn/plus-button.png">
+            New Text ...
+        </a>
+    </div>
+    <div>
+        <a href="long_text_import.php">
+            <img src="icn/plus-button.png">
+            Long Text Import ...
+        </a>
+    </div>
+    <div>
+        <a href="do_feeds.php?page=1&amp;check_autoupdate=1">
+            <img src="icn/plus-button.png">
+            Newsfeed Import ...
+        </a>
+    </div>
+    <div>
+        <a href="edit_archivedtexts.php?query=&amp;page=1">
+            <img src="icn/drawer--minus.png">
+            Archived Texts
+        </a>
+    </div>
+</div>
     <?php
     edit_texts_filters_form($currentlang, $recno, $currentpage, $pages);
 
@@ -1283,15 +1301,6 @@ function edit_texts_display($message)
         <?php
 
     }
-
-    ?>
-
-<p>
-    <input type="button" value="Archived Texts" onclick="location.href='edit_archivedtexts.php?query=&amp;page=1';" />
-</p>
-
-    <?php
-
 }
 
 /**

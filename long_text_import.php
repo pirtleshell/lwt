@@ -182,7 +182,34 @@ if (isset($_REQUEST['op'])) {
 
     <script type="text/javascript" charset="utf-8">
          $(document).ready(ask_before_exiting);
-     </script>         
+     </script>
+
+    <div style="display: flex; justify-content: space-evenly; width: 850px;">
+        <div title="Import of a single text, max. 65,000 bytes long, with optional audio">
+            <a href="<?php echo $_SERVER['PHP_SELF']; ?>?new=1">
+                <img src="icn/plus-button.png">
+                Standard Text Import...
+            </a>
+        </div>
+        <div>
+            <a href="do_feeds.php?page=1&amp;check_autoupdate=1">
+                <img src="icn/plus-button.png">
+                Newsfeed Import ...
+            </a>
+        </div>
+        <div>
+            <a href="edit_texts.php?query=&amp;page=1">
+                <img src="icn/drawer--plus.png">
+                Active Texts
+            </a>
+        </div>
+        <div>
+            <a href="edit_archivedtexts.php?query=&amp;page=1">
+                <img src="icn/drawer--minus.png">
+                Archived Texts
+            </a>
+        </div>
+    </div>
 
     <form enctype="multipart/form-data" class="validate" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
     <table class="tab3" cellspacing="0" cellpadding="5">
@@ -198,7 +225,10 @@ if (isset($_REQUEST['op'])) {
     </tr>
     <tr>
     <td class="td1 right">Title:</td>
-    <td class="td1"><input type="text" class="notempty checkoutsidebmp" data_info="Title" name="TxTitle" value="" maxlength="200" size="60" /> <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /></td>
+    <td class="td1">
+        <input type="text" class="notempty checkoutsidebmp" data_info="Title" name="TxTitle" value="" maxlength="200" size="60" />
+        <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+    </td>
     </tr>
     <tr>
     <td class="td1 right">
@@ -248,9 +278,6 @@ if (isset($_REQUEST['op'])) {
     </tr>
     </table>
     </form>
-    
-    <p class="smallgray">Import of a <b>single text</b>, max. 65,000 bytes long, with optional audio:</p><p><input type="button" value="Standard Text Import" onclick="location.href='edit_texts.php?new=1';" /> </p>
-
 
     <?php
 

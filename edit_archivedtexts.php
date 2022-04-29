@@ -29,7 +29,7 @@ $currenttag2 = validateArchTextTag(processSessParam("tag2", "currentarchivetextt
 $currenttag12 = processSessParam("tag12", "currentarchivetexttag12", '', 0);
 
 $wh_lang = ($currentlang != '') ? (' and AtLgID=' . $currentlang) : '';
-$wh_query = $currentregexmode . 'like ' .  convert_string_to_sqlsyntax(($currentregexmode == '') ? (str_replace("*", "%", mb_strtolower($currentquery, 'UTF-8'))) : ($currentquery));
+$wh_query = $currentregexmode . 'like ' .  convert_string_to_sqlsyntax(($currentregexmode == '') ? str_replace("*", "%", mb_strtolower($currentquery, 'UTF-8')) : $currentquery);
 switch($currentquerymode){
 case 'title,text':
     $wh_query=' and (AtTitle ' . $wh_query . ' or AtText ' . $wh_query . ')';
@@ -52,7 +52,8 @@ if($currentquery!=='') {
         }
     }
 }
-else { $wh_query = ''; 
+else { 
+    $wh_query = ''; 
 }
 
 $wh_tag1 = null;
@@ -107,7 +108,8 @@ if (isset($_REQUEST['markaction'])) {
             $l = count($_REQUEST['marked']);
             if ($l > 0 ) {
                 $list = "(" . $_REQUEST['marked'][0];
-                for ($i=1; $i<$l; $i++) { $list .= "," . $_REQUEST['marked'][$i]; 
+                for ($i=1; $i<$l; $i++) { 
+                    $list .= "," . $_REQUEST['marked'][$i]; 
                 }
                 $list .= ")";
                 
@@ -325,6 +327,33 @@ else {
     
     ?>
 
+
+<div style="display: flex; justify-content: space-evenly; width: 850px;">
+    <div>
+        <a href="<?php echo $_SERVER['PHP_SELF']; ?>?new=1">
+            <img src="icn/plus-button.png">
+            New Text ...
+        </a>
+    </div>
+    <div>
+        <a href="long_text_import.php">
+            <img src="icn/plus-button.png"> 
+            Long Text Import ...
+        </a>
+    </div>
+    <div>
+        <a href="do_feeds.php?page=1&amp;check_autoupdate=1">
+            <img src="icn/plus-button.png"> 
+            Newsfeed Import ...
+        </a>
+    </div>
+    <div>
+        <a href="edit_texts.php?query=&amp;page=1">
+            <img src="icn/drawer--plus.png">
+            Active Texts
+        </a>
+    </div>
+</div>
 <form name="form1" action="#" onsubmit="document.form1.querybutton.click(); return false;">
 <table class="tab1" cellspacing="0" cellpadding="5">
 <tr>
@@ -346,10 +375,13 @@ Language:
 <option value="text"<?php if($currentquerymode=="text") { echo ' selected="selected"'; 
 } ?>>Text</option>
 </select><?php
-if($currentregexmode=='') { echo '<span style="vertical-align: middle"> (Wildc.=*): </span>'; 
+if($currentregexmode=='') { 
+    echo '<span style="vertical-align: middle"> (Wildc.=*): </span>'; 
 }
-elseif($currentregexmode=='r') { echo '<span style="vertical-align: middle"> RegEx Mode: </span>';
-} else { echo '<span style="vertical-align: middle"> RegEx(CS) Mode: </span>'; 
+elseif($currentregexmode=='r') { 
+    echo '<span style="vertical-align: middle"> RegEx Mode: </span>';
+} else { 
+    echo '<span style="vertical-align: middle"> RegEx(CS) Mode: </span>'; 
 }?>
 <input type="text" name="query" value="<?php echo tohtml($currentquery); ?>" maxlength="50" size="15" />&nbsp;
 <input type="button" name="querybutton" value="Filter" onclick="{val=document.form1.query.value;val=encodeURIComponent(val); location.href='edit_archivedtexts.php?page=1&amp;query=' + val;}" />&nbsp;
@@ -465,13 +497,6 @@ Marked Texts:&nbsp;
         <?php
 
     }
-
-    ?>
-
-<p><input type="button" value="Active Texts" onclick="location.href='edit_texts.php?query=&amp;page=1';" /></p>
-
-    <?php
-
 }
 
 pageend();
