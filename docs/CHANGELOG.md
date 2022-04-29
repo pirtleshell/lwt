@@ -10,6 +10,9 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 
 ### Fixed
 * Many pages were asking before exiting while it was unnecessary.
+* Made bigger buttons and uniformised the presentation of ``edit_texts.php``, 
+``edit_archivedtexts.php``, ``long_text_import.php`` and ``do_feeds.php``. It solves
+issue [#29](https://github.com/HugoFara/lwt/issues/29).
 
 ### Removed
 * The HTML code documentation is no longer included in the dev branch.
