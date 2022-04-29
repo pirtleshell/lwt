@@ -21,7 +21,6 @@ if(trim($text)!='') {
         echo '<h3>Google Translate:  &nbsp; <span class="red2" id="textToSpeak" style="cursor:pointer" title="Click on expression for pronunciation" onclick="var txt = $(\'#textToSpeak\').text();var audio = new Audio();audio.src =\'tts.php?tl=' . $sl . '&q=\' + txt;audio.play();">' . tohtml($text) . '</span> <img id="del_translation" src="icn/broom.png" style="cursor:pointer" title="Empty Translation Field" onclick="deleteTranslation ();"></img></h3>';
         echo '<p>(Click on <img src="icn/tick-button.png" title="Choose" alt="Choose" /> to copy word(s) into above term)<br />&nbsp;</p>';
         ?>
-    <!--<script type="text/javascript" src="js/translation_api.js" charset="utf-8"></script>-->
     <script type="text/javascript">
         //<![CDATA[
         $(document).ready( function() {

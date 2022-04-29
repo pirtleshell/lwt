@@ -238,7 +238,9 @@ if (isset($_REQUEST['new'])) {
     
     <h4>New Language <a target="_blank" href="docs/info.html#howtolang"><img src="icn/question-frame.png" title="Help" alt="Help" /></a> </h4>
 
-    <script type="text/javascript" src="js/unloadformcheck.js" charset="utf-8"></script>    
+    <script type="text/javascript" charset="utf-8">
+         $(document).ready(ask_before_exiting);
+     </script>   
     <form class="validate" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" onsubmit="return check_dupl_lang(0);">
 
     <table class="tab1" cellspacing="0" cellpadding="5">
@@ -323,7 +325,9 @@ elseif (isset($_REQUEST['chg'])) {
         ?>
     
      <h4>Edit Language <a target="_blank" href="docs/info.html#howtolang"><img src="icn/question-frame.png" title="Help" alt="Help" /></a> </h4>
-     <script type="text/javascript" src="js/unloadformcheck.js" charset="utf-8"></script>    
+     <script type="text/javascript" charset="utf-8">
+         $(document).ready(ask_before_exiting);
+     </script>
      <form class="validate" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" onsubmit="return check_dupl_lang(<?php echo $_REQUEST['chg']; ?>);">
      <input type="hidden" name="LgID" value="<?php echo $_REQUEST['chg']; ?>" />
      <table class="tab1" cellspacing="0" cellpadding="5">

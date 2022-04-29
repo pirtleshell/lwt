@@ -284,8 +284,8 @@ function validateTextTag($currenttag,$currentlang)
 /** 
  * Convert a setting to 0 or 1
  *
- * @param  string     $key The input value
- * @param  string|int $dft Default value to use, should be convertible to string
+ * @param string     $key The input value
+ * @param string|int $dft Default value to use, should be convertible to string
  * 
  * @return int
  * 
@@ -332,7 +332,7 @@ function getSetting($key)
 /**
  * Get the settings value for a specific key. Return a default value when possible
  * 
- * @param  string $key Settings key
+ * @param string $key Settings key
  * 
  * @return string Requested setting, or default value, or ''
  * 
@@ -350,7 +350,7 @@ function getSettingWithDefault($key)
     if (isset($val) && $val != '') {
         return trim($val); 
     }
-    if (array_key_exists($key, $dft)) { 
+    if (isset($dft[$key])) { 
         return $dft[$key]['dft']; 
     }
     return '';
@@ -382,7 +382,7 @@ function saveSetting($k, $v)
         WHERE StKey = ' . convert_string_to_sqlsyntax($k), 
         ''
     );
-    if (array_key_exists($k, $dft) && $dft[$k]['num']) {
+    if (isset($dft[$k]) && $dft[$k]['num']) {
         $v = (int)$v;
         if ($v < $dft[$k]['min']) { 
             $v = $dft[$k]['dft']; 
@@ -764,7 +764,9 @@ function splitCheckText($text, $lid, $id)
         $s = preg_replace_callback(
             "/(\S+)\s*((\.+)|([$splitSentence]))([]'`\"”)‘’‹›“„«»』」]*)(?=(\s*)(\S+|$))/u", 
             //fn ($matches) => find_latin_sentence_end($matches, $noSentenceEnd), Arrow functions got introduced in PHP 7.4
-            function ($matches) use ($noSentenceEnd) { return find_latin_sentence_end($matches, $noSentenceEnd); },
+            function ($matches) use ($noSentenceEnd) {
+                return find_latin_sentence_end($matches, $noSentenceEnd); 
+            },
             $s
         );
         $s = str_replace(array("¶"," ¶"), array("¶\r","\r¶"), $s);
@@ -816,7 +818,7 @@ function splitCheckText($text, $lid, $id)
             }
             mysqli_free_result($res);
         }
-    ?>
+        ?>
 <script type="text/javascript">
     MWORDS = <?php echo json_encode($mw) ?>;
     if (<?php echo json_encode($rtlScript); ?>) {
@@ -873,7 +875,8 @@ function reparse_all_texts(): void
  * @global string $tbpref Database table prefix
  * @global 0|1    $debug  Output debug messages.
  */
-function update_database($dbname) {
+function update_database($dbname)
+{
     global $tbpref, $debug;
 
     // DB Version

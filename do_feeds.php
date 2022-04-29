@@ -311,7 +311,32 @@ else
 if(empty($edit_text)) {
     ?>
 
-<a href="edit_feeds.php?manage_feeds=1"><img src="icn/plus-button.png" title="manage feeds" alt="manage feeds" /> Manage Feeds ...</a>
+<div style="display: flex; justify-content: space-evenly; width: 850px;">
+    <div title="Import of a single text, max. 65,000 bytes long, with optional audio">
+        <a href="<?php echo $_SERVER['PHP_SELF']; ?>?new=1">
+            <img src="icn/plus-button.png">
+            Standard Text Import...
+        </a>
+    </div>
+    <div>
+        <a href="edit_feeds.php?manage_feeds=1">
+            <img src="icn/plus-button.png" title="manage feeds" alt="manage feeds" />
+            Manage Feeds ...
+        </a>
+    </div>
+    <div>
+        <a href="edit_texts.php?query=&amp;page=1">
+            <img src="icn/drawer--plus.png">
+            Active Texts
+        </a>
+    </div>
+    <div>
+        <a href="edit_archivedtexts.php?query=&amp;page=1">
+            <img src="icn/drawer--minus.png">
+            Archived Texts
+        </a>
+    </div>
+</div>
 <form name="form1" action="#" onsubmit="document.form1.querybutton.click(); return false;">
 <table class="tab1" cellspacing="0" cellpadding="5"><tr>
 <th class="th1" colspan="4">Filter <img src="icn/funnel.png" title="Filter" alt="Filter" />&nbsp;

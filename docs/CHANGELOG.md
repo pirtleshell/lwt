@@ -4,6 +4,20 @@ Changelog
 This project's changelog. Versions marked with "-fork" come from the community, other versions come from the canonical LWT ("official" branch on Git).
 For git tags, official releases are marked like "v1.0.0", while unofficial ones are marked like "v1.0.0-fork".
 
+## [Unreleased]
+### Changed
+* You must not only include ``pgm.js`` to ask the user before exiting but also the new function ``ask_before_exiting``.
+
+### Fixed
+* Many pages were asking before exiting while it was unnecessary.
+* Made bigger buttons and uniformised the presentation of ``edit_texts.php``, 
+``edit_archivedtexts.php``, ``long_text_import.php`` and ``do_feeds.php``. It solves
+issue [#29](https://github.com/HugoFara/lwt/issues/29).
+
+### Removed
+* The HTML code documentation is no longer included in the dev branch.
+* The unnecessary JS files were removed since they were all merged in ``js/``.
+
 ## 2.3.0-fork (April 25 2022)
 ### Added
 * Commands included in ``Makefile`` where transcripted in ``composer.json``.

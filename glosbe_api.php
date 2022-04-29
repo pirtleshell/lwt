@@ -26,7 +26,6 @@ echo '<h3>' . $titletext . ' <img id="del_translation" src="icn/broom.png" title
 echo '<p>(Click on <img src="icn/tick-button.png" title="Choose" alt="Choose" /> to copy word(s) into above term)<br />&nbsp;</p>';
 
 ?>
-<!--<script type="text/javascript" src="js/translation_api.js" charset="utf-8"></script>-->
 <script type="text/javascript">
     //<![CDATA[
     $(document).ready( function() {

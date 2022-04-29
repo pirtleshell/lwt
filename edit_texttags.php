@@ -112,7 +112,9 @@ if (isset($_REQUEST['new'])) {
     ?>
 
     <h4>New Tag</h4>
-    <script type="text/javascript" src="js/unloadformcheck.js" charset="utf-8"></script>    
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(ask_before_exiting);
+    </script>
     <form name="newtag" class="validate" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
     <table class="tab3" cellspacing="0" cellpadding="5">
     <tr>
@@ -144,7 +146,9 @@ elseif (isset($_REQUEST['chg'])) {
     if ($record = mysqli_fetch_assoc($res)) {
         ?>
      <h4>Edit Tag</h4>
-     <script type="text/javascript" src="js/unloadformcheck.js" charset="utf-8"></script>    
+     <script type="text/javascript" charset="utf-8">
+         $(document).ready(ask_before_exiting);
+     </script>
      <form name="edittag" class="validate" action="<?php echo $_SERVER['PHP_SELF']; ?>#rec<?php echo $_REQUEST['chg']; ?>" method="post">
         <input type="hidden" name="T2ID" value="<?php echo $record['T2ID']; ?>" />
         <table class="tab3" cellspacing="0" cellpadding="5">

@@ -6,6 +6,8 @@
  * @license unlicense
  * @author  andreask7 <andreasks7@users.noreply.github.com>
  * @since   1.6.16-fork
+ * @since   2.3.1-fork You should not only include this script to check before unload
+ * 					but also call ask_before_exiting once.
  */
 
 /**
@@ -47,13 +49,19 @@ function resetDirty() {
  * @returns {true} Always return true
  */
 function tagChanged(_, ui) {
-	if (! ui.duringInitialization) {
+	if (!ui.duringInitialization) {
 		DIRTY = 1;
 	}
 	return true;
 }
 
-$(document).ready( function() {
+/**
+ * Call this function if you want to ask the user 
+ * before exiting the form.
+ * 
+ * @returns {undefined}
+ */
+function ask_before_exiting() {
 	$('#termtags').tagit({
 		afterTagAdded: tagChanged, 
 		afterTagRemoved: tagChanged
@@ -66,4 +74,4 @@ $(document).ready( function() {
 	.not('#quickmenu').on('change', makeDirty);
 	$(':reset,:submit').on('click', resetDirty);
 	$(window).on('beforeunload', askConfirmIfDirty);
-} ); 
+} 

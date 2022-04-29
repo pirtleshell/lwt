@@ -18,8 +18,8 @@ require_once __DIR__ . '/session_utility.php';
 /**
  * Get the list of imported terms and start the display.
  * 
- * @param int $recno          Record number
- * @param int $currentpage    Current page
+ * @param int    $recno       Record number
+ * @param int    $currentpage Current page
  * @param string $last_update Last update
  * 
  * @return string SQL-formatted query to limit the number of results
@@ -46,47 +46,47 @@ function get_imported_terms($recno, $currentpage, $last_update)
         </th>
         <th class="th1" colspan="1" nowrap="nowrap">
             <?php
-    if ($currentpage > 1) {
-            ?>
+            if ($currentpage > 1) {
+                ?>
             &nbsp; &nbsp;
             <img src="icn/control-stop-180.png" title="First Page" alt="First Page" onclick="$('#res_data').load('inc/ajax_show_imported_terms.php',{'last_update':'<?php echo $last_update; ?>','count':$('#recno').text(),'page':'1'}); return false;" />
             &nbsp;
             <img  src="icn/control-180.png" title="Previous Page" alt="Previous Page" onclick="$('#res_data').load('inc/ajax_show_imported_terms.php',{'last_update':'<?php echo $last_update; ?>','count':$('#recno').text(),'page':'<?php echo $currentpage-1; ?>'}); return false;" />
             &nbsp;
-            <?php
-    } else {
-            ?>
+                <?php
+            } else {
+                ?>
             &nbsp; &nbsp;
             <img src="<?php print_file_path('icn/placeholder.png');?>" alt="-" />&nbsp;
             <img src="<?php print_file_path('icn/placeholder.png');?>" alt="-" />&nbsp;
-            <?php
-    }
+                <?php
+            }
             ?>
             Page
             <?php
-    if ($pages==1) { 
-        echo '1'; 
-    } else {
-            ?>
+            if ($pages==1) { 
+                echo '1'; 
+            } else {
+                ?>
             <select name="page" onchange="{val=document.form1.page.options[document.form1.page.selectedIndex].value;$('#res_data').load('inc/ajax_show_imported_terms.php',{'last_update':'<?php echo $last_update; ?>','count':$('#recno').text(),'page':val}); return false;}">
                 <?php echo get_paging_selectoptions($currentpage, $pages); ?>
             </select>
-            <?php
-    }
-    echo ' of ' . $pages . '&nbsp; ';
-    if ($currentpage < $pages) { 
-            ?>
+                <?php
+            }
+            echo ' of ' . $pages . '&nbsp; ';
+            if ($currentpage < $pages) { 
+                ?>
             <img src="icn/control.png" title="Next Page" alt="Next Page" onclick="$('#res_data').load('inc/ajax_show_imported_terms.php',{'last_update':'<?php echo $last_update; ?>','count':$('#recno').text(),'page':'<?php echo $currentpage+1; ?>'}); return false;" />&nbsp;
             <img src="icn/control-stop.png" title="Last Page" alt="Last Page" onclick="$('#res_data').load('inc/ajax_show_imported_terms.php',{'last_update':'<?php echo $last_update; ?>','count':$('#recno').text(),'page':'<?php echo $pages; ?>'}); return false;" />&nbsp; &nbsp;
-            <?php 
-    } else {
-            ?>
+                <?php 
+            } else {
+                ?>
             <img src="<?php print_file_path('icn/placeholder.png');?>" alt="-" />
             &nbsp;
             <img src="<?php print_file_path('icn/placeholder.png');?>" alt="-" />
             &nbsp; &nbsp; 
-            <?php
-    }
+                <?php
+            }
             ?>
         </th>
     </table>
@@ -193,10 +193,9 @@ function do_ajax_show_imported_terms($last_update, $currentpage, $recno, $rtl)
     }
 }
 
-if (
-    isset($_REQUEST['last_update']) && isset($_REQUEST['page']) && 
-    isset($_REQUEST['count']) && isset($_REQUEST['rtl'])
-    ) {
+if (isset($_REQUEST['last_update']) && isset($_REQUEST['page'])  
+    && isset($_REQUEST['count']) && isset($_REQUEST['rtl'])
+) {
     do_ajax_show_imported_terms(
         $_REQUEST['last_update'], 
         (int)$_REQUEST['page'], 
