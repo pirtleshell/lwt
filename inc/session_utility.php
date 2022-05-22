@@ -3438,15 +3438,12 @@ function insertExpressionFromMeCab($textlc, $lid, $wid, $len, $mode)
 {
     global $tbpref;
 
-    $db_to_mecab = sys_get_temp_dir() . "/" . $tbpref . "db_to_mecab.txt";
-    $mecab_to_db = sys_get_temp_dir() . "/" . $tbpref . "mecab_to_db.txt";
-    $mecab_args = ' -F %m\\t%t\\t%h\\n -U %m\\t%t\\t%h\\n -E EOS\\t3\\t7\\n ';
+    $db_to_mecab = tempnam(sys_get_temp_dir(), $tbpref . "db_to_mecab");
+    $mecab_to_db = tempnam(sys_get_temp_dir(), $tbpref . "mecab_to_db");
+    $delim = PHP_EOL;
+    $mecab_args = " -F %m\\t%t\\t%h\\n -U %m\\t%t\\t%h\\n -E EOS\\t3\\t7\\n ";
     $mecab_expr = '';
-    /*if(!is_dir(sys_get_temp_dir() . "/lwt")) {
-        mkdir(sys_get_temp_dir() . "/lwt", 0777);
-        chmod(sys_get_temp_dir() . "/lwt", 0777);
-    }*/
-    if(file_exists($db_to_mecab)) { 
+    if (file_exists($db_to_mecab)) { 
         unlink($db_to_mecab); 
     }
     $mecab = get_mecab_path($mecab_args);
@@ -3976,7 +3973,7 @@ function trim_value(&$value): void
  * Parses text be read by an automatic audio player.
  * 
  * Some non-phonetic alphabet will need this, currently only Japanese
- * is supported, using MeCaB.
+ * is supported, using MeCab.
  *
  * @param  string $text Text to be converted
  * @param  string $lang Language code (usually BCP 47 or ISO 639-1)
@@ -3990,7 +3987,7 @@ function phonetic_reading($text, $lang)
         return $text;
     }
 
-    // Japanes is on exception
+    // Japanese is an exception
     $mecab_file = sys_get_temp_dir() . "/" . $tbpref . "mecab_to_db.txt";
     $mecab_args = ' -O yomi ';
     if (file_exists($mecab_file)) { 
@@ -4001,7 +3998,7 @@ function phonetic_reading($text, $lang)
     fclose($fp);
     $mecab = get_mecab_path($mecab_args);
     $handle = popen($mecab . $mecab_file, "r");
-    /// Output string
+    /** @var string $mecab_str Output string */
     $mecab_str = '';
     while (($line = fgets($handle, 4096)) !== false) {
         $mecab_str .= $line; 

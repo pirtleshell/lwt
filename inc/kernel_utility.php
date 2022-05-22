@@ -207,17 +207,32 @@ function remove_spaces($s, $remove)
  * @param string $mecab_args Arguments to add
  *
  * @return null|string OS-compatible command
+ * 
+ * @since 2.3.1-fork Much more verifications added
  */
 function get_mecab_path($mecab_args = ''): ?string 
 {
     $os = strtoupper(substr(PHP_OS, 0, 3));
     $mecab_args = escapeshellcmd($mecab_args);
     if ($os == 'LIN') {
-        return 'mecab' . $mecab_args; 
+        if (shell_exec("command -v mecab")) {
+            return 'mecab' . $mecab_args; 
+        }
+        my_die("MeCab not detected! Please install it and add it to your PATH.");
     }
     if ($os == 'WIN') {
-        return '"%ProgramFiles%/MeCab/bin/mecab.exe"' . $mecab_args; 
+        if (shell_exec('where /R "%ProgramFiles%\\MeCab\\bin" mecab.exe')) { 
+            return '"%ProgramFiles%\\MeCab\\bin\\mecab.exe"' . $mecab_args;
+        } 
+        if (shell_exec('where /R "%ProgramFiles(x86)%\\MeCab\\bin" mecab.exe')) {
+            return '"%ProgramFiles(x86)%\\MeCab\\bin\\mecab.exe"' . $mecab_args; 
+        }
+        if (shell_exec('where mecab.exe')) {
+            return 'mecab.exe' . $mecab_args; 
+        }
+        my_die("MeCab not detected! Install it or add it to the PATH.");
     }
+    my_die("Your OS '$os' cannot use MeCab with this version of LWT!");
 }
 
 

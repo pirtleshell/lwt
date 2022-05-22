@@ -5,14 +5,19 @@ This project's changelog. Versions marked with "-fork" come from the community, 
 For git tags, official releases are marked like "v1.0.0", while unofficial ones are marked like "v1.0.0-fork".
 
 ## [Unreleased]
+### Added
+* The external dependency for Japanese parsing, MeCab, is now more easily detected on Windows and Linux.
+
 ### Changed
 * You must not only include ``pgm.js`` to ask the user before exiting but also the new function ``ask_before_exiting``.
+* ``splitCheckText`` was split into smaller functions. 
 
 ### Fixed
 * Many pages were asking before exiting while it was unnecessary.
 * Made bigger buttons and uniformised the presentation of ``edit_texts.php``, 
 ``edit_archivedtexts.php``, ``long_text_import.php`` and ``do_feeds.php``. It solves
 issue [#29](https://github.com/HugoFara/lwt/issues/29).
+* Japanese texts were ill parsed on Windows. The issue [#23](https://github.com/HugoFara/lwt/issues/23) is now solved! 
 
 ### Removed
 * The HTML code documentation is no longer included in the dev branch.
