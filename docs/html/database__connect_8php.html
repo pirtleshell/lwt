@@ -136,8 +136,18 @@ Functions</h2></td></tr>
 <tr class="separator:a8ac89d832d3a95c00b38bad4b46bbe19"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a82d62f0d7510fc4454deb4ed0f16e9a9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="database__connect_8php.html#a82d62f0d7510fc4454deb4ed0f16e9a9">set_word_count</a> ()</td></tr>
 <tr class="separator:a82d62f0d7510fc4454deb4ed0f16e9a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3117a4f4d8cd548f39fd047aa7617a24"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="database__connect_8php.html#a3117a4f4d8cd548f39fd047aa7617a24">parse_japanese_text</a> ($text, $id)</td></tr>
+<tr class="separator:a3117a4f4d8cd548f39fd047aa7617a24"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe31d7ed63ac9d55dab490b56651c9bd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="database__connect_8php.html#afe31d7ed63ac9d55dab490b56651c9bd">parse_standard_text</a> ($text, $id, $lid)</td></tr>
+<tr class="separator:afe31d7ed63ac9d55dab490b56651c9bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae98a7593f72474bea963bdd31ef9ae5e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="database__connect_8php.html#ae98a7593f72474bea963bdd31ef9ae5e">prepare_text_parsing</a> ($text, $id, $lid)</td></tr>
+<tr class="separator:ae98a7593f72474bea963bdd31ef9ae5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad99b49a4dbf10bb27e0009c10b033706"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="database__connect_8php.html#ad99b49a4dbf10bb27e0009c10b033706">check_text_valid</a> ($lid)</td></tr>
 <tr class="separator:ad99b49a4dbf10bb27e0009c10b033706"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a31fb489225a5a5c071b6fb7d2ddcbea1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="database__connect_8php.html#a31fb489225a5a5c071b6fb7d2ddcbea1">update_default_values</a> ($id, $lid, $sql)</td></tr>
+<tr class="separator:a31fb489225a5a5c071b6fb7d2ddcbea1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9464cc837c9757492dc3ed022d20b6cd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="database__connect_8php.html#a9464cc837c9757492dc3ed022d20b6cd">check_text</a> ($sql, $rtlScript, $wl)</td></tr>
+<tr class="separator:a9464cc837c9757492dc3ed022d20b6cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a46d04d108e75a5647dbaf056c3b70758"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="database__connect_8php.html#a46d04d108e75a5647dbaf056c3b70758">check_text_with_expressions</a> ($id, $lid, $wl, $wl_max, $mw_sql)</td></tr>
 <tr class="separator:a46d04d108e75a5647dbaf056c3b70758"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a46e8e1270bdf2caa528fee2b393c919c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="database__connect_8php.html#a46e8e1270bdf2caa528fee2b393c919c">splitCheckText</a> ($text, $lid, $id)</td></tr>
@@ -196,6 +206,50 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 <p >Adjust the auto-incrementation in the database.</p>
 <p >@global string $tbpref Database table prefix </p>
+
+</div>
+</div>
+<a id="a9464cc837c9757492dc3ed022d20b6cd" name="a9464cc837c9757492dc3ed022d20b6cd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9464cc837c9757492dc3ed022d20b6cd">&#9670;&nbsp;</a></span>check_text()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">check_text </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$sql</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$rtlScript</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$wl</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Check a text and display statistics about it.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">{string}</td><td>$sql </td></tr>
+    <tr><td class="paramname">{bool}</td><td>$rtlScript </td></tr>
+    <tr><td class="paramname">{}</td><td>$wl</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
 
 </div>
 </div>
@@ -645,6 +699,131 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="a3117a4f4d8cd548f39fd047aa7617a24" name="a3117a4f4d8cd548f39fd047aa7617a24"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3117a4f4d8cd548f39fd047aa7617a24">&#9670;&nbsp;</a></span>parse_japanese_text()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">parse_japanese_text </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$text</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$id</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Parse a Japanese text using MeCab and add it to the database.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">{string}</td><td>$text Text to parse. </td></tr>
+    <tr><td class="paramname">{int}</td><td>$id Text ID</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
+
+</div>
+</div>
+<a id="afe31d7ed63ac9d55dab490b56651c9bd" name="afe31d7ed63ac9d55dab490b56651c9bd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afe31d7ed63ac9d55dab490b56651c9bd">&#9670;&nbsp;</a></span>parse_standard_text()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">parse_standard_text </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$text</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$lid</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Parse a text using the default tools. It is a not-japanese text.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">{string}</td><td>$text Text to parse </td></tr>
+    <tr><td class="paramname">{int}</td><td>$id Text ID </td></tr>
+    <tr><td class="paramname">{int}</td><td>$lid Language ID</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
+
+</div>
+</div>
+<a id="ae98a7593f72474bea963bdd31ef9ae5e" name="ae98a7593f72474bea963bdd31ef9ae5e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae98a7593f72474bea963bdd31ef9ae5e">&#9670;&nbsp;</a></span>prepare_text_parsing()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">prepare_text_parsing </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$text</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$lid</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Pre-parse the input text before a definitive parsing by a specialized parser.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">{string}</td><td>$text Text to parse </td></tr>
+    <tr><td class="paramname">{int}</td><td>$id Text ID </td></tr>
+    <tr><td class="paramname">{int}</td><td>$lid Language ID</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
+
+</div>
+</div>
 <a id="ac536fa1c9af67239c031c2fbebd2ddef" name="ac536fa1c9af67239c031c2fbebd2ddef"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac536fa1c9af67239c031c2fbebd2ddef">&#9670;&nbsp;</a></span>reparse_all_texts()</h2>
 
@@ -760,6 +939,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p >Set the number of words for all languages</p>
 <p >@global string $tbpref Database table prefix </p>
 
 </div>
@@ -833,6 +1013,50 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 <p>@global string $tbpref Database table prefix @global 0|1 $debug Output debug messages. </p>
+
+</div>
+</div>
+<a id="a31fb489225a5a5c071b6fb7d2ddcbea1" name="a31fb489225a5a5c071b6fb7d2ddcbea1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a31fb489225a5a5c071b6fb7d2ddcbea1">&#9670;&nbsp;</a></span>update_default_values()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">update_default_values </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$lid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$sql</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Change the default values for default language, default text, etc...</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">{int}</td><td>$id New default text ID </td></tr>
+    <tr><td class="paramname">{int}</td><td>$lid New default language ID </td></tr>
+    <tr><td class="paramname">{string}</td><td>$sql</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
 
 </div>
 </div>
