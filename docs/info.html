@@ -1900,9 +1900,15 @@ KEY NfUpdate (NfUpdate)</p>
 <p>This project's changelog. Versions marked with "-fork" come from the community, other versions come from the canonical LWT ("official" branch on Git).
 For git tags, official releases are marked like "v1.0.0", while unofficial ones are marked like "v1.0.0-fork".</p>
 <h3>[Unreleased]</h3>
+<h4>Added</h4>
+<ul>
+<li>The external dependency for Japanese parsing, MeCab, is now more easily detected on Windows and Linux.</li>
+</ul>
 <h4>Changed</h4>
 <ul>
 <li>You must not only include <code>pgm.js</code> to ask the user before exiting but also the new function <code>ask_before_exiting</code>.</li>
+<li>
+<code>splitCheckText</code> was split into smaller functions.</li>
 </ul>
 <h4>Fixed</h4>
 <ul>
@@ -1910,6 +1916,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 <li>Made bigger buttons and uniformised the presentation of <code>edit_texts.php</code>,
 <code>edit_archivedtexts.php</code>, <code>long_text_import.php</code> and <code>do_feeds.php</code>. It solves
 issue <a href="https://github.com/HugoFara/lwt/issues/29">#29</a>.</li>
+<li>Japanese texts were ill parsed on Windows. The issue <a href="https://github.com/HugoFara/lwt/issues/23">#23</a> is now solved!</li>
 </ul>
 <h4>Removed</h4>
 <ul>
