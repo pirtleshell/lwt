@@ -66,8 +66,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#namespaces">Namespaces</a> &#124;
-<a href="#func-members">Functions</a> &#124;
-<a href="#var-members">Variables</a>  </div>
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">edit_languages.php File Reference</div></div>
 </div><!--header-->
 <div class="contents">
@@ -82,106 +81,239 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ac9e46939760329bc41309fd51aa36895"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="edit__languages_8php.html#ac9e46939760329bc41309fd51aa36895">edit_languages_do_js</a> ()</td></tr>
-<tr class="separator:ac9e46939760329bc41309fd51aa36895"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:abf17cb2dba2ed17cb28aa5f37deb5293"><td class="memItemLeft" align="right" valign="top"><a id="abf17cb2dba2ed17cb28aa5f37deb5293" name="abf17cb2dba2ed17cb28aa5f37deb5293"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>$message</b> = ''</td></tr>
-<tr class="separator:abf17cb2dba2ed17cb28aa5f37deb5293"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae9ee7226610bfd3f462519e791af6eb7"><td class="memItemLeft" align="right" valign="top"><a id="ae9ee7226610bfd3f462519e791af6eb7" name="ae9ee7226610bfd3f462519e791af6eb7"></a>
-if(isset($_REQUEST['refresh'])) if(isset( $_REQUEST[ 'del'])) elseif(isset($_REQUEST['op']))&#160;</td><td class="memItemRight" valign="bottom"><b>$feedarticlescount</b> = null</td></tr>
-<tr class="separator:ae9ee7226610bfd3f462519e791af6eb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a31ce36adc36c41e9c9188276d4e1aa43"><td class="memItemLeft" align="right" valign="top"><a id="a31ce36adc36c41e9c9188276d4e1aa43" name="a31ce36adc36c41e9c9188276d4e1aa43"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>$newsfeedcount</b> = null</td></tr>
-<tr class="separator:a31ce36adc36c41e9c9188276d4e1aa43"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a53f3a572a36b1e503045e03a4e6c789e"><td class="memItemLeft" align="right" valign="top">if(isset( $_REQUEST[ 'new'])) elseif(isset($_REQUEST['chg']))&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="edit__languages_8php.html#a53f3a572a36b1e503045e03a4e6c789e">else</a></td></tr>
-<tr class="separator:a53f3a572a36b1e503045e03a4e6c789e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2c4c58e377f6c66ca38c8ea97666fc5e"><td class="memItemLeft" align="right" valign="top"><a id="a2c4c58e377f6c66ca38c8ea97666fc5e" name="a2c4c58e377f6c66ca38c8ea97666fc5e"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>$current</b> = (int) <a class="el" href="database__connect_8php.html#a81cd47da0bcdaa2bf17382266982720b">getSetting</a>('currentlanguage')</td></tr>
-<tr class="separator:a2c4c58e377f6c66ca38c8ea97666fc5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa1b8d0109388103549a18088bccc9b82"><td class="memItemLeft" align="right" valign="top"><a id="aa1b8d0109388103549a18088bccc9b82" name="aa1b8d0109388103549a18088bccc9b82"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>$recno</b> = <a class="el" href="database__connect_8php.html#a9c4a52b3d9b10360dce64ad0464bfad5">get_first_value</a>('select count(*) as value from ' . $tbpref . 'languages where LgName&lt;&gt;&quot;&quot;')</td></tr>
-<tr class="separator:aa1b8d0109388103549a18088bccc9b82"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa1f8e8cc9964970fda707a846e0dc630"><td class="memItemLeft" align="right" valign="top">if($recno==0) else&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="edit__languages_8php.html#aa1f8e8cc9964970fda707a846e0dc630">$sql</a></td></tr>
-<tr class="separator:aa1f8e8cc9964970fda707a846e0dc630"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a197acfe3388e7bc4c2e832a49bc5805e"><td class="memItemLeft" align="right" valign="top">if($debug)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="edit__languages_8php.html#a197acfe3388e7bc4c2e832a49bc5805e">$res</a></td></tr>
-<tr class="separator:a197acfe3388e7bc4c2e832a49bc5805e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a96bb941f35593dc63d9f3f9781dc9584"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="edit__languages_8php.html#a96bb941f35593dc63d9f3f9781dc9584">edit_languages_alert_duplicate</a> ()</td></tr>
+<tr class="separator:a96bb941f35593dc63d9f3f9781dc9584"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2fafa38b7a6ae04c950127ac0a5ff403"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="edit__languages_8php.html#a2fafa38b7a6ae04c950127ac0a5ff403">edit_languages_refresh</a> ($lid)</td></tr>
+<tr class="separator:a2fafa38b7a6ae04c950127ac0a5ff403"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3dfdbff629cb93e02bd3bbebe2434f56"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="edit__languages_8php.html#a3dfdbff629cb93e02bd3bbebe2434f56">edit_languages_delete</a> ($lid)</td></tr>
+<tr class="separator:a3dfdbff629cb93e02bd3bbebe2434f56"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6adfcf595b943cd3e132050c10d56a6f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="edit__languages_8php.html#a6adfcf595b943cd3e132050c10d56a6f">edit_languages_op_save</a> ()</td></tr>
+<tr class="separator:a6adfcf595b943cd3e132050c10d56a6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a22c1fc4b70e7a59656440f4ad4ed168b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="edit__languages_8php.html#a22c1fc4b70e7a59656440f4ad4ed168b">edit_languages_op_change</a> ($lid)</td></tr>
+<tr class="separator:a22c1fc4b70e7a59656440f4ad4ed168b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a819e713660722e60c44c16407a1c6227"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="edit__languages_8php.html#a819e713660722e60c44c16407a1c6227">edit_languages_new</a> ()</td></tr>
+<tr class="separator:a819e713660722e60c44c16407a1c6227"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a23364ba7692e17d72c053823a9029987"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="edit__languages_8php.html#a23364ba7692e17d72c053823a9029987">edit_languages_change</a> ($lid)</td></tr>
+<tr class="separator:a23364ba7692e17d72c053823a9029987"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a441df3001626dcbae071cb1f845146dd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="edit__languages_8php.html#a441df3001626dcbae071cb1f845146dd">edit_languages_display</a> ($message)</td></tr>
+<tr class="separator:a441df3001626dcbae071cb1f845146dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac9d8d50274a88be634145cdc16d0d049"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="edit__languages_8php.html#ac9d8d50274a88be634145cdc16d0d049">edit_languages_do_page</a> ()</td></tr>
+<tr class="separator:ac9d8d50274a88be634145cdc16d0d049"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Manage languages. </p>
 <p >Call: <a class="el" href="edit__languages_8php.html" title="Manage languages.">edit_languages.php</a>?.... ... refresh=[langid] ... reparse all texts in lang ... del=[langid] ... do delete ... op=Save ... do insert new ... op=Change ... do update ... new=1 ... display new lang. screen ... chg=[langid] ... display edit screen </p>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a id="ac9e46939760329bc41309fd51aa36895" name="ac9e46939760329bc41309fd51aa36895"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac9e46939760329bc41309fd51aa36895">&#9670;&nbsp;</a></span>edit_languages_do_js()</h2>
+<a id="a96bb941f35593dc63d9f3f9781dc9584" name="a96bb941f35593dc63d9f3f9781dc9584"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a96bb941f35593dc63d9f3f9781dc9584">&#9670;&nbsp;</a></span>edit_languages_alert_duplicate()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">edit_languages_do_js </td>
+          <td class="memname">edit_languages_alert_duplicate </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
+<p >Prepare a JavaScript code that checks for duplicate names in languages.</p>
+<dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
 <p >Check if langname exists and its lang# != curr</p>
 
 </div>
 </div>
-<h2 class="groupheader">Variable Documentation</h2>
-<a id="a197acfe3388e7bc4c2e832a49bc5805e" name="a197acfe3388e7bc4c2e832a49bc5805e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a197acfe3388e7bc4c2e832a49bc5805e">&#9670;&nbsp;</a></span>$res</h2>
+<a id="a23364ba7692e17d72c053823a9029987" name="a23364ba7692e17d72c053823a9029987"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a23364ba7692e17d72c053823a9029987">&#9670;&nbsp;</a></span>edit_languages_change()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">while ( $record=mysqli_fetch_assoc( $res)) $res</td>
+          <td class="memname">edit_languages_change </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$lid</em></td><td>)</td>
+          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= <a class="code hl_function" href="database__connect_8php.html#af092366f1596cc99b3552185b173a53d">do_mysqli_query</a>(</div>
-<div class="line">            <span class="stringliteral">&#39;select NfLgID,count(*) as value from &#39;</span> . $tbpref . <span class="stringliteral">&#39;newsfeeds group by NfLgID&#39;</span></div>
-<div class="line">        )</div>
-<div class="ttc" id="adatabase__connect_8php_html_af092366f1596cc99b3552185b173a53d"><div class="ttname"><a href="database__connect_8php.html#af092366f1596cc99b3552185b173a53d">do_mysqli_query</a></div><div class="ttdeci">do_mysqli_query($sql)</div><div class="ttdef"><b>Definition:</b> database_connect.php:24</div></div>
-</div><!-- fragment -->
+<p >Display a form to edit an existing language.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">{int}</td><td>$lid Language ID</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
+
 </div>
 </div>
-<a id="aa1f8e8cc9964970fda707a846e0dc630" name="aa1f8e8cc9964970fda707a846e0dc630"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa1f8e8cc9964970fda707a846e0dc630">&#9670;&nbsp;</a></span>$sql</h2>
+<a id="a3dfdbff629cb93e02bd3bbebe2434f56" name="a3dfdbff629cb93e02bd3bbebe2434f56"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3dfdbff629cb93e02bd3bbebe2434f56">&#9670;&nbsp;</a></span>edit_languages_delete()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">if ( $recno==0) else $sql</td>
+          <td class="memname">edit_languages_delete </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$lid</em></td><td>)</td>
+          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= <span class="stringliteral">&#39;SELECT LgID, LgName, LgExportTemplate </span></div>
-<div class="line"><span class="stringliteral">        FROM &#39;</span> . $tbpref . <span class="stringliteral">&#39;languages </span></div>
-<div class="line"><span class="stringliteral">        WHERE LgName&lt;&gt;&quot;&quot; ORDER BY LgName&#39;</span></div>
-</div><!-- fragment -->
+<p >Delete a language.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">{int}</td><td>$lid Language ID</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>{string} Info on the number of languages deleted</dd></dl>
+<p>@global {string} $tbpref Database table prefix </p>
+
 </div>
 </div>
-<a id="a53f3a572a36b1e503045e03a4e6c789e" name="a53f3a572a36b1e503045e03a4e6c789e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a53f3a572a36b1e503045e03a4e6c789e">&#9670;&nbsp;</a></span>else</h2>
+<a id="a441df3001626dcbae071cb1f845146dd" name="a441df3001626dcbae071cb1f845146dd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a441df3001626dcbae071cb1f845146dd">&#9670;&nbsp;</a></span>edit_languages_display()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">if(isset($_REQUEST['new'])) elseif (isset( $_REQUEST[ 'chg'])) else</td>
+          <td class="memname">edit_languages_display </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$message</em></td><td>)</td>
+          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">{</div>
-<div class="line">    </div>
-<div class="line">    echo error_message_with_hide($message, 0)</div>
-</div><!-- fragment -->
+<p >Display the standard page of saved languages.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">{string}</td><td>$message An information message to display.</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>@global {string} $tbpref Database table prefix @global {int} $debug 1 to display debugging data</p>
+<dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
+
+</div>
+</div>
+<a id="ac9d8d50274a88be634145cdc16d0d049" name="ac9d8d50274a88be634145cdc16d0d049"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac9d8d50274a88be634145cdc16d0d049">&#9670;&nbsp;</a></span>edit_languages_do_page()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">edit_languages_do_page </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Display a variation of the edit_language page.</p>
+<dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
+
+</div>
+</div>
+<a id="a819e713660722e60c44c16407a1c6227" name="a819e713660722e60c44c16407a1c6227"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a819e713660722e60c44c16407a1c6227">&#9670;&nbsp;</a></span>edit_languages_new()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">edit_languages_new </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Display a form to createa new language.</p>
+<dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
+
+</div>
+</div>
+<a id="a22c1fc4b70e7a59656440f4ad4ed168b" name="a22c1fc4b70e7a59656440f4ad4ed168b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a22c1fc4b70e7a59656440f4ad4ed168b">&#9670;&nbsp;</a></span>edit_languages_op_change()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">edit_languages_op_change </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$lid</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Edit an existing text in the database.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">{int}</td><td>$lid Language ID</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>{string} Number of texts updated and items reparsed.</dd></dl>
+<p>@global {string} $tbpref Database table prefix </p>
+
+</div>
+</div>
+<a id="a6adfcf595b943cd3e132050c10d56a6f" name="a6adfcf595b943cd3e132050c10d56a6f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6adfcf595b943cd3e132050c10d56a6f">&#9670;&nbsp;</a></span>edit_languages_op_save()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">edit_languages_op_save </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Save a new language to the database.</p>
+<dl class="section return"><dt>Returns</dt><dd>{string} Success or error message</dd></dl>
+<p>@global {string} $tbpref Database table prefix </p>
+
+</div>
+</div>
+<a id="a2fafa38b7a6ae04c950127ac0a5ff403" name="a2fafa38b7a6ae04c950127ac0a5ff403"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2fafa38b7a6ae04c950127ac0a5ff403">&#9670;&nbsp;</a></span>edit_languages_refresh()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">edit_languages_refresh </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$lid</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Refresh sentence and text items from a specific language.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">{int}</td><td>$lid Language ID</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>{string} Number of sentences and textitems refreshed</dd></dl>
+<p>@global {string} $tbpref Database table prefix </p>
+
 </div>
 </div>
 </div><!-- contents -->

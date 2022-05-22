@@ -80,13 +80,16 @@ Changed</h2>
 <ul>
 <li>You must not only include <code>pgm.js</code> to ask the user before exiting but also the new function <code>ask_before_exiting</code>.</li>
 <li><code>splitCheckText</code> was split into smaller functions.</li>
+<li>Refactored <code><a class="el" href="edit__languages_8php.html" title="Manage languages.">edit_languages.php</a></code> with functional paradigm.</li>
 </ul>
 <h2><a class="anchor" id="autotoc_md4"></a>
 Fixed</h2>
 <ul>
 <li>Many pages were asking before exiting while it was unnecessary.</li>
 <li>Made bigger buttons and uniformised the presentation of <code><a class="el" href="edit__texts_8php.html" title="Manage active texts.">edit_texts.php</a></code>, <code>edit_archivedtexts.php</code>, <code>long_text_import.php</code> and <code><a class="el" href="do__feeds_8php.html" title="Prepare RSS feeds.">do_feeds.php</a></code>. It solves issue <a href="https://github.com/HugoFara/lwt/issues/29">#29</a>.</li>
-<li>Japanese texts were ill parsed on Windows. The issue <a href="https://github.com/HugoFara/lwt/issues/23">#23</a> is now solved!</li>
+<li>Japanese texts were ill parsed on Windows. The issue <a href="https://github.com/HugoFara/lwt/issues/23">#23</a> is now solved! <a href="https://github.com/rc-ops">@rc-ops</a>, arigatou!</li>
+<li>The number of texts, expressions and so on was always 0 in <code><a class="el" href="edit__languages_8php.html" title="Manage languages.">edit_languages.php</a></code>.</li>
+<li>On Windows, annoying notices were often displayed in <code><a class="el" href="edit__languages_8php.html" title="Manage languages.">edit_languages.php</a></code>.</li>
 </ul>
 <h2><a class="anchor" id="autotoc_md5"></a>
 Removed</h2>
