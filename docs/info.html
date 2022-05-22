@@ -1909,6 +1909,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 <li>You must not only include <code>pgm.js</code> to ask the user before exiting but also the new function <code>ask_before_exiting</code>.</li>
 <li>
 <code>splitCheckText</code> was split into smaller functions.</li>
+<li>Refactored <code>edit_languages.php</code> with functional paradigm.</li>
 </ul>
 <h4>Fixed</h4>
 <ul>
@@ -1916,7 +1917,10 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 <li>Made bigger buttons and uniformised the presentation of <code>edit_texts.php</code>,
 <code>edit_archivedtexts.php</code>, <code>long_text_import.php</code> and <code>do_feeds.php</code>. It solves
 issue <a href="https://github.com/HugoFara/lwt/issues/29">#29</a>.</li>
-<li>Japanese texts were ill parsed on Windows. The issue <a href="https://github.com/HugoFara/lwt/issues/23">#23</a> is now solved!</li>
+<li>Japanese texts were ill parsed on Windows. The issue <a href="https://github.com/HugoFara/lwt/issues/23">#23</a> is now solved!
+<a href="https://github.com/rc-ops">@rc-ops</a>, arigatou!</li>
+<li>The number of texts, expressions and so on was always 0 in <code>edit_languages.php</code>.</li>
+<li>On Windows, annoying notices were often displayed in <code>edit_languages.php</code>.</li>
 </ul>
 <h4>Removed</h4>
 <ul>

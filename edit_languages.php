@@ -28,9 +28,10 @@ require_once 'inc/session_utility.php';
  * 
  * @return void
  */
-function edit_languages_alert_duplicate() {
+function edit_languages_alert_duplicate()
+{
   
-?>
+    ?>
 
 <script type="text/javascript">
     //<![CDATA[
@@ -53,7 +54,7 @@ function edit_languages_alert_duplicate() {
     //]]>
 </script>
 
-<?php  
+    <?php  
 }
 
 
@@ -66,7 +67,8 @@ function edit_languages_alert_duplicate() {
  * 
  * @global {string} $tbpref Database table prefix
  */
-function edit_languages_refresh($lid) {
+function edit_languages_refresh($lid)
+{
     global $tbpref;
     $message2 = runsql(
         'delete from ' . $tbpref . 'sentences where SeLgID = ' . $lid, 
@@ -113,7 +115,8 @@ function edit_languages_refresh($lid) {
  * 
  * @global {string} $tbpref Database table prefix
  */
-function edit_languages_delete($lid) {
+function edit_languages_delete($lid)
+{
     global $tbpref;
     $anztexts = get_first_value(
         'select count(TxID) as value 
@@ -160,7 +163,8 @@ function edit_languages_delete($lid) {
  * 
  * @global {string} $tbpref Database table prefix
  */
-function edit_languages_op_save() {
+function edit_languages_op_save()
+{
     global $tbpref;
     $val = get_first_value(
         'select min(LgID) as value 
@@ -615,103 +619,122 @@ function edit_languages_display($message)
 
     <?php
 
-        $sql = 'SELECT LgID, LgName, LgExportTemplate 
-        FROM ' . $tbpref . 'languages 
-        WHERE LgName<>"" ORDER BY LgName';
-        if ($debug) { 
-            echo $sql; 
-        }
-        // May be refactored with KISS principle
-        $res = do_mysqli_query(
-            'select NfLgID,count(*) as value 
-            from ' . $tbpref . 'newsfeeds 
-            group by NfLgID'
+    $sql = 'SELECT LgID, LgName, LgExportTemplate 
+    FROM ' . $tbpref . 'languages 
+    WHERE LgName<>"" ORDER BY LgName';
+    if ($debug) { 
+        echo $sql; 
+    }
+    // May be refactored with KISS principle
+    $res = do_mysqli_query(
+        'select NfLgID, count(*) as value 
+        from ' . $tbpref . 'newsfeeds 
+        group by NfLgID'
+    );
+    $newsfeedcount = null;
+    while ($record = mysqli_fetch_assoc($res)) {
+        $newsfeedcount[$record['NfLgID']] = $record['value'];
+    }
+    // May be refactored with KISS principle
+    $res = do_mysqli_query(
+        'SELECT NfLgID, count(*) AS value 
+        FROM ' . $tbpref . 'newsfeeds, ' . $tbpref . 'feedlinks 
+        WHERE NfID=FlNfID 
+        GROUP BY NfLgID'
+    );
+    $feedarticlescount = null;
+    while ($record = mysqli_fetch_assoc($res)) {
+        $feedarticlescount[$record['NfLgID']] = $record['value'];
+    }
+    $res = do_mysqli_query($sql);
+    while ($record = mysqli_fetch_assoc($res)) {
+        $lid = (int)$record['LgID'];
+        $foo = get_first_value(
+            'select count(TxID) as value 
+            from ' . $tbpref . 'texts 
+            where TxLgID=' . $lid
         );
-        $newsfeedcount = null;
-        while ($record = mysqli_fetch_assoc($res)) {
-            $newsfeedcount[$record['NfLgID']]=$record['value'];
-        }
-        // May be refactored with KISS principle
-        $res = do_mysqli_query(
-            'SELECT NfLgID,count(*) AS value 
-            FROM ' . $tbpref . 'newsfeeds,' . $tbpref . 'feedlinks 
-            WHERE NfID=FlNfID group by NfLgID'
+        $textcount = is_numeric($foo) ? (int)$foo : 0;
+        $foo = get_first_value(
+            'select count(AtID) as value 
+            from ' . $tbpref . 'archivedtexts 
+            where AtLgID=' . $lid
         );
-        $feedarticlescount = null;
-        while ($record = mysqli_fetch_assoc($res)) {
-            $feedarticlescount[$record['NfLgID']] = $record['value'];
+        $archtextcount = is_numeric($foo) ? (int)$foo : 0;
+        $foo = get_first_value(
+            'select count(WoID) as value 
+            from ' . $tbpref . 'words 
+            where WoLgID=' . $lid
+        );
+        $wordcount = is_numeric($foo) ? (int)$foo : 0;
+        if (is_null($newsfeedcount) || empty($newsfeedcount)) {
+            $nfcount = 0;
+        } else if (isset($newsfeedcount[$lid])) {
+            $nfcount = (int)$newsfeedcount[$lid];
+        } else {
+            $nfcount = 0;
         }
-        $res = do_mysqli_query($sql);
-        while ($record = mysqli_fetch_assoc($res)) {
-            $lid = (int)$record['LgID'];
-            $textcount = get_first_value(
-                'select count(TxID) as value 
-                from ' . $tbpref . 'texts 
-                where TxLgID=' . $lid
-            );
-            $archtextcount = get_first_value(
-                'select count(AtID) as value 
-                from ' . $tbpref . 'archivedtexts 
-                where AtLgID=' . $lid
-            );
-            $wordcount = get_first_value(
-                'select count(WoID) as value 
-                from ' . $tbpref . 'words 
-                where WoLgID=' . $lid
-            );
-            echo '<tr>';
-            if ($current == $lid) {
-                $tdth = 'th';
-                echo '<th class="th1" style="border-top-left-radius:0;">
+        if (is_null($feedarticlescount) || empty($feedarticlescount)) {
+            $fartcount = 0;
+        } else if (isset($feedarticlescount[$lid])) {
+            $fartcount = (int)$feedarticlescount[$lid];
+        } else {
+            $fartcount = 0;
+        }
+        echo '<tr>';
+        if ($current == $lid) {
+            $tdth = 'th';
+            echo '<th class="th1" style="border-top-left-radius:0;">
                 <img src="icn/exclamation-red.png" title="Current Language" alt="Current Language" />
                 </th>';
-            } else {
-                $tdth = 'td';
-                echo '<td class="td1 center">
+        } else {
+            $tdth = 'td';
+            echo '<td class="td1 center">
                 <a href="save_setting_redirect.php?k=currentlanguage&amp;v=' . $lid . '&amp;u=edit_languages.php">
                 <img src="icn/tick-button.png" title="Set as Current Language" alt="Set as Current Language" />
                 </a>
                 </td>';
-            }
-            echo '<' . $tdth . ' class="' . $tdth . '1 center"><a href="do_test.php?lang=' . $lid . '">
-            <img src="icn/question-balloon.png" title="Test" alt="Test" /></a></' . $tdth . '>';
-            echo '<' . $tdth . ' class="' . $tdth . '1 center" nowrap="nowrap">&nbsp;<a href="' . $_SERVER['PHP_SELF'] . '?chg=' . $lid . '">
-            <img src="icn/document--pencil.png" title="Edit" alt="Edit" /></a>';
-            if ($textcount == 0 && $archtextcount == 0 && $wordcount == 0 && $newsfeedcount[$lid] == 0) { 
-                echo '&nbsp; <span class="click" onclick="if (confirmDelete()) location.href=\'' . $_SERVER['PHP_SELF'] . '?del=' . $lid . '\';">
-                <img src="icn/minus-button.png" title="Delete" alt="Delete" /></span>'; 
-            } else { 
-                echo '&nbsp; <img src="icn/placeholder.png" title="Delete not possible" alt="Delete not possible" />'; 
-            }
-            echo '&nbsp;</' . $tdth . '>';
-            echo '<' . $tdth . ' class="' . $tdth . '1 center">' . tohtml((string)$record['LgName']) . '</' . $tdth . '>';
-            if ($textcount[$lid] > 0) { 
-                echo '<' . $tdth . ' class="' . $tdth . '1 center">
-                <a href="edit_texts.php?page=1&amp;query=&amp;filterlang=' . $lid . '">' . 
-                $textcount[$lid] . '</a> &nbsp;&nbsp; <a href="' . $_SERVER['PHP_SELF'] . '?refresh=' . $lid . '">
-                <img src="icn/lightning.png" title="Reparse Texts" alt="Reparse Texts" /></a>'; 
-            } else {
-                echo '<' . $tdth . ' class="' . $tdth . '1 center">0 &nbsp;&nbsp; <img src="';print_file_path('icn/placeholder.png');
-                echo'" title="No texts to reparse" alt="No texts to reparse" />';
-            }
-            echo '</' . $tdth . '>';
-            echo '<' . $tdth . ' class="' . $tdth . '1 center">' . 
-            ($archtextcount[$lid] > 0 ? '<a href="edit_archivedtexts.php?page=1&amp;query=&amp;filterlang=' . $lid . '">' . 
-            $archtextcount[$lid] . '</a>' : '0' ) . '</' . $tdth . '>';
-            echo '<' . $tdth . ' class="' . $tdth . '1 center">' . 
-            ($newsfeedcount[$lid] > 0 ? '<a href="do_feeds.php?query=&amp;selected_feed=&amp;check_autoupdate=1&amp;filterlang=' . $lid . '">' . 
-            $newsfeedcount[$lid] . ' (' . (empty($feedarticlescount[$lid])?0:$feedarticlescount[$lid]) . ')</a>' : '0' ) . '</' . $tdth . '>';
-            echo '<' . $tdth . ' class="' . $tdth . '1 center">' . 
-            ($wordcount[$lid] > 0 ? '<a href="edit_words.php?page=1&amp;query=&amp;text=&amp;status=&amp;filterlang=' . 
-            $lid . '&amp;status=&amp;tag12=0&amp;tag2=&amp;tag1=">' . $wordcount[$lid] . '</a>' : '0' ) . '</' . $tdth . '>';
-            echo '<' . $tdth . ' class="' . $tdth . '1 center" style="border-top-right-radius:0;">' . 
-            (isset($record['LgExportTemplate']) ? '<img src="icn/status.png" title="Yes" alt="Yes" />' : 
-            '<img src="icn/status-busy.png" title="No" alt="No" />' ) . '</' . $tdth . '>';
-            echo '</tr>';
         }
-        mysqli_free_result($res);
+        echo '<' . $tdth . ' class="' . $tdth . '1 center"><a href="do_test.php?lang=' . $lid . '">
+            <img src="icn/question-balloon.png" title="Test" alt="Test" /></a></' . $tdth . '>';
+        echo '<' . $tdth . ' class="' . $tdth . '1 center" nowrap="nowrap">&nbsp;<a href="' . $_SERVER['PHP_SELF'] . '?chg=' . $lid . '">
+            <img src="icn/document--pencil.png" title="Edit" alt="Edit" /></a>';
+        if ($textcount == 0 && $archtextcount == 0 && $wordcount == 0 && $nfcount == 0) { 
+            echo '&nbsp; <span class="click" onclick="if (confirmDelete()) location.href=\'' . $_SERVER['PHP_SELF'] . '?del=' . $lid . '\';">
+                <img src="icn/minus-button.png" title="Delete" alt="Delete" /></span>'; 
+        } else { 
+            echo '&nbsp; <img src="icn/placeholder.png" title="Delete not possible" alt="Delete not possible" />'; 
+        }
+        echo '&nbsp;</' . $tdth . '>';
+        echo '<' . $tdth . ' class="' . $tdth . '1 center">' . tohtml((string)$record['LgName']) . '</' . $tdth . '>';
+        if ($textcount > 0) { 
+            echo '<' . $tdth . ' class="' . $tdth . '1 center">
+                <a href="edit_texts.php?page=1&amp;query=&amp;filterlang=' . $lid . '">' . 
+            $textcount . '</a> &nbsp;&nbsp; <a href="' . $_SERVER['PHP_SELF'] . '?refresh=' . $lid . '">
+                <img src="icn/lightning.png" title="Reparse Texts" alt="Reparse Texts" /></a>'; 
+        } else {
+            echo '<' . $tdth . ' class="' . $tdth . '1 center">0 &nbsp;&nbsp; <img src="';
+            print_file_path('icn/placeholder.png');
+            echo'" title="No texts to reparse" alt="No texts to reparse" />';
+        }
+        echo '</' . $tdth . '>';
+        echo '<' . $tdth . ' class="' . $tdth . '1 center">' . 
+        ($archtextcount > 0 ? '<a href="edit_archivedtexts.php?page=1&amp;query=&amp;filterlang=' . $lid . '">' . 
+        $archtextcount . '</a>' : '0' ) . '</' . $tdth . '>';
+        echo '<' . $tdth . ' class="' . $tdth . '1 center">' . 
+        ($$nfcount > 0 ? '<a href="do_feeds.php?query=&amp;selected_feed=&amp;check_autoupdate=1&amp;filterlang=' . $lid . '">' . 
+        $nfcount . ' (' . $fartcount . ')</a>' : '0' ) . '</' . $tdth . '>';
+        echo '<' . $tdth . ' class="' . $tdth . '1 center">' . 
+        ($wordcount > 0 ? '<a href="edit_words.php?page=1&amp;query=&amp;text=&amp;status=&amp;filterlang=' . 
+        $lid . '&amp;status=&amp;tag12=0&amp;tag2=&amp;tag1=">' . $wordcount . '</a>' : '0' ) . '</' . $tdth . '>';
+        echo '<' . $tdth . ' class="' . $tdth . '1 center" style="border-top-right-radius:0;">' . 
+        (isset($record['LgExportTemplate']) ? '<img src="icn/status.png" title="Yes" alt="Yes" />' : 
+        '<img src="icn/status-busy.png" title="No" alt="No" />' ) . '</' . $tdth . '>';
+        echo '</tr>';
+    }
+    mysqli_free_result($res);
 
-        ?>
+    ?>
 
 </table>
 

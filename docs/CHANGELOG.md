@@ -10,7 +10,8 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 
 ### Changed
 * You must not only include ``pgm.js`` to ask the user before exiting but also the new function ``ask_before_exiting``.
-* ``splitCheckText`` was split into smaller functions. 
+* ``splitCheckText`` was split into smaller functions.
+* Refactored ``edit_languages.php`` with functional paradigm.
 
 ### Fixed
 * Many pages were asking before exiting while it was unnecessary.
@@ -18,6 +19,9 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 ``edit_archivedtexts.php``, ``long_text_import.php`` and ``do_feeds.php``. It solves
 issue [#29](https://github.com/HugoFara/lwt/issues/29).
 * Japanese texts were ill parsed on Windows. The issue [#23](https://github.com/HugoFara/lwt/issues/23) is now solved! 
+[@rc-ops](https://github.com/rc-ops), arigatou!
+* The number of texts, expressions and so on was always 0 in ``edit_languages.php``.
+* On Windows, annoying notices were often displayed in ``edit_languages.php``.
 
 ### Removed
 * The HTML code documentation is no longer included in the dev branch.
