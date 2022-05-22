@@ -23,6 +23,8 @@ require_once 'inc/session_utility.php';
 
 pagestart('My Languages', true);
 
+function edit_languages_do_js() {
+  
 ?>
 
 <script type="text/javascript">
@@ -45,14 +47,14 @@ function check_dupl_lang(curr) {
 //]]>
 </script>
 
-<?php
+<?php  
+}
 
 $message = '';
 
 // REFRESH 
-
-if (isset($_REQUEST['refresh'])) {
-    $id = $_REQUEST['refresh'];
+function edit_languages_refresh($id) {
+    global $tbpref;
     $message2 = runsql(
         'delete from ' . $tbpref . 'sentences where SeLgID = ' . $id, 
         "Sentences deleted"
@@ -71,11 +73,17 @@ if (isset($_REQUEST['refresh'])) {
     }
     mysqli_free_result($res);
     $message = $message2 . " / " . $message3 . " / Sentences added: " . get_first_value('select count(*) as value from ' . $tbpref . 'sentences where SeLgID = ' . $id) . " / Text items added: " . get_first_value('select count(*) as value from ' . $tbpref . 'textitems2 where Ti2LgID = ' . $id);
+    return $message;
+}
+
+
+if (isset($_REQUEST['refresh'])) {
+    $message = edit_languages_refresh($_REQUEST['refresh']);
 }
 
 // DEL
-
-if (isset($_REQUEST['del'])) {
+function edit_languages_delete() {
+    global $tbpref;
     $anztexts = get_first_value(
         'select count(TxID) as value from ' . $tbpref . 'texts where TxLgID = ' . 
         $_REQUEST['del']
@@ -97,87 +105,32 @@ if (isset($_REQUEST['del'])) {
     } else {
         $message = runsql('UPDATE ' . $tbpref . 'languages SET LgName = "", LgDict1URI = "", LgDict2URI = "", LgGoogleTranslateURI = "", LgExportTemplate = "", LgTextSize = DEFAULT, LgCharacterSubstitutions = "", LgRegexpSplitSentences = "", LgExceptionsSplitSentences = "", LgRegexpWordCharacters = "", LgRemoveSpaces = DEFAULT, LgSplitEachChar = DEFAULT, LgRightToLeft = DEFAULT where LgID = ' . $_REQUEST['del'], "Deleted");
     }
+    return $message;
 }
 
-// INS/UPD
-
-elseif (isset($_REQUEST['op'])) {
-    
-    // INSERT
-    
-    if ($_REQUEST['op'] == 'Save') {
-        $val = get_first_value('select min(LgID) as value from ' . $tbpref . 'languages where LgName=""');
-        if (! isset($val)) {
-            $message = runsql(
-                'insert into ' . $tbpref . 'languages (LgName, LgDict1URI, LgDict2URI, LgGoogleTranslateURI, LgExportTemplate, LgTextSize, LgCharacterSubstitutions, LgRegexpSplitSentences, LgExceptionsSplitSentences, LgRegexpWordCharacters, LgRemoveSpaces, LgSplitEachChar, LgRightToLeft) values(' . 
-                convert_string_to_sqlsyntax($_REQUEST["LgName"]) . ', ' .
-                convert_string_to_sqlsyntax($_REQUEST["LgDict1URI"]) . ', '. 
-                convert_string_to_sqlsyntax($_REQUEST["LgDict2URI"]) . ', '.
-                convert_string_to_sqlsyntax($_REQUEST["LgGoogleTranslateURI"]) . ', '.
-                convert_string_to_sqlsyntax($_REQUEST["LgExportTemplate"]) . ', '.
-                $_REQUEST["LgTextSize"] . ', '.
-                convert_string_to_sqlsyntax_notrim_nonull($_REQUEST["LgCharacterSubstitutions"]) . ', '.
-                convert_string_to_sqlsyntax($_REQUEST["LgRegexpSplitSentences"]) . ', '.
-                convert_string_to_sqlsyntax_notrim_nonull($_REQUEST["LgExceptionsSplitSentences"]) . ', '.
-                convert_string_to_sqlsyntax($_REQUEST["LgRegexpWordCharacters"]) . ', '.
-                $_REQUEST["LgRemoveSpaces"] . ', '.
-                $_REQUEST["LgSplitEachChar"] . ', '.
-                $_REQUEST["LgRightToLeft"] . 
-                ')', 'Saved'
-            );
-        }
-        else {
-            $message = runsql(
-                'update ' . $tbpref . 'languages set ' . 
-                'LgName = ' . convert_string_to_sqlsyntax($_REQUEST["LgName"]) . ', ' . 
-                'LgDict1URI = ' . convert_string_to_sqlsyntax($_REQUEST["LgDict1URI"]) . ', ' .
-                'LgDict2URI = ' . convert_string_to_sqlsyntax($_REQUEST["LgDict2URI"]) . ', ' .
-                'LgGoogleTranslateURI = ' . convert_string_to_sqlsyntax($_REQUEST["LgGoogleTranslateURI"]) . ', ' .
-                'LgExportTemplate = ' . convert_string_to_sqlsyntax($_REQUEST["LgExportTemplate"]) . ', ' .
-                'LgTextSize = ' . $_REQUEST["LgTextSize"] . ', ' .
-                'LgCharacterSubstitutions = ' . convert_string_to_sqlsyntax_notrim_nonull($_REQUEST["LgCharacterSubstitutions"]) . ', ' .
-                'LgRegexpSplitSentences = ' . convert_string_to_sqlsyntax($_REQUEST["LgRegexpSplitSentences"]) . ', ' .
-                'LgExceptionsSplitSentences = ' . convert_string_to_sqlsyntax_notrim_nonull($_REQUEST["LgExceptionsSplitSentences"]) . ', ' .
-                'LgRegexpWordCharacters = ' . convert_string_to_sqlsyntax($_REQUEST["LgRegexpWordCharacters"]) . ', ' .
-                'LgRemoveSpaces = ' . $_REQUEST["LgRemoveSpaces"] . ', ' .
-                'LgSplitEachChar = ' . $_REQUEST["LgSplitEachChar"] . ', ' . 
-                'LgRightToLeft = ' . $_REQUEST["LgRightToLeft"] . 
-                ' where LgID = ' . $val, 'Saved'
-            );
-        }
+function edit_languages_op_save() {
+    global $tbpref;
+    $val = get_first_value('select min(LgID) as value from ' . $tbpref . 'languages where LgName=""');
+    if (! isset($val)) {
+        $message = runsql(
+            'insert into ' . $tbpref . 'languages (LgName, LgDict1URI, LgDict2URI, LgGoogleTranslateURI, LgExportTemplate, LgTextSize, LgCharacterSubstitutions, LgRegexpSplitSentences, LgExceptionsSplitSentences, LgRegexpWordCharacters, LgRemoveSpaces, LgSplitEachChar, LgRightToLeft) values(' . 
+            convert_string_to_sqlsyntax($_REQUEST["LgName"]) . ', ' .
+            convert_string_to_sqlsyntax($_REQUEST["LgDict1URI"]) . ', '. 
+            convert_string_to_sqlsyntax($_REQUEST["LgDict2URI"]) . ', '.
+            convert_string_to_sqlsyntax($_REQUEST["LgGoogleTranslateURI"]) . ', '.
+            convert_string_to_sqlsyntax($_REQUEST["LgExportTemplate"]) . ', '.
+            $_REQUEST["LgTextSize"] . ', '.
+            convert_string_to_sqlsyntax_notrim_nonull($_REQUEST["LgCharacterSubstitutions"]) . ', '.
+            convert_string_to_sqlsyntax($_REQUEST["LgRegexpSplitSentences"]) . ', '.
+            convert_string_to_sqlsyntax_notrim_nonull($_REQUEST["LgExceptionsSplitSentences"]) . ', '.
+            convert_string_to_sqlsyntax($_REQUEST["LgRegexpWordCharacters"]) . ', '.
+            $_REQUEST["LgRemoveSpaces"] . ', '.
+            $_REQUEST["LgSplitEachChar"] . ', '.
+            $_REQUEST["LgRightToLeft"] . 
+            ')', 'Saved'
+        );
     }
-    // UPDATE
-    
-    elseif ($_REQUEST['op'] == 'Change') {
-        // Get old values
-        $sql = "select * from " . $tbpref . "languages where LgID=" . $_REQUEST["LgID"];
-        $res = do_mysqli_query($sql);
-        $record = mysqli_fetch_assoc($res);
-        if ($record == false) { my_die("Cannot access language data: $sql"); 
-        }
-        $oldCharacterSubstitutions = $record['LgCharacterSubstitutions'];
-        $oldRegexpSplitSentences = $record['LgRegexpSplitSentences'];
-        $oldExceptionsSplitSentences = $record['LgExceptionsSplitSentences'];
-        $oldRegexpWordCharacters = $record['LgRegexpWordCharacters'];
-        $oldRemoveSpaces = $record['LgRemoveSpaces'];
-        $oldSplitEachChar = $record['LgSplitEachChar'];
-        mysqli_free_result($res);
-    
-        $needReParse = 
-        (convert_string_to_sqlsyntax_notrim_nonull($_REQUEST["LgCharacterSubstitutions"]) != convert_string_to_sqlsyntax_notrim_nonull($oldCharacterSubstitutions)) 
-        ||
-        (convert_string_to_sqlsyntax($_REQUEST["LgRegexpSplitSentences"]) != convert_string_to_sqlsyntax($oldRegexpSplitSentences)) 
-        ||
-        (convert_string_to_sqlsyntax_notrim_nonull($_REQUEST["LgExceptionsSplitSentences"]) != convert_string_to_sqlsyntax_notrim_nonull($oldExceptionsSplitSentences)) 
-        ||
-        (convert_string_to_sqlsyntax($_REQUEST["LgRegexpWordCharacters"]) != convert_string_to_sqlsyntax($oldRegexpWordCharacters)) 
-        ||
-        ($_REQUEST["LgRemoveSpaces"] != $oldRemoveSpaces) 
-        ||
-        ($_REQUEST["LgSplitEachChar"] != $oldSplitEachChar) 
-        ;
-        $needReParse = ($needReParse ? 1 : 0);
-    
+    else {
         $message = runsql(
             'update ' . $tbpref . 'languages set ' . 
             'LgName = ' . convert_string_to_sqlsyntax($_REQUEST["LgName"]) . ', ' . 
@@ -193,46 +146,116 @@ elseif (isset($_REQUEST['op'])) {
             'LgRemoveSpaces = ' . $_REQUEST["LgRemoveSpaces"] . ', ' .
             'LgSplitEachChar = ' . $_REQUEST["LgSplitEachChar"] . ', ' . 
             'LgRightToLeft = ' . $_REQUEST["LgRightToLeft"] . 
-            ' where LgID = ' . $_REQUEST["LgID"], 'Updated'
+            ' where LgID = ' . $val, 'Saved'
         );
-        
-        if ($needReParse) {
-            $id = $_REQUEST["LgID"];
-            runsql(
-                'delete from ' . $tbpref . 'sentences where SeLgID = ' . $id, 
-                "Sentences deleted"
-            );
-            runsql(
-                'delete from ' . $tbpref . 'textitems2 where Ti2LgID = ' . $id, 
-                "Text items deleted"
-            );
-            adjust_autoincr('sentences', 'SeID');
-            runsql("UPDATE  " . $tbpref . "words SET WoWordCount  = 0 where WoLgID = " . $id, '');
-            set_word_count();
-            $sql = "select TxID, TxText from " . $tbpref . "texts where TxLgID = " . $id . " order by TxID";
-            $res = do_mysqli_query($sql);
-            $cntrp = 0;
-            while ($record = mysqli_fetch_assoc($res)) {
-                $txtid = (int)$record["TxID"];
-                $txttxt = $record["TxText"];
-                splitCheckText($txttxt, $id, $txtid);
-                $cntrp++;
-            }
-            mysqli_free_result($res);
-            $message .= " / Reparsed texts: " . $cntrp;
-        } else {
-            $message .= " / Reparsing not needed";
+    }
+    return $message;
+}
+
+function edit_languages_op_change() {
+    global $tbpref;
+    // Get old values
+    $sql = "select * from " . $tbpref . "languages where LgID=" . $_REQUEST["LgID"];
+    $res = do_mysqli_query($sql);
+    $record = mysqli_fetch_assoc($res);
+    if ($record == false) { my_die("Cannot access language data: $sql"); 
+    }
+    $oldCharacterSubstitutions = $record['LgCharacterSubstitutions'];
+    $oldRegexpSplitSentences = $record['LgRegexpSplitSentences'];
+    $oldExceptionsSplitSentences = $record['LgExceptionsSplitSentences'];
+    $oldRegexpWordCharacters = $record['LgRegexpWordCharacters'];
+    $oldRemoveSpaces = $record['LgRemoveSpaces'];
+    $oldSplitEachChar = $record['LgSplitEachChar'];
+    mysqli_free_result($res);
+
+    $needReParse = 
+    (convert_string_to_sqlsyntax_notrim_nonull($_REQUEST["LgCharacterSubstitutions"]) != convert_string_to_sqlsyntax_notrim_nonull($oldCharacterSubstitutions)) 
+    ||
+    (convert_string_to_sqlsyntax($_REQUEST["LgRegexpSplitSentences"]) != convert_string_to_sqlsyntax($oldRegexpSplitSentences)) 
+    ||
+    (convert_string_to_sqlsyntax_notrim_nonull($_REQUEST["LgExceptionsSplitSentences"]) != convert_string_to_sqlsyntax_notrim_nonull($oldExceptionsSplitSentences)) 
+    ||
+    (convert_string_to_sqlsyntax($_REQUEST["LgRegexpWordCharacters"]) != convert_string_to_sqlsyntax($oldRegexpWordCharacters)) 
+    ||
+    ($_REQUEST["LgRemoveSpaces"] != $oldRemoveSpaces) 
+    ||
+    ($_REQUEST["LgSplitEachChar"] != $oldSplitEachChar) 
+    ;
+    $needReParse = ($needReParse ? 1 : 0);
+
+    $message = runsql(
+        'update ' . $tbpref . 'languages set ' . 
+        'LgName = ' . convert_string_to_sqlsyntax($_REQUEST["LgName"]) . ', ' . 
+        'LgDict1URI = ' . convert_string_to_sqlsyntax($_REQUEST["LgDict1URI"]) . ', ' .
+        'LgDict2URI = ' . convert_string_to_sqlsyntax($_REQUEST["LgDict2URI"]) . ', ' .
+        'LgGoogleTranslateURI = ' . convert_string_to_sqlsyntax($_REQUEST["LgGoogleTranslateURI"]) . ', ' .
+        'LgExportTemplate = ' . convert_string_to_sqlsyntax($_REQUEST["LgExportTemplate"]) . ', ' .
+        'LgTextSize = ' . $_REQUEST["LgTextSize"] . ', ' .
+        'LgCharacterSubstitutions = ' . convert_string_to_sqlsyntax_notrim_nonull($_REQUEST["LgCharacterSubstitutions"]) . ', ' .
+        'LgRegexpSplitSentences = ' . convert_string_to_sqlsyntax($_REQUEST["LgRegexpSplitSentences"]) . ', ' .
+        'LgExceptionsSplitSentences = ' . convert_string_to_sqlsyntax_notrim_nonull($_REQUEST["LgExceptionsSplitSentences"]) . ', ' .
+        'LgRegexpWordCharacters = ' . convert_string_to_sqlsyntax($_REQUEST["LgRegexpWordCharacters"]) . ', ' .
+        'LgRemoveSpaces = ' . $_REQUEST["LgRemoveSpaces"] . ', ' .
+        'LgSplitEachChar = ' . $_REQUEST["LgSplitEachChar"] . ', ' . 
+        'LgRightToLeft = ' . $_REQUEST["LgRightToLeft"] . 
+        ' where LgID = ' . $_REQUEST["LgID"], 'Updated'
+    );
+    
+    if ($needReParse) {
+        $id = $_REQUEST["LgID"];
+        runsql(
+            'delete from ' . $tbpref . 'sentences where SeLgID = ' . $id, 
+            "Sentences deleted"
+        );
+        runsql(
+            'delete from ' . $tbpref . 'textitems2 where Ti2LgID = ' . $id, 
+            "Text items deleted"
+        );
+        adjust_autoincr('sentences', 'SeID');
+        runsql("UPDATE  " . $tbpref . "words SET WoWordCount  = 0 where WoLgID = " . $id, '');
+        set_word_count();
+        $sql = "select TxID, TxText from " . $tbpref . "texts where TxLgID = " . $id . " order by TxID";
+        $res = do_mysqli_query($sql);
+        $cntrp = 0;
+        while ($record = mysqli_fetch_assoc($res)) {
+            $txtid = (int)$record["TxID"];
+            $txttxt = $record["TxText"];
+            splitCheckText($txttxt, $id, $txtid);
+            $cntrp++;
         }
+        mysqli_free_result($res);
+        $message .= " / Reparsed texts: " . $cntrp;
+    } else {
+        $message .= " / Reparsing not needed";
+    }
+    return $message;
+}
+
+if (isset($_REQUEST['del'])) {
+    $message = edit_languages_delete();
+}
+
+// INS/UPD
+
+elseif (isset($_REQUEST['op'])) {
+    
+    // INSERT
+    
+    if ($_REQUEST['op'] == 'Save') {
+        $message = edit_languages_op_save();
+    }
+    // UPDATE
+    
+    elseif ($_REQUEST['op'] == 'Change') {
+        $message = edit_languages_op_change();
 
     }
 
 }
 
-// NEW
+function edit_languages_new() 
+{
 
-$feedarticlescount = null;
-$newsfeedcount = null;
-if (isset($_REQUEST['new'])) {
     
     ?>
     
@@ -311,13 +334,11 @@ if (isset($_REQUEST['new'])) {
     </form>
     
     <?php
-    
 }
 
-// CHG
-
-elseif (isset($_REQUEST['chg'])) {
-    
+function edit_languages_change() 
+{
+    global $tbpref;
     $sql = 'select * from ' . $tbpref . 'languages where LgID = ' . $_REQUEST['chg'];
     $res = do_mysqli_query($sql);
     if ($record = mysqli_fetch_assoc($res)) {
@@ -396,10 +417,10 @@ elseif (isset($_REQUEST['chg'])) {
     mysqli_free_result($res);
 }
 
-// DISPLAY
+function edit_languages_display($message)
+{
+    global $tbpref, $debug;
 
-else {
-    
     echo error_message_with_hide($message, 0);
     
     $current = (int) getSetting('currentlanguage');
@@ -443,6 +464,7 @@ else {
         $res = do_mysqli_query(
             'select NfLgID,count(*) as value from ' . $tbpref . 'newsfeeds group by NfLgID'
         );
+        $newsfeedcount = null;
         while ($record = mysqli_fetch_assoc($res)) {
             $newsfeedcount[$record['NfLgID']]=$record['value'];
         }
@@ -452,6 +474,7 @@ else {
             FROM ' . $tbpref . 'newsfeeds,' . $tbpref . 'feedlinks 
             WHERE NfID=FlNfID group by NfLgID'
         );
+        $feedarticlescount = null;
         while ($record = mysqli_fetch_assoc($res)) {
             $feedarticlescount[$record['NfLgID']] = $record['value'];
         }
@@ -500,6 +523,25 @@ else {
         <?php
 
     }
+    
+}
+
+// NEW
+
+if (isset($_REQUEST['new'])) {
+    edit_languages_new();
+}
+
+// CHG
+
+elseif (isset($_REQUEST['chg'])) {
+    edit_languages_change();
+}
+
+// DISPLAY
+
+else {
+    edit_languages_display($message);
 }
 
 pageend();
