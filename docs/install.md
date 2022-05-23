@@ -1,5 +1,33 @@
 # LWT Installation
-* *Last update*: March 14 2022
+* *Last update*: May 23 2022
+
+Let's install the LWT server. LWT uses a client-server architecture, which means it 
+will run in your browser as a classical website. You can use any computer as the 
+server, here are some ways to do it. 
+
+## Run in a [Docker](https://docs.docker.com/get-docker/) container
+It is the easiest way to install LWT, but the drawback is that it will use more or 
+less 1 GB on your system. 
+
+If LWT is already downloaded, you only need to build the image by going into the 
+project root folder and run using 
+
+```bash
+docker-compose -f docker-compose.yml up -d
+```
+
+By default the server can be accessed on port 8010 (http://localhost:8010).
+
+To remove the created containers run
+
+```bash
+docker-compose -f docker-compose.yml down
+```
+
+Otherwise, you can download the official image with
+```bash
+docker pull ghcr.io/hugofara/lwt
+```
 
 ## Windows 10
 ### Possibility (a): Installation EasyPHP / LWT on Win10
@@ -39,8 +67,8 @@ Now you must only do step 6b to start LWT.
 
 1. Install XAMPP
    1. Go to https://www.apachefriends.org/download.html 
-   2.  Download "XAMPP for Windows 7.3.30 (64 bit)" (or a higher PHP 7 version).
-Step 1c: Open your Downloads folder and run the downloaded "xampp-windows-x64-xxx-installer.exe". Please install the components Apache, MySQL, PHP and phpMyAdmin into the folder C:\xampp.
+   2. Download "XAMPP for Windows 7.3.30 (64 bit)" (or a higher PHP 7 version).
+   3. Open your Downloads folder and run the downloaded "xampp-windows-x64-xxx-installer.exe". Please install the components Apache, MySQL, PHP and phpMyAdmin into the folder C:\xampp.
 
 2. Get the [latest GitHub release](https://github.com/HugoFara/lwt/releases), unzip it.
     
@@ -153,23 +181,6 @@ If you want to use LWT again, just do step 7.
 If you have a technical knowledge of how Composer works for dependency management, you may consider using
 Composer. It is *required for contributors only*, but advanced users may want to use it as well.
 The official repository is at https://packagist.org/packages/hugofara/lwt.
-
-## Run in [Docker](https://docs.docker.com/get-docker/)
-This repository contains docker-compose file to accomodate running LWT in a docker container.
-
-To use it, change into project root folder and run
-
-```bash
-docker-compose -f docker-compose.yml up -d
-```
-
-By default the server can be accessed on port 8010 (http://localhost:8010).
-
-To remove the created containers run
-
-```bash
-docker-compose -f docker-compose.yml down
-```
 
 ## Upgrade LWT
 

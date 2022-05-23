@@ -7,6 +7,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 ## [Unreleased]
 ### Added
 * The external dependency for Japanese parsing, MeCab, is now more easily detected on Windows and Linux.
+* Better integration of Docker.
 
 ### Changed
 * You must not only include ``pgm.js`` to ask the user before exiting but also the new function ``ask_before_exiting``.
