@@ -20,17 +20,15 @@ jobs:
         tagRegex: "*.*.*"  # Optional. Returns specified group text as tag name.
         tagRegexGroup: 1 # Optional. Default is 1.
 
-    
-    - uses: actions/checkout@v3
-
     - name: Login to GitHub Container Registry
       uses: docker/login-action@v1
       with:
         registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-        
+
     - name: Build the Docker image
+      uses: actions/checkout@v3
       with:
         tagname: ${{ steps.tagName.outputs.tag }}
       run:  |
