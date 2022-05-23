@@ -22,7 +22,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="lwt_icon.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Learning with Texts - Fork<span id="projectnumber">&#160;2.3.0-fork</span>
+   <div id="projectname">Learning with Texts - Fork<span id="projectnumber">&#160;2.4.0-fork</span>
    </div>
    <div id="projectbrief">Learn foreign languages with texts</div>
   </td>
@@ -68,11 +68,21 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><ul>
-<li><em>Last update</em>: March 14 2022</li>
+<li><em>Last update</em>: May 23 2022</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md357"></a>
+<p >Let's install the LWT server. LWT uses a client-server architecture, which means it will run in your browser as a classical website. You can use any computer as the server, here are some ways to do it.</p>
+<h1><a class="anchor" id="autotoc_md359"></a>
+Run in a &lt;a href="https://docs.docker.com/get-docker/" &gt;Docker&lt;/a&gt; container</h1>
+<p >It is the easiest way to install LWT, but the drawback is that it will use more or less 1 GB on your system.</p>
+<p >If LWT is already downloaded, you only need to build the image by going into the project root folder and run using</p>
+<div class="fragment"><div class="line">docker-compose -f docker-compose.yml up -d</div>
+</div><!-- fragment --><p >By default the server can be accessed on port 8010 (<a href="http://localhost:8010">http://localhost:8010</a>).</p>
+<p >To remove the created containers run</p>
+<div class="fragment"><div class="line">docker-compose -f docker-compose.yml down</div>
+</div><!-- fragment --><p >Otherwise, you can download the official image with </p><div class="fragment"><div class="line">docker pull ghcr.io/hugofara/lwt</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md360"></a>
 Windows 10</h1>
-<h2><a class="anchor" id="autotoc_md358"></a>
+<h2><a class="anchor" id="autotoc_md361"></a>
 Possibility (a): Installation EasyPHP / LWT on Win10</h2>
 <ol type="1">
 <li>Get Visual C++<ol type="a">
@@ -106,12 +116,13 @@ Possibility (a): Installation EasyPHP / LWT on Win10</h2>
 <p >If you start up Windows, you must repeat Step 6a+b.</p>
 <p >If you want to start EasyPHP every time you start Windows and avoid Step 6a, put an EasyPHP link into "C:\Users\&zwj;(YourUID)\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup".</p>
 <p >Now you must only do step 6b to start LWT.</p>
-<h2><a class="anchor" id="autotoc_md359"></a>
+<h2><a class="anchor" id="autotoc_md362"></a>
 Possibility (b): Installation XAMPP / LWT on Win10</h2>
 <ol type="1">
 <li>Install XAMPP<ol type="a">
 <li>Go to <a href="https://www.apachefriends.org/download.html">https://www.apachefriends.org/download.html</a></li>
-<li>Download "XAMPP for Windows 7.3.30 (64 bit)" (or a higher PHP 7 version). Step 1c: Open your Downloads folder and run the downloaded "xampp-windows-x64-xxx-installer.exe". Please install the components Apache, MySQL, PHP and phpMyAdmin into the folder C:\xampp.</li>
+<li>Download "XAMPP for Windows 7.3.30 (64 bit)" (or a higher PHP 7 version).</li>
+<li>Open your Downloads folder and run the downloaded "xampp-windows-x64-xxx-installer.exe". Please install the components Apache, MySQL, PHP and phpMyAdmin into the folder C:\xampp.</li>
 </ol>
 </li>
 <li><p class="startli">Get the <a href="https://github.com/HugoFara/lwt/releases">latest GitHub release</a>, unzip it.</p>
@@ -129,7 +140,7 @@ Possibility (b): Installation XAMPP / LWT on Win10</h2>
 <p >If you want to start "XAMPP Control Panel" every time you start Windows and to avoid Step 5a, put a "XAMPP Control Panel" link to "C:\xampp\xampp-control.exe" into "C:\Users\&zwj;(YourUID)\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup". To autostart also the Apache and MySQL modules, please open "Config" within the XAMPP Control Panel and check the two checkboxes.</p>
 <p >Hint: To fix a "XAMPP Control Panel" error "Xampp-control.ini Access is denied", please read and do the instructions in <a href="https://www.codermen.com/fix-xampp-server-error-xampp-control-ini-access-is-denied/">https://www.codermen.com/fix-xampp-server-error-xampp-control-ini-access-is-denied/</a></p>
 <p >Now you must only do step 5b to start LWT.</p>
-<h1><a class="anchor" id="autotoc_md360"></a>
+<h1><a class="anchor" id="autotoc_md363"></a>
 macOS 10.10+</h1>
 <p >I no longer use Apple hardware. Therefore, I cannot test LWT itself and the following installation instructions on a Mac. Your help is very much appreciated.</p>
 <ol type="1">
@@ -145,7 +156,7 @@ macOS 10.10+</h1>
 <li>You may install the LWT demo database, or define the first language you want to learn.</li>
 </ol>
 <p >If you want to use LWT again, just do step 8 and 9. The local webserver (MAMP) will be automatically stopped by quitting the MAMP application.</p>
-<h1><a class="anchor" id="autotoc_md361"></a>
+<h1><a class="anchor" id="autotoc_md364"></a>
 Linux</h1>
 <p >The following instruction were tested on Raspbian Stretch.</p>
 <ol type="1">
@@ -186,18 +197,10 @@ Linux</h1>
 <li>You may install the LWT demo database, or define the first language you want to learn.</li>
 </ol>
 <p >If you want to use LWT again, just do step 7.</p>
-<h1><a class="anchor" id="autotoc_md362"></a>
+<h1><a class="anchor" id="autotoc_md365"></a>
 Dependency management with Composer</h1>
 <p >If you have a technical knowledge of how Composer works for dependency management, you may consider using Composer. It is <em>required for contributors only</em>, but advanced users may want to use it as well. The official repository is at <a href="https://packagist.org/packages/hugofara/lwt">https://packagist.org/packages/hugofara/lwt</a>.</p>
-<h1><a class="anchor" id="autotoc_md363"></a>
-Run in &lt;a href="https://docs.docker.com/get-docker/" &gt;Docker&lt;/a&gt;</h1>
-<p >This repository contains docker-compose file to accomodate running LWT in a docker container.</p>
-<p >To use it, change into project root folder and run</p>
-<div class="fragment"><div class="line">docker-compose -f docker-compose.yml up -d</div>
-</div><!-- fragment --><p >By default the server can be accessed on port 8010 (<a href="http://localhost:8010">http://localhost:8010</a>).</p>
-<p >To remove the created containers run</p>
-<div class="fragment"><div class="line">docker-compose -f docker-compose.yml down</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md364"></a>
+<h1><a class="anchor" id="autotoc_md366"></a>
 Upgrade LWT</h1>
 <ol type="1">
 <li>Backup the LWT directory. Backup your database (within LWT).</li>
