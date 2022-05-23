@@ -4,9 +4,10 @@ Changelog
 This project's changelog. Versions marked with "-fork" come from the community, other versions come from the canonical LWT ("official" branch on Git).
 For git tags, official releases are marked like "v1.0.0", while unofficial ones are marked like "v1.0.0-fork".
 
-## [Unreleased]
+## 2.4.0-fork (May 23 2022)
 ### Added
 * The external dependency for Japanese parsing, MeCab, is now more easily detected on Windows and Linux.
+* Better integration of Docker.
 
 ### Changed
 * You must not only include ``pgm.js`` to ask the user before exiting but also the new function ``ask_before_exiting``.
@@ -26,6 +27,9 @@ issue [#29](https://github.com/HugoFara/lwt/issues/29).
 ### Removed
 * The HTML code documentation is no longer included in the dev branch.
 * The unnecessary JS files were removed since they were all merged in ``js/``.
+
+### Full Changelog
+* [2.3.0...2.4.0](https://github.com/HugoFara/lwt/compare/2.3.0...2.4.0)
 
 ## 2.3.0-fork (April 25 2022)
 ### Added
@@ -61,6 +65,9 @@ issue [#29](https://github.com/HugoFara/lwt/issues/29).
 * Tags were breaking text modification. Issue [#12](https://github.com/HugoFara/lwt/issues/12), thanks [@chaosarium](https://github.com/chaosarium).
 * In edit_texts.php, unknown words (with status 0), had no abbreviation display between parentheses. It was showing "Unknown ()".
 
+### Full Changelog
+* [2.2.2...2.3.0](https://github.com/HugoFara/lwt/compare/2.2.2...2.3.0)
+
 ## 2.2.2-fork (February 13 2022)
 ### Added
 * A contribution guide at ``docs/contribute.md``.
@@ -92,7 +99,7 @@ issue [#29](https://github.com/HugoFara/lwt/issues/29).
   * Name uniformisation: ``prepareStyle`` to ``do_text_text_style`` and  ``do_text_javascript`` to ``do_text_text_javascript``.
 
 ### Full Changelog
-* [v2.2.1...v2.2.2](https://github.com/HugoFara/lwt/compare/v2.2.1...v2.2.2)
+* [2.2.1...2.2.2](https://github.com/HugoFara/lwt/compare/2.2.1...2.2.2)
 
 ## 2.2.1-fork (February 07 2022)
 ### Changed
@@ -124,7 +131,7 @@ issue [#29](https://github.com/HugoFara/lwt/issues/29).
   * Its content was unused. The files it was trying to use are duplicated.
 
 ### Full Changelog
-* [v2.2.0...v2.2.1](https://github.com/HugoFara/lwt/compare/v2.2.0...v2.2.1)
+* [2.2.0...2.2.1](https://github.com/HugoFara/lwt/compare/2.2.0...2.2.1)
 
 ## 2.2.0-fork (February 04 2022)
 ### Added
@@ -153,7 +160,7 @@ the maximum value was shown as a floating point value.
 * Floating Menu from JTricks.com was unused since 2.0.4-fork. It is now deleted.
 
 ### Full Changelog
-* [2.1.0...v2.2.0](https://github.com/HugoFara/lwt/compare/2.1.0...v2.2.0)
+* [2.1.0...2.2.0](https://github.com/HugoFara/lwt/compare/2.1.0...2.2.0)
 
 ## 2.1.0-fork (January 09 2022)
 ### Added

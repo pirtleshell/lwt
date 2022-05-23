@@ -3,6 +3,7 @@
 [![License](https://poser.pugx.org/hugofara/lwt/license)](https://packagist.org/packages/hugofara/lwt) 
 [![PHP Version Require](https://poser.pugx.org/hugofara/lwt/require/php)](https://packagist.org/packages/hugofara/lwt)
 ![Composer Continuous Integration](https://github.com/hugofara/lwt/actions/workflows/php.yml/badge.svg)
+[![Docker Image CI](https://github.com/HugoFara/lwt/actions/workflows/docker-image.yml/badge.svg)](https://github.com/HugoFara/lwt/actions/workflows/docker-image.yml)
 
 **Learning with Texts** (LWT) is a tool for language learning by reading. It is a self-hosted web application.
 
