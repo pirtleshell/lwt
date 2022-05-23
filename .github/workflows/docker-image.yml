@@ -28,7 +28,6 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Build the Docker image
-      uses: actions/checkout@v3
       with:
         tagname: ${{ steps.tagName.outputs.tag }}
       run:  |
