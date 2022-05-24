@@ -557,11 +557,11 @@ server, here are some ways to do it.</p>
 less 1 GB on your system.</p>
 <p>If LWT is already downloaded, you only need to build the image by going into the
 project root folder and run using</p>
-<pre><code class="language-bash">docker-compose -f docker-compose.yml up -d
+<pre><code class="language-bash">docker compose -f docker-compose.yml up -d
 </code></pre>
 <p>By default the server can be accessed on port 8010 (<a href="http://localhost:8010">http://localhost:8010</a>).</p>
 <p>To remove the created containers run</p>
-<pre><code class="language-bash">docker-compose -f docker-compose.yml down
+<pre><code class="language-bash">docker compose -f docker-compose.yml down
 </code></pre>
 <p>Otherwise, you can download the official image with</p>
 <pre><code class="language-bash">docker pull ghcr.io/hugofara/lwt

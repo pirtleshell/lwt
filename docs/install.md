@@ -13,7 +13,7 @@ If LWT is already downloaded, you only need to build the image by going into the
 project root folder and run using 
 
 ```bash
-docker-compose -f docker-compose.yml up -d
+docker compose -f docker-compose.yml up -d
 ```
 
 By default the server can be accessed on port 8010 (http://localhost:8010).
@@ -21,7 +21,7 @@ By default the server can be accessed on port 8010 (http://localhost:8010).
 To remove the created containers run
 
 ```bash
-docker-compose -f docker-compose.yml down
+docker compose -f docker-compose.yml down
 ```
 
 Otherwise, you can download the official image with
