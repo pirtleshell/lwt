@@ -8,6 +8,9 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 ### Changed
 * Some function signature were not logical in ``edit_texts.php``. These signatures remain untouched for compatibility, but the internals were changed. 
 
+## Fixed
+* A typo was breaking the feeds count in ``edit_languages.php``, creating annoying notices as illustrated at [#35](https://github.com/HugoFara/lwt/issues/35).
+
 ## 2.4.0-fork (May 23 2022)
 ### Added
 * The external dependency for Japanese parsing, MeCab, is now more easily detected on Windows and Linux.
