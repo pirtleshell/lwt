@@ -1801,44 +1801,57 @@ function get_themes_selectoptions($v): string
 }
 
 
-// -------------------------------------------------------------
-
-function processSessParam($reqkey,$sesskey,$default,$isnum) 
+/**
+ * Get a SESSION value and update it if necessary.
+ * 
+ * @param string $reqkey  If in $_REQUEST, update the session with $_REQUEST[$reqkey]
+ * @param string $sesskey Field of the session to get or update
+ * @param string $default Default value to return
+ * @param bool   $isnum   If true, convert the result to an int
+ * 
+ * @return string|int The string data unless $isnum is specified
+ */
+function processSessParam($reqkey, $sesskey, $default, $isnum) 
 {
-    if(isset($_REQUEST[$reqkey])) {
+    if (isset($_REQUEST[$reqkey])) {
         $reqdata = trim($_REQUEST[$reqkey]);
         $_SESSION[$sesskey] = $reqdata;
         $result = $reqdata;
-    }
-    elseif(isset($_SESSION[$sesskey])) {
+    } elseif(isset($_SESSION[$sesskey])) {
         $result = $_SESSION[$sesskey];
-    }
-    else {
+    } else {
         $result = $default;
     }
-    if($isnum) {
+    if ($isnum) {
         $result = (int)$result; 
     }
     return $result;
 }
 
-// -------------------------------------------------------------
 
-function processDBParam($reqkey,$dbkey,$default,$isnum) 
+/**
+ * Get a database value and update it if necessary.
+ * 
+ * @param string $reqkey  If in $_REQUEST, update the database with $_REQUEST[$reqkey]
+ * @param string $dbkey   Field of the database to get or update
+ * @param string $default Default value to return
+ * @param bool   $isnum   If true, convert the result to an int
+ * 
+ * @return string|int The string data unless $isnum is specified
+ */
+function processDBParam($reqkey, $dbkey, $default, $isnum) 
 {
     $dbdata = getSetting($dbkey);
-    if(isset($_REQUEST[$reqkey])) {
+    if (isset($_REQUEST[$reqkey])) {
         $reqdata = trim($_REQUEST[$reqkey]);
         saveSetting($dbkey, $reqdata);
         $result = $reqdata;
-    }
-    elseif($dbdata != '') {
+    } elseif ($dbdata != '') {
         $result = $dbdata;
-    }
-    else {
+    } else {
         $result = $default;
     }
-    if($isnum) { 
+    if ($isnum) { 
         $result = (int)$result; 
     }
     return $result;
