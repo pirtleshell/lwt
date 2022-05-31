@@ -4,6 +4,10 @@ Changelog
 This project's changelog. Versions marked with "-fork" come from the community, other versions come from the canonical LWT ("official" branch on Git).
 For git tags, official releases are marked like "v1.0.0", while unofficial ones are marked like "v1.0.0-fork".
 
+## [Unreleased]
+### Changed
+* Some function signature were not logical in ``edit_texts.php``. These signatures remain untouched for compatibility, but the internals were changed. 
+
 ## 2.4.0-fork (May 23 2022)
 ### Added
 * The external dependency for Japanese parsing, MeCab, is now more easily detected on Windows and Linux.
