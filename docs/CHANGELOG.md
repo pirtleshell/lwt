@@ -10,6 +10,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 
 ## Fixed
 * A typo was breaking the feeds count in ``edit_languages.php``, creating annoying notices as illustrated at [#35](https://github.com/HugoFara/lwt/issues/35).
+* The error "[1290] The MySQL server is running with the --secure-file-priv option" should no longer appear when trying to save Japanese texts. It was referenced [here](https://github.com/HugoFara/lwt/issues/34#issuecomment-1141976723) in [issue #34](https://github.com/HugoFara/lwt/issues/34).  
 
 ## 2.4.0-fork (May 23 2022)
 ### Added
