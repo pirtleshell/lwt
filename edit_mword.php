@@ -142,7 +142,7 @@ var title = window.parent.JQ_TOOLTIP ? '':make_tooltip(<?php echo prepare_textda
     }
     ?>
 <script type="text/javascript">
-window.parent.getElementById('frame-l').focus();
+window.parent.document.getElementById('frame-l').focus();
 window.parent.setTimeout('cClick()', 100);
 </script>
 

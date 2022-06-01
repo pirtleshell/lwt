@@ -28,7 +28,7 @@ if (isset($_REQUEST['term'])) {
         convert_string_to_sqlsyntax($row['text']) . ',' . 
         convert_string_to_sqlsyntax($row['status']) . ',' . 
         (
-            ($row['trans']=='') ?  
+            (!isset($row['trans']) || $row['trans']=='') ?  
             '"*"' : 
             convert_string_to_sqlsyntax($row['trans'])
         ) . 

@@ -78,7 +78,7 @@ function delete_word_javascript($wid, $tid)
         title = ''
     } else {
         make_tooltip(
-            <?php echo prepare_textdata_js($_REQUEST["WoText"]); ?>, trans, roman, status
+            <?php echo prepare_textdata_js(get_term($wid)); ?>, trans, roman, status
         );
     }
     $('.word<?php echo $wid; ?>', context)
