@@ -134,7 +134,7 @@ function edit_texts_get_wh_tag($currentlang)
 /**
  * When a mark action is in use, do the action.
  * 
- * @param string $maraction  Type of action
+ * @param string $markaction  Type of action
  * @param array  $marked     Texts marked.
  * @param string $actiondata Values to insert to the database
  * 
