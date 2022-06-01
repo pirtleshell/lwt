@@ -13,9 +13,10 @@ require_once 'inc/session_utility.php';
 require_once 'inc/simterms.php';
 
 $translation_raw = repl_tab_nl(getreq("WoTranslation"));
-if ($translation_raw == '' ) { $translation = '*'; 
-}
-else { $translation = $translation_raw; 
+if ($translation_raw == '' ) { 
+    $translation = '*'; 
+} else { 
+    $translation = $translation_raw; 
 }
 
 // INS/UPD
@@ -38,16 +39,22 @@ if (isset($_REQUEST['op'])) {
             echo '<h4><span class="bigger">' . $titletext . '</span></h4>';
 
             $message = runsql(
-                'insert into ' . $tbpref . 'words (WoLgID, WoTextLC, WoText, ' .
-                'WoStatus, WoTranslation, WoSentence, WoRomanization, WoWordCount, WoStatusChanged,' .  make_score_random_insert_update('iv') . ') values( ' . 
+                'insert into ' . $tbpref . 'words (
+                    WoLgID, WoTextLC, WoText, WoStatus, WoTranslation, WoSentence, 
+                    WoRomanization, WoWordCount, WoStatusChanged,' 
+                    .  make_score_random_insert_update('iv') . '
+                ) values( ' . 
                 $_REQUEST["WoLgID"] . ', ' .
                 convert_string_to_sqlsyntax($_REQUEST["WoTextLC"]) . ', ' .
                 convert_string_to_sqlsyntax($_REQUEST["WoText"]) . ', ' .
                 $_REQUEST["WoStatus"] . ', ' .
                 convert_string_to_sqlsyntax($translation) . ', ' .
                 convert_string_to_sqlsyntax(repl_tab_nl($_REQUEST["WoSentence"])) . ', ' .
-                convert_string_to_sqlsyntax($_REQUEST["WoRomanization"]) . ', ' . convert_string_to_sqlsyntax($_REQUEST["len"]) . ', NOW(), ' .  
-                make_score_random_insert_update('id') . ')', "Term saved"
+                convert_string_to_sqlsyntax($_REQUEST["WoRomanization"]) . ', ' . 
+                convert_string_to_sqlsyntax($_REQUEST["len"]) . ', NOW(), ' .  
+                make_score_random_insert_update('id') . 
+                ')', 
+                "Term saved"
             );
             $wid = get_last_key();
             set_word_count();
@@ -67,15 +74,21 @@ if (isset($_REQUEST['op'])) {
             $oldstatus = $_REQUEST["WoOldStatus"];
             $newstatus = $_REQUEST["WoStatus"];
             $xx = '';
-            if ($oldstatus != $newstatus) { $xx = ', WoStatus = ' .    $newstatus . ', WoStatusChanged = NOW()'; 
+            if ($oldstatus != $newstatus) { 
+                $xx = ', WoStatus = ' .    $newstatus . ', WoStatusChanged = NOW()'; 
             }
 
             $message = runsql(
-                'update ' . $tbpref . 'words set WoText = ' . 
-                convert_string_to_sqlsyntax($_REQUEST["WoText"]) . ', WoTranslation = ' . 
-                convert_string_to_sqlsyntax($translation) . ', WoSentence = ' . 
-                convert_string_to_sqlsyntax(repl_tab_nl($_REQUEST["WoSentence"])) . ', WoRomanization = ' .
-                convert_string_to_sqlsyntax($_REQUEST["WoRomanization"]) . $xx . ',' . make_score_random_insert_update('u') . ' where WoID = ' . $_REQUEST["WoID"], "Updated"
+                'update ' . $tbpref . 'words set 
+                WoText = ' . convert_string_to_sqlsyntax($_REQUEST["WoText"]) . ', 
+                WoTranslation = ' . convert_string_to_sqlsyntax($translation) . ', 
+                WoSentence = ' . convert_string_to_sqlsyntax(
+                    repl_tab_nl($_REQUEST["WoSentence"])
+                ) . ', 
+                WoRomanization = ' . convert_string_to_sqlsyntax($_REQUEST["WoRomanization"]) . $xx . ',' . 
+                make_score_random_insert_update('u') . ' 
+                where WoID = ' . $_REQUEST["WoID"], 
+                "Updated"
             );
 
             $wid = $_REQUEST["WoID"];
@@ -116,14 +129,20 @@ var title = window.parent.JQ_TOOLTIP ? '':make_tooltip(<?php echo prepare_textda
         ?>
 <script type="text/javascript">
 //<![CDATA[
-        $('.word' + woid, context).attr('data_trans',trans).attr('data_rom',roman).attr('title',title).removeClass('status<?php echo $_REQUEST['WoOldStatus']; ?>').addClass('status' + status).attr('data_status',status);
+        $('.word' + woid, context)
+        .attr('data_trans',trans)
+        .attr('data_rom',roman)
+        .attr('title',title)
+        .removeClass('status<?php echo $_REQUEST['WoOldStatus']; ?>')
+        .addClass('status' + status)
+        .attr('data_status',status);
 //]]>
 </script>
         <?php
     }
     ?>
 <script type="text/javascript">
-window.parent.getElementById('frame-l').focus();
+window.parent.document.getElementById('frame-l').focus();
 window.parent.setTimeout('cClick()', 100);
 </script>
 
@@ -143,13 +162,25 @@ else {  // if (! isset($_REQUEST['op']))
     $wid = getreq('wid');
 
     if ($wid == '') {
-        $lang = get_first_value("select TxLgID as value from " . $tbpref . "texts where TxID = " . $_REQUEST['tid']);
+        $lang = get_first_value(
+            "select TxLgID as value 
+            from " . $tbpref . "texts 
+            where TxID = " . $_REQUEST['tid']
+        );
         $term = prepare_textdata(getreq('txt'));
         $termlc = mb_strtolower($term, 'UTF-8');
 
-        $wid = get_first_value("select WoID as value from " . $tbpref . "words where WoLgID = " . $lang . " and WoTextLC = " . convert_string_to_sqlsyntax($termlc));
+        $wid = get_first_value(
+            "select WoID as value 
+            from " . $tbpref . "words 
+            where WoLgID = " . $lang . " and WoTextLC = " . convert_string_to_sqlsyntax($termlc)
+        );
         if (isset($wid)) { 
-            $term = get_first_value("select WoText as value from " . $tbpref . "words where WoID = " . $wid); 
+            $term = get_first_value(
+                "select WoText as value 
+                from " . $tbpref . "words 
+                where WoID = " . $wid
+            ); 
         }
     } else {
 
@@ -184,7 +215,11 @@ else {  // if (! isset($_REQUEST['op']))
     // NEW
 
     if ($new) {
-        $seid = get_first_value("select Ti2SeID as value from " . $tbpref . "textitems2 where Ti2TxID = " . $_REQUEST['tid'] . " and Ti2Order = " . $_REQUEST['ord']);
+        $seid = get_first_value(
+            "select Ti2SeID as value 
+            from " . $tbpref . "textitems2 
+            where Ti2TxID = " . $_REQUEST['tid'] . " and Ti2Order = " . $_REQUEST['ord']
+        );
         $sent = getSentence($seid, $termlc, (int) getSettingWithDefault('set-term-sentence-count'));
 
         ?>

@@ -583,8 +583,9 @@ function edit_languages_display($message)
     $current = (int) getSetting('currentlanguage');
     
     $recno = get_first_value(
-        'select count(*) as value 
-        from ' . $tbpref . 'languages where LgName<>""'
+        'SELECT COUNT(*) AS value 
+        FROM ' . $tbpref . 'languages 
+        WHERE LgName<>""'
     ); 
     
     ?>
@@ -722,7 +723,7 @@ function edit_languages_display($message)
         ($archtextcount > 0 ? '<a href="edit_archivedtexts.php?page=1&amp;query=&amp;filterlang=' . $lid . '">' . 
         $archtextcount . '</a>' : '0' ) . '</' . $tdth . '>';
         echo '<' . $tdth . ' class="' . $tdth . '1 center">' . 
-        ($$nfcount > 0 ? '<a href="do_feeds.php?query=&amp;selected_feed=&amp;check_autoupdate=1&amp;filterlang=' . $lid . '">' . 
+        ($nfcount > 0 ? '<a href="do_feeds.php?query=&amp;selected_feed=&amp;check_autoupdate=1&amp;filterlang=' . $lid . '">' . 
         $nfcount . ' (' . $fartcount . ')</a>' : '0' ) . '</' . $tdth . '>';
         echo '<' . $tdth . ' class="' . $tdth . '1 center">' . 
         ($wordcount > 0 ? '<a href="edit_words.php?page=1&amp;query=&amp;text=&amp;status=&amp;filterlang=' . 

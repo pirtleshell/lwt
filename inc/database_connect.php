@@ -570,8 +570,12 @@ function set_word_count(): void
         WHERE UPPER(LgRegexpWordCharacters)="MECAB"'
         )) {
         
-        $db_to_mecab = tempnam(sys_get_temp_dir(), $tbpref . "db_to_mecab");
-        $mecab_to_db = tempnam(sys_get_temp_dir(), $tbpref . "mecab_to_db");
+        $temp_dir = get_first_value('SELECT @@GLOBAL.secure_file_priv AS value');
+        if ($temp_dir === null || $temp_dir === "") {
+            $temp_dir = sys_get_temp_dir();
+        }
+        $db_to_mecab = tempnam($temp_dir, "{$tbpref}db_to_mecab");
+        $mecab_to_db = tempnam($temp_dir, "{$tbpref}mecab_to_db");
         $mecab_args = ' -F %m%t\\t -U %m%t\\t -E \\n ';
         if (file_exists($db_to_mecab)) { 
             unlink($db_to_mecab); 
@@ -722,7 +726,8 @@ function parse_japanese_text($text, $id) {
     TiOrder = IF(
         CASE
             WHEN @f = '7' THEN IF(@c='EOS',(@g:=2) AND (@c:='¶'), @g:=2) 
-            WHEN LOCATE(@e, '267') THEN @g:=@h ELSE @g:=1 
+            WHEN LOCATE(@e, '267') THEN @g:=@h 
+            ELSE @g:=1 
         END IS null, 
         null, 
         @a := @a + IF((@i=1) AND (@g=1), 0, 1) + IF((@i=0) AND (@g=0), 1, 0) 
@@ -731,7 +736,8 @@ function parse_japanese_text($text, $id) {
     TiWordCount =
     CASE 
         WHEN (@i:=@g) IS NULL THEN NULL
-        WHEN @g=0 THEN 1 ELSE 0 
+        WHEN @g=0 THEN 1 
+        ELSE 0 
     END";
     do_mysqli_query($sql);
     do_mysqli_query('DELETE FROM ' . $tbpref . 'temptextitems2 WHERE TiOrder=@a');

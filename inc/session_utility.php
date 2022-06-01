@@ -1801,44 +1801,57 @@ function get_themes_selectoptions($v): string
 }
 
 
-// -------------------------------------------------------------
-
-function processSessParam($reqkey,$sesskey,$default,$isnum) 
+/**
+ * Get a SESSION value and update it if necessary.
+ * 
+ * @param string $reqkey  If in $_REQUEST, update the session with $_REQUEST[$reqkey]
+ * @param string $sesskey Field of the session to get or update
+ * @param string $default Default value to return
+ * @param bool   $isnum   If true, convert the result to an int
+ * 
+ * @return string|int The string data unless $isnum is specified
+ */
+function processSessParam($reqkey, $sesskey, $default, $isnum) 
 {
-    if(isset($_REQUEST[$reqkey])) {
+    if (isset($_REQUEST[$reqkey])) {
         $reqdata = trim($_REQUEST[$reqkey]);
         $_SESSION[$sesskey] = $reqdata;
         $result = $reqdata;
-    }
-    elseif(isset($_SESSION[$sesskey])) {
+    } elseif(isset($_SESSION[$sesskey])) {
         $result = $_SESSION[$sesskey];
-    }
-    else {
+    } else {
         $result = $default;
     }
-    if($isnum) {
+    if ($isnum) {
         $result = (int)$result; 
     }
     return $result;
 }
 
-// -------------------------------------------------------------
 
-function processDBParam($reqkey,$dbkey,$default,$isnum) 
+/**
+ * Get a database value and update it if necessary.
+ * 
+ * @param string $reqkey  If in $_REQUEST, update the database with $_REQUEST[$reqkey]
+ * @param string $dbkey   Field of the database to get or update
+ * @param string $default Default value to return
+ * @param bool   $isnum   If true, convert the result to an int
+ * 
+ * @return string|int The string data unless $isnum is specified
+ */
+function processDBParam($reqkey, $dbkey, $default, $isnum) 
 {
     $dbdata = getSetting($dbkey);
-    if(isset($_REQUEST[$reqkey])) {
+    if (isset($_REQUEST[$reqkey])) {
         $reqdata = trim($_REQUEST[$reqkey]);
         saveSetting($dbkey, $reqdata);
         $result = $reqdata;
-    }
-    elseif($dbdata != '') {
+    } elseif ($dbdata != '') {
         $result = $dbdata;
-    }
-    else {
+    } else {
         $result = $default;
     }
-    if($isnum) { 
+    if ($isnum) { 
         $result = (int)$result; 
     }
     return $result;
@@ -3438,9 +3451,12 @@ function insertExpressionFromMeCab($textlc, $lid, $wid, $len, $mode)
 {
     global $tbpref;
 
-    $db_to_mecab = tempnam(sys_get_temp_dir(), $tbpref . "db_to_mecab");
-    $mecab_to_db = tempnam(sys_get_temp_dir(), $tbpref . "mecab_to_db");
-    $delim = PHP_EOL;
+    $temp_dir = get_first_value('SELECT @@GLOBAL.secure_file_priv AS value');
+    if ($temp_dir === null || $temp_dir === "") {
+        $temp_dir = sys_get_temp_dir();
+    }
+    $db_to_mecab = tempnam($temp_dir, "{$tbpref}db_to_mecab");
+    $mecab_to_db = tempnam($temp_dir, "{$tbpref}mecab_to_db");
     $mecab_args = " -F %m\\t%t\\t%h\\n -U %m\\t%t\\t%h\\n -E EOS\\t3\\t7\\n ";
     $mecab_expr = '';
     if (file_exists($db_to_mecab)) { 
@@ -3487,13 +3503,12 @@ function insertExpressionFromMeCab($textlc, $lid, $wid, $len, $mode)
                     $sent =  mb_substr($sent, 0, $seek);
                     $pos = ( mb_substr_count($sent, "\t") * 2) + $first_pos;
                     fwrite($fp, $txtid . "\t" . $sentid . "\t" . $pos . "\n");
-                    if($mode==0 && $txtid==$_REQUEST["tid"]) {
-                        $sid[$pos]=$sentid;
-                        if(getSettingZeroOrOne('showallwords', 1)) {
-                            $appendtext[$pos]='&nbsp;' . $len . '&nbsp';
-                        }
-                        else { 
-                            $appendtext[$pos]= $textlc; 
+                    if ($mode==0 && $txtid==$_REQUEST["tid"]) {
+                        $sid[$pos] = $sentid;
+                        if (getSettingZeroOrOne('showallwords', 1)) {
+                            $appendtext[$pos] = '&nbsp;' . $len . '&nbsp';
+                        } else { 
+                            $appendtext[$pos] = $textlc; 
                         }
                     }
                 }

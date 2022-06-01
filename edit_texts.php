@@ -92,8 +92,14 @@ function edit_texts_get_wh_tag($currentlang)
 {
     $wh_tag1 = null;
     $wh_tag2 = null;
-    $currenttag1 = validateTextTag(processSessParam("tag1", "currenttexttag1", '', 0), $currentlang);
-    $currenttag2 = validateTextTag(processSessParam("tag2", "currenttexttag2", '', 0), $currentlang);
+    $currenttag1 = validateTextTag(
+        processSessParam("tag1", "currenttexttag1", '', 0), 
+        $currentlang
+    );
+    $currenttag2 = validateTextTag(
+        processSessParam("tag2", "currenttexttag2", '', 0), 
+        $currentlang
+    );
     $currenttag12 = processSessParam("tag12", "currenttexttag12", '', 0);
     if ($currenttag1 == '' && $currenttag2 == '') {
         return '';
@@ -103,7 +109,8 @@ function edit_texts_get_wh_tag($currentlang)
             $wh_tag1 = "group_concat(TtT2ID) IS NULL"; 
         }
         else {
-            $wh_tag1 = "concat('/',group_concat(TtT2ID separator '/'),'/') like '%/" . $currenttag1 . "/%'"; 
+            $wh_tag1 = "concat('/',group_concat(TtT2ID separator '/'),'/') like '%/" 
+            . $currenttag1 . "/%'"; 
         }
     }
     if ($currenttag2 != '') {
@@ -111,7 +118,8 @@ function edit_texts_get_wh_tag($currentlang)
             $wh_tag2 = "group_concat(TtT2ID) IS NULL"; 
         }
         else {
-            $wh_tag2 = "concat('/',group_concat(TtT2ID separator '/'),'/') like '%/" . $currenttag2 . "/%'"; 
+            $wh_tag2 = "concat('/',group_concat(TtT2ID separator '/'),'/') like '%/" 
+            . $currenttag2 . "/%'"; 
         }
     }
     if ($currenttag1 != '' && $currenttag2 == '') {
@@ -120,19 +128,21 @@ function edit_texts_get_wh_tag($currentlang)
     if ($currenttag2 != '' && $currenttag1 == '') {
         return " having (" . $wh_tag2 . ') ';
     } 
-    return " having ((" . $wh_tag1 . ($currenttag12 ? ') AND (' : ') OR (') . $wh_tag2 . ')) ';
+    return " HAVING (($wh_tag1) " . ($currenttag12 ? 'AND' : 'OR') . " ($wh_tag2)) ";
 }
 
 /**
  * When a mark action is in use, do the action.
  * 
- * @param string $maraction  Type of action
+ * @param string $markaction  Type of action
  * @param array  $marked     Texts marked.
  * @param string $actiondata Values to insert to the database
  * 
- * @return string[2] Massage and number of rows edited.
+ * @return string[2] Number of rows edited, the second string is always null.
  * 
  * @global string $tbpref Database table prefix
+ * 
+ * @since 2.4.1-fork The second return field is always null 
  */
 function edit_texts_mark_action($markaction, $marked, $actiondata)
 {
@@ -307,7 +317,7 @@ function edit_texts_mark_action($markaction, $marked, $actiondata)
         header("Location: do_test.php?selection=1");
         exit();
     }
-    return array($message, $message1);
+    return array($message, null);
 }
 
 
@@ -413,12 +423,14 @@ function edit_texts_archive($txid)
  * Do an operation on texts.
  * 
  * @param string $op           Operation name
- * @param string $message1     Number of texts edited
+ * @param string $message1     Unnused
  * @param int    $no_pagestart If you don't want a page 
  * 
  * @return string Edition message (number of rows edited)
  * 
  * @global string $tbpref Database table prefix
+ * 
+ * @since 2.4.1-fork $message1 is unnused
  */
 function edit_texts_do_operation($op, $message1, $no_pagestart)
 {
@@ -494,11 +506,11 @@ function edit_texts_do_operation($op, $message1, $no_pagestart)
         saveTextTags($id);
     }
 
-    $message2 = runsql(
+    $message1 = runsql(
         'delete from ' . $tbpref . 'sentences where SeTxID = ' . $id,
         "Sentences deleted"
     );
-    $message3 = runsql(
+    $message2 = runsql(
         'delete from ' . $tbpref . 'textitems2 where Ti2TxID = ' . $id,
         "Textitems deleted"
     );
@@ -512,7 +524,7 @@ function edit_texts_do_operation($op, $message1, $no_pagestart)
         $_REQUEST["TxLgID"], $id 
     );
 
-    $message = $message1 . " / " . $message2 . " / " . $message3 . 
+    $message = $message1 . " / " . $message2 . 
     " / Sentences added: " . get_first_value(
         "SELECT COUNT(*) AS value 
         FROM {$tbpref}sentences 
@@ -1003,7 +1015,7 @@ function edit_texts_show_text_row($txrecord, $currentlang, $statuses)
  * Main form for displaying multiple texts.
  * 
  * @param string $currentlang Current language ID
- * @param int    $showCounts  Number of items to show
+ * @param string $showCounts  Number of items to show, put into a string
  * @param string $sql         SQL string to execute
  * @param int    $recno       Record number
  * 
@@ -1322,9 +1334,8 @@ function edit_texts_do_page()
 
     // MARK ACTIONS
 
-    $message1 = null;
     if (isset($_REQUEST['markaction'])) {
-        list($message, $message1) = edit_texts_mark_action(
+        list($message, $_) = edit_texts_mark_action(
             $_REQUEST['markaction'], $_REQUEST['marked'], getreq('data')
         );
     }
@@ -1336,7 +1347,9 @@ function edit_texts_do_page()
         $message = edit_texts_archive((int) getreq('arch'));
     } elseif (isset($_REQUEST['op'])) {
         // INS/UPD
-        $message = edit_texts_do_operation($_REQUEST['op'],$message1,$no_pagestart);
+        $message .= " / " . edit_texts_do_operation(
+            $_REQUEST['op'], null, $no_pagestart
+        );
     }
 
     if (isset($_REQUEST['new'])) {
