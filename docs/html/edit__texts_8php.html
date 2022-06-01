@@ -261,13 +261,14 @@ Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramtype">string</td><td class="paramname">$op</td><td>Operation name </td></tr>
-    <tr><td class="paramtype">string</td><td class="paramname">$message1</td><td>Number of texts edited </td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$message1</td><td>Unnused </td></tr>
     <tr><td class="paramtype">int</td><td class="paramname">$no_pagestart</td><td>If you don't want a page</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>string Edition message (number of rows edited)</dd></dl>
-<p>@global string $tbpref Database table prefix </p>
+<p>@global string $tbpref Database table prefix</p>
+<dl class="section since"><dt>Since</dt><dd>2.4.1-fork $message1 is unnused </dd></dl>
 
 </div>
 </div>
@@ -445,14 +446,15 @@ Functions</h2></td></tr>
 <p >When a mark action is in use, do the action.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramtype">string</td><td class="paramname">$maraction</td><td>Type of action </td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$markaction</td><td>Type of action </td></tr>
     <tr><td class="paramtype">array</td><td class="paramname">$marked</td><td>Texts marked. </td></tr>
     <tr><td class="paramtype">string</td><td class="paramname">$actiondata</td><td>Values to insert to the database</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>string[2] Massage and number of rows edited.</dd></dl>
-<p>@global string $tbpref Database table prefix </p>
+<dl class="section return"><dt>Returns</dt><dd>string[2] Number of rows edited, the second string is always null.</dd></dl>
+<p>@global string $tbpref Database table prefix</p>
+<dl class="section since"><dt>Since</dt><dd>2.4.1-fork The second return field is always null </dd></dl>
 
 </div>
 </div>
@@ -594,7 +596,7 @@ Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramtype">string</td><td class="paramname">$currentlang</td><td>Current language ID </td></tr>
-    <tr><td class="paramtype">int</td><td class="paramname">$showCounts</td><td>Number of items to show </td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$showCounts</td><td>Number of items to show, put into a string </td></tr>
     <tr><td class="paramtype">string</td><td class="paramname">$sql</td><td>SQL string to execute </td></tr>
     <tr><td class="paramtype">int</td><td class="paramname">$recno</td><td>Record number</td></tr>
   </table>
