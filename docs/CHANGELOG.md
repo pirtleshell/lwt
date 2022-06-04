@@ -26,7 +26,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 
 ### Fixed
 * Many pages were asking before exiting while it was unnecessary.
-* Made bigger buttons and uniformised the presentation of ``edit_texts.php``, 
+* Made bigger buttons and unified the presentation of ``edit_texts.php``, 
 ``edit_archivedtexts.php``, ``long_text_import.php`` and ``do_feeds.php``. It solves
 issue [#29](https://github.com/HugoFara/lwt/issues/29).
 * Japanese texts were ill parsed on Windows. The issue [#23](https://github.com/HugoFara/lwt/issues/23) is now solved! 
@@ -60,7 +60,7 @@ issue [#29](https://github.com/HugoFara/lwt/issues/29).
 * Feed wizard changes
   * The feed wizard got a little broken: the "next" button is always active, even if you did not select text and click "Get".
   * It's style was uniformized with your current theme.
-* ``tts.php`` becomes ``text_to_speech_settings.php``. As this file was unnused, it is not considered as a breaking change.
+* ``tts.php`` becomes ``text_to_speech_settings.php``. As this file was unused, it is not considered as a breaking change.
 * Refactored ``all_words_wellknown.php``, ``edit_texts.php``. Those pages should load a bit faster.
 * We do no longer load pages in [Almost Standards Mode](https://developer.mozilla.org/en-US/docs/Web/HTML/Quirks_Mode_and_Standards_Mode). Unless you use some Netscape browser, it should not impact you.
 
@@ -122,7 +122,7 @@ issue [#29](https://github.com/HugoFara/lwt/issues/29).
 ### Fixed
 * Calling ``do_text.php?text=`` created a database error, it does no longer.
 * Long text were laggy in ``do_text_text.php`` since 2.0.3-fork. Some other issues may have been fixed at the same time.
-* Possible unsecure PHP string to JS string conversion in ``do_text_header.php``, function ``browser_tts``.
+* Possible insecure PHP string to JS string conversion in ``do_text_header.php``, function ``browser_tts``.
 
 ### Deprecated
 * The ``is_mobile`` function now always returns false.
@@ -223,8 +223,8 @@ mobile compatibility.
 Serious maintaining is back!
 
 This version should be the stable merge between official v2.0.2 and community maintained 1.6.31-fork.
-### Added
 
+### Added
 * Show Learning translation setting.
 * README.md created
 * Code documentation.
@@ -236,10 +236,9 @@ This version should be the stable merge between official v2.0.2 and community ma
 * Makefile to simplify workflows.
 
 ### Changed
-
 * MeCab is now the default way to learn Japanese.
 * JS and CSS are now minified.
-* Code liniting.
+* Code linting.
 * Important code refactors.
 
 ### Full Changelog 
@@ -304,7 +303,7 @@ This version should be the stable merge between official v2.0.2 and community ma
 ## 1.6.29-fork (April 21 2016):
 
 ### Changed
-* In appreviations like 'Mr.' the dot is now part of the term. A reparse of texts is needed to take effect.  
+* In abbreviations like 'Mr.' the dot is now part of the term. A reparse of texts is needed to take effect.  
 * Wizard Language: Arabic 'RegExp Word Characters' changed.  
 
 ### Fixed
@@ -373,10 +372,12 @@ This version should be the stable merge between official v2.0.2 and community ma
 ## 1.6.24-fork (January 11 2016):  
 ### Added
 * Added possibility to switch between 'unique' and 'total' word count by clicking on 'u'/'t'-button.  
+
 ### Changed
 * HTML lang attribute added in testing frame.  
 * Speed improvements in 'My Texts' screen.  
-* Replaced precentage of 'unknown words' by 'word charts' in 'My Texts' screen.  
+* Replaced percentage of 'unknown words' by 'word charts' in 'My Texts' screen.  
+
 ### Removed
 * Deleted Setting: Show Word Counts of Texts immediately  
       
@@ -420,13 +421,13 @@ This version should be the stable merge between official v2.0.2 and community ma
 * Translations can now be displayed 'behind', 'in front of', 'above' or 'below' the term in the reading frame.  
 * Improved encoding detection in 'newsfeed import'.  
 ### Fixed
-* Bugfix: Words that are created by 'bulk import' are not updated in the reading frame (i.e. when new translations are added afterwards).  
-* Bugfix: mysql error 'duplicate entry' in 'newsfeed import'.  
+* Words that are created by 'bulk import' are not updated in the reading frame (i.e. when new translations are added afterwards).  
+* mysql error 'duplicate entry' in 'newsfeed import'.  
       
     
 ## 1.6.17-fork (May 09 2015):  
 ### Fixed
-* Bugfix: Newsfeed Import doesn't load new links if WordPress is used for multiple users.  
+* Newsfeed Import doesn't load new links if WordPress is used for multiple users.  
       
     
 ## 1.6.16-fork (May 01 2015):   
@@ -491,7 +492,7 @@ This version should be the stable merge between official v2.0.2 and community ma
     
 ## 1.6.7-fork (December 18 2014):  
 ### Fixed
-* Database errore in newsfeeds  
+* Database error in newsfeeds  
       
     
 ## 1.6.6-fork (December 16 2014):
