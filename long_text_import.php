@@ -1,200 +1,215 @@
 <?php
 
-
-/**************************************************************
-Call: long_text_import.php?...
-            op=...
-Long Text Import
- ***************************************************************/
+/*
+ * \file 
+ * \brief Long Text Import
+ * 
+ * Call: long_text_import.php?...
+ *                          op=...
+ */
 
 require_once 'inc/session_utility.php';
 
-pagestart('Long Text Import', true);
-
-$max_input_vars = ini_get('max_input_vars');
-if ($max_input_vars === false || $max_input_vars == '') { 
-    $max_input_vars = 1000; 
-}
-
-$imported = null;
-if (isset($_REQUEST['op'])) {
+/*
+ * Display the check page before a long text import.
+ * 
+ * @param int $max_input_vars Maximale bytes size for the text.
+ * 
+ * @return void
+ */
+function long_text_check($max_input_vars) {
+        
+    $langid = $_REQUEST["LgID"];
+    $title = $_REQUEST["TxTitle"];
+    $paragraph_handling = (int)$_REQUEST["paragraph_handling"];
+    $maxsent = $_REQUEST["maxsent"];
+    $source_uri = $_REQUEST["TxSourceURI"];
+    $texttags = null;
+    if (isset($_REQUEST["TextTags"])) {
+        $texttags = json_encode($_REQUEST["TextTags"]);
+    }
     
-    if (substr($_REQUEST['op'], 0, 5) == 'NEXT ') {
-        
-        $langid = $_REQUEST["LgID"];
-        $title = $_REQUEST["TxTitle"];
-        $paragraph_handling = (int)$_REQUEST["paragraph_handling"];
-        $maxsent = $_REQUEST["maxsent"];
-        $source_uri = $_REQUEST["TxSourceURI"];
-        $texttags = null;
-        if (isset($_REQUEST["TextTags"])) {
-            $texttags = json_encode($_REQUEST["TextTags"]);
+    // Get $data with \n line endings 
+    if (isset($_FILES["thefile"]) && 
+    $_FILES["thefile"]["tmp_name"] != "" && 
+    $_FILES["thefile"]["error"] == 0) {
+        $data = file_get_contents($_FILES["thefile"]["tmp_name"]);
+        $data = str_replace("\r\n", "\n", $data);
+    } else {
+        $data = prepare_textdata($_REQUEST["Upload"]);
+    }
+    $data = replace_supp_unicode_planes_char($data);
+    $data = trim($data);
+    
+    // Use ¶ symbol for paragraphs separation
+    if ($paragraph_handling == 2) {
+        $data = preg_replace('/\n\s*?\n/u', '¶', $data);
+        $data = str_replace("\n", ' ', $data);
+    } else {
+        $data = str_replace("\n", '¶', $data);
+    }
+    $data = preg_replace('/\s{2,}/u', ' ', $data);
+    $data = str_replace('¶ ', '¶', $data);
+    // Separate paragraphs by \n finally
+    $data = str_replace('¶', "\n", $data);
+
+    if ($data == "") {
+        $message = "Error: No text specified!";
+        echo error_message_with_hide($message, 0);
+    } else {
+        $sent_array = splitCheckText($data, $langid, -2);
+        $texts = array();
+        $text_index = 0;
+        $texts[$text_index] = array();
+        $cnt = 0;
+        $bytes = 0;
+        foreach ($sent_array as $item) {
+            $item_len = strlen($item) + 1;
+            if ($item != '¶') { 
+                $cnt++; 
+            }
+            if ($cnt <= $maxsent && $bytes+$item_len < 65000) {
+                $texts[$text_index][] = $item;
+                $bytes += $item_len;
+            } else {
+                $text_index++;
+                $texts[$text_index] = array($item);
+                $cnt = 1;
+                $bytes = $item_len;
+            }
         }
+        $textcount = count($texts);
+        $plural = ($textcount==1 ? '' : 's');
+        $shorter = ($textcount==1 ? ' ' : ' shorter ');
         
-        if (isset($_FILES["thefile"]) && 
-        $_FILES["thefile"]["tmp_name"] != "" && 
-        $_FILES["thefile"]["error"] == 0) {
-            $data = file_get_contents($_FILES["thefile"]["tmp_name"]);
-            $data = str_replace("\r\n", "\n", $data);
-        } else {
-            $data = prepare_textdata($_REQUEST["Upload"]);
-        }
-        $data = replace_supp_unicode_planes_char($data);
-        $data = trim($data);
-        
-        if ($paragraph_handling == 2) {
-            $data = preg_replace('/\n\s*?\n/u', '¶', $data);
-            $data = str_replace("\n", ' ', $data);
-        } else {
-            $data = str_replace("\n", '¶', $data);
-        }
-        $data = preg_replace('/\s{2,}/u', ' ', $data);
-        $data = str_replace('¶ ', '¶', $data);
-        $data = str_replace('¶', "\n", $data);
-        
-        if ($data == "") {
-            $message = "Error: No text specified!";
+        if ($textcount > $max_input_vars-20) {
+            $message = "Error: Too many texts (" . $textcount . " > " . 
+            ($max_input_vars-20) . 
+            "). You must increase 'Maximum Sentences per Text'!";
             echo error_message_with_hide($message, 0);
         } else {
-            $sent_array = splitCheckText($data, $langid, -2);
-            $texts = array();
-            $text_index = 0;
-            $texts[$text_index] = array();
-            $cnt = 0;
-            $bytes = 0;
-            foreach ($sent_array as $item) {
-                $item_len = strlen($item) + 1;
-                if ($item != '¶') { 
-                    $cnt++; 
-                }
-                if ($cnt <= $maxsent && $bytes+$item_len < 65000) {
-                    $texts[$text_index][] = $item;
-                    $bytes += $item_len;
-                } else {
-                    $text_index++;
-                    $texts[$text_index] = array($item);
-                    $cnt = 1;
-                    $bytes = $item_len;
-                }
-            }
-            $textcount = count($texts);
-            $plural = ($textcount==1 ? '' : 's');
-            $shorter = ($textcount==1 ? ' ' : ' shorter ');
-            
-            if ($textcount > $max_input_vars-20) {
-                $message = "Error: Too many texts (" . $textcount . " > " . 
-                ($max_input_vars-20) . 
-                "). You must increase 'Maximum Sentences per Text'!";
-                echo error_message_with_hide($message, 0);
-            } else {
 
-                ?>
-    <script type="text/javascript">
-        //<![CDATA[
-            $(document).ready(ask_before_exiting);
-            makeDirty();
-        //]]>
-    </script>
-    <form enctype="multipart/form-data"  action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-    <input type="hidden" name="LgID" value="<?php echo $langid; ?>" />
-    <input type="hidden" name="TxTitle" value="<?php echo tohtml($title); ?>" />
-    <input type="hidden" name="TxSourceURI" value="<?php echo tohtml($source_uri); ?>" />
-    <input type="hidden" name="TextTags" value="<?php echo tohtml($texttags); ?>" />
-    <input type="hidden" name="TextCount" value="<?php echo $textcount; ?>" />
-    <table class="tab3" cellspacing="0" cellpadding="5">
-        <tr>
-        <td class="td1" colspan="2">
-            <?php echo "This long text will be split into " . $textcount . $shorter . "text" . $plural . " - as follows:"; ?>
-        </td>
-    </tr>
+            ?>
+<script type="text/javascript">
+    //<![CDATA[
+        $(document).ready(ask_before_exiting);
+        makeDirty();
+    //]]>
+</script>
+<form enctype="multipart/form-data"  action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+<input type="hidden" name="LgID" value="<?php echo $langid; ?>" />
+<input type="hidden" name="TxTitle" value="<?php echo tohtml($title); ?>" />
+<input type="hidden" name="TxSourceURI" value="<?php echo tohtml($source_uri); ?>" />
+<input type="hidden" name="TextTags" value="<?php echo tohtml($texttags); ?>" />
+<input type="hidden" name="TextCount" value="<?php echo $textcount; ?>" />
+<table class="tab3" cellspacing="0" cellpadding="5">
     <tr>
-        <td class="td1 right" colspan="2">
-            <input type="button" value="Cancel" onclick="{resetDirty(); location.href='index.php';}" /> 
-            &nbsp; | &nbsp; 
-            <input type="button" value="Go Back" onclick="{resetDirty(); history.back();}" /> 
-            &nbsp; | &nbsp; 
-            <input type="submit" name="op" value="Create <?php echo $textcount; ?> text<?php echo $plural; ?>" />
-        </td>
-    </tr>
-    <?php
-    $textno = -1;
-    foreach ($texts as $item) {
-        $textno++;
-        $textstring = str_replace("¶", "\n", implode(" ", $item));
-        $bytes = strlen($textstring);
-        ?>            
-    <tr>
-        <td class="td1 right">
-            <b>Text <?php echo $textno+1; ?>:</b>
-            <br /><br /><br />
-            Length:<br /><?php echo $bytes; ?><br />Bytes
-        </td>
-        <td class="td1">
-            <textarea readonly="readonly" <?php echo getScriptDirectionTag($langid); ?> name="text[<?php echo $textno; ?>]" cols="60" rows="10">
-                <?php echo str_replace('¶', "\n", str_replace("¶ ", "\n", implode(" ", $item))); ?>
-            </textarea>
-        </td>
-    </tr>
-    <?php
-                }
-    ?>
-    </table>
-    </form>
-        <?php
+    <td class="td1" colspan="2">
+        <?php echo "This long text will be split into " . $textcount . $shorter . "text" . $plural . " - as follows:"; ?>
+    </td>
+</tr>
+<tr>
+    <td class="td1 right" colspan="2">
+        <input type="button" value="Cancel" onclick="{resetDirty(); location.href='index.php';}" /> 
+        &nbsp; | &nbsp; 
+        <input type="button" value="Go Back" onclick="{resetDirty(); history.back();}" /> 
+        &nbsp; | &nbsp; 
+        <input type="submit" name="op" value="Create <?php echo $textcount; ?> text<?php echo $plural; ?>" />
+    </td>
+</tr>
+<?php
+$textno = -1;
+foreach ($texts as $item) {
+    $textno++;
+    $textstring = str_replace("¶", "\n", implode(" ", $item));
+    $bytes = strlen($textstring);
+    ?>            
+<tr>
+    <td class="td1 right">
+        <b>Text <?php echo $textno+1; ?>:</b>
+        <br /><br /><br />
+        Length:<br /><?php echo $bytes; ?><br />Bytes
+    </td>
+    <td class="td1">
+        <textarea readonly="readonly" <?php echo getScriptDirectionTag($langid); ?> name="text[<?php echo $textno; ?>]" cols="60" rows="10">
+            <?php echo $textstring; ?>
+        </textarea>
+    </td>
+</tr>
+<?php
             }
+?>
+</table>
+</form>
+    <?php
         }
-    } elseif (substr($_REQUEST['op'], 0, 5) == 'Creat') {
-
-        $langid = $_REQUEST["LgID"];
-        $title = $_REQUEST["TxTitle"];
-        $source_uri = $_REQUEST["TxSourceURI"];
-        if (isset($_REQUEST["TextTags"])) {
-            $_REQUEST["TextTags"] = json_decode($_REQUEST["TextTags"], true);
-        }
-        $textcount = (int)$_REQUEST["TextCount"];
-        $texts = $_REQUEST["text"];
-        $message = '';
-        
-        if (count($texts) != $textcount ) {
-            $message = "Error: Number of texts wrong: " .  count($texts) . " != " . $textcount;
-        } else {
-            $imported = 0;
-            for ($i = 0; $i < $textcount; $i++) {
-                $texts[$i] = remove_soft_hyphens($texts[$i]);
-                $counter = makeCounterWithTotal($textcount, $i+1);
-                $thistitle = $title . ($counter == '' ? '' : (' (' . $counter . ')')); 
-                $imported += (int) runsql(
-                    'insert into ' . $tbpref . 'texts (
-                        TxLgID, TxTitle, TxText, TxAnnotatedText, TxAudioURI, 
-                        TxSourceURI
-                    ) values( ' . 
-                        $langid . ', ' . 
-                        convert_string_to_sqlsyntax($thistitle) . ', ' . 
-                        convert_string_to_sqlsyntax($texts[$i]) . ", '', 
-                        NULL, " .
-                        convert_string_to_sqlsyntax($source_uri) . 
-                    ')', 
-                    ''
-                );
-                $id = get_last_key();
-                saveTextTags($id);    
-                splitCheckText($texts[$i], $langid, (int) $id);
-            }
-            $message = $imported . " Text(s) imported!";
-        
-        }
-        
-        
-        echo error_message_with_hide($message, 0);
-
-        ?>        
-     <p>&nbsp;<br /><input type="button" value="Show Texts" onclick="location.href='edit_texts.php';" /></p>
-        <?php
-        
     }
 
-} else {
+}
 
+/*
+ * Save a long text to the database.
+ * 
+ * @return void
+ * 
+ * @global string $tppref Database table prefix.
+ */
+function long_text_save() {
+    global $tbpref;
+    $langid = (int) $_REQUEST["LgID"];
+    $title = $_REQUEST["TxTitle"];
+    $source_uri = $_REQUEST["TxSourceURI"];
+    if (isset($_REQUEST["TextTags"])) {
+        $_REQUEST["TextTags"] = json_decode($_REQUEST["TextTags"], true);
+    }
+    $textcount = (int)$_REQUEST["TextCount"];
+    $texts = $_REQUEST["text"];
+    $message = '';
+    
+    if (count($texts) != $textcount ) {
+        $message = "Error: Number of texts wrong: " .  count($texts) . " != " . $textcount;
+    } else {
+        $imported = 0;
+        for ($i = 0; $i < $textcount; $i++) {
+            $texts[$i] = remove_soft_hyphens($texts[$i]);
+            $counter = makeCounterWithTotal($textcount, $i+1);
+            $thistitle = $title . ($counter == '' ? '' : (' (' . $counter . ')')); 
+            $imported += (int) runsql(
+                'insert into ' . $tbpref . 'texts (
+                    TxLgID, TxTitle, TxText, TxAnnotatedText, TxAudioURI, 
+                    TxSourceURI
+                ) values( ' . 
+                    $langid . ', ' . 
+                    convert_string_to_sqlsyntax($thistitle) . ', ' . 
+                    convert_string_to_sqlsyntax($texts[$i]) . ", '', 
+                    NULL, " .
+                    convert_string_to_sqlsyntax($source_uri) . 
+                ')', 
+                ''
+            );
+            $id = get_last_key();
+            saveTextTags($id);    
+            splitCheckText($texts[$i], $langid, (int) $id);
+        }
+        $message = $imported . " Text(s) imported!";
+    }
+    
+    echo error_message_with_hide($message, 0);
+
+    ?>        
+ <p>&nbsp;<br /><input type="button" value="Show Texts" onclick="location.href='edit_texts.php';" /></p>
+    <?php
+
+}
+
+/**
+ * Display the main page for a long tex import.
+ * 
+ * @param int $max_input_vars Maximal number of bytes for the text.
+ * 
+ * @return void
+ */
+function long_text_display($max_input_vars) {
     ?>
 
     <script type="text/javascript" charset="utf-8">
@@ -323,6 +338,32 @@ if (isset($_REQUEST['op'])) {
 
 }
 
-pageend();
+/*
+ * Do the main page for the long text import.
+ * 
+ * @return void
+ */
+function long_text_do_page() {
+    pagestart('Long Text Import', true);
+
+    $max_input_vars = ini_get('max_input_vars');
+    if ($max_input_vars === false || $max_input_vars == '') { 
+        $max_input_vars = 1000; 
+    }
+
+    if (isset($_REQUEST['op'])) {
+        if (substr($_REQUEST['op'], 0, 5) == 'NEXT ') {
+            long_text_check($max_input_vars);
+        } elseif (substr($_REQUEST['op'], 0, 5) == 'Creat') {
+            long_text_save();
+        }
+    } else {
+        long_text_display($max_input_vars);
+    }
+
+    pageend();
+}
+
+long_text_do_page();
 
 ?>

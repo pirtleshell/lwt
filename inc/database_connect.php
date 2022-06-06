@@ -685,11 +685,6 @@ function set_word_count(): void
  */
 function parse_japanese_text($text, $id) {
     global $tbpref;
-    $file_name = tempnam(sys_get_temp_dir(), $tbpref . "tmpti");
-    // We use the format "word  num num" for all nodes
-    $mecab_args = " -F %m\\t%t\\t%h\\n -U %m\\t%t\\t%h\\n -E EOS\\t3\\t7\\n";
-    $mecab_args .= " -o $file_name ";
-    $mecab = get_mecab_path($mecab_args);
     $text = preg_replace('/[ \t]+/u', ' ', $text);
     $text = trim($text);
     if ($id == -1) {
@@ -697,8 +692,15 @@ function parse_japanese_text($text, $id) {
         <h4>Text</h4>
         <p>' . str_replace("\n", "<br /><br />", tohtml($text)). '</p>'; 
     } else if ($id == -2) {
+        $text = preg_replace("/[\n]+/u", "\n¶", $text);
         return explode("\n", $text);
     }
+
+    $file_name = tempnam(sys_get_temp_dir(), $tbpref . "tmpti");
+    // We use the format "word  num num" for all nodes
+    $mecab_args = " -F %m\\t%t\\t%h\\n -U %m\\t%t\\t%h\\n -E EOS\\t3\\t7\\n";
+    $mecab_args .= " -o $file_name ";
+    $mecab = get_mecab_path($mecab_args);
     
     // WARNING: \n is converted to PHP_EOL here!
     $handle = popen($mecab, 'w');
@@ -729,10 +731,11 @@ function parse_japanese_text($text, $id) {
     "LOAD DATA LOCAL INFILE " . convert_string_to_sqlsyntax($file_name) . "
     INTO TABLE {$tbpref}temptextitems2
     FIELDS TERMINATED BY '\\t' 
-    LINES TERMINATED BY '" . PHP_EOL . "' (@c, @e, @f)
+    LINES TERMINATED BY '" . PHP_EOL . "' 
+    (@c, @e, @f)
     SET 
-    TiSeID = IF(@g=2 or (@c='EOS' AND @f='7'), @s:=@s+(@d:=@h)+1,@s),
-    TiCount = (@d:=@d+CHAR_LENGTH(@c))+1-CHAR_LENGTH(@c),
+    TiSeID = IF(@g=2 OR (@c='EOS' AND @f='7'), @s:=@s+(@d:=@h)+1,@s),
+    TiCount = (@d:= @d + CHAR_LENGTH(@c)) + 1 - CHAR_LENGTH(@c),
     TiOrder = IF(
         CASE
             WHEN @f = '7' THEN IF(@c='EOS',(@g:=2) AND (@c:='¶'), @g:=2) 
@@ -750,16 +753,16 @@ function parse_japanese_text($text, $id) {
         ELSE 0 
     END";
     do_mysqli_query($sql);
-    do_mysqli_query('DELETE FROM ' . $tbpref . 'temptextitems2 WHERE TiOrder=@a');
+    do_mysqli_query("DELETE FROM {$tbpref}temptextitems2 WHERE TiOrder=@a");
     do_mysqli_query(
-        'INSERT INTO ' . $tbpref . 'temptextitems (
+        "INSERT INTO {$tbpref}temptextitems (
             TiCount, TiSeID, TiOrder, TiWordCount, TiText
         ) 
         SELECT MIN(TiCount) s, TiSeID, TiOrder, TiWordCount, 
-        group_concat(TiText order by TiCount SEPARATOR \'\') 
-        FROM ' . $tbpref . 'temptextitems2 
+        group_concat(TiText ORDER BY TiCount SEPARATOR '') 
+        FROM {$tbpref}temptextitems2 
         WHERE 1 
-        GROUP BY TiOrder'
+        GROUP BY TiOrder"
     );
     do_mysqli_query('DROP TABLE ' . $tbpref . 'temptextitems2');
     unlink($file_name);
@@ -786,7 +789,8 @@ function parse_standard_text($text, $id, $lid) {
     $noSentenceEnd = $record['LgExceptionsSplitSentences'];
     $termchar = $record['LgRegexpWordCharacters'];
     $rtlScript = $record['LgRightToLeft'];
-    $s = str_replace("\n", " ¶", $text);
+    // Split text paragraphs using " ¶" symbol 
+    $text = str_replace("\n", " ¶", $text);
     $text = trim($text);
     if ($record['LgSplitEachChar']) {
         $text = preg_replace('/([^\s])/u', "$1\t", $text);
@@ -809,6 +813,7 @@ function parse_standard_text($text, $id, $lid) {
         },
         $text
     );
+    // Paragraph delimiters become a combination of ¶ and carriage return \r
     $text = str_replace(array("¶"," ¶"), array("¶\r","\r¶"), $text);
     $text = preg_replace(
         array(
@@ -820,39 +825,39 @@ function parse_standard_text($text, $id, $lid) {
         $text
     );
     if ($id == -2) {
-        return explode("\r", remove_spaces(
-                str_replace(
-                    array("\r\r","\t","\n"), array("\r","",""), $text
-                ), 
-                $removeSpaces
-        ));
+        $text = remove_spaces(
+            str_replace(
+                array("\r\r","\t","\n"), array("\r","",""), $text
+            ), 
+            $removeSpaces
+        );
+        return explode("\r", $text);
     }
 
     
     $file_name = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $tbpref . "tmpti.txt";
     $fp = fopen($file_name, 'w');
-    fwrite(
-        $fp, 
-        remove_spaces(
-            preg_replace("/(\n|^)(?!1\t)/u", "\n0\t", trim(preg_replace(
-                array(
-                    "/\r(?=[]'`\"”)‘’‹›“„«»』」 ]*\r)/u",
-                    '/[\n]+\r/u',
-                    '/\r([^\n])/u',
-                    "/\n[.](?![]'`\"”)‘’‹›“„«»』」]*\r)/u",
-                    "/(\n|^)(?=.?[$termchar][^\n]*\n)/u"
-                ), 
-                array(
-                    "",
-                    "\r",
-                    "\r\n$1",
-                    ".\n",
-                    "\n1\t"
-                ), 
-                str_replace(array("\t","\n\n"), array("\n",""), $s)))), 
-                $removeSpaces
-            )
-        );
+    $text = trim(preg_replace(
+        array(
+            "/\r(?=[]'`\"”)‘’‹›“„«»』」 ]*\r)/u",
+            '/[\n]+\r/u',
+            '/\r([^\n])/u',
+            "/\n[.](?![]'`\"”)‘’‹›“„«»』」]*\r)/u",
+            "/(\n|^)(?=.?[$termchar][^\n]*\n)/u"
+        ), 
+        array(
+            "",
+            "\r",
+            "\r\n$1",
+            ".\n",
+            "\n1\t"
+        ), 
+        str_replace(array("\t","\n\n"), array("\n",""), $text)
+    ));
+    $text = remove_spaces(
+        preg_replace("/(\n|^)(?!1\t)/u", "\n0\t", $text), $removeSpaces
+    );
+    fwrite($fp, $text);
     fclose($fp);
     do_mysqli_query(
         'SET @a=0, 
@@ -862,7 +867,7 @@ function parse_standard_text($text, $id, $lid) {
             : 1
         ) . ',@d=0,@e=0;'
     );
-    $sql= 'LOAD DATA LOCAL INFILE '. convert_string_to_sqlsyntax($file_name) . ' 
+    $sql = 'LOAD DATA LOCAL INFILE '. convert_string_to_sqlsyntax($file_name) . ' 
     INTO TABLE ' . $tbpref . 'temptextitems 
     FIELDS TERMINATED BY \'\\t\' LINES TERMINATED BY \'\\n\' (@w,@c) 
     set 
@@ -917,7 +922,7 @@ function prepare_text_parsing($text, $id, $lid) {
         }
     }
 
-    if ('MECAB'== strtoupper(trim($termchar))) {
+    if ('MECAB' == strtoupper(trim($termchar))) {
         return parse_japanese_text($text, $id);
     } 
     return parse_standard_text($text, $id, $lid);
