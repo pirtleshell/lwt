@@ -198,19 +198,30 @@ elseif (isset($_REQUEST['op'])) {
     // UPDATE
     
     if ($_REQUEST['op'] == 'Change') {
-        $oldtext = get_first_value('select AtText as value from ' . $tbpref . 'archivedtexts where AtID = ' . $_REQUEST["AtID"]);
-        $textsdiffer = (convert_string_to_sqlsyntax($_REQUEST["AtText"]) != convert_string_to_sqlsyntax($oldtext));
+        $oldtext = get_first_value(
+            'select AtText as value 
+            from ' . $tbpref . 'archivedtexts 
+            where AtID = ' . $_REQUEST["AtID"]
+        );
+        $textsdiffer = (convert_string_to_sqlsyntax($_REQUEST["AtText"]) != 
+        convert_string_to_sqlsyntax($oldtext));
         $message = runsql(
-            'update ' . $tbpref . 'archivedtexts set ' .
+            'UPDATE ' . $tbpref . 'archivedtexts SET ' .
             'AtLgID = ' . $_REQUEST["AtLgID"] . ', ' .
             'AtTitle = ' . convert_string_to_sqlsyntax($_REQUEST["AtTitle"]) . ', ' .
             'AtText = ' . convert_string_to_sqlsyntax($_REQUEST["AtText"]) . ', ' .
             'AtAudioURI = ' . convert_string_to_sqlsyntax($_REQUEST["AtAudioURI"]) . ', ' .
             'AtSourceURI = ' . convert_string_to_sqlsyntax($_REQUEST["AtSourceURI"]) . ' ' .
-            'where AtID = ' . $_REQUEST["AtID"], "Updated"
+            'where AtID = ' . $_REQUEST["AtID"], 
+            "Updated"
         );
-        if (($message == 'Updated: 1') && $textsdiffer) {
-            runsql("update " . $tbpref . "archivedtexts set AtAnnotatedText = '' where AtID = " . $_REQUEST["AtID"], "");
+        if ($message == 'Updated: 1' && $textsdiffer) {
+            runsql(
+                "update " . $tbpref . "archivedtexts set 
+                AtAnnotatedText = '' 
+                where AtID = " . $_REQUEST["AtID"], 
+                ""
+            );
         }
         $id = $_REQUEST["AtID"];
     }
@@ -222,7 +233,10 @@ elseif (isset($_REQUEST['op'])) {
 
 if (isset($_REQUEST['chg'])) {
     
-    $sql = 'select AtLgID, AtTitle, AtText, AtAudioURI, AtSourceURI, length(AtAnnotatedText) as annotlen from ' . $tbpref . 'archivedtexts where AtID = ' . $_REQUEST['chg'];
+    $sql = 'select AtLgID, AtTitle, AtText, AtAudioURI, AtSourceURI, 
+    length(AtAnnotatedText) as annotlen 
+    from ' . $tbpref . 'archivedtexts 
+    where AtID = ' . $_REQUEST['chg'];
     $res = do_mysqli_query($sql);
     if ($record = mysqli_fetch_assoc($res)) {
 
@@ -298,7 +312,13 @@ else {
 
     echo error_message_with_hide($message, 0);
 
-    $sql =     'select count(*) as value from (select AtID from (' . $tbpref . 'archivedtexts left JOIN ' . $tbpref . 'archtexttags ON AtID = AgAtID) where (1=1) ' . $wh_lang . $wh_query . ' group by AtID ' . $wh_tag . ') as dummy';
+    $sql = 'select count(*) as value from (select AtID 
+    from (
+        ' . $tbpref . 'archivedtexts 
+        left JOIN ' . $tbpref . 'archtexttags 
+        ON AtID = AgAtID
+    ) where (1=1) ' . $wh_lang . $wh_query . ' 
+    group by AtID ' . $wh_tag . ') as dummy';
     $recno = (int)get_first_value($sql);
     if ($debug) { 
         echo $sql . ' ===&gt; ' . $recno; 
@@ -363,7 +383,8 @@ else {
 <tr>
 <td class="td1 center" colspan="2">
 Language:
-<select name="filterlang" onchange="{setLang(document.form1.filterlang,'edit_archivedtexts.php');}"><?php	echo get_languages_selectoptions($currentlang, '[Filter off]'); ?></select>
+<select name="filterlang" onchange="{setLang(document.form1.filterlang,'edit_archivedtexts.php');}">
+<?php echo get_languages_selectoptions($currentlang, '[Filter off]'); ?></select>
 </td>
 <td class="td1 center" colspan="2">
 <select name="query_mode" onchange="{val=document.form1.query.value;mode=document.form1.query_mode.value; location.href='edit_archivedtexts.php?page=1&amp;query=' + val + '&amp;query_mode=' + mode;}">
@@ -449,7 +470,27 @@ Marked Texts:&nbsp;
 
         <?php
 
-        $sql = 'select AtID, AtTitle, LgName, AtAudioURI, AtSourceURI, length(AtAnnotatedText) as annotlen, ifnull(concat(\'[\',group_concat(distinct T2Text order by T2Text separator \', \'),\']\'),\'\') as taglist from ((' . $tbpref . 'archivedtexts left JOIN ' . $tbpref . 'archtexttags ON AtID = AgAtID) left join ' . $tbpref . 'tags2 on T2ID = AgT2ID), ' . $tbpref . 'languages where LgID=AtLgID ' . $wh_lang . $wh_query . ' group by AtID ' . $wh_tag . ' order by ' . $sorts[$currentsort-1] . ' ' . $limit;
+        $sql = 'select AtID, AtTitle, LgName, AtAudioURI, AtSourceURI, 
+        length(AtAnnotatedText) as annotlen, 
+        ifnull(
+            concat(
+                \'[\', 
+                group_concat(distinct T2Text order by T2Text separator \', \'), 
+                \']\'
+            ),
+            \'\'
+        ) as taglist 
+        from (
+            (
+                ' . $tbpref . 'archivedtexts 
+                left JOIN ' . $tbpref . 'archtexttags 
+                ON AtID = AgAtID
+            ) left join ' . $tbpref . 'tags2 
+            on T2ID = AgT2ID
+        ), ' . $tbpref . 'languages 
+        where LgID=AtLgID ' . $wh_lang . $wh_query . ' 
+        group by AtID ' . $wh_tag . ' 
+        order by ' . $sorts[$currentsort-1] . ' ' . $limit;
 
         if ($debug) { 
             echo $sql; 
@@ -458,7 +499,8 @@ Marked Texts:&nbsp;
         $res = do_mysqli_query($sql);
         while ($record = mysqli_fetch_assoc($res)) {
             echo '<tr>';
-            echo '<td class="td1 center"><a name="rec' . $record['AtID'] . '"><input name="marked[]" class="markcheck"  type="checkbox" value="' . $record['AtID'] . '" ' . checkTest($record['AtID'], 'marked') . ' /></a></td>';
+            echo '<td class="td1 center"><a name="rec' . $record['AtID'] . '">
+            <input name="marked[]" class="markcheck"  type="checkbox" value="' . $record['AtID'] . '" ' . checkTest($record['AtID'], 'marked') . ' /></a></td>';
             echo '<td nowrap="nowrap" class="td1 center">&nbsp;<a href="' . $_SERVER['PHP_SELF'] . '?unarch=' . $record['AtID'] . '"><img src="icn/inbox-upload.png" title="Unarchive" alt="Unarchive" /></a>&nbsp; <a href="' . $_SERVER['PHP_SELF'] . '?chg=' . $record['AtID'] . '"><img src="icn/document--pencil.png" title="Edit" alt="Edit" /></a>&nbsp; <span class="click" onclick="if (confirmDelete()) location.href=\'' . $_SERVER['PHP_SELF'] . '?del=' . $record['AtID'] . '\';"><img src="icn/minus-button.png" title="Delete" alt="Delete" /></span>&nbsp;</td>';
             if ($currentlang == '') { 
                 echo '<td class="td1 center">' . tohtml($record['LgName']) . '</td>'; 

@@ -475,7 +475,8 @@ function edit_texts_do_operation($op, $message1, $no_pagestart)
             convert_string_to_sqlsyntax($_REQUEST["TxTitle"]) . ', ' . 
             convert_string_to_sqlsyntax(remove_soft_hyphens($_REQUEST["TxText"])) . ", '', " .
             convert_string_to_sqlsyntax($_REQUEST["TxAudioURI"]) . ', ' .
-            convert_string_to_sqlsyntax($_REQUEST["TxSourceURI"]) . ')', "Saved"
+            convert_string_to_sqlsyntax($_REQUEST["TxSourceURI"]) . ')', 
+            "Saved"
         );
         $id = get_last_key();
         saveTextTags($id);
