@@ -24,7 +24,8 @@ require_once 'inc/session_utility.php';
  * 
  * @global string $tbpref Database table prefix.
  */
-function do_diplay_impr_text_header_data($textid) {
+function do_diplay_impr_text_header_data($textid)
+{
     global $tbpref;
 
     $sql = 
@@ -55,9 +56,10 @@ function do_diplay_impr_text_header_data($textid) {
  * 
  * @return void
  */
-function do_diplay_impr_text_header_js() {
+function do_diplay_impr_text_header_js()
+{
 
-?>
+    ?>
 
 <script type="text/javascript">
     //<![CDATA[
@@ -96,7 +98,7 @@ function do_diplay_impr_text_header_js() {
     //]]>
 </script>
 
-<?php
+    <?php
 
 }
 
@@ -110,7 +112,8 @@ function do_diplay_impr_text_header_js() {
  * 
  * @return void
  */
-function do_diplay_impr_text_header_content($title, $textid, $audio, $sourceURI) {
+function do_diplay_impr_text_header_content($title, $textid, $audio, $sourceURI)
+{
     ?>
 <h2 class="center" style="margin:5px;margin-top:-10px;">
     <img id="hidet" style="margin-bottom:-5px;" class="click" src="icn/light-bulb-T.png" title="Toggle Text Display (Now ON)" alt="Toggle Text Display (Now ON)" onclick="do_hide_t();" />
@@ -126,10 +129,10 @@ function do_diplay_impr_text_header_content($title, $textid, $audio, $sourceURI)
             </a>';
         }
         echo getPreviousAndNextTextLinks($textid, 'display_impr_text.php?text=', true, ' &nbsp; &nbsp; ');
-     ?>
+        ?>
      <img class="click" src="icn/cross.png" title="Close Window" alt="Close Window" onclick="top.close();" />
 </h2>
-        <?php
+    <?php
     makeMediaPlayer($audio);
 
     echo '</table>';
@@ -144,7 +147,8 @@ function do_diplay_impr_text_header_content($title, $textid, $audio, $sourceURI)
  * 
  * @return void
  */
-function do_diplay_impr_text_header_main($textid) {
+function do_diplay_impr_text_header_main($textid)
+{
     do_diplay_impr_text_header_js();
     list($title, $audio, $sourceURI) = do_diplay_impr_text_header_data($textid);
     do_diplay_impr_text_header_content($title, $textid, $audio, $sourceURI);

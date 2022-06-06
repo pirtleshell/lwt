@@ -131,21 +131,21 @@ function do_test_mobile_page($property)
 function do_test_desktop_page($property) 
 {
     $language = get_l2_language_name();
-?>
+    ?>
 <div style="width: 95%; height: 100%;">
     <div id="frame-h">
         <?php
-    start_test_header_page($language);
+        start_test_header_page($language);
         ?>
     </div>
     <hr />
     <div id="frame-l">
         <?php
-    if (getreq('type') == 'table') {
-        do_test_table();
-    } else {
-        do_test_test_content();
-    }
+        if (getreq('type') == 'table') {
+            do_test_table();
+        } else {
+            do_test_test_content();
+        }
         ?>
     </div>
 </div>
@@ -169,7 +169,7 @@ onclick="hideRightFrames();">
     <source src="<?php print_file_path("sounds/failure.mp3") ?>" type="audio/mpeg" />
     Your browser does not support audio element!
 </audio>
-<?php
+    <?php
 }
 
 /**

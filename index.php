@@ -79,7 +79,8 @@ require_once 'inc/session_utility.php';
  * @global string $tbpref       Database table prefix
  * @global string $fixed_tbpref Fixed database table prefix
  */
-function get_span_groups() {
+function get_span_groups()
+{
     global $tbpref, $fixed_tbpref;
 
     if ($tbpref == '') {
@@ -129,7 +130,7 @@ function do_current_text_info($textid)
         FROM " . $tbpref . "texts 
         WHERE TxID = " . $textid
     ) > 0;
-?>
+    ?>
  
  <div style="height: 85px;">
     Last Text (<?php echo tohtml($lngname); ?>):<br /> 
@@ -148,16 +149,16 @@ function do_current_text_info($textid)
     </a>
     <?php
     if ($annotated) {
-    ?>
+        ?>
     &nbsp; &nbsp; 
     <a href="print_impr_text.php?text=<?php echo $textid; ?>">
         <img src="icn/tick.png" title="Improved Annotated Text" alt="Improved Annotated Text" />&nbsp;Ann. Text
     </a>
-    <?php
+        <?php
     }
     ?>
  </div>
-<?php
+    <?php
 }
 
 /**
@@ -173,7 +174,7 @@ function do_language_selectable($langid)
         <?php echo get_languages_selectoptions($langid, '[Select...]'); ?>
     </select>
 </div>   
-<?php
+    <?php
 }
 
 /**
@@ -181,17 +182,18 @@ function do_language_selectable($langid)
  * 
  * @return void 
  */
-function wordpress_logout_link() {
+function wordpress_logout_link()
+{
     // ********* WORDPRESS LOGOUT *********
     if (isset($_SESSION['LWT-WP-User'])) {
-?>
+        ?>
 
 <div class="menu">
     <a href="wp_lwt_stop.php">
         <span style="font-size:115%; font-weight:bold; color:red;">LOGOUT</span> (from WordPress and LWT)
     </a>
 </div>
-<?php
+        <?php
     }
 }
 
@@ -235,9 +237,9 @@ function get_server_data()
     $serversoft = explode(' ', $_SERVER['SERVER_SOFTWARE']);
     $apache = "Apache/?";
     // if (count($serversoft) >= 1) { Not supposed to happen
-        if (substr($serversoft[0], 0, 7) == "Apache/") { 
-            $apache = $serversoft[0]; 
-        }
+    if (substr($serversoft[0], 0, 7) == "Apache/") { 
+        $apache = $serversoft[0]; 
+    }
     // }
     $php = phpversion();
     $mysql = get_first_value("SELECT VERSION() as value");
@@ -300,19 +302,19 @@ echo '<div>' .
 <div style="display: flex; justify-content: space-evenly; flex-wrap: wrap;">
     <div class="menu">
         <?php
-if ($langcnt == 0) {
-        ?> 
+        if ($langcnt == 0) {
+            ?> 
         <div><p>Hint: The database seems to be empty.</p></div>
         <a href="install_demo.php">Install the LWT demo database, </a>
         <a href="edit_languages.php?new=1">Define the first language you want to learn.</a>
-        <?php
-} else if ($langcnt > 0) {
-    do_language_selectable($currentlang);
-    if ($currenttext !== null) {
-        do_current_text_info($currenttext);
-    }
-} 
-            ?>
+            <?php
+        } else if ($langcnt > 0) {
+            do_language_selectable($currentlang);
+            if ($currenttext !== null) {
+                do_current_text_info($currenttext);
+            }
+        } 
+        ?>
             <a href="edit_languages.php">Languages</a>
     </div>
 

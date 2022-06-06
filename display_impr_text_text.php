@@ -22,7 +22,8 @@ require_once 'inc/session_utility.php';
  * 
  * @return string Text annotations 
  */
-function get_annotated_text($textid) {
+function get_annotated_text($textid)
+{
     global $tbpref;
     $ann = get_first_value(
         "SELECT TxAnnotatedText AS value 
@@ -41,7 +42,8 @@ function get_annotated_text($textid) {
  * @return array{0: string, 1: string} Text size, and if this text 
  * is rigth-to-left.
  */
-function get_display_impr_text_text_data($textid) {
+function get_display_impr_text_text_data($textid)
+{
     global $tbpref;
 
     /*$sql = 'SELECT TxLgID, TxTitle 
@@ -74,8 +76,9 @@ function get_display_impr_text_text_data($textid) {
  * 
  * @return void
  */
-function do_diplay_impr_text_text_js() {  
-?>
+function do_diplay_impr_text_text_js()
+{  
+    ?>
 <script type="text/javascript">
     //<![CDATA[
 
@@ -110,7 +113,7 @@ function do_diplay_impr_text_text_js() {
     //]]>
 </script>
 
-<?php
+    <?php
 
 }
 
@@ -123,7 +126,8 @@ function do_diplay_impr_text_text_js() {
  * 
  * @return void
  */
-function do_diplay_impr_text_text_area($ann, $textsize, $rtlScript) {
+function do_diplay_impr_text_text_area($ann, $textsize, $rtlScript)
+{
     echo '<div id="print"' . ($rtlScript ? ' dir="rtl"' : '') . '>';
     echo '<p style="font-size:' . $textsize . '%;line-height: 1.35; margin-bottom: 10px; ">';
 
@@ -143,7 +147,8 @@ function do_diplay_impr_text_text_area($ann, $textsize, $rtlScript) {
  * 
  * @global string $tbpref Database table prefix.
  */
-function get_word_annotations($vals) {
+function get_word_annotations($vals)
+{
     global $tbpref;
     $trans = '';
     $c = count($vals);
@@ -177,7 +182,8 @@ function get_word_annotations($vals) {
  * 
  * @return void
  */
-function do_display_impr_text_text_word($item, $textsize) {
+function do_display_impr_text_text_word($item, $textsize)
+{
     $vals = preg_split('/[\t]/u', $item);
     if ((int)$vals[0] > -1) {
         list($trans, $rom) = get_word_annotations($vals);
@@ -210,7 +216,8 @@ function do_display_impr_text_text_word($item, $textsize) {
  * 
  * @return void
  */
-function do_display_impr_text_text_main($textid=null) {
+function do_display_impr_text_text_main($textid=null)
+{
     if ($textid === null) {
         $textid = (int)getreq('text');
     }

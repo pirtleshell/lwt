@@ -768,7 +768,7 @@ function write_rss_to_db($texts): string
                         convert_string_to_sqlsyntax($text['TxText']) .','. 
                         convert_string_to_sqlsyntax($text['TxAudioURI']) .','.
                         convert_string_to_sqlsyntax($text['TxSourceURI']) .')'
-                    );
+                );
                 $id = (int)get_last_key();
                 splitCheckText(
                     get_first_value(
@@ -1099,11 +1099,12 @@ function get_links_from_rss($NfSourceURI,$NfArticleSection)
             array(' &amp; ',"\n","\n",'','$1$1'), 
             trim($node->getElementsByTagName($feed_tags['description'])->item(0)->nodeValue)
         ) : '',
-        'link' => trim(($feed_tags['item']=='entry')?(
+        'link' => trim(
+            ($feed_tags['item']=='entry')?(
             $node->getElementsByTagName($feed_tags['link'])->item(0)->getAttribute('href')
             ):(
                 $node->getElementsByTagName($feed_tags['link'])->item(0)->nodeValue)
-            ),
+        ),
         'date' => isset($node->getElementsByTagName($feed_tags['pubDate'])->item(0)->nodeValue)?
         trim($node->getElementsByTagName($feed_tags['pubDate'])->item(0)->nodeValue)
         : null,
@@ -1113,9 +1114,13 @@ function get_links_from_rss($NfSourceURI,$NfArticleSection)
             $item['date'] = date("Y-m-d H:i:s", time()-count($rss_data));
         }
         else{
-            $item['date'] = date("Y-m-d H:i:s", mktime($pubDate['hour'], 
-            $pubDate['minute'], $pubDate['second'], $pubDate['month'], 
-            $pubDate['day'], $pubDate['year']));
+            $item['date'] = date(
+                "Y-m-d H:i:s", mktime(
+                    $pubDate['hour'], 
+                    $pubDate['minute'], $pubDate['second'], $pubDate['month'], 
+                    $pubDate['day'], $pubDate['year']
+                )
+            );
         }
         if(strlen($item['desc'])>1000) { $item['desc']=mb_substr($item['desc'], 0, 995, "utf-8") . '...'; 
         }
@@ -3043,8 +3048,10 @@ function tsv_export($sql)
     }
     mysqli_free_result($res);
     header('Content-type: text/plain; charset=utf-8');
-    header("Content-disposition: attachment; filename=lwt_tsv_export_" . 
-    date('Y-m-d-H-i-s') . ".txt");
+    header(
+        "Content-disposition: attachment; filename=lwt_tsv_export_" . 
+        date('Y-m-d-H-i-s') . ".txt"
+    );
     echo $x;
     exit();
 }
@@ -3114,8 +3121,10 @@ function flexible_export($sql)
     }
     mysqli_free_result($res);
     header('Content-type: text/plain; charset=utf-8');
-    header("Content-disposition: attachment; filename=lwt_flexible_export_" . 
-    date('Y-m-d-H-i-s') . ".txt");
+    header(
+        "Content-disposition: attachment; filename=lwt_flexible_export_" . 
+        date('Y-m-d-H-i-s') . ".txt"
+    );
     echo $x;
     exit();
 }
@@ -3259,7 +3268,8 @@ function texttodocount($text): string
     (get_first_value(
         'SELECT count(DISTINCT LOWER(Ti2Text)) as value 
         FROM ' . $tbpref . 'textitems2 
-        WHERE Ti2WordCount=1 and Ti2WoID=0 and Ti2TxID=' . $text)
+        WHERE Ti2WordCount=1 and Ti2WoID=0 and Ti2TxID=' . $text
+    )
     ) . '&nbsp;</span>';
 }
 
@@ -3353,13 +3363,14 @@ function getSentence($seid, $wordlc,$mode): array
                 where Ti2SeID = SeID and SeID < ' . $seid . ' and SeTxID = ' . $txtid . " 
                 and trim(SeText) not in ('¶','') 
                 group by SeID 
-                order by SeID desc");
+                order by SeID desc"
+            );
         } else{
             $prevseSent = get_first_value(
                 'select SeText as value from ' . $tbpref . 'sentences 
                 where SeID < ' . $seid . ' and SeTxID = ' . $txtid . "
                  and trim(SeText) not in ('¶','') order by SeID desc"
-                );
+            );
         }
         if (isset($prevseSent)) {
             $se = preg_replace($pattern, '<b>$0</b>', $prevseSent) . $se;
@@ -3379,12 +3390,13 @@ function getSentence($seid, $wordlc,$mode): array
                     group by SeID 
                     order by SeID asc"
                 );
-            } else{
+            } else {
                 $nextSent = get_first_value(
                     'select SeText as value 
                     from ' . $tbpref . 'sentences 
                     where SeID > ' . $seid . ' and SeTxID = ' . $txtid . " 
-                    and trim(SeText) not in ('¶','') order by SeID asc");
+                    and trim(SeText) not in ('¶','') order by SeID asc"
+                );
             }
             if (isset($nextSent)) {
                 $se .= preg_replace($pattern, '<b>$0</b>', $nextSent);
@@ -4257,7 +4269,9 @@ function phonetic_reading($text, $lang)
     fclose($fp);
     $mecab = get_mecab_path($mecab_args);
     $handle = popen($mecab . $mecab_file, "r");
-    /** @var string $mecab_str Output string */
+    /**
+     * @var string $mecab_str Output string 
+     */
     $mecab_str = '';
     while (($line = fgets($handle, 4096)) !== false) {
         $mecab_str .= $line; 

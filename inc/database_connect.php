@@ -473,7 +473,8 @@ function LWTTableCheck(): void
         );
         if (mysqli_num_rows(
             do_mysqli_query("SHOW TABLES LIKE '\\_lwtgeneral'")
-            ) == 0) { 
+        ) == 0
+        ) { 
             my_die("Unable to create table '_lwtgeneral'!"); 
         }
     }
@@ -574,7 +575,8 @@ function set_word_count(): void
         'SELECT (@m := group_concat(LgID)) value 
         FROM ' . $tbpref . 'languages 
         WHERE UPPER(LgRegexpWordCharacters)="MECAB"'
-        )) {
+    )
+    ) {
         
         $temp_dir = get_first_value('SELECT @@GLOBAL.secure_file_priv AS value');
         if ($temp_dir === null || $temp_dir === "") {
@@ -677,13 +679,14 @@ function set_word_count(): void
  * 
  * @param string $text Text to parse.
  * @param int    $id   Text ID. If $id = -1 print results, 
- *                       if $id = -2 return splitted texts
+ *                     if $id = -2 return splitted texts
  * 
  * @return string[]|void Splitted sentence if $id = -2
  * 
  * @global string $tbpref Database table prefix
  */
-function parse_japanese_text($text, $id) {
+function parse_japanese_text($text, $id)
+{
     global $tbpref;
     $text = preg_replace('/[ \t]+/u', ' ', $text);
     $text = trim($text);
@@ -779,7 +782,8 @@ function parse_japanese_text($text, $id) {
  * 
  * @global string $tbpref Database table prefix
  */
-function parse_standard_text($text, $id, $lid) {
+function parse_standard_text($text, $id, $lid)
+{
     global $tbpref;
     $sql = "SELECT * FROM " . $tbpref . "languages WHERE LgID=" . $lid;
     $res = do_mysqli_query($sql);
@@ -837,23 +841,25 @@ function parse_standard_text($text, $id, $lid) {
     
     $file_name = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $tbpref . "tmpti.txt";
     $fp = fopen($file_name, 'w');
-    $text = trim(preg_replace(
-        array(
+    $text = trim(
+        preg_replace(
+            array(
             "/\r(?=[]'`\"”)‘’‹›“„«»』」 ]*\r)/u",
             '/[\n]+\r/u',
             '/\r([^\n])/u',
             "/\n[.](?![]'`\"”)‘’‹›“„«»』」]*\r)/u",
             "/(\n|^)(?=.?[$termchar][^\n]*\n)/u"
-        ), 
-        array(
+            ), 
+            array(
             "",
             "\r",
             "\r\n$1",
             ".\n",
             "\n1\t"
-        ), 
-        str_replace(array("\t","\n\n"), array("\n",""), $text)
-    ));
+            ), 
+            str_replace(array("\t","\n\n"), array("\n",""), $text)
+        )
+    );
     $text = remove_spaces(
         preg_replace("/(\n|^)(?!1\t)/u", "\n0\t", $text), $removeSpaces
     );
@@ -901,7 +907,8 @@ function parse_standard_text($text, $id, $lid) {
  * 
  * @global string $tbpref Database table prefix
  */
-function prepare_text_parsing($text, $id, $lid) {
+function prepare_text_parsing($text, $id, $lid)
+{
     global $tbpref;
     $sql = "SELECT * FROM " . $tbpref . "languages WHERE LgID=" . $lid;
     $res = do_mysqli_query($sql);
@@ -986,7 +993,8 @@ function check_text_valid($lid)
  * 
  * @global string $tbpref Database table prefix
  */
-function update_default_values($id, $lid, $sql) {
+function update_default_values($id, $lid, $sql)
+{
     global $tbpref;
     do_mysqli_query(
         'ALTER TABLE ' . $tbpref . 'textitems2 
@@ -1036,11 +1044,12 @@ function update_default_values($id, $lid, $sql) {
  * 
  * @param string   $sql
  * @param bool     $rtlScript true if language is right-to-left
- * @param string[] $wl Words lengths
+ * @param string[] $wl        Words lengths
  * 
  * @return void
  */
-function check_text($sql, $rtlScript, $wl) {
+function check_text($sql, $rtlScript, $wl)
+{
     $mw = array();
     if(!empty($wl)) {
         $res = do_mysqli_query($sql);
@@ -1312,8 +1321,10 @@ function update_database($dbname)
         where StKey = 'dbversion'"
     );
     if (mysqli_errno($GLOBALS['DBCONNECTION']) != 0) { 
-        my_die('There is something wrong with your database ' . $dbname . 
-        '. Please reinstall.'); 
+        my_die(
+            'There is something wrong with your database ' . $dbname . 
+            '. Please reinstall.'
+        ); 
     }
     $record = mysqli_fetch_assoc($res);
     if ($record) {
@@ -1334,8 +1345,8 @@ function update_database($dbname)
             'SELECT concat(default_character_set_name, default_collation_name) as value 
             FROM information_schema.SCHEMATA 
             WHERE schema_name = "' . $dbname . '"'
-            )
-            ) {
+        )
+        ) {
             runsql("SET collation_connection = 'utf8_general_ci'", '');
             runsql('ALTER DATABASE `' . $dbname . '` CHARACTER SET utf8 COLLATE utf8_general_ci', '');
             
@@ -1740,7 +1751,8 @@ function get_database_prefixes(&$tbpref)
             if (strpos(
                 "_0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ", 
                 substr($tbpref, $i, 1)
-                ) === false) {
+            ) === false
+            ) {
                 my_die(
                     'Table prefix/set "' . $tbpref . 
                     '" contains characters or digits other than 0-9, a-z, A-Z or _. Please fix in "connect.inc.php".'

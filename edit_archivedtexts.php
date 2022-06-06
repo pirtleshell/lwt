@@ -384,7 +384,7 @@ else {
 <td class="td1 center" colspan="2">
 Language:
 <select name="filterlang" onchange="{setLang(document.form1.filterlang,'edit_archivedtexts.php');}">
-<?php echo get_languages_selectoptions($currentlang, '[Filter off]'); ?></select>
+    <?php echo get_languages_selectoptions($currentlang, '[Filter off]'); ?></select>
 </td>
 <td class="td1 center" colspan="2">
 <select name="query_mode" onchange="{val=document.form1.query.value;mode=document.form1.query_mode.value; location.href='edit_archivedtexts.php?page=1&amp;query=' + val + '&amp;query_mode=' + mode;}">

@@ -6,6 +6,12 @@
  * 
  * Call: long_text_import.php?...
  *                          op=...
+ * 
+ * @package Lwt
+ * @author  LWT Project <lwt-project@hotmail.com>
+ * @license Unlicense <http://unlicense.org/>
+ * @link    https://hugofara.github.io/lwt/docs/html/long__text__import_8php.html
+ * @since   1.5.9
  */
 
 require_once 'inc/session_utility.php';
@@ -17,7 +23,8 @@ require_once 'inc/session_utility.php';
  * 
  * @return void
  */
-function long_text_check($max_input_vars) {
+function long_text_check($max_input_vars)
+{
         
     $langid = $_REQUEST["LgID"];
     $title = $_REQUEST["TxTitle"];
@@ -30,9 +37,10 @@ function long_text_check($max_input_vars) {
     }
     
     // Get $data with \n line endings 
-    if (isset($_FILES["thefile"]) && 
-    $_FILES["thefile"]["tmp_name"] != "" && 
-    $_FILES["thefile"]["error"] == 0) {
+    if (isset($_FILES["thefile"])  
+        && $_FILES["thefile"]["tmp_name"] != ""  
+        && $_FILES["thefile"]["error"] == 0
+    ) {
         $data = file_get_contents($_FILES["thefile"]["tmp_name"]);
         $data = str_replace("\r\n", "\n", $data);
     } else {
@@ -105,7 +113,7 @@ function long_text_check($max_input_vars) {
 <table class="tab3" cellspacing="0" cellpadding="5">
     <tr>
     <td class="td1" colspan="2">
-        <?php echo "This long text will be split into " . $textcount . $shorter . "text" . $plural . " - as follows:"; ?>
+            <?php echo "This long text will be split into " . $textcount . $shorter . "text" . $plural . " - as follows:"; ?>
     </td>
 </tr>
 <tr>
@@ -117,13 +125,13 @@ function long_text_check($max_input_vars) {
         <input type="submit" name="op" value="Create <?php echo $textcount; ?> text<?php echo $plural; ?>" />
     </td>
 </tr>
-<?php
-$textno = -1;
-foreach ($texts as $item) {
-    $textno++;
-    $textstring = str_replace("¶", "\n", implode(" ", $item));
-    $bytes = strlen($textstring);
-    ?>            
+            <?php
+            $textno = -1;
+            foreach ($texts as $item) {
+                $textno++;
+                $textstring = str_replace("¶", "\n", implode(" ", $item));
+                $bytes = strlen($textstring);
+                ?>            
 <tr>
     <td class="td1 right">
         <b>Text <?php echo $textno+1; ?>:</b>
@@ -132,16 +140,16 @@ foreach ($texts as $item) {
     </td>
     <td class="td1">
         <textarea readonly="readonly" <?php echo getScriptDirectionTag($langid); ?> name="text[<?php echo $textno; ?>]" cols="60" rows="10">
-            <?php echo $textstring; ?>
+                <?php echo $textstring; ?>
         </textarea>
     </td>
 </tr>
-<?php
+                <?php
             }
-?>
+            ?>
 </table>
 </form>
-    <?php
+            <?php
         }
     }
 
@@ -154,7 +162,8 @@ foreach ($texts as $item) {
  * 
  * @global string $tppref Database table prefix.
  */
-function long_text_save() {
+function long_text_save()
+{
     global $tbpref;
     $langid = (int) $_REQUEST["LgID"];
     $title = $_REQUEST["TxTitle"];
@@ -209,7 +218,8 @@ function long_text_save() {
  * 
  * @return void
  */
-function long_text_display($max_input_vars) {
+function long_text_display($max_input_vars)
+{
     ?>
 
     <script type="text/javascript" charset="utf-8">
@@ -343,7 +353,8 @@ function long_text_display($max_input_vars) {
  * 
  * @return void
  */
-function long_text_do_page() {
+function long_text_do_page()
+{
     pagestart('Long Text Import', true);
 
     $max_input_vars = ini_get('max_input_vars');

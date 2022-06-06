@@ -34,8 +34,8 @@ function text_mode_save_settings($showAll, $showLearning): int
 /**
  * Do the JavaScript action to change the display of translations.
  * 
- * @param int $showLearning         Whether to show translation of learning words
- * @param int oldShowLearning If show learning was previously true (1) or false (0)
+ * @param int $showLearning    Whether to show translation of learning words
+ * @param int $oldShowLearning If show learning was previously true (1) or false (0)
  * 
  * @return void
  */
@@ -106,9 +106,9 @@ function text_annotations_mode_javascript($showLearning, $oldShowLearning)
 /**
  * Do the main page content when chaning display of translations.
  * 
- * @param int $showAll              Whether all word should be shown
- * @param int $showLearning         Whether to show translation of learning words
- * @param int $oldShowLearning      If show learning was previously true (1) or false (0)
+ * @param int $showAll         Whether all word should be shown
+ * @param int $showLearning    Whether to show translation of learning words
+ * @param int $oldShowLearning If show learning was previously true (1) or false (0)
  * 
  * @return void
  */
