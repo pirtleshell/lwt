@@ -213,7 +213,7 @@
 			</h2>
 
 			<p>
-				The current version is 2.4.0-fork (May 23 2022).
+				The current version is 2.4.1-fork (June 09 2022).
 				<br>
 				<a href="#CHANGELOG">View the Changelog.</a>
 			</p>
@@ -1908,6 +1908,7 @@ KEY NfUpdate (NfUpdate)</p>
 <p>This project's changelog. Versions marked with "-fork" come from the community, other versions come from the canonical LWT ("official" branch on Git).
 For git tags, official releases are marked like "v1.0.0", while unofficial ones are marked like "v1.0.0-fork".</p>
 <h3>[Unreleased]</h3>
+<h3>2.4.1-fork (June 09 2022)</h3>
 <h4>Changed</h4>
 <ul>
 <li>Some function signature were not logical in <code>edit_texts.php</code>. These signatures remain untouched for backward compatibility, but the internals were changed.</li>
@@ -1921,6 +1922,12 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 <li>The "Undefined index: WoText in .../delete_word.php" notice fixed.</li>
 <li>Repaired <code>long_text_import.php</code> for non-Japanese texts, it was broken since 2.4.0. Thanks to <a href="https://github.com/rc-ops">@rc-ops</a> for this issue <a href="https://github.com/HugoFara/lwt/issues/33">#33</a>.</li>
 <li>Text statistics were not displayed when there was more than one text since 2.2.2-fork.</li>
+</ul>
+<h4>Full Changelog</h4>
+<ul>
+<li>
+<a href="https://github.com/HugoFara/lwt/compare/2.4.0...2.4.1">2.4.0...2.4.1</a>
+</li>
 </ul>
 <h3>2.4.0-fork (May 23 2022)</h3>
 <h4>Added</h4>

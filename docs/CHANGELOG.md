@@ -5,6 +5,8 @@ This project's changelog. Versions marked with "-fork" come from the community, 
 For git tags, official releases are marked like "v1.0.0", while unofficial ones are marked like "v1.0.0-fork".
 
 ## [Unreleased]
+
+## 2.4.1-fork (June 09 2022)
 ### Changed
 * Some function signature were not logical in ``edit_texts.php``. These signatures remain untouched for backward compatibility, but the internals were changed.
 * Texts without tag do no longer display a "[]" string next to the title. Applies to both archived and active texts.
@@ -16,6 +18,9 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 * The "Undefined index: WoText in .../delete_word.php" notice fixed.
 * Repaired ``long_text_import.php`` for non-Japanese texts, it was broken since 2.4.0. Thanks to [@rc-ops](https://github.com/rc-ops) for this issue [#33](https://github.com/HugoFara/lwt/issues/33).
 * Text statistics were not displayed when there was more than one text since 2.2.2-fork.
+
+### Full Changelog
+* [2.4.0...2.4.1](https://github.com/HugoFara/lwt/compare/2.4.0...2.4.1)
 
 ## 2.4.0-fork (May 23 2022)
 ### Added
