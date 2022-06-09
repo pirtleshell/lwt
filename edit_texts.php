@@ -1254,12 +1254,12 @@ function edit_texts_display($message)
         }
         $sql = "SELECT TxID, TxTitle, LgName, TxAudioURI, TxSourceURI, 
         LENGTH(TxAnnotatedText) AS annotlen,
-        IFNULL(
+        IF(
+            COUNT(T2Text)=0, 
+            '', 
             CONCAT(
-                '[', 
-                group_concat(DISTINCT T2Text ORDER BY T2Text separator ', '),
-                ']'),
-            ''
+                '[',group_concat(DISTINCT T2Text ORDER BY T2Text separator ', '),']'
+            )
         ) AS taglist
         FROM (
             ({$tbpref}texts LEFT JOIN {$tbpref}texttags ON TxID = TtTxID) 

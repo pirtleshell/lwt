@@ -6,7 +6,8 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 
 ## [Unreleased]
 ### Changed
-* Some function signature were not logical in ``edit_texts.php``. These signatures remain untouched for compatibility, but the internals were changed. 
+* Some function signature were not logical in ``edit_texts.php``. These signatures remain untouched for backward compatibility, but the internals were changed.
+* Texts without tag do no longer display a "[]" string next to the title. Applies to both archived and active texts.
 
 ## Fixed
 * A typo was breaking the feeds count in ``edit_languages.php``, creating annoying notices as illustrated at [#35](https://github.com/HugoFara/lwt/issues/35).

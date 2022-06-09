@@ -51,8 +51,7 @@ if($currentquery!=='') {
             }
         }
     }
-}
-else { 
+} else { 
     $wh_query = ''; 
 }
 
@@ -60,28 +59,24 @@ $wh_tag1 = null;
 $wh_tag2 = null;
 if ($currenttag1 == '' && $currenttag2 == '') {
     $wh_tag = ''; 
-}
-else {
+} else {
     if ($currenttag1 != '') {
         if ($currenttag1 == -1) {
             $wh_tag1 = "group_concat(AgT2ID) IS NULL"; 
-        }
-        else {
+        } else {
             $wh_tag1 = "concat('/',group_concat(AgT2ID separator '/'),'/') like '%/" . $currenttag1 . "/%'"; 
         }
     } 
     if ($currenttag2 != '') {
         if ($currenttag2 == -1) {
             $wh_tag2 = "group_concat(AgT2ID) IS NULL"; 
-        }
-        else {
+        } else {
             $wh_tag2 = "concat('/',group_concat(AgT2ID separator '/'),'/') like '%/" . $currenttag2 . "/%'"; 
         }
     } 
     if ($currenttag1 != '' && $currenttag2 == '') {    
         $wh_tag = " having (" . $wh_tag1 . ') '; 
-    }
-    elseif ($currenttag2 != '' && $currenttag1 == '') {    
+    } elseif ($currenttag2 != '' && $currenttag1 == '') {    
         $wh_tag = " having (" . $wh_tag2 . ') ';
     } else {
         $wh_tag = " having ((" . $wh_tag1 . ($currenttag12 ? ') AND (' : ') OR (') . $wh_tag2 . ')) '; 
@@ -90,7 +85,7 @@ else {
 
 $no_pagestart = 
     (getreq('markaction') == 'deltag');
-if (! $no_pagestart) {
+if (!$no_pagestart) {
     pagestart('My ' . getLanguage($currentlang) . ' Text Archive', true);
 }
 
@@ -106,7 +101,7 @@ if (isset($_REQUEST['markaction'])) {
     if (isset($_REQUEST['marked'])) {
         if (is_array($_REQUEST['marked'])) {
             $l = count($_REQUEST['marked']);
-            if ($l > 0 ) {
+            if ($l > 0) {
                 $list = "(" . $_REQUEST['marked'][0];
                 for ($i=1; $i<$l; $i++) { 
                     $list .= "," . $_REQUEST['marked'][$i]; 
@@ -114,43 +109,83 @@ if (isset($_REQUEST['markaction'])) {
                 $list .= ")";
                 
                 if ($markaction == 'del') {
-                    $message = runsql('delete from ' . $tbpref . 'archivedtexts where AtID in ' . $list, "Archived Texts deleted");
+                    $message = runsql(
+                        'delete from ' . $tbpref . 'archivedtexts 
+                        where AtID in ' . $list, 
+                        "Archived Texts deleted"
+                    );
                     adjust_autoincr('archivedtexts', 'AtID');
-                    runsql("DELETE " . $tbpref . "archtexttags FROM (" . $tbpref . "archtexttags LEFT JOIN " . $tbpref . "archivedtexts on AgAtID = AtID) WHERE AtID IS NULL", '');
-                } 
-
-                elseif ($markaction == 'addtag' ) {
+                    runsql(
+                        "DELETE " . $tbpref . "archtexttags 
+                        FROM (
+                            " . $tbpref . "archtexttags 
+                            LEFT JOIN " . $tbpref . "archivedtexts 
+                            on AgAtID = AtID
+                        ) 
+                        WHERE AtID IS NULL", 
+                        ''
+                    );
+                } elseif ($markaction == 'addtag' ) {
                     $message = addarchtexttaglist($actiondata, $list);
-                }
-                
-                elseif ($markaction == 'deltag' ) {
+                } elseif ($markaction == 'deltag' ) {
                     removearchtexttaglist($actiondata, $list);
                     header("Location: edit_archivedtexts.php");
                     exit();
-                }
-                
-                elseif ($markaction == 'unarch') {
+                } elseif ($markaction == 'unarch') {
                     $count = 0;
-                    $sql = "select AtID, AtLgID from " . $tbpref . "archivedtexts where AtID in " . $list;
+                    $sql = "select AtID, AtLgID 
+                    from " . $tbpref . "archivedtexts 
+                    where AtID in " . $list;
                     $res = do_mysqli_query($sql);
                     while ($record = mysqli_fetch_assoc($res)) {
                         $ida = $record['AtID'];
-                        $mess = (int)runsql('insert into ' . $tbpref . 'texts (TxLgID, TxTitle, TxText, TxAnnotatedText, TxAudioURI, TxSourceURI) select AtLgID, AtTitle, AtText, AtAnnotatedText, AtAudioURI, AtSourceURI from ' . $tbpref . 'archivedtexts where AtID = ' . $ida, "");
+                        $mess = (int)runsql(
+                            'insert into ' . $tbpref . 'texts (
+                                TxLgID, TxTitle, TxText, TxAnnotatedText, TxAudioURI, 
+                                TxSourceURI
+                            ) 
+                            select AtLgID, AtTitle, AtText, AtAnnotatedText, 
+                            AtAudioURI, AtSourceURI 
+                            from ' . $tbpref . 'archivedtexts 
+                            where AtID = ' . $ida, 
+                            ""
+                        );
                         $count += $mess;
                         $id = (int)get_last_key();
-                        runsql('insert into ' . $tbpref . 'texttags (TtTxID, TtT2ID) select ' . $id . ', AgT2ID from ' . $tbpref . 'archtexttags where AgAtID = ' . $ida, "");    
+                        runsql(
+                            'insert into ' . $tbpref . 'texttags (TtTxID, TtT2ID) 
+                            select ' . $id . ', AgT2ID 
+                            from ' . $tbpref . 'archtexttags 
+                            where AgAtID = ' . $ida, 
+                            ""
+                        );    
                         splitCheckText(
                             get_first_value(
-                                'select TxText as value from ' . $tbpref . 'texts where TxID = ' . $id
+                                'select TxText as value 
+                                from ' . $tbpref . 'texts 
+                                where TxID = ' . $id
                             ), 
                             $record['AtLgID'], 
                             $id
                         );    
-                        runsql('delete from ' . $tbpref . 'archivedtexts where AtID = ' . $ida, "");
+                        runsql(
+                            'delete from ' . $tbpref . 'archivedtexts 
+                            where AtID = ' . $ida, 
+                            ""
+                        );
                     }
                     mysqli_free_result($res);
                     adjust_autoincr('archivedtexts', 'AtID');
-                    runsql("DELETE " . $tbpref . "archtexttags FROM (" . $tbpref . "archtexttags LEFT JOIN " . $tbpref . "archivedtexts on AgAtID = AtID) WHERE AtID IS NULL", '');
+                    runsql(
+                        "DELETE " . $tbpref . "archtexttags 
+                        FROM (
+                            " . $tbpref . "archtexttags 
+                            LEFT JOIN " . $tbpref . "archivedtexts 
+                            on AgAtID = AtID
+                        ) 
+                        WHERE AtID IS NULL", 
+                        ''
+                    );
                     $message = 'Unarchived Text(s): ' . $count;
                 } 
                                                 
@@ -167,15 +202,36 @@ if (isset($_REQUEST['del'])) {
         "Archived Texts deleted"
     );
     adjust_autoincr('archivedtexts', 'AtID');
-    runsql("DELETE " . $tbpref . "archtexttags FROM (" . $tbpref . "archtexttags LEFT JOIN " . $tbpref . "archivedtexts on AgAtID = AtID) WHERE AtID IS NULL", '');
+    runsql(
+        "DELETE " . $tbpref . "archtexttags 
+        FROM (
+            " . $tbpref . "archtexttags 
+            LEFT JOIN " . $tbpref . "archivedtexts on AgAtID = AtID
+        ) 
+        WHERE AtID IS NULL", 
+        ''
+    );
 }
 
 // UNARCH
 
 elseif (isset($_REQUEST['unarch'])) {
-    $message2 = runsql('insert into ' . $tbpref . 'texts (TxLgID, TxTitle, TxText, TxAnnotatedText, TxAudioURI, TxSourceURI) select AtLgID, AtTitle, AtText, AtAnnotatedText, AtAudioURI, AtSourceURI from ' . $tbpref . 'archivedtexts where AtID = ' . $_REQUEST['unarch'], "Texts added");
+    $message2 = runsql(
+        'insert into ' . $tbpref . 'texts (
+            TxLgID, TxTitle, TxText, TxAnnotatedText, TxAudioURI, TxSourceURI
+        ) select AtLgID, AtTitle, AtText, AtAnnotatedText, AtAudioURI, AtSourceURI 
+        from ' . $tbpref . 'archivedtexts 
+        where AtID = ' . $_REQUEST['unarch'], 
+        "Texts added"
+    );
     $id = (int)get_last_key();
-    runsql('insert into ' . $tbpref . 'texttags (TtTxID, TtT2ID) select ' . $id . ', AgT2ID from ' . $tbpref . 'archtexttags where AgAtID = ' . $_REQUEST['unarch'], "");    
+    runsql(
+        'insert into ' . $tbpref . 'texttags (TtTxID, TtT2ID) 
+        select ' . $id . ', AgT2ID 
+        from ' . $tbpref . 'archtexttags 
+        where AgAtID = ' . $_REQUEST['unarch'], 
+        ""
+    );    
     splitCheckText(
         get_first_value(
             'select TxText as value from ' . $tbpref . 'texts where TxID = ' . $id
@@ -185,10 +241,27 @@ elseif (isset($_REQUEST['unarch'])) {
         ), 
         $id 
     );    
-    $message1 = runsql('delete from ' . $tbpref . 'archivedtexts where AtID = ' . $_REQUEST['unarch'], "Archived Texts deleted");
-    $message = $message1 . " / " . $message2 . " / Sentences added: " . get_first_value('select count(*) as value from ' . $tbpref . 'sentences where SeTxID = ' . $id) . " / Text items added: " . get_first_value('select count(*) as value from ' . $tbpref . 'textitems2 where Ti2TxID = ' . $id);
+    $message1 = runsql(
+        'delete from ' . $tbpref . 'archivedtexts 
+        where AtID = ' . $_REQUEST['unarch'], 
+        "Archived Texts deleted"
+    );
+    $message = $message1 . " / " . $message2 . " / Sentences added: " . 
+    get_first_value(
+        'select count(*) as value 
+        from ' . $tbpref . 'sentences 
+        where SeTxID = ' . $id
+    ) . " / Text items added: " . get_first_value(
+        'select count(*) as value from ' . $tbpref . 'textitems2 
+        where Ti2TxID = ' . $id
+    );
     adjust_autoincr('archivedtexts', 'AtID');
-    runsql("DELETE " . $tbpref . "archtexttags FROM (" . $tbpref . "archtexttags LEFT JOIN " . $tbpref . "archivedtexts on AgAtID = AtID) WHERE AtID IS NULL", '');
+    runsql(
+        "DELETE " . $tbpref . "archtexttags 
+        FROM (" . $tbpref . "archtexttags 
+        LEFT JOIN " . $tbpref . "archivedtexts on AgAtID = AtID) 
+        WHERE AtID IS NULL", ''
+    );
 }
 
 // UPD
@@ -470,27 +543,27 @@ Marked Texts:&nbsp;
 
         <?php
 
-        $sql = 'select AtID, AtTitle, LgName, AtAudioURI, AtSourceURI, 
+        $sql = "SELECT AtID, AtTitle, LgName, AtAudioURI, AtSourceURI, 
         length(AtAnnotatedText) as annotlen, 
-        ifnull(
-            concat(
-                \'[\', 
-                group_concat(distinct T2Text order by T2Text separator \', \'), 
-                \']\'
-            ),
-            \'\'
-        ) as taglist 
+        IF(
+            COUNT(T2Text)=0, 
+            '', 
+            CONCAT(
+                '[',group_concat(DISTINCT T2Text ORDER BY T2Text separator ', '),']'
+            )
+        ) AS taglist
         from (
             (
-                ' . $tbpref . 'archivedtexts 
-                left JOIN ' . $tbpref . 'archtexttags 
+                {$tbpref}archivedtexts 
+                left JOIN {$tbpref}archtexttags 
                 ON AtID = AgAtID
-            ) left join ' . $tbpref . 'tags2 
+            ) left join {$tbpref}tags2 
             on T2ID = AgT2ID
-        ), ' . $tbpref . 'languages 
-        where LgID=AtLgID ' . $wh_lang . $wh_query . ' 
-        group by AtID ' . $wh_tag . ' 
-        order by ' . $sorts[$currentsort-1] . ' ' . $limit;
+        ), {$tbpref}languages 
+        where LgID=AtLgID $wh_lang$wh_query 
+        group by AtID $wh_tag 
+        order by {$sorts[$currentsort-1]} 
+        $limit";
 
         if ($debug) { 
             echo $sql; 
