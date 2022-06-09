@@ -18,7 +18,7 @@ require_once 'inc/session_utility.php';
 /**
  * Get the record for this text in the database.
  * 
- * @param  string $textid ID of the text
+ * @param string $textid ID of the text
  * 
  * @return array{TxLgID: int, TxTitle: string, TxAnnotatedText: string, 
  * TxPosition: int}|false|null Record corresponding to this text.
@@ -41,7 +41,7 @@ function get_text_data($textid)
 /**
  * Get the record for this text in the database.
  * 
- * @param  string $textid ID of the text
+ * @param string $textid ID of the text
  * 
  * @return array{TxLgID: int, TxTitle: string, TxAnnotatedText: string, 
  * TxPosition: int}|false|null Record corresponding to this text.
@@ -467,10 +467,10 @@ function mainWordLoop($textid, $showAll): void
 /**
  * Prepare style for showing word status. Write a now STYLE object
  * 
- * @param int        $showLearning 1 to show learning translations
- * @param int<1, 4>  $mode_trans   Annotation position
- * @param int        $textsize     Text font size
- * @param bool       $ann_exist    Does annotations exist for this text
+ * @param int       $showLearning 1 to show learning translations
+ * @param int<1, 4> $mode_trans   Annotation position
+ * @param int       $textsize     Text font size
+ * @param bool      $ann_exist    Does annotations exist for this text
  *
  * @return void
  */
@@ -536,10 +536,10 @@ function do_text_text_style($showLearning, $mode_trans, $textsize, $ann_exists):
 /**
  * Prepare style for showing word status. Write a now STYLE object
  * 
- * @param int        $showLearning 1 to show learning translations
- * @param int<1, 4>  $mode_trans   Annotation position
- * @param int        $textsize     Text font size
- * @param bool       $ann_exist    Does annotations exist for this text
+ * @param int       $showLearning 1 to show learning translations
+ * @param int<1, 4> $mode_trans   Annotation position
+ * @param int       $textsize     Text font size
+ * @param bool      $ann_exist    Does annotations exist for this text
  *
  * @return void
  * 

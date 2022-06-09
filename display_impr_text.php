@@ -24,12 +24,13 @@ require_once 'display_impr_text_text.php';
  * @param int    $textid Text ID
  * @param string $audio  Media URI
  * 
- * @return void
+ * @return     void
  * @deprecated 
- * @since 2.2.0 This function should not longer be used, and should cause issues. Use
+ * @since      2.2.0 This function should not longer be used, and should cause issues. Use
  * do_desktop_display_impr_text instead.
  */
-function do_mobile_display_impr_text($textid, $audio) {
+function do_mobile_display_impr_text($textid, $audio)
+{
     do_frameset_mobile_css();
     do_frameset_mobile_js($audio);
     do_frameset_mobile_page_content(
@@ -47,7 +48,8 @@ function do_mobile_display_impr_text($textid, $audio) {
  * 
  * @return void
  */
-function do_desktop_display_impr_text($textid, $audio) {
+function do_desktop_display_impr_text($textid, $audio)
+{
     
     ?>
 
@@ -85,7 +87,8 @@ if (isset($audio)) {
  * 
  * @return void
  */
-function do_display_impr_text_page($textid) {
+function do_display_impr_text_page($textid)
+{
     global $tbpref;
     $audio = get_first_value(
         'SELECT TxAudioURI AS value FROM ' . $tbpref . 'texts 

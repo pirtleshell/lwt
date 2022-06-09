@@ -26,7 +26,8 @@ require_once 'do_text_text.php';
  * 
  * @return int|null Text ID or null
  */
-function get_text_id() {
+function get_text_id()
+{
     if (isset($_REQUEST['text']) && is_numeric($_REQUEST['text'])) {
         return (int)$_REQUEST['text'];
     }
@@ -48,7 +49,8 @@ function get_text_id() {
  * 
  * @since 2.2.1 It also calls do_frameset_mobile_css and do_frameset_mobile_js
  */
-function do_text_mobile_content($textid, $audio) {
+function do_text_mobile_content($textid, $audio)
+{
     do_frameset_mobile_css();
     do_frameset_mobile_js($audio);
     do_frameset_mobile_page_content(
@@ -66,8 +68,9 @@ function do_text_mobile_content($textid, $audio) {
  * 
  * @return void
  */
-function do_text_desktop_content($textid, $audio) {
-?>
+function do_text_desktop_content($textid, $audio)
+{
+    ?>
 <div style="width: 95%; height: 100%;">
     <div id="frame-h">
         <?php do_text_header_content($textid, true); ?>
@@ -90,7 +93,7 @@ onclick="hideRightFrames();">
     </div>
 </div>
 
-<?php
+    <?php
 }
 
 /**

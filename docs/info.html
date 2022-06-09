@@ -1910,7 +1910,8 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 <h3>[Unreleased]</h3>
 <h4>Changed</h4>
 <ul>
-<li>Some function signature were not logical in <code>edit_texts.php</code>. These signatures remain untouched for compatibility, but the internals were changed.</li>
+<li>Some function signature were not logical in <code>edit_texts.php</code>. These signatures remain untouched for backward compatibility, but the internals were changed.</li>
+<li>Texts without tag do no longer display a "[]" string next to the title. Applies to both archived and active texts.</li>
 </ul>
 <h3>Fixed</h3>
 <ul>
@@ -1918,6 +1919,8 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 <li>The error "[1290] The MySQL server is running with the --secure-file-priv option" should no longer appear when trying to save Japanese texts. It was referenced <a href="https://github.com/HugoFara/lwt/issues/34#issuecomment-1141976723">here</a> in <a href="https://github.com/HugoFara/lwt/issues/34">issue #34</a>.</li>
 <li>The "Undefined index: trans in .../bulk_translate_word.php" notice fixed.</li>
 <li>The "Undefined index: WoText in .../delete_word.php" notice fixed.</li>
+<li>Repaired <code>long_text_import.php</code> for non-Japanese texts, it was broken since 2.4.0. Thanks to <a href="https://github.com/rc-ops">@rc-ops</a> for this issue <a href="https://github.com/HugoFara/lwt/issues/33">#33</a>.</li>
+<li>Text statistics were not displayed when there was more than one text since 2.2.2-fork.</li>
 </ul>
 <h3>2.4.0-fork (May 23 2022)</h3>
 <h4>Added</h4>
@@ -1935,7 +1938,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 <h4>Fixed</h4>
 <ul>
 <li>Many pages were asking before exiting while it was unnecessary.</li>
-<li>Made bigger buttons and uniformised the presentation of <code>edit_texts.php</code>,
+<li>Made bigger buttons and unified the presentation of <code>edit_texts.php</code>,
 <code>edit_archivedtexts.php</code>, <code>long_text_import.php</code> and <code>do_feeds.php</code>. It solves
 issue <a href="https://github.com/HugoFara/lwt/issues/29">#29</a>.</li>
 <li>Japanese texts were ill parsed on Windows. The issue <a href="https://github.com/HugoFara/lwt/issues/23">#23</a> is now solved!
@@ -1986,7 +1989,7 @@ issue <a href="https://github.com/HugoFara/lwt/issues/29">#29</a>.</li>
 </ul>
 </li>
 <li>
-<code>tts.php</code> becomes <code>text_to_speech_settings.php</code>. As this file was unnused, it is not considered as a breaking change.</li>
+<code>tts.php</code> becomes <code>text_to_speech_settings.php</code>. As this file was unused, it is not considered as a breaking change.</li>
 <li>Refactored <code>all_words_wellknown.php</code>, <code>edit_texts.php</code>. Those pages should load a bit faster.</li>
 <li>We do no longer load pages in <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Quirks_Mode_and_Standards_Mode">Almost Standards Mode</a>. Unless you use some Netscape browser, it should not impact you.</li>
 </ul>
@@ -2074,7 +2077,7 @@ issue <a href="https://github.com/HugoFara/lwt/issues/29">#29</a>.</li>
 <ul>
 <li>Calling <code>do_text.php?text=</code> created a database error, it does no longer.</li>
 <li>Long text were laggy in <code>do_text_text.php</code> since 2.0.3-fork. Some other issues may have been fixed at the same time.</li>
-<li>Possible unsecure PHP string to JS string conversion in <code>do_text_header.php</code>, function <code>browser_tts</code>.</li>
+<li>Possible insecure PHP string to JS string conversion in <code>do_text_header.php</code>, function <code>browser_tts</code>.</li>
 </ul>
 <h4>Deprecated</h4>
 <ul>
@@ -2231,7 +2234,7 @@ mobile compatibility.</p>
 <ul>
 <li>MeCab is now the default way to learn Japanese.</li>
 <li>JS and CSS are now minified.</li>
-<li>Code liniting.</li>
+<li>Code linting.</li>
 <li>Important code refactors.</li>
 </ul>
 <h4>Full Changelog</h4>
@@ -2307,7 +2310,7 @@ mobile compatibility.</p>
 <h3>1.6.29-fork (April 21 2016):</h3>
 <h4>Changed</h4>
 <ul>
-<li>In appreviations like 'Mr.' the dot is now part of the term. A reparse of texts is needed to take effect.</li>
+<li>In abbreviations like 'Mr.' the dot is now part of the term. A reparse of texts is needed to take effect.</li>
 <li>Wizard Language: Arabic 'RegExp Word Characters' changed.</li>
 </ul>
 <h4>Fixed</h4>
@@ -2389,7 +2392,7 @@ mobile compatibility.</p>
 <ul>
 <li>HTML lang attribute added in testing frame.</li>
 <li>Speed improvements in 'My Texts' screen.</li>
-<li>Replaced precentage of 'unknown words' by 'word charts' in 'My Texts' screen.</li>
+<li>Replaced percentage of 'unknown words' by 'word charts' in 'My Texts' screen.</li>
 </ul>
 <h4>Removed</h4>
 <ul>
@@ -2443,13 +2446,13 @@ mobile compatibility.</p>
 </ul>
 <h4>Fixed</h4>
 <ul>
-<li>Bugfix: Words that are created by 'bulk import' are not updated in the reading frame (i.e. when new translations are added afterwards).</li>
-<li>Bugfix: mysql error 'duplicate entry' in 'newsfeed import'.</li>
+<li>Words that are created by 'bulk import' are not updated in the reading frame (i.e. when new translations are added afterwards).</li>
+<li>mysql error 'duplicate entry' in 'newsfeed import'.</li>
 </ul>
 <h3>1.6.17-fork (May 09 2015):</h3>
 <h4>Fixed</h4>
 <ul>
-<li>Bugfix: Newsfeed Import doesn't load new links if WordPress is used for multiple users.</li>
+<li>Newsfeed Import doesn't load new links if WordPress is used for multiple users.</li>
 </ul>
 <h3>1.6.16-fork (May 01 2015):</h3>
 <h4>Changed</h4>
@@ -2522,7 +2525,7 @@ mobile compatibility.</p>
 <h3>1.6.7-fork (December 18 2014):</h3>
 <h4>Fixed</h4>
 <ul>
-<li>Database errore in newsfeeds</li>
+<li>Database error in newsfeeds</li>
 </ul>
 <h3>1.6.6-fork (December 16 2014):</h3>
 <h4>Added</h4>

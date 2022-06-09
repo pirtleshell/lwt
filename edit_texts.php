@@ -61,11 +61,10 @@ function edit_texts_get_wh_query($currentquery, $currentquerymode, $currentregex
         break;
     }
     if ($currentquery!=='') {
-        if (
-            $currentregexmode !== '' && 
-            @mysqli_query(
-            $GLOBALS["DBCONNECTION"], 
-            'SELECT "test" RLIKE ' . convert_string_to_sqlsyntax($currentquery)
+        if ($currentregexmode !== ''  
+            && @mysqli_query(
+                $GLOBALS["DBCONNECTION"], 
+                'SELECT "test" RLIKE ' . convert_string_to_sqlsyntax($currentquery)
             ) === false
         ) {
             $currentquery = '';
@@ -134,7 +133,7 @@ function edit_texts_get_wh_tag($currentlang)
 /**
  * When a mark action is in use, do the action.
  * 
- * @param string $markaction  Type of action
+ * @param string $markaction Type of action
  * @param array  $marked     Texts marked.
  * @param string $actiondata Values to insert to the database
  * 
@@ -221,13 +220,16 @@ function edit_texts_mark_action($markaction, $marked, $actiondata)
         mysqli_free_result($res);
         $message = 'Text(s) archived: ' . $count;
         runsql('delete from ' . $tbpref . 'texts where TxID in ' . $list, "");
-        runsql("DELETE " . $tbpref . "texttags 
-        FROM (
-            " . $tbpref . "texttags 
-            LEFT JOIN " . $tbpref . "texts 
-            on TtTxID = TxID
-        ) 
-        WHERE TxID IS NULL", '');
+        runsql(
+            "DELETE " . $tbpref . "texttags 
+            FROM (
+                " . $tbpref . "texttags 
+                LEFT JOIN " . $tbpref . "texts 
+                on TtTxID = TxID
+            ) 
+            WHERE TxID IS NULL", 
+            ''
+        );
         adjust_autoincr('texts', 'TxID');
         adjust_autoincr('sentences', 'SeID');
     } elseif ($markaction == 'addtag' ) {
@@ -475,7 +477,8 @@ function edit_texts_do_operation($op, $message1, $no_pagestart)
             convert_string_to_sqlsyntax($_REQUEST["TxTitle"]) . ', ' . 
             convert_string_to_sqlsyntax(remove_soft_hyphens($_REQUEST["TxText"])) . ", '', " .
             convert_string_to_sqlsyntax($_REQUEST["TxAudioURI"]) . ', ' .
-            convert_string_to_sqlsyntax($_REQUEST["TxSourceURI"]) . ')', "Saved"
+            convert_string_to_sqlsyntax($_REQUEST["TxSourceURI"]) . ')', 
+            "Saved"
         );
         $id = get_last_key();
         saveTextTags($id);
@@ -890,9 +893,9 @@ function edit_texts_other_pages($recno)
  * Display the content of a table row for text edition.
  * 
  * @param array<string, string>                         $txrecord    
- * Various information about the text should contain 'TxID' at least.
+ *                                                                   Various information about the text should contain 'TxID' at least.
  * @param string                                        $currentlang 
- * Current language ID
+ *                                                                   Current language ID
  * @param array<int<0, 5>|98|99, array<string, string>> $statuses
  * List of statuses WITH unknown words (status 0)
  * 
@@ -1140,7 +1143,9 @@ function edit_texts_display($message)
 
     // Page, Sort, etc.
 
-    $currentlang = validateLang(processDBParam("filterlang",'currentlanguage','',0));
+    $currentlang = validateLang(
+        processDBParam("filterlang", 'currentlanguage', '', 0)
+    );
     $currentsort = processDBParam("sort", 'currenttextsort', '1', 1);
 
     $currentpage = processSessParam("page", "currenttextpage", '1', 1);
@@ -1249,12 +1254,12 @@ function edit_texts_display($message)
         }
         $sql = "SELECT TxID, TxTitle, LgName, TxAudioURI, TxSourceURI, 
         LENGTH(TxAnnotatedText) AS annotlen,
-        IFNULL(
+        IF(
+            COUNT(T2Text)=0, 
+            '', 
             CONCAT(
-                '[', 
-                group_concat(DISTINCT T2Text ORDER BY T2Text separator ', '),
-                ']'),
-            ''
+                '[',group_concat(DISTINCT T2Text ORDER BY T2Text separator ', '),']'
+            )
         ) AS taglist
         FROM (
             ({$tbpref}texts LEFT JOIN {$tbpref}texttags ON TxID = TtTxID) 
@@ -1322,7 +1327,9 @@ function edit_texts_display($message)
  */
 function edit_texts_do_page()
 {
-    $currentlang = validateLang(processDBParam("filterlang",'currentlanguage','',0));
+    $currentlang = validateLang(
+        processDBParam("filterlang", 'currentlanguage', '', 0)
+    );
     $no_pagestart = getreq('markaction') == 'test' || 
     getreq('markaction') == 'deltag' || 
     substr(getreq('op'), -8) == 'and Open';

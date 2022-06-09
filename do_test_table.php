@@ -86,7 +86,7 @@ function get_test_table_settings()
 
 function do_test_table_javascript()
 {
-?>
+    ?>
 <script type="text/javascript">
 //<![CDATA[
     $(document).ready( function() {
@@ -179,13 +179,13 @@ function do_test_table_javascript()
     });
 //]]>
 </script>
-<?php
+    <?php
 }
 
 
 function do_test_table_settings($settings)
 {
-?>
+    ?>
 <p>
     <input type="checkbox" id="cbEdit" <?php echo get_checked($settings[0]); ?> /> Edit
     <input type="checkbox" id="cbStatus" <?php echo get_checked($settings[1]); ?> /> Status
@@ -194,13 +194,13 @@ function do_test_table_settings($settings)
     <input type="checkbox" id="cbRom" <?php echo get_checked($settings[4]); ?> /> Romanization
     <input type="checkbox" id="cbSentence" <?php echo get_checked($settings[5]); ?> /> Sentence
 </p>
-<?php
+    <?php
 }
 
 
 function do_test_table_header()
 {
-?>
+    ?>
     <tr>
         <th class="th1">Ed</th>
         <th class="th1 clickable">Status</th>
@@ -209,7 +209,7 @@ function do_test_table_header()
         <th class="th1 clickable">Romanization</th>
         <th class="th1 clickable">Sentence</th>
     </tr>
-<?php
+    <?php
 }
 
 function do_test_table_table_content($lang_record, $testsql) 
@@ -286,7 +286,7 @@ function do_test_table_row($record, $regexword, $textsize, $span1, $span2)
         <?php echo $sent1; ?></span><?php echo $span2; ?>
     </td>
 </tr>
-<?php
+    <?php
 }
 
 function do_test_table()

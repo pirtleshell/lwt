@@ -18,7 +18,7 @@ require_once __DIR__ . '/session_utility.php';
 /**
  * Do the word count for a specific text.
  * 
- * @param int $textid Text ID
+ * @param string $textid Text IDs seperated by comma
  * 
  * @return void
  */
@@ -29,7 +29,7 @@ function do_ajax_word_counts($textid)
 }
 
 if (isset($_POST["id"])) {
-    do_ajax_word_counts((int)$_POST["id"]);
+    do_ajax_word_counts($_POST["id"]);
 }
 
 ?>

@@ -91,8 +91,14 @@ function get_first_value($sql)
     return $d;
 }
 
-// -------------------------------------------------------------
 
+/**
+ * Replace Windows line return ("\r\n") by Linux ones ("\n").
+ * 
+ * @param string $s Input string
+ * 
+ * @return string Adapted string. 
+ */
 function prepare_textdata($s): string 
 {
     return str_replace("\r\n", "\n", $s);
@@ -467,7 +473,8 @@ function LWTTableCheck(): void
         );
         if (mysqli_num_rows(
             do_mysqli_query("SHOW TABLES LIKE '\\_lwtgeneral'")
-            ) == 0) { 
+        ) == 0
+        ) { 
             my_die("Unable to create table '_lwtgeneral'!"); 
         }
     }
@@ -568,7 +575,8 @@ function set_word_count(): void
         'SELECT (@m := group_concat(LgID)) value 
         FROM ' . $tbpref . 'languages 
         WHERE UPPER(LgRegexpWordCharacters)="MECAB"'
-        )) {
+    )
+    ) {
         
         $temp_dir = get_first_value('SELECT @@GLOBAL.secure_file_priv AS value');
         if ($temp_dir === null || $temp_dir === "") {
@@ -639,15 +647,14 @@ function set_word_count(): void
     while($rec = mysqli_fetch_assoc($result)){
         if ($rec['LgSplitEachChar']) {
             $textlc = preg_replace('/([^\s])/u', "$1 ", $rec['WoTextLC']);
-        }
-        else{
+        } else {
             $textlc = $rec['WoTextLC'];
         }
         $sqlarr[]= ' WHEN ' . $rec['WoID'] . ' 
         THEN ' . preg_match_all(
             '/([' . $rec['LgRegexpWordCharacters'] . ']+)/u', $textlc, $ma
         );
-        if(++$i % 1000 == 0) {
+        if (++$i % 1000 == 0) {
             //if(!empty($sqlarr)) { cannot be empty
             $max = $rec['WoID'];
             $sqltext = "UPDATE  " . $tbpref . "words SET WoWordCount  = CASE WoID";
@@ -660,7 +667,7 @@ function set_word_count(): void
         }
     }
     mysqli_free_result($result);
-    if(!empty($sqlarr)) {
+    if (!empty($sqlarr)) {
         $sqltext = "UPDATE  " . $tbpref . "words SET WoWordCount  = CASE WoID";
         $sqltext .= implode(' ', $sqlarr) . ' END where WoWordCount=0';
         do_mysqli_query($sqltext);
@@ -670,29 +677,37 @@ function set_word_count(): void
 /**
  * Parse a Japanese text using MeCab and add it to the database.
  * 
- * @param {string} $text Text to parse.
- * @param {int}    $id   Text ID
+ * @param string $text Text to parse.
+ * @param int    $id   Text ID. If $id = -1 print results, 
+ *                     if $id = -2 return splitted texts
  * 
- * @return void
+ * @return string[]|void Splitted sentence if $id = -2
+ * 
+ * @global string $tbpref Database table prefix
  */
-function parse_japanese_text($text, $id) {
+function parse_japanese_text($text, $id)
+{
     global $tbpref;
+    $text = preg_replace('/[ \t]+/u', ' ', $text);
+    $text = trim($text);
+    if ($id == -1) {
+        echo '<div id="check_text" style="margin-right:50px;">
+        <h4>Text</h4>
+        <p>' . str_replace("\n", "<br /><br />", tohtml($text)). '</p>'; 
+    } else if ($id == -2) {
+        $text = preg_replace("/[\n]+/u", "\n¶", $text);
+        return explode("\n", $text);
+    }
+
     $file_name = tempnam(sys_get_temp_dir(), $tbpref . "tmpti");
-    // Ze use the format "zord  num num" for all nodes
+    // We use the format "word  num num" for all nodes
     $mecab_args = " -F %m\\t%t\\t%h\\n -U %m\\t%t\\t%h\\n -E EOS\\t3\\t7\\n";
     $mecab_args .= " -o $file_name ";
     $mecab = get_mecab_path($mecab_args);
-    $s = preg_replace('/[ \t]+/u', ' ', $text);
-    $s = trim($s);
-    if ($id == -1) { 
-        echo '<div id="check_text" style="margin-right:50px;">
-        <h4>Text</h4>
-        <p>' . str_replace("\n", "<br /><br />", tohtml($s)). '</p>'; 
-    }
     
     // WARNING: \n is converted to PHP_EOL here!
     $handle = popen($mecab, 'w');
-    fwrite($handle, $s);
+    fwrite($handle, $text);
     pclose($handle);
 
     runsql(
@@ -719,10 +734,11 @@ function parse_japanese_text($text, $id) {
     "LOAD DATA LOCAL INFILE " . convert_string_to_sqlsyntax($file_name) . "
     INTO TABLE {$tbpref}temptextitems2
     FIELDS TERMINATED BY '\\t' 
-    LINES TERMINATED BY '" . PHP_EOL . "' (@c, @e, @f)
+    LINES TERMINATED BY '" . PHP_EOL . "' 
+    (@c, @e, @f)
     SET 
-    TiSeID = IF(@g=2 or (@c='EOS' AND @f='7'), @s:=@s+(@d:=@h)+1,@s),
-    TiCount = (@d:=@d+CHAR_LENGTH(@c))+1-CHAR_LENGTH(@c),
+    TiSeID = IF(@g=2 OR (@c='EOS' AND @f='7'), @s:=@s+(@d:=@h)+1,@s),
+    TiCount = (@d:= @d + CHAR_LENGTH(@c)) + 1 - CHAR_LENGTH(@c),
     TiOrder = IF(
         CASE
             WHEN @f = '7' THEN IF(@c='EOS',(@g:=2) AND (@c:='¶'), @g:=2) 
@@ -740,16 +756,16 @@ function parse_japanese_text($text, $id) {
         ELSE 0 
     END";
     do_mysqli_query($sql);
-    do_mysqli_query('DELETE FROM ' . $tbpref . 'temptextitems2 WHERE TiOrder=@a');
+    do_mysqli_query("DELETE FROM {$tbpref}temptextitems2 WHERE TiOrder=@a");
     do_mysqli_query(
-        'INSERT INTO ' . $tbpref . 'temptextitems (
+        "INSERT INTO {$tbpref}temptextitems (
             TiCount, TiSeID, TiOrder, TiWordCount, TiText
         ) 
         SELECT MIN(TiCount) s, TiSeID, TiOrder, TiWordCount, 
-        group_concat(TiText order by TiCount SEPARATOR \'\') 
-        FROM ' . $tbpref . 'temptextitems2 
+        group_concat(TiText ORDER BY TiCount SEPARATOR '') 
+        FROM {$tbpref}temptextitems2 
         WHERE 1 
-        GROUP BY TiOrder'
+        GROUP BY TiOrder"
     );
     do_mysqli_query('DROP TABLE ' . $tbpref . 'temptextitems2');
     unlink($file_name);
@@ -758,13 +774,16 @@ function parse_japanese_text($text, $id) {
 /**
  * Parse a text using the default tools. It is a not-japanese text.
  * 
- * @param {string} $text Text to parse
- * @param {int}    $id   Text ID
- * @param {int}    $lid  Language ID
+ * @param string $text Text to parse
+ * @param int    $id   Text ID. If $id == -2, only split the text.
+ * @param int    $lid  Language ID. 
  * 
- * @return void
+ * @return void|string[] If $id == -2 return a splitted version of the text.
+ * 
+ * @global string $tbpref Database table prefix
  */
-function parse_standard_text($text, $id, $lid) {
+function parse_standard_text($text, $id, $lid)
+{
     global $tbpref;
     $sql = "SELECT * FROM " . $tbpref . "languages WHERE LgID=" . $lid;
     $res = do_mysqli_query($sql);
@@ -774,74 +793,77 @@ function parse_standard_text($text, $id, $lid) {
     $noSentenceEnd = $record['LgExceptionsSplitSentences'];
     $termchar = $record['LgRegexpWordCharacters'];
     $rtlScript = $record['LgRightToLeft'];
-    $s = $text;
-    $s = str_replace("\n", " ¶", $s);
-    $s = trim($s);
+    // Split text paragraphs using " ¶" symbol 
+    $text = str_replace("\n", " ¶", $text);
+    $text = trim($text);
     if ($record['LgSplitEachChar']) {
-        $s = preg_replace('/([^\s])/u', "$1\t", $s);
+        $text = preg_replace('/([^\s])/u', "$1\t", $text);
     }
-    $s = preg_replace('/\s+/u', ' ', $s);
+    $text = preg_replace('/\s+/u', ' ', $text);
     if ($id == -1) { 
         echo "<div id=\"check_text\" style=\"margin-right:50px;\">
         <h4>Text</h4>
         <p " .  ($rtlScript ? 'dir="rtl"' : '') . ">" . 
-        str_replace("¶", "<br /><br />", tohtml($s)) . 
+        str_replace("¶", "<br /><br />", tohtml($text)) . 
         "</p>"; 
     }
     // "\r" => Sentence delimiter, "\t" and "\n" => Word delimiter
-    $s = preg_replace_callback(
+    $text = preg_replace_callback(
         "/(\S+)\s*((\.+)|([$splitSentence]))([]'`\"”)‘’‹›“„«»』」]*)(?=(\s*)(\S+|$))/u",
         // Arrow functions got introduced in PHP 7.4 
         //fn ($matches) => find_latin_sentence_end($matches, $noSentenceEnd)
         function ($matches) use ($noSentenceEnd) {
             return find_latin_sentence_end($matches, $noSentenceEnd); 
         },
-        $s
+        $text
     );
-    $s = str_replace(array("¶"," ¶"), array("¶\r","\r¶"), $s);
-    $s = preg_replace(
+    // Paragraph delimiters become a combination of ¶ and carriage return \r
+    $text = str_replace(array("¶"," ¶"), array("¶\r","\r¶"), $text);
+    $text = preg_replace(
         array(
             '/([^' . $termchar . '])/u',
             '/\n([' . $splitSentence . '][\'`"”)\]‘’‹›“„«»』」]*)\n\t/u',
             '/([0-9])[\n]([:.,])[\n]([0-9])/u'
         ), 
         array("\n$1\n", "$1", "$1$2$3"), 
-        $s
+        $text
     );
     if ($id == -2) {
-        return explode("\r", remove_spaces(
-                str_replace(
-                    array("\r\r","\t","\n"), array("\r","",""), $s
-                ), 
-                $removeSpaces)
-            );
+        $text = remove_spaces(
+            str_replace(
+                array("\r\r","\t","\n"), array("\r","",""), $text
+            ), 
+            $removeSpaces
+        );
+        return explode("\r", $text);
     }
 
     
     $file_name = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $tbpref . "tmpti.txt";
     $fp = fopen($file_name, 'w');
-    fwrite(
-        $fp, 
-        remove_spaces(
-            preg_replace("/(\n|^)(?!1\t)/u", "\n0\t", trim(preg_replace(
-                array(
-                    "/\r(?=[]'`\"”)‘’‹›“„«»』」 ]*\r)/u",
-                    '/[\n]+\r/u',
-                    '/\r([^\n])/u',
-                    "/\n[.](?![]'`\"”)‘’‹›“„«»』」]*\r)/u",
-                    "/(\n|^)(?=.?[$termchar][^\n]*\n)/u"
-                ), 
-                array(
-                    "",
-                    "\r",
-                    "\r\n$1",
-                    ".\n",
-                    "\n1\t"
-                ), 
-                str_replace(array("\t","\n\n"), array("\n",""), $s)))), 
-                $removeSpaces
-            )
-        );
+    $text = trim(
+        preg_replace(
+            array(
+            "/\r(?=[]'`\"”)‘’‹›“„«»』」 ]*\r)/u",
+            '/[\n]+\r/u',
+            '/\r([^\n])/u',
+            "/\n[.](?![]'`\"”)‘’‹›“„«»』」]*\r)/u",
+            "/(\n|^)(?=.?[$termchar][^\n]*\n)/u"
+            ), 
+            array(
+            "",
+            "\r",
+            "\r\n$1",
+            ".\n",
+            "\n1\t"
+            ), 
+            str_replace(array("\t","\n\n"), array("\n",""), $text)
+        )
+    );
+    $text = remove_spaces(
+        preg_replace("/(\n|^)(?!1\t)/u", "\n0\t", $text), $removeSpaces
+    );
+    fwrite($fp, $text);
     fclose($fp);
     do_mysqli_query(
         'SET @a=0, 
@@ -851,7 +873,7 @@ function parse_standard_text($text, $id, $lid) {
             : 1
         ) . ',@d=0,@e=0;'
     );
-    $sql= 'LOAD DATA LOCAL INFILE '. convert_string_to_sqlsyntax($file_name) . ' 
+    $sql = 'LOAD DATA LOCAL INFILE '. convert_string_to_sqlsyntax($file_name) . ' 
     INTO TABLE ' . $tbpref . 'temptextitems 
     FIELDS TERMINATED BY \'\\t\' LINES TERMINATED BY \'\\n\' (@w,@c) 
     set 
@@ -877,13 +899,16 @@ function parse_standard_text($text, $id, $lid) {
 /**
  * Pre-parse the input text before a definitive parsing by a specialized parser.
  * 
- * @param {string} $text Text to parse
- * @param {int}    $id   Text ID
- * @param {int}    $lid  Language ID
+ * @param string $text Text to parse
+ * @param int    $id   Text ID
+ * @param int    $lid  Language ID
  * 
- * @return void
+ * @return string[]|void If $id = -2 return a splitted version of the text
+ * 
+ * @global string $tbpref Database table prefix
  */
-function prepare_text_parsing($text, $id, $lid) {
+function prepare_text_parsing($text, $id, $lid)
+{
     global $tbpref;
     $sql = "SELECT * FROM " . $tbpref . "languages WHERE LgID=" . $lid;
     $res = do_mysqli_query($sql);
@@ -891,24 +916,23 @@ function prepare_text_parsing($text, $id, $lid) {
     $termchar = $record['LgRegexpWordCharacters'];
     $replace = explode("|", $record['LgCharacterSubstitutions']);
     mysqli_free_result($res);
-    $s = prepare_textdata($text);
+    $text = prepare_textdata($text);
     //if(is_callable('normalizer_normalize')) $s = normalizer_normalize($s);
     do_mysqli_query('TRUNCATE TABLE ' . $tbpref . 'temptextitems');
 
     // because of sentence special characters
-    $s = str_replace(array('}','{'), array(']','['), $s);    
+    $text = str_replace(array('}','{'), array(']','['), $text);    
     foreach ($replace as $value) {
         $fromto = explode("=", trim($value));
-        if(count($fromto) >= 2) {
-            $s = str_replace(trim($fromto[0]), trim($fromto[1]), $s);
+        if (count($fromto) >= 2) {
+            $text = str_replace(trim($fromto[0]), trim($fromto[1]), $text);
         }
     }
 
-    if ('MECAB'== strtoupper(trim($termchar))) {
-        parse_japanese_text($text, $id);
-    } else {
-        parse_standard_text($text, $id, $lid);
-    }
+    if ('MECAB' == strtoupper(trim($termchar))) {
+        return parse_japanese_text($text, $id);
+    } 
+    return parse_standard_text($text, $id, $lid);
 }
 
 /**
@@ -936,19 +960,18 @@ function check_text_valid($lid)
         'SELECT count(`TiOrder`) cnt, if(0=TiWordCount,0,1) as len, 
         LOWER(TiText) as word, WoTranslation 
         FROM ' . $tbpref . 'temptextitems 
-        left join ' . $tbpref . 'words on lower(TiText)=WoTextLC and WoLgID=' . $lid . ' 
-        group by lower(TiText)'
+        LEFT JOIN ' . $tbpref . 'words ON lower(TiText)=WoTextLC AND WoLgID=' . $lid . ' 
+        GROUP BY lower(TiText)'
     );
-    while($record = mysqli_fetch_assoc($res)){
-        if($record['len']==1) {
+    while ($record = mysqli_fetch_assoc($res)) {
+        if ($record['len']==1) {
             $wo[]= array(
                 tohtml($record['word']),
                 $record['cnt'],
                 tohtml($record['WoTranslation'])
             );
-        }
-        else{
-            $nw[]= array(tohtml($record['word']),tohtml($record['cnt']));
+        } else{
+            $nw[] = array(tohtml($record['word']), tohtml($record['cnt']));
         }
     }
     mysqli_free_result($res);
@@ -962,13 +985,16 @@ function check_text_valid($lid)
 /**
  * Change the default values for default language, default text, etc...
  * 
- * @param {int}    $id  New default text ID
- * @param {int}    $lid New default language ID
- * @param {string} $sql 
+ * @param int    $id  New default text ID
+ * @param int    $lid New default language ID
+ * @param string $sql 
  * 
  * @return void
+ * 
+ * @global string $tbpref Database table prefix
  */
-function update_default_values($id, $lid, $sql) {
+function update_default_values($id, $lid, $sql)
+{
     global $tbpref;
     do_mysqli_query(
         'ALTER TABLE ' . $tbpref . 'textitems2 
@@ -1016,13 +1042,14 @@ function update_default_values($id, $lid, $sql) {
 /**
  * Check a text and display statistics about it.
  * 
- * @param {string} $sql
- * @param {bool}   $rtlScript
- * @param {}       $wl 
+ * @param string   $sql
+ * @param bool     $rtlScript true if language is right-to-left
+ * @param string[] $wl        Words lengths
  * 
  * @return void
  */
-function check_text($sql, $rtlScript, $wl) {
+function check_text($sql, $rtlScript, $wl)
+{
     $mw = array();
     if(!empty($wl)) {
         $res = do_mysqli_query($sql);
@@ -1097,7 +1124,9 @@ function check_text_with_expressions($id, $lid, $wl, $wl_max, $mw_sql)
         $init_var = '@a' . strval($i) . '=0,';
     }
     do_mysqli_query('set ' . $init_var . '@a1=0,@a0=0,@b=0,@c="",@d=0,@e=0,@f="",@h=0;');
-    do_mysqli_query('CREATE TEMPORARY TABLE IF NOT EXISTS ' . $tbpref . 'numbers( n  tinyint(3) unsigned NOT NULL);');
+    do_mysqli_query(
+        'CREATE TEMPORARY TABLE IF NOT EXISTS ' . $tbpref . 'numbers( n  tinyint(3) unsigned NOT NULL);'
+    );
     do_mysqli_query('TRUNCATE TABLE ' . $tbpref . 'numbers');
     do_mysqli_query('INSERT IGNORE INTO ' . $tbpref . 'numbers(n) VALUES (' . implode('),(', $wl) . ');');
     if ($id>0) {
@@ -1173,7 +1202,7 @@ function check_text_with_expressions($id, $lid, $wl, $wl_max, $mw_sql)
  *
  * @global string $tbpref Database table prefix
  *
- * @return null|string[]
+ * @return null|string[] The sentence array if $id = -2
  *
  * @psalm-return non-empty-list<string>|null
  */
@@ -1193,37 +1222,51 @@ function splitCheckText($text, $lid, $id)
     $rtlScript = $record['LgRightToLeft'];
     mysqli_free_result($res);
 
+    if ($id == -2) {
+        /*
+        Replacement code not created yet 
+
+        trigger_error(
+            "Using splitCheckText with \$id == -2 is deprectad and won't work in 
+            LWT 3.0.0. Use format_text instead.", 
+            E_USER_WARNING
+        );*/
+        return prepare_text_parsing($text, -2, $lid);
+    }
     prepare_text_parsing($text, $id, $lid);
 
-    if ($id==-1) {//check text
+    // Check text
+    if ($id == -1) {
         check_text_valid($lid);
-    }//check text end
+    }
 
     $res = do_mysqli_query(
-        "SELECT WoWordCount AS len, count(WoWordCount) AS cnt 
+        "SELECT WoWordCount AS word_count, count(WoWordCount) AS cnt 
         FROM " . $tbpref . "words 
         WHERE WoLgID = " . $lid . " AND WoWordCount > 1 
         GROUP BY WoWordCount"
     );
     while ($record = mysqli_fetch_assoc($res)){
-        if($wl_max < $record['len']) { 
-            $wl_max = $record['len'];
+        if ($wl_max < $record['word_count']) { 
+            $wl_max = $record['word_count'];
         }
-        $wl[] = $record['len'];
-        $mw_sql .= ' WHEN ' . $record['len'] . 
-        ' THEN @a' . (intval($record['len']) * 2 - 1);
+        $wl[] = $record['word_count'];
+        $mw_sql .= ' WHEN ' . $record['word_count'] . 
+        ' THEN @a' . (intval($record['word_count']) * 2 - 1);
     }
     mysqli_free_result($res);
     $sql = '';
-    if(!empty($wl)) {//text has expressions
+    // Text has expressions
+    if (!empty($wl)) {
         $sql = check_text_with_expressions($id, $lid, $wl, $wl_max, $mw_sql);
-    }//text has expressions end
-    if($id>0) {
+    }
+    if ($id > 0) {
         update_default_values($id, $lid, $sql);
     }
-    if($id==-1) {//check text
+    // Check text
+    if ($id == -1) {
         check_text($sql, $rtlScript, $wl);
-    }//check text end
+    }
     do_mysqli_query('TRUNCATE TABLE ' . $tbpref . 'temptextitems');
 }
 
@@ -1278,8 +1321,10 @@ function update_database($dbname)
         where StKey = 'dbversion'"
     );
     if (mysqli_errno($GLOBALS['DBCONNECTION']) != 0) { 
-        my_die('There is something wrong with your database ' . $dbname . 
-        '. Please reinstall.'); 
+        my_die(
+            'There is something wrong with your database ' . $dbname . 
+            '. Please reinstall.'
+        ); 
     }
     $record = mysqli_fetch_assoc($res);
     if ($record) {
@@ -1300,8 +1345,8 @@ function update_database($dbname)
             'SELECT concat(default_character_set_name, default_collation_name) as value 
             FROM information_schema.SCHEMATA 
             WHERE schema_name = "' . $dbname . '"'
-            )
-            ) {
+        )
+        ) {
             runsql("SET collation_connection = 'utf8_general_ci'", '');
             runsql('ALTER DATABASE `' . $dbname . '` CHARACTER SET utf8 COLLATE utf8_general_ci', '');
             
@@ -1706,7 +1751,8 @@ function get_database_prefixes(&$tbpref)
             if (strpos(
                 "_0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ", 
                 substr($tbpref, $i, 1)
-                ) === false) {
+            ) === false
+            ) {
                 my_die(
                     'Table prefix/set "' . $tbpref . 
                     '" contains characters or digits other than 0-9, a-z, A-Z or _. Please fix in "connect.inc.php".'

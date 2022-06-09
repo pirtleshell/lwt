@@ -66,15 +66,15 @@ function set_test_status_change_progress($stchange)
 /**
  * Make the JavaScript action for setting a word status.
  * 
- * @param int $wid       Word ID
- * @param int $status    New learning status for the word
- * @param int $stchange  -1, 0, or 1 if status is rising or not
+ * @param int $wid      Word ID
+ * @param int $status   New learning status for the word
+ * @param int $stchange -1, 0, or 1 if status is rising or not
  * 
  * @return void
  */
 function do_set_test_status_javascript($wid, $status, $stchange)
 {
-?>
+    ?>
 <script type="text/javascript">
     //<![CDATA[
     const context = window.parent;
@@ -96,7 +96,7 @@ function do_set_test_status_javascript($wid, $status, $stchange)
     }
     //]]>
 </script>
-<?php
+    <?php
 }
 
 /**
