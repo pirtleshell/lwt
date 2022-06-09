@@ -22,7 +22,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="lwt_icon.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Learning with Texts - Fork<span id="projectnumber">&#160;2.4.0-fork</span>
+   <div id="projectname">Learning with Texts - Fork<span id="projectnumber">&#160;2.4.1-fork</span>
    </div>
    <div id="projectbrief">Learn foreign languages with texts</div>
   </td>
@@ -113,11 +113,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a7c0a009f162f65fbd403fb367695edc2"><td class="memItemLeft" align="right" valign="top"><a id="a7c0a009f162f65fbd403fb367695edc2" name="a7c0a009f162f65fbd403fb367695edc2"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>getWordTags</b> ($wid)</td></tr>
 <tr class="separator:a7c0a009f162f65fbd403fb367695edc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab48c3d7d538b1486c0b50477d3f03ea2"><td class="memItemLeft" align="right" valign="top"><a id="ab48c3d7d538b1486c0b50477d3f03ea2" name="ab48c3d7d538b1486c0b50477d3f03ea2"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>getTextTags</b> ($tid)</td></tr>
+<tr class="memitem:ab48c3d7d538b1486c0b50477d3f03ea2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="session__utility_8php.html#ab48c3d7d538b1486c0b50477d3f03ea2">getTextTags</a> ($tid)</td></tr>
 <tr class="separator:ab48c3d7d538b1486c0b50477d3f03ea2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0dc38abdc426d2a8b135b8cafd3bbf6c"><td class="memItemLeft" align="right" valign="top"><a id="a0dc38abdc426d2a8b135b8cafd3bbf6c" name="a0dc38abdc426d2a8b135b8cafd3bbf6c"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>getArchivedTextTags</b> ($tid)</td></tr>
+<tr class="memitem:a0dc38abdc426d2a8b135b8cafd3bbf6c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="session__utility_8php.html#a0dc38abdc426d2a8b135b8cafd3bbf6c">getArchivedTextTags</a> ($tid)</td></tr>
 <tr class="separator:a0dc38abdc426d2a8b135b8cafd3bbf6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abc062b261f450cc0009bc331e08cfa36"><td class="memItemLeft" align="right" valign="top"><a id="abc062b261f450cc0009bc331e08cfa36" name="abc062b261f450cc0009bc331e08cfa36"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>addtaglist</b> ($item, $list)</td></tr>
@@ -840,6 +838,33 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a0dc38abdc426d2a8b135b8cafd3bbf6c" name="a0dc38abdc426d2a8b135b8cafd3bbf6c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0dc38abdc426d2a8b135b8cafd3bbf6c">&#9670;&nbsp;</a></span>getArchivedTextTags()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">getArchivedTextTags </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$tid</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Return a HTML-formatted list of the text tags for an archived text.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">int</td><td class="paramname">$tid</td><td>Text ID. Can be below 1 to create an empty list.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>string UL list of text tags</dd></dl>
+<p>@global string $tbpref Database table prefix </p>
+
+</div>
+</div>
 <a id="a3a0b4908f07b97ecbb64363d408c9609" name="a3a0b4908f07b97ecbb64363d408c9609"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3a0b4908f07b97ecbb64363d408c9609">&#9670;&nbsp;</a></span>getLanguage()</h2>
 
@@ -969,6 +994,33 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>array{0: string, 1: string} [0]=html, word in bold, [1]=text, word in {} </dd></dl>
+
+</div>
+</div>
+<a id="ab48c3d7d538b1486c0b50477d3f03ea2" name="ab48c3d7d538b1486c0b50477d3f03ea2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab48c3d7d538b1486c0b50477d3f03ea2">&#9670;&nbsp;</a></span>getTextTags()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">getTextTags </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$tid</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Return a HTML-formatted list of the text tags.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">int</td><td class="paramname">$tid</td><td>Text ID. Can be below 1 to create an empty list.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>string UL list of text tags</dd></dl>
+<p>@global string $tbpref Database table prefix </p>
 
 </div>
 </div>
@@ -1597,7 +1649,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p >Save the tags for archived texts.</p>
-<dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>void</dd></dl>
+<p>@global string $tbpref Databse table prefix. </p>
 
 </div>
 </div>
@@ -1617,7 +1670,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p >Save the tags for texts.</p>
-<dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>void</dd></dl>
+<p>@global string $tbpref Databse table prefix. </p>
 
 </div>
 </div>
@@ -1760,12 +1814,12 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p >Compute and echo word statistics about a specific text ID.</p>
+<p >Compute and echo word statistics about a list of text ID.</p>
 <p >It is useful for unknown percent with this fork.</p>
 <p >The echo is an output array{0: int, 1: int, 2: int, 3: int, 4: int, 5: int} Total number of words, number of expression, statistics, total unique, number of unique expressions, unique statistics</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramtype">string</td><td class="paramname">$textID</td><td>identifier for this text</td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$textID</td><td>Text IDs separated by comma</td></tr>
   </table>
   </dd>
 </dl>

@@ -22,7 +22,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="lwt_icon.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Learning with Texts - Fork<span id="projectnumber">&#160;2.4.0-fork</span>
+   <div id="projectname">Learning with Texts - Fork<span id="projectnumber">&#160;2.4.1-fork</span>
    </div>
    <div id="projectbrief">Learn foreign languages with texts</div>
   </td>
@@ -86,8 +86,7 @@ Functions</h2></td></tr>
 <tr class="separator:acba5ba1657b74c879fc17dd6f13c6bce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9c4a52b3d9b10360dce64ad0464bfad5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="database__connect_8php.html#a9c4a52b3d9b10360dce64ad0464bfad5">get_first_value</a> ($sql)</td></tr>
 <tr class="separator:a9c4a52b3d9b10360dce64ad0464bfad5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adc5e56bdc4497573811854675f1e510e"><td class="memItemLeft" align="right" valign="top"><a id="adc5e56bdc4497573811854675f1e510e" name="adc5e56bdc4497573811854675f1e510e"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>prepare_textdata</b> ($s)</td></tr>
+<tr class="memitem:adc5e56bdc4497573811854675f1e510e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="database__connect_8php.html#adc5e56bdc4497573811854675f1e510e">prepare_textdata</a> ($s)</td></tr>
 <tr class="separator:adc5e56bdc4497573811854675f1e510e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abb1d020397c6111d6c54a57629ebef9b"><td class="memItemLeft" align="right" valign="top"><a id="abb1d020397c6111d6c54a57629ebef9b" name="abb1d020397c6111d6c54a57629ebef9b"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>prepare_textdata_js</b> ($s)</td></tr>
@@ -243,9 +242,9 @@ Variables</h2></td></tr>
 <p >Check a text and display statistics about it.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">{string}</td><td>$sql </td></tr>
-    <tr><td class="paramname">{bool}</td><td>$rtlScript </td></tr>
-    <tr><td class="paramname">{}</td><td>$wl</td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$sql</td><td></td></tr>
+    <tr><td class="paramtype">bool</td><td class="paramname">$rtlScript</td><td>true if language is right-to-left </td></tr>
+    <tr><td class="paramtype">string[]</td><td class="paramname">$wl</td><td>Words lengths</td></tr>
   </table>
   </dd>
 </dl>
@@ -727,12 +726,13 @@ Variables</h2></td></tr>
 <p >Parse a Japanese text using MeCab and add it to the database.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">{string}</td><td>$text Text to parse. </td></tr>
-    <tr><td class="paramname">{int}</td><td>$id Text ID</td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$text</td><td>Text to parse. </td></tr>
+    <tr><td class="paramtype">int</td><td class="paramname">$id</td><td>Text ID. If $id = -1 print results, if $id = -2 return splitted texts</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>string[]|void Splitted sentence if $id = -2</dd></dl>
+<p>@global string $tbpref Database table prefix </p>
 
 </div>
 </div>
@@ -770,13 +770,14 @@ Variables</h2></td></tr>
 <p >Parse a text using the default tools. It is a not-japanese text.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">{string}</td><td>$text Text to parse </td></tr>
-    <tr><td class="paramname">{int}</td><td>$id Text ID </td></tr>
-    <tr><td class="paramname">{int}</td><td>$lid Language ID</td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$text</td><td>Text to parse </td></tr>
+    <tr><td class="paramtype">int</td><td class="paramname">$id</td><td>Text ID. If $id == -2, only split the text. </td></tr>
+    <tr><td class="paramtype">int</td><td class="paramname">$lid</td><td>Language ID.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>void|string[] If $id == -2 return a splitted version of the text.</dd></dl>
+<p>@global string $tbpref Database table prefix </p>
 
 </div>
 </div>
@@ -814,13 +815,40 @@ Variables</h2></td></tr>
 <p >Pre-parse the input text before a definitive parsing by a specialized parser.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">{string}</td><td>$text Text to parse </td></tr>
-    <tr><td class="paramname">{int}</td><td>$id Text ID </td></tr>
-    <tr><td class="paramname">{int}</td><td>$lid Language ID</td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$text</td><td>Text to parse </td></tr>
+    <tr><td class="paramtype">int</td><td class="paramname">$id</td><td>Text ID </td></tr>
+    <tr><td class="paramtype">int</td><td class="paramname">$lid</td><td>Language ID</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>string[]|void If $id = -2 return a splitted version of the text</dd></dl>
+<p>@global string $tbpref Database table prefix </p>
+
+</div>
+</div>
+<a id="adc5e56bdc4497573811854675f1e510e" name="adc5e56bdc4497573811854675f1e510e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adc5e56bdc4497573811854675f1e510e">&#9670;&nbsp;</a></span>prepare_textdata()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">prepare_textdata </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$s</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Replace Windows line return ("\r\n") by Linux ones ("\n").</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">string</td><td class="paramname">$s</td><td>Input string</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>string Adapted string. </dd></dl>
 
 </div>
 </div>
@@ -985,7 +1013,7 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 <p>@global string $tbpref Database table prefix</p>
-<dl class="section return"><dt>Returns</dt><dd>null|string[]</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>null|string[] The sentence array if $id = -2</dd></dl>
 <p>@psalm-return non-empty-list&lt;string&gt;|null </p>
 
 </div>
@@ -1050,13 +1078,14 @@ Variables</h2></td></tr>
 <p >Change the default values for default language, default text, etc...</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">{int}</td><td>$id New default text ID </td></tr>
-    <tr><td class="paramname">{int}</td><td>$lid New default language ID </td></tr>
-    <tr><td class="paramname">{string}</td><td>$sql</td></tr>
+    <tr><td class="paramtype">int</td><td class="paramname">$id</td><td>New default text ID </td></tr>
+    <tr><td class="paramtype">int</td><td class="paramname">$lid</td><td>New default language ID </td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$sql</td><td></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>void</dd></dl>
+<p>@global string $tbpref Database table prefix </p>
 
 </div>
 </div>
