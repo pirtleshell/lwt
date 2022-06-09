@@ -13,7 +13,8 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 * The error "[1290] The MySQL server is running with the --secure-file-priv option" should no longer appear when trying to save Japanese texts. It was referenced [here](https://github.com/HugoFara/lwt/issues/34#issuecomment-1141976723) in [issue #34](https://github.com/HugoFara/lwt/issues/34).
 * The "Undefined index: trans in .../bulk_translate_word.php" notice fixed.
 * The "Undefined index: WoText in .../delete_word.php" notice fixed.
-* Repaired ``long_text_import.php`` for non-Japanese texts, it was broken since 2.4.0. Thanks to [@rc-ops](https://github.com/rc-ops) for this issue [#33](https://github.com/HugoFara/lwt/issues/33)
+* Repaired ``long_text_import.php`` for non-Japanese texts, it was broken since 2.4.0. Thanks to [@rc-ops](https://github.com/rc-ops) for this issue [#33](https://github.com/HugoFara/lwt/issues/33).
+* Text statistics were not displayed when there was more than one text since 2.2.2-fork.
 
 ## 2.4.0-fork (May 23 2022)
 ### Added

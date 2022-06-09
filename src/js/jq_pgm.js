@@ -941,6 +941,11 @@ function do_ajax_show_similar_terms () {
   );
 }
 
+/**
+ * Update WORDCOUNTS in with an AJAX request.
+ * 
+ * @returns {undefined}
+ */
 function do_ajax_word_counts () {
   const t = $('.markcheck').map(function () { 
     return $(this).val(); })
@@ -952,7 +957,9 @@ function do_ajax_word_counts () {
       WORDCOUNTS = data;
       word_count_click();
       $('.barchart').removeClass('hide');
-    }, 'json');
+    }, 
+    'json'
+    );
 }
 
 /**
@@ -1007,10 +1014,14 @@ function set_word_counts () {
     }
     $('#total_' + key).html((SUW & 1 ? value : WORDCOUNTS.total[key]));
     $.each(WORDCOUNTS.statu[key], function (k, v) {
-      if (SUW & 8)$('#stat_' + k + '_' + key).html(v); knownu += parseInt(v);
+      if (SUW & 8)
+        $('#stat_' + k + '_' + key).html(v); 
+      knownu += parseInt(v);
     });
     $.each(WORDCOUNTS.stat[key], function (k, v) {
-      if (!(SUW & 8))$('#stat_' + k + '_' + key).html(v); known += parseInt(v);
+      if (!(SUW & 8))
+        $('#stat_' + k + '_' + key).html(v); 
+      known += parseInt(v);
     });
     $('#saved_' + key).html(known ? ((SUW & 2 ? knownu : known) - expr + '+' + expr) : 0);
     if (SUW & 4) {

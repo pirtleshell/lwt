@@ -3198,7 +3198,7 @@ function mask_term_in_sentence($s,$regexword): string
 }
 
 /**
- * Compute and echo word statistics about a specific text ID.
+ * Compute and echo word statistics about a list of text ID.
  *
  * It is useful for unknown percent with this fork.
  *
@@ -3207,7 +3207,7 @@ function mask_term_in_sentence($s,$regexword): string
  * Total number of words, number of expression, statistics, total unique, 
  * number of unique expressions, unique statistics
  *
- * @param string $textID identifier for this text
+ * @param string $textID Text IDs separated by comma
  *
  * @global string $tbpref Table name prefix
  */
@@ -3216,11 +3216,11 @@ function textwordcount($textID): void
     global $tbpref;
     $total = $total_unique = $expr = $expr_unique = $stat = $stat_unique = array();
     $res = do_mysqli_query(
-        'select Ti2TxID as text, count(distinct lower(Ti2Text)) as value, 
-        count(lower(Ti2Text)) as total
-		 from ' . $tbpref . 'textitems2
-		 where Ti2WordCount = 1 and Ti2TxID in(' . $textID . ')
-		 group by Ti2TxID'
+        "SELECT Ti2TxID AS text, COUNT(DISTINCT LOWER(Ti2Text)) AS value, 
+        COUNT(LOWER(Ti2Text)) AS total
+		FROM {$tbpref}textitems2
+		WHERE Ti2WordCount = 1 AND Ti2TxID IN($textID)
+		GROUP BY Ti2TxID"
     );
     while ($record = mysqli_fetch_assoc($res)) {
         $total[$record['text']] = $record['total'];
@@ -3228,11 +3228,11 @@ function textwordcount($textID): void
     }
     mysqli_free_result($res);
     $res = do_mysqli_query(
-        'select Ti2TxID as text, count(distinct Ti2WoID) as value, 
+        'SELECT Ti2TxID as text, count(distinct Ti2WoID) as value, 
         count(Ti2WoID) as total
-		 from ' . $tbpref . 'textitems2
-		 where Ti2WordCount > 1 and Ti2TxID in(' . $textID . ')
-		 group by Ti2TxID'
+		from ' . $tbpref . 'textitems2
+		where Ti2WordCount > 1 and Ti2TxID in(' . $textID . ')
+		group by Ti2TxID'
     );
     while ($record = mysqli_fetch_assoc($res)) {
         $expr[$record['text']] = $record['total'];
@@ -3240,12 +3240,11 @@ function textwordcount($textID): void
     }
     mysqli_free_result($res);
     $res = do_mysqli_query(
-        'select Ti2TxID as text, count(distinct Ti2WoID) as value, 
+        'SELECT Ti2TxID as text, count(distinct Ti2WoID) as value, 
         count(Ti2WoID) as total, WoStatus as status
-		 from ' . $tbpref . 'textitems2, ' . $tbpref . 'words
-		 where Ti2WoID!=0 and Ti2TxID in(' . $textID . ')
-		 and Ti2WoID=WoID
-		 group by Ti2TxID,WoStatus'
+		from ' . $tbpref . 'textitems2, ' . $tbpref . 'words
+		where Ti2WoID!=0 and Ti2TxID in(' . $textID . ') and Ti2WoID=WoID
+		group by Ti2TxID, WoStatus'
     );
     while ($record = mysqli_fetch_assoc($res)) {
         $stat[$record['text']][$record['status']]=$record['total'];
@@ -3253,8 +3252,8 @@ function textwordcount($textID): void
     }
     mysqli_free_result($res);
     $r = array(
-        'total'=>$total,'expr'=>$expr,'stat'=>$stat,'totalu'=>$total_unique,
-        'expru'=>$expr_unique,'statu'=>$stat_unique
+        'total'=>$total, 'expr'=>$expr, 'stat'=>$stat, 'totalu'=>$total_unique,
+        'expru'=>$expr_unique, 'statu'=>$stat_unique
     );
     echo json_encode($r);
 }
