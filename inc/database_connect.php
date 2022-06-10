@@ -17,7 +17,7 @@ require __DIR__ . "/../connect.inc.php";
  *
  * @param string $sql Query using SQL syntax
  *
- * @global mysqli $DBCONNECTION COnnection to the database
+ * @global mysqli $DBCONNECTION Connection to the database
  *
  * @return mysqli_result|true
  */
@@ -1678,6 +1678,9 @@ function check_update_db($debug, $tbpref, $dbname): void
 function connect_to_database($server, $userid, $passwd, $dbname) 
 {
     // @ suppresses error messages
+    
+    @mysqli_report(MYSQLI_REPORT_OFF); // added because mysqli_report default setting in PHP 8.1+ has changed
+
     $DBCONNECTION = @mysqli_connect($server, $userid, $passwd, $dbname);
 
     if (!$DBCONNECTION && mysqli_connect_errno() == 1049) {

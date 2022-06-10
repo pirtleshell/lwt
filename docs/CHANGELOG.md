@@ -5,6 +5,12 @@ This project's changelog. Versions marked with "-fork" come from the community, 
 For git tags, official releases are marked like "v1.0.0", while unofficial ones are marked like "v1.0.0-fork".
 
 ## [Unreleased]
+### Fixed
+* Updated with LWT 2.0.3, solving incompatibilities with PHP 8.1 throzing MySQLI errors.
+
+## 2.0.3 (February 15 2022)
+### Fixed
+* An incompatibility with PHP 8.1+ (changed mysqli_report default setting in PHP 8.1+) has been fixed.
 
 ## 2.4.1-fork (June 09 2022)
 ### Changed
