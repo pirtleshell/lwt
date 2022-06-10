@@ -5,8 +5,12 @@ This project's changelog. Versions marked with "-fork" come from the community, 
 For git tags, official releases are marked like "v1.0.0", while unofficial ones are marked like "v1.0.0-fork".
 
 ## [Unreleased]
-### Fixed
+### Added
+* Compatibility with PHP 8.0.* and 8.1.*!
 * Updated with LWT 2.0.3, solving incompatibilities with PHP 8.1 throzing MySQLI errors.
+
+### Changed
+* Composer dependencies updated.
 
 ## 2.0.3 (February 15 2022)
 ### Fixed
