@@ -12,6 +12,9 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 ### Changed
 * Composer dependencies updated.
 
+### Fixed
+* For some user, the --secure-priv-file option was still required to be on. This was due to a conflict between PHP and MySQLI authorizations.
+
 ## 2.0.3 (February 15 2022)
 ### Fixed
 * An incompatibility with PHP 8.1+ (changed mysqli_report default setting in PHP 8.1+) has been fixed.

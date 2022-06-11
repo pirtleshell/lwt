@@ -3686,8 +3686,9 @@ function insertExpressionFromMeCab($textlc, $lid, $wid, $len, $mode)
     if ($temp_dir === null || $temp_dir === "") {
         $temp_dir = sys_get_temp_dir();
     }
-    $db_to_mecab = tempnam($temp_dir, "{$tbpref}db_to_mecab");
-    $mecab_to_db = tempnam($temp_dir, "{$tbpref}mecab_to_db");
+    // Dangerous code
+    $db_to_mecab = "$temp_dir/{$tbpref}db_to_mecab";
+    $mecab_to_db = "$temp_dir/{$tbpref}mecab_to_db";
     $mecab_args = " -F %m\\t%t\\t%h\\n -U %m\\t%t\\t%h\\n -E EOS\\t3\\t7\\n ";
     $mecab_expr = '';
     if (file_exists($db_to_mecab)) { 

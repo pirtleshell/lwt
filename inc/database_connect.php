@@ -582,19 +582,20 @@ function set_word_count(): void
         if ($temp_dir === null || $temp_dir === "") {
             $temp_dir = sys_get_temp_dir();
         }
-        $db_to_mecab = tempnam($temp_dir, "{$tbpref}db_to_mecab");
-        $mecab_to_db = tempnam($temp_dir, "{$tbpref}mecab_to_db");
+        // Dangerous code
+        $db_to_mecab = "$temp_dir/{$tbpref}db_to_mecab";
+        $mecab_to_db = "$temp_dir/{$tbpref}mecab_to_db";
         $mecab_args = ' -F %m%t\\t -U %m%t\\t -E \\n ';
-        if (file_exists($db_to_mecab)) { 
+        if (file_exists($db_to_mecab)) {
             unlink($db_to_mecab); 
         }
 
         $mecab = get_mecab_path($mecab_args);
 
         do_mysqli_query(
-            'SELECT WoID, WoTextLC FROM ' . $tbpref . 'words 
-            WHERE WoLgID in(@m) AND WoWordCount = 0 
-            into outfile ' . convert_string_to_sqlsyntax($db_to_mecab)
+            "SELECT WoID, WoTextLC FROM {$tbpref}words 
+            WHERE WoLgID IN(@m) AND WoWordCount = 0 
+            into outfile " . convert_string_to_sqlsyntax($db_to_mecab)
         );
         $handle = popen($mecab . $db_to_mecab, "r");
         $fp = fopen($mecab_to_db, 'w');
