@@ -773,12 +773,13 @@ function getLangFromDict(wblink3) {
 }
 
 /**
- * Return a tooltip, a short string describing the word (word, translation and romanization) 
+ * Return a tooltip, a short string describing the word (word, translation, 
+ * romanization and learning status) 
  * 
  * @param {string} word   The word 
  * @param {string} trans  Translation of the word
  * @param {string} roman  Romanized version 
- * @param {int}    status Learnign status of the word 
+ * @param {int}    status Learning status of the word 
  * @returns {string} Toottip for this word
  */
 function make_tooltip (word, trans, roman, status) {
