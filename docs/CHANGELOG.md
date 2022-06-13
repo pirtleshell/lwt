@@ -15,6 +15,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 ### Fixed
 * For some user, the --secure-priv-file option was still required to be on. This was due to a conflict between PHP and MySQLI authorizations.
 * When deleting a word, it was previously necessary to reload the page to see a visual change.
+* Multi-words insertion fixed.
 
 ## 2.0.3 (February 15 2022)
 ### Fixed

@@ -579,12 +579,15 @@ function set_word_count(): void
     ) {
         
         $temp_dir = get_first_value('SELECT @@GLOBAL.secure_file_priv AS value');
+        $temp_dir = null;
         if ($temp_dir === null || $temp_dir === "") {
             $temp_dir = sys_get_temp_dir();
         }
         // Dangerous code
-        $db_to_mecab = "$temp_dir/{$tbpref}db_to_mecab";
-        $mecab_to_db = "$temp_dir/{$tbpref}mecab_to_db";
+        $db_to_mecab = "$temp_dir{$tbpref}db_to_mecab";
+        $db_to_mecab = tempnam($temp_dir, "{$tbpref}db_to_mecab");
+        $mecab_to_db = "$temp_dir{$tbpref}mecab_to_db";
+        $mecab_to_db = tempnam($temp_dir, "{$tbpref}mecab_to_db");
         $mecab_args = ' -F %m%t\\t -U %m%t\\t -E \\n ';
         if (file_exists($db_to_mecab)) {
             unlink($db_to_mecab); 
@@ -592,31 +595,49 @@ function set_word_count(): void
 
         $mecab = get_mecab_path($mecab_args);
 
-        do_mysqli_query(
+        $sql = "SELECT WoID, WoTextLC FROM {$tbpref}words 
+        WHERE WoLgID IN(@m) AND WoWordCount = 0";
+        $res = do_mysqli_query($sql);
+        $fp = fopen($db_to_mecab, 'w');
+        while ($record = mysqli_fetch_assoc($res)) {
+            echo $record['WoID'] . "\t" . $record['WoTextLC'] . "\n";
+            fwrite(
+                $fp, 
+                $record['WoID'] . "\t" . $record['WoTextLC'] . "\n"
+            );
+        }
+        mysqli_free_result($res);
+        fclose($fp);
+
+        /*do_mysqli_query(
             "SELECT WoID, WoTextLC FROM {$tbpref}words 
             WHERE WoLgID IN(@m) AND WoWordCount = 0 
-            into outfile " . convert_string_to_sqlsyntax($db_to_mecab)
-        );
+            INTO OUTFILE " . convert_string_to_sqlsyntax($db_to_mecab)
+        );*/
+
         $handle = popen($mecab . $db_to_mecab, "r");
         $fp = fopen($mecab_to_db, 'w');
+        $sql = "INSERT INTO {$tbpref}mecab (MID, MWordCount) values";
         if (!feof($handle)) {
             while (!feof($handle)) {
                 $row = fgets($handle, 1024);
-                $arr  = explode("4\t", $row, 2);
-                //var_dump($arr);
+                $arr = explode("4\t", $row, 2);
                 if (!empty($arr[1])) {
                     $cnt = substr_count(
                         preg_replace('$[^267]\t$u', '', $arr[1]), 
                         "\t"
                     );
-                    if(empty($cnt)) { 
+                    if (empty($cnt)) {
                         $cnt =1; 
                     }
                     fwrite($fp, $arr[0] . "\t" . $cnt . "\n");
+                    $sql .= "(" . convert_string_to_sqlsyntax(
+                        $arr[0]) . ", " . $cnt . "),";
                 }
             }
             pclose($handle);
             fclose($fp);
+            $sql = mb_substr($sql, 0, mb_strlen($sql) - 1);
             do_mysqli_query(
                 'CREATE TEMPORARY TABLE ' . $tbpref . 'mecab ( 
                     MID mediumint(8) unsigned NOT NULL, 
@@ -624,17 +645,22 @@ function set_word_count(): void
                     PRIMARY KEY (MID)
                 ) CHARSET=utf8'
             );
+            
+            echo $sql;
+            /*
             do_mysqli_query(
                 'LOAD DATA LOCAL INFILE ' . 
                 convert_string_to_sqlsyntax($mecab_to_db) . ' 
                 INTO TABLE ' . $tbpref . 'mecab (MID, MWordCount)'
             );
+            */
+            do_mysqli_query($sql);
             do_mysqli_query(
-                'UPDATE ' . $tbpref . 'words 
-                JOIN ' . $tbpref . 'mecab ON MID = WoID 
-                SET WoWordCount = MWordCount'
+                "UPDATE {$tbpref}words 
+                JOIN {$tbpref}mecab ON MID = WoID 
+                SET WoWordCount = MWordCount"
             );
-            do_mysqli_query('DROP TABLE ' . $tbpref . 'mecab');
+            do_mysqli_query("DROP TABLE {$tbpref}mecab");
 
             unlink($mecab_to_db);
             unlink($db_to_mecab);

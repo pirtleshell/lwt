@@ -3687,69 +3687,98 @@ function insertExpressionFromMeCab($textlc, $lid, $wid, $len, $mode)
         $temp_dir = sys_get_temp_dir();
     }
     // Dangerous code
-    $db_to_mecab = "$temp_dir/{$tbpref}db_to_mecab";
-    $mecab_to_db = "$temp_dir/{$tbpref}mecab_to_db";
+    $db_to_mecab = "$temp_dir{$tbpref}db_to_mecab";
+    $db_to_mecab = tempnam($temp_dir, "{$tbpref}db_to_mecab");
+    $mecab_to_db = "$temp_dir{$tbpref}mecab_to_db";
+    $mecab_to_db = tempnam($temp_dir, "{$tbpref}mecab_to_db");
     $mecab_args = " -F %m\\t%t\\t%h\\n -U %m\\t%t\\t%h\\n -E EOS\\t3\\t7\\n ";
     $mecab_expr = '';
     if (file_exists($db_to_mecab)) { 
         unlink($db_to_mecab); 
     }
+
     $mecab = get_mecab_path($mecab_args);
+    /*
     do_mysqli_query(
         'SELECT 0 SeID, 0 SeTxID, 0 SeFirstPos, ' . 
         convert_string_to_sqlsyntax_notrim_nonull($textlc) . ' SeText 
-        UNION SELECT SeID,SeTxID,SeFirstPos,SeText 
+        UNION SELECT SeID, SeTxID, SeFirstPos, SeText 
         FROM sentences 
         WHERE SeText 
         LIKE ' . convert_string_to_sqlsyntax_notrim_nonull('%' . $textlc . '%') . ' 
-        INTO outfile ' . convert_string_to_sqlsyntax($db_to_mecab)
+        INTO OUTFILE ' . convert_string_to_sqlsyntax($db_to_mecab)
     );
-    $handle = popen($mecab . $db_to_mecab, "r");
-    $fp = fopen($mecab_to_db, 'w');
-    if(!feof($handle)) {
-        return;
+    */
+    $sql = 'SELECT 0 SeID, 0 SeTxID, 0 SeFirstPos, ' . 
+    convert_string_to_sqlsyntax_notrim_nonull($textlc) . ' SeText 
+    UNION SELECT SeID, SeTxID, SeFirstPos, SeText 
+    FROM sentences 
+    WHERE SeText 
+    LIKE ' . convert_string_to_sqlsyntax_notrim_nonull('%' . $textlc . '%');
+    $res = do_mysqli_query($sql);
+    $fp = fopen($db_to_mecab, 'w');
+    while ($record = mysqli_fetch_assoc($res)) {
+        echo $record['SeID'] . "\t" . $record['SeID'] . "\t" . 
+        $record['SeTxID'] . "\t" . $record['SeText'] . "\n";
+        fwrite(
+            $fp, 
+            $record['SeID'] . "\t" . $record['SeID'] . "\t" . 
+            $record['SeTxID'] . "\t" . $record['SeText'] . "\n"
+        );
     }
-
+    mysqli_free_result($res);
+    fclose($fp);
+    $handle = popen($mecab . $db_to_mecab, "r");
     $appendtext = null;
     $sid = null;
+    if (!feof($handle)) {
+        return array($appendtext, $sid);
+    }
+
+    $fp = fopen($mecab_to_db, 'w');
     while (!feof($handle)) {
         $row = fgets($handle, 4096);
-        //$arr  = explode("ÿ名詞-数\t",$row , 4);
+        //$arr = explode("ÿ名詞-数\t",$row , 4);
         //if(!empty($arr[3])) $sent = preg_replace(array('$ÿ記号[^\t]*\t$u','$ÿ名詞-数\t$u','$[0-9a-zA-Z]ÿ[^\t]*\t$u','$ÿ[^\t]*\t$u'),array('','','',"\t"), $arr[3]);
-        $arr  = explode("4\t", $row, 4);
-        if(!empty($arr[3])) { 
-            $sent = preg_replace_callback(
-                '([267])?\t[0-9]+$', 
-                function ($matches) {
-                    return isset($matches[1]) ? "\t" : "";
-                }, 
-                $arr[3]
-            );
-            if(empty($mecab_expr)) {
-                $mecab_expr = trim($sent) . "\t";
-            }
-            else if(!empty($arr[0])) {
-                $first_pos = (int)str_replace('{', '', $arr[2]);
-                while(($seek = mb_strrpos($sent, $mecab_expr))!==false){
-                    $sentid = str_replace('{', '', $arr[0]);
-                    $txtid = str_replace('{', '', $arr[1]);
-                    $sent =  mb_substr($sent, 0, $seek);
-                    $pos = ( mb_substr_count($sent, "\t") * 2) + $first_pos;
-                    fwrite($fp, $txtid . "\t" . $sentid . "\t" . $pos . "\n");
-                    if ($mode==0 && $txtid==$_REQUEST["tid"]) {
-                        $sid[$pos] = $sentid;
-                        if (getSettingZeroOrOne('showallwords', 1)) {
-                            $appendtext[$pos] = '&nbsp;' . $len . '&nbsp';
-                        } else { 
-                            $appendtext[$pos] = $textlc; 
-                        }
-                    }
+        $arr = explode("4\t", $row, 4);
+        if (empty($arr[3])) {
+            continue;
+        }
+        $sent = preg_replace_callback(
+            '([267])?\t[0-9]+$', 
+            function ($matches) {
+                return isset($matches[1]) ? "\t" : "";
+            }, 
+            $arr[3]
+        );
+        if (empty($mecab_expr)) {
+            $mecab_expr = trim($sent) . "\t";
+            continue;
+        } 
+        if (empty($arr[0])) {
+            continue;
+        }
+        $first_pos = (int)str_replace('{', '', $arr[2]);
+        while (($seek = mb_strrpos($sent, $mecab_expr))!==false) {
+            $sentid = str_replace('{', '', $arr[0]);
+            $txtid = str_replace('{', '', $arr[1]);
+            $sent =  mb_substr($sent, 0, $seek);
+            $pos = mb_substr_count($sent, "\t") * 2 + $first_pos;
+            fwrite($fp, $txtid . "\t" . $sentid . "\t" . $pos . "\n");
+            $sql .= "($txtid, $sentid, $pos),";
+            if ($mode == 0 && $txtid == $_REQUEST["tid"]) {
+                $sid[$pos] = $sentid;
+                if (getSettingZeroOrOne('showallwords', 1)) {
+                    $appendtext[$pos] = '&nbsp;' . $len . '&nbsp';
+                } else { 
+                    $appendtext[$pos] = $textlc; 
                 }
             }
         }
     }
     pclose($handle);
     fclose($fp);
+    $sql = mb_substr($sql, 0, mb_strlen($sql) - 1);
     do_mysqli_query(
         'ALTER TABLE ' . $tbpref . 'textitems2
          ALTER Ti2WoID SET DEFAULT ' . $wid . ',
@@ -3757,10 +3786,13 @@ function insertExpressionFromMeCab($textlc, $lid, $wid, $len, $mode)
          ALTER Ti2WordCount SET DEFAULT ' . $len . ',
          ALTER Ti2Text SET DEFAULT ""'
     );
+    /*
     do_mysqli_query(
         'LOAD DATA LOCAL INFILE ' . convert_string_to_sqlsyntax($mecab_to_db) . '
          INTO TABLE ' . $tbpref . 'textitems2 (Ti2TxID,Ti2SeID,Ti2Order)'
     );
+    */
+    do_mysqli_query($sql);
     do_mysqli_query(
         'ALTER TABLE ' . $tbpref . 'textitems2
          ALTER Ti2WoID DROP DEFAULT,
@@ -3770,7 +3802,95 @@ function insertExpressionFromMeCab($textlc, $lid, $wid, $len, $mode)
     );
     unlink($mecab_to_db);
     unlink($db_to_mecab);
-    
+    return array($appendtext, $sid);
+}
+
+function insert_standard_expression($textlc, $lid, $wid, $len, $mode) {
+    global $tbpref;
+    $appendtext = array();
+    $sid = array();
+    $sqlarr = array();
+    $wis = $textlc;
+    $sql = "select * from " . $tbpref . "languages where LgID=" . $lid;
+    $res = do_mysqli_query($sql);
+    $record = mysqli_fetch_assoc($res);
+    $removeSpaces = $record["LgRemoveSpaces"];
+    $splitEachChar = $record['LgSplitEachChar'];
+    $termchar = $record['LgRegexpWordCharacters'];
+    mysqli_free_result($res);
+    if ($removeSpaces==1 && $splitEachChar==0) {
+        $rSflag = '';
+    }
+    if($removeSpaces==1 && $splitEachChar==0) {
+        $sql = "SELECT 
+        group_concat(Ti2Text order by Ti2Order SEPARATOR ' ') AS SeText, SeID, 
+        SeTxID, SeFirstPos 
+        FROM " . $tbpref . "textitems2," . $tbpref . "sentences 
+        where SeID=Ti2SeID and SeLgID = " . $lid . " and Ti2LgID = " . $lid . " 
+        and SeText like " . convert_string_to_sqlsyntax_notrim_nonull("%" .  $wis . "%") . " 
+        and Ti2WordCount < 2 
+        group by SeID";
+    } else {
+        $sql = "SELECT * FROM " . $tbpref . "sentences 
+        where SeLgID = " . $lid . " and SeText like " . 
+        convert_string_to_sqlsyntax_notrim_nonull("%" .  $wis . "%");
+    }
+    $res = do_mysqli_query($sql);
+    $notermchar='/[^' . $termchar . '](' . $textlc . ')[^' . $termchar . ']/ui';
+    while ($record = mysqli_fetch_assoc($res)){
+        $string = ' ' . $record['SeText'] . ' ';
+        if ($splitEachChar) {
+            $string = preg_replace('/([^\s])/u', "$1 ", $string);
+        }
+        if ($removeSpaces==1 && $splitEachChar==0) {
+            if (empty($rSflag)) {
+                $rSflag = preg_match(
+                    '/(?<=[ ])(' . preg_replace(
+                        '/(.)/ui', "$1[ ]*", $textlc
+                    ) . ')(?=[ ])/ui', 
+                    $string, $ma
+                );
+                if (!empty($ma[1])) {
+                    $textlc = trim($ma[1]);
+                    $notermchar='/[^' . $termchar . '](' . $textlc . ')[^' . 
+                    $termchar . ']/ui';
+                }
+            }
+        }
+        $txtid = $record['SeTxID'];
+        $sentid = $record['SeID'];
+        $last_pos = mb_strripos($string, $textlc, 0,  'UTF-8');
+        while ($last_pos!==false){
+            $matches=array();
+            if ($splitEachChar || $removeSpaces || 
+            preg_match($notermchar, '  ' . $string, $matches, 0, $last_pos - 1)==1
+            ) {
+                $string = mb_substr($string, 0, $last_pos, 'UTF-8');
+                $cnt = preg_match_all('/([' . $termchar . ']+)/u', $string, $ma);
+                $pos = 2 * $cnt + (int) $record['SeFirstPos'];
+                $txt='';
+                if ($matches[1]!=$textlc) { 
+                    $txt=$splitEachChar?$wis:$matches[1]; 
+                }
+                $sqlarr[] = '(' . $wid . ',' . $lid . ',' . $txtid . ',' . 
+                $sentid . ',' . $pos . ',' . $len . ',' . 
+                convert_string_to_sqlsyntax_notrim_nonull($txt) . ')';
+                if ($mode==0 && $txtid==$_REQUEST["tid"]) {
+                    $sid[$pos]=$record['SeID'];
+                    if(getSettingZeroOrOne('showallwords', 1)) {
+                        $appendtext[$pos]='&nbsp;' . $len . '&nbsp';
+                    } else { 
+                        $appendtext[$pos]=$splitEachChar || $removeSpaces?$wis:$matches[1]; 
+                    }
+                }
+            } else { 
+                $string = mb_substr($string, 0, $last_pos, 'UTF-8'); 
+            }
+            $last_pos = mb_strripos($string, $textlc, 0,  'UTF-8');
+        }
+    }
+    mysqli_free_result($res);
+    return array($appendtext, $sid, $sqlarr);
 }
 
 
@@ -3836,7 +3956,7 @@ function new_expression_interactable($hex, $appendtext, $sid, $len): void
 }
 
 /**
- * Alter the database when to add a new word
+ * Alter the database to add a new word
  * 
  * @param  string $textlc 
  * @param  string $lid    Language ID
@@ -3850,7 +3970,6 @@ function new_expression_interactable($hex, $appendtext, $sid, $len): void
 function insertExpressions($textlc, $lid, $wid, $len, $mode) 
 {
     global $tbpref;
-    $wis = $textlc;
     $hex = null;
     if ($mode == 0) { 
         $hex = strToClassName(prepare_textdata($textlc)); 
@@ -3858,10 +3977,8 @@ function insertExpressions($textlc, $lid, $wid, $len, $mode)
     $sql = "select * from " . $tbpref . "languages where LgID=" . $lid;
     $res = do_mysqli_query($sql);
     $record = mysqli_fetch_assoc($res);
-    $termchar = $record['LgRegexpWordCharacters'];
     $splitEachChar = $record['LgSplitEachChar'];
-    $removeSpaces = $record["LgRemoveSpaces"];
-    $record['LgRightToLeft'];
+    $termchar = $record['LgRegexpWordCharacters'];
     mysqli_free_result($res);
     $appendtext = array();
     $sid = array();
@@ -3869,75 +3986,22 @@ function insertExpressions($textlc, $lid, $wid, $len, $mode)
     if ($splitEachChar) {
         $textlc = preg_replace('/([^\s])/u', "$1 ", $textlc);
     }
-    if ($removeSpaces==1 && $splitEachChar==0) {
-        $rSflag = '';
-    }
 
     if ('MECAB'== strtoupper(trim($termchar))) {
-        insertExpressionFromMeCab($textlc, $lid, $wid, $len, $mode);
+        list($appendtext, $sid) = insertExpressionFromMeCab(
+            $textlc, $lid, $wid, $len, $mode
+        );
     } else {
-        if($removeSpaces==1 && $splitEachChar==0) {
-            $sql = "SELECT 
-            group_concat(Ti2Text order by Ti2Order SEPARATOR ' ') AS SeText, SeID, 
-            SeTxID, SeFirstPos 
-            FROM " . $tbpref . "textitems2," . $tbpref . "sentences 
-            where SeID=Ti2SeID and SeLgID = " . $lid . " and Ti2LgID = " . $lid . " 
-            and SeText like " . convert_string_to_sqlsyntax_notrim_nonull("%" .  $wis . "%") . " 
-            and Ti2WordCount < 2 
-            group by SeID";
-        } else {
-            $sql = "SELECT * FROM " . $tbpref . "sentences 
-            where SeLgID = " . $lid . " and SeText like " . convert_string_to_sqlsyntax_notrim_nonull("%" .  $wis . "%");
+        $hex = null;
+        if ($mode == 0) { 
+            $hex = strToClassName(prepare_textdata($textlc)); 
         }
-        $res=do_mysqli_query($sql);
-        $notermchar='/[^' . $termchar . '](' . $textlc . ')[^' . $termchar . ']/ui';
-        while($record = mysqli_fetch_assoc($res)){
-            $string = ' ' . ($splitEachChar?preg_replace('/([^\s])/u', "$1 ", $record['SeText']):$record['SeText']) . ' ';
-            if($removeSpaces==1 && $splitEachChar==0) {
-                if(empty($rSflag)) {
-                    $rSflag = preg_match('/(?<=[ ])(' . preg_replace('/(.)/ui', "$1[ ]*", $textlc) . ')(?=[ ])/ui', $string, $ma);
-                    if(!empty($ma[1])) {
-                        $textlc = trim($ma[1]);
-                        $notermchar='/[^' . $termchar . '](' . $textlc . ')[^' . $termchar . ']/ui';
-                    }
-                }
-            }
-            $txtid = $record['SeTxID'];
-            $sentid = $record['SeID'];
-            $last_pos = mb_strripos($string, $textlc, 0,  'UTF-8');
-            while($last_pos!==false){
-                $matches=array();
-                if($splitEachChar || $removeSpaces || preg_match($notermchar, '  ' . $string, $matches, 0, $last_pos - 1)==1) {
-                    $string = mb_substr($string, 0, $last_pos, 'UTF-8');
-                    $cnt = preg_match_all('/([' . $termchar . ']+)/u', $string, $ma);
-                    $pos = 2 * $cnt + (int) $record['SeFirstPos'];
-                    $txt='';
-                    if($matches[1]!=$textlc) { 
-                        $txt=$splitEachChar?$wis:$matches[1]; 
-                    }
-                    $sqlarr[] = '(' . $wid . ',' . $lid . ',' . $txtid . ',' . 
-                    $sentid . ',' . $pos . ',' . $len . ',' . 
-                    convert_string_to_sqlsyntax_notrim_nonull($txt) . ')';
-                    if($mode==0 && $txtid==$_REQUEST["tid"]) {
-                        $sid[$pos]=$record['SeID'];
-                        if(getSettingZeroOrOne('showallwords', 1)) {
-                            $appendtext[$pos]='&nbsp;' . $len . '&nbsp';
-                        }
-                        else { 
-                            $appendtext[$pos]=$splitEachChar || $removeSpaces?$wis:$matches[1]; 
-                        }
-                    }
-                }
-                else { 
-                    $string = mb_substr($string, 0, $last_pos, 'UTF-8'); 
-                }
-                $last_pos = mb_strripos($string, $textlc, 0,  'UTF-8');
-            }
-        }
-        mysqli_free_result($res);
+        list($appendtext, $sid, $sqlarr) = insert_standard_expression(
+                $textlc, $lid, $wid, $len, $mode
+            );
     }
     $sqltext = null;
-    if(!empty($sqlarr)) {
+    if (!empty($sqlarr)) {
         $sqltext = '';
         if ($mode != 2) {
             $sqltext .= 

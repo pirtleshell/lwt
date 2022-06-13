@@ -50,45 +50,47 @@ function edit_mword_do_operation($translation, $wid) {
         exit();
 
     }
-    ?>
-<script type="text/javascript">
-//<![CDATA[
-const context = window.parent.document;
-var woid = <?php echo prepare_textdata_js($wid); ?>;
-var status = <?php echo prepare_textdata_js($_REQUEST["WoStatus"]); ?>;
-var trans = <?php echo prepare_textdata_js($translation . getWordTagList($wid, ' ', 1, 0)); ?>;
-var roman = <?php echo prepare_textdata_js($_REQUEST["WoRomanization"]); ?>;
-var title = window.parent.JQ_TOOLTIP ? '':make_tooltip(<?php echo prepare_textdata_js($_REQUEST["WoText"]); ?>,trans,roman,status);
-//]]>
-</script>
-    <?php
     if ($_REQUEST['op'] == 'Save') {
 
         insertExpressions($textlc, $_REQUEST["WoLgID"], $wid, $_REQUEST["len"], 0);
     } else {
         ?>
-<script type="text/javascript">
-//<![CDATA[
+    <script type="text/javascript">
+    //<![CDATA[
+        const context = window.parent.document;
+        const woid = <?= prepare_textdata_js($wid); ?>;
+        const status = <?= prepare_textdata_js($_REQUEST["WoStatus"]); ?>;
+        const trans = <?= prepare_textdata_js(
+            $translation . getWordTagList($wid, ' ', 1, 0)
+        ); ?>;
+        const roman = <?= prepare_textdata_js($_REQUEST["WoRomanization"]); ?>;
+        let title = '';
+        if (window.parent.JQ_TOOLTIP) 
+            title = make_tooltip(
+                <?= prepare_textdata_js($_REQUEST["WoText"]); ?>,trans,roman,status
+            );
         $('.word' + woid, context)
-        .attr('data_trans',trans)
-        .attr('data_rom',roman)
-        .attr('title',title)
-        .removeClass('status<?php echo $_REQUEST['WoOldStatus']; ?>')
+        .attr('data_trans', trans)
+        .attr('data_rom', roman)
+        .attr('title', title)
+        .removeClass('status<?= $_REQUEST['WoOldStatus']; ?>')
         .addClass('status' + status)
-        .attr('data_status',status);
-//]]>
-</script>
+        .attr('data_status', status);
+    //]]>
+    </script>
         <?php
     }
     ?>
-<script type="text/javascript">
-window.parent.document.getElementById('frame-l').focus();
-window.parent.setTimeout('cClick()', 100);
-</script>
+    <script type="text/javascript">
+        window.parent.document.getElementById('frame-l').focus();
+        window.parent.setTimeout('cClick()', 100);
+    </script>
 
     <?php
-
-    if(isset($sqltext)) {
+    /*
+     * Unreachabke code, at least from 2.3.0-fork.
+     */
+    if (isset($sqltext)) {
         flush();
         do_mysqli_query($sqltext);
         echo '<p>OK: ',tohtml($message),'</p>';
@@ -107,15 +109,16 @@ function edit_mword_do_insert($translation) {
             WoRomanization, WoWordCount, WoStatusChanged,' 
             .  make_score_random_insert_update('iv') . '
         ) values( ' . 
-        $_REQUEST["WoLgID"] . ', ' .
-        convert_string_to_sqlsyntax($_REQUEST["WoTextLC"]) . ', ' .
-        convert_string_to_sqlsyntax($_REQUEST["WoText"]) . ', ' .
-        $_REQUEST["WoStatus"] . ', ' .
-        convert_string_to_sqlsyntax($translation) . ', ' .
-        convert_string_to_sqlsyntax(repl_tab_nl($_REQUEST["WoSentence"])) . ', ' .
-        convert_string_to_sqlsyntax($_REQUEST["WoRomanization"]) . ', ' . 
-        convert_string_to_sqlsyntax($_REQUEST["len"]) . ', NOW(), ' .  
-        make_score_random_insert_update('id') . 
+            $_REQUEST["WoLgID"] . ', ' .
+            convert_string_to_sqlsyntax($_REQUEST["WoTextLC"]) . ', ' .
+            convert_string_to_sqlsyntax($_REQUEST["WoText"]) . ', ' .
+            $_REQUEST["WoStatus"] . ', ' .
+            convert_string_to_sqlsyntax($translation) . ', ' .
+            convert_string_to_sqlsyntax(repl_tab_nl($_REQUEST["WoSentence"])) . ', ' .
+            convert_string_to_sqlsyntax($_REQUEST["WoRomanization"]) . ', ' . 
+            convert_string_to_sqlsyntax($_REQUEST["len"]) . ', 
+            NOW(), ' .  
+            make_score_random_insert_update('id') . 
         ')', 
         "Term saved"
     );
@@ -157,6 +160,8 @@ function edit_mword_do_update($translation) {
 function edit_mword_display() {
     global $tbpref;
 
+    $lang = null;
+    $term = null;
     $wid = getreq('wid');
 
     if ($wid == '') {
@@ -171,7 +176,8 @@ function edit_mword_display() {
         $wid = get_first_value(
             "select WoID as value 
             from " . $tbpref . "words 
-            where WoLgID = " . $lang . " and WoTextLC = " . convert_string_to_sqlsyntax($termlc)
+            where WoLgID = " . $lang . 
+            " and WoTextLC = " . convert_string_to_sqlsyntax($termlc)
         );
         if (isset($wid)) { 
             $term = get_first_value(
@@ -366,8 +372,6 @@ if ($translation_raw == '' ) {
 
 // INS/UPD
 
-$lang = null;
-$term = null;
 if (isset($_REQUEST['op'])) {
     edit_mword_do_operation($translation, $wid);
 } // if (isset($_REQUEST['op']))
