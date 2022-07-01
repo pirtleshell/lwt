@@ -559,6 +559,76 @@ function optimizedb(): void
     mysqli_free_result($res);
 }
 
+function update_japanese_word_count($japid) {
+    global $tbpref;
+        
+    // STEP 1: write the useful info to a file
+    $db_to_mecab = tempnam(sys_get_temp_dir(), "{$tbpref}db_to_mecab");
+    $mecab_args = ' -F %m%t\\t -U %m%t\\t -E \\n ';
+    $mecab = get_mecab_path($mecab_args);
+
+    $sql = "SELECT WoID, WoTextLC FROM {$tbpref}words 
+    WHERE WoLgID = $japid AND WoWordCount = 0";
+    $res = do_mysqli_query($sql);
+    $fp = fopen($db_to_mecab, 'w');
+    while ($record = mysqli_fetch_assoc($res)) {
+        echo $record['WoID'] . "\t" . $record['WoTextLC'] . "\n";
+        fwrite($fp, $record['WoID'] . "\t" . $record['WoTextLC'] . "\n");
+    }
+    mysqli_free_result($res);
+    fclose($fp);
+
+    // STEP 2: process the data with MeCab and refine the output
+    $handle = popen($mecab . $db_to_mecab, "r");
+    if (feof($handle)) {
+        pclose($handle);
+        unlink($db_to_mecab);
+        return;
+    }
+    $sql = "INSERT INTO {$tbpref}mecab (MID, MWordCount) values";
+    $values = array();
+    while (!feof($handle)) {
+        $row = fgets($handle, 1024);
+        $arr = explode("4\t", $row, 2);
+        if (!empty($arr[1])) {
+            $cnt = substr_count(
+                preg_replace('$[^267]\t$u', '', $arr[1]), 
+                "\t"
+            );
+            if (empty($cnt)) {
+                $cnt = 1;
+            }
+            $values[] = "(" . convert_string_to_sqlsyntax($arr[0]) . ", $cnt)";
+        }
+    }
+    pclose($handle);
+    if (empty($values)) {
+        // Nothing to update, quit
+        return;
+    }
+    $sql .= join(",", $values);
+
+
+    // STEP 3: edit the database
+    do_mysqli_query(
+        "CREATE TEMPORARY TABLE {$tbpref}mecab ( 
+            MID mediumint(8) unsigned NOT NULL, 
+            MWordCount tinyint(3) unsigned NOT NULL, 
+            PRIMARY KEY (MID)
+        ) CHARSET=utf8"
+    );
+    
+    do_mysqli_query($sql);
+    do_mysqli_query(
+        "UPDATE {$tbpref}words 
+        JOIN {$tbpref}mecab ON MID = WoID 
+        SET WoWordCount = MWordCount"
+    );
+    do_mysqli_query("DROP TABLE {$tbpref}mecab");
+
+    unlink($db_to_mecab);
+}
+
 /**
  * Set the number of words for all languages
  * 
@@ -572,79 +642,21 @@ function set_word_count(): void
     $sqlarr = array();
     $i = 0;
     $min = 0;
-
-    if (get_first_value(
-        "SELECT (@m := group_concat(LgID)) value 
+    /**
+     * @var string|null ID for the Japanese language using MeCab
+     */
+    $japid = get_first_value(
+        "SELECT group_concat(LgID) value 
         FROM {$tbpref}languages 
         WHERE UPPER(LgRegexpWordCharacters)='MECAB'"
-    )
-    ) {
-        
-        // STEP 1: write the useful info to a file
-        $db_to_mecab = tempnam(sys_get_temp_dir(), "{$tbpref}db_to_mecab");
-        $mecab_args = ' -F %m%t\\t -U %m%t\\t -E \\n ';
-        $mecab = get_mecab_path($mecab_args);
+    );
 
-        $sql = "SELECT WoID, WoTextLC FROM {$tbpref}words 
-        WHERE WoLgID IN(@m) AND WoWordCount = 0";
-        $res = do_mysqli_query($sql);
-        $fp = fopen($db_to_mecab, 'w');
-        while ($record = mysqli_fetch_assoc($res)) {
-            echo $record['WoID'] . "\t" . $record['WoTextLC'] . "\n";
-            fwrite(
-                $fp, 
-                $record['WoID'] . "\t" . $record['WoTextLC'] . "\n"
-            );
-        }
-        mysqli_free_result($res);
-        fclose($fp);
-
-        // STEP 2: process the data with MeCab and refine the output
-        $handle = popen($mecab . $db_to_mecab, "r");
-        $sql = "INSERT INTO {$tbpref}mecab (MID, MWordCount) values";
-        if (!feof($handle)) {
-            while (!feof($handle)) {
-                $row = fgets($handle, 1024);
-                $arr = explode("4\t", $row, 2);
-                if (!empty($arr[1])) {
-                    $cnt = substr_count(
-                        preg_replace('$[^267]\t$u', '', $arr[1]), 
-                        "\t"
-                    );
-                    if (empty($cnt)) {
-                        $cnt = 1;
-                    }
-                    $sql .= "(" . convert_string_to_sqlsyntax(
-                        $arr[0]) . ", " . $cnt . "),";
-                }
-            }
-            pclose($handle);
-            $sql = mb_substr($sql, 0, mb_strlen($sql) - 1);
-
-
-            // STEP 3: edit the database
-            do_mysqli_query(
-                'CREATE TEMPORARY TABLE ' . $tbpref . 'mecab ( 
-                    MID mediumint(8) unsigned NOT NULL, 
-                    MWordCount tinyint(3) unsigned NOT NULL, 
-                    PRIMARY KEY (MID)
-                ) CHARSET=utf8'
-            );
-            
-            do_mysqli_query($sql);
-            do_mysqli_query(
-                "UPDATE {$tbpref}words 
-                JOIN {$tbpref}mecab ON MID = WoID 
-                SET WoWordCount = MWordCount"
-            );
-            do_mysqli_query("DROP TABLE {$tbpref}mecab");
-
-            unlink($db_to_mecab);
-        }
+    if ($japid) {
+        update_japanese_word_count((int)$japid);
     }
     $sql = "SELECT WoID, WoTextLC, LgRegexpWordCharacters, LgSplitEachChar 
-    FROM " . $tbpref . "words, " . $tbpref . "languages 
-    WHERE WoWordCount=0 AND WoLgID = LgID 
+    FROM {$tbpref}words, {$tbpref}languages 
+    WHERE WoWordCount = 0 AND WoLgID = LgID 
     ORDER BY WoID";
     $result = do_mysqli_query($sql);
     while ($rec = mysqli_fetch_assoc($result)){
@@ -659,10 +671,10 @@ function set_word_count(): void
         );
         if (++$i % 1000 == 0) {
             $max = $rec['WoID'];
-            $sqltext = "UPDATE  " . $tbpref . "words 
-            SET WoWordCount  = CASE WoID" . implode(' ', $sqlarr) . ' 
+            $sqltext = "UPDATE  {$tbpref}words 
+            SET WoWordCount = CASE WoID" . implode(' ', $sqlarr) . "
             END 
-            WHERE WoWordCount=0 AND WoID between ' . $min . ' AND ' . $max;
+            WHERE WoWordCount=0 AND WoID BETWEEN $min AND $max";
             do_mysqli_query($sqltext);
             $min = $max;
             $sqlarr = array();

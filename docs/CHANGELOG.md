@@ -6,8 +6,9 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 
 ## [Unreleased]
 ### Added
-* Compatibility with PHP 8.0.* and 8.1.*!
+* Compatibility with PHP 8+!
 * Updated with LWT 2.0.3, solving incompatibilities with PHP 8.1 throzing MySQLI errors.
+* Introducing the new class ``Term`` in ``edit_mword.php``. This class is yet to be considered experimental, so expect important changes, but should gradually get used everywhere.
 
 ### Changed
 * Composer dependencies updated.
