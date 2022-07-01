@@ -298,7 +298,7 @@ function saveWordTags($wid)
  * 
  * @return void
  * 
- * @global string $tbpref Databse table prefix.
+ * @global string $tbpref Database table prefix.
  */
 function saveTextTags($tid): void 
 {
@@ -2972,8 +2972,7 @@ function strToClassName($string): string
             || ($o > 122 && $o < 165)
         ) {
             $r .= '¤' . strToHex($c); 
-        }
-        else { 
+        } else { 
             $r .= $c; 
         }
     }
@@ -3669,46 +3668,27 @@ function getScriptDirectionTag($lid): string
 /**
  * Insert an expression to the database using MeCab.
  *
- * @param string $textlc 
+ * @param string $textlc Text to insert in lower case
  * @param string $lid    Language ID
  * @param string $wid    Word ID
  * @param int    $mode
  *
- * @global string $tbpref Table name prefix
+ * @return array<string[]|null, string[]|null> Append text and sentence id
+ * 
+ * @since 2.5.0-fork 
  *
- * @return void
+ * @global string $tbpref Table name prefix
  */
 function insertExpressionFromMeCab($textlc, $lid, $wid, $len, $mode)
 {
     global $tbpref;
 
-    $temp_dir = get_first_value('SELECT @@GLOBAL.secure_file_priv AS value');
-    if ($temp_dir === null || $temp_dir === "") {
-        $temp_dir = sys_get_temp_dir();
-    }
-    // Dangerous code
-    $db_to_mecab = "$temp_dir{$tbpref}db_to_mecab";
-    $db_to_mecab = tempnam($temp_dir, "{$tbpref}db_to_mecab");
-    $mecab_to_db = "$temp_dir{$tbpref}mecab_to_db";
-    $mecab_to_db = tempnam($temp_dir, "{$tbpref}mecab_to_db");
+    // STEP 1: write the useful info to a file
+    $db_to_mecab = tempnam(sys_get_temp_dir(), "{$tbpref}db_to_mecab");
     $mecab_args = " -F %m\\t%t\\t%h\\n -U %m\\t%t\\t%h\\n -E EOS\\t3\\t7\\n ";
     $mecab_expr = '';
-    if (file_exists($db_to_mecab)) { 
-        unlink($db_to_mecab); 
-    }
 
     $mecab = get_mecab_path($mecab_args);
-    /*
-    do_mysqli_query(
-        'SELECT 0 SeID, 0 SeTxID, 0 SeFirstPos, ' . 
-        convert_string_to_sqlsyntax_notrim_nonull($textlc) . ' SeText 
-        UNION SELECT SeID, SeTxID, SeFirstPos, SeText 
-        FROM sentences 
-        WHERE SeText 
-        LIKE ' . convert_string_to_sqlsyntax_notrim_nonull('%' . $textlc . '%') . ' 
-        INTO OUTFILE ' . convert_string_to_sqlsyntax($db_to_mecab)
-    );
-    */
     $sql = 'SELECT 0 SeID, 0 SeTxID, 0 SeFirstPos, ' . 
     convert_string_to_sqlsyntax_notrim_nonull($textlc) . ' SeText 
     UNION SELECT SeID, SeTxID, SeFirstPos, SeText 
@@ -3718,8 +3698,6 @@ function insertExpressionFromMeCab($textlc, $lid, $wid, $len, $mode)
     $res = do_mysqli_query($sql);
     $fp = fopen($db_to_mecab, 'w');
     while ($record = mysqli_fetch_assoc($res)) {
-        echo $record['SeID'] . "\t" . $record['SeID'] . "\t" . 
-        $record['SeTxID'] . "\t" . $record['SeText'] . "\n";
         fwrite(
             $fp, 
             $record['SeID'] . "\t" . $record['SeID'] . "\t" . 
@@ -3728,6 +3706,9 @@ function insertExpressionFromMeCab($textlc, $lid, $wid, $len, $mode)
     }
     mysqli_free_result($res);
     fclose($fp);
+
+
+    // STEP 2: process the data with MeCab and refine the output
     $handle = popen($mecab . $db_to_mecab, "r");
     $appendtext = null;
     $sid = null;
@@ -3735,11 +3716,9 @@ function insertExpressionFromMeCab($textlc, $lid, $wid, $len, $mode)
         return array($appendtext, $sid);
     }
 
-    $fp = fopen($mecab_to_db, 'w');
+
     while (!feof($handle)) {
         $row = fgets($handle, 4096);
-        //$arr = explode("ÿ名詞-数\t",$row , 4);
-        //if(!empty($arr[3])) $sent = preg_replace(array('$ÿ記号[^\t]*\t$u','$ÿ名詞-数\t$u','$[0-9a-zA-Z]ÿ[^\t]*\t$u','$ÿ[^\t]*\t$u'),array('','','',"\t"), $arr[3]);
         $arr = explode("4\t", $row, 4);
         if (empty($arr[3])) {
             continue;
@@ -3764,7 +3743,6 @@ function insertExpressionFromMeCab($textlc, $lid, $wid, $len, $mode)
             $txtid = str_replace('{', '', $arr[1]);
             $sent =  mb_substr($sent, 0, $seek);
             $pos = mb_substr_count($sent, "\t") * 2 + $first_pos;
-            fwrite($fp, $txtid . "\t" . $sentid . "\t" . $pos . "\n");
             $sql .= "($txtid, $sentid, $pos),";
             if ($mode == 0 && $txtid == $_REQUEST["tid"]) {
                 $sid[$pos] = $sentid;
@@ -3777,34 +3755,43 @@ function insertExpressionFromMeCab($textlc, $lid, $wid, $len, $mode)
         }
     }
     pclose($handle);
-    fclose($fp);
     $sql = mb_substr($sql, 0, mb_strlen($sql) - 1);
+
+
+    // STEP 3: edit the database
     do_mysqli_query(
-        'ALTER TABLE ' . $tbpref . 'textitems2
-         ALTER Ti2WoID SET DEFAULT ' . $wid . ',
-         ALTER Ti2LgID SET DEFAULT ' . $lid . ',
-         ALTER Ti2WordCount SET DEFAULT ' . $len . ',
-         ALTER Ti2Text SET DEFAULT ""'
+        "ALTER TABLE {$tbpref}textitems2
+         ALTER Ti2WoID SET DEFAULT $wid,
+         ALTER Ti2LgID SET DEFAULT $lid,
+         ALTER Ti2WordCount SET DEFAULT $len,
+         ALTER Ti2Text SET DEFAULT ''"
     );
-    /*
-    do_mysqli_query(
-        'LOAD DATA LOCAL INFILE ' . convert_string_to_sqlsyntax($mecab_to_db) . '
-         INTO TABLE ' . $tbpref . 'textitems2 (Ti2TxID,Ti2SeID,Ti2Order)'
-    );
-    */
     do_mysqli_query($sql);
     do_mysqli_query(
-        'ALTER TABLE ' . $tbpref . 'textitems2
+        "ALTER TABLE {$tbpref}textitems2
          ALTER Ti2WoID DROP DEFAULT,
          ALTER Ti2LgID DROP DEFAULT,
          ALTER Ti2WordCount DROP DEFAULT,
-         ALTER Ti2Text DROP DEFAULT'
+         ALTER Ti2Text DROP DEFAULT"
     );
-    unlink($mecab_to_db);
     unlink($db_to_mecab);
     return array($appendtext, $sid);
 }
 
+/**
+ * Insert an expression without using a tool like MeCab.
+ *
+ * @param string $textlc Text to insert in lower case
+ * @param string $lid    Language ID
+ * @param string $wid    Word ID
+ * @param int    $mode   
+ *
+ * @return array<string[]|null, string[]|null> Append text and sentence id
+ * 
+ * @since 2.5.0-fork 
+ *
+ * @global string $tbpref Table name prefix
+ */
 function insert_standard_expression($textlc, $lid, $wid, $len, $mode) {
     global $tbpref;
     $appendtext = array();
@@ -3958,13 +3945,16 @@ function new_expression_interactable($hex, $appendtext, $sid, $len): void
 /**
  * Alter the database to add a new word
  * 
- * @param  string $textlc 
+ * @param  string $textlc Text in lower case
  * @param  string $lid    Language ID
  * @param  string $len
  * @param  int    $mode   Function mode
  *                        - 0: Default mode, do nothing special
  *                        - 1: Runs an expresion inserter interactable 
  *                        - 2: Return the sql output
+ * 
+ * @return string|null If $mode == 2 return the SQL request, nothing otherwise.
+ * 
  * @global string $tbpref Table name prefix
  */
 function insertExpressions($textlc, $lid, $wid, $len, $mode) 

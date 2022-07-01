@@ -562,37 +562,27 @@ function optimizedb(): void
 /**
  * Set the number of words for all languages
  * 
+ * @return void
+ * 
  * @global string $tbpref Database table prefix
  */
 function set_word_count(): void 
 {
     global $tbpref;
     $sqlarr = array();
-    $i=0;
-    $min=0;
+    $i = 0;
+    $min = 0;
 
     if (get_first_value(
-        'SELECT (@m := group_concat(LgID)) value 
-        FROM ' . $tbpref . 'languages 
-        WHERE UPPER(LgRegexpWordCharacters)="MECAB"'
+        "SELECT (@m := group_concat(LgID)) value 
+        FROM {$tbpref}languages 
+        WHERE UPPER(LgRegexpWordCharacters)='MECAB'"
     )
     ) {
         
-        $temp_dir = get_first_value('SELECT @@GLOBAL.secure_file_priv AS value');
-        $temp_dir = null;
-        if ($temp_dir === null || $temp_dir === "") {
-            $temp_dir = sys_get_temp_dir();
-        }
-        // Dangerous code
-        $db_to_mecab = "$temp_dir{$tbpref}db_to_mecab";
-        $db_to_mecab = tempnam($temp_dir, "{$tbpref}db_to_mecab");
-        $mecab_to_db = "$temp_dir{$tbpref}mecab_to_db";
-        $mecab_to_db = tempnam($temp_dir, "{$tbpref}mecab_to_db");
+        // STEP 1: write the useful info to a file
+        $db_to_mecab = tempnam(sys_get_temp_dir(), "{$tbpref}db_to_mecab");
         $mecab_args = ' -F %m%t\\t -U %m%t\\t -E \\n ';
-        if (file_exists($db_to_mecab)) {
-            unlink($db_to_mecab); 
-        }
-
         $mecab = get_mecab_path($mecab_args);
 
         $sql = "SELECT WoID, WoTextLC FROM {$tbpref}words 
@@ -609,14 +599,8 @@ function set_word_count(): void
         mysqli_free_result($res);
         fclose($fp);
 
-        /*do_mysqli_query(
-            "SELECT WoID, WoTextLC FROM {$tbpref}words 
-            WHERE WoLgID IN(@m) AND WoWordCount = 0 
-            INTO OUTFILE " . convert_string_to_sqlsyntax($db_to_mecab)
-        );*/
-
+        // STEP 2: process the data with MeCab and refine the output
         $handle = popen($mecab . $db_to_mecab, "r");
-        $fp = fopen($mecab_to_db, 'w');
         $sql = "INSERT INTO {$tbpref}mecab (MID, MWordCount) values";
         if (!feof($handle)) {
             while (!feof($handle)) {
@@ -628,16 +612,17 @@ function set_word_count(): void
                         "\t"
                     );
                     if (empty($cnt)) {
-                        $cnt =1; 
+                        $cnt = 1;
                     }
-                    fwrite($fp, $arr[0] . "\t" . $cnt . "\n");
                     $sql .= "(" . convert_string_to_sqlsyntax(
                         $arr[0]) . ", " . $cnt . "),";
                 }
             }
             pclose($handle);
-            fclose($fp);
             $sql = mb_substr($sql, 0, mb_strlen($sql) - 1);
+
+
+            // STEP 3: edit the database
             do_mysqli_query(
                 'CREATE TEMPORARY TABLE ' . $tbpref . 'mecab ( 
                     MID mediumint(8) unsigned NOT NULL, 
@@ -646,14 +631,6 @@ function set_word_count(): void
                 ) CHARSET=utf8'
             );
             
-            echo $sql;
-            /*
-            do_mysqli_query(
-                'LOAD DATA LOCAL INFILE ' . 
-                convert_string_to_sqlsyntax($mecab_to_db) . ' 
-                INTO TABLE ' . $tbpref . 'mecab (MID, MWordCount)'
-            );
-            */
             do_mysqli_query($sql);
             do_mysqli_query(
                 "UPDATE {$tbpref}words 
@@ -662,7 +639,6 @@ function set_word_count(): void
             );
             do_mysqli_query("DROP TABLE {$tbpref}mecab");
 
-            unlink($mecab_to_db);
             unlink($db_to_mecab);
         }
     }
@@ -671,7 +647,7 @@ function set_word_count(): void
     WHERE WoWordCount=0 AND WoLgID = LgID 
     ORDER BY WoID";
     $result = do_mysqli_query($sql);
-    while($rec = mysqli_fetch_assoc($result)){
+    while ($rec = mysqli_fetch_assoc($result)){
         if ($rec['LgSplitEachChar']) {
             $textlc = preg_replace('/([^\s])/u', "$1 ", $rec['WoTextLC']);
         } else {
@@ -682,21 +658,21 @@ function set_word_count(): void
             '/([' . $rec['LgRegexpWordCharacters'] . ']+)/u', $textlc, $ma
         );
         if (++$i % 1000 == 0) {
-            //if(!empty($sqlarr)) { cannot be empty
             $max = $rec['WoID'];
-            $sqltext = "UPDATE  " . $tbpref . "words SET WoWordCount  = CASE WoID";
-            $sqltext .= implode(' ', $sqlarr) . ' END 
+            $sqltext = "UPDATE  " . $tbpref . "words 
+            SET WoWordCount  = CASE WoID" . implode(' ', $sqlarr) . ' 
+            END 
             WHERE WoWordCount=0 AND WoID between ' . $min . ' AND ' . $max;
             do_mysqli_query($sqltext);
-            $min=$max;
-            //}
+            $min = $max;
             $sqlarr = array();
         }
     }
     mysqli_free_result($result);
     if (!empty($sqlarr)) {
-        $sqltext = "UPDATE  " . $tbpref . "words SET WoWordCount  = CASE WoID";
-        $sqltext .= implode(' ', $sqlarr) . ' END where WoWordCount=0';
+        $sqltext = "UPDATE  " . $tbpref . "words 
+        SET WoWordCount = CASE WoID" . implode(' ', $sqlarr) . ' 
+        END where WoWordCount=0';
         do_mysqli_query($sqltext);
     }
 }
