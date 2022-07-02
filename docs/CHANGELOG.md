@@ -18,6 +18,9 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 * When deleting a word, it was previously necessary to reload the page to see a visual change.
 * Multi-words insertion fixed.
 
+### Deprecated
+* ``set_word_count`` in ``database_connect.php`` had a misleading name. It was changed to ``init_word_count``.
+
 ## 2.0.3 (February 15 2022)
 ### Fixed
 * An incompatibility with PHP 8.1+ (changed mysqli_report default setting in PHP 8.1+) has been fixed.

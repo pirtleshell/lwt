@@ -559,6 +559,15 @@ function optimizedb(): void
     mysqli_free_result($res);
 }
 
+/**
+ * Update the word count for Japanese language (using MeCab only).
+ * 
+ * @param int $japid Japanese language ID
+ * 
+ * @return void
+ * 
+ * @global string $tbpref Database table prefix.
+ */
 function update_japanese_word_count($japid) {
     global $tbpref;
         
@@ -630,13 +639,15 @@ function update_japanese_word_count($japid) {
 }
 
 /**
- * Set the number of words for all languages
+ * Initiate the number of words in terms for all languages.
+ * 
+ * Only terms with a word count set to 0 are changed.
  * 
  * @return void
  * 
  * @global string $tbpref Database table prefix
  */
-function set_word_count(): void 
+function init_word_count(): void 
 {
     global $tbpref;
     $sqlarr = array();
@@ -687,6 +698,22 @@ function set_word_count(): void
         END where WoWordCount=0';
         do_mysqli_query($sqltext);
     }
+}
+
+/**
+ * Initiate the number of words in terms for all languages
+ * 
+ * Only terms with a word count set to 0 are changed.
+ * 
+ * @return void
+ * 
+ * @global string $tbpref Database table prefix
+ * 
+ * @deprecated Use init_word_count: same effect, but more logical name. Will be 
+ * removed in version 3.0.0.
+ */
+function set_word_count() {
+    init_word_count();
 }
 
 /**

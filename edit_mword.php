@@ -209,7 +209,7 @@ function edit_mword_do_insert($term, $lgid) {
         ')', 
         "Term saved"
     );
-    set_word_count();
+    init_word_count();
     // strToClassName($textlc);
     return $message;
 }

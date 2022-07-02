@@ -244,7 +244,7 @@ if (isset($_REQUEST['op'])) {
             if (!$file_upl ) {
                 unlink($file_name);
             }
-            set_word_count();
+            init_word_count();
             runsql('UPDATE ' . $tbpref . 'words join ' . $tbpref . 'textitems2 on WoWordCount=1 and Ti2WoID=0 and lower(Ti2Text)=WoTextLC and Ti2LgID = WoLgID SET Ti2WoID=WoID', '');
             $mwords = get_first_value("select count(*) as value from " . $tbpref . "words where WoWordCount>1 and WoCreated > " . convert_string_to_sqlsyntax($last_update));
             if($mwords > 40) {
