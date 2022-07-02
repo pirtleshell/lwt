@@ -1324,7 +1324,7 @@ function reparse_all_texts(): void
     runsql('TRUNCATE ' . $tbpref . 'sentences', '');
     runsql('TRUNCATE ' . $tbpref . 'textitems2', '');
     adjust_autoincr('sentences', 'SeID');
-    set_word_count();
+    init_word_count();
     $sql = "select TxID, TxLgID from " . $tbpref . "texts";
     $res = do_mysqli_query($sql);
     while ($record = mysqli_fetch_assoc($res)) {

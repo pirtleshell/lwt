@@ -256,7 +256,7 @@ function edit_mword_do_update($term, $newstatus) {
 }
 
 /**
- * Make the main display for editing mutli-words.
+ * Make the main display for editing multi-words.
  * 
  * @return void
  * 
@@ -265,51 +265,50 @@ function edit_mword_do_update($term, $newstatus) {
 function edit_mword_display() {
     global $tbpref;
 
-    $lang = null;
-    $term = null;
+    $term = new Term();
+
     $wid = getreq('wid');
 
     if ($wid == '') {
-        $lang = get_first_value(
+        $term->lgid = get_first_value(
             "select TxLgID as value 
             from " . $tbpref . "texts 
             where TxID = " . $_REQUEST['tid']
         );
-        $term = prepare_textdata(getreq('txt'));
-        $termlc = mb_strtolower($term, 'UTF-8');
+        $term->text = prepare_textdata(getreq('txt'));
+        $term->textlc = mb_strtolower($term->text, 'UTF-8');
 
-        $wid = get_first_value(
+        $term->id = get_first_value(
             "select WoID as value 
             from " . $tbpref . "words 
-            where WoLgID = " . $lang . 
-            " and WoTextLC = " . convert_string_to_sqlsyntax($termlc)
+            where WoLgID = " . $term->lgid . 
+            " and WoTextLC = " . convert_string_to_sqlsyntax($term->textlc)
         );
-        if (isset($wid)) { 
-            $term = get_first_value(
+        if (isset($term->id)) { 
+            $term->text = get_first_value(
                 "select WoText as value 
                 from " . $tbpref . "words 
-                where WoID = " . $wid
+                where WoID = " . $term->id
             ); 
         }
     } else {
-
-        $sql = 'select WoText, WoLgID from ' . $tbpref . 'words where WoID = ' . $wid;
+        $term->id = (int) $wid;
+        $sql = "SELECT WoText, WoLgID FROM {$tbpref}words WHERE WoID = $term->id";
         $res = do_mysqli_query($sql);
         $record = mysqli_fetch_assoc($res);
-        if ($record ) {
-            $term = $record['WoText'];
-            $lang = $record['WoLgID'];
-        } else {
+        if (!$record) {
             my_die("Cannot access Term and Language in edit_mword.php");
         }
+        $term->text = $record['WoText'];
+        $term->lgid = $record['WoLgID'];
         mysqli_free_result($res);
-        $termlc =    mb_strtolower($term, 'UTF-8');
+        $term->textlc = mb_strtolower($term->text, 'UTF-8');
 
     }
 
-    $new = empty($wid);
+    $new = empty($term->id);
 
-    $titletext = ($new ? "New Term" : "Edit Term") . ": " . $term;
+    $titletext = ($new ? "New Term" : "Edit Term") . ": " . $term->text;
     pagestart_nobody($titletext);
     ?>
     <script type="text/javascript">
@@ -321,32 +320,40 @@ function edit_mword_display() {
         });
     </script>
     <?php
-    $scrdir = getScriptDirectionTag($lang);
-
-
+    $scrdir = getScriptDirectionTag($term->lgid);
+    
     if ($new) {
         // NEW
-        edit_mword_new($lang, $termlc, $term, $scrdir);
+        edit_mword_display_new($term, $scrdir);
     } else {
         // CHG
-        edit_mword_change($wid, $lang, $termlc, $term, $scrdir);
+        edit_mword_display_change($term, $scrdir);
     }
 }
 
-function edit_mword_new($lang, $termlc, $term, $scrdir) {
+/**
+ * Display a form for the insertion of a new multi-word.
+ * 
+ * @param Term $term Multi-word to insert.
+ * 
+ * @return void
+ * 
+ * @global string $tbpref Database table prefix.
+ */
+function edit_mword_display_new($term, $scrdir) {
     global $tbpref;
     $seid = get_first_value(
         "select Ti2SeID as value 
         from " . $tbpref . "textitems2 
         where Ti2TxID = " . $_REQUEST['tid'] . " and Ti2Order = " . $_REQUEST['ord']
     );
-    $sent = getSentence($seid, $termlc, (int) getSettingWithDefault('set-term-sentence-count'));
+    $sent = getSentence($seid, $term->textlc, (int) getSettingWithDefault('set-term-sentence-count'));
 
     ?>
 
     <form name="newword" class="validate" action="<?= $_SERVER['PHP_SELF']; ?>" method="post">
-    <input type="hidden" name="WoLgID" id="langfield" value="<?= $lang; ?>" />
-    <input type="hidden" name="WoTextLC" value="<?= tohtml($termlc); ?>" />
+    <input type="hidden" name="WoLgID" id="langfield" value="<?= $term->lgid; ?>" />
+    <input type="hidden" name="WoTextLC" value="<?= tohtml($term->textlc); ?>" />
     <input type="hidden" name="tid" value="<?= $_REQUEST['tid']; ?>" />
     <input type="hidden" name="ord" value="<?= $_REQUEST['ord']; ?>" />
     <input type="hidden" name="len" value="<?= $_REQUEST['len']; ?>" />
@@ -354,7 +361,7 @@ function edit_mword_new($lang, $termlc, $term, $scrdir) {
         <tr title="Only change uppercase/lowercase!">
             <td class="td1 right"><b>New Term:</b></td>
             <td class="td1">
-                <input <?= $scrdir; ?> class="notempty checkoutsidebmp" data_info="New Term" type="text" name="WoText" id="wordfield" value="<?= tohtml($term); ?>" maxlength="250" size="35" /> 
+                <input <?= $scrdir; ?> class="notempty checkoutsidebmp" data_info="New Term" type="text" name="WoText" id="wordfield" value="<?= tohtml($term->text); ?>" maxlength="250" size="35" /> 
                 <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
             </td>
         </tr>
@@ -362,7 +369,8 @@ function edit_mword_new($lang, $termlc, $term, $scrdir) {
         <tr>
             <td class="td1 right">Translation:</td>
             <td class="td1">
-                <textarea name="WoTranslation" class="setfocus textarea-noreturn checklength checkoutsidebmp" data_maxlength="500" data_info="Translation" cols="35" rows="3"></textarea></td>
+                <textarea name="WoTranslation" class="setfocus textarea-noreturn checklength checkoutsidebmp" data_maxlength="500" data_info="Translation" cols="35" rows="3"></textarea>
+            </td>
         </tr>
         <tr>
             <td class="td1 right">Tags:</td>
@@ -390,7 +398,7 @@ function edit_mword_new($lang, $termlc, $term, $scrdir) {
         </tr>
         <tr>
             <td class="td1 right" colspan="2">
-                <?= createDictLinksInEditWin($lang, $term, 'document.forms[0].WoSentence', isset($_GET['nodict'])?0:1); ?>
+                <?= createDictLinksInEditWin($term->lgid, $term->text, 'document.forms[0].WoSentence', isset($_GET['nodict'])?0:1); ?>
                 &nbsp; &nbsp; &nbsp; 
                 <input type="submit" name="op" value="Save" />
             </td>
@@ -398,7 +406,7 @@ function edit_mword_new($lang, $termlc, $term, $scrdir) {
     </table>
     </form>
     <div id="exsent">
-        <span class="click" onclick="do_ajax_show_sentences(<?= $lang; ?>, <?= prepare_textdata_js($termlc) ?>, <?= prepare_textdata_js("document.forms['newword'].WoSentence") ?> . , -1);">
+        <span class="click" onclick="do_ajax_show_sentences(<?= $term->lgid; ?>, <?= prepare_textdata_js($term->textlc) ?>, <?= prepare_textdata_js("document.forms['newword'].WoSentence") ?> . , -1);">
             <img src="icn/sticky-notes-stack.png" title="Show Sentences" alt="Show Sentences" /> 
             Show Sentences
         </span>
@@ -406,10 +414,19 @@ function edit_mword_new($lang, $termlc, $term, $scrdir) {
     <?php
 }
 
-function edit_mword_change($wid, $lang, $termlc, $term, $scrdir) {
+/**
+ * Display an updating form for a multi-word.
+ * 
+ * @param Term $term Multi-word to being modified.
+ * 
+ * @return void
+ * 
+ * @global string $tbpref Database table prefix.
+ */
+function edit_mword_display_change($term, $scrdir) {
     global $tbpref;
-    $sql = 'select WoTranslation, WoSentence, WoRomanization, WoStatus 
-    from ' . $tbpref . 'words where WoID = ' . $wid;
+    $sql = 'SELECT WoTranslation, WoSentence, WoRomanization, WoStatus 
+    FROM ' . $tbpref . 'words WHERE WoID = ' . $term->id;
     $res = do_mysqli_query($sql);
     if ($record = mysqli_fetch_assoc($res)) {
         $status = $record['WoStatus'];
@@ -419,35 +436,36 @@ function edit_mword_change($wid, $lang, $termlc, $term, $scrdir) {
         $sentence = repl_tab_nl($record['WoSentence']);
         if ($sentence == '') {
             $seid = get_first_value(
-                "select Ti2SeID as value 
-                from " . $tbpref . "textitems2 
-                where Ti2TxID = " . $_REQUEST['tid'] . " 
-                and Ti2Order = " . $_REQUEST['ord']
+                "SELECT Ti2SeID AS value 
+                FROM " . $tbpref . "textitems2 
+                WHERE Ti2TxID = " . $_REQUEST['tid'] . 
+                " AND Ti2Order = " . $_REQUEST['ord']
             );
             $sent = getSentence(
-                $seid, $termlc, (int) getSettingWithDefault('set-term-sentence-count')
+                $seid, $term->textlc, 
+                (int) getSettingWithDefault('set-term-sentence-count')
             );
             $sentence = repl_tab_nl($sent[1]);
         }
         $transl = repl_tab_nl($record['WoTranslation']);
-        if($transl == '*') { 
-            $transl=''; 
+        if ($transl == '*') { 
+            $transl = ''; 
         }
         ?>
 
     <form name="editword" class="validate" action="<?= $_SERVER['PHP_SELF']; ?>" method="post">
-    <input type="hidden" name="WoLgID" id="langfield" value="<?= $lang; ?>" />
-    <input type="hidden" name="WoID" value="<?= $wid; ?>" />
+    <input type="hidden" name="WoLgID" id="langfield" value="<?= $term->lgid; ?>" />
+    <input type="hidden" name="WoID" value="<?= $term->id; ?>" />
     <input type="hidden" name="WoOldStatus" value="<?= $record['WoStatus']; ?>" />
     <input type="hidden" name="WoStatus" value="<?= $status; ?>" />
-    <input type="hidden" name="WoTextLC" value="<?= tohtml($termlc); ?>" />
+    <input type="hidden" name="WoTextLC" value="<?= tohtml($term->textlc); ?>" />
     <input type="hidden" name="tid" value="<?= $_REQUEST['tid']; ?>" />
     <input type="hidden" name="ord" value="<?= $_REQUEST['ord']; ?>" />
     <table class="tab2" cellspacing="0" cellpadding="5">
         <tr title="Only change uppercase/lowercase!">
             <td class="td1 right"><b>Edit Term:</b></td>
             <td class="td1">
-                <input <?= $scrdir; ?> class="notempty checkoutsidebmp" data_info="Term" type="text" name="WoText" id="wordfield" value="<?= tohtml($term); ?>" maxlength="250" size="35" /> 
+                <input <?= $scrdir; ?> class="notempty checkoutsidebmp" data_info="Term" type="text" name="WoText" id="wordfield" value="<?= tohtml($term->text); ?>" maxlength="250" size="35" /> 
                 <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
             </td>
         </tr>
@@ -461,7 +479,7 @@ function edit_mword_change($wid, $lang, $termlc, $term, $scrdir) {
         <tr>
             <td class="td1 right">Tags:</td>
             <td class="td1">
-                    <?= getWordTags($wid); ?>
+                <?= getWordTags($term->id); ?>
             </td>
         </tr>
         <tr>
@@ -485,7 +503,7 @@ function edit_mword_change($wid, $lang, $termlc, $term, $scrdir) {
         </tr>
         <tr>
             <td class="td1 right" colspan="2">
-                <?= createDictLinksInEditWin($lang, $term, 'document.forms[0].WoSentence', isset($_GET['nodict'])?0:1); ?>
+                <?= createDictLinksInEditWin($term->lgid, $term->text, 'document.forms[0].WoSentence', isset($_GET['nodict'])?0:1); ?>
                 &nbsp; &nbsp; &nbsp; 
                 <input type="submit" name="op" value="Change" />
             </td>
@@ -493,7 +511,7 @@ function edit_mword_change($wid, $lang, $termlc, $term, $scrdir) {
     </table>
     </form>
     <div id="exsent">
-        <span class="click" onclick="do_ajax_show_sentences(<?= $lang; ?>, <?= prepare_textdata_js($termlc) ?>, <?= prepare_textdata_js("document.forms['editword'].WoSentence") ?>, <?= $wid; ?>);">
+        <span class="click" onclick="do_ajax_show_sentences(<?= $term->lgid; ?>, <?= prepare_textdata_js($term->textlc) ?>, <?= prepare_textdata_js("document.forms['editword'].WoSentence") ?>, <?= $term->id; ?>);">
             <img src="icn/sticky-notes-stack.png" title="Show Sentences" alt="Show Sentences" /> 
             Show Sentences
         </span>
@@ -503,6 +521,11 @@ function edit_mword_change($wid, $lang, $termlc, $term, $scrdir) {
     mysqli_free_result($res);
 }
 
+/**
+ * Create the multi-word frame.
+ * 
+ * @return void
+ */
 function edit_mword_page() {
     if (isset($_REQUEST['op'])) {
         // INS/UPD
@@ -527,7 +550,7 @@ function edit_mword_page() {
             $_REQUEST["WoText"], $translation
         );
     } else {  
-        // edit_mword.php?tid=..&ord=..&wid=..  ODER  edit_mword.php?tid=..&ord=..&txt=..
+        // edit_mword.php?tid=..&ord=..&wid=.. OR edit_mword.php?tid=..&ord=..&txt=..
         edit_mword_display();
     }
     pageend();
