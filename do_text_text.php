@@ -100,7 +100,7 @@ function getLanguagesSettings($langid)
 
 
 /**
- * Print the output when the word is a term.
+ * Print the output when the word is a term (word or multi-word).
  *
  * @param int                   $actcode       Action code, > 1 for multiword
  * @param int                   $showAll       Show all words or not
@@ -115,20 +115,13 @@ function echo_term($actcode, $showAll, $spanid, $hidetag, $currcharcount, $recor
 {
     $actcode = (int)$record['Code'];
     if ($actcode > 1) {   
-        // A MULTIWORD FOUND
+        // A multiword
 
-        //$titext[$actcode] = $record['TiText'];
-
-        // MULTIWORD FOUND - DISPLAY (Status 1-5, display)
         if (isset($record['WoID'])) {
-
-            echo '<span id="' . $spanid . '" 
-            class="' . $hidetag . ' click mword ' . 
-            ($showAll ? 'mwsty' : 'wsty') .  
-            'order' . $record['Ti2Order'] .
-            'word' . $record['WoID'] . 
-            'status' . $record['WoStatus'] . 
-            ' TERM' . strToClassName($record['TiTextLC']) . 
+            echo '<span id="' . $spanid . '" class="' . $hidetag . ' click mword ' . 
+            ($showAll ? 'mwsty' : 'wsty') . ' order' . $record['Ti2Order'] .
+            ' word' . $record['WoID'] . ' status' . $record['WoStatus'] . 
+            ' TERM' . strToClassName($record['TiTextLC']) . '" ' .
             ' data_pos="' . $currcharcount . '" 
             data_order="' . $record['Ti2Order'] . '" 
             data_wid="' . $record['WoID'] . '" 
@@ -138,23 +131,23 @@ function echo_term($actcode, $showAll, $spanid, $hidetag, $currcharcount, $recor
             ) . '" 
             data_rom="' . tohtml($record['WoRomanization']) . '" 
             data_status="' . $record['WoStatus'] . '"  
-            data_code="' . $record['Code'] . '" 
-            data_text="' . tohtml($record['TiText']); '">'; 
+            data_code="' . $actcode . '" 
+            data_text="' . tohtml($record['TiText']) . '">'; 
             if ($showAll) {
-                echo '&nbsp;' . $record['Code'] . '&nbsp;';
+                echo '&nbsp;' . $actcode . '&nbsp;';
             } else {
                 echo tohtml($record['TiText']);
             }
             echo '</span>';
         }
     } else {  
-        // ($actcode == 1)  -- A WORD FOUND
+        // Single word
 
-        if (isset($record['WoID'])) {  // WORD FOUND STATUS 1-5,98,99
-
+        if (isset($record['WoID'])) {  
+            // Word found status 1-5|98|99
             echo '<span 
             id="' . $spanid . '" 
-            class="' . $hidetag . 
+            class="' . 
             ' click word wsty word'. $record['WoID'] . 
             ' status'. $record['WoStatus'] . 
             ' TERM' . strToClassName($record['TiTextLC']) . '" 
@@ -174,20 +167,17 @@ function echo_term($actcode, $showAll, $spanid, $hidetag, $currcharcount, $recor
             . tohtml($record['TiText']) . 
             '</span>';
         } else {
-            // NOT A WORD AND NOT A MULTIWORD FOUND - STATUS 0
+            // Not registered word (status 0)
             echo '<span 
             id="' . $spanid . '" 
-            class="' . $hidetag . 
-            ' click word wsty status0 TERM' . strToClassName($record['TiTextLC']) . '" 
+            class="click word wsty status0 TERM' . 
+            strToClassName($record['TiTextLC']) . '" 
             data_pos="' . $currcharcount . '" 
             data_order="' . $record['Ti2Order'] . '" 
             data_trans="" data_rom="" data_status="0" 
             data_wid="">' . tohtml($record['TiText']) . '</span>';
-        } 
-
-        //$titext = array('','','','','','','','','','','');
-
-    }  // ($actcode == 1)  -- A WORD FOUND
+        }
+    }
 }
 
 /**
@@ -340,29 +330,23 @@ function word_parser($record, $showAll, $currcharcount, $hideuntil): int
             $hidetag = ' hide'; 
         } else {
             $hideuntil = -1;
-            $hidetag = '';
         }
     }
 
-    // The current word is not a term
     if ($record['TiIsNotWord'] != 0) {
-        echo '<span id="' . $spanid . '" class="' .
-        $hidetag . '">' .
-        str_replace(
-            "¶",
-            '<br />',
-            tohtml($record['TiText'])
-        ) . '</span>';
-
-    } else {   
-        // $record['TiIsNotWord'] == 0  -- A TERM
-        if (isset($record['WoID']) && !$showAll && $hideuntil == -1) {
-            $hideuntil = (int)$record['Ti2Order'] + ($actcode - 1) * 2;
+        // The current word is not a term (likely punctuation)
+        echo "<span id=\"$spanid\" class=\"$hidetag\">" .
+        str_replace("¶", '<br />', tohtml($record['TiText'])) . '</span>';
+    } else {
+        // A term (word or multi-word)
+        //echo "hide " . $hideuntil . " show " . ((!$showAll) ? 'true' : 'false');
+        if (isset($record['WoID']) && $hideuntil == -1) {
+            $hideuntil = $record['Ti2Order'] + ($actcode - 1) * 2;
         }
         echo_term(
             $actcode, $showAll, $spanid, $hidetag, $currcharcount, $record
         );
-    } // $record['TiIsNotWord'] == 0  -- A TERM
+    }
 
     return $hideuntil;
 }
@@ -401,26 +385,21 @@ function main_word_loop($textid, $showAll): void
     global $tbpref;
     
     $sql = 
-    'SELECT
-     CASE WHEN `Ti2WordCount`>0 THEN Ti2WordCount ELSE 1 END as Code,
-     CASE WHEN CHAR_LENGTH(Ti2Text)>0 THEN Ti2Text ELSE `WoText` END as TiText,
-     CASE WHEN CHAR_LENGTH(Ti2Text)>0 THEN lower(Ti2Text) ELSE `WoTextLC` END as TiTextLC,
+    "SELECT
+     CASE WHEN `Ti2WordCount`>0 THEN Ti2WordCount ELSE 1 END AS Code,
+     CASE WHEN CHAR_LENGTH(Ti2Text)>0 THEN Ti2Text ELSE `WoText` END AS TiText,
+     CASE WHEN CHAR_LENGTH(Ti2Text)>0 THEN LOWER(Ti2Text) ELSE `WoTextLC` END AS TiTextLC,
      Ti2Order, Ti2SeID, 
-     CASE WHEN `Ti2WordCount`>0 THEN 0 ELSE 1 END as TiIsNotWord,
+     CASE WHEN `Ti2WordCount`>0 THEN 0 ELSE 1 END AS TiIsNotWord,
      CASE 
         WHEN CHAR_LENGTH(Ti2Text)>0 
         THEN CHAR_LENGTH(Ti2Text) 
         ELSE CHAR_LENGTH(`WoTextLC`) 
-        END
-     AS TiTextLength, 
+     END AS TiTextLength, 
      WoID, WoText, WoStatus, WoTranslation, WoRomanization
-     FROM (' 
-       . $tbpref . 'textitems2
-        LEFT JOIN ' . $tbpref . 'words
-        ON (Ti2WoID = WoID)
-     )
-     WHERE Ti2TxID = ' . $textid . '
-     ORDER BY Ti2Order asc, Ti2WordCount desc';
+     FROM {$tbpref}textitems2 LEFT JOIN {$tbpref}words ON Ti2WoID = WoID
+     WHERE Ti2TxID = $textid
+     ORDER BY Ti2Order asc, Ti2WordCount desc";
     
     $res = do_mysqli_query($sql);
     $currcharcount = 0;
@@ -440,8 +419,7 @@ function main_word_loop($textid, $showAll): void
             $currcharcount += $record['TiTextLength']; 
             $cnt++;
         }
-
-    } // while ($record = mysql_fetch_assoc($res))  -- MAIN LOOP
+    }
     
     mysqli_free_result($res);
     echo '<span id="totalcharcount" class="hide">' . $currcharcount . '</span>';

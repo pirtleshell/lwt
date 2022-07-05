@@ -39,17 +39,14 @@ function quickMenuRedirection(value) {
 function newExpressionInteractable(text, attrs, length, hex, showallwords) {
 
     const context = window.parent.document;
-    console.log(text);
     for (key in text) {
-        let text_refresh = false;
-        if ($('span[id^="ID-'+ key +'-"]', context).not(".hide").length) {
-            if ($('span[id^="ID-'+ key +'-"]', context).not(".hide").attr('data_code') <= length) {
-                text_refresh = true;
-            }
-        }
+        const words = $('span[id^="ID-'+ key +'-"]', context).not(".hide"); 
+        const text_refresh = (
+            words.attr('data_code') !== undefined 
+            && words.attr('data_code') <= length);
         $('#ID-' + key + '-' + length, context).remove();
-        var i = '';
-        for (let j = parseInt(length, 10) - 1; j > 0; j--) {
+        let i = '';
+        for (let j = length - 1; j > 0; j--) {
             if (j==1)
                 i = '#ID-' + key + '-1';
             if ($('#ID-' + key + '-' + j, context).length) {
@@ -57,21 +54,21 @@ function newExpressionInteractable(text, attrs, length, hex, showallwords) {
                 break;
             }
         }
-        var ord_class='order' + key;
-        $(i, context).before('<span id="ID-' + key + '-' + length + '"' + attrs + '>' 
-        + text[ key ] + '</span>');
-        el = $('#ID-' + key + '-' + parseInt(length, 10), context);
-        el.addClass(ord_class).attr('data_order',key);
-        var txt = el
+        $(i, context)
+        .before('<span id="ID-' + key + '-' + length + '"' + attrs + '>' 
+        + text[key] + '</span>');
+        const el = $('#ID-' + key + '-' + length, context);
+        el.addClass('order' + key).attr('data_order', key);
+        const txt = el
             .nextUntil(
-                $('#ID-' + (parseInt(key) + parseInt(length, 10) * 2 - 1) + '-1', context),
+                $('#ID-' + (parseInt(key) + length * 2 - 1) + '-1', context),
                 '[id$="-1"]'
             )
             .map(function() {
                 return $(this).text();
             })
             .get().join("");
-        var pos = $('#ID-' + key + '-1', context).attr('data_pos');
+        const pos = $('#ID-' + key + '-1', context).attr('data_pos');
         el.attr('data_text', txt).attr('data_pos', pos);
         if (!showallwords) {
             if (text_refresh) {

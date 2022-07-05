@@ -3673,7 +3673,7 @@ function getScriptDirectionTag($lid): string
  * @param string $wid    Word ID
  * @param int    $mode   If equal to 0, add data in the output
  *
- * @return array<string[], int[]> Append text and sentence id
+ * @return array<string[], string[]> Append text and values to insert to the database
  * 
  * @since 2.5.0-fork Function added. 
  *
@@ -3685,65 +3685,47 @@ function insert_expression_from_mecab($text, $lid, $wid, $len)
 
     $db_to_mecab = tempnam(sys_get_temp_dir(), "{$tbpref}db_to_mecab");
     $mecab_args = " -F %m\\t%t\\t%h\\n -U %m\\t%t\\t%h\\n -E EOS\\t3\\t7\\n ";
-    $mecab_expr = '';
 
     $mecab = get_mecab_path($mecab_args);
-    $sql = "SELECT SeID, SeTxID, SeFirstPos, SeText
-    FROM {$tbpref}sentences 
+    $sql = "SELECT SeID, SeTxID, SeFirstPos, SeText FROM {$tbpref}sentences 
     WHERE SeText LIKE " . convert_string_to_sqlsyntax_notrim_nonull("%$text%");
     $res = do_mysqli_query($sql);
 
 
     $appendtext = array();
     $sqlarray = array();
+    // For each sentence in database containing $text
     while ($record = mysqli_fetch_assoc($res)) {
         $sent = trim($record['SeText']);
-        // $record['SeID'] . "\t" . $record['SeTxID'] . "\t" . $record['SeFirstPos'] . "\t" . 
-        // STEP 1: parse the sentence with MeCab
         $fp = fopen($db_to_mecab, 'w');
         fwrite($fp, $sent . "\n");
         fclose($fp);
 
-        // STEP 2: process the data with MeCab and refine the output
         $handle = popen($mecab . $db_to_mecab, "r");
         $word_counter = 0;
+        // For each word in sentence
         while (!feof($handle)) {
-            $row = fgets($handle, 4096);
+            $row = fgets($handle, 16132);
             $arr = explode("\t", $row, 4);
-            //var_dump("array", $arr);
-            //if (empty($record['SeText'])) {
-            //    continue;
-            //}
-            /*$sent = preg_replace_callback(
-                '([267])?\t[0-9]+$', 
-                function ($matches) {
-                    return isset($matches[1]) ? "\t" : "";
-                }, 
-                $row
-            );*/
-            if (strpos("2 6 7", $arr[1]) === false) {
-                $word_counter += mb_strlen($arr[0]);
+            if (empty($arr[0]) || $arr[0] == "EOS") {
                 continue;
             }
-            //if (empty($mecab_expr)) {
-            //    $mecab_expr = trim($sent) . "\t";
-            //    continue;
-            //} 
-            if (empty($arr[0]) || mb_strpos($text, $arr[0]) === false) {
+            if (mb_strpos($text, $arr[0]) === false 
+            || strpos("2 6 7", $arr[1]) === false) {
+                $word_counter++;
                 continue;
             }
-            $mecab_expr = $arr[0];
-            var_dump("Word", $mecab_expr);
-            $first_pos = (int) $record['SeFirstPos']; //str_replace('{', '', $arr[2]);
             $seek = 0;
-            while (($seek = mb_strpos($sent, $text, $seek)) !== false) {
-                $sentid = (int) $record['SeID']; //str_replace('{', '', $arr[0]);
-                $txtid = (int) $record['SeTxID']; // str_replace('{', '', $arr[1]);
+            // For each occurence of multi-word in sentence 
+            while (
+                $seek < mb_strlen($sent) 
+                && ($seek = mb_strpos($sent, $text, $seek)) !== false
+            ) {
                 $sent = mb_substr($sent, $seek);
-                $pos = $word_counter * 2 + $first_pos; //mb_substr_count($sent, "\t") * 2 + $first_pos;
+                $pos = $word_counter * 2 + (int) $record['SeFirstPos'];
                 // Ti2WoID,Ti2LgID,Ti2TxID,Ti2SeID,Ti2Order,Ti2WordCount,Ti2Text
-                $sqlarray[] = "($wid, $lid, $txtid, $sentid, $pos, $len, " .
-                convert_string_to_sqlsyntax_notrim_nonull($text) . ")";
+                $sqlarray[] = "($wid, $lid, {$record['SeTxID']}, {$record['SeID']}, 
+                $pos, $len, " . convert_string_to_sqlsyntax_notrim_nonull($text) . ")";
                 if (getSettingZeroOrOne('showallwords', 1)) {
                     $appendtext[$pos] = '&nbsp;' . $len . '&nbsp';
                 } else { 
@@ -3751,14 +3733,11 @@ function insert_expression_from_mecab($text, $lid, $wid, $len)
                 }
                 $seek++;
             }
-            $word_counter += mb_strlen($arr[0]);
+            $word_counter++;
         }
         pclose($handle);
     }
     mysqli_free_result($res);
-
-
-    // STEP 2: process the data with MeCab and refine the output
     unlink($db_to_mecab);
 
     return array($appendtext, $sqlarray);
@@ -3900,7 +3879,6 @@ function new_expression_interactable($hex, $appendtext, $sid, $len): void
 
     ?>
 <script type="text/javascript">
-    console.log("this is a test");
     newExpressionInteractable(
         <?= json_encode($appendtext); ?>, 
         ' class="click mword <?= $showAll; ?>wsty TERM<?= $hex; ?> word' + 
@@ -4012,7 +3990,6 @@ function insertExpressions($textlc, $lid, $wid, $len, $mode)
         list($appendtext, $sqlarr) = insert_expression_from_mecab(
             $textlc, $lid, $wid, $len
         );
-        var_dump("Final append", $appendtext);
     } else {
         list($appendtext, $_, $sqlarr) = insert_standard_expression(
                 $textlc, $lid, $wid, $len, null
