@@ -162,8 +162,7 @@ function edit_mword_do_operation($term) {
  */
 function edit_mword_do_insert($term) {
     global $tbpref;
-    $textlc = mb_strtolower($term->text);
-    $titletext = "New Term: " . tohtml($textlc);
+    $titletext = "New Term: " . tohtml($term->textlc);
     pagestart_nobody($titletext);
     echo '<h4><span class="bigger">' . $titletext . '</span></h4>';
 
@@ -174,7 +173,7 @@ function edit_mword_do_insert($term) {
             .  make_score_random_insert_update('iv') . '
         ) VALUES( ' . 
             $term->lgid . ', ' .
-            convert_string_to_sqlsyntax($textlc) . ', ' .
+            convert_string_to_sqlsyntax($term->textlc) . ', ' .
             convert_string_to_sqlsyntax($term->text) . ', ' .
             $term->status . ', ' .
             convert_string_to_sqlsyntax($term->translation) . ', ' .
@@ -190,9 +189,7 @@ function edit_mword_do_insert($term) {
     // strToClassName($textlc);
     $term->id = get_last_key();
     saveWordTags($term->id);
-    insertExpressions(
-        $term->textlc, $_REQUEST["WoLgID"], $term->id, $term->word_count, 0
-    );
+    insertExpressions($term->textlc, $term->lgid, $term->id, $term->word_count, 0);
     return $message;
 }
 
@@ -209,8 +206,7 @@ function edit_mword_do_insert($term) {
  */
 function edit_mword_do_update($term, $newstatus) {
     global $tbpref;
-    $textlc = $term->text;
-    $titletext = "Edit Term: " . tohtml($textlc);
+    $titletext = "Edit Term: " . tohtml($term->textlc);
     pagestart_nobody($titletext);
     echo '<h4><span class="bigger">' . $titletext . '</span></h4>';
 
@@ -222,7 +218,7 @@ function edit_mword_do_update($term, $newstatus) {
 
     $message = runsql(
         'UPDATE ' . $tbpref . 'words set 
-        WoText = ' . convert_string_to_sqlsyntax($term) . ', 
+        WoText = ' . convert_string_to_sqlsyntax($term->text) . ', 
         WoTranslation = ' . convert_string_to_sqlsyntax($term->translation) . ', 
         WoSentence = ' . convert_string_to_sqlsyntax(
             repl_tab_nl($term->sentence)
@@ -287,29 +283,25 @@ function edit_mword_do_update($term, $newstatus) {
  * 
  * @global string $tbpref Database table prefix.
  */
-function edit_mword_new($text, $tid, $ord, $len) {
+function edit_mword_new($text, $tid, $ord, $len) 
+{
     global $tbpref;
 
     $term = new Term();
     $term->lgid = get_first_value(
-        "SELECT TxLgID as value 
-        from " . $tbpref . "texts 
-        where TxID = " . $tid
+        "SELECT TxLgID AS value FROM {$tbpref}texts WHERE TxID = $tid"
     );
     $term->text = prepare_textdata($text);
     $term->textlc = mb_strtolower($term->text, 'UTF-8');
 
     $term->id = get_first_value(
-        "SELECT WoID as value 
-        from " . $tbpref . "words 
-        where WoLgID = " . $term->lgid . 
-        " and WoTextLC = " . convert_string_to_sqlsyntax($term->textlc)
+        "SELECT WoID AS value FROM {$tbpref}words 
+        WHERE WoLgID = $term->lgid AND WoTextLC = " . 
+        convert_string_to_sqlsyntax($term->textlc)
     );
     if (isset($term->id)) { 
         $term->text = get_first_value(
-            "SELECT WoText as value 
-            from " . $tbpref . "words 
-            where WoID = " . $term->id
+            "SELECT WoText AS value FROM {$tbpref}words WHERE WoID = $term->id"
         ); 
     }
     edit_mword_display_new($term, $tid, $ord, $len);
@@ -327,7 +319,8 @@ function edit_mword_new($text, $tid, $ord, $len) {
  * 
  * @global string $tbpref Database table prefix.
  */
-function edit_mword_update($wid, $tid, $ord) {
+function edit_mword_update($wid, $tid, $ord) 
+{
     global $tbpref;
 
     $term = new Term();
@@ -366,7 +359,9 @@ function edit_mword_display_new($term, $tid, $ord, $len) {
         FROM {$tbpref}textitems2 
         WHERE Ti2TxID = $tid AND Ti2Order = $ord"
     );
-    $sent = getSentence($seid, $term->textlc, (int) getSettingWithDefault('set-term-sentence-count'));
+    $sent = getSentence(
+        $seid, $term->textlc, (int) getSettingWithDefault('set-term-sentence-count')
+    );
 
     ?>
 

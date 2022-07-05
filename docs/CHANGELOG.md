@@ -9,6 +9,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 * Compatibility with PHP 8+!
 * Updated with LWT 2.0.3, solving incompatibilities with PHP 8.1 throzing MySQLI errors.
 * Introducing the new class ``Term`` in ``edit_mword.php``. This class is yet to be considered experimental, so expect important changes, but should gradually get used everywhere.
+* ``insert_expression_from_mecab`` in ``session_utility.php``. Better name and behavior for ``insertExpressionFromMeCab`` (see deprecations).
 
 ### Changed
 * Composer dependencies updated.
@@ -20,6 +21,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 
 ### Deprecated
 * ``set_word_count`` in ``database_connect.php`` had a misleading name. It was changed to ``init_word_count``.
+* ``insertExpressionFromMeCab`` deprecated for ``insert_expression_from_mecab`` in ``session_utility.php``.
 
 ## 2.0.3 (February 15 2022)
 ### Fixed

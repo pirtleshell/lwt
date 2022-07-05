@@ -3675,108 +3675,118 @@ function getScriptDirectionTag($lid): string
  *
  * @return array<string[], int[]> Append text and sentence id
  * 
- * @since 2.5.0-fork $mode is unnused, data are always returned. 
+ * @since 2.5.0-fork Function added. 
  *
  * @global string $tbpref Table name prefix
  */
-function insertExpressionFromMeCab($textlc, $lid, $wid, $len, $mode)
+function insert_expression_from_mecab($text, $lid, $wid, $len)
 {
     global $tbpref;
 
-    // STEP 1: write the useful info to a file
     $db_to_mecab = tempnam(sys_get_temp_dir(), "{$tbpref}db_to_mecab");
     $mecab_args = " -F %m\\t%t\\t%h\\n -U %m\\t%t\\t%h\\n -E EOS\\t3\\t7\\n ";
     $mecab_expr = '';
 
     $mecab = get_mecab_path($mecab_args);
-    $sql = 'SELECT 0 SeID, 0 SeTxID, 0 SeFirstPos, ' . 
-    convert_string_to_sqlsyntax_notrim_nonull($textlc) . ' SeText 
-    UNION SELECT SeID, SeTxID, SeFirstPos, SeText 
-    FROM sentences 
-    WHERE SeText 
-    LIKE ' . convert_string_to_sqlsyntax_notrim_nonull("%$textlc%");
+    $sql = "SELECT SeID, SeTxID, SeFirstPos, SeText
+    FROM {$tbpref}sentences 
+    WHERE SeText LIKE " . convert_string_to_sqlsyntax_notrim_nonull("%$text%");
     $res = do_mysqli_query($sql);
-    $fp = fopen($db_to_mecab, 'w');
-    while ($record = mysqli_fetch_assoc($res)) {
-        fwrite(
-            $fp, 
-            $record['SeID'] . "\t" . $record['SeTxID'] . "\t" . 
-            $record['SeFirstPos'] . "\t" . $record['SeText'] . "\n"
-        );
-    }
-    mysqli_free_result($res);
-    fclose($fp);
 
 
-    // STEP 2: process the data with MeCab and refine the output
-    $handle = popen($mecab . $db_to_mecab, "r");
     $appendtext = array();
-    $sid = array();
     $sqlarray = array();
+    while ($record = mysqli_fetch_assoc($res)) {
+        $sent = trim($record['SeText']);
+        // $record['SeID'] . "\t" . $record['SeTxID'] . "\t" . $record['SeFirstPos'] . "\t" . 
+        // STEP 1: parse the sentence with MeCab
+        $fp = fopen($db_to_mecab, 'w');
+        fwrite($fp, $sent . "\n");
+        fclose($fp);
 
-    while (!feof($handle)) {
-        $row = fgets($handle, 4096);
-        $arr = explode("4\t", $row, 4);
-        if (empty($arr[3])) {
-            continue;
-        }
-        $sent = preg_replace_callback(
-            '([267])?\t[0-9]+$', 
-            function ($matches) {
-                return isset($matches[1]) ? "\t" : "";
-            }, 
-            $arr[3]
-        );
-        if (empty($mecab_expr)) {
-            $mecab_expr = trim($sent) . "\t";
-            continue;
-        } 
-        if (empty($arr[0])) {
-            continue;
-        }
-        $first_pos = (int)str_replace('{', '', $arr[2]);
-        while (($seek = mb_strrpos($sent, $mecab_expr)) !== false) {
-            $sentid = str_replace('{', '', $arr[0]);
-            $txtid = str_replace('{', '', $arr[1]);
-            $sent = mb_substr($sent, 0, $seek);
-            $pos = mb_substr_count($sent, "\t") * 2 + $first_pos;
-            $sqlarray[] = "($txtid, $sentid, $pos)";
-            //if ($mode == 0 && $txtid == $_REQUEST["tid"]) {
-                $sid[$pos] = $sentid;
+        // STEP 2: process the data with MeCab and refine the output
+        $handle = popen($mecab . $db_to_mecab, "r");
+        $word_counter = 0;
+        while (!feof($handle)) {
+            $row = fgets($handle, 4096);
+            $arr = explode("\t", $row, 4);
+            //var_dump("array", $arr);
+            //if (empty($record['SeText'])) {
+            //    continue;
+            //}
+            /*$sent = preg_replace_callback(
+                '([267])?\t[0-9]+$', 
+                function ($matches) {
+                    return isset($matches[1]) ? "\t" : "";
+                }, 
+                $row
+            );*/
+            if (strpos("2 6 7", $arr[1]) === false) {
+                $word_counter += mb_strlen($arr[0]);
+                continue;
+            }
+            //if (empty($mecab_expr)) {
+            //    $mecab_expr = trim($sent) . "\t";
+            //    continue;
+            //} 
+            if (empty($arr[0]) || mb_strpos($text, $arr[0]) === false) {
+                continue;
+            }
+            $mecab_expr = $arr[0];
+            var_dump("Word", $mecab_expr);
+            $first_pos = (int) $record['SeFirstPos']; //str_replace('{', '', $arr[2]);
+            $seek = 0;
+            while (($seek = mb_strpos($sent, $text, $seek)) !== false) {
+                $sentid = (int) $record['SeID']; //str_replace('{', '', $arr[0]);
+                $txtid = (int) $record['SeTxID']; // str_replace('{', '', $arr[1]);
+                $sent = mb_substr($sent, $seek);
+                $pos = $word_counter * 2 + $first_pos; //mb_substr_count($sent, "\t") * 2 + $first_pos;
+                // Ti2WoID,Ti2LgID,Ti2TxID,Ti2SeID,Ti2Order,Ti2WordCount,Ti2Text
+                $sqlarray[] = "($wid, $lid, $txtid, $sentid, $pos, $len, " .
+                convert_string_to_sqlsyntax_notrim_nonull($text) . ")";
                 if (getSettingZeroOrOne('showallwords', 1)) {
                     $appendtext[$pos] = '&nbsp;' . $len . '&nbsp';
                 } else { 
-                    $appendtext[$pos] = $textlc; 
+                    $appendtext[$pos] = $text;
                 }
-            //}
+                $seek++;
+            }
+            $word_counter += mb_strlen($arr[0]);
         }
+        pclose($handle);
     }
-    pclose($handle);
-    if (empty($appendtext)) {
-    //    return array($appendtext, $sid);
-    }
-    //$sql = mb_substr($sql, 0, mb_strlen($sql) - 1);
-    $sql .= join(",", $sqlarray);
+    mysqli_free_result($res);
 
 
-    // STEP 3: edit the database
-    do_mysqli_query(
-        "ALTER TABLE {$tbpref}textitems2
-         ALTER Ti2WoID SET DEFAULT $wid,
-         ALTER Ti2LgID SET DEFAULT $lid,
-         ALTER Ti2WordCount SET DEFAULT $len,
-         ALTER Ti2Text SET DEFAULT ''"
-    );
-    //do_mysqli_query($sql);
-    do_mysqli_query(
-        "ALTER TABLE {$tbpref}textitems2
-         ALTER Ti2WoID DROP DEFAULT,
-         ALTER Ti2LgID DROP DEFAULT,
-         ALTER Ti2WordCount DROP DEFAULT,
-         ALTER Ti2Text DROP DEFAULT"
-    );
+    // STEP 2: process the data with MeCab and refine the output
     unlink($db_to_mecab);
-    return array($appendtext, $sid);
+
+    return array($appendtext, $sqlarray);
+}
+
+/**
+ * Insert an expression to the database using MeCab.
+ *
+ * @param string $textlc Text to insert in lower case
+ * @param string $lid    Language ID
+ * @param string $wid    Word ID
+ * @param int    $mode   If equal to 0, add data in the output
+ *
+ * @return array<string[], int[]> Append text and empty array.
+ * 
+ * @since 2.5.0-fork Function deprecated. 
+ *                   $mode is unnused, data are always returned.
+ *                   The second return argument is always empty array.
+ * 
+ * @deprecated Use insert_expression_from_mecab instead.
+ *
+ * @global string $tbpref Table name prefix
+ */
+function insertExpressionFromMeCab($textlc, $lid, $wid, $len, $mode)
+{
+    return array(
+        insert_expression_from_mecab($textlc, $lid, $wid, $len)[0], array()
+    );
 }
 
 /**
@@ -3796,7 +3806,6 @@ function insertExpressionFromMeCab($textlc, $lid, $wid, $len, $mode)
 function insert_standard_expression($textlc, $lid, $wid, $len, $mode) {
     global $tbpref;
     $appendtext = array();
-    $sid = array();
     $sqlarr = array();
     $wis = $textlc;
     $sql = "SELECT * FROM {$tbpref}languages WHERE LgID=$lid";
@@ -3862,7 +3871,6 @@ function insert_standard_expression($textlc, $lid, $wid, $len, $mode) {
                 }
                 $sqlarr[] = "($wid,$lid,$txtid,$sentid,$pos,$len," . 
                 convert_string_to_sqlsyntax_notrim_nonull($txt) . ')';
-                $sid[$pos] = (int) $record['SeID'];
                 if (getSettingZeroOrOne('showallwords', 1)) {
                     $appendtext[$pos] = '&nbsp;' . $len . '&nbsp';
                 } else { 
@@ -3873,7 +3881,7 @@ function insert_standard_expression($textlc, $lid, $wid, $len, $mode) {
         }
     }
     mysqli_free_result($res);
-    return array($appendtext, $sid, $sqlarr);
+    return array($appendtext, array(), $sqlarr);
 }
 
 
@@ -3981,35 +3989,33 @@ function new_expression_interactable2($hex, $appendtext, $wid, $len): void
  *                        - 1: Runs an expresion inserter interactable 
  *                        - 2: Return the sql output
  * 
- * @return string|null If $mode == 2 return the SQL request, nothing otherwise.
+ * @return string|null If $mode == 2 return values to insert in textitems2, 
+ *                     nothing otherwise.
  * 
  * @global string $tbpref Table name prefix
  */
 function insertExpressions($textlc, $lid, $wid, $len, $mode) 
 {
     global $tbpref;
-    $hex = null;
-    if ($mode == 0) { 
-        $hex = strToClassName(prepare_textdata($textlc)); 
-    }
-    $sql = "SELECT * from " . $tbpref . "languages where LgID=" . $lid;
+    $sql = "SELECT * FROM {$tbpref}languages WHERE LgID=$lid";
     $res = do_mysqli_query($sql);
     $record = mysqli_fetch_assoc($res);
-    $splitEachChar = $record['LgSplitEachChar'];
-    $termchar = $record['LgRegexpWordCharacters'];
+    $mecab = 'MECAB' == strtoupper(trim($record['LgRegexpWordCharacters']));
+    $splitEachChar = !$mecab && $record['LgSplitEachChar'];
     mysqli_free_result($res);
     $sqlarr = array();
     if ($splitEachChar) {
         $textlc = preg_replace('/([^\s])/u', "$1 ", $textlc);
     }
 
-    if ('MECAB'== strtoupper(trim($termchar))) {
-        list($appendtext, $_) = insertExpressionFromMeCab(
-            $textlc, $lid, $wid, $len, $mode
+    if ($mecab) {
+        list($appendtext, $sqlarr) = insert_expression_from_mecab(
+            $textlc, $lid, $wid, $len
         );
+        var_dump("Final append", $appendtext);
     } else {
         list($appendtext, $_, $sqlarr) = insert_standard_expression(
-                $textlc, $lid, $wid, $len, $mode
+                $textlc, $lid, $wid, $len, null
             );
     }
     $sqltext = null;
@@ -4017,11 +4023,11 @@ function insertExpressions($textlc, $lid, $wid, $len, $mode)
         $sqltext = '';
         if ($mode != 2) {
             $sqltext .= 
-            'INSERT INTO ' . $tbpref . 'textitems2
+            "INSERT INTO {$tbpref}textitems2
              (Ti2WoID,Ti2LgID,Ti2TxID,Ti2SeID,Ti2Order,Ti2WordCount,Ti2Text)
-             VALUES ';
+             VALUES ";
         }
-        $sqltext .= rtrim(implode(',', $sqlarr), ',');
+        $sqltext .= implode(',', $sqlarr);
         unset($sqlarr);
     }
 
