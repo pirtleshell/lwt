@@ -85,76 +85,54 @@ class Term {
     }
 }
 
+/**
+ * Use the superglobals to load a new Term object.
+ * 
+ * Check if the lowercase version is a good one.
+ * 
+ * @return Term The loaded data.
+ */
+function edit_mword_prepare_term() {
+    $textlc = trim(getreq("WoTextLC"));
+    if (mb_strtolower(trim(getreq("WoText")), 'UTF-8') != $textlc) {
+        $titletext = "New/Edit Term: " . tohtml($textlc);
+        pagestart_nobody($titletext);
+        echo '<h4><span class="bigger">' . $titletext . '</span></h4>';
+        $message = 'Error: Term in lowercase must be exactly = "' . $textlc . 
+        '", please go back and correct this!';
+        echo error_message_with_hide($message, 0);
+        pageend();
+        exit();
+    }
+    $term = new Term();
+    $translation_raw = repl_tab_nl(getreq("WoTranslation"));
+    $translation = ($translation_raw == '') ? '*' : $translation_raw;
+    $term->translation = $translation;
+    $term->text = prepare_textdata($_REQUEST["WoText"]);
+    $term->textlc = prepare_textdata($textlc);
+    $term->roman = $_REQUEST["WoRomanization"];
+    $term->word_count = (int) $_REQUEST["len"];
+    $term->sentence = $_REQUEST["WoSentence"];
+    return $term;
+}
+
 
 /**
  * Do a server operation for multiwords.
  * 
  * @return void
  */
-function edit_mword_do_operation($text, $translation) {
-
-    $textlc = prepare_textdata(mb_strtolower($text));
-    $text = prepare_textdata($text);
-    $term = new Term();
-    $term->translation = $translation;
-    $term->text = $text;
-    $term->roman = $_REQUEST["WoRomanization"];
-    $term->word_count = (int) $_REQUEST["len"];
-    $term->sentence = $_REQUEST["WoSentence"];
-
-
+function edit_mword_do_operation($term) {
     if ($_REQUEST['op'] == 'Save') {
         // INSERT
         $term->status = (int) $_REQUEST["WoStatus"];
-        $message = edit_mword_do_insert($term, (int) $_REQUEST["WoLgID"]);
-        $term->id = get_last_key();
+        $term->lgid = (int) $_REQUEST["WoLgID"];
+        $message = edit_mword_do_insert($term);
     } else {  
         // UPDATE
         $term->id = (int) $_REQUEST["WoID"];
         $term->status = (int) $_REQUEST["WoOldStatus"];
         $message = edit_mword_do_update($term, (int) $_REQUEST["WoStatus"]);
-        $term->status = (int) $_REQUEST["WoStatus"];
-    } 
-    saveWordTags($term->id);
-
-    if ($_REQUEST['op'] == 'Save') {
-        insertExpressions(
-            $textlc, $_REQUEST["WoLgID"], $term->id, $term->word_count, 0
-        );
-    } else {
-        ?>
-    <script type="text/javascript">
-    //<![CDATA[
-        function update_mword(mword, oldstatus) {
-            const context = window.parent.document;
-            let title = '';
-            if (window.parent.JQ_TOOLTIP) 
-                title = make_tooltip(
-                    mword.text, mword.trans, mword.roman, mword.status
-                );
-            $('.word' + mword.woid, context)
-            .attr('data_trans', mword.trans)
-            .attr('data_rom', mword.roman)
-            .attr('title', title)
-            .removeClass('status' + oldstatus)
-            .addClass('status' + mword.status)
-            .attr('data_status', mword.status);
-        }
-
-        /*update_mword(
-            <?= prepare_textdata_js($term->id); ?>,
-            <?= prepare_textdata_js($term->text); ?>,
-            <?= prepare_textdata_js($term->roman); ?>, 
-            <?= prepare_textdata_js(
-                $translation . getWordTagList($term->id, ' ', 1, 0)
-            ); ?>, 
-            <?= prepare_textdata_js($term->status); ?>,
-            <?= $_REQUEST['WoOldStatus']; ?>
-            );*/
-        update_mword($term->export_js_dict(), <?= (int) $_REQUEST['WoOldStatus']; ?>);
-    //]]>
-    </script>
-        <?php
     }
     ?>
     <script type="text/javascript">
@@ -177,13 +155,12 @@ function edit_mword_do_operation($text, $translation) {
  * Insert a multi-word to the database.
  * 
  * @param Term $term Multi-word to be inserted.
- * @param int  $lgid Language ID for the inserted multi-word.
  * 
  * @return void
  * 
  * @global string $tbpref Database table prefix.
  */
-function edit_mword_do_insert($term, $lgid) {
+function edit_mword_do_insert($term) {
     global $tbpref;
     $textlc = mb_strtolower($term->text);
     $titletext = "New Term: " . tohtml($textlc);
@@ -196,7 +173,7 @@ function edit_mword_do_insert($term, $lgid) {
             WoRomanization, WoWordCount, WoStatusChanged," 
             .  make_score_random_insert_update('iv') . '
         ) VALUES( ' . 
-            $lgid . ', ' .
+            $term->lgid . ', ' .
             convert_string_to_sqlsyntax($textlc) . ', ' .
             convert_string_to_sqlsyntax($term->text) . ', ' .
             $term->status . ', ' .
@@ -211,6 +188,11 @@ function edit_mword_do_insert($term, $lgid) {
     );
     init_word_count();
     // strToClassName($textlc);
+    $term->id = get_last_key();
+    saveWordTags($term->id);
+    insertExpressions(
+        $term->textlc, $_REQUEST["WoLgID"], $term->id, $term->word_count, 0
+    );
     return $message;
 }
 
@@ -239,7 +221,7 @@ function edit_mword_do_update($term, $newstatus) {
     }
 
     $message = runsql(
-        'update ' . $tbpref . 'words set 
+        'UPDATE ' . $tbpref . 'words set 
         WoText = ' . convert_string_to_sqlsyntax($term) . ', 
         WoTranslation = ' . convert_string_to_sqlsyntax($term->translation) . ', 
         WoSentence = ' . convert_string_to_sqlsyntax(
@@ -252,65 +234,142 @@ function edit_mword_do_update($term, $newstatus) {
         "Updated"
     );
 
+    saveWordTags($term->id);
+
+    $term->status = (int) $_REQUEST["WoStatus"];
+    ?>
+    <script type="text/javascript">
+    //<![CDATA[
+        function update_mword(mword, oldstatus) {
+            const context = window.parent.document;
+            let title = '';
+            if (window.parent.JQ_TOOLTIP) 
+                title = make_tooltip(
+                    mword.text, mword.trans, mword.roman, mword.status
+                );
+            $('.word' + mword.woid, context)
+            .attr('data_trans', mword.trans)
+            .attr('data_rom', mword.roman)
+            .attr('title', title)
+            .removeClass('status' + oldstatus)
+            .addClass('status' + mword.status)
+            .attr('data_status', mword.status);
+        }
+
+        /*update_mword(
+            <?= prepare_textdata_js($term->id); ?>,
+            <?= prepare_textdata_js($term->text); ?>,
+            <?= prepare_textdata_js($term->roman); ?>, 
+            <?= prepare_textdata_js(
+                $term->translation . getWordTagList($term->id, ' ', 1, 0)
+            ); ?>, 
+            <?= prepare_textdata_js($term->status); ?>,
+            <?= $_REQUEST['WoOldStatus']; ?>
+            );*/
+        update_mword(
+            <?= $term->export_js_dict(); ?>, <?= (int) $_REQUEST['WoOldStatus']; ?>
+        );
+    //]]>
+    </script>
+        <?php
     return $message;
 }
 
 /**
- * Make the main display for editing multi-words.
+ * Make the main display for editing new multi-word.
+ * 
+ * @param string $text Original group of words.
+ * @param int    $tid  Text ID
+ * @param int    $ord  Text order
+ * @param int    $len  Number of words in the multi-word.
  * 
  * @return void
  * 
  * @global string $tbpref Database table prefix.
  */
-function edit_mword_display() {
+function edit_mword_new($text, $tid, $ord, $len) {
+    global $tbpref;
+
+    $term = new Term();
+    $term->lgid = get_first_value(
+        "SELECT TxLgID as value 
+        from " . $tbpref . "texts 
+        where TxID = " . $tid
+    );
+    $term->text = prepare_textdata($text);
+    $term->textlc = mb_strtolower($term->text, 'UTF-8');
+
+    $term->id = get_first_value(
+        "SELECT WoID as value 
+        from " . $tbpref . "words 
+        where WoLgID = " . $term->lgid . 
+        " and WoTextLC = " . convert_string_to_sqlsyntax($term->textlc)
+    );
+    if (isset($term->id)) { 
+        $term->text = get_first_value(
+            "SELECT WoText as value 
+            from " . $tbpref . "words 
+            where WoID = " . $term->id
+        ); 
+    }
+    edit_mword_display_new($term, $tid, $ord, $len);
+
+}
+
+/**
+ * Make the main display for editing existing multi-word.
+ * 
+ * @param int $wid Term ID
+ * @param int $tid Text ID
+ * @param int $ord Text order
+ * 
+ * @return void
+ * 
+ * @global string $tbpref Database table prefix.
+ */
+function edit_mword_update($wid, $tid, $ord) {
     global $tbpref;
 
     $term = new Term();
 
-    $wid = getreq('wid');
-
-    if ($wid == '') {
-        $term->lgid = get_first_value(
-            "select TxLgID as value 
-            from " . $tbpref . "texts 
-            where TxID = " . $_REQUEST['tid']
-        );
-        $term->text = prepare_textdata(getreq('txt'));
-        $term->textlc = mb_strtolower($term->text, 'UTF-8');
-
-        $term->id = get_first_value(
-            "select WoID as value 
-            from " . $tbpref . "words 
-            where WoLgID = " . $term->lgid . 
-            " and WoTextLC = " . convert_string_to_sqlsyntax($term->textlc)
-        );
-        if (isset($term->id)) { 
-            $term->text = get_first_value(
-                "select WoText as value 
-                from " . $tbpref . "words 
-                where WoID = " . $term->id
-            ); 
-        }
-    } else {
-        $term->id = (int) $wid;
-        $sql = "SELECT WoText, WoLgID FROM {$tbpref}words WHERE WoID = $term->id";
-        $res = do_mysqli_query($sql);
-        $record = mysqli_fetch_assoc($res);
-        if (!$record) {
-            my_die("Cannot access Term and Language in edit_mword.php");
-        }
-        $term->text = $record['WoText'];
-        $term->lgid = $record['WoLgID'];
-        mysqli_free_result($res);
-        $term->textlc = mb_strtolower($term->text, 'UTF-8');
-
+    $term->id = (int) $wid;
+    $sql = "SELECT WoText, WoLgID FROM {$tbpref}words WHERE WoID = $term->id";
+    $res = do_mysqli_query($sql);
+    $record = mysqli_fetch_assoc($res);
+    if (!$record) {
+        my_die("Cannot access Term and Language in edit_mword.php");
     }
+    $term->text = $record['WoText'];
+    $term->lgid = $record['WoLgID'];
+    mysqli_free_result($res);
+    $term->textlc = mb_strtolower($term->text, 'UTF-8');
+    edit_mword_display_change($term, $tid, $ord);
+}
 
-    $new = empty($term->id);
+/**
+ * Display a form for the insertion of a new multi-word.
+ * 
+ * @param Term $term Multi-word to insert.
+ * @param int  $tid  Text ID
+ * @param int  $ord  Text order
+ * @param int  $len  Number of words in the multi-word.
+ * 
+ * @return void
+ * 
+ * @global string $tbpref Database table prefix.
+ */
+function edit_mword_display_new($term, $tid, $ord, $len) {
+    global $tbpref;
+    $scrdir = getScriptDirectionTag($term->lgid);
+    $seid = get_first_value(
+        "SELECT Ti2SeID AS value 
+        FROM {$tbpref}textitems2 
+        WHERE Ti2TxID = $tid AND Ti2Order = $ord"
+    );
+    $sent = getSentence($seid, $term->textlc, (int) getSettingWithDefault('set-term-sentence-count'));
 
-    $titletext = ($new ? "New Term" : "Edit Term") . ": " . $term->text;
-    pagestart_nobody($titletext);
     ?>
+
     <script type="text/javascript">
         $(document).ready(ask_before_exiting);
         $(window).on('beforeunload',function() {
@@ -319,44 +378,12 @@ function edit_mword_display() {
             }, 0);
         });
     </script>
-    <?php
-    $scrdir = getScriptDirectionTag($term->lgid);
-    
-    if ($new) {
-        // NEW
-        edit_mword_display_new($term, $scrdir);
-    } else {
-        // CHG
-        edit_mword_display_change($term, $scrdir);
-    }
-}
-
-/**
- * Display a form for the insertion of a new multi-word.
- * 
- * @param Term $term Multi-word to insert.
- * 
- * @return void
- * 
- * @global string $tbpref Database table prefix.
- */
-function edit_mword_display_new($term, $scrdir) {
-    global $tbpref;
-    $seid = get_first_value(
-        "select Ti2SeID as value 
-        from " . $tbpref . "textitems2 
-        where Ti2TxID = " . $_REQUEST['tid'] . " and Ti2Order = " . $_REQUEST['ord']
-    );
-    $sent = getSentence($seid, $term->textlc, (int) getSettingWithDefault('set-term-sentence-count'));
-
-    ?>
-
     <form name="newword" class="validate" action="<?= $_SERVER['PHP_SELF']; ?>" method="post">
     <input type="hidden" name="WoLgID" id="langfield" value="<?= $term->lgid; ?>" />
     <input type="hidden" name="WoTextLC" value="<?= tohtml($term->textlc); ?>" />
-    <input type="hidden" name="tid" value="<?= $_REQUEST['tid']; ?>" />
-    <input type="hidden" name="ord" value="<?= $_REQUEST['ord']; ?>" />
-    <input type="hidden" name="len" value="<?= $_REQUEST['len']; ?>" />
+    <input type="hidden" name="tid" value="<?= $tid; ?>" />
+    <input type="hidden" name="ord" value="<?= $ord; ?>" />
+    <input type="hidden" name="len" value="<?= $len; ?>" />
     <table class="tab2" cellspacing="0" cellpadding="5">
         <tr title="Only change uppercase/lowercase!">
             <td class="td1 right"><b>New Term:</b></td>
@@ -418,13 +445,16 @@ function edit_mword_display_new($term, $scrdir) {
  * Display an updating form for a multi-word.
  * 
  * @param Term $term Multi-word to being modified.
+ * @param int  $tid  Text ID
+ * @param int  $ord  Text order
  * 
  * @return void
  * 
  * @global string $tbpref Database table prefix.
  */
-function edit_mword_display_change($term, $scrdir) {
+function edit_mword_display_change($term, $tid, $ord) {
     global $tbpref;
+    $scrdir = getScriptDirectionTag($term->lgid);
     $sql = 'SELECT WoTranslation, WoSentence, WoRomanization, WoStatus 
     FROM ' . $tbpref . 'words WHERE WoID = ' . $term->id;
     $res = do_mysqli_query($sql);
@@ -438,8 +468,7 @@ function edit_mword_display_change($term, $scrdir) {
             $seid = get_first_value(
                 "SELECT Ti2SeID AS value 
                 FROM " . $tbpref . "textitems2 
-                WHERE Ti2TxID = " . $_REQUEST['tid'] . 
-                " AND Ti2Order = " . $_REQUEST['ord']
+                WHERE Ti2TxID = $tid AND Ti2Order = $ord"
             );
             $sent = getSentence(
                 $seid, $term->textlc, 
@@ -452,6 +481,15 @@ function edit_mword_display_change($term, $scrdir) {
             $transl = ''; 
         }
         ?>
+    
+    <script type="text/javascript">
+        $(document).ready(ask_before_exiting);
+        $(window).on('beforeunload',function() {
+            setTimeout(function() {
+                window.parent.frames['ru'].location.href = 'empty.html';
+            }, 0);
+        });
+    </script>
 
     <form name="editword" class="validate" action="<?= $_SERVER['PHP_SELF']; ?>" method="post">
     <input type="hidden" name="WoLgID" id="langfield" value="<?= $term->lgid; ?>" />
@@ -459,8 +497,8 @@ function edit_mword_display_change($term, $scrdir) {
     <input type="hidden" name="WoOldStatus" value="<?= $record['WoStatus']; ?>" />
     <input type="hidden" name="WoStatus" value="<?= $status; ?>" />
     <input type="hidden" name="WoTextLC" value="<?= tohtml($term->textlc); ?>" />
-    <input type="hidden" name="tid" value="<?= $_REQUEST['tid']; ?>" />
-    <input type="hidden" name="ord" value="<?= $_REQUEST['ord']; ?>" />
+    <input type="hidden" name="tid" value="<?= $tid; ?>" />
+    <input type="hidden" name="ord" value="<?= $ord; ?>" />
     <table class="tab2" cellspacing="0" cellpadding="5">
         <tr title="Only change uppercase/lowercase!">
             <td class="td1 right"><b>Edit Term:</b></td>
@@ -525,33 +563,34 @@ function edit_mword_display_change($term, $scrdir) {
  * Create the multi-word frame.
  * 
  * @return void
+ * 
+ * @global string $tbpref Database table prefix.
  */
 function edit_mword_page() {
+    global $tbpref;
+
     if (isset($_REQUEST['op'])) {
         // INS/UPD
-        $translation_raw = repl_tab_nl(getreq("WoTranslation"));
-        if ($translation_raw == '' ) { 
-            $translation = '*';
-        } else { 
-            $translation = $translation_raw; 
-        }
-        $textlc = trim(getreq("WoTextLC"));
-        if (mb_strtolower(trim(getreq("WoText")), 'UTF-8') != $textlc) {
-            $titletext = "New/Edit Term: " . tohtml($textlc);
-            pagestart_nobody($titletext);
-            echo '<h4><span class="bigger">' . $titletext . '</span></h4>';
-            $message = 'Error: Term in lowercase must be exactly = "' . $textlc . 
-            '", please go back and correct this!';
-            echo error_message_with_hide($message, 0);
-            pageend();
-            exit();
-        }
-        edit_mword_do_operation(
-            $_REQUEST["WoText"], $translation
-        );
+        $term = edit_mword_prepare_term();
+        edit_mword_do_operation($term);
     } else {  
-        // edit_mword.php?tid=..&ord=..&wid=.. OR edit_mword.php?tid=..&ord=..&txt=..
-        edit_mword_display();
+        if (getreq('wid') == "") {
+            // edit_mword.php?tid=..&ord=..&txt=.. for new multi-word 
+            pagestart_nobody("New Term: " . getreq('txt'));
+            edit_mword_new(
+                getreq('txt'), (int) getreq('tid'), getreq('ord'), getreq('len')
+            );
+        } else {
+            // edit_mword.php?tid=..&ord=..&wid=.. for multi-word edit.
+            $text = get_first_value(
+                "SELECT WoText AS value 
+                FROM {$tbpref}words WHERE WoID = " . getreq('wid')
+            );
+            pagestart_nobody("Edit Term: " . $text);
+            edit_mword_update(
+                (int) getreq('wid'), (int) getreq('tid'), getreq('ord')
+            );
+        }
     }
     pageend();
 }
