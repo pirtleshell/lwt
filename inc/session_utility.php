@@ -3707,11 +3707,13 @@ function insert_expression_from_mecab($text, $lid, $wid, $len)
         while (!feof($handle)) {
             $row = fgets($handle, 16132);
             $arr = explode("\t", $row, 4);
-            if (empty($arr[0]) || $arr[0] == "EOS") {
+            // Not a word (punctuation)
+            if (empty($arr[0]) || $arr[0] == "EOS" 
+            || strpos("2 6 7", $arr[1]) === false) {
                 continue;
             }
-            if (mb_strpos($text, $arr[0]) === false 
-            || strpos("2 6 7", $arr[1]) === false) {
+            // A word in sentence but not in selected multi-word
+            if (mb_strpos($text, $arr[0]) === false) {
                 $word_counter++;
                 continue;
             }

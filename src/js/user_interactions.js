@@ -72,7 +72,7 @@ function newExpressionInteractable(text, attrs, length, hex, showallwords) {
         el.attr('data_text', txt).attr('data_pos', pos);
         if (!showallwords) {
             if (text_refresh) {
-                refresh_text(el);
+                //refresh_text(el);
             } else {
                 el.addClass('hide');
             }
