@@ -24,7 +24,10 @@ require_once __DIR__ . '/session_utility.php';
  * @param int    $langid Language ID
  * @param int    $wid    Word ID
  * @param string $word   Word translation
- * @param string $ctl    JS sentence control 
+ * @param string $ctl    Path for the textarea of the sentence of the word being 
+ *                       edited.
+ * 
+ * @return string 
  */
 function do_ajax_show_sentences($langid, $wid, $word, $ctl)
 {
@@ -43,7 +46,7 @@ if (isset($_POST['lang']) && isset($_POST['word'])
     && isset($_POST['woid']) && isset($_POST['ctl'])
 ) {
     echo do_ajax_show_sentences(
-        (int)$_POST['lang'], $_POST['word'], (int)$_POST['woid'], $_POST['ctl']
+        (int)$_POST['lang'], (int)$_POST['woid'], $_POST['word'], $_POST['ctl']
     );
 }
 ?>

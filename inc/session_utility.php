@@ -3278,7 +3278,7 @@ function texttodocount($text): string
  *
  * @return string HTML result
  *
- * @global string $tbpref Table prefix
+ * @global string $tbpref Database table prefix
  */
 function texttodocount2($textid): string
 {
@@ -3307,35 +3307,46 @@ function texttodocount2($textid): string
     $res = '<span title="To Do" class="status0">&nbsp;' . $c . '&nbsp;</span>&nbsp;';
     //$res .='<img src="icn/script-import.png" onclick="showRightFrames(\'bulk_translate_words.php?tid=10&offset=0&sl=fr&tl=en\');" style="cursor: pointer;vertical-align:middle" title="Lookup New Words" alt="Lookup New Words" />&nbsp;&nbsp;&nbsp;'; 
     $res .='<img src="icn/script-import.png" onclick="showRightFrames(\'bulk_translate_words.php?tid=' . $textid . '&offset=0&sl=' . $sl . '&tl=' . $tl . '\');" style="cursor: pointer;vertical-align:middle" title="Lookup New Words" alt="Lookup New Words" />&nbsp;&nbsp;&nbsp;';
-    if ($show_buttons!=2) { 
-        $res .='<input type="button" onclick="iknowall(' . $textid . ');" value=" I KNOW ALL " />'; 
+    if ($show_buttons != 2) { 
+        $res .= '<input type="button" onclick="iknowall(' . $textid . ');" value=" I KNOW ALL " />'; 
     }
-    if ($show_buttons!=1) { 
-        $res.='<input type="button" onclick="ignoreall(' . $textid . ');" value=" IGNORE ALL " />'; 
+    if ($show_buttons != 1) { 
+        $res .= '<input type="button" onclick="ignoreall(' . $textid . ');" value=" IGNORE ALL " />'; 
     }
     return $res;
 }
 
 /**
+ * Format the sentence(s) $seid containing $wordlc highlighting $wordlc.
+ * 
+ * @param int    $seid   Sentence ID
+ * @param string $wordlc Term text in lower case
+ * @param int    $mode   * Up to 1: return only the current sentence
+ *                       * Above 1: return previous sentence and current sentence 
+ *                       * Above 2: return previous, current and next sentence
+ *  
  * @return array{0: string, 1: string} [0]=html, word in bold, [1]=text, word in {}
+ * 
+ * @global string $tbpref Database table prefix.
  */
-function getSentence($seid, $wordlc,$mode): array 
+function getSentence($seid, $wordlc, $mode): array 
 {
     global $tbpref;
     $res = do_mysqli_query(
-        'select concat(
-            \'​\',
-            group_concat(Ti2Text order by Ti2Order asc SEPARATOR \'​\'
-        ),\'​\') as SeText, Ti2TxID as SeTxID, LgRegexpWordCharacters, LgRemoveSpaces, 
-        LgSplitEachChar 
-        from ' . $tbpref . 'textitems2, ' . $tbpref . 'languages 
-        where Ti2LgID = LgID and Ti2WordCount<2 and Ti2SeID= ' . $seid
+        "SELECT 
+        CONCAT(
+            '​', group_concat(Ti2Text ORDER BY Ti2Order asc SEPARATOR '​'),'​'
+        ) AS SeText, 
+        Ti2TxID AS SeTxID, LgRegexpWordCharacters, LgRemoveSpaces,  LgSplitEachChar 
+        FROM {$tbpref}textitems2, {$tbpref}languages 
+        WHERE Ti2LgID = LgID AND Ti2WordCount < 2 AND Ti2SeID = $seid" 
     );
     $record = mysqli_fetch_assoc($res);
     $removeSpaces = $record["LgRemoveSpaces"];
     $splitEachChar = $record['LgSplitEachChar'];
     $txtid = $record["SeTxID"];
-    if(($removeSpaces==1 && $splitEachChar==0) || 'MECAB'== strtoupper(trim($record["LgRegexpWordCharacters"]))) {
+    if (($removeSpaces==1 && $splitEachChar==0) 
+    || 'MECAB'== strtoupper(trim($record["LgRegexpWordCharacters"]))) {
         $text = $record["SeText"];
         $wordlc = '[​]*' . preg_replace('/(.)/u', "$1[​]*", $wordlc);
         $pattern = '/(?<=[​])(' . $wordlc . ')(?=[​])/ui';
@@ -3363,7 +3374,7 @@ function getSentence($seid, $wordlc,$mode): array
                 group by SeID 
                 order by SeID desc"
             );
-        } else{
+        } else {
             $prevseSent = get_first_value(
                 'select SeText as value from ' . $tbpref . 'sentences 
                 where SeID < ' . $seid . ' and SeTxID = ' . $txtid . "
@@ -3377,7 +3388,7 @@ function getSentence($seid, $wordlc,$mode): array
         if ($mode > 2) {
             if($removeSpaces==1 && $splitEachChar==0) {
                 $nextSent = get_first_value(
-                    'select concat(
+                    'SELECT concat(
                         \'​\',group_concat(Ti2Text order by Ti2Order asc SEPARATOR \'​\'),
                         \'​\'
                     ) as  value 
@@ -3390,7 +3401,7 @@ function getSentence($seid, $wordlc,$mode): array
                 );
             } else {
                 $nextSent = get_first_value(
-                    'select SeText as value 
+                    'SELECT SeText as value 
                     from ' . $tbpref . 'sentences 
                     where SeID > ' . $seid . ' and SeTxID = ' . $txtid . " 
                     and trim(SeText) not in ('¶','') order by SeID asc"
@@ -3459,31 +3470,46 @@ function getSentence($seid, $wordlc,$mode): array
                              // [1]=text, word in {} 
 }
 
-// -------------------------------------------------------------
-
+/**
+ * Show 20 sentences containg $wordlc.
+ * 
+ * @param int      $lang      Language ID
+ * @param string   $wordlc    Term in lower case.
+ * @param int|null $wid       Word ID
+ * @param string   $jsctlname Path for the textarea of the sentence of the word being 
+ *                            edited.
+ * @param int      $mode      * Up to 1: return only the current sentence
+ *                            * Above 1: return previous and current sentence 
+ *                            * Above 2: return previous, current and next sentence
+ * 
+ * @return string HTML-formatted string of which elements are candidate santences to
+ *                use.
+ * 
+ * @global string $tbpref Database table prefix
+ */
 function get20Sentences($lang, $wordlc, $wid, $jsctlname, $mode): string 
 {
     global $tbpref;
-    $r = '<p><b>Sentences in active texts with <i>' . tohtml($wordlc) . '</i></b></p><p>(Click on <img src="icn/tick-button.png" title="Choose" alt="Choose" /> to copy sentence into above term)</p>';
-    $mecab_str = null;
-    if(empty($wid)) {
-        $sql = 'SELECT DISTINCT SeID, SeText 
-        FROM ' . $tbpref . 'sentences, ' . $tbpref . 'textitems2 
-        WHERE lower(Ti2Text) = ' . convert_string_to_sqlsyntax($wordlc) . ' 
-        AND Ti2WoID = 0 
-        AND SeID = Ti2SeID AND SeLgID = ' . $lang . ' 
-        order by CHAR_LENGTH(SeText), SeText 
-        limit 0,20';
-    } else if($wid==-1) {
+    $r = '<p><b>Sentences in active texts with <i>' . tohtml($wordlc) . '</i></b></p>
+    <p>(Click on <img src="icn/tick-button.png" title="Choose" alt="Choose" /> 
+    to copy sentence into above term)</p>';
+    if (empty($wid)) {
+        $sql = "SELECT DISTINCT SeID, SeText 
+        FROM {$tbpref}sentences, {$tbpref}textitems2 
+        WHERE LOWER(Ti2Text) = " . convert_string_to_sqlsyntax($wordlc) . " 
+        AND Ti2WoID = 0 AND SeID = Ti2SeID AND SeLgID = $lang 
+        ORDER BY CHAR_LENGTH(SeText), SeText 
+        LIMIT 0,20";
+    } else if ($wid==-1) {
         $res = do_mysqli_query(
-            'select LgRegexpWordCharacters,LgRemoveSpaces 
-            from ' . $tbpref . 'languages 
-            where LgID = ' . $lang
+            'SELECT LgRegexpWordCharacters, LgRemoveSpaces 
+            FROM ' . $tbpref . 'languages 
+            WHERE LgID = ' . $lang
         );
         $record = mysqli_fetch_assoc($res);
         mysqli_free_result($res);
         $removeSpaces = $record["LgRemoveSpaces"];
-        if('MECAB'== strtoupper(trim($record["LgRegexpWordCharacters"]))) {
+        if ('MECAB'== strtoupper(trim($record["LgRegexpWordCharacters"]))) {
             $mecab_file = sys_get_temp_dir() . "/" . $tbpref . "mecab_to_db.txt";
             //$mecab_args = ' -F {%m%t\\t -U {%m%t\\t -E \\n ';
             // For instance, "このラーメン" becomes "この    6    68\nラーメン    7    38"
@@ -3498,16 +3524,6 @@ function get20Sentences($lang, $wordlc, $wid, $jsctlname, $mode): string
             $handle = popen($mecab . $mecab_file, "r");
             if (!feof($handle)) {
                 $row = fgets($handle, 256);
-                //$mecab_str = "\t" . str_replace(array('þ',"\n"),array('',''),preg_replace(array('$ÿ記号[^\t]*\t$u','$ÿ名詞-数\t$u','$[0-9a-zA-Z]ÿ[^\t]*\t$u','$ÿ[^\t]*\t$u'),array('','','',"\t"), $row));
-                /*$mecab_str = "\t" . str_replace(
-                array('{',"\n"), array('',''),
-                preg_replace_callback(
-                '$(([267])|[0-9])\t$u', 
-                function ($matches){
-                if(isset($matches[2])) return "\t"; else return "";
-                }, 
-                $row)
-                );*/
                 // Format string removing numbers. 
                 // MeCab tip: 2 = hiragana, 6 = kanji, 7 = katakana
                 $mecab_str = "\t" . preg_replace_callback(
@@ -3521,15 +3537,18 @@ function get20Sentences($lang, $wordlc, $wid, $jsctlname, $mode): string
             pclose($handle);
             unlink($mecab_file);
             $sql 
-            = 'SELECT SeID, SeText, concat("\\t",group_concat(Ti2Text
-             ORDER BY Ti2Order asc SEPARATOR "\\t"),"\\t") val
+            = 'SELECT SeID, SeText, 
+            concat(
+                "\\t",
+                group_concat(Ti2Text ORDER BY Ti2Order asc SEPARATOR "\\t"),
+                "\\t"
+            ) val
              FROM ' . $tbpref . 'sentences, ' . $tbpref . 'textitems2
              WHERE lower(SeText)
-             LIKE ' . convert_string_to_sqlsyntax('%' . $wordlc . '%') . '
+             LIKE ' . convert_string_to_sqlsyntax("%$wordlc%") . '
              AND SeID = Ti2SeID AND SeLgID = ' . $lang . ' AND Ti2WordCount<2
-             GROUP BY SeID
-             HAVING val 
-             LIKE ' . convert_string_to_sqlsyntax_notrim_nonull('%' . $mecab_str . '%') . '
+             GROUP BY SeID HAVING val 
+             LIKE ' . convert_string_to_sqlsyntax_notrim_nonull("%$mecab_str%") . '
              ORDER BY CHAR_LENGTH(SeText), SeText 
              LIMIT 0,20';
         } else {
@@ -3539,25 +3558,23 @@ function get20Sentences($lang, $wordlc, $wid, $jsctlname, $mode): string
                      . remove_spaces($wordlc, $removeSpaces)
                      . '([^' . $record["LgRegexpWordCharacters"] . ']|$)'
                 );
-            }
-            else {
+            } else {
                 $pattern = convert_string_to_sqlsyntax($wordlc);
             }
             $sql 
-            = 'SELECT DISTINCT SeID, SeText
-             FROM ' . $tbpref . 'sentences
-             WHERE SeText rlike ' . $pattern . ' AND SeLgID = ' . $lang . '
+            = "SELECT DISTINCT SeID, SeText
+             FROM {$tbpref}sentences
+             WHERE SeText RLIKE $pattern AND SeLgID = $lang
              ORDER BY CHAR_LENGTH(SeText), SeText 
-             LIMIT 0,20';
+             LIMIT 0,20";
         }
-    }
-    else {
+    } else {
         $sql 
-        = 'SELECT DISTINCT SeID, SeText
-         FROM ' . $tbpref . 'sentences, ' . $tbpref . 'textitems2
-         WHERE Ti2WoID = ' . $wid . ' AND SeID = Ti2SeID AND SeLgID = ' . $lang . '
+        = "SELECT DISTINCT SeID, SeText
+         FROM {$tbpref}sentences, {$tbpref}textitems2
+         WHERE Ti2WoID = $wid AND SeID = Ti2SeID AND SeLgID = $lang
          ORDER BY CHAR_LENGTH(SeText), SeText
-         LIMIT 0,20';
+         LIMIT 0,20";
     }
     $res = do_mysqli_query($sql);
     $r .= '<p>';
@@ -3566,7 +3583,10 @@ function get20Sentences($lang, $wordlc, $wid, $jsctlname, $mode): string
         if ($last != $record['SeText']) {
             $sent = getSentence($record['SeID'], $wordlc, $mode);
             if (mb_strstr($sent[1], '}', false, 'UTF-8')) {
-                $r .= '<span class="click" onclick="{' . $jsctlname . '.value=' . prepare_textdata_js($sent[1]) . '; makeDirty();}"><img src="icn/tick-button.png" title="Choose" alt="Choose" /></span> &nbsp;' . $sent[0] . '<br />';
+                $r .= '<span class="click" onclick="{' . $jsctlname . '.value=' . 
+                    prepare_textdata_js($sent[1]) . '; makeDirty();}">
+                <img src="icn/tick-button.png" title="Choose" alt="Choose" />
+                </span> &nbsp;' . $sent[0] . '<br />';
             }
         }
         $last = $record['SeText'];

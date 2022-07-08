@@ -1913,6 +1913,8 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 <li>Compatibility with PHP 8+!</li>
 <li>Updated with LWT 2.0.3, solving incompatibilities with PHP 8.1 throzing MySQLI errors.</li>
 <li>Introducing the new class <code>Term</code> in <code>edit_mword.php</code>. This class is yet to be considered experimental, so expect important changes, but should gradually get used everywhere.</li>
+<li>
+<code>insert_expression_from_mecab</code> in <code>session_utility.php</code>. Better name and behavior for <code>insertExpressionFromMeCab</code> (see deprecations).</li>
 </ul>
 <h4>Changed</h4>
 <ul>
@@ -1923,11 +1925,14 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 <li>For some user, the --secure-priv-file option was still required to be on. This was due to a conflict between PHP and MySQLI authorizations.</li>
 <li>When deleting a word, it was previously necessary to reload the page to see a visual change.</li>
 <li>Multi-words insertion fixed.</li>
+<li>"Show Sentences" button during words edition was broken since 2.3.0-fork.</li>
 </ul>
 <h4>Deprecated</h4>
 <ul>
 <li>
 <code>set_word_count</code> in <code>database_connect.php</code> had a misleading name. It was changed to <code>init_word_count</code>.</li>
+<li>
+<code>insertExpressionFromMeCab</code> deprecated for <code>insert_expression_from_mecab</code> in <code>session_utility.php</code>.</li>
 </ul>
 <h3>2.0.3 (February 15 2022)</h3>
 <h4>Fixed</h4>

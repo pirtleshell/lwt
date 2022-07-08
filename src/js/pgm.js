@@ -702,7 +702,6 @@ function translateSentence (url, sentctl) {
     text = sentctl.value;
     if (typeof text === 'string') {
       showRightFrames(undefined, createTheDictUrl(url, text.replace(/[{}]/g, '')));
-      //window.parent.frames.ru.location.href = createTheDictUrl(url, text.replace(/[{}]/g, ''));
     }
   }
 }
@@ -730,7 +729,6 @@ function translateWord (url, wordctl) {
     text = wordctl.value;
     if (typeof text === 'string') {
       showRightFrames(undefined, createTheDictUrl(url, text));
-      //window.parent.frames.ru.location.href = createTheDictUrl(url, text);
     }
   }
 }
@@ -1134,8 +1132,7 @@ function deleteCookie (name, path, domain) {
  */
 function iknowall(t) {
   const answer = confirm('Are you sure?');
-  if (answer) { 
-    //top.frames.ro.location.href = 'all_words_wellknown.php?text=' + t;
+  if (answer) {
     showRightFrames('all_words_wellknown.php?text=' + t);
   }
 }

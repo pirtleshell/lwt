@@ -18,6 +18,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 * For some user, the --secure-priv-file option was still required to be on. This was due to a conflict between PHP and MySQLI authorizations.
 * When deleting a word, it was previously necessary to reload the page to see a visual change.
 * Multi-words insertion fixed.
+* "Show Sentences" button during words edition was broken since 2.3.0-fork.
 
 ### Deprecated
 * ``set_word_count`` in ``database_connect.php`` had a misleading name. It was changed to ``init_word_count``.
