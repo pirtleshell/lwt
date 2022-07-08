@@ -25,7 +25,8 @@ require_once 'inc/simterms.php';
  * 
  * This structure is experimental and subject to change.
  */
-class Term {
+class Term
+{
     /**
      * @var int Term ID.
      */
@@ -72,8 +73,10 @@ class Term {
      * 
      * @return string JSON disctionnary. 
      */
-    public function export_js_dict() {
-        return json_encode(array(
+    public function export_js_dict()
+    {
+        return json_encode(
+            array(
             "woid" => $this->id,
             "text" =>  $this->text,
             "romanization" => $this->roman,
@@ -81,7 +84,8 @@ class Term {
                 $this->translation . getWordTagList($this->id, ' ', 1, 0)
             ),
             "status" => $this->status
-        ));
+            )
+        );
     }
 }
 
@@ -92,7 +96,8 @@ class Term {
  * 
  * @return Term The loaded data.
  */
-function edit_mword_prepare_term() {
+function edit_mword_prepare_term()
+{
     $textlc = trim(getreq("WoTextLC"));
     if (mb_strtolower(trim(getreq("WoText")), 'UTF-8') != $textlc) {
         $titletext = "New/Edit Term: " . tohtml($textlc);
@@ -122,7 +127,8 @@ function edit_mword_prepare_term() {
  * 
  * @return void
  */
-function edit_mword_do_operation($term) {
+function edit_mword_do_operation($term)
+{
     if ($_REQUEST['op'] == 'Save') {
         // INSERT
         $term->status = (int) $_REQUEST["WoStatus"];
@@ -160,7 +166,8 @@ function edit_mword_do_operation($term) {
  * 
  * @global string $tbpref Database table prefix.
  */
-function edit_mword_do_insert($term) {
+function edit_mword_do_insert($term)
+{
     global $tbpref;
     $titletext = "New Term: " . tohtml($term->textlc);
     pagestart_nobody($titletext);
@@ -204,7 +211,8 @@ function edit_mword_do_insert($term) {
  * 
  * @global string $tbpref Database table prefix.
  */
-function edit_mword_do_update($term, $newstatus) {
+function edit_mword_do_update($term, $newstatus)
+{
     global $tbpref;
     $titletext = "Edit Term: " . tohtml($term->textlc);
     pagestart_nobody($titletext);
@@ -252,22 +260,12 @@ function edit_mword_do_update($term, $newstatus) {
             .attr('data_status', mword.status);
         }
 
-        /*update_mword(
-            <?= prepare_textdata_js($term->id); ?>,
-            <?= prepare_textdata_js($term->text); ?>,
-            <?= prepare_textdata_js($term->roman); ?>, 
-            <?= prepare_textdata_js(
-                $term->translation . getWordTagList($term->id, ' ', 1, 0)
-            ); ?>, 
-            <?= prepare_textdata_js($term->status); ?>,
-            <?= $_REQUEST['WoOldStatus']; ?>
-            );*/
         update_mword(
             <?= $term->export_js_dict(); ?>, <?= (int) $_REQUEST['WoOldStatus']; ?>
         );
     //]]>
     </script>
-        <?php
+    <?php
     return $message;
 }
 
@@ -351,7 +349,8 @@ function edit_mword_update($wid, $tid, $ord)
  * 
  * @global string $tbpref Database table prefix.
  */
-function edit_mword_display_new($term, $tid, $ord, $len) {
+function edit_mword_display_new($term, $tid, $ord, $len)
+{
     global $tbpref;
     $scrdir = getScriptDirectionTag($term->lgid);
     $seid = get_first_value(
@@ -447,7 +446,8 @@ function edit_mword_display_new($term, $tid, $ord, $len) {
  * 
  * @global string $tbpref Database table prefix.
  */
-function edit_mword_display_change($term, $tid, $ord) {
+function edit_mword_display_change($term, $tid, $ord)
+{
     global $tbpref;
     $scrdir = getScriptDirectionTag($term->lgid);
     $sql = 'SELECT WoTranslation, WoSentence, WoRomanization, WoStatus 
@@ -561,7 +561,8 @@ function edit_mword_display_change($term, $tid, $ord) {
  * 
  * @global string $tbpref Database table prefix.
  */
-function edit_mword_page() {
+function edit_mword_page()
+{
     global $tbpref;
 
     if (isset($_REQUEST['op'])) {

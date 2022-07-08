@@ -317,9 +317,7 @@ function item_parser($record, $showAll, $currcharcount, $hide): void
     $spanid = 'ID-' . $record['Ti2Order'] . '-' . $actcode;
 
     // Check if item should be hidden
-    $hidetag = '';
-    if ($hide)
-        $hidetag = ' hide';
+    $hidetag = $hide ? ' hide' : '';
 
     if ($record['TiIsNotWord'] != 0) {
         // The current item is not a term (likely punctuation)
@@ -353,8 +351,9 @@ function word_parser($record, $showAll, $currcharcount, $hideuntil): int
     // Check if item should be hidden
     $hidetag = '';
     if ($record['Ti2Order'] <= $hideuntil) {
-        if (!$showAll || ($showAll && $actcode > 1))
-            $hidetag = ' hide'; 
+        if (!$showAll || ($showAll && $actcode > 1)) {
+            $hidetag = ' hide';
+        } 
     } else {
         $hidetag = '';
         $hideuntil = -1;    
@@ -429,8 +428,7 @@ function main_word_loop($textid, $showAll): void
     
     $res = do_mysqli_query($sql);
     $currcharcount = 0;
-    $hideuntil = -1;
-    $hide_items_array = array();
+    $hidden_items = array();
     $cnt = 1;
     $sid = 0;
     $last = -1;
@@ -443,18 +441,12 @@ function main_word_loop($textid, $showAll): void
         }
         if ($showAll) {
             $hide = isset($record['WoID']) 
-            && array_key_exists((int) $record['WoID'], $hide_items_array);
+            && array_key_exists((int) $record['WoID'], $hidden_items);
         } else {
             $hide = $record['Ti2Order'] <= $last;
         }
-        if ($record['Ti2Order'] > $hideuntil) {
-            $hideuntil = -1;    
-        }
     
         item_parser($record, $showAll, $currcharcount, $hide);
-        if ($hideuntil == -1) {
-            //$hideuntil = $record['Ti2Order'] + ((int)$record['Code'] - 1) * 2;
-        }
         if ((int)$record['Code'] == 1) { 
             $currcharcount += $record['TiTextLength']; 
             $cnt++;
@@ -463,17 +455,15 @@ function main_word_loop($textid, $showAll): void
             $last, (int) $record['Ti2Order'] + ((int)$record['Code'] - 1) * 2
         );
         if ($showAll) {
-            if (
-            isset($record['WoID']) 
-            && !array_key_exists((int) $record['WoID'], $hide_items_array) // !$hide
+            if (isset($record['WoID']) 
+                && !array_key_exists((int) $record['WoID'], $hidden_items) // !$hide
             ) {
-                // Registering single words is useless for next turn
-                $hide_items_array[(int) $record['WoID']] = (int) $record['Ti2Order'] 
+                $hidden_items[(int) $record['WoID']] = (int) $record['Ti2Order'] 
                 + ((int)$record['Code'] - 1) * 2;
             }
             // Clean the already finished items
-            $hide_items_array = array_filter(
-                $hide_items_array, 
+            $hidden_items = array_filter(
+                $hidden_items, 
                 fn($val) => $val >= $record['Ti2Order'],
             );
         }

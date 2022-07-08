@@ -246,7 +246,6 @@ function get_mecab_path($mecab_args = ''): ?string
  */
 function find_latin_sentence_end($matches, $noSentenceEnd)
 {
-    //var_dump($matches);
     if (!strlen($matches[6]) && strlen($matches[7]) && preg_match('/[a-zA-Z0-9]/', substr($matches[1], -1))) { 
         return preg_replace("/[.]/", ".\t", $matches[0]); 
     }
@@ -254,19 +253,18 @@ function find_latin_sentence_end($matches, $noSentenceEnd)
         if (strlen($matches[1]) < 3) { 
             return $matches[0];
         }
-    }
-    else if ($matches[3] && (preg_match('/^[B-DF-HJ-NP-TV-XZb-df-hj-np-tv-xz][b-df-hj-np-tv-xzñ]*$/u', $matches[1]) || preg_match('/^[AEIOUY]$/', $matches[1]))) { 
+    } else if (
+        $matches[3] && (preg_match('/^[B-DF-HJ-NP-TV-XZb-df-hj-np-tv-xz][b-df-hj-np-tv-xzñ]*$/u', $matches[1]) || preg_match('/^[AEIOUY]$/', $matches[1]))
+        ) { 
         return $matches[0]; 
     }
-    if (preg_match('/[.:]/', $matches[2])) {
-        if (preg_match('/^[a-z]/', $matches[7])) {
-            return $matches[0]; 
-        }
+    if (preg_match('/[.:]/', $matches[2]) && preg_match('/^[a-z]/', $matches[7])) {
+        return $matches[0];
     }
-    if ($noSentenceEnd != '' && preg_match('/^(' . $noSentenceEnd . ')$/', $matches[0])) {
+    if ($noSentenceEnd != '' && preg_match("/^($noSentenceEnd)$/", $matches[0])) {
         return $matches[0]; 
     }
-    return $matches[0]."\r";
+    return $matches[0] . "\r";
 }
 
 
@@ -563,6 +561,5 @@ function getsqlscoreformula($method): string
     } 
     return '0';
 }
-
 
 ?>
