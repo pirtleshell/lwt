@@ -302,14 +302,48 @@ function sentenceParser($sid, $old_sid)
 /**
  * Process each text item (can be punction, term, etc...)
  *
+ * @param string[] $record        Text item information
+ * @param 0|1      $showAll       Show all words or not
+ * @param int      $currcharcount Current number of caracters
+ * @param bool     $hide          Should some item be hidden, depends on $showAll
+ * 
+ * @return void
+ * 
+ * @since 2.5.0-fork
+ */
+function item_parser($record, $showAll, $currcharcount, $hide): void
+{
+    $actcode = (int)$record['Code'];
+    $spanid = 'ID-' . $record['Ti2Order'] . '-' . $actcode;
+
+    // Check if item should be hidden
+    $hidetag = '';
+    if ($hide)
+        $hidetag = ' hide';
+
+    if ($record['TiIsNotWord'] != 0) {
+        // The current item is not a term (likely punctuation)
+        echo "<span id=\"$spanid\" class=\"$hidetag\">" .
+        str_replace("¶", '<br />', tohtml($record['TiText'])) . '</span>';
+    } else {
+        // A term (word or multi-word)
+        echo_term(
+            $actcode, $showAll, $spanid, $hidetag, $currcharcount, $record
+        );
+    }
+}
+
+/**
+ * Process each text item (can be punction, term, etc...)
+ *
  * @param string[] $record        Record information
  * @param 0|1      $showAll       Show all words or not
- * @param int      $currcharcount Current number of caracters 
- * @param int      $cnt
- * @param int      $sid           Sentence ID
+ * @param int      $currcharcount Current number of caracters
  * @param int      $hideuntil     Should the value be hidden or not
  * 
  * @return int New value for $hideuntil
+ * 
+ * @deprecated Use item_parser instead (since 2.5.0-fork).
  */
 function word_parser($record, $showAll, $currcharcount, $hideuntil): int
 {
@@ -319,20 +353,12 @@ function word_parser($record, $showAll, $currcharcount, $hideuntil): int
     // Check if item should be hidden
     $hidetag = '';
     if ($record['Ti2Order'] <= $hideuntil) {
-        if (!$showAll || $showAll && $actcode > 1)
+        if (!$showAll || ($showAll && $actcode > 1))
             $hidetag = ' hide'; 
     } else {
         $hidetag = '';
         $hideuntil = -1;    
     }
-    /*$hidetag = '';
-    if ($hideuntil > 0) {
-        if ($record['Ti2Order'] <= $hideuntil) {
-            $hidetag = ' hide'; 
-        } else {
-            $hideuntil = -1;
-        }
-    }*/
 
     if ($record['TiIsNotWord'] != 0) {
         // The current item is not a term (likely punctuation)
@@ -404,8 +430,10 @@ function main_word_loop($textid, $showAll): void
     $res = do_mysqli_query($sql);
     $currcharcount = 0;
     $hideuntil = -1;
+    $hide_items_array = array();
     $cnt = 1;
     $sid = 0;
+    $last = -1;
 
     // Loop over words and punctuation
     while ($record = mysqli_fetch_assoc($res)) {
@@ -413,10 +441,41 @@ function main_word_loop($textid, $showAll): void
         if ($cnt < $record['Ti2Order']) {
             echo '<span id="ID-' . $cnt++ . '-1"></span>';
         }
-        $hideuntil = word_parser($record, $showAll, $currcharcount, $hideuntil);
+        if ($showAll) {
+            $hide = isset($record['WoID']) 
+            && array_key_exists((int) $record['WoID'], $hide_items_array);
+        } else {
+            $hide = $record['Ti2Order'] <= $last;
+        }
+        if ($record['Ti2Order'] > $hideuntil) {
+            $hideuntil = -1;    
+        }
+    
+        item_parser($record, $showAll, $currcharcount, $hide);
+        if ($hideuntil == -1) {
+            //$hideuntil = $record['Ti2Order'] + ((int)$record['Code'] - 1) * 2;
+        }
         if ((int)$record['Code'] == 1) { 
             $currcharcount += $record['TiTextLength']; 
             $cnt++;
+        } 
+        $last = max(
+            $last, (int) $record['Ti2Order'] + ((int)$record['Code'] - 1) * 2
+        );
+        if ($showAll) {
+            if (
+            isset($record['WoID']) 
+            && !array_key_exists((int) $record['WoID'], $hide_items_array) // !$hide
+            ) {
+                // Registering single words is useless for next turn
+                $hide_items_array[(int) $record['WoID']] = (int) $record['Ti2Order'] 
+                + ((int)$record['Code'] - 1) * 2;
+            }
+            // Clean the already finished items
+            $hide_items_array = array_filter(
+                $hide_items_array, 
+                fn($val) => $val >= $record['Ti2Order'],
+            );
         }
     }
     

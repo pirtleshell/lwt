@@ -568,8 +568,24 @@ function edit_mword_page() {
         // INS/UPD
         $term = edit_mword_prepare_term();
         edit_mword_do_operation($term);
-    } else {  
-        if (getreq('wid') == "") {
+    } else {
+        $str_id = getreq('wid');
+        // No ID provided: check if text exists in database.
+        if ($str_id == "" || !is_numeric($str_id)) {
+            $lgid = get_first_value(
+                "SELECT TxLgID AS value FROM {$tbpref}texts 
+                WHERE TxID = " . ((int) getreq('tid'))
+            );
+            $textlc = convert_string_to_sqlsyntax(
+                mb_strtolower(prepare_textdata(getreq('txt')), 'UTF-8')
+            );
+
+            $str_id = get_first_value(
+                "SELECT WoID AS value FROM {$tbpref}words 
+                WHERE WoLgID = $lgid AND WoTextLC = $textlc"
+            );
+        }
+        if (!isset($str_id)) {
             // edit_mword.php?tid=..&ord=..&txt=.. for new multi-word 
             pagestart_nobody("New Term: " . getreq('txt'));
             edit_mword_new(
@@ -578,12 +594,11 @@ function edit_mword_page() {
         } else {
             // edit_mword.php?tid=..&ord=..&wid=.. for multi-word edit.
             $text = get_first_value(
-                "SELECT WoText AS value 
-                FROM {$tbpref}words WHERE WoID = " . getreq('wid')
+                "SELECT WoText AS value FROM {$tbpref}words WHERE WoID = $str_id"
             );
             pagestart_nobody("Edit Term: " . $text);
             edit_mword_update(
-                (int) getreq('wid'), (int) getreq('tid'), getreq('ord')
+                (int) $str_id, (int) getreq('tid'), getreq('ord')
             );
         }
     }
