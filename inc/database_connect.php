@@ -1721,7 +1721,8 @@ function connect_to_database($server, $userid, $passwd, $dbname)
 {
     // @ suppresses error messages
     
-    @mysqli_report(MYSQLI_REPORT_OFF); // added because mysqli_report default setting in PHP 8.1+ has changed
+    // Necessary since mysqli_report default setting in PHP 8.1+ has changed
+    @mysqli_report(MYSQLI_REPORT_OFF); 
 
     $DBCONNECTION = @mysqli_connect($server, $userid, $passwd, $dbname);
 

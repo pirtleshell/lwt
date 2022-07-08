@@ -13,6 +13,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 
 ### Changed
 * Composer dependencies updated.
+* The Docker container now uses PHP 8.1 (instead of 7.4).
 
 ### Fixed
 * For some user, the --secure-priv-file option was still required to be on. This was due to a conflict between PHP and MySQLI authorizations.
@@ -23,6 +24,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 ### Deprecated
 * ``set_word_count`` in ``database_connect.php`` had a misleading name. It was changed to ``init_word_count``.
 * ``insertExpressionFromMeCab`` deprecated for ``insert_expression_from_mecab`` in ``session_utility.php``.
+* PHP <8 won't be tested anymore. You are highly encouraged to update to PHP 8+!
 
 ## 2.0.3 (February 15 2022)
 ### Fixed
