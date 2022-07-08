@@ -4,7 +4,34 @@ Changelog
 This project's changelog. Versions marked with "-fork" come from the community, other versions come from the canonical LWT ("official" branch on Git).
 For git tags, official releases are marked like "v1.0.0", while unofficial ones are marked like "v1.0.0-fork".
 
-## [Unreleased]
+## 2.5.0-fork (July 08 2022)
+### Added
+* Compatibility with PHP 8+!
+* Updated with LWT 2.0.3, solving incompatibilities with PHP 8.1 throzing MySQLI errors.
+* Introducing the new class ``Term`` in ``edit_mword.php``. This class is yet to be considered experimental, so expect important changes, but should gradually get used everywhere.
+* ``insert_expression_from_mecab`` in ``session_utility.php``. Better name and behavior for ``insertExpressionFromMeCab`` (see deprecations).
+
+### Changed
+* Composer dependencies updated.
+* The Docker container now uses PHP 8.1 (instead of 7.4).
+
+### Fixed
+* For some user, the --secure-priv-file option was still required to be on. This was due to a conflict between PHP and MySQLI authorizations.
+* When deleting a word, it was previously necessary to reload the page to see a visual change.
+* Multi-words insertion fixed.
+* "Show Sentences" button during words edition was broken since 2.3.0-fork.
+
+### Full Changelog
+* [2.4.1...2.5.0](https://github.com/HugoFara/lwt/compare/2.4.1...2.5.0)
+
+### Deprecated
+* ``set_word_count`` in ``database_connect.php`` had a misleading name. It was changed to ``init_word_count``.
+* ``insertExpressionFromMeCab`` deprecated for ``insert_expression_from_mecab`` in ``session_utility.php``.
+* PHP <8 won't be tested anymore. You are highly encouraged to update to PHP 8+!
+
+## 2.0.3 (February 15 2022)
+### Fixed
+* An incompatibility with PHP 8.1+ (changed mysqli_report default setting in PHP 8.1+) has been fixed.
 
 ## 2.4.1-fork (June 09 2022)
 ### Changed

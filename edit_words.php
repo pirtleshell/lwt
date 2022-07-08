@@ -372,7 +372,7 @@ elseif (isset($_REQUEST['op'])) {
         );
 
         $wid = get_last_key();
-        set_word_count();
+        init_word_count();
         $len = get_first_value('select WoWordCount as value from ' . $tbpref . 'words where WoID = ' . $wid);
         $textlc = mb_strtolower($_REQUEST["WoText"], 'UTF-8');
         if($len > 1) {

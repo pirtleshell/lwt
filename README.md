@@ -7,7 +7,11 @@
 
 **Learning with Texts** (LWT) is a tool for language learning by reading. It is a self-hosted web application.
 
-You feel that you won't learn much by translating dumb sentences or using grammar books? Learning with Texts offers you the possibility to learn by reading texts in your objective language. The idea: when you don't know a word in a text, just click it. We show you the translation, and you will have regular tests to remember it. Ready to go?
+<div style="text-align: center;">
+<img src="https://github.com/HugoFara/lwt/raw/master/img/lwt_icon_big.jpg" />
+</div>
+
+You feel that you won't learn much by translating dumb sentences or using grammar books? Learning With Texts offers you the possibility to learn by reading texts in your target language. Concept: when you don't know a word in a text, just click it. We show you the translation, and you will have regular tests to remember it. Ready to go?
 
 **THIS IS A THIRD PARTY VERSION**. This version is not the 
 official one, and brings many improvements and new features. 

@@ -1,36 +1,41 @@
 # LWT Installation
-* *Last update*: May 23 2022
+* *Last update*: July 08 2022
 
 Let's install the LWT server. LWT uses a client-server architecture, which means it 
 will run in your browser as a classical website. You can use any computer as the 
 server, here are some ways to do it. 
 
-## Run in a [Docker](https://docs.docker.com/get-docker/) container
-It is the easiest way to install LWT, but the drawback is that it will use more or 
-less 1 GB on your system. 
+## Windows 10/11
 
-If LWT is already downloaded, you only need to build the image by going into the 
-project root folder and run using 
+### Possibility (a): Using XAMPP
 
-```bash
-docker compose -f docker-compose.yml up -d
-```
+1. Install XAMPP
+   1. Go to https://www.apachefriends.org/download.html 
+   2. Download "XAMPP for Windows 7.3.30 (64 bit)" (or a higher PHP 7 version).
+   3. Open your Downloads folder and run the downloaded "xampp-windows-x64-xxx-installer.exe". Please install the components Apache, MySQL, PHP and phpMyAdmin into the folder C:\xampp.
 
-By default the server can be accessed on port 8010 (http://localhost:8010).
+2. Get the [latest GitHub release](https://github.com/HugoFara/lwt/releases), unzip it.
+    
+   You can also try to download the [latest stable version](https://github.com/HugoFara/lwt/archive/refs/heads/master.zip) if you want the cutting-edge updates (that may include some bugs)
 
-To remove the created containers run
+3. Now go into "C:\xampp\htdocs\lwt". Rename the file "connect_xampp.inc.php" to "connect.inc.php". Sometimes the "php" extension is hidden, so be careful! You can display file extensions via the Windows Explorer settings and check it.
 
-```bash
-docker compose -f docker-compose.yml down
-```
+4. Start LWT 
+   1. Start the "XAMPP Control Panel" ("C:\xampp\xampp-control.exe") and start the two modules Apache and MySQL. Now the two module names should have a green background color. 
+   2. LWT can now be started. Open a browser, and open http://localhost/lwt (please bookmark).
 
-Otherwise, you can download the official image with
-```bash
-docker pull ghcr.io/hugofara/lwt
-```
+5. You may now install the LWT demo database, or define the first language you want to learn. 
 
-## Windows 10
-### Possibility (a): Installation EasyPHP / LWT on Win10
+If you start up Windows, you must repeat Step 5a+b. 
+
+If you want to start "XAMPP Control Panel" every time you start Windows and to avoid Step 5a, put a "XAMPP Control Panel" link to "C:\xampp\xampp-control.exe" into "C:\Users\(YourUID)\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup". To autostart also the Apache and MySQL modules, please open "Config" within the XAMPP Control Panel and check the two checkboxes.
+
+Hint: To fix a "XAMPP Control Panel" error "Xampp-control.ini Access is denied", please read and do the instructions in https://www.codermen.com/fix-xampp-server-error-xampp-control-ini-access-is-denied/
+
+Now you must only do step 5b to start LWT.
+
+
+### Possibility (b): Using EasyPHP
 
 1. Get Visual C++
    1. Download "vcredist_x86.exe" from https://www.microsoft.com/en-us/download/details.aspx?id=30679 
@@ -62,33 +67,6 @@ If you start up Windows, you must repeat Step 6a+b.
 If you want to start EasyPHP every time you start Windows and avoid Step 6a, put an EasyPHP link into "C:\Users\(YourUID)\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup". 
 
 Now you must only do step 6b to start LWT.
-
-### Possibility (b): Installation XAMPP / LWT on Win10
-
-1. Install XAMPP
-   1. Go to https://www.apachefriends.org/download.html 
-   2. Download "XAMPP for Windows 7.3.30 (64 bit)" (or a higher PHP 7 version).
-   3. Open your Downloads folder and run the downloaded "xampp-windows-x64-xxx-installer.exe". Please install the components Apache, MySQL, PHP and phpMyAdmin into the folder C:\xampp.
-
-2. Get the [latest GitHub release](https://github.com/HugoFara/lwt/releases), unzip it.
-    
-   You can also try to download the [latest stable version](https://github.com/HugoFara/lwt/archive/refs/heads/master.zip) if you want the cutting-edge updates (that may include some bugs)
-
-3. Now go into "C:\xampp\htdocs\lwt". Rename the file "connect_xampp.inc.php" to "connect.inc.php". Sometimes the "php" extension is hidden, so be careful! You can display file extensions via the Windows Explorer settings and check it.
-
-4. Start LWT 
-   1. Start the "XAMPP Control Panel" ("C:\xampp\xampp-control.exe") and start the two modules Apache and MySQL. Now the two module names should have a green background color. 
-   2. LWT can now be started. Open a browser, and open http://localhost/lwt (please bookmark).
-
-5. You may now install the LWT demo database, or define the first language you want to learn. 
-
-If you start up Windows, you must repeat Step 5a+b. 
-
-If you want to start "XAMPP Control Panel" every time you start Windows and to avoid Step 5a, put a "XAMPP Control Panel" link to "C:\xampp\xampp-control.exe" into "C:\Users\(YourUID)\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup". To autostart also the Apache and MySQL modules, please open "Config" within the XAMPP Control Panel and check the two checkboxes.
-
-Hint: To fix a "XAMPP Control Panel" error "Xampp-control.ini Access is denied", please read and do the instructions in https://www.codermen.com/fix-xampp-server-error-xampp-control-ini-access-is-denied/
-
-Now you must only do step 5b to start LWT.
 
 ## macOS 10.10+
 
@@ -176,6 +154,30 @@ The following instruction were tested on Raspbian Stretch.
 8. You may install the LWT demo database, or define the first language you want to learn. 
 
 If you want to use LWT again, just do step 7.
+
+## Run in a [Docker](https://docs.docker.com/get-docker/) container
+It is the easiest way to install LWT, but the drawback is that it will use more or 
+less 1 GB on your system. 
+
+If LWT is already downloaded, you only need to build the image by going into the 
+project root folder and run using 
+
+```bash
+docker compose -f docker-compose.yml up -d
+```
+
+By default the server can be accessed on port 8010 (http://localhost:8010).
+
+To remove the created containers run
+
+```bash
+docker compose -f docker-compose.yml down
+```
+
+Otherwise, you can download the official image with
+```bash
+docker pull ghcr.io/hugofara/lwt
+```
 
 ## Dependency management with Composer
 If you have a technical knowledge of how Composer works for dependency management, you may consider using

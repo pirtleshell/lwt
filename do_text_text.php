@@ -100,7 +100,7 @@ function getLanguagesSettings($langid)
 
 
 /**
- * Print the output when the word is a term.
+ * Print the output when the word is a term (word or multi-word).
  *
  * @param int                   $actcode       Action code, > 1 for multiword
  * @param int                   $showAll       Show all words or not
@@ -115,20 +115,13 @@ function echo_term($actcode, $showAll, $spanid, $hidetag, $currcharcount, $recor
 {
     $actcode = (int)$record['Code'];
     if ($actcode > 1) {   
-        // A MULTIWORD FOUND
+        // A multiword
 
-        //$titext[$actcode] = $record['TiText'];
-
-        // MULTIWORD FOUND - DISPLAY (Status 1-5, display)
         if (isset($record['WoID'])) {
-
-            echo '<span id="' . $spanid . '" 
-            class="' . $hidetag . ' click mword ' . 
-            ($showAll ? 'mwsty' : 'wsty') .  
-            'order' . $record['Ti2Order'] .
-            'word' . $record['WoID'] . 
-            'status' . $record['WoStatus'] . 
-            ' TERM' . strToClassName($record['TiTextLC']) . 
+            echo '<span id="' . $spanid . '" class="' . $hidetag . ' click mword ' . 
+            ($showAll ? 'mwsty' : 'wsty') . ' order' . $record['Ti2Order'] .
+            ' word' . $record['WoID'] . ' status' . $record['WoStatus'] . 
+            ' TERM' . strToClassName($record['TiTextLC']) . '" ' .
             ' data_pos="' . $currcharcount . '" 
             data_order="' . $record['Ti2Order'] . '" 
             data_wid="' . $record['WoID'] . '" 
@@ -138,23 +131,23 @@ function echo_term($actcode, $showAll, $spanid, $hidetag, $currcharcount, $recor
             ) . '" 
             data_rom="' . tohtml($record['WoRomanization']) . '" 
             data_status="' . $record['WoStatus'] . '"  
-            data_code="' . $record['Code'] . '" 
-            data_text="' . tohtml($record['TiText']); '">'; 
+            data_code="' . $actcode . '" 
+            data_text="' . tohtml($record['TiText']) . '">'; 
             if ($showAll) {
-                echo '&nbsp;' . $record['Code'] . '&nbsp;';
+                echo '&nbsp;' . $actcode . '&nbsp;';
             } else {
                 echo tohtml($record['TiText']);
             }
             echo '</span>';
         }
     } else {  
-        // ($actcode == 1)  -- A WORD FOUND
+        // Single word
 
-        if (isset($record['WoID'])) {  // WORD FOUND STATUS 1-5,98,99
-
+        if (isset($record['WoID'])) {  
+            // Word found status 1-5|98|99
             echo '<span 
             id="' . $spanid . '" 
-            class="' . $hidetag . 
+            class="' . $hidetag .
             ' click word wsty word'. $record['WoID'] . 
             ' status'. $record['WoStatus'] . 
             ' TERM' . strToClassName($record['TiTextLC']) . '" 
@@ -174,20 +167,17 @@ function echo_term($actcode, $showAll, $spanid, $hidetag, $currcharcount, $recor
             . tohtml($record['TiText']) . 
             '</span>';
         } else {
-            // NOT A WORD AND NOT A MULTIWORD FOUND - STATUS 0
+            // Not registered word (status 0)
             echo '<span 
             id="' . $spanid . '" 
-            class="' . $hidetag . 
-            ' click word wsty status0 TERM' . strToClassName($record['TiTextLC']) . '" 
+            class="' . $hidetag . ' click word wsty status0 TERM' . 
+            strToClassName($record['TiTextLC']) . '" 
             data_pos="' . $currcharcount . '" 
             data_order="' . $record['Ti2Order'] . '" 
             data_trans="" data_rom="" data_status="0" 
             data_wid="">' . tohtml($record['TiText']) . '</span>';
-        } 
-
-        //$titext = array('','','','','','','','','','','');
-
-    }  // ($actcode == 1)  -- A WORD FOUND
+        }
+    }
 }
 
 /**
@@ -257,24 +247,17 @@ function wordProcessor($record, $showAll, $currcharcount): int
     }
     // The current word is not a term
     if ($record['TiIsNotWord'] != 0) {
-        echo '<span id="' . $spanid . '" class="' .
-        $hidetag . '">' .
-        str_replace(
-            "¶",
-            '<br />',
-            tohtml($record['TiText'])
-        ) . '</span>';
-
-    } else {   
-        // $record['TiIsNotWord'] == 0  -- A TERM
+        echo '<span id="' . $spanid . '" class="' . $hidetag . '">' .
+        str_replace("¶", '<br />', tohtml($record['TiText'])) . 
+        '</span>';
+    } else {
         echo_term(
             $actcode, $showAll, $spanid, $hidetag, $currcharcount, $record
         );
-    } // $record['TiIsNotWord'] == 0  -- A TERM
-
+    }
+    
     if ($actcode == 1) { 
-        $currcharcount += $record['TiTextLength']; 
-        $cnt++;
+        $currcharcount += $record['TiTextLength'];
     }
 
     return $currcharcount;
@@ -317,52 +300,78 @@ function sentenceParser($sid, $old_sid)
 }
 
 /**
- * Process each word (can be punction, term, etc...)
+ * Process each text item (can be punction, term, etc...)
+ *
+ * @param string[] $record        Text item information
+ * @param 0|1      $showAll       Show all words or not
+ * @param int      $currcharcount Current number of caracters
+ * @param bool     $hide          Should some item be hidden, depends on $showAll
+ * 
+ * @return void
+ * 
+ * @since 2.5.0-fork
+ */
+function item_parser($record, $showAll, $currcharcount, $hide): void
+{
+    $actcode = (int)$record['Code'];
+    $spanid = 'ID-' . $record['Ti2Order'] . '-' . $actcode;
+
+    // Check if item should be hidden
+    $hidetag = $hide ? ' hide' : '';
+
+    if ($record['TiIsNotWord'] != 0) {
+        // The current item is not a term (likely punctuation)
+        echo "<span id=\"$spanid\" class=\"$hidetag\">" .
+        str_replace("¶", '<br />', tohtml($record['TiText'])) . '</span>';
+    } else {
+        // A term (word or multi-word)
+        echo_term(
+            $actcode, $showAll, $spanid, $hidetag, $currcharcount, $record
+        );
+    }
+}
+
+/**
+ * Process each text item (can be punction, term, etc...)
  *
  * @param string[] $record        Record information
  * @param 0|1      $showAll       Show all words or not
- * @param int      $currcharcount Current number of caracters 
- * @param int      $cnt
- * @param int      $sid           Sentence ID
+ * @param int      $currcharcount Current number of caracters
  * @param int      $hideuntil     Should the value be hidden or not
  * 
  * @return int New value for $hideuntil
+ * 
+ * @deprecated Use item_parser instead (since 2.5.0-fork).
  */
 function word_parser($record, $showAll, $currcharcount, $hideuntil): int
 {
     $actcode = (int)$record['Code'];
     $spanid = 'ID-' . $record['Ti2Order'] . '-' . $actcode;
 
-    // Check if word should be hidden
+    // Check if item should be hidden
     $hidetag = '';
-    if ($hideuntil > 0) {
-        if ($record['Ti2Order'] <= $hideuntil) {
-            $hidetag = ' hide'; 
-        } else {
-            $hideuntil = -1;
-            $hidetag = '';
-        }
+    if ($record['Ti2Order'] <= $hideuntil) {
+        if (!$showAll || ($showAll && $actcode > 1)) {
+            $hidetag = ' hide';
+        } 
+    } else {
+        $hidetag = '';
+        $hideuntil = -1;    
     }
 
-    // The current word is not a term
     if ($record['TiIsNotWord'] != 0) {
-        echo '<span id="' . $spanid . '" class="' .
-        $hidetag . '">' .
-        str_replace(
-            "¶",
-            '<br />',
-            tohtml($record['TiText'])
-        ) . '</span>';
-
-    } else {   
-        // $record['TiIsNotWord'] == 0  -- A TERM
-        if (isset($record['WoID']) && !$showAll && $hideuntil == -1) {
-            $hideuntil = (int)$record['Ti2Order'] + ($actcode - 1) * 2;
-        }
+        // The current item is not a term (likely punctuation)
+        echo "<span id=\"$spanid\" class=\"$hidetag\">" .
+        str_replace("¶", '<br />', tohtml($record['TiText'])) . '</span>';
+    } else {
+        // A term (word or multi-word)
         echo_term(
             $actcode, $showAll, $spanid, $hidetag, $currcharcount, $record
         );
-    } // $record['TiIsNotWord'] == 0  -- A TERM
+        if ($hideuntil == -1) {
+            $hideuntil = $record['Ti2Order'] + ($actcode - 1) * 2;
+        }
+    }
 
     return $hideuntil;
 }
@@ -401,47 +410,64 @@ function main_word_loop($textid, $showAll): void
     global $tbpref;
     
     $sql = 
-    'SELECT
-     CASE WHEN `Ti2WordCount`>0 THEN Ti2WordCount ELSE 1 END as Code,
-     CASE WHEN CHAR_LENGTH(Ti2Text)>0 THEN Ti2Text ELSE `WoText` END as TiText,
-     CASE WHEN CHAR_LENGTH(Ti2Text)>0 THEN lower(Ti2Text) ELSE `WoTextLC` END as TiTextLC,
+    "SELECT
+     CASE WHEN `Ti2WordCount`>0 THEN Ti2WordCount ELSE 1 END AS Code,
+     CASE WHEN CHAR_LENGTH(Ti2Text)>0 THEN Ti2Text ELSE `WoText` END AS TiText,
+     CASE WHEN CHAR_LENGTH(Ti2Text)>0 THEN LOWER(Ti2Text) ELSE `WoTextLC` END AS TiTextLC,
      Ti2Order, Ti2SeID, 
-     CASE WHEN `Ti2WordCount`>0 THEN 0 ELSE 1 END as TiIsNotWord,
+     CASE WHEN `Ti2WordCount`>0 THEN 0 ELSE 1 END AS TiIsNotWord,
      CASE 
         WHEN CHAR_LENGTH(Ti2Text)>0 
         THEN CHAR_LENGTH(Ti2Text) 
         ELSE CHAR_LENGTH(`WoTextLC`) 
-        END
-     AS TiTextLength, 
+     END AS TiTextLength, 
      WoID, WoText, WoStatus, WoTranslation, WoRomanization
-     FROM (' 
-       . $tbpref . 'textitems2
-        LEFT JOIN ' . $tbpref . 'words
-        ON (Ti2WoID = WoID)
-     )
-     WHERE Ti2TxID = ' . $textid . '
-     ORDER BY Ti2Order asc, Ti2WordCount desc';
+     FROM {$tbpref}textitems2 LEFT JOIN {$tbpref}words ON Ti2WoID = WoID
+     WHERE Ti2TxID = $textid
+     ORDER BY Ti2Order asc, Ti2WordCount desc";
     
     $res = do_mysqli_query($sql);
     $currcharcount = 0;
-    $hideuntil = -1;
+    $hidden_items = array();
     $cnt = 1;
     $sid = 0;
+    $last = -1;
 
     // Loop over words and punctuation
     while ($record = mysqli_fetch_assoc($res)) {
-        $actcode = (int)$record['Code'];
         $sid = sentence_parser($sid, $record['Ti2SeID']);
         if ($cnt < $record['Ti2Order']) {
             echo '<span id="ID-' . $cnt++ . '-1"></span>';
         }
-        $hideuntil = word_parser($record, $showAll, $currcharcount, $hideuntil);
-        if ($actcode == 1) { 
+        if ($showAll) {
+            $hide = isset($record['WoID']) 
+            && array_key_exists((int) $record['WoID'], $hidden_items);
+        } else {
+            $hide = $record['Ti2Order'] <= $last;
+        }
+    
+        item_parser($record, $showAll, $currcharcount, $hide);
+        if ((int)$record['Code'] == 1) { 
             $currcharcount += $record['TiTextLength']; 
             $cnt++;
+        } 
+        $last = max(
+            $last, (int) $record['Ti2Order'] + ((int)$record['Code'] - 1) * 2
+        );
+        if ($showAll) {
+            if (isset($record['WoID']) 
+                && !array_key_exists((int) $record['WoID'], $hidden_items) // !$hide
+            ) {
+                $hidden_items[(int) $record['WoID']] = (int) $record['Ti2Order'] 
+                + ((int)$record['Code'] - 1) * 2;
+            }
+            // Clean the already finished items
+            $hidden_items = array_filter(
+                $hidden_items, 
+                fn($val) => $val >= $record['Ti2Order'],
+            );
         }
-
-    } // while ($record = mysql_fetch_assoc($res))  -- MAIN LOOP
+    }
     
     mysqli_free_result($res);
     echo '<span id="totalcharcount" class="hide">' . $currcharcount . '</span>';

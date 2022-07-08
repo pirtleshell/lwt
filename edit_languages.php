@@ -298,7 +298,7 @@ function edit_languages_op_change($lid)
             where WoLgID = " . $lid, 
             ''
         );
-        set_word_count();
+        init_word_count();
         $sql = "select TxID, TxText 
         from " . $tbpref . "texts 
         where TxLgID = " . $lid . " 

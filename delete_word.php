@@ -72,27 +72,42 @@ function delete_word_javascript($wid, $tid)
     ?>
 <script type="text/javascript">
     //<![CDATA[
-    var context = window.parent.document;
-    var title;
-    if (window.parent.document.getElementById('frame-l').JQ_TOOLTIP) {
-        title = ''
-    } else {
-        make_tooltip(
-            <?php echo prepare_textdata_js(get_term($wid)); ?>, trans, roman, status
-        );
+
+    /**
+     * Make the visual effects to delete a word from the page.
+     * 
+     * @param {int} wid Word ID
+     * 
+     * @returns {undefined} 
+     */
+    function delete_word(wid) {
+        const context = window.parent.document;
+        const elem = $('.word' + wid, context);
+        let title = "";
+        if (!window.parent.document.getElementById('frame-l').JQ_TOOLTIP) { 
+            const ann = elem.attr('data_ann');
+            title = make_tooltip(
+                <?php echo prepare_textdata_js(get_term($wid)); ?>, 
+                ann + (ann ? ' / ' : '') + elem.attr('data_trans'), 
+                elem.attr('data_rom'), 
+                elem.attr('data_status')
+            );
+        }
+        elem
+        .removeClass('status99 status98 status1 status2 status3 status4 status5 word' + wid)
+        .addClass('status0')
+        .attr('data_status', '0')
+        .attr('data_trans', '')
+        .attr('data_rom', '')
+        .attr('data_wid', '')
+        .attr('title', title)
+        .removeAttr("data_img");
+        $('#learnstatus', context).html('<?= addslashes(texttodocount2($tid)); ?>');
+        window.parent.document.getElementById('frame-l').focus();
+        window.parent.setTimeout('cClick()', 100);
     }
-    $('.word<?php echo $wid; ?>', context)
-    .removeClass('status99 status98 status1 status2 status3 status4 status5 word<?php echo $wid; ?>')
-    .addClass('status0')
-    .attr('data_status','0')
-    .attr('data_trans','')
-    .attr('data_rom','')
-    .attr('data_wid','')
-    .attr('title', title)
-    .removeAttr("data_img");
-    $('#learnstatus', context).html('<?php echo addslashes(texttodocount2($tid)); ?>');
-    window.parent.document.getElementById('frame-l').focus();
-    window.parent.setTimeout('cClick()', 100);
+
+    delete_word(<?= $wid; ?>);
     //]]>
 </script>
     <?php

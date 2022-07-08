@@ -333,46 +333,38 @@ function keydown_event_do_test_test (e) {
   if (e.which == 32 && OPENED == 0) { // space : show sol.
     $('.word').trigger('click');
     cClick();
-    //window.parent.frames.ro.location.href = 
     showRightFrames('show_word.php?wid=' + $('.word').attr('data_wid') + '&ann=');
     OPENED = 1;
     return false;
   }
   if (OPENED == 0) return true;
   if (e.which == 38) { // up : status+1
-    //window.parent.frames.ro.location.href =
 		showRightFrames('set_test_status.php?wid=' + WID + '&stchange=1');
     return false;
   }
   if (e.which == 40) { // down : status-1
-    //window.parent.frames.ro.location.href =
 		showRightFrames('set_test_status.php?wid=' + WID + '&stchange=-1');
     return false;
   }
   if (e.which == 27) { // esc : dont change status
-    //window.parent.frames.ro.location.href =
 		showRightFrames('set_test_status.php?wid=' + WID + '&status=' + $('.word').attr('data_status'));
     return false;
   }
   for (let i = 1; i <= 5; i++) {
     if (e.which == (48 + i) || e.which == (96 + i)) { // 1,.. : status=i
-      //window.parent.frames.ro.location.href =
 			showRightFrames('set_test_status.php?wid=' + WID + '&status=' + i);
       return false;
     }
   }
   if (e.which == 73) { // I : status=98
-    //window.parent.frames.ro.location.href =
 		showRightFrames('set_test_status.php?wid=' + WID + '&status=98');
     return false;
   }
   if (e.which == 87) { // W : status=99
-    //window.parent.frames.ro.location.href =
 		showRightFrames('set_test_status.php?wid=' + WID + '&status=99');
     return false;
   }
   if (e.which == 69) { // E : EDIT
-    //window.parent.frames.ro.location.href =
 		showRightFrames('edit_tword.php?wid=' + WID);
     return false;
   }
@@ -594,11 +586,9 @@ function mword_drag_n_drop_select (event) {
               if (text.length > 250) {
                 alert('selected text is too long!!!');
               } else {
-                //top.frames.ro.location.href = 
                 showRightFrames('edit_mword.php?tid=' + TID + '&len=' + len + '&ord=' + g + '&txt=' + text);
               }
             } else {
-              //top.frames.ro.location.href = 
               showRightFrames('edit_word.php?tid=' + TID + '&ord=' + g + '&txt=' + $('#ID-' + g + '-1').text());
             }
           }
@@ -732,7 +722,6 @@ function keydown_event_do_text_text (e) {
     if ((typeof curr.attr('data_ann')) !== 'undefined') { 
       ann = curr.attr('data_ann');
     }
-    //window.parent.frames.ro.location.href = 
     showRightFrames('show_word.php?wid=' + curr.attr('data_wid') + '&ann=' + encodeURIComponent(ann));
     return false;
   }
@@ -746,7 +735,6 @@ function keydown_event_do_text_text (e) {
     if ((typeof curr.attr('data_ann')) !== 'undefined') { 
       ann = curr.attr('data_ann');
     }
-    //window.parent.frames.ro.location.href = 
     showRightFrames('show_word.php?wid=' + curr.attr('data_wid') + '&ann=' + encodeURIComponent(ann));
     return false;
   }
@@ -775,7 +763,6 @@ function keydown_event_do_text_text (e) {
     if ((typeof curr.attr('data_ann')) !== 'undefined') { 
       ann = curr.attr('data_ann'); 
     }
-    //window.parent.frames.ro.location.href = 
     showRightFrames('show_word.php?wid=' + curr.attr('data_wid') + '&ann=' + encodeURIComponent(ann));
     return false;
   }
@@ -801,8 +788,9 @@ function keydown_event_do_text_text (e) {
     curr.addClass('kwordmarked');
     $(window).scrollTo(curr, { axis: 'y', offset: -150 });
     var ann = '';
-    if ((typeof curr.attr('data_ann')) !== 'undefined') { ann = curr.attr('data_ann'); }
-    //window.parent.frames.ro.location.href = 
+    if ((typeof curr.attr('data_ann')) !== 'undefined') { 
+      ann = curr.attr('data_ann'); 
+    }
     showRightFrames('show_word.php?wid=' + curr.attr('data_wid') + '&ann=' + encodeURIComponent(ann));
     return false;
   }
@@ -829,10 +817,8 @@ function keydown_event_do_text_text (e) {
           if (sl != WBLINK3 && tl != WBLINK3)
             i = i + '&sl=' + sl + '&tl=' + tl;
         }
-        //window.parent.frames.ro.location.href =
         showRightFrames('set_word_on_hover.php?text=' + txt + '&tid=' + TID + '&status=' + i);
       } else {
-        //window.parent.frames.ro.location.href =
 				showRightFrames('set_word_status.php?wid=' + wid + '&tid=' + TID + '&ord=' + ord + '&status=' + i);
         return false;
       }
@@ -840,20 +826,16 @@ function keydown_event_do_text_text (e) {
   }
   if (e.which == 73) { // I : status=98
     if (stat == '0') {
-      //window.parent.frames.ro.location.href =
 			showRightFrames('set_word_on_hover.php?text=' + txt + '&tid=' + TID + '&status=98');
     } else {
-      //window.parent.frames.ro.location.href =
 			showRightFrames('set_word_status.php?wid=' + wid + '&tid=' + TID + '&ord=' + ord + '&status=98');
       return false;
     }
   }
   if (e.which == 87) { // W : status=99
     if (stat == '0') {
-      //window.parent.frames.ro.location.href =
 			showRightFrames('set_word_on_hover.php?text=' + txt + '&tid=' + TID + '&status=99');
     } else {
-      //window.parent.frames.ro.location.href =
 			showRightFrames('set_word_status.php?wid=' + wid + '&tid=' + TID + '&ord=' + ord + '&status=99');
     }
     return false;
@@ -867,7 +849,6 @@ function keydown_event_do_text_text (e) {
     if ((WBLINK3.substr(0, 8) == '*http://') || (WBLINK3.substr(0, 9) == '*https://')) {
       owin('trans.php?x=1&i=' + ord + '&t=' + TID);
     } else if ((WBLINK3.substr(0, 7) == 'http://') || (WBLINK3.substr(0, 8) == 'https://') || (WBLINK3.substr(0, 7) == 'ggl.php')) {
-      //window.parent.frames.ru.location.href = 'trans.php?x=1&i=' + ord + '&t=' + TID;
       showRightFrames(undefined, 'trans.php?x=1&i=' + ord + '&t=' + TID);
     }
     return false;
@@ -890,8 +871,7 @@ function keydown_event_do_text_text (e) {
     setTimeout(function () {
       if ((WBLINK3.substr(0, 8) == '*http://') || (WBLINK3.substr(0, 9) == '*https://')) { 
         owin(createTheDictUrl(WBLINK3.replace('*', ''), txt)); 
-      } else { 
-          //window.parent.frames.ru.location.href = createTheDictUrl(WBLINK3, txt);
+      } else {
           showRightFrames(undefined, createTheDictUrl(WBLINK3, txt));
       }
     }, 10);
@@ -899,13 +879,10 @@ function keydown_event_do_text_text (e) {
   if (e.which == 69 || e.which == 71) { //  E / G: edit term
     let url = '';
     if (curr.hasClass('mword')) {
-      //window.parent.frames.ro.location.href = 
       url = 'edit_mword.php?wid=' + wid + '&len=' + curr.attr('data_code') + '&tid=' + TID + '&ord=' + ord + dict;
     } else if (stat == '0') {
-      //window.parent.frames.ro.location.href =
 			url =	'edit_word.php?wid=&tid=' + TID + '&ord=' + ord + dict;
     } else {
-      //window.parent.frames.ro.location.href =
 			url =	'edit_word.php?wid=' + wid + '&tid=' + TID + '&ord=' + ord + dict;
     }
     showRightFrames(url);
@@ -925,9 +902,20 @@ function do_ajax_update_media_select () {
   );
 }
 
+/**
+ * Show the sentences containing specific word.
+ * 
+ * @param {int}    lang Language ID 
+ * @param {string} word Term text (the looked for term) 
+ * @param {string} ctl  Path of the textarea showing sentence of the edited term
+ * @param {int}    woid Term id (word or multi-word)
+ * @returns {undefined}
+ */
 function do_ajax_show_sentences (lang, word, ctl, woid) {
   $('#exsent').html('<img src="icn/waiting2.gif" />');
-  $.post('inc/ajax_show_sentences.php', { lang: lang, word: word, ctl: ctl, woid: woid },
+  $.post(
+    'inc/ajax_show_sentences.php', 
+    { lang: lang, word: word, ctl: ctl, woid: woid },
     function (data) { $('#exsent').html(data); }
   );
 }

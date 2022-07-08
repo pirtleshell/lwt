@@ -17,7 +17,7 @@ require __DIR__ . "/../connect.inc.php";
  *
  * @param string $sql Query using SQL syntax
  *
- * @global mysqli $DBCONNECTION COnnection to the database
+ * @global mysqli $DBCONNECTION Connection to the database
  *
  * @return mysqli_result|true
  */
@@ -560,91 +560,117 @@ function optimizedb(): void
 }
 
 /**
- * Set the number of words for all languages
+ * Update the word count for Japanese language (using MeCab only).
+ * 
+ * @param int $japid Japanese language ID
+ * 
+ * @return void
+ * 
+ * @global string $tbpref Database table prefix.
+ */
+function update_japanese_word_count($japid) {
+    global $tbpref;
+        
+    // STEP 1: write the useful info to a file
+    $db_to_mecab = tempnam(sys_get_temp_dir(), "{$tbpref}db_to_mecab");
+    $mecab_args = ' -F %m%t\\t -U %m%t\\t -E \\n ';
+    $mecab = get_mecab_path($mecab_args);
+
+    $sql = "SELECT WoID, WoTextLC FROM {$tbpref}words 
+    WHERE WoLgID = $japid AND WoWordCount = 0";
+    $res = do_mysqli_query($sql);
+    $fp = fopen($db_to_mecab, 'w');
+    while ($record = mysqli_fetch_assoc($res)) {
+        echo $record['WoID'] . "\t" . $record['WoTextLC'] . "\n";
+        fwrite($fp, $record['WoID'] . "\t" . $record['WoTextLC'] . "\n");
+    }
+    mysqli_free_result($res);
+    fclose($fp);
+
+    // STEP 2: process the data with MeCab and refine the output
+    $handle = popen($mecab . $db_to_mecab, "r");
+    if (feof($handle)) {
+        pclose($handle);
+        unlink($db_to_mecab);
+        return;
+    }
+    $sql = "INSERT INTO {$tbpref}mecab (MID, MWordCount) values";
+    $values = array();
+    while (!feof($handle)) {
+        $row = fgets($handle, 1024);
+        $arr = explode("4\t", $row, 2);
+        if (!empty($arr[1])) {
+            $cnt = substr_count(
+                preg_replace('$[^267]\t$u', '', $arr[1]), 
+                "\t"
+            );
+            if (empty($cnt)) {
+                $cnt = 1;
+            }
+            $values[] = "(" . convert_string_to_sqlsyntax($arr[0]) . ", $cnt)";
+        }
+    }
+    pclose($handle);
+    if (empty($values)) {
+        // Nothing to update, quit
+        return;
+    }
+    $sql .= join(",", $values);
+
+
+    // STEP 3: edit the database
+    do_mysqli_query(
+        "CREATE TEMPORARY TABLE {$tbpref}mecab ( 
+            MID mediumint(8) unsigned NOT NULL, 
+            MWordCount tinyint(3) unsigned NOT NULL, 
+            PRIMARY KEY (MID)
+        ) CHARSET=utf8"
+    );
+    
+    do_mysqli_query($sql);
+    do_mysqli_query(
+        "UPDATE {$tbpref}words 
+        JOIN {$tbpref}mecab ON MID = WoID 
+        SET WoWordCount = MWordCount"
+    );
+    do_mysqli_query("DROP TABLE {$tbpref}mecab");
+
+    unlink($db_to_mecab);
+}
+
+/**
+ * Initiate the number of words in terms for all languages.
+ * 
+ * Only terms with a word count set to 0 are changed.
+ * 
+ * @return void
  * 
  * @global string $tbpref Database table prefix
  */
-function set_word_count(): void 
+function init_word_count(): void 
 {
     global $tbpref;
     $sqlarr = array();
-    $i=0;
-    $min=0;
+    $i = 0;
+    $min = 0;
+    /**
+     * @var string|null ID for the Japanese language using MeCab
+     */
+    $japid = get_first_value(
+        "SELECT group_concat(LgID) value 
+        FROM {$tbpref}languages 
+        WHERE UPPER(LgRegexpWordCharacters)='MECAB'"
+    );
 
-    if (get_first_value(
-        'SELECT (@m := group_concat(LgID)) value 
-        FROM ' . $tbpref . 'languages 
-        WHERE UPPER(LgRegexpWordCharacters)="MECAB"'
-    )
-    ) {
-        
-        $temp_dir = get_first_value('SELECT @@GLOBAL.secure_file_priv AS value');
-        if ($temp_dir === null || $temp_dir === "") {
-            $temp_dir = sys_get_temp_dir();
-        }
-        $db_to_mecab = tempnam($temp_dir, "{$tbpref}db_to_mecab");
-        $mecab_to_db = tempnam($temp_dir, "{$tbpref}mecab_to_db");
-        $mecab_args = ' -F %m%t\\t -U %m%t\\t -E \\n ';
-        if (file_exists($db_to_mecab)) { 
-            unlink($db_to_mecab); 
-        }
-
-        $mecab = get_mecab_path($mecab_args);
-
-        do_mysqli_query(
-            'SELECT WoID, WoTextLC FROM ' . $tbpref . 'words 
-            WHERE WoLgID in(@m) AND WoWordCount = 0 
-            into outfile ' . convert_string_to_sqlsyntax($db_to_mecab)
-        );
-        $handle = popen($mecab . $db_to_mecab, "r");
-        $fp = fopen($mecab_to_db, 'w');
-        if (!feof($handle)) {
-            while (!feof($handle)) {
-                $row = fgets($handle, 1024);
-                $arr  = explode("4\t", $row, 2);
-                //var_dump($arr);
-                if (!empty($arr[1])) {
-                    $cnt = substr_count(
-                        preg_replace('$[^267]\t$u', '', $arr[1]), 
-                        "\t"
-                    );
-                    if(empty($cnt)) { 
-                        $cnt =1; 
-                    }
-                    fwrite($fp, $arr[0] . "\t" . $cnt . "\n");
-                }
-            }
-            pclose($handle);
-            fclose($fp);
-            do_mysqli_query(
-                'CREATE TEMPORARY TABLE ' . $tbpref . 'mecab ( 
-                    MID mediumint(8) unsigned NOT NULL, 
-                    MWordCount tinyint(3) unsigned NOT NULL, 
-                    PRIMARY KEY (MID)
-                ) CHARSET=utf8'
-            );
-            do_mysqli_query(
-                'LOAD DATA LOCAL INFILE ' . 
-                convert_string_to_sqlsyntax($mecab_to_db) . ' 
-                INTO TABLE ' . $tbpref . 'mecab (MID, MWordCount)'
-            );
-            do_mysqli_query(
-                'UPDATE ' . $tbpref . 'words 
-                JOIN ' . $tbpref . 'mecab ON MID = WoID 
-                SET WoWordCount = MWordCount'
-            );
-            do_mysqli_query('DROP TABLE ' . $tbpref . 'mecab');
-
-            unlink($mecab_to_db);
-            unlink($db_to_mecab);
-        }
+    if ($japid) {
+        update_japanese_word_count((int)$japid);
     }
     $sql = "SELECT WoID, WoTextLC, LgRegexpWordCharacters, LgSplitEachChar 
-    FROM " . $tbpref . "words, " . $tbpref . "languages 
-    WHERE WoWordCount=0 AND WoLgID = LgID 
+    FROM {$tbpref}words, {$tbpref}languages 
+    WHERE WoWordCount = 0 AND WoLgID = LgID 
     ORDER BY WoID";
     $result = do_mysqli_query($sql);
-    while($rec = mysqli_fetch_assoc($result)){
+    while ($rec = mysqli_fetch_assoc($result)){
         if ($rec['LgSplitEachChar']) {
             $textlc = preg_replace('/([^\s])/u', "$1 ", $rec['WoTextLC']);
         } else {
@@ -655,23 +681,39 @@ function set_word_count(): void
             '/([' . $rec['LgRegexpWordCharacters'] . ']+)/u', $textlc, $ma
         );
         if (++$i % 1000 == 0) {
-            //if(!empty($sqlarr)) { cannot be empty
             $max = $rec['WoID'];
-            $sqltext = "UPDATE  " . $tbpref . "words SET WoWordCount  = CASE WoID";
-            $sqltext .= implode(' ', $sqlarr) . ' END 
-            WHERE WoWordCount=0 AND WoID between ' . $min . ' AND ' . $max;
+            $sqltext = "UPDATE  {$tbpref}words 
+            SET WoWordCount = CASE WoID" . implode(' ', $sqlarr) . "
+            END 
+            WHERE WoWordCount=0 AND WoID BETWEEN $min AND $max";
             do_mysqli_query($sqltext);
-            $min=$max;
-            //}
+            $min = $max;
             $sqlarr = array();
         }
     }
     mysqli_free_result($result);
     if (!empty($sqlarr)) {
-        $sqltext = "UPDATE  " . $tbpref . "words SET WoWordCount  = CASE WoID";
-        $sqltext .= implode(' ', $sqlarr) . ' END where WoWordCount=0';
+        $sqltext = "UPDATE  " . $tbpref . "words 
+        SET WoWordCount = CASE WoID" . implode(' ', $sqlarr) . ' 
+        END where WoWordCount=0';
         do_mysqli_query($sqltext);
     }
+}
+
+/**
+ * Initiate the number of words in terms for all languages
+ * 
+ * Only terms with a word count set to 0 are changed.
+ * 
+ * @return void
+ * 
+ * @global string $tbpref Database table prefix
+ * 
+ * @deprecated Use init_word_count: same effect, but more logical name. Will be 
+ * removed in version 3.0.0.
+ */
+function set_word_count() {
+    init_word_count();
 }
 
 /**
@@ -1282,7 +1324,7 @@ function reparse_all_texts(): void
     runsql('TRUNCATE ' . $tbpref . 'sentences', '');
     runsql('TRUNCATE ' . $tbpref . 'textitems2', '');
     adjust_autoincr('sentences', 'SeID');
-    set_word_count();
+    init_word_count();
     $sql = "select TxID, TxLgID from " . $tbpref . "texts";
     $res = do_mysqli_query($sql);
     while ($record = mysqli_fetch_assoc($res)) {
@@ -1678,6 +1720,10 @@ function check_update_db($debug, $tbpref, $dbname): void
 function connect_to_database($server, $userid, $passwd, $dbname) 
 {
     // @ suppresses error messages
+    
+    // Necessary since mysqli_report default setting in PHP 8.1+ has changed
+    @mysqli_report(MYSQLI_REPORT_OFF); 
+
     $DBCONNECTION = @mysqli_connect($server, $userid, $passwd, $dbname);
 
     if (!$DBCONNECTION && mysqli_connect_errno() == 1049) {

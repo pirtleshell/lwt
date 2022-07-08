@@ -50,7 +50,7 @@ if (isset($_REQUEST['op'])) {
         $wid = get_last_key();
 
         saveWordTags($wid);
-        set_word_count();
+        init_word_count();
         //        $showAll = getSettingZeroOrOne('showallwords',1);
         ?>
 

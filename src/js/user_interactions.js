@@ -26,63 +26,59 @@ function quickMenuRedirection(value) {
 }
 
 /**
- * Ceate an interactable to add a new expression.
+ * Create an interactable to add a new expression.
  * 
  * WARNING! This function was not properly tested!
  * 
- * @param {string} text Text to append 
- * @param {string} attrs A group of attributes to add 
- * @param {int} length SHoud correspond to WoWordCount
- * @param {*} hex 
- * @param {bool} showallwords Whether you want to show all words
+ * @param {string[]} text         An array of words forming the expression 
+ * @param {string}   attrs        A group of attributes to add 
+ * @param {int}      length       Number of words, should correspond to WoWordCount
+ * @param {string}   hex          Lowercase formatted version of the text.
+ * @param {bool}     showallwords Whether you want to show all words
  */
 function newExpressionInteractable(text, attrs, length, hex, showallwords) {
-    console.log("HERE, text: " + text + " attrs: "  + attrs + " length: " + length);
-    var attrs2 =  ' class="click mword ' + (showallwords ? 'm':'') + 'wsty TERM' + hex + 
-    ' word' + woid + ' status' + status + '" data_trans="' + trans + 
-    '" data_rom="' + roman + '" data_code="' + length + 
-    '" data_status="' + status + '" data_wid="' + woid + 
-    '" title="' + title + '"';
 
+    const context = window.parent.document;
     for (key in text) {
-        let text_refresh = false;
-        if($('span[id^="ID-'+ key +'-"]', context).not(".hide").length ) {
-            if(!($('span[id^="ID-'+ key +'-"]', context).not(".hide").attr('data_code')>length)){
-                text_refresh = true;
-            }
-        }
+        const words = $('span[id^="ID-'+ key +'-"]', context).not(".hide"); 
+        const text_refresh = (
+            words.attr('data_code') !== undefined 
+            && words.attr('data_code') <= length);
         $('#ID-' + key + '-' + length, context).remove();
-        var i = '';
-        for (let j = parseInt(length, 10) - 1; j > 0; j = j-1){
+        let i = '';
+        for (let j = length - 1; j > 0; j--) {
             if (j==1)
-                i='#ID-' + key + '-1';
-            if($('#ID-' + key + '-' + j,context).length){
+                i = '#ID-' + key + '-1';
+            if ($('#ID-' + key + '-' + j, context).length) {
                 i = '#ID-' + key + '-' + j;
                 break;
             }
         }
-        var ord_class='order' + key;
-        $(i, context).before('<span id="ID-' + key + '-' + length + '"' + attrs + '>' + text[ key ] + '</span>');
-        el = $('#ID-' + key + '-' + parseInt(length, 10), context);
-        el.addClass(ord_class).attr('data_order',key);
-        var txt = el
-            .nextUntil($('#ID-' + (parseInt(key) + parseInt(length, 10) * 2 - 1) + '-1', context),'[id$="-1"]')
+        $(i, context)
+        .before('<span id="ID-' + key + '-' + length + '"' + attrs + '>' 
+        + text[key] + '</span>');
+        const el = $('#ID-' + key + '-' + length, context);
+        el.addClass('order' + key).attr('data_order', key);
+        const txt = el
+            .nextUntil(
+                $('#ID-' + (parseInt(key) + length * 2 - 1) + '-1', context),
+                '[id$="-1"]'
+            )
             .map(function() {
                 return $(this).text();
             })
             .get().join("");
-        var pos = $('#ID-' + key + '-1', context).attr('data_pos');
-        el.attr('data_text',txt).attr('data_pos',pos);
+        const pos = $('#ID-' + key + '-1', context).attr('data_pos');
+        el.attr('data_text', txt).attr('data_pos', pos);
         if (!showallwords) {
             if (text_refresh) {
-                refresh_text(el);
+                //refresh_text(el);
             } else {
                 el.addClass('hide');
             }
         }
     }
 }
-
 
 
 /** 
