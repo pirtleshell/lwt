@@ -22,7 +22,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="lwt_icon.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Learning with Texts - Fork<span id="projectnumber">&#160;2.4.1-fork</span>
+   <div id="projectname">Learning with Texts - Fork<span id="projectnumber">&#160;2.5.0-fork</span>
    </div>
    <div id="projectbrief">Learn foreign languages with texts</div>
   </td>
@@ -133,6 +133,8 @@ Functions</h2></td></tr>
 <tr class="separator:a553441f4fbb4aef5ad113142d5998bae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8ac89d832d3a95c00b38bad4b46bbe19"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="database__connect_8php.html#a8ac89d832d3a95c00b38bad4b46bbe19">optimizedb</a> ()</td></tr>
 <tr class="separator:a8ac89d832d3a95c00b38bad4b46bbe19"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a280dddf6818f5a62d97ce50015e76504"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="database__connect_8php.html#a280dddf6818f5a62d97ce50015e76504">update_japanese_word_count</a> ($japid)</td></tr>
+<tr class="separator:a280dddf6818f5a62d97ce50015e76504"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a82d62f0d7510fc4454deb4ed0f16e9a9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="database__connect_8php.html#a82d62f0d7510fc4454deb4ed0f16e9a9">set_word_count</a> ()</td></tr>
 <tr class="separator:a82d62f0d7510fc4454deb4ed0f16e9a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3117a4f4d8cd548f39fd047aa7617a24"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="database__connect_8php.html#a3117a4f4d8cd548f39fd047aa7617a24">parse_japanese_text</a> ($text, $id)</td></tr>
@@ -512,7 +514,7 @@ Variables</h2></td></tr>
   </table>
   </dd>
 </dl>
-<p>@global mysqli $DBCONNECTION COnnection to the database</p>
+<p>@global mysqli $DBCONNECTION Connection to the database</p>
 <dl class="section return"><dt>Returns</dt><dd>mysqli_result|true </dd></dl>
 
 </div>
@@ -967,8 +969,11 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p >Set the number of words for all languages</p>
-<p >@global string $tbpref Database table prefix </p>
+<p >Initiate the number of words in terms for all languages</p>
+<p >Only terms with a word count set to 0 are changed.</p>
+<dl class="section return"><dt>Returns</dt><dd>void</dd></dl>
+<p>@global string $tbpref Database table prefix</p>
+<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000016">Deprecated:</a></b></dt><dd>Use init_word_count: same effect, but more logical name. Will be removed in version 3.0.0. </dd></dl>
 
 </div>
 </div>
@@ -1086,6 +1091,33 @@ Variables</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>void</dd></dl>
 <p>@global string $tbpref Database table prefix </p>
+
+</div>
+</div>
+<a id="a280dddf6818f5a62d97ce50015e76504" name="a280dddf6818f5a62d97ce50015e76504"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a280dddf6818f5a62d97ce50015e76504">&#9670;&nbsp;</a></span>update_japanese_word_count()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">update_japanese_word_count </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$japid</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Update the word count for Japanese language (using MeCab only).</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">int</td><td class="paramname">$japid</td><td>Japanese language ID</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>void</dd></dl>
+<p>@global string $tbpref Database table prefix. </p>
 
 </div>
 </div>
