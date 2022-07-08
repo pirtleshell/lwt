@@ -4,7 +4,7 @@ Changelog
 This project's changelog. Versions marked with "-fork" come from the community, other versions come from the canonical LWT ("official" branch on Git).
 For git tags, official releases are marked like "v1.0.0", while unofficial ones are marked like "v1.0.0-fork".
 
-## [Unreleased]
+## 2.5.0-fork (July 08 2022)
 ### Added
 * Compatibility with PHP 8+!
 * Updated with LWT 2.0.3, solving incompatibilities with PHP 8.1 throzing MySQLI errors.
@@ -20,6 +20,9 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 * When deleting a word, it was previously necessary to reload the page to see a visual change.
 * Multi-words insertion fixed.
 * "Show Sentences" button during words edition was broken since 2.3.0-fork.
+
+### Full Changelog
+* [2.4.1...2.5.0](https://github.com/HugoFara/lwt/compare/2.4.1...2.5.0)
 
 ### Deprecated
 * ``set_word_count`` in ``database_connect.php`` had a misleading name. It was changed to ``init_word_count``.
