@@ -768,38 +768,42 @@ function parse_japanese_text($text, $id)
     // security restrictions
     if (get_first_value("SELECT @@GLOBAL.local_infile as value")) {
         do_mysqli_query(
-            "SET @order:=0, @g:=0,
+            "SET @order:=0, @term_type:=0,
             @sid:=" . (
                 $id>0 ?
                 "(SELECT ifnull(max(`SeID`)+1,1) FROM `{$tbpref}sentences`)" 
                 : 1 
-            ) . ", @count:=0,@h:=0,@i:=0;"
+            ) . ", @count:=0,@last_term_type:=0;"
         );
         
-        // @a ;= @a + 2 - (@i = @g)
         $sql = 
         "LOAD DATA LOCAL INFILE " . convert_string_to_sqlsyntax($file_name) . "
         INTO TABLE {$tbpref}temptextitems2
         FIELDS TERMINATED BY '\\t' 
         LINES TERMINATED BY '" . PHP_EOL . "' 
-        (@text, @node_type, @f)
+        (@term, @node_type, @third)
         SET 
-        TiSeID = IF(@g=2 OR (@text='EOS' AND @f='7'), @sid:=@sid+(@d:=@h)+1,@sid),
-        TiCount = (@count:= @count + CHAR_LENGTH(@text)) + 1 - CHAR_LENGTH(@text),
+        TiSeID = IF(@term_type=2 OR (@term='EOS' AND @third='7'), @sid:=@sid+1,@sid),
+        TiCount = (@count:= @count + CHAR_LENGTH(@term)) + 1 - CHAR_LENGTH(@term),
         TiOrder = IF(
             CASE
-                WHEN @f = '7' THEN IF(@text='EOS',(@g:=2) AND (@text:='¶'), @g:=2) 
-                WHEN LOCATE(@node_type, '267') THEN @g:=@h 
-                ELSE @g:=1 
-            END IS null, 
-            null,
-            @order := @order + IF((@i=1) AND (@g=1), 0, 1) + IF((@i=0) AND (@g=0), 1, 0) 
+                WHEN @third = '7' THEN IF(
+                    @term = 'EOS',
+                    (@term_type := 2) AND (@term := '¶'), 
+                    @g := 2
+                ) 
+                WHEN LOCATE(@node_type, '267') THEN @term_type:=0 
+                ELSE @term_type:=1 
+            END IS NULL,
+            NULL,
+            @order := @order + IF((@last_term_type=1) AND (@term_type=1), 0, 1) 
+            + IF((@last_term_type=0) AND (@term_type=0), 1, 0) 
         ), 
-        TiText = @text,
+        TiText = @term,
         TiWordCount =
         CASE 
-            WHEN (@i:=@g) IS NULL THEN NULL
-            WHEN @g=0 THEN 1
+            WHEN (@last_term_type:=@term_type) IS NULL THEN NULL
+            WHEN @term_type=0 THEN 1
             ELSE 0 
         END";
         do_mysqli_query($sql);
@@ -808,7 +812,6 @@ function parse_japanese_text($text, $id)
         $handle = fopen($file_name, 'r');
         $mecabed = fread($handle, filesize($file_name));
         fclose($handle);
-        var_dump($mecabed);
         $values = array();
         $order = 0;
         $sid = 1;
@@ -818,37 +821,35 @@ function parse_japanese_text($text, $id)
                 FROM {$tbpref}sentences"
             );
         }
-        $g = $h = $i = 0;
+        $term_type = 0;
         $count = 0;
         $row = array(0, 0, 0, "", 0);
         foreach (explode(PHP_EOL, $mecabed) as $line) {
-            list($term, $node_type, $f) = explode(mb_chr(9), $line);
-            //echo "term $term line " . explode(mb_chr(9), $line);
-            if ($g == 2 || $term == 'EOS' && $f == '7') {
-                $d = $h;
-                $sid += $d + 1;
+            list($term, $node_type, $third) = explode(mb_chr(9), $line);
+            if ($term_type == 2 || $term == 'EOS' && $third == '7') {
+                $sid += 1;
             }
             $row[0] = $sid; // TiSeID
             $row[1] = $count + 1; // TiCount
             $count += mb_strlen($term);
-            if ($f == '7') {
+            $last_term_type = $term_type;
+            if ($third == '7') {
                 if ($term == 'EOS') {
                     $term = '¶';
                 }
-                $g = 2;
+                $term_type = 2;
             } else if (str_contains('267', $node_type)) {
-                $g = $h;
+                $term_type = 0;
             } else {
-                $g = 1;
+                $term_type = 1;
             }
-            $order += (($g == 0) && ($i == 0)) + !(($g == 1) && ($i == 1));
+            $order += (($term_type == 0) && ($last_term_type == 0)) + 
+            !(($term_type == 1) && ($last_term_type == 1));
             $row[2] = $order; // TiOrder
-            $row[3] = convert_string_to_sqlsyntax($term); // TiText
-            $i = $g;
-            $row[4] = $g == 0 ? 1 : 0; // TiWordCount
+            $row[3] = convert_string_to_sqlsyntax_notrim_nonull($term); // TiText
+            $row[4] = $term_type == 0 ? 1 : 0; // TiWordCount
             $values[] = "(" . implode(",", $row) . ")";
         }
-        echo "VALUES " . implode(',', $values);
         do_mysqli_query(
             "INSERT INTO {$tbpref}temptextitems2 (
                 TiSeID, TiCount, TiOrder, TiText, TiWordCount
@@ -977,21 +978,21 @@ function parse_standard_text($text, $id, $lid)
         );
         $sql = "LOAD DATA LOCAL INFILE " . convert_string_to_sqlsyntax($file_name) . "
         INTO TABLE {$tbpref}temptextitems 
-        FIELDS TERMINATED BY '\\t' LINES TERMINATED BY '\\n' (@word_count, @text)
+        FIELDS TERMINATED BY '\\t' LINES TERMINATED BY '\\n' (@word_count, @term)
         SET 
             TiSeID = @sid, 
-            TiCount = (@count:=@count+CHAR_LENGTH(@text))+1-CHAR_LENGTH(@text),
+            TiCount = (@count:=@count+CHAR_LENGTH(@term))+1-CHAR_LENGTH(@term),
             TiOrder = IF(
-                @text LIKE '%\\r',
+                @term LIKE '%\\r',
                 CASE 
-                    WHEN (@text:=REPLACE(@text,'\\r','')) IS NULL THEN NULL 
+                    WHEN (@term:=REPLACE(@term,'\\r','')) IS NULL THEN NULL 
                     WHEN (@sid:=@sid+1) IS NULL THEN NULL 
                     WHEN @count:= 0 IS NULL THEN NULL 
                     ELSE @order := @order+1 
                 END, 
                 @order := @order+1
             ), 
-            TiText = @text,
+            TiText = @term,
             TiWordCount = @word_count";
         do_mysqli_query($sql);
         mysqli_free_result($res);
@@ -1008,18 +1009,18 @@ function parse_standard_text($text, $id, $lid)
         }
         $count = 0;
         $row = array(0, 0, 0, "", 0);
-        foreach (explode(PHP_EOL, $text) as $line) {
-            list($word_count, $term) = explode(mb_chr(9), $line);
+        foreach (explode("\n", $text) as $line) {
+            list($word_count, $term) = explode("\t", $line);
             $row[0] = $sid; // TiSeID
             $row[1] = $count + 1; // TiCount
             $count += mb_strlen($term);
-            if (str_ends_with($term, "\\r")) {
-                $term = str_replace('\\r', '', $term);
+            if (str_ends_with($term, "\r")) {
+                $term = str_replace("\r", '', $term);
                 $sid++;
                 $count = 0;
             }
             $row[2] = ++$order; // TiOrder
-            $row[3] = convert_string_to_sqlsyntax($term); // TiText
+            $row[3] = convert_string_to_sqlsyntax_notrim_nonull($term); // TiText
             $row[4] = $word_count; // TiWordCount
             $values[] = "(" . implode(",", $row) . ")";
         }
