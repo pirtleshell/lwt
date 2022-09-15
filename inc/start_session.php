@@ -3,12 +3,23 @@
  * \file
  * \brief Start a PHP session.
  * 
- * @author https://github.com/HugoFara/ HugoFara
+ * @package Lwt
+ * @author  HugoFara <hugo.farajallah@protonmail.com>
+ * @license Unlicense <http://unlicense.org/>
+ * @link    https://hugofara.github.io/lwt/docs/html/start__session_8php.html
+ * @since   2.0.3-fork
  */
 
-// Get globals
-require 'kernel_utility.php';
+require_once __DIR__ . '/kernel_utility.php';
 
+/*
+ * Starts or not the error reporting.
+ * 
+ * @param int $dsplerrors not 0: start error reporting for ALL errors  
+ *                        0: don't report
+ * 
+ * @return void
+ */
 function set_error_reporting($dsplerrors): void 
 {
     if ($dsplerrors) {
@@ -22,6 +33,11 @@ function set_error_reporting($dsplerrors): void
     }
 }
 
+/*
+ * Set configuration values as script limit time and such...
+ * 
+ * @return void
+ */
 function set_configuration_options(): void 
 {
     // Set script time limit
@@ -31,6 +47,11 @@ function set_configuration_options(): void
     @ini_set('memory_limit', '999M');
 }  
 
+/*
+ * Start the session and checks for its sanity.
+ * 
+ * @return void
+ */
 function start_session(): void 
 {
     // session isn't started
@@ -38,7 +59,7 @@ function start_session(): void
     if ($err === false) { 
         my_die('SESSION error (Impossible to start a PHP session)'); 
     }
-    if(session_id() == '') {
+    if (session_id() == '') {
         my_die('SESSION ID empty (Impossible to start a PHP session)'); 
     }
     if (!isset($_SESSION)) {
@@ -46,9 +67,14 @@ function start_session(): void
     }
 }
 
+/*
+* Launch a new session for WordPress.
+*
+* @return void
+*/
 function start_session_main(): void 
 {
-    set_error_reporting($GLOBALS['$dsplerrors']);
+    set_error_reporting($GLOBALS['dsplerrors']);
     set_configuration_options();
     // Start a PHP session if not one already exists
     if (session_id() == '') {

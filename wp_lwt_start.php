@@ -16,13 +16,13 @@
  * http://...path-to-wp-blog.../lwt/wp_lwt_stop.php
  * 
  * @package Lwt
- * @author  LWT Prject <lwt-project@hotmail.com>
+ * @author  LWT Project <lwt-project@hotmail.com>
  * @license Unlicense <http://unlicense.org/>
  * @link    https://hugofara.github.io/lwt/docs/html/wp__lwt__start_8php.html
  * @since   1.5.5
  */
 
-require_once 'inc/session_utility.php';
+require_once 'inc/kernel_utility.php';
 require_once '../wp-load.php' ;
 
 if (is_user_logged_in()) {
@@ -35,21 +35,27 @@ if (is_user_logged_in()) {
     if ($err === false) { 
         my_die('SESSION error (Impossible to start a PHP session)'); 
     }
-    if(session_id() == '') {
+    if (session_id() == '') {
         my_die('SESSION ID empty (Impossible to start a PHP session)'); 
     }
-    if (! isset($_SESSION)) {
+    if (!isset($_SESSION)) {
         my_die('SESSION array not set (Impossible to start a PHP session)'); 
     }
 
-    $_SESSION['LWT-WP-User']=$wpuser;
-    $url = (!empty($_REQUEST["rd"]) && file_exists(preg_replace('/^([^?]+).*/', './$1', $_REQUEST["rd"])))?$_REQUEST["rd"]:'index.php';
+    $_SESSION['LWT-WP-User'] = $wpuser;
+    $url = 'index.php';
+    if (!empty($_REQUEST["rd"])) {
+        $rd = $_REQUEST["rd"];
+        // Check for multiple redirections?
+        if (file_exists(preg_replace('/^([^?]+).*/', './$1', $rd))) {
+            $url = $rd;
+        }
+    }
     header("Location: ./" . $url);
-    exit;
-}
-else { 
+    exit();
+} else {
     header("Location: ../wp-login.php?redirect_to=./lwt/wp_lwt_start.php");
-    exit;
+    exit();
 }
 
 ?>

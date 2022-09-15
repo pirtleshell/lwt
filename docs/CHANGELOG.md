@@ -9,6 +9,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 * Having ``@@GLOBAL.local_infile`` (MySQL) set to 0, or any configuration disabling ``LOAD DATA LOCAL INFILE``, was causing a fatal error on adding a new text. This is fixing by a slower method.
   * If ``local_infile`` is enabled, no change should be noticed.
   * This was signaled in issues [#20](https://github.com/HugoFara/lwt/issues/20) and [#40](https://github.com/HugoFara/lwt/issues/40).
+* The WordPress binding scripts had multiple issues as reported in [#41](https://github.com/HugoFara/lwt/issues/41), thanks [@Redmattski](https://github.com/Redmattski)! 
 
 ## 2.5.0-fork (July 08 2022)
 ### Added
