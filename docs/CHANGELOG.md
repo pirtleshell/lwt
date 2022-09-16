@@ -4,10 +4,17 @@ Changelog
 This project's changelog. Versions marked with "-fork" come from the community, other versions come from the canonical LWT ("official" branch on Git).
 For git tags, official releases are marked like "v1.0.0", while unofficial ones are marked like "v1.0.0-fork".
 
+## 2.5.1-fork (September 16 2022)
+### Fixed
+* Having ``@@GLOBAL.local_infile`` (MySQL) set to 0, or any configuration disabling ``LOAD DATA LOCAL INFILE``, was causing a fatal error on adding a new text. This is fixing by a slower method.
+  * If ``local_infile`` is enabled, no change should be noticed.
+  * This was signaled in issues [#20](https://github.com/HugoFara/lwt/issues/20) and [#40](https://github.com/HugoFara/lwt/issues/40).
+* The WordPress binding scripts had multiple issues as reported in [#41](https://github.com/HugoFara/lwt/issues/41), thanks [@Redmattski](https://github.com/Redmattski)! 
+
 ## 2.5.0-fork (July 08 2022)
 ### Added
 * Compatibility with PHP 8+!
-* Updated with LWT 2.0.3, solving incompatibilities with PHP 8.1 throzing MySQLI errors.
+* Updated with LWT 2.0.3, solving incompatibilities with PHP 8.1 throwing MySQLI errors.
 * Introducing the new class ``Term`` in ``edit_mword.php``. This class is yet to be considered experimental, so expect important changes, but should gradually get used everywhere.
 * ``insert_expression_from_mecab`` in ``session_utility.php``. Better name and behavior for ``insertExpressionFromMeCab`` (see deprecations).
 

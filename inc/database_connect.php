@@ -725,6 +725,8 @@ function set_word_count() {
  * 
  * @return string[]|void Splitted sentence if $id = -2
  * 
+ * @since 2.5.1-fork Works even if LOAD DATA LOCAL INFILE operator is disabled.
+ * 
  * @global string $tbpref Database table prefix
  */
 function parse_japanese_text($text, $id)
@@ -753,7 +755,7 @@ function parse_japanese_text($text, $id)
     pclose($handle);
 
     runsql(
-        "CREATE TEMPORARY TABLE IF NOT EXISTS " . $tbpref . "temptextitems2 (
+        "CREATE TEMPORARY TABLE IF NOT EXISTS {$tbpref}temptextitems2 (
             TiCount smallint(5) unsigned NOT NULL,
             TiSeID mediumint(8) unsigned NOT NULL,
             TiOrder smallint(5) unsigned NOT NULL,
@@ -762,54 +764,110 @@ function parse_japanese_text($text, $id)
         ) DEFAULT CHARSET=utf8", 
         ''
     );
-    do_mysqli_query(
-        'SET @a:=0, @g:=0, 
-        @s:=' . (
-            $id>0 ? 
-            '(SELECT ifnull(max(`SeID`)+1,1) FROM `' . $tbpref . 'sentences`)' 
-            : 1 
-        ) . ', @d:=0,@h:=0,@i:=0;'
-    );
-    
-    // @a ;= @a + 2 - (@i = @g)
-    $sql = 
-    "LOAD DATA LOCAL INFILE " . convert_string_to_sqlsyntax($file_name) . "
-    INTO TABLE {$tbpref}temptextitems2
-    FIELDS TERMINATED BY '\\t' 
-    LINES TERMINATED BY '" . PHP_EOL . "' 
-    (@c, @e, @f)
-    SET 
-    TiSeID = IF(@g=2 OR (@c='EOS' AND @f='7'), @s:=@s+(@d:=@h)+1,@s),
-    TiCount = (@d:= @d + CHAR_LENGTH(@c)) + 1 - CHAR_LENGTH(@c),
-    TiOrder = IF(
-        CASE
-            WHEN @f = '7' THEN IF(@c='EOS',(@g:=2) AND (@c:='¶'), @g:=2) 
-            WHEN LOCATE(@e, '267') THEN @g:=@h 
-            ELSE @g:=1 
-        END IS null, 
-        null, 
-        @a := @a + IF((@i=1) AND (@g=1), 0, 1) + IF((@i=0) AND (@g=0), 1, 0) 
-    ), 
-    TiText = @c, 
-    TiWordCount =
-    CASE 
-        WHEN (@i:=@g) IS NULL THEN NULL
-        WHEN @g=0 THEN 1 
-        ELSE 0 
-    END";
-    do_mysqli_query($sql);
-    do_mysqli_query("DELETE FROM {$tbpref}temptextitems2 WHERE TiOrder=@a");
+    // It is faster to write to a file and let SQL do its magic, but may run into
+    // security restrictions
+    if (get_first_value("SELECT @@GLOBAL.local_infile as value")) {
+        do_mysqli_query(
+            "SET @order:=0, @term_type:=0,
+            @sid:=" . (
+                $id>0 ?
+                "(SELECT ifnull(max(`SeID`)+1,1) FROM `{$tbpref}sentences`)" 
+                : 1 
+            ) . ", @count:=0,@last_term_type:=0;"
+        );
+        
+        $sql = 
+        "LOAD DATA LOCAL INFILE " . convert_string_to_sqlsyntax($file_name) . "
+        INTO TABLE {$tbpref}temptextitems2
+        FIELDS TERMINATED BY '\\t' 
+        LINES TERMINATED BY '" . PHP_EOL . "' 
+        (@term, @node_type, @third)
+        SET 
+        TiSeID = IF(@term_type=2 OR (@term='EOS' AND @third='7'), @sid:=@sid+1,@sid),
+        TiCount = (@count:= @count + CHAR_LENGTH(@term)) + 1 - CHAR_LENGTH(@term),
+        TiOrder = IF(
+            CASE
+                WHEN @third = '7' THEN IF(
+                    @term = 'EOS',
+                    (@term_type := 2) AND (@term := '¶'), 
+                    @g := 2
+                ) 
+                WHEN LOCATE(@node_type, '267') THEN @term_type:=0 
+                ELSE @term_type:=1 
+            END IS NULL,
+            NULL,
+            @order := @order + IF((@last_term_type=1) AND (@term_type=1), 0, 1) 
+            + IF((@last_term_type=0) AND (@term_type=0), 1, 0) 
+        ), 
+        TiText = @term,
+        TiWordCount =
+        CASE 
+            WHEN (@last_term_type:=@term_type) IS NULL THEN NULL
+            WHEN @term_type=0 THEN 1
+            ELSE 0 
+        END";
+        do_mysqli_query($sql);
+        do_mysqli_query("DELETE FROM {$tbpref}temptextitems2 WHERE TiOrder=@order");
+    } else {
+        $handle = fopen($file_name, 'r');
+        $mecabed = fread($handle, filesize($file_name));
+        fclose($handle);
+        $values = array();
+        $order = 0;
+        $sid = 1;
+        if ($id > 0) {
+            $sid = (int)get_first_value(
+                "SELECT IFNULL(MAX(`SeID`)+1,1) as value 
+                FROM {$tbpref}sentences"
+            );
+        }
+        $term_type = 0;
+        $count = 0;
+        $row = array(0, 0, 0, "", 0);
+        foreach (explode(PHP_EOL, $mecabed) as $line) {
+            list($term, $node_type, $third) = explode(mb_chr(9), $line);
+            if ($term_type == 2 || $term == 'EOS' && $third == '7') {
+                $sid += 1;
+            }
+            $row[0] = $sid; // TiSeID
+            $row[1] = $count + 1; // TiCount
+            $count += mb_strlen($term);
+            $last_term_type = $term_type;
+            if ($third == '7') {
+                if ($term == 'EOS') {
+                    $term = '¶';
+                }
+                $term_type = 2;
+            } else if (str_contains('267', $node_type)) {
+                $term_type = 0;
+            } else {
+                $term_type = 1;
+            }
+            $order += (($term_type == 0) && ($last_term_type == 0)) + 
+            !(($term_type == 1) && ($last_term_type == 1));
+            $row[2] = $order; // TiOrder
+            $row[3] = convert_string_to_sqlsyntax_notrim_nonull($term); // TiText
+            $row[4] = $term_type == 0 ? 1 : 0; // TiWordCount
+            $values[] = "(" . implode(",", $row) . ")";
+        }
+        do_mysqli_query(
+            "INSERT INTO {$tbpref}temptextitems2 (
+                TiSeID, TiCount, TiOrder, TiText, TiWordCount
+            ) VALUES " . implode(',', $values)
+        );
+        // Delete elements TiOrder=@order
+        do_mysqli_query("DELETE FROM {$tbpref}temptextitems2 WHERE TiOrder=$order");
+    }
     do_mysqli_query(
         "INSERT INTO {$tbpref}temptextitems (
             TiCount, TiSeID, TiOrder, TiWordCount, TiText
         ) 
         SELECT MIN(TiCount) s, TiSeID, TiOrder, TiWordCount, 
-        group_concat(TiText ORDER BY TiCount SEPARATOR '') 
-        FROM {$tbpref}temptextitems2 
-        WHERE 1 
+        group_concat(TiText ORDER BY TiCount SEPARATOR '')
+        FROM {$tbpref}temptextitems2
         GROUP BY TiOrder"
     );
-    do_mysqli_query('DROP TABLE ' . $tbpref . 'temptextitems2');
+    do_mysqli_query("DROP TABLE {$tbpref}temptextitems2");
     unlink($file_name);
 }
 
@@ -822,12 +880,14 @@ function parse_japanese_text($text, $id)
  * 
  * @return void|string[] If $id == -2 return a splitted version of the text.
  * 
+ * @since 2.5.1-fork Works even if LOAD DATA LOCAL INFILE operator is disabled.
+ * 
  * @global string $tbpref Database table prefix
  */
 function parse_standard_text($text, $id, $lid)
 {
     global $tbpref;
-    $sql = "SELECT * FROM " . $tbpref . "languages WHERE LgID=" . $lid;
+    $sql = "SELECT * FROM {$tbpref}languages WHERE LgID=$lid";
     $res = do_mysqli_query($sql);
     $record = mysqli_fetch_assoc($res);
     $removeSpaces = $record['LgRemoveSpaces'];
@@ -881,23 +941,21 @@ function parse_standard_text($text, $id, $lid)
     }
 
     
-    $file_name = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $tbpref . "tmpti.txt";
-    $fp = fopen($file_name, 'w');
     $text = trim(
         preg_replace(
             array(
-            "/\r(?=[]'`\"”)‘’‹›“„«»』」 ]*\r)/u",
-            '/[\n]+\r/u',
-            '/\r([^\n])/u',
-            "/\n[.](?![]'`\"”)‘’‹›“„«»』」]*\r)/u",
-            "/(\n|^)(?=.?[$termchar][^\n]*\n)/u"
+                "/\r(?=[]'`\"”)‘’‹›“„«»』」 ]*\r)/u",
+                '/[\n]+\r/u',
+                '/\r([^\n])/u',
+                "/\n[.](?![]'`\"”)‘’‹›“„«»』」]*\r)/u",
+                "/(\n|^)(?=.?[$termchar][^\n]*\n)/u"
             ), 
             array(
-            "",
-            "\r",
-            "\r\n$1",
-            ".\n",
-            "\n1\t"
+                "",
+                "\r",
+                "\r\n$1",
+                ".\n",
+                "\n1\t"
             ), 
             str_replace(array("\t","\n\n"), array("\n",""), $text)
         )
@@ -905,36 +963,73 @@ function parse_standard_text($text, $id, $lid)
     $text = remove_spaces(
         preg_replace("/(\n|^)(?!1\t)/u", "\n0\t", $text), $removeSpaces
     );
-    fwrite($fp, $text);
-    fclose($fp);
-    do_mysqli_query(
-        'SET @a=0, 
-        @b=' . ($id>0?'(
-            SELECT ifnull(max(`SeID`)+1,1) 
-            FROM `' . $tbpref . 'sentences`)'
-            : 1
-        ) . ',@d=0,@e=0;'
-    );
-    $sql = 'LOAD DATA LOCAL INFILE '. convert_string_to_sqlsyntax($file_name) . ' 
-    INTO TABLE ' . $tbpref . 'temptextitems 
-    FIELDS TERMINATED BY \'\\t\' LINES TERMINATED BY \'\\n\' (@w,@c) 
-    set 
-        TiSeID = @b, 
-        TiCount = (@d:=@d+CHAR_LENGTH(@c))+1-CHAR_LENGTH(@c), 
-        TiOrder = if(
-            @c like "%\\r", 
-            case 
-                when (@c:=REPLACE(@c,"\\r","")) is NULL then NULL 
-                when (@b:=@b+1) is NULL then NULL 
-                when @d:= @e is NULL then NULL 
-            else @a:=@a+1 end, 
-            @a:=@a+1
-        ), 
-        TiText = @c,
-        TiWordCount=@w';
-    do_mysqli_query($sql);
-    mysqli_free_result($res);
-    unlink($file_name);
+    // It is faster to write to a file and let SQL do its magic, but may run into
+    // security restrictions
+    if (get_first_value("SELECT @@GLOBAL.local_infile as value")) {
+        $file_name = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $tbpref . "tmpti.txt";
+        $fp = fopen($file_name, 'w');
+        fwrite($fp, $text);
+        fclose($fp);
+        do_mysqli_query(
+            "SET @order=0, 
+            @sid=" . (
+                $id>0?"(SELECT ifnull(max(`SeID`)+1,1) FROM `{$tbpref}sentences`)" : 1) . 
+            ", @count = 0;"
+        );
+        $sql = "LOAD DATA LOCAL INFILE " . convert_string_to_sqlsyntax($file_name) . "
+        INTO TABLE {$tbpref}temptextitems 
+        FIELDS TERMINATED BY '\\t' LINES TERMINATED BY '\\n' (@word_count, @term)
+        SET 
+            TiSeID = @sid, 
+            TiCount = (@count:=@count+CHAR_LENGTH(@term))+1-CHAR_LENGTH(@term),
+            TiOrder = IF(
+                @term LIKE '%\\r',
+                CASE 
+                    WHEN (@term:=REPLACE(@term,'\\r','')) IS NULL THEN NULL 
+                    WHEN (@sid:=@sid+1) IS NULL THEN NULL 
+                    WHEN @count:= 0 IS NULL THEN NULL 
+                    ELSE @order := @order+1 
+                END, 
+                @order := @order+1
+            ), 
+            TiText = @term,
+            TiWordCount = @word_count";
+        do_mysqli_query($sql);
+        mysqli_free_result($res);
+        unlink($file_name);
+    } else {
+        $values = array();
+        $order = 0;
+        $sid = 1;
+        if ($id > 0) {
+            $sid = (int)get_first_value(
+                "SELECT IFNULL(MAX(`SeID`)+1,1) as value 
+                FROM {$tbpref}sentences"
+            );
+        }
+        $count = 0;
+        $row = array(0, 0, 0, "", 0);
+        foreach (explode("\n", $text) as $line) {
+            list($word_count, $term) = explode("\t", $line);
+            $row[0] = $sid; // TiSeID
+            $row[1] = $count + 1; // TiCount
+            $count += mb_strlen($term);
+            if (str_ends_with($term, "\r")) {
+                $term = str_replace("\r", '', $term);
+                $sid++;
+                $count = 0;
+            }
+            $row[2] = ++$order; // TiOrder
+            $row[3] = convert_string_to_sqlsyntax_notrim_nonull($term); // TiText
+            $row[4] = $word_count; // TiWordCount
+            $values[] = "(" . implode(",", $row) . ")";
+        }
+        do_mysqli_query(
+            "INSERT INTO {$tbpref}temptextitems (
+                TiSeID, TiCount, TiOrder, TiText, TiWordCount
+            ) VALUES " . implode(',', $values)
+        );
+    }
 }
 
 

@@ -213,7 +213,7 @@
 			</h2>
 
 			<p>
-				The current version is 2.5.0-fork (July 08 2022).
+				The current version is 2.5.1-fork (September 16 2022).
 				<br>
 				<a href="#CHANGELOG">View the Changelog.</a>
 			</p>
@@ -1907,11 +1907,22 @@ KEY NfUpdate (NfUpdate)</p>
 			<h2 id="CHANGELOG" name="CHANGELOG">▶ Changelog - <a href="#">[↑]</a></h2>
 <p>This project's changelog. Versions marked with "-fork" come from the community, other versions come from the canonical LWT ("official" branch on Git).
 For git tags, official releases are marked like "v1.0.0", while unofficial ones are marked like "v1.0.0-fork".</p>
+<h3>2.5.1-fork (September 16 2022)</h3>
+<h4>Fixed</h4>
+<ul>
+<li>Having <code>@@GLOBAL.local_infile</code> (MySQL) set to 0, or any configuration disabling <code>LOAD DATA LOCAL INFILE</code>, was causing a fatal error on adding a new text. This is fixing by a slower method.
+<ul>
+<li>If <code>local_infile</code> is enabled, no change should be noticed.</li>
+<li>This was signaled in issues <a href="https://github.com/HugoFara/lwt/issues/20">#20</a> and <a href="https://github.com/HugoFara/lwt/issues/40">#40</a>.</li>
+</ul>
+</li>
+<li>The WordPress binding scripts had multiple issues as reported in <a href="https://github.com/HugoFara/lwt/issues/41">#41</a>, thanks <a href="https://github.com/Redmattski">@Redmattski</a>!</li>
+</ul>
 <h3>2.5.0-fork (July 08 2022)</h3>
 <h4>Added</h4>
 <ul>
 <li>Compatibility with PHP 8+!</li>
-<li>Updated with LWT 2.0.3, solving incompatibilities with PHP 8.1 throzing MySQLI errors.</li>
+<li>Updated with LWT 2.0.3, solving incompatibilities with PHP 8.1 throwing MySQLI errors.</li>
 <li>Introducing the new class <code>Term</code> in <code>edit_mword.php</code>. This class is yet to be considered experimental, so expect important changes, but should gradually get used everywhere.</li>
 <li>
 <code>insert_expression_from_mecab</code> in <code>session_utility.php</code>. Better name and behavior for <code>insertExpressionFromMeCab</code> (see deprecations).</li>
