@@ -4,7 +4,7 @@ Changelog
 This project's changelog. Versions marked with "-fork" come from the community, other versions come from the canonical LWT ("official" branch on Git).
 For git tags, official releases are marked like "v1.0.0", while unofficial ones are marked like "v1.0.0-fork".
 
-## [Unreleased]
+## 2.5.1-fork (September 16 2022)
 ### Fixed
 * Having ``@@GLOBAL.local_infile`` (MySQL) set to 0, or any configuration disabling ``LOAD DATA LOCAL INFILE``, was causing a fatal error on adding a new text. This is fixing by a slower method.
   * If ``local_infile`` is enabled, no change should be noticed.
