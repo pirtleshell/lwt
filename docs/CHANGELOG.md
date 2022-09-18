@@ -4,12 +4,19 @@ Changelog
 This project's changelog. Versions marked with "-fork" come from the community, other versions come from the canonical LWT ("official" branch on Git).
 For git tags, official releases are marked like "v1.0.0", while unofficial ones are marked like "v1.0.0-fork".
 
+## [Unreleased]
+### Fixed
+* Multi-words insertion for languages using no space is now repaired! Thanks to [@gaoxiangluke](https://github.com/gaoxiangluke) for signaling it ([#38](https://github.com/HugoFara/lwt/issues/38)).
+
 ## 2.5.1-fork (September 16 2022)
 ### Fixed
 * Having ``@@GLOBAL.local_infile`` (MySQL) set to 0, or any configuration disabling ``LOAD DATA LOCAL INFILE``, was causing a fatal error on adding a new text. This is fixing by a slower method.
   * If ``local_infile`` is enabled, no change should be noticed.
   * This was signaled in issues [#20](https://github.com/HugoFara/lwt/issues/20) and [#40](https://github.com/HugoFara/lwt/issues/40).
-* The WordPress binding scripts had multiple issues as reported in [#41](https://github.com/HugoFara/lwt/issues/41), thanks [@Redmattski](https://github.com/Redmattski)! 
+* The WordPress binding scripts had multiple issues as reported in [#41](https://github.com/HugoFara/lwt/issues/41), thanks [@Redmattski](https://github.com/Redmattski)!
+
+### Full Changelog
+* [2.5.0...2.5.1](https://github.com/HugoFara/lwt/compare/2.5.0...2.5.1)
 
 ## 2.5.0-fork (July 08 2022)
 ### Added
@@ -390,7 +397,7 @@ This version should be the stable merge between official v2.0.2 and community ma
     
 ## 1.6.25-fork (January 31 2016):  
 ### Added 
-* Added German Feed 'NachDenkSeiten'(url:'http://www.nachdenkseiten.de/?feed=audiopodcast', Article Section:'//encoded/p', Options:'Article Source:encoded') to DemoDatabase.  
+* Added German Feed [NachDenkSeiten](http://www.nachdenkseiten.de/?feed=audiopodcast) to DemoDatabase.  
 * Added saved expressions to CheckText.  
 ### Changed
 * SplitCheckText rewritten.  
@@ -627,10 +634,10 @@ Changes from official LWT version 1.5.20 imported:
        
 ## 1.6.0-fork (September 12 2014):  
 ### Added
-* New Feature: Longer (>9) expressions can now be saved  
-* New Feature: TextToSpeech support for words added  
-* New Feature: experimental google api (use 'ggl.php' instead of '\*http://translate.google.com' for google translate)  
-* New Feature: new word select mode in read texts (hold down mouse button)
+* Longer (>9) expressions can now be saved  
+* TextToSpeech support for words added  
+* Experimental google api (use 'ggl.php' instead of '\*http://translate.google.com' for google translate)  
+* New word select mode in read texts (hold down mouse button)
 
 ### Changed
 * Database Changes: table textitems replaced by textitems2, temporary tables added, global table tts added  
@@ -699,7 +706,7 @@ Changes from official LWT version 1.5.20 imported:
 * License texts updated according to text on [unlicense.org](http://unlicense.org/).  
 * Documentation updated.  
 ### Fixed
-* Removed an erroneous extra space in "wp\_logincheck.inc.php". Thanks to a poster in the help forum for pointing this out!  
+* Removed an erroneous extra space in "wp\_logincheck.inc.php". Thanks to a post in the help forum for pointing this out!  
 * Minor bug fixes.  
       
     
