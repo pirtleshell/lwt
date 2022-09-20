@@ -436,7 +436,7 @@ function edit_mword_display_new($term, $tid, $ord, $len)
     </table>
     </form>
     <div id="exsent">
-        <span class="click" onclick="do_ajax_show_sentences(<?= $term->lgid; ?>, <?= prepare_textdata_js($term->textlc) ?>, <?= prepare_textdata_js("document.forms['newword'].WoSentence") ?> . , -1);">
+        <span class="click" onclick="do_ajax_show_sentences(<?= $term->lgid; ?>, <?= prepare_textdata_js($term->textlc) ?>, <?= prepare_textdata_js('document.forms[\'newword\'].WoSentence') ?>, -1);">
             <img src="icn/sticky-notes-stack.png" title="Show Sentences" alt="Show Sentences" /> 
             Show Sentences
         </span>

@@ -3862,7 +3862,6 @@ function insert_standard_expression($textlc, $lid, $wid, $len, $mode) {
                     $_
                 );
                 $pos = 2 * $cnt + (int) $record['SeFirstPos'];
-                var_dump("pos " . $pos, "count " . $cnt, "first pos " . $record['SeFirstPos'], "string " . $string);
                 $txt = '';
                 if ($matches[1] != $textlc) { 
                     $txt = $splitEachChar ? $wis : $matches[1]; 
@@ -3897,7 +3896,7 @@ function insert_standard_expression($textlc, $lid, $wid, $len, $mode) {
  */
 function new_expression_interactable($hex, $appendtext, $sid, $len): void 
 {
-    $showAll = (bool)getSettingZeroOrOne('showallwords', 1) ? "m" : "";
+    $showAll = getSettingZeroOrOne('showallwords', 1) ? "m" : "";
 
     ?>
 <script type="text/javascript">

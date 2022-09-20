@@ -34,7 +34,11 @@ function quickMenuRedirection(value) {
  * @param {string}   attrs        A group of attributes to add 
  * @param {int}      length       Number of words, should correspond to WoWordCount
  * @param {string}   hex          Lowercase formatted version of the text.
- * @param {bool}     showallwords Whether you want to show all words
+ * @param {bool}     showallwords Set to false if a group if multi-words should be 
+ *                                displayed as index
+ * @returns {undefined}
+ * 
+ * @since 2.5.2-fork Don't hide multi-word index when inserting new multi-word. 
  */
 function newExpressionInteractable(text, attrs, length, hex, showallwords) {
 
@@ -71,7 +75,7 @@ function newExpressionInteractable(text, attrs, length, hex, showallwords) {
         const pos = $('#ID-' + key + '-1', context).attr('data_pos');
         el.attr('data_text', txt).attr('data_pos', pos);
         if (!showallwords) {
-            if (text_refresh) {
+            if (true || text_refresh) {
                 //refresh_text(el);
             } else {
                 el.addClass('hide');
