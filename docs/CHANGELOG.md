@@ -7,6 +7,8 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 ## [Unreleased]
 ### Fixed
 * Multi-words insertion for languages using no space is now repaired! Thanks to [@gaoxiangluke](https://github.com/gaoxiangluke) for signaling it ([#38](https://github.com/HugoFara/lwt/issues/38)).
+* Terms import (``upload_words.php``) can now be used with ``@@GLOBAL.local_infile`` (MySQL) set to 0.
+* Deleted a parasite ";" that was displayed after importing terms. 
 
 ## 2.5.1-fork (September 16 2022)
 ### Fixed

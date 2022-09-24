@@ -171,17 +171,12 @@ if (isset($_REQUEST['op'])) {
         if ($fields["txt"]>0) {
             $columns = '(' . rtrim(implode(',', $col), ',') . ')';
             $temp_tabs = $tabs;
-            $tabs = " FIELDS TERMINATED BY '";
             if ($temp_tabs == 'h') {
-                $tabs .= "#";  
+                $tabs = "#";  
             } else if ($temp_tabs == 'c') { 
-                $tabs .= ",";
+                $tabs = ",";
             } else {
-                $tabs .= "\\t"; 
-            }
-            $tabs .= "' ENCLOSED BY '\"' LINES TERMINATED BY '\\n' ";
-            if ($_REQUEST["IgnFirstLine"] == '1') { 
-                $tabs .= 'IGNORE 1 LINES '; 
+                $tabs = "\\t"; 
             }
             if ($file_upl) { 
                 $file_name = $_FILES["thefile"]["tmp_name"]; 
@@ -195,14 +190,74 @@ if (isset($_REQUEST['op'])) {
             $sql = 'LOAD DATA LOCAL INFILE '. convert_string_to_sqlsyntax($file_name);
             //$sql.= ($overwrite)?' REPLACE':(' IGNORE') ;
             if ($fields["tl"]==0 and $overwrite==0) {
-                $sql .= " IGNORE INTO TABLE {$tbpref}words $tabs$columns 
-                SET WoLgID =  $lang, " . 
-                ($removeSpaces ? 
-                'WoTextLC = LOWER(REPLACE(@wotext," ","")),WoText = REPLACE(@wotext," ","")':
-                'WoTextLC = LOWER(WoText)') . ", 
-                WoStatus = $status, WoStatusChanged = NOW(), " . 
-                make_score_random_insert_update('u');
-                runsql($sql, '');
+
+                if (get_first_value("SELECT @@GLOBAL.local_infile as value")) {
+                    $sql .= " IGNORE INTO TABLE {$tbpref}words 
+                    FIELDS TERMINATED BY '$tabs' ENCLOSED BY '\"' LINES TERMINATED BY '\\n' 
+                    " . ($_REQUEST["IgnFirstLine"] == '1' ? "IGNORE 1 LINES" : "") . "
+                    $columns 
+                    SET WoLgID = $lang, " . 
+                    ($removeSpaces ? 
+                    'WoTextLC = LOWER(REPLACE(@wotext," ","")),WoText = REPLACE(@wotext," ","")':
+                    'WoTextLC = LOWER(WoText)') . ", 
+                    WoStatus = $status, WoStatusChanged = NOW(), " . 
+                    make_score_random_insert_update('u');
+                    runsql($sql, '');
+                } else {
+                    $handle = fopen($file_name, 'r');
+                    $data_text = fread($handle, filesize($file_name));
+                    fclose($handle);
+                    $values = array();
+                    $i = 0;
+                    foreach (explode(PHP_EOL, $data_text) as $line) {
+                        if ($i++ == 0 && $_REQUEST["IgnFirstLine"] == '1')
+                            continue;
+                        $row = array();
+                        $parsed_line = explode($tabs, $line); 
+                        $wotext = $parsed_line[$fields["txt"]];
+                        // Fill WoText and WoTextLC
+                        if ($removeSpaces) {
+                            $row[] = str_replace("", " ", $wotext);
+                            $row[] = mb_strtolower(str_replace("", " ", $wotext));
+                        } else {
+                            $row[] = $wotext;
+                            $row[] = mb_strtolower($wotext);
+                        }
+                        if ($fields["tr"] != 0) {
+                            $row[] = (
+                                $parsed_line[$fields["tr"]]
+                            );
+                        }
+                        if ($fields["ro"] != 0) {
+                            $row[] = (
+                                $parsed_line[$fields["ro"]]
+                            );
+                        }
+                        if ($fields["se"] != 0) {
+                            $row[] = (
+                                $parsed_line[$fields["se"]]
+                            );
+                        }
+
+                        $row = array_map('convert_string_to_sqlsyntax', $row);
+                        $row = array_merge($row, array(
+                            $lang, $status, "NOW()", 
+                            getsqlscoreformula(2), getsqlscoreformula(3), "RAND()"
+                        ));
+                        $values[] = "(" . implode(",", $row) . ")";
+                    }
+                    do_mysqli_query(
+                        "INSERT INTO {$tbpref}words(
+                            WoText, WoTextLC, " . 
+                            ($fields["tr"] != 0 ? 'WoTranslation, ' : '') . 
+                            ($fields["ro"] != 0 ? 'WoRomanization, ' : '') . 
+                            ($fields["se"] != 0 ? 'WoSentence, ' : '') . 
+                            "WoLgID, WoStatus, WoStatusChanged, 
+                            WoTodayScore, WoTomorrowScore, WoRandom
+                        )
+                        VALUES " . implode(',', $values)
+                    );
+                }
             } else {
                 runsql('SET GLOBAL max_heap_table_size = 1024 * 1024 * 1024 * 2', '');
                 runsql(
@@ -216,15 +271,68 @@ if (isset($_REQUEST['op'])) {
                     ('4'),('5'),('6'),('7'),('8'),('9')", 
                     ''
                 );
-                $sql .= " INTO TABLE {$tbpref}tempwords $tabs$columns SET " . (
-                    $removeSpaces ? 
-                    'WoTextLC = LOWER(REPLACE(@wotext," ","")), WoText = REPLACE(@wotext," ","")':
-                    'WoTextLC = LOWER(WoText)'
-                );
-                if ($fields["tl"]!=0) { 
-                    $sql.= ', WoTaglist = REPLACE(@taglist," ",",")'; 
+                if (get_first_value("SELECT @@GLOBAL.local_infile as value")) {
+                    $sql .= " INTO TABLE {$tbpref}tempwords 
+                    FIELDS TERMINATED BY '$tabs' ENCLOSED BY '\"' LINES TERMINATED BY '\\n' 
+                    " . ($_REQUEST["IgnFirstLine"] == '1' ? "IGNORE 1 LINES" : "") . 
+                    "$columns SET " . (
+                        $removeSpaces ? 
+                        'WoTextLC = LOWER(REPLACE(@wotext," ","")), WoText = REPLACE(@wotext," ","")':
+                        'WoTextLC = LOWER(WoText)'
+                    );
+                    if ($fields["tl"] != 0) { 
+                        $sql .= ', WoTaglist = REPLACE(@taglist, " ", ",")'; 
+                    }
+                    runsql($sql, '');
+                } else {
+                    $handle = fopen($file_name, 'r');
+                    $data_text = fread($handle, filesize($file_name));
+                    fclose($handle);
+                    $values = array();
+                    $i = 0;
+                    foreach (explode(PHP_EOL, $data_text) as $line) {
+                        if ($i++ == 0 && $_REQUEST["IgnFirstLine"] == '1')
+                            continue;
+                        $row = array();
+                        $parsed_line = explode($tabs, $line);
+                        $wotext = $parsed_line[$fields["txt"]];
+                        // Fill WoText and WoTextLC
+                        if ($removeSpaces) {
+                            $row[] = str_replace(" ", "", $wotext);
+                            $row[] = mb_strtolower(str_replace(" ", "", $wotext));
+                        } else {
+                            $row[] = $wotext;
+                            $row[] = mb_strtolower($wotext);
+                        }
+                        if ($fields["tr"] != 0) {
+                            $row[] = $parsed_line[$fields["tr"]];
+                        }
+                        if ($fields["ro"] != 0) {
+                            $row[] = $parsed_line[$fields["ro"]];
+                        }
+                        if ($fields["se"] != 0) {
+                            $row[] = $parsed_line[$fields["se"]];
+                        }
+                        if ($fields["tl"] != 0) { 
+                            $row[] = str_replace(
+                                " ", ",", $parsed_line[$fields['tl']]
+                            ); 
+                        }
+                        $values[] = "(" . implode(",", array_map(
+                            'convert_string_to_sqlsyntax', $row
+                        )) . ")";
+                    }
+                    do_mysqli_query(
+                        "INSERT INTO {$tbpref}tempwords(
+                            WoText, WoTextLC" . 
+                            ($fields["tr"] != 0 ? ', WoTranslation' : '') . 
+                            ($fields["ro"] != 0 ? ', WoRomanization' : '') . 
+                            ($fields["se"] != 0 ? ', WoSentence' : '') . 
+                            ($fields["tl"] != 0 ? ", WoTaglist" : "") .
+                        ")
+                        VALUES " . implode(',', $values)
+                    );
                 }
-                runsql($sql, '');
                 //*//
                 if($overwrite>3) {
                     runsql(
@@ -513,10 +621,11 @@ if (isset($_REQUEST['op'])) {
                 where WoStatusChanged > " . convert_string_to_sqlsyntax($last_update)
             );
     ?>
-    <form name="form1" action="#" onsubmit="$('#res_data').load('inc/ajax_show_imported_terms.php',{'last_update':'<?php echo $last_update; ?>','count':$('#recno').text(),'page':document.form1.page.options[document.form1.page.selectedIndex].value}); return false;"><div id="res_data"><table class="tab1"  cellspacing="0" cellpadding="2">
-        <?php
-            echo "</table></div></form>";
-        ?>
+    <form name="form1" action="#" onsubmit="$('#res_data').load('inc/ajax_show_imported_terms.php',{'last_update':'<?php echo $last_update; ?>','count':$('#recno').text(),'page':document.form1.page.options[document.form1.page.selectedIndex].value}); return false;">
+    <div id="res_data">
+        <table class="tab1"  cellspacing="0" cellpadding="2"></table>
+    </div>
+    </form>
     <script type="text/javascript">
         $('#res_data')
         .load(
@@ -538,17 +647,13 @@ if (isset($_REQUEST['op'])) {
             }
             $columns .= ')';
             $temp_tabs = $tabs;
-            $tabs = " FIELDS TERMINATED BY '";
+            $tabs = " ";
             if ($temp_tabs == 'h') {
                 $tabs .= "#"; 
             } elseif ($temp_tabs == 'c') {
                 $tabs .= ",";
             } else {
                 $tabs .= "\\t"; 
-            }
-            $tabs .= "' ENCLOSED BY '\"' LINES TERMINATED BY '\\n' ";
-            if ($_REQUEST["IgnFirstLine"] == '1') { 
-                $tabs .= 'IGNORE 1 LINES '; 
             }
             if ($file_upl) {
                 $file_name = $_FILES["thefile"]["tmp_name"]; 
@@ -559,10 +664,32 @@ if (isset($_REQUEST['op'])) {
                 fseek($temp, 0);
                 fclose($temp);
             }
-            $sql = "LOAD DATA LOCAL INFILE " . convert_string_to_sqlsyntax($file_name) . 
-            " IGNORE INTO TABLE {$tbpref}tempwords $tabs$columns 
-            SET WoTextLC = REPLACE(@taglist, ' ', ',')";
-            runsql($sql, '');
+            if (get_first_value("SELECT @@GLOBAL.local_infile as value")) {
+                $sql = "LOAD DATA LOCAL INFILE " . convert_string_to_sqlsyntax($file_name) . 
+                " IGNORE INTO TABLE {$tbpref}tempwords 
+                FIELDS TERMINATED BY '$tabs' ENCLOSED BY '\"' LINES TERMINATED BY '\\n'
+                " . ($_REQUEST["IgnFirstLine"] == '1' ? "IGNORE 1 LINES" : "") . "
+                $columns 
+                SET WoTextLC = REPLACE(@taglist, ' ', ',')";
+                runsql($sql, '');
+            } else {
+                $handle = fopen($file_name, 'r');
+                $data_text = fread($handle, filesize($file_name));
+                fclose($handle);
+                $texts = array();
+                $i = 0;
+                foreach (explode(PHP_EOL, $data_text) as $line) {
+                    if ($i++ == 0 && $_REQUEST["IgnFirstLine"] == '1')
+                        continue;
+                    $tags = explode($tabs, $line)[$fields["tl"]];
+                    $tags = str_replace(' ', ',', $tags);
+                    $texts[] = convert_string_to_sqlsyntax($tags);
+                }
+                do_mysqli_query(
+                    "INSERT INTO {$tbpref}tempwords(WoTextLC) 
+                    VALUES " . implode(',', $texts)
+                );
+            }
             runsql(
                 "CREATE TEMPORARY TABLE IF NOT EXISTS {$tbpref}numbers( 
                     n  tinyint(3) unsigned NOT NULL

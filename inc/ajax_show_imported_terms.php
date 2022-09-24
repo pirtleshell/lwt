@@ -168,7 +168,7 @@ function show_imported_terms($last_update, $limit, $rtl)
                 }
             );
         });
-    </script>;
+    </script>
     <?php
 }
 
