@@ -3801,16 +3801,15 @@ function insertExpressionFromMeCab($textlc, $lid, $wid, $len, $mode)
  * @return array<string[], int[]> Append text and sentence id
  * 
  * @since 2.5.0-fork Mode is unnused and data are always added to the output.
- *
+ * @since 2.5.2-fork Fixed multi-words insertion for languages using no space
+ * 
  * @global string $tbpref Table name prefix
  */
 function insert_standard_expression($textlc, $lid, $wid, $len, $mode) {
     global $tbpref;
     $appendtext = array();
     $sqlarr = array();
-    $wis = $textlc;
-    $sql = "SELECT * FROM {$tbpref}languages WHERE LgID=$lid";
-    $res = do_mysqli_query($sql);
+    $res = do_mysqli_query("SELECT * FROM {$tbpref}languages WHERE LgID=$lid");
     $record = mysqli_fetch_assoc($res);
     $removeSpaces = $record["LgRemoveSpaces"];
     $splitEachChar = $record['LgSplitEachChar'];
@@ -3818,67 +3817,67 @@ function insert_standard_expression($textlc, $lid, $wid, $len, $mode) {
     mysqli_free_result($res);
     if ($removeSpaces == 1 && $splitEachChar == 0) {
         $rSflag = '';
-    }
-    if ($removeSpaces == 1 && $splitEachChar == 0) {
         $sql = "SELECT 
-        group_concat(Ti2Text order by Ti2Order SEPARATOR ' ') AS SeText, SeID, 
+        group_concat(Ti2Text ORDER BY Ti2Order SEPARATOR ' ') AS SeText, SeID, 
         SeTxID, SeFirstPos 
-        FROM {$tbpref}textitems2,{$tbpref}sentences 
+        FROM {$tbpref}textitems2, {$tbpref}sentences 
         WHERE SeID=Ti2SeID AND SeLgID = $lid AND Ti2LgID = $lid 
-        AND SeText LIKE " . convert_string_to_sqlsyntax_notrim_nonull("%$wis%") . " 
+        AND SeText LIKE " . convert_string_to_sqlsyntax_notrim_nonull("%$textlc%") . " 
         AND Ti2WordCount < 2 
         GROUP BY SeID";
     } else {
         $sql = "SELECT * FROM {$tbpref}sentences 
         WHERE SeLgID = $lid AND SeText LIKE " . 
-        convert_string_to_sqlsyntax_notrim_nonull("%$wis%");
+        convert_string_to_sqlsyntax_notrim_nonull("%$textlc%");
     }
+    $wis = $textlc;
     $res = do_mysqli_query($sql);
-    $notermchar='/[^' . $termchar . '](' . $textlc . ')[^' . $termchar . ']/ui';
+    $notermchar = "/[^$termchar]($textlc)[^$termchar]/ui";
+    // For each sentence in the language containing the query
     while ($record = mysqli_fetch_assoc($res)){
         $string = ' ' . $record['SeText'] . ' ';
         if ($splitEachChar) {
             $string = preg_replace('/([^\s])/u', "$1 ", $string);
-        }
-        if ($removeSpaces==1 && $splitEachChar==0) {
-            if (empty($rSflag)) {
-                $rSflag = preg_match(
-                    '/(?<=[ ])(' . preg_replace(
-                        '/(.)/ui', "$1[ ]*", $textlc
-                    ) . ')(?=[ ])/ui', 
-                    $string, $ma
-                );
-                if (!empty($ma[1])) {
-                    $textlc = trim($ma[1]);
-                    $notermchar='/[^' . $termchar . '](' . $textlc . ')[^' . 
-                    $termchar . ']/ui';
-                }
+        } else if ($removeSpaces == 1 && empty($rSflag)) {
+            $rSflag = preg_match(
+                '/(?<=[ ])(' . preg_replace('/(.)/ui', "$1[ ]*", $textlc) . 
+                ')(?=[ ])/ui', 
+                $string, $ma
+            );
+            if (!empty($ma[1])) {
+                $textlc = trim($ma[1]);
+                $notermchar = "/[^$termchar]($textlc)[^$termchar]/ui";
             }
         }
-        $txtid = $record['SeTxID'];
-        $sentid = $record['SeID'];
-        $last_pos = mb_strripos($string, $textlc, 0,  'UTF-8');
+        $last_pos = mb_strripos($string, $textlc, 0, 'UTF-8');
+        // For each occurence of query in sentence
         while ($last_pos !== false) {
-            $matches = array();
-            $string = mb_substr($string, 0, $last_pos, 'UTF-8'); 
             if ($splitEachChar || $removeSpaces || 
-            preg_match($notermchar, '  ' . $string, $matches, 0, $last_pos - 1)==1
+            preg_match($notermchar, " $string ", $matches, 0, $last_pos - 1)
             ) {
-                $cnt = preg_match_all('/([' . $termchar . ']+)/u', $string, $ma);
+                // Number of terms before group
+                $cnt = preg_match_all(
+                    "/([$termchar]+)/u", 
+                    mb_substr($string, 0, $last_pos, 'UTF-8'), 
+                    $_
+                );
                 $pos = 2 * $cnt + (int) $record['SeFirstPos'];
                 $txt = '';
                 if ($matches[1] != $textlc) { 
-                    $txt = $splitEachChar?$wis:$matches[1]; 
+                    $txt = $splitEachChar ? $wis : $matches[1]; 
                 }
-                $sqlarr[] = "($wid,$lid,$txtid,$sentid,$pos,$len," . 
+                $sqlarr[] = "($wid, $lid, {$record['SeTxID']},
+                {$record['SeID']}, $pos, $len, " . 
                 convert_string_to_sqlsyntax_notrim_nonull($txt) . ')';
                 if (getSettingZeroOrOne('showallwords', 1)) {
-                    $appendtext[$pos] = '&nbsp;' . $len . '&nbsp';
+                    $appendtext[$pos] = "&nbsp;$len&nbsp";
                 } else { 
                     $appendtext[$pos] = $splitEachChar || $removeSpaces?$wis:$matches[1]; 
                 }
             }
-            $last_pos = mb_strripos($string, $textlc, 0,  'UTF-8');
+            // Cut the sentence to before the right-most term starts
+            $string = mb_substr($string, 0, $last_pos, 'UTF-8');
+            $last_pos = mb_strripos($string, $textlc, 0, 'UTF-8');
         }
     }
     mysqli_free_result($res);
@@ -3897,7 +3896,7 @@ function insert_standard_expression($textlc, $lid, $wid, $len, $mode) {
  */
 function new_expression_interactable($hex, $appendtext, $sid, $len): void 
 {
-    $showAll = (bool)getSettingZeroOrOne('showallwords', 1) ? "m" : "";
+    $showAll = getSettingZeroOrOne('showallwords', 1) ? "m" : "";
 
     ?>
 <script type="text/javascript">
@@ -3941,7 +3940,7 @@ function new_expression_interactable2($hex, $appendtext, $wid, $len): void
     $record = mysqli_fetch_assoc($res);
 
     $attrs = array(
-        "class" => "click mword {$showAll}wsty TERM{$hex} word$wid status" . 
+        "class" => "click mword {$showAll}wsty TERM$hex word$wid status" . 
         $record["WoStatus"],
         "data_trans" => $record["WoTranslation"],
         "data_rom" => $record["WoRomanization"],

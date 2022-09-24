@@ -95,6 +95,9 @@ class Term
  * Check if the lowercase version is a good one.
  * 
  * @return Term The loaded data.
+ * 
+ * @since 2.5.2-fork The created term has the attribute "wordcount" assigned 
+ * (instead of the wrong "word_count").
  */
 function edit_mword_prepare_term()
 {
@@ -116,7 +119,10 @@ function edit_mword_prepare_term()
     $term->text = prepare_textdata($_REQUEST["WoText"]);
     $term->textlc = prepare_textdata($textlc);
     $term->roman = $_REQUEST["WoRomanization"];
-    $term->word_count = (int) $_REQUEST["len"];
+    // Words count is not necessary when updating multi-word
+    if (!empty($_REQUEST["len"])) {
+        $term->wordcount = (int) $_REQUEST["len"];
+    }
     $term->sentence = $_REQUEST["WoSentence"];
     return $term;
 }
@@ -165,6 +171,9 @@ function edit_mword_do_operation($term)
  * @return void
  * 
  * @global string $tbpref Database table prefix.
+ * 
+ * @since 2.5.2-fork Use the "wordcount" attribute of $term instead of the 
+ * wrong word_count.
  */
 function edit_mword_do_insert($term)
 {
@@ -186,7 +195,7 @@ function edit_mword_do_insert($term)
             convert_string_to_sqlsyntax($term->translation) . ', ' .
             convert_string_to_sqlsyntax(repl_tab_nl($term->sentence)) . ', ' .
             convert_string_to_sqlsyntax($term->roman) . ', ' . 
-            convert_string_to_sqlsyntax($term->word_count) . ', 
+            convert_string_to_sqlsyntax($term->wordcount) . ', 
             NOW(), ' .  
             make_score_random_insert_update('id') . 
         ')', 
@@ -196,7 +205,7 @@ function edit_mword_do_insert($term)
     // strToClassName($textlc);
     $term->id = get_last_key();
     saveWordTags($term->id);
-    insertExpressions($term->textlc, $term->lgid, $term->id, $term->word_count, 0);
+    insertExpressions($term->textlc, $term->lgid, $term->id, $term->wordcount, 0);
     return $message;
 }
 
@@ -427,7 +436,7 @@ function edit_mword_display_new($term, $tid, $ord, $len)
     </table>
     </form>
     <div id="exsent">
-        <span class="click" onclick="do_ajax_show_sentences(<?= $term->lgid; ?>, <?= prepare_textdata_js($term->textlc) ?>, <?= prepare_textdata_js("document.forms['newword'].WoSentence") ?> . , -1);">
+        <span class="click" onclick="do_ajax_show_sentences(<?= $term->lgid; ?>, <?= prepare_textdata_js($term->textlc) ?>, <?= prepare_textdata_js('document.forms[\'newword\'].WoSentence') ?>, -1);">
             <img src="icn/sticky-notes-stack.png" title="Show Sentences" alt="Show Sentences" /> 
             Show Sentences
         </span>
