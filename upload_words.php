@@ -29,7 +29,21 @@ function my_str_getcsv($input)
     return $data;
 }
 
-function upload_words_add_text($fields, $tabs, $file_upl, $col, $lang) {
+/*
+ * Import terms to the database.
+ * 
+ * @param array    $fields   Fields indexes
+ * @param string   $tabs     Columns separator
+ * @param bool     $file_upl If the input text is an uploaded file
+ * @param string[] $col      Columns names
+ * @param int      $lang     Language ID
+ * 
+ * @return void
+ * 
+ * @global string $tbpref Database table prefix
+ */
+function upload_words_import_terms($fields, $tabs, $file_upl, $col, $lang)
+{
     global $tbpref;
     $sql = "SELECT * FROM {$tbpref}languages WHERE LgID=$lang";
     $res = do_mysqli_query($sql);
@@ -70,7 +84,8 @@ function upload_words_add_text($fields, $tabs, $file_upl, $col, $lang) {
             $columns 
             SET WoLgID = $lang, " . 
             ($removeSpaces ? 
-            'WoTextLC = LOWER(REPLACE(@wotext," ","")),WoText = REPLACE(@wotext," ","")':
+            'WoTextLC = LOWER(REPLACE(@wotext," ","")),
+            WoText = REPLACE(@wotext, " ", "")':
             'WoTextLC = LOWER(WoText)') . ", 
             WoStatus = $status, WoStatusChanged = NOW(), " . 
             make_score_random_insert_update('u');
@@ -82,8 +97,9 @@ function upload_words_add_text($fields, $tabs, $file_upl, $col, $lang) {
             $values = array();
             $i = 0;
             foreach (explode(PHP_EOL, $data_text) as $line) {
-                if ($i++ == 0 && $_REQUEST["IgnFirstLine"] == '1')
+                if ($i++ == 0 && $_REQUEST["IgnFirstLine"] == '1') {
                     continue;
+                }
                 $row = array();
                 $parsed_line = explode($tabs, $line); 
                 $wotext = $parsed_line[$fields["txt"] - 1];
@@ -112,10 +128,12 @@ function upload_words_add_text($fields, $tabs, $file_upl, $col, $lang) {
                 }
 
                 $row = array_map('convert_string_to_sqlsyntax', $row);
-                $row = array_merge($row, array(
+                $row = array_merge(
+                    $row, array(
                     $lang, $status, "NOW()", 
                     getsqlscoreformula(2), getsqlscoreformula(3), "RAND()"
-                ));
+                    )
+                );
                 $values[] = "(" . implode(",", $row) . ")";
             }
             do_mysqli_query(
@@ -163,8 +181,9 @@ function upload_words_add_text($fields, $tabs, $file_upl, $col, $lang) {
             $values = array();
             $i = 0;
             foreach (explode(PHP_EOL, $data_text) as $line) {
-                if ($i++ == 0 && $_REQUEST["IgnFirstLine"] == '1')
+                if ($i++ == 0 && $_REQUEST["IgnFirstLine"] == '1') {
                     continue;
+                }
                 $row = array();
                 $parsed_line = explode($tabs, $line);
                 $wotext = $parsed_line[$fields["txt"] - 1];
@@ -190,9 +209,11 @@ function upload_words_add_text($fields, $tabs, $file_upl, $col, $lang) {
                         " ", ",", $parsed_line[$fields['tl'] - 1]
                     ); 
                 }
-                $values[] = "(" . implode(",", array_map(
-                    'convert_string_to_sqlsyntax', $row
-                )) . ")";
+                $values[] = "(" . implode(
+                    ",", array_map(
+                        'convert_string_to_sqlsyntax', $row
+                    )
+                ) . ")";
             }
             do_mysqli_query(
                 "INSERT INTO {$tbpref}tempwords(
@@ -205,8 +226,8 @@ function upload_words_add_text($fields, $tabs, $file_upl, $col, $lang) {
                 VALUES " . implode(',', $values)
             );
         }
-        //*//
-        if($overwrite>3) {
+        
+        if ($overwrite>3) {
             runsql(
                 "CREATE TEMPORARY TABLE IF NOT EXISTS {$tbpref}merge_words(
                     MID mediumint(8) unsigned NOT NULL AUTO_INCREMENT, 
@@ -230,7 +251,7 @@ function upload_words_add_text($fields, $tabs, $file_upl, $col, $lang) {
             }
             $seplen = mb_strlen($wosep, 'UTF-8');
             $WoTrRepl = $tbpref . 'words.WoTranslation';
-            for ($i=1; $i < $seplen; $i++){
+            for ($i=1; $i < $seplen; $i++) {
                 $WoTrRepl = 'REPLACE(
                     ' . $WoTrRepl . ', ' . 
                     convert_string_to_sqlsyntax($wosep[$i]) . ', ' . 
@@ -328,21 +349,19 @@ function upload_words_add_text($fields, $tabs, $file_upl, $col, $lang) {
         }
         // */
         if ($overwrite!=3 and $overwrite!=5) {
-            $sql = ($overwrite != 0) ? 'INSERT ':'INSERT IGNORE ';
-            $sql .= " INTO {$tbpref}words (
+            $sql = "INSERT " . ($overwrite != 0 ? '' : 'IGNORE ') .
+            " INTO {$tbpref}words (
                 WoTextLC , WoText, WoTranslation, WoRomanization, WoSentence,
                 WoStatus, WoStatusChanged, WoLgID, 
-                " .  make_score_random_insert_update('iv')  . '
-            ) ';
-            $sql .= "
+                " .  make_score_random_insert_update('iv')  . "
+            ) 
             SELECT *, $lang as LgID, " . make_score_random_insert_update('id') . "
-            from (
-                select WoTextLC , WoText, WoTranslation, WoRomanization, 
-                WoSentence, {$status} as WoStatus, 
-                NOW() as WoStatusChanged 
-                from {$tbpref}tempwords
-            ) as tw";
-            //if($overwrite==1)$sql.= ' ON DUPLICATE KEY UPDATE ' . $tbpref . 'words.WoTranslation = tw.WoTranslation, ' . $tbpref . 'words.WoRomanization = tw.WoRomanization, ' . $tbpref . 'words.WoSentence = tw.WoSentence, ' . $tbpref . 'words.WoStatus = tw.WoStatus, ' . $tbpref . 'words.WoStatusChanged = tw.WoStatusChanged';
+            FROM (
+                SELECT WoTextLC , WoText, WoTranslation, WoRomanization, 
+                WoSentence, $status AS WoStatus, 
+                NOW() AS WoStatusChanged 
+                FROM {$tbpref}tempwords
+            ) AS tw";
             if ($overwrite==1 or $overwrite==4) { 
                 $sql .= " ON DUPLICATE KEY UPDATE " . 
                 ($fields["tr"] ? "{$tbpref}words.WoTranslation = tw.WoTranslation, ":"") . 
@@ -404,8 +423,8 @@ function upload_words_add_text($fields, $tabs, $file_upl, $col, $lang) {
                     INNER JOIN {$tbpref}tempwords 
                     ON CHAR_LENGTH({$tbpref}tempwords.WoTaglist)-CHAR_LENGTH(REPLACE({$tbpref}tempwords.WoTaglist, ',', ''))>={$tbpref}numbers.n-1 
                     ORDER BY WoTextLC, n) A",
-                    ''
-                );
+                ''
+            );
             runsql(
                 "INSERT IGNORE INTO {$tbpref}wordtags 
                 select WoID,TgID 
@@ -423,7 +442,7 @@ function upload_words_add_text($fields, $tabs, $file_upl, $col, $lang) {
             );
         }
         runsql("DROP TABLE {$tbpref}numbers", '');
-        runsql("truncate " . $tbpref . "tempwords", '');
+        runsql("TRUNCATE {$tbpref}tempwords", '');
         if ($fields["tl"]!=0) { 
             get_tags(1); 
         }
@@ -441,7 +460,8 @@ function upload_words_add_text($fields, $tabs, $file_upl, $col, $lang) {
     );
     $mwords = get_first_value(
         "SELECT count(*) AS value from {$tbpref}words 
-        WHERE WoWordCount>1 AND WoCreated > " . convert_string_to_sqlsyntax($last_update)
+        WHERE WoWordCount>1 AND WoCreated > " . 
+        convert_string_to_sqlsyntax($last_update)
     );
     if ($mwords > 40) {
         runsql(
@@ -465,12 +485,13 @@ function upload_words_add_text($fields, $tabs, $file_upl, $col, $lang) {
         }
         mysqli_free_result($res);
         //$message .= " / Reparsed texts: " . $cntrp;
-    } else if($mwords!=0) {
+    } else if ($mwords!=0) {
         $sqlarr = array();
         $res = do_mysqli_query(
-            "select WoID, WoTextLC, WoWordCount 
-            from " . $tbpref . "words 
-            where WoWordCount>1 and WoCreated > " . convert_string_to_sqlsyntax($last_update)
+            "SELECT WoID, WoTextLC, WoWordCount 
+            FROM {$tbpref}words 
+            WHERE WoWordCount>1 AND WoCreated > " . 
+            convert_string_to_sqlsyntax($last_update)
         );
         while ($record = mysqli_fetch_assoc($res)) {
             $len = $record['WoWordCount'];
@@ -481,10 +502,10 @@ function upload_words_add_text($fields, $tabs, $file_upl, $col, $lang) {
         mysqli_free_result($res);
         $sqlarr = array_filter($sqlarr);
         if (!empty($sqlarr)) {
-            $sqltext = 'INSERT INTO ' . $tbpref . 'textitems2 (
+            $sqltext = "INSERT INTO {$tbpref}textitems2 (
                 Ti2WoID, Ti2LgID, Ti2TxID, Ti2SeID, Ti2Order, Ti2WordCount,
                 Ti2Text
-            ) VALUES ' . rtrim(implode(',', $sqlarr), ',');
+            ) VALUES " . rtrim(implode(',', $sqlarr), ',');
             do_mysqli_query($sqltext);
         }
     }
@@ -492,7 +513,7 @@ function upload_words_add_text($fields, $tabs, $file_upl, $col, $lang) {
         "SELECT count(*) AS value FROM {$tbpref}words 
         where WoStatusChanged > " . convert_string_to_sqlsyntax($last_update)
     );
-?>
+    ?>
 <script type="text/javascript">
 function showImportedTerms(last_update, rtl, count, page) {
     $('#res_data')
@@ -518,10 +539,22 @@ function showImportedTerms(last_update, rtl, count, page) {
         '<?php echo $recno; ?>', '1'
     );
 </script>
-<?php
+    <?php
 }
 
-function upload_words_tags_only($fields, $tabs, $file_upl) {
+/*
+ * Import term tags only to the database.
+ * 
+ * @param array    $fields   Fields indexes
+ * @param string   $tabs     Columns separator
+ * @param bool     $file_upl If the input text is an uploaded file
+ * 
+ * @return void
+ * 
+ * @global string $tbpref Database table prefix
+ */
+function upload_words_tags_only($fields, $tabs, $file_upl)
+{
     global $tbpref;
     $columns = '';
     for ($j=1; $j<=$fields["tl"]; $j++) {
@@ -561,8 +594,9 @@ function upload_words_tags_only($fields, $tabs, $file_upl) {
         $texts = array();
         $i = 0;
         foreach (explode(PHP_EOL, $data_text) as $line) {
-            if ($i++ == 0 && $_REQUEST["IgnFirstLine"] == '1')
+            if ($i++ == 0 && $_REQUEST["IgnFirstLine"] == '1') {
                 continue;
+            }
             $tags = explode($tabs, $line)[$fields["tl"] - 1];
             $tags = str_replace(' ', ',', $tags);
             $texts[] = convert_string_to_sqlsyntax($tags);
@@ -604,7 +638,15 @@ function upload_words_tags_only($fields, $tabs, $file_upl) {
     }
 }
 
-function upload_words_import() {
+/*
+ * Import terms of tags to the database.
+ * 
+ * @return void
+ * 
+ * @global string $tbpref Database table prefix
+ */
+function upload_words_import()
+{
     global $tbpref;
     $tabs = $_REQUEST["Tab"];
     $lang = $_REQUEST["LgID"];
@@ -630,7 +672,7 @@ function upload_words_import() {
 
     $max = max(array_keys($col));
     for ($j=1; $j<=$max; $j++) {
-        if(!isset($col[$j])) { 
+        if (!isset($col[$j])) {
             $col[$j]='@dummy'; 
         } else {
             switch ($col[$j]){
@@ -664,23 +706,9 @@ function upload_words_import() {
             }
         }
     
-        /* Not merged from official
-        $protokoll = '<h4>Import Report (Language: ' . getLanguage($lang) . ', Status: ' . $status . ')</h4><table class="tab1" cellspacing="0" cellpadding="5"><tr><th class="th1">Line</th><th class="th1">Term</th><th class="th1">Translation</th><th class="th1">Romanization</th><th class="th1">Sentence</th><th class="th1">Tag List</th><th class="th1">Message</th></tr>';
-    
-        if ( isset($_FILES["thefile"]) && $_FILES["thefile"]["tmp_name"] != "" && $_FILES["thefile"]["error"] == 0 ) {
-        $lines = file($_FILES["thefile"]["tmp_name"], FILE_IGNORE_NEW_LINES);
-        $l = count($lines);
-        for ($i=0; $i<$l; $i++) {
-        $lines[$i] = replace_supp_unicode_planes_char($lines[$i]);
-        }
-        } 
-        else {
-        $lines = explode("\n",replace_supp_unicode_planes_char(
-        prepare_textdata($_REQUEST["Upload"])));
-        */
     }
     if ($fields["txt"] > 0) {
-        upload_words_add_text($fields, $tabs, $file_upl, $col, $lang);
+        upload_words_import_terms($fields, $tabs, $file_upl, $col, $lang);
     } else if ($fields["tl"] > 0) {
         upload_words_tags_only($fields, $tabs, $file_upl);
     }
@@ -692,7 +720,8 @@ function upload_words_import() {
  * 
  * @return void
  */
-function upload_words_display() {
+function upload_words_display()
+{
 
     ?>
 
@@ -831,11 +860,8 @@ function upload_words_display() {
 pagestart('Import Terms', true);
 
 // Import
-
 if (isset($_REQUEST['op'])) {
-    
     // INSERT
-    
     if ($_REQUEST['op'] == 'Import') { 
         upload_words_import();
     } else {
@@ -843,7 +869,6 @@ if (isset($_REQUEST['op'])) {
         $message = 'Error: Wrong Operation: ' . $_REQUEST['op'];
         echo error_message_with_hide($message, 0);
     }
-
 } else {
     upload_words_display();
 }

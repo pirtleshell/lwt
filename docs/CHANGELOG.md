@@ -5,6 +5,9 @@ This project's changelog. Versions marked with "-fork" come from the community, 
 For git tags, official releases are marked like "v1.0.0", while unofficial ones are marked like "v1.0.0-fork".
 
 ## [Unreleased]
+### Changed
+* Refactored ``upload_words.php``.
+
 ### Fixed
 * Multi-words insertion for languages using no space is now repaired! Thanks to [@gaoxiangluke](https://github.com/gaoxiangluke) for signaling it ([#38](https://github.com/HugoFara/lwt/issues/38)).
 * Terms import (``upload_words.php``) can now be used with ``@@GLOBAL.local_infile`` (MySQL) set to 0.
