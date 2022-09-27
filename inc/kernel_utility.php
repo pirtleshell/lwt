@@ -26,7 +26,7 @@
 function get_version(): string 
 {
     global $debug;
-    $version = '2.5.1-fork (September 16 2022)'; 
+    $version = '2.5.2-fork (September 27 2022)'; 
     if ($debug) {
         $version .= ' <span class="red">DEBUG</span>';
     }

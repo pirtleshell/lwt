@@ -4,7 +4,7 @@ Changelog
 This project's changelog. Versions marked with "-fork" come from the community, other versions come from the canonical LWT ("official" branch on Git).
 For git tags, official releases are marked like "v1.0.0", while unofficial ones are marked like "v1.0.0-fork".
 
-## [Unreleased]
+## 2.5.2-fork (September 27 2022)
 ### Changed
 * Refactored ``upload_words.php``.
 

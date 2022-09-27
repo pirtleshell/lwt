@@ -553,7 +553,7 @@ function showImportedTerms(last_update, rtl, count, page) {
  * 
  * @global string $tbpref Database table prefix
  */
-function upload_words_tags_only($fields, $tabs, $file_upl)
+function upload_words_import_tags($fields, $tabs, $file_upl)
 {
     global $tbpref;
     $columns = '';
@@ -710,7 +710,7 @@ function upload_words_import()
     if ($fields["txt"] > 0) {
         upload_words_import_terms($fields, $tabs, $file_upl, $col, $lang);
     } else if ($fields["tl"] > 0) {
-        upload_words_tags_only($fields, $tabs, $file_upl);
+        upload_words_import_tags($fields, $tabs, $file_upl);
     }
 }
 
