@@ -213,7 +213,7 @@
 			</h2>
 
 			<p>
-				The current version is 2.5.1-fork (September 16 2022).
+				The current version is 2.5.2-fork (September 27 2022).
 				<br>
 				<a href="#CHANGELOG">View the Changelog.</a>
 			</p>
@@ -1907,6 +1907,17 @@ KEY NfUpdate (NfUpdate)</p>
 			<h2 id="CHANGELOG" name="CHANGELOG">▶ Changelog - <a href="#">[↑]</a></h2>
 <p>This project's changelog. Versions marked with "-fork" come from the community, other versions come from the canonical LWT ("official" branch on Git).
 For git tags, official releases are marked like "v1.0.0", while unofficial ones are marked like "v1.0.0-fork".</p>
+<h3>2.5.2-fork (September 27 2022)</h3>
+<h4>Changed</h4>
+<ul>
+<li>Refactored <code>upload_words.php</code>.</li>
+</ul>
+<h4>Fixed</h4>
+<ul>
+<li>Multi-words insertion for languages using no space is now repaired! Thanks to <a href="https://github.com/gaoxiangluke">@gaoxiangluke</a> for signaling it (<a href="https://github.com/HugoFara/lwt/issues/38">#38</a>).</li>
+<li>Terms import (<code>upload_words.php</code>) can now be used with <code>@@GLOBAL.local_infile</code> (MySQL) set to 0.</li>
+<li>Deleted a parasite ";" that was displayed after importing terms.</li>
+</ul>
 <h3>2.5.1-fork (September 16 2022)</h3>
 <h4>Fixed</h4>
 <ul>
@@ -1917,6 +1928,12 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 </ul>
 </li>
 <li>The WordPress binding scripts had multiple issues as reported in <a href="https://github.com/HugoFara/lwt/issues/41">#41</a>, thanks <a href="https://github.com/Redmattski">@Redmattski</a>!</li>
+</ul>
+<h4>Full Changelog</h4>
+<ul>
+<li>
+<a href="https://github.com/HugoFara/lwt/compare/2.5.0...2.5.1">2.5.0...2.5.1</a>
+</li>
 </ul>
 <h3>2.5.0-fork (July 08 2022)</h3>
 <h4>Added</h4>
@@ -2414,7 +2431,7 @@ mobile compatibility.</p>
 <h3>1.6.25-fork (January 31 2016):</h3>
 <h4>Added</h4>
 <ul>
-<li>Added German Feed 'NachDenkSeiten'(url:'http://www.nachdenkseiten.de/?feed=audiopodcast', Article Section:'//encoded/p', Options:'Article Source:encoded') to DemoDatabase.</li>
+<li>Added German Feed <a href="http://www.nachdenkseiten.de/?feed=audiopodcast">NachDenkSeiten</a> to DemoDatabase.</li>
 <li>Added saved expressions to CheckText.</li>
 </ul>
 <h4>Changed</h4>
@@ -2693,10 +2710,10 @@ mobile compatibility.</p>
 <h3>1.6.0-fork (September 12 2014):</h3>
 <h4>Added</h4>
 <ul>
-<li>New Feature: Longer (&gt;9) expressions can now be saved</li>
-<li>New Feature: TextToSpeech support for words added</li>
-<li>New Feature: experimental google api (use 'ggl.php' instead of '*<a href="http://translate.google.com">http://translate.google.com</a>' for google translate)</li>
-<li>New Feature: new word select mode in read texts (hold down mouse button)</li>
+<li>Longer (&gt;9) expressions can now be saved</li>
+<li>TextToSpeech support for words added</li>
+<li>Experimental google api (use 'ggl.php' instead of '*<a href="http://translate.google.com">http://translate.google.com</a>' for google translate)</li>
+<li>New word select mode in read texts (hold down mouse button)</li>
 </ul>
 <h4>Changed</h4>
 <ul>
@@ -2778,7 +2795,7 @@ mobile compatibility.</p>
 </ul>
 <h4>Fixed</h4>
 <ul>
-<li>Removed an erroneous extra space in "wp_logincheck.inc.php". Thanks to a poster in the help forum for pointing this out!</li>
+<li>Removed an erroneous extra space in "wp_logincheck.inc.php". Thanks to a post in the help forum for pointing this out!</li>
 <li>Minor bug fixes.</li>
 </ul>
 <h3>1.5.12 (July 16 2013):</h3>

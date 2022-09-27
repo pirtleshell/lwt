@@ -4,9 +4,14 @@ Changelog
 This project's changelog. Versions marked with "-fork" come from the community, other versions come from the canonical LWT ("official" branch on Git).
 For git tags, official releases are marked like "v1.0.0", while unofficial ones are marked like "v1.0.0-fork".
 
-## [Unreleased]
+## 2.5.2-fork (September 27 2022)
+### Changed
+* Refactored ``upload_words.php``.
+
 ### Fixed
 * Multi-words insertion for languages using no space is now repaired! Thanks to [@gaoxiangluke](https://github.com/gaoxiangluke) for signaling it ([#38](https://github.com/HugoFara/lwt/issues/38)).
+* Terms import (``upload_words.php``) can now be used with ``@@GLOBAL.local_infile`` (MySQL) set to 0.
+* Deleted a parasite ";" that was displayed after importing terms. 
 
 ## 2.5.1-fork (September 16 2022)
 ### Fixed
