@@ -3301,8 +3301,8 @@ function texttodocount2($textid): string
         FROM ' . $tbpref . 'languages, ' . $tbpref . 'texts 
         WHERE LgID = TxLgID and TxID = ' . $textid
     );
-    $tl = preg_replace('/.*[?&]tl=([a-zA-Z\-]*)(&.*)*$/', '$1', $dict);
-    $sl = preg_replace('/.*[?&]sl=([a-zA-Z\-]*)(&.*)*$/', '$1', $dict);
+    $tl = preg_replace('/.*[?&]tl=([a-zA-Z\-]*)(&.*)*$/', '$1', $dict ?: "");
+    $sl = preg_replace('/.*[?&]sl=([a-zA-Z\-]*)(&.*)*$/', '$1', $dict ?: "");
     
     $res = '<span title="To Do" class="status0">&nbsp;' . $c . '&nbsp;</span>&nbsp;';
     //$res .='<img src="icn/script-import.png" onclick="showRightFrames(\'bulk_translate_words.php?tid=10&offset=0&sl=fr&tl=en\');" style="cursor: pointer;vertical-align:middle" title="Lookup New Words" alt="Lookup New Words" />&nbsp;&nbsp;&nbsp;'; 
