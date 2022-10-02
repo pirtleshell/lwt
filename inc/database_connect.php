@@ -25,24 +25,22 @@ function do_mysqli_query($sql)
 {
     global $DBCONNECTION;
     $res = mysqli_query($DBCONNECTION, $sql);
-    if ($res == false) {
-        echo '</select></p></div>
-        <div style="padding: 1em; color:red; font-size:120%; background-color:#CEECF5;">' .
-        '<p><b>Fatal Error in SQL Query:</b> ' . 
-        tohtml($sql) . 
-        '</p>' . 
-        '<p><b>Error Code &amp; Message:</b> [' . 
-        mysqli_errno($DBCONNECTION) . 
-        '] ' . 
-        tohtml(mysqli_error($DBCONNECTION)) . 
-        "</p></div><hr /><pre>Backtrace:\n\n";
-        debug_print_backtrace();
-        echo '</pre><hr />';
-        die('</body></html>');
+    if ($res != false) {
+        return $res;
     }
-    else {
-        return $res; 
-    }
+    echo '</select></p></div>
+    <div style="padding: 1em; color:red; font-size:120%; background-color:#CEECF5;">' .
+    '<p><b>Fatal Error in SQL Query:</b> ' . 
+    tohtml($sql) . 
+    '</p>' . 
+    '<p><b>Error Code &amp; Message:</b> [' . 
+    mysqli_errno($DBCONNECTION) . 
+    '] ' . 
+    tohtml(mysqli_error($DBCONNECTION)) . 
+    "</p></div><hr /><pre>Backtrace:\n\n";
+    debug_print_backtrace();
+    echo '</pre><hr />';
+    die('</body></html>');
 }
 
 /**
@@ -1215,20 +1213,19 @@ function check_text($sql, $rtlScript, $wl)
             + v[1] + (v[2]==""?"":' — ' + v[2]) + '</span></li>';
         }
         );
-    $('#check_text').append(h);
-    h = '</ul><p>TOTAL: ' + WORDS.length 
+    h += '</ul><p>TOTAL: ' + WORDS.length 
     + '</p><h4>Expression List</span></h4><ul class="expressionlist">';
     $.each(MWORDS, function (k,v) {
         h+= '<li><span>[' + v[0] + '] — ' + v[1] + 
         (v[2]==""?"":' — ' + v[2]) + '</span></li>';
     });
-    $('#check_text').append(h);
-    h = '</ul><p>TOTAL: ' + MWORDS.length + 
+    h += '</ul><p>TOTAL: ' + MWORDS.length + 
     '</p><h4>Non-Word List</span></h4><ul class="nonwordlist">';
     $.each(NOWORDS, function(k,v) {
         h+= '<li>[' + v[0] + '] — ' + v[1] + '</li>';
     });
-    $('#check_text').append(h + '</ul><p>TOTAL: ' + NOWORDS.length +'</p>');
+    h += '</ul><p>TOTAL: ' + NOWORDS.length + '</p>'
+    $('#check_text').append(h);
 </script>
 
     <?php
@@ -1349,11 +1346,11 @@ function splitCheckText($text, $lid, $id)
     $wl = array();
     $wl_max = 0;
     $mw_sql = '';
-    $sql = "SELECT LgRightToLeft FROM " . $tbpref . "languages WHERE LgID=" . $lid;
+    $sql = "SELECT LgRightToLeft FROM {$tbpref}languages WHERE LgID=$lid";
     $res = do_mysqli_query($sql);
     $record = mysqli_fetch_assoc($res);
     // Just checking if LgID exists with ID should be enough
-    if ($record == false) { 
+    if ($record == false) {
         my_die("Language data not found: $sql"); 
     }
     $rtlScript = $record['LgRightToLeft'];
@@ -1379,8 +1376,8 @@ function splitCheckText($text, $lid, $id)
 
     $res = do_mysqli_query(
         "SELECT WoWordCount AS word_count, count(WoWordCount) AS cnt 
-        FROM " . $tbpref . "words 
-        WHERE WoLgID = " . $lid . " AND WoWordCount > 1 
+        FROM {$tbpref}words 
+        WHERE WoLgID = $lid AND WoWordCount > 1 
         GROUP BY WoWordCount"
     );
     while ($record = mysqli_fetch_assoc($res)){
@@ -1393,7 +1390,7 @@ function splitCheckText($text, $lid, $id)
     }
     mysqli_free_result($res);
     $sql = '';
-    // Text has expressions
+    // Text has multi-words
     if (!empty($wl)) {
         $sql = check_text_with_expressions($id, $lid, $wl, $wl_max, $mw_sql);
     }
@@ -1402,9 +1399,9 @@ function splitCheckText($text, $lid, $id)
     }
     // Check text
     if ($id == -1) {
-        check_text($sql, $rtlScript, $wl);
+        check_text($sql, (bool)$rtlScript, $wl);
     }
-    do_mysqli_query('TRUNCATE TABLE ' . $tbpref . 'temptextitems');
+    do_mysqli_query("TRUNCATE TABLE {$tbpref}temptextitems");
 }
 
 

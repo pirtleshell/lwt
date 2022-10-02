@@ -4,6 +4,10 @@ Changelog
 This project's changelog. Versions marked with "-fork" come from the community, other versions come from the canonical LWT ("official" branch on Git).
 For git tags, official releases are marked like "v1.0.0", while unofficial ones are marked like "v1.0.0-fork".
 
+## [Unreleased]
+### Fixed
+* Left-to-right languages where displayed as right-to-left when checking them, as signaled in [pull request #42](https://github.com/HugoFara/lwt/pull/42), thanks [@Helioza](https://github.com/Heliozoa)!
+
 ## 2.5.2-fork (September 27 2022)
 ### Changed
 * Refactored ``upload_words.php``.
