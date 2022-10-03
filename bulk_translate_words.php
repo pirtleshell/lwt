@@ -14,12 +14,7 @@ if (isset($_REQUEST["offset"])) {
     $pos = $_REQUEST["offset"]; 
 }
 if (isset($_REQUEST['term'])) {
-    $cnt=0;
-    $sqltext = 'INSERT INTO ' . $tbpref . 'words (
-        WoLgID, WoTextLC, WoText, WoStatus, WoTranslation, WoSentence, 
-        WoRomanization, WoStatusChanged,' .  
-        make_score_random_insert_update('iv') . '
-    ) values ';
+    $cnt = 0;
     $sqlarr = array();
     foreach ($_REQUEST['term'] as $row){
         $sqlarr[] =  '(' . 
@@ -40,22 +35,23 @@ if (isset($_REQUEST['term'])) {
         ')';
         $cnt++;
     }
-    if (isset($pos)) {
-        $pos-=$cnt;
-    }
-    $sqltext .= rtrim(implode(',', $sqlarr), ',');
-    $max = get_first_value('select max(WoID) as value from ' . $tbpref . 'words');
+    $sqltext = "INSERT INTO {$tbpref}words (
+        WoLgID, WoTextLC, WoText, WoStatus, WoTranslation, WoSentence, 
+        WoRomanization, WoStatusChanged,' .  
+        make_score_random_insert_update('iv') . '
+    ) VALUES " . rtrim(implode(',', $sqlarr), ',');
     runsql($sqltext, '');
-    pagestart($cnt . ' New Word' . ($cnt!=1?'s':'') . ' Saved', false);
+    $tooltip_mode = getSettingWithDefault('set-tooltip-mode');
+    $max = get_first_value("SELECT max(WoID) AS value FROM {$tbpref}words");
+    $res = do_mysqli_query(
+        "SELECT WoID, WoTextLC, WoStatus, WoTranslation 
+        FROM {$tbpref}words 
+        where WoID > $max"
+    );
+    pagestart($cnt . ' New Word' . ($cnt != 1 ? 's' : '') . ' Saved', false);
     echo '<p id="displ_message"><img src="icn/waiting2.gif" /> Updating Texts</p>';
     flush();
-    $res = do_mysqli_query(
-        'select WoID, WoTextLC, WoStatus, WoTranslation 
-        from ' . $tbpref . 'words 
-        where WoID > ' . $max
-    );
     echo '<script type="text/javascript">var context = window.parent.frames[\'l\'].document;';
-    $tooltip_mode = getSettingWithDefault('set-tooltip-mode');
     while ($record = mysqli_fetch_assoc($res)){
         $hex = strToClassName(prepare_textdata($record["WoTextLC"]));
         echo '$(".TERM',$hex,'",context)
@@ -74,7 +70,7 @@ if (isset($_REQUEST['term'])) {
                     );
                 }
             )'; 
-        } else { 
+        } else {
             echo ".attr('title','')"; 
         }
         echo ";\n";
@@ -83,10 +79,10 @@ if (isset($_REQUEST['term'])) {
     echo "</script>";
     flush();
     do_mysqli_query(
-        'UPDATE ' . $tbpref . 'textitems2 
-        join ' . $tbpref . 'words 
-        on lower(Ti2Text)=WoTextLC AND Ti2WordCount=1 AND Ti2LgID=WoLgID AND WoID > ' . $max . ' 
-        set Ti2WoID = WoID'
+        "UPDATE {$tbpref}textitems2 
+        JOIN {$tbpref}words 
+        ON lower(Ti2Text)=WoTextLC AND Ti2WordCount=1 AND Ti2LgID=WoLgID AND WoID>$max 
+        SET Ti2WoID = WoID"
     );
     echo "<script type=\"text/javascript\">
     $('#learnstatus', window.parent.document)
@@ -98,6 +94,9 @@ if (isset($_REQUEST['term'])) {
     }
     echo "</script>";
     flush();
+    if (isset($pos)) {
+        $pos -= $cnt;
+    }
 } else {
     pagestart_nobody('Translate New Words');
 }
