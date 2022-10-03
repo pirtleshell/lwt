@@ -3287,9 +3287,9 @@ function texttodocount2($textid): string
         $textid = (int) $textid;
     }
     $c = get_first_value(
-        'SELECT count(DISTINCT LOWER(Ti2Text)) AS value 
-        FROM ' . $tbpref . 'textitems2 
-        WHERE Ti2WordCount=1 AND Ti2WoID=0 AND Ti2TxID=' . $textid
+        "SELECT COUNT(DISTINCT LOWER(Ti2Text)) AS value 
+        FROM {$tbpref}textitems2 
+        WHERE Ti2WordCount=1 AND Ti2WoID=0 AND Ti2TxID=$textid"
     );
     if ($c <= 0) {
         return '<span title="To Do" class="status0">&nbsp;' . $c . '&nbsp;</span>'; 
@@ -3297,17 +3297,24 @@ function texttodocount2($textid): string
     $show_buttons = getSettingWithDefault('set-words-to-do-buttons');
     
     $dict = get_first_value(
-        'SELECT LgGoogleTranslateURI AS value 
-        FROM ' . $tbpref . 'languages, ' . $tbpref . 'texts 
-        WHERE LgID = TxLgID and TxID = ' . $textid
+        "SELECT LgGoogleTranslateURI AS value 
+        FROM {$tbpref}languages, {$tbpref}texts 
+        WHERE LgID = TxLgID and TxID = $textid"
     );
-    $tl = preg_replace('/.*[?&]tl=([a-zA-Z\-]*)(&.*)*$/', '$1', $dict ?: "");
-    $sl = preg_replace('/.*[?&]sl=([a-zA-Z\-]*)(&.*)*$/', '$1', $dict ?: "");
+    if ($dict) {
+        $tl = preg_replace('/.*[?&]tl=([a-zA-Z\-]*)(&.*)*$/', '$1', $dict);
+        $sl = preg_replace('/.*[?&]sl=([a-zA-Z\-]*)(&.*)*$/', '$1', $dict);
+    } else {
+        // (2.5.2-fork) For future version of LWT: do not use google uri to 
+        // find language code
+        $tl = $sl = "";
+    }
     
-    $res = '<span title="To Do" class="status0">&nbsp;' . $c . '&nbsp;</span>&nbsp;';
-    //$res .='<img src="icn/script-import.png" onclick="showRightFrames(\'bulk_translate_words.php?tid=10&offset=0&sl=fr&tl=en\');" style="cursor: pointer;vertical-align:middle" title="Lookup New Words" alt="Lookup New Words" />&nbsp;&nbsp;&nbsp;'; 
-    $res .='<img src="icn/script-import.png" onclick="showRightFrames(\'bulk_translate_words.php?tid=' . $textid . '&offset=0&sl=' . $sl . '&tl=' . $tl . '\');" style="cursor: pointer;vertical-align:middle" title="Lookup New Words" alt="Lookup New Words" />&nbsp;&nbsp;&nbsp;';
-    if ($show_buttons != 2) { 
+    $res = '<span title="To Do" class="status0">&nbsp;' . $c . '&nbsp;</span>&nbsp;' .
+    '<img src="icn/script-import.png" onclick="showRightFrames(\'bulk_translate_words.php?tid=' . 
+    $textid . '&offset=0&sl=' . $sl . '&tl=' . $tl . 
+    '\');" style="cursor: pointer;vertical-align:middle" title="Lookup New Words" alt="Lookup New Words" />&nbsp;&nbsp;&nbsp;';
+    if ($show_buttons != 2) {
         $res .= '<input type="button" onclick="iknowall(' . $textid . ');" value=" I KNOW ALL " />'; 
     }
     if ($show_buttons != 1) { 
