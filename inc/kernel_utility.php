@@ -274,6 +274,8 @@ function find_latin_sentence_end($matches, $noSentenceEnd)
  * @param string $text Error text to output
  *
  * @return never
+ * 
+ * @since 2.5.3-fork Add a link to the Discord community
  */
 function my_die($text) 
 {
@@ -282,8 +284,10 @@ function my_die($text)
     tohtml($text) . 
     "</p></div><hr /><pre>Backtrace:\n\n";
     debug_print_backtrace();
-    echo '</pre><hr />';
-    echo '<a href="https://github.com/HugoFara/lwt/issues/new/choose">Signal this issue.</a>';
+    echo '</pre><hr />
+    <p>Signal this issue on 
+    <a href="https://github.com/HugoFara/lwt/issues/new/choose">GitHub</a> or 
+    <a href="https://discord.gg/xrkRZR2jtt">Discord</a>.</p>';
     die('</body></html>');
 }
 
