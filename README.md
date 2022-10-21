@@ -4,6 +4,7 @@
 [![PHP Version Require](https://poser.pugx.org/hugofara/lwt/require/php)](https://packagist.org/packages/hugofara/lwt)
 ![Composer Continuous Integration](https://github.com/hugofara/lwt/actions/workflows/php.yml/badge.svg)
 [![Docker Image CI](https://github.com/HugoFara/lwt/actions/workflows/docker-image.yml/badge.svg)](https://github.com/HugoFara/lwt/actions/workflows/docker-image.yml)
+[![Discord Server](https://badgen.net/discord/members/zAE8GXMKFa?icon=discord)](https://discord.gg/zAE8GXMKFa)
 
 **Learning with Texts** (LWT) is a tool for language learning by reading. It is a self-hosted web application.
 
@@ -124,7 +125,8 @@ Any other branch if considered under development.
 ## Useful links
 * General documentation at [docs/info.html](https://hugofara.github.io/lwt/docs/info.html).
 * Please find more help at [docs/index.html](https://hugofara.github.io/lwt/docs/index.html).
-* You can also contact the community by GitHub.
+* You can also contact the community using [GitHub](https://github.com/hugofara/lwt) or 
+[Discord](https://discord.gg/zAE8GXMKFa).
 
 ## Alternatives
 * *See also*: [docs/links.md](docs/links.md)

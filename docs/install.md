@@ -1,17 +1,18 @@
 # LWT Installation
-* *Last update*: July 08 2022
+* *Last update*: October 21 2022
 
 Let's install the LWT server. LWT uses a client-server architecture, which means it 
 will run in your browser as a classical website. You can use any computer as the 
 server, here are some ways to do it. 
 
 ## Windows 10/11
+Two main softwares can be used to set up a local server on your computer: XAMPP and EasyPHP. We recommand XAMPP because it supports higher PHP version, but feel free to use any softare you like.
 
 ### Possibility (a): Using XAMPP
 
 1. Install XAMPP
-   1. Go to https://www.apachefriends.org/download.html 
-   2. Download "XAMPP for Windows 7.3.30 (64 bit)" (or a higher PHP 7 version).
+   1. Go to https://www.apachefriends.org/download.html
+   2. Download "XAMPP for **Windows**". PHP starting from 7.4 is supported, we recommend PHP 8.
    3. Open your Downloads folder and run the downloaded "xampp-windows-x64-xxx-installer.exe". Please install the components Apache, MySQL, PHP and phpMyAdmin into the folder C:\xampp.
 
 2. Get the [latest GitHub release](https://github.com/HugoFara/lwt/releases), unzip it.
@@ -20,19 +21,19 @@ server, here are some ways to do it.
 
 3. Now go into "C:\xampp\htdocs\lwt". Rename the file "connect_xampp.inc.php" to "connect.inc.php". Sometimes the "php" extension is hidden, so be careful! You can display file extensions via the Windows Explorer settings and check it.
 
-4. Start LWT 
+4. Start LWT server
    1. Start the "XAMPP Control Panel" ("C:\xampp\xampp-control.exe") and start the two modules Apache and MySQL. Now the two module names should have a green background color. 
    2. LWT can now be started. Open a browser, and open http://localhost/lwt (please bookmark).
 
-5. You may now install the LWT demo database, or define the first language you want to learn. 
+5. You may now define the first language you want to learn or install the LWT demo database. 
 
-If you start up Windows, you must repeat Step 5a+b. 
+If you start up Windows, you must repeat steps 4 and 5. 
 
-If you want to start "XAMPP Control Panel" every time you start Windows and to avoid Step 5a, put a "XAMPP Control Panel" link to "C:\xampp\xampp-control.exe" into "C:\Users\(YourUID)\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup". To autostart also the Apache and MySQL modules, please open "Config" within the XAMPP Control Panel and check the two checkboxes.
+If you want to start "XAMPP Control Panel" every time you start Windows and to avoid Step 4.1, put a "XAMPP Control Panel" link to "C:\xampp\xampp-control.exe" into "C:\Users\(YourUID)\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup". To autostart also the Apache and MySQL modules, please open "Config" within the XAMPP Control Panel and check the two checkboxes.
 
-Hint: To fix a "XAMPP Control Panel" error "Xampp-control.ini Access is denied", please read and do the instructions in https://www.codermen.com/fix-xampp-server-error-xampp-control-ini-access-is-denied/
+> Hint: To fix a "XAMPP Control Panel" error "Xampp-control.ini Access is denied", please read and do the instructions in https://www.codermen.com/fix-xampp-server-error-xampp-control-ini-access-is-denied/
 
-Now you must only do step 5b to start LWT.
+Now you must only do step 4.2 to start LWT.
 
 
 ### Possibility (b): Using EasyPHP
@@ -60,23 +61,21 @@ Now you must only do step 5b to start LWT.
    1. Start EasyPHP via Desktop Icon (Devserver 17). In the Task Bar near the clock appears the EasyPHP app icon (it may be hidden!).
    2. LWT can now be started. Right-Click on the EasyPHP icon in the taskbar, choose "Servers->Start/Restart all Servers", open a browser, and open http://127.0.0.1/lwt (please bookmark).
 
-7. You may now install the LWT demo database, or define the first language you want to learn. 
+7. You may now define the first language you want to learn or install the LWT demo database. 
 
-If you start up Windows, you must repeat Step 6a+b. 
+If you start up EasyPHP, you must repeat step 5.1 and 5.2. 
 
-If you want to start EasyPHP every time you start Windows and avoid Step 6a, put an EasyPHP link into "C:\Users\(YourUID)\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup". 
+If you want to start EasyPHP every time you start Windows and avoid step 5.1, put an EasyPHP link into "C:\Users\(YourUID)\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup". 
 
-Now you must only do step 6b to start LWT.
+Now you must only do step 5.2 to start LWT.
 
 ## macOS 10.10+
+> This session may be obsolete! Your help is welcomed!
 
-I no longer use Apple hardware. 
-Therefore, I cannot test LWT itself and the following installation instructions on a Mac.
-Your help is very much appreciated.
 
 1. Go to https://www.mamp.info/en/downloads/
 
-2. Download "MAMP & MAMP PRO" (currently version 6.5).
+2. Download "MAMP & MAMP PRO" (currently version 6.6).
 
 3. Double-click on the downloaded installation package "MAMP_MAMP_PRO_xxx.pkg", accept the license, click on "Install for all users..." and on "Continue", on the next panel titled "Standard Install on Macintosh HD" click on "Customize", deselect "MAMP PRO", and click Install. You must enter your password. After this step MAMP is installed within a folder named "MAMP" in the Applications folder.
 
@@ -84,15 +83,15 @@ Your help is very much appreciated.
     
    You can also try to download the [latest stable version](https://github.com/HugoFara/lwt/archive/refs/heads/master.zip) if you want the cutting-edge updates (that may include some bugs)
 
-5. Go to /Applications/MAMP/htdocs/lwt. Rename the file connect_mamp.inc.php to connect.inc.php.
+5. Go to ``/Applications/MAMP/htdocs/lwt``. Rename the file ``connect_mamp.inc.php`` to ``connect.inc.php``.
 
-6. Open MAMP.app in /Applications/MAMP. Accept the messages from the firewall. Apache and MySQL start automatically.
+6. Open ``MAMP.app`` in ``/Applications/MAMP``. Accept the messages from the firewall. Apache and MySQL start automatically.
 
 7. LWT can now be started in your web browser, go to: http://localhost:8888/lwt.
 
-8. You may install the LWT demo database, or define the first language you want to learn. 
+8. You may define the first language you want to learn or install the LWT demo database. 
 
-If you want to use LWT again, just do step 8 and 9.
+If you want to use LWT again, just do steps 6 and 7.
 The local webserver (MAMP) will be automatically stopped by quitting the MAMP application. 
 
 ## Linux
@@ -156,6 +155,7 @@ The following instruction were tested on Raspbian Stretch.
 If you want to use LWT again, just do step 7.
 
 ## Run in a [Docker](https://docs.docker.com/get-docker/) container
+> Currently being repaired! See [issue #37](https://github.com/HugoFara/lwt/issues/37) for more details!
 It is the easiest way to install LWT, but the drawback is that it will use more or 
 less 1 GB on your system. 
 
@@ -197,3 +197,6 @@ The official repository is at https://packagist.org/packages/hugofara/lwt.
 4. Copy the following (if not already at its place and OK) from your LWT backup into the LWT directory: "connect.inc.php" and the whole "media" sub-directory (if you created one; contains your MP3 audio files).
 
 5. Clear the web browser cache and open LWT as usual. 
+
+## Something Went Wrong
+Need more help? You can contact us through  [GitHub](https://github.com/HugoFara/lwt/issues) and [Discord](https://discord.gg/xrkRZR2jtt)!
