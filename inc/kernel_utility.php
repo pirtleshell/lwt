@@ -493,6 +493,9 @@ function url_base(): string
  * Make a random score for a new word.
  * 
  * @param 'iv'|'id'|'u'|string $type Type of insertion
+ *        * 'iv': Keys only (TodayScore, Tomorrow, Random)
+ *        * 'id': Values only
+ *        * 'u': Key = value pairs
  * 
  * @return string SQL code to use
  */

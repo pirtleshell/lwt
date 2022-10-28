@@ -547,7 +547,7 @@ THE SOFTWARE.</p>
 			<h2 id="install" name="install">▶ LWT Installation - <a href="#">[↑]</a></h2>
 <ul>
 <li>
-<em>Last update</em>: October 21 2022</li>
+<em>Last update</em>: October 28 2022</li>
 </ul>
 <p>Let's install the LWT server. LWT uses a client-server architecture, which means it
 will run in your browser as a classical website. You can use any computer as the
@@ -637,7 +637,7 @@ server, here are some ways to do it.</p>
 <p>Now you must only do step 5.2 to start LWT.</p>
 <h3>macOS 10.10+</h3>
 <blockquote>
-<p>This session may be obsolete! Your help is welcomed!</p>
+<p>This section may be obsolete! Your help is welcome!</p>
 </blockquote>
 <ol>
 <li>
@@ -1920,10 +1920,18 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 <ul>
 <li>Links to the Discord community (<code>README.md</code> and <code>inc/kernel_utility.php</code>).</li>
 </ul>
+<h4>Changed</h4>
+<ul>
+<li>Renamed <code>connect_mamp.php</code> to <code>connect_mamp.inc.php</code> for consistency with documentation.</li>
+<li>"I KNOW ALL" button becomes "Set All to Known" and "IGNORE ALL" becomes "Ignore All".</li>
+<li>Changed the messages when clicking "Set All to Known".</li>
+<li>Uncomplete code linting in <code>bulk_translate_words.php</code>. For phone users, it now properly focuses on the main screen after use.</li>
+</ul>
 <h4>Fixed</h4>
 <ul>
 <li>Left-to-right languages where displayed as right-to-left when checking them, as signaled in <a href="https://github.com/HugoFara/lwt/pull/42">pull request #42</a>, thanks <a href="https://github.com/Heliozoa">@Helioza</a>!</li>
 <li>People who didn't fill the URL for Google Translate were seeing deprecation warnings while using using the <code>bulk_translate</code> functionality (clicking in "TO DO" for editing multiple new words). Bulk translate itself is not fixed, but warnings are no longer displayed. Merged <a href="https://github.com/HugoFara/lwt/pull/42">pull request #44</a>, from <a href="https://github.com/Heliozoa">@Helioza</a>.</li>
+<li>Setting all words to well-known was resulting in a crash when no words were added as well-known (<code>all_words_wellknown.php</code>).</li>
 </ul>
 <h3>2.5.2-fork (September 27 2022)</h3>
 <h4>Changed</h4>
