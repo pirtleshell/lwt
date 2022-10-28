@@ -37,8 +37,8 @@ if (isset($_REQUEST['term'])) {
     }
     $sqltext = "INSERT INTO {$tbpref}words (
         WoLgID, WoTextLC, WoText, WoStatus, WoTranslation, WoSentence, 
-        WoRomanization, WoStatusChanged,' .  
-        make_score_random_insert_update('iv') . '
+        WoRomanization, WoStatusChanged," .  
+        make_score_random_insert_update('iv') . "
     ) VALUES " . rtrim(implode(',', $sqlarr), ',');
     runsql($sqltext, '');
     $tooltip_mode = getSettingWithDefault('set-tooltip-mode');
@@ -51,7 +51,7 @@ if (isset($_REQUEST['term'])) {
     pagestart($cnt . ' New Word' . ($cnt != 1 ? 's' : '') . ' Saved', false);
     echo '<p id="displ_message"><img src="icn/waiting2.gif" /> Updating Texts</p>';
     flush();
-    echo '<script type="text/javascript">var context = window.parent.frames[\'l\'].document;';
+    echo '<script type="text/javascript">var context = window.parent.document;';
     while ($record = mysqli_fetch_assoc($res)){
         $hex = strToClassName(prepare_textdata($record["WoTextLC"]));
         echo '$(".TERM',$hex,'",context)
@@ -75,8 +75,8 @@ if (isset($_REQUEST['term'])) {
         }
         echo ";\n";
     }
-    mysqli_free_result($res);
     echo "</script>";
+    mysqli_free_result($res);
     flush();
     do_mysqli_query(
         "UPDATE {$tbpref}textitems2 
@@ -89,7 +89,7 @@ if (isset($_REQUEST['term'])) {
     .html('",addslashes(texttodocount2($tid)),"');
     $('#displ_message').remove();";
     if (!isset($pos)) {
-        echo "window.parent.getElementById('frame-l').focus();
+        echo "window.parent.document.getElementById('frame-l').focus();
         window.parent.setTimeout('cClick()', 100);";
     }
     echo "</script>";
@@ -285,22 +285,65 @@ function googleTranslateElementInit() {
 }
 </script>
 <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-    <?php
-    echo '<form name="form1" action="', $_SERVER['PHP_SELF'], '" method="post">
+<script type="text/javascript">
+    function markAll() {
+        $('input[type^=submit]').val('Save');
+        selectToggle(true, 'form1');
+        $('[name^=term]').prop('disabled', false);
+    }
+
+    function markNone() {
+        let v;
+        if(!$('input[name^=offset]').length) {
+            v = 'End'; 
+        } else {
+            v = 'Next';
+        } 
+        $('input[type^=submit]').val(v);
+        selectToggle(false,'form1');
+        $('[name^=term]').prop('disabled', true);
+    }
+
+    function changeTermToggles(elem) {
+        const v = elem.val();
+        if (v==6) {
+            $('.markcheck:checked').each(function() {
+                e=$('#Term_' + elem.val()).children('.term');
+                e.text(e.text().toLowerCase());
+                $('#Text_' + elem.val()).val(e.text().toLowerCase());
+            });
+            elem.prop('selectedIndex',0);
+            return false;
+        } 
+        if(v==7){
+            $('.markcheck:checked').each(function() {
+                $('#Trans_' + elem.val() + ' input').val('*');
+            });
+            elem.prop('selectedIndex',0);
+            return false;
+        }
+        $('.markcheck:checked').each(function() {
+            $('#Stat_' + elem.val()).val(v);
+        });
+        elem.prop('selectedIndex', 0);
+        return false;
+    }
+</script>
+    <form name="form1" action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post">
     <span class="notranslate">
         <div id="google_translate_element"></div>
         <table class="tab3" cellspacing="0">
         <tr class="notranslate">
             <th class="th1 center" colspan="3">
-                <input type="button" value="Mark All" onclick="$(\'input[type^=submit]\').val(\'Save\');selectToggle(true,\'form1\');$(\'[name^=term]\').prop(\'disabled\', false);" />
-                <input type="button" value="Mark None" onclick="if(!$(\'input[name^=offset]\').length)v=\'End\';else v=\'Next\';$(\'input[type^=submit]\').val(v);selectToggle(false,\'form1\');$(\'[name^=term]\').prop(\'disabled\', true);" />
+                <input type="button" value="Mark All" onclick="markAll()" />
+                <input type="button" value="Mark None" onclick="markNone()" />
                 <br />
             </th>
         </tr>
         <tr class="notranslate">
             <td class="td1">Marked Terms: </td>
             <td class="td1">
-                <select onchange="v=$(this).val();if(v==6){$(\'.markcheck:checked\').each(function(){e=$(\'#Term_\' + $(this).val()).children(\'.term\');e.text(e.text().toLowerCase());$(\'#Text_\' + $(this).val()).val(e.text().toLowerCase());});$(this).prop(\'selectedIndex\',0);return false;}if(v==7){$(\'.markcheck:checked\').each(function(){$(\'#Trans_\' + $(this).val() + \' input\').val(\'*\');});$(this).prop(\'selectedIndex\',0);return false;}$(\'.markcheck:checked\').each(function(){$(\'#Stat_\' + $(this).val()).val(v);});$(this).prop(\'selectedIndex\',0);return false;">
+                <select onchange="changeTermToggles($(this));">
                     <option value="0" selected="selected">[Choose...]</option>
                     <option value="1">Set Status To [1]</option>
                     <option value="2">Set Status To [2]</option>
@@ -325,8 +368,8 @@ function googleTranslateElementInit() {
             <th class="th1" style="min-width:5em;">Term</th>
             <th class="th1">Translation</th>
             <th class="th1">Status</th>
-        </tr>';
-
+        </tr>
+    <?php
     $res = do_mysqli_query(
         'select Ti2Text as word,Ti2LgID,min(Ti2Order) as pos 
         from ' . $tbpref . 'textitems2 
@@ -368,7 +411,12 @@ function googleTranslateElementInit() {
         }
     }
     mysqli_free_result($res);
-    echo '</table><input type="hidden" name="tid" value="',$tid,'" />', $offset ,'</form>';
+    ?>
+    </table>
+    <input type="hidden" name="tid" value="<?php echo $tid ?>" />
+    <?php echo $offset ?>
+    </form>
+    <?php
 }
 pageend();
 ?>

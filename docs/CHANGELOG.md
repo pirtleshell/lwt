@@ -12,6 +12,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 * Renamed ``connect_mamp.php`` to ``connect_mamp.inc.php`` for consistency with documentation.
 * "I KNOW ALL" button becomes "Set All to Known" and "IGNORE ALL" becomes "Ignore All".
 * Changed the messages when clicking "Set All to Known".
+* Uncomplete code linting in ``bulk_translate_words.php``. For phone users, it now properly focuses on the main screen after use.
 
 ### Fixed
 * Left-to-right languages where displayed as right-to-left when checking them, as signaled in [pull request #42](https://github.com/HugoFara/lwt/pull/42), thanks [@Helioza](https://github.com/Heliozoa)!
