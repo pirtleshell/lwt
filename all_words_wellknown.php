@@ -48,29 +48,31 @@ function all_words_wellknown_get_words($txid)
  * @param int    $langid Language ID
  * 
  * @return array<int, string> Number of rows edited and a javascript query.
+ * 
+ * @since 2.5.3-fork Do not crash when echoing an error
  */
 function all_words_wellknown_process_word($status, $term, $termlc, $langid)
 {
     global $tbpref;
     $message = runsql(
-        'INSERT INTO ' . $tbpref . 'words (
-            WoLgID, WoText, WoTextLC, WoStatus, WoStatusChanged,' 
+        "INSERT INTO {$tbpref}words (
+            WoLgID, WoText, WoTextLC, WoStatus, WoStatusChanged," 
             . make_score_random_insert_update('iv') . 
-        ') 
-        VALUES( ' . 
-            $langid . ', ' . 
-            convert_string_to_sqlsyntax($term) . ', ' . 
-            convert_string_to_sqlsyntax($termlc) . ', ' . $status . ' , NOW(), ' .  
+        ") 
+        VALUES( 
+            $langid, " . 
+            convert_string_to_sqlsyntax($term) . ", " . 
+            convert_string_to_sqlsyntax($termlc) . ", $status, NOW(), " .  
             make_score_random_insert_update('id') .
-        ')', 
+        ")", 
         ''
     );
     if (!is_numeric($message)) {
-        my_die('ERROR: Could not modify words! Message: ' + $message);
+        my_die('ERROR: Could not modify words! Message: ' . $message);
     }
     if ((int)$message == 0) {
         error_message_with_hide(
-            'WARNING: No rows modified! Message: ' + $message, 
+            'WARNING: No rows modified! Message: ' . $message, 
             false
         );
     }
@@ -129,13 +131,15 @@ function all_words_wellknown_main_loop($txid, $status)
  * @param int $count  Number of edited words. 
  * 
  * @return void
+ * 
+ * @since 2.5.3-fork Improved messages (more clear, and can handle singular/plural)
  */
 function all_words_wellknown_count_terms($status, $count)
 {
     if ($status == 98) {
-        echo "<p>OK, you ignore all " . $count . " word(s)!</p>"; 
+        echo "<p>Ignored all $count word" . ($count > 1 ? 's' : '') . "!</p>"; 
     } else {
-        echo "<p>OK, you know all " . $count . " word(s) well!</p>"; 
+        echo "<p>You know all $count word" . ($count > 1 ? 's' : '') . " well!</p>"; 
     }
 }
 
