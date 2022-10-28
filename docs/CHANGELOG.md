@@ -8,6 +8,9 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 ### Added
 * Links to the Discord community (``README.md`` and ``inc/kernel_utility.php``).
 
+### Changed
+* Renamed ``connect_mamp.php`` to ``connect_mamp.inc.php`` for consistency with documentation.
+
 ### Fixed
 * Left-to-right languages where displayed as right-to-left when checking them, as signaled in [pull request #42](https://github.com/HugoFara/lwt/pull/42), thanks [@Helioza](https://github.com/Heliozoa)!
 * People who didn't fill the URL for Google Translate were seeing deprecation warnings while using using the ``bulk_translate`` functionality (clicking in "TO DO" for editing multiple new words). Bulk translate itself is not fixed, but warnings are no longer displayed. Merged [pull request #44](https://github.com/HugoFara/lwt/pull/42), from [@Helioza](https://github.com/Heliozoa).
