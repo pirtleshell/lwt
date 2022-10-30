@@ -50,34 +50,44 @@ function all_words_wellknown_get_words($txid)
  * @return array<int, string> Number of rows edited and a javascript query.
  * 
  * @since 2.5.3-fork Do not crash when echoing an error
+ * @since 2.5.3-fork Do not crash when a word is already registred to the database
  */
 function all_words_wellknown_process_word($status, $term, $termlc, $langid)
 {
     global $tbpref;
-    $message = runsql(
-        "INSERT INTO {$tbpref}words (
-            WoLgID, WoText, WoTextLC, WoStatus, WoStatusChanged," 
-            . make_score_random_insert_update('iv') . 
-        ") 
-        VALUES( 
-            $langid, " . 
-            convert_string_to_sqlsyntax($term) . ", " . 
-            convert_string_to_sqlsyntax($termlc) . ", $status, NOW(), " .  
-            make_score_random_insert_update('id') .
-        ")", 
-        ''
+    $wid = get_first_value(
+        "SELECT WoID as value 
+        FROM words 
+        WHERE WoTextLC = '$termlc'"
     );
-    if (!is_numeric($message)) {
-        my_die('ERROR: Could not modify words! Message: ' . $message);
-    }
-    if ((int)$message == 0) {
-        error_message_with_hide(
-            'WARNING: No rows modified! Message: ' . $message, 
-            false
+    if ($wid !== null) {
+        $rows = 0;
+    } else {
+        $message = runsql(
+            "INSERT INTO {$tbpref}words (
+                WoLgID, WoText, WoTextLC, WoStatus, WoStatusChanged," 
+                . make_score_random_insert_update('iv') . 
+            ") 
+            VALUES( 
+                $langid, " . 
+                convert_string_to_sqlsyntax($term) . ", " . 
+                convert_string_to_sqlsyntax($termlc) . ", $status, NOW(), " .  
+                make_score_random_insert_update('id') .
+            ")", 
+            ''
         );
+        if (!is_numeric($message)) {
+            my_die('ERROR: Could not modify words! Message: ' . $message);
+        }
+        if ((int)$message == 0) {
+            error_message_with_hide(
+                'WARNING: No rows modified! Message: ' . $message, 
+                false
+            );
+        }
+        $rows = (int) $message;
+        $wid = get_last_key();
     }
-    $rows = (int) $message;
-    $wid = get_last_key();
     $javascript = '';
     if (getSettingWithDefault('set-tooltip-mode') == 1 && $rows > 0) {
         $javascript .= "title = make_tooltip(" . 
@@ -135,12 +145,27 @@ function all_words_wellknown_main_loop($txid, $status)
  * @since 2.5.3-fork Improved messages (more clear, and can handle singular/plural)
  */
 function all_words_wellknown_count_terms($status, $count)
-{
+{   
+    $message = "<p>";
     if ($status == 98) {
-        echo "<p>Ignored all $count word" . ($count > 1 ? 's' : '') . "!</p>"; 
+        if ($count > 1) {
+            $message .= "Ignored all $count words!";
+        } else if ($count == 1) {
+            $message .= "Ignored 1 word.";
+        } else {
+            $message .= "No new word ignored!";
+        } 
     } else {
-        echo "<p>You know all $count word" . ($count > 1 ? 's' : '') . " well!</p>"; 
+        if ($count > 1) {
+            $message .= "You know all $count words well!";
+        } else if ($count == 1) {
+            $message .= "1 new word added as known";
+        } else {
+            $message .= "No new known word added!";
+        } 
     }
+    $message .= "</p>";
+    echo $message;
 }
 
 /**
