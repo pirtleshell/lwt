@@ -131,6 +131,16 @@ function all_words_wellknown_main_loop($txid, $status)
         $count += $modified_rows;
     }
     mysqli_free_result($res);
+
+    // Associate existing textitems.
+    runsql(
+        "UPDATE {$tbpref}words 
+        JOIN {$tbpref}textitems2 
+        ON Ti2WoID=0 AND lower(Ti2Text)=WoTextLC AND Ti2LgID = WoLgID 
+        SET Ti2WoID=WoID", 
+        ''
+    );
+
     return array($count, $javascript);
 }
 
