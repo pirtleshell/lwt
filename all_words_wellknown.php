@@ -76,11 +76,11 @@ function all_words_wellknown_process_word($status, $term, $termlc, $langid)
             ''
         );
         if (!is_numeric($message)) {
-            my_die('ERROR: Could not modify words! Message: ' . $message);
+            my_die("ERROR: Could not modify words! Message: $message");
         }
         if ((int)$message == 0) {
             error_message_with_hide(
-                'WARNING: No rows modified! Message: ' . $message, 
+                "WARNING: No rows modified! Message: $message", 
                 false
             );
         }
@@ -90,14 +90,13 @@ function all_words_wellknown_process_word($status, $term, $termlc, $langid)
     $javascript = '';
     if (getSettingWithDefault('set-tooltip-mode') == 1 && $rows > 0) {
         $javascript .= "title = make_tooltip(" . 
-        prepare_textdata_js($term) . ", '*', '', '" . $status . 
-        "');";
+        prepare_textdata_js($term) . ", '*', '', '$status');";
     }
     $javascript .= "$('.TERM" . strToClassName($termlc) . "', context)
     .removeClass('status0')
-    .addClass('status" . $status . " word" . $wid . "')
-    .attr('data_status', '" . $status . "')
-    .attr('data_wid', '" . $wid . "')
+    .addClass('status$status word$wid')
+    .attr('data_status', '$status')
+    .attr('data_wid', '$wid')
     .attr('title', title);";
     return array($rows, $javascript);
 }
@@ -137,8 +136,8 @@ function all_words_wellknown_main_loop($txid, $status)
     runsql(
         "UPDATE {$tbpref}words 
         JOIN {$tbpref}textitems2 
-        ON Ti2WoID=0 AND lower(Ti2Text)=WoTextLC AND Ti2LgID = WoLgID 
-        SET Ti2WoID=WoID", 
+        ON Ti2WoID = 0 AND LOWER(Ti2Text) = WoTextLC AND Ti2LgID = WoLgID 
+        SET Ti2WoID = WoID", 
         ''
     );
 
