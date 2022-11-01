@@ -56,9 +56,8 @@ function all_words_wellknown_process_word($status, $term, $termlc, $langid)
 {
     global $tbpref;
     $wid = get_first_value(
-        "SELECT WoID as value 
-        FROM words 
-        WHERE WoTextLC = '$termlc'"
+        "SELECT WoID AS value FROM words 
+        WHERE WoTextLC = " . convert_string_to_sqlsyntax($termlc)
     );
     if ($wid !== null) {
         $rows = 0;
@@ -110,17 +109,19 @@ function all_words_wellknown_process_word($status, $term, $termlc, $langid)
  * @param int $status New status to apply to all words.
  * 
  * @return array<int,string> Number of edited words, 
- *                           and JavaScript query to change their display  
+ *                           and JavaScript query to change their display
+ * 
+ * @since 2.5.3-fork Use 'let' instead of 'var' in returned JS
  */
 function all_words_wellknown_main_loop($txid, $status)
 {
     global $tbpref;
     $langid = get_first_value(
         "SELECT TxLgID AS value 
-        FROM " . $tbpref . "texts 
-        WHERE TxID = " . $txid
+        FROM {$tbpref}texts 
+        WHERE TxID = $txid"
     );
-    $javascript = "var title='';";
+    $javascript = "let title='';";
     $count = 0;
     $res = all_words_wellknown_get_words($txid);
     while ($record = mysqli_fetch_assoc($res)) {
