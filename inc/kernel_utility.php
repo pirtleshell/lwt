@@ -319,7 +319,7 @@ function quickMenu(): void
     <optgroup label="Other">
         <option value="backup_restore">Backup/Restore</option>
         <option value="settings">Settings</option>
-        <option value="tts">Text-to-Speech Settings</option>
+        <option value="text_to_speech_settings">Text-to-Speech Settings</option>
         <option value="INFO">Help</option>
     </optgroup>
 </select>
