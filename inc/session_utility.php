@@ -3315,10 +3315,10 @@ function texttodocount2($textid): string
     $textid . '&offset=0&sl=' . $sl . '&tl=' . $tl . 
     '\');" style="cursor: pointer;vertical-align:middle" title="Lookup New Words" alt="Lookup New Words" />&nbsp;&nbsp;&nbsp;';
     if ($show_buttons != 2) {
-        $res .= '<input type="button" onclick="iknowall(' . $textid . ');" value=" I KNOW ALL " />'; 
+        $res .= '<input type="button" onclick="iknowall(' . $textid . ');" value=" Set All to Known " />'; 
     }
     if ($show_buttons != 1) { 
-        $res .= '<input type="button" onclick="ignoreall(' . $textid . ');" value=" IGNORE ALL " />'; 
+        $res .= '<input type="button" onclick="ignoreall(' . $textid . ');" value=" Ignore All " />'; 
     }
     return $res;
 }

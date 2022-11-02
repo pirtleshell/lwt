@@ -319,7 +319,7 @@ function quickMenu(): void
     <optgroup label="Other">
         <option value="backup_restore">Backup/Restore</option>
         <option value="settings">Settings</option>
-        <option value="tts">Text-to-Speech Settings</option>
+        <option value="text_to_speech_settings">Text-to-Speech Settings</option>
         <option value="INFO">Help</option>
     </optgroup>
 </select>
@@ -493,6 +493,9 @@ function url_base(): string
  * Make a random score for a new word.
  * 
  * @param 'iv'|'id'|'u'|string $type Type of insertion
+ *        * 'iv': Keys only (TodayScore, Tomorrow, Random)
+ *        * 'id': Values only
+ *        * 'u': Key = value pairs
  * 
  * @return string SQL code to use
  */

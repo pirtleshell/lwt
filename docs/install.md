@@ -1,5 +1,5 @@
 # LWT Installation
-* *Last update*: October 21 2022
+* *Last update*: October 28 2022
 
 Let's install the LWT server. LWT uses a client-server architecture, which means it 
 will run in your browser as a classical website. You can use any computer as the 
@@ -70,7 +70,7 @@ If you want to start EasyPHP every time you start Windows and avoid step 5.1, pu
 Now you must only do step 5.2 to start LWT.
 
 ## macOS 10.10+
-> This session may be obsolete! Your help is welcomed!
+> This section may be obsolete! Your help is welcome!
 
 
 1. Go to https://www.mamp.info/en/downloads/
