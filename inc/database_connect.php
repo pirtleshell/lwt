@@ -566,7 +566,8 @@ function optimizedb(): void
  * 
  * @global string $tbpref Database table prefix.
  */
-function update_japanese_word_count($japid) {
+function update_japanese_word_count($japid)
+{
     global $tbpref;
         
     // STEP 1: write the useful info to a file
@@ -710,7 +711,8 @@ function init_word_count(): void
  * @deprecated Use init_word_count: same effect, but more logical name. Will be 
  * removed in version 3.0.0.
  */
-function set_word_count() {
+function set_word_count()
+{
     init_word_count();
 }
 

@@ -102,12 +102,12 @@ function delete_word_javascript($wid, $tid)
         .attr('data_wid', '')
         .attr('title', title)
         .removeAttr("data_img");
-        $('#learnstatus', context).html('<?= addslashes(texttodocount2($tid)); ?>');
+        $('#learnstatus', context).html('<?php echo addslashes(texttodocount2($tid)); ?>');
         window.parent.document.getElementById('frame-l').focus();
         window.parent.setTimeout('cClick()', 100);
     }
 
-    delete_word(<?= $wid; ?>);
+    delete_word(<?php echo $wid; ?>);
     //]]>
 </script>
     <?php

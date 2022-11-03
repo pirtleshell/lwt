@@ -3353,7 +3353,8 @@ function getSentence($seid, $wordlc, $mode): array
     $splitEachChar = $record['LgSplitEachChar'];
     $txtid = $record["SeTxID"];
     if (($removeSpaces==1 && $splitEachChar==0) 
-    || 'MECAB'== strtoupper(trim($record["LgRegexpWordCharacters"]))) {
+        || 'MECAB'== strtoupper(trim($record["LgRegexpWordCharacters"]))
+    ) {
         $text = $record["SeText"];
         $wordlc = '[​]*' . preg_replace('/(.)/u', "$1[​]*", $wordlc);
         $pattern = '/(?<=[​])(' . $wordlc . ')(?=[​])/ui';
@@ -3736,7 +3737,8 @@ function insert_expression_from_mecab($text, $lid, $wid, $len)
             $arr = explode("\t", $row, 4);
             // Not a word (punctuation)
             if (empty($arr[0]) || $arr[0] == "EOS" 
-            || strpos("2 6 7", $arr[1]) === false) {
+                || strpos("2 6 7", $arr[1]) === false
+            ) {
                 continue;
             }
             // A word in sentence but not in selected multi-word
@@ -3812,7 +3814,8 @@ function insertExpressionFromMeCab($textlc, $lid, $wid, $len, $mode)
  * 
  * @global string $tbpref Table name prefix
  */
-function insert_standard_expression($textlc, $lid, $wid, $len, $mode) {
+function insert_standard_expression($textlc, $lid, $wid, $len, $mode)
+{
     global $tbpref;
     $appendtext = array();
     $sqlarr = array();
@@ -3859,8 +3862,8 @@ function insert_standard_expression($textlc, $lid, $wid, $len, $mode) {
         $last_pos = mb_strripos($string, $textlc, 0, 'UTF-8');
         // For each occurence of query in sentence
         while ($last_pos !== false) {
-            if ($splitEachChar || $removeSpaces || 
-            preg_match($notermchar, " $string ", $matches, 0, $last_pos - 1)
+            if ($splitEachChar || $removeSpaces  
+                || preg_match($notermchar, " $string ", $matches, 0, $last_pos - 1)
             ) {
                 // Number of terms before group
                 $cnt = preg_match_all(
@@ -3908,15 +3911,15 @@ function new_expression_interactable($hex, $appendtext, $sid, $len): void
     ?>
 <script type="text/javascript">
     newExpressionInteractable(
-        <?= json_encode($appendtext); ?>, 
-        ' class="click mword <?= $showAll; ?>wsty TERM<?= $hex; ?> word' + 
+        <?php echo json_encode($appendtext); ?>, 
+        ' class="click mword <?php echo $showAll; ?>wsty TERM<?php echo $hex; ?> word' + 
     woid + ' status' + status + '" data_trans="' + trans + '" data_rom="' + 
-    roman + '" data_code="<?= $len; ?>" data_status="' + 
+    roman + '" data_code="<?php echo $len; ?>" data_status="' + 
     status + '" data_wid="' + woid + 
     '" title="' + title + '"' ,
-        <?= json_encode($len); ?>, 
-        <?= json_encode($hex); ?>,
-        <?= json_encode(!$showAll); ?>
+        <?php echo json_encode($len); ?>, 
+        <?php echo json_encode($hex); ?>,
+        <?php echo json_encode(!$showAll); ?>
     );
  </script>
     <?php
@@ -3959,12 +3962,12 @@ function new_expression_interactable2($hex, $appendtext, $wid, $len): void
 
     ?>
 <script type="text/javascript">
-    let term = <?= json_encode($attrs); ?>;
+    let term = <?php echo json_encode($attrs); ?>;
 
     let title = '';
     if (window.parent.JQ_TOOLTIP) 
         title = make_tooltip(
-            <?= json_encode($appendtext); ?>, term.data_trans, term.data_rom, 
+            <?php echo json_encode($appendtext); ?>, term.data_trans, term.data_rom, 
             parseInt(term.data_status, 10)
         );
     term['title'] = title;
@@ -3973,11 +3976,11 @@ function new_expression_interactable2($hex, $appendtext, $wid, $len): void
     // keys(term).map((k) => k + '="' + term[k] + '"').join(" ");
     
     newExpressionInteractable(
-        <?= json_encode($appendtext); ?>, 
+        <?php echo json_encode($appendtext); ?>, 
         attrs,
-        <?= json_encode($len); ?>, 
-        <?= json_encode($hex); ?>,
-        <?= json_encode(!$showAll); ?>
+        <?php echo json_encode($len); ?>, 
+        <?php echo json_encode($hex); ?>,
+        <?php echo json_encode(!$showAll); ?>
     );
  </script>
     <?php
@@ -3987,13 +3990,13 @@ function new_expression_interactable2($hex, $appendtext, $wid, $len): void
 /**
  * Alter the database to add a new word
  * 
- * @param  string $textlc Text in lower case
- * @param  string $lid    Language ID
- * @param  string $len
- * @param  int    $mode   Function mode
- *                        - 0: Default mode, do nothing special
- *                        - 1: Runs an expresion inserter interactable 
- *                        - 2: Return the sql output
+ * @param string $textlc Text in lower case
+ * @param string $lid    Language ID
+ * @param string $len
+ * @param int    $mode   Function mode
+ *                       - 0: Default mode, do nothing special
+ *                       - 1: Runs an expresion inserter interactable 
+ *                       - 2: Return the sql output
  * 
  * @return string|null If $mode == 2 return values to insert in textitems2, 
  *                     nothing otherwise.
@@ -4020,8 +4023,8 @@ function insertExpressions($textlc, $lid, $wid, $len, $mode)
         );
     } else {
         list($appendtext, $_, $sqlarr) = insert_standard_expression(
-                $textlc, $lid, $wid, $len, null
-            );
+            $textlc, $lid, $wid, $len, null
+        );
     }
     $sqltext = null;
     if (!empty($sqlarr)) {
@@ -4090,10 +4093,9 @@ function restore_file($handle, $title): string
         );
         if ($sql_line != "") {
             if ($start) {
-                if (
-                    strpos($sql_line, "-- lwt-backup-") === false && 
-                    strpos($sql_line, "-- lwt-exp_version-backup-") === false
-                    ) {
+                if (strpos($sql_line, "-- lwt-backup-") === false  
+                    && strpos($sql_line, "-- lwt-exp_version-backup-") === false
+                ) {
                     $message = "Error: Invalid $title Restore file " .
                     "(possibly not created by LWT backup)";
                     $errors = 1;
