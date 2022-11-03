@@ -253,9 +253,8 @@ function find_latin_sentence_end($matches, $noSentenceEnd)
         if (strlen($matches[1]) < 3) { 
             return $matches[0];
         }
-    } else if (
-        $matches[3] && (preg_match('/^[B-DF-HJ-NP-TV-XZb-df-hj-np-tv-xz][b-df-hj-np-tv-xzñ]*$/u', $matches[1]) || preg_match('/^[AEIOUY]$/', $matches[1]))
-        ) { 
+    } else if ($matches[3] && (preg_match('/^[B-DF-HJ-NP-TV-XZb-df-hj-np-tv-xz][b-df-hj-np-tv-xzñ]*$/u', $matches[1]) || preg_match('/^[AEIOUY]$/', $matches[1]))
+    ) { 
         return $matches[0]; 
     }
     if (preg_match('/[.:]/', $matches[2]) && preg_match('/^[a-z]/', $matches[7])) {
@@ -493,9 +492,9 @@ function url_base(): string
  * Make a random score for a new word.
  * 
  * @param 'iv'|'id'|'u'|string $type Type of insertion
- *        * 'iv': Keys only (TodayScore, Tomorrow, Random)
- *        * 'id': Values only
- *        * 'u': Key = value pairs
+ *                                   * 'iv': Keys only (TodayScore, Tomorrow, Random)
+ *                                   * 'id': Values only
+ *                                   * 'u': Key = value pairs
  * 
  * @return string SQL code to use
  */
