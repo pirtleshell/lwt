@@ -4049,8 +4049,22 @@ function insertExpressions($textlc, $lid, $wid, $len, $mode)
     }
 }
 
-// -------------------------------------------------------------
 
+/*
+ * Restore the database from a file.
+ * 
+ * @param resource $handle Backup file handle
+ * @param string   $title  File title
+ * 
+ * @return string Human-readable status message
+ * 
+ * @global string $trbpref Database table prefix
+ * @global int    $debug   Debug status
+ * @global string $dbname  Database name
+ * 
+ * @since 2.0.3-fork Function was broken
+ * @since 2.5.3-fork Function repaired
+ */
 function restore_file($handle, $title): string 
 {
     global $tbpref;
@@ -4064,7 +4078,7 @@ function restore_file($handle, $title): string
     $inserts = 0;
     $creates = 0;
     $start = 1;
-    while (! gzeof($handle)) {
+    while (!gzeof($handle)) {
         $sql_line = trim(
             str_replace(
                 "\r", "",
@@ -4075,9 +4089,13 @@ function restore_file($handle, $title): string
             )
         );
         if ($sql_line != "") {
-            if($start) {
-                if (strpos($sql_line, "-- lwt-backup-") === false and strpos($sql_line, "-- lwt-exp_version-backup-") === false) {
-                    $message = "Error: Invalid " . $title . " Restore file (possibly not created by LWT backup)";
+            if ($start) {
+                if (
+                    strpos($sql_line, "-- lwt-backup-") === false && 
+                    strpos($sql_line, "-- lwt-exp_version-backup-") === false
+                    ) {
+                    $message = "Error: Invalid $title Restore file " .
+                    "(possibly not created by LWT backup)";
                     $errors = 1;
                     break;
                 }
@@ -4085,42 +4103,41 @@ function restore_file($handle, $title): string
                 continue;
             }
             if (substr($sql_line, 0, 3) !== '-- ' ) {
-                $res = mysqli_query($GLOBALS['DBCONNECTION'], insert_prefix_in_sql($sql_line));
+                $res = mysqli_query(
+                    $GLOBALS['DBCONNECTION'], 
+                    insert_prefix_in_sql($sql_line)
+                );
                 $lines++;
-                if ($res == false) { $errors++; 
-                }
-                else {
+                if ($res == false) { 
+                    $errors++; 
+                } else {
                     $ok++;
                     if (substr($sql_line, 0, 11) == "INSERT INTO") { 
                         $inserts++; 
-                    }
-                    elseif (substr($sql_line, 0, 10) == "DROP TABLE") { 
+                    } else if (substr($sql_line, 0, 10) == "DROP TABLE") { 
                         $drops++;
-                    } elseif (substr($sql_line, 0, 12) == "CREATE TABLE") { 
+                    } else if (substr($sql_line, 0, 12) == "CREATE TABLE") { 
                         $creates++;
                     }
                 }
-                // echo $ok . " / " . tohtml(insert_prefix_in_sql($sql_line)) . "<br />";
             }
         }
     } // while (! feof($handle))
     gzclose($handle);
     if ($errors == 0) {
-        runsql('DROP TABLE IF EXISTS ' . $tbpref . 'textitems', '');
+        runsql("DROP TABLE IF EXISTS {$tbpref}textitems", '');
         check_update_db($debug, $tbpref, $dbname);
         reparse_all_texts();
         optimizedb();
         get_tags(1);
         get_texttags(1);
-        $message = "Success: " . $title . " restored - " .
-        $lines . " queries - " . $ok . 
-        " successful (" . $drops . "/" . $creates . " tables dropped/created, " . $inserts . " records added), " . 
-        $errors . " failed.";
+        $message = "Success: $title restored - $lines queries - $ok successful (" . 
+        "$drops/$creates tables dropped/created, $inserts records added), " . 
+        "$errors failed.";
     } else if ($message == "") {
-        $message = "Error: " . $title . " NOT restored - " .
-        $lines . " queries - " . $ok . 
-        " successful (" . $drops . "/" . $creates . " tables dropped/created, " . $inserts . " records added), " . 
-        $errors . " failed.";
+        $message = "Error: $title NOT restored - $lines queries - $ok successful (" .
+        "$drops/$creates tables dropped/created, $inserts records added), ". 
+        "$errors failed.";
     }
     return $message;
 }
