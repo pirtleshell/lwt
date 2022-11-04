@@ -3605,24 +3605,6 @@ function get20Sentences($lang, $wordlc, $wid, $jsctlname, $mode): string
 }
 
 
-// -------------------------------------------------------------
-
-function areUnknownWordsInSentence($sentno): bool 
-{
-    global $tbpref;
-    $x = get_first_value(
-        "SELECT DISTINCT Ti2Text AS value 
-        FROM " . $tbpref . "textitems2 
-        WHERE Ti2SeID = " . $sentno . " AND Ti2WordCount = 1 AND Ti2WoID = 0 
-        LIMIT 1"
-    );
-    if (isset($x) && $x == '') {
-        return true;
-    }
-    return false;
-}
-
-
 /**
  * Return a dictionary of languages name - id
  * 
