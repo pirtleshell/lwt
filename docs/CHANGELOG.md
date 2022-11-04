@@ -13,6 +13,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 * "I KNOW ALL" button becomes "Set All to Known" and "IGNORE ALL" becomes "Ignore All".
 * Changed the messages when clicking "Set All to Known" or "Ignore All".
 * Uncomplete code linting in ``bulk_translate_words.php``. For phone users, it now properly focuses on the main screen after use.
+* Only sentences containing more than 70% of known words are shown were testing sentences. Based on an idea from [#53](https://github.com/HugoFara/lwt/issues/53).
 
 ### Fixed
 * Left-to-right languages where displayed as right-to-left when checking them, as signaled in [pull request #42](https://github.com/HugoFara/lwt/pull/42), thanks [@Helioza](https://github.com/Heliozoa)!
@@ -23,6 +24,8 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
   * Words were not updated in the view unless reparsing the text ([#48](https://github.com/HugoFara/lwt/pull/48)). Merged pull request [#49](https://github.com/HugoFara/lwt/pull/49). 
 * In the main dropdown menu, the option "Text-to-Speech Settings" was still leading to ``tts.php`` (now ``text_to_speech_settings.php``). Merged pull request [#51](https://github.com/HugoFara/lwt/pull/51), thanks [@jzohrab](https://github.com/jzohrab).
 * Fixed the database restoration, apparently broken since 2.0.3-fork. Pull request [#56](https://github.com/HugoFara/lwt/pull/56) by [@jzohrab](https://github.com/jzohrab).
+* Sentences with unknown words were showned in test when it was not supposed to be the case ([#52](https://github.com/HugoFara/lwt/issues/52)).
+
 
 ## 2.5.2-fork (September 27 2022)
 ### Changed
