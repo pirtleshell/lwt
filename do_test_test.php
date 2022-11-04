@@ -32,20 +32,24 @@ function get_test_sql()
     global $tbpref;
     if (isset($_REQUEST['selection']) && isset($_SESSION['testsql'])) { 
         $testsql = $_SESSION['testsql'];
-        $cntlang = get_first_value('SELECT count(distinct WoLgID) AS value FROM ' . $testsql);
+        $cntlang = get_first_value(
+            "SELECT COUNT(DISTINCT WoLgID) AS value 
+            FROM $testsql"
+        );
         if ($cntlang > 1) {
             //pagestart('', false);
-            echo '<p>Sorry - The selected terms are in ' . $cntlang . ' languages, but tests are only possible in one language at a time.</p>';
+            echo "<p>Sorry - The selected terms are in $cntlang languages," . 
+            " but tests are only possible in one language at a time.</p>";
             //pageend();
             exit();
         }
     } else if (isset($_REQUEST['lang'])) {
-        $testsql = ' ' . $tbpref . 'words where WoLgID = ' . $_REQUEST['lang'] . ' ';
+        $testsql = " {$tbpref}words WHERE WoLgID = " . $_REQUEST['lang'] . " ";
     } else if (isset($_REQUEST['text'])) {
-        $testsql = ' ' . $tbpref . 'words, ' . $tbpref . 'textitems2 
-        WHERE Ti2LgID = WoLgID AND Ti2WoID = WoID AND Ti2TxID = ' . $_REQUEST['text'] . ' ';
-    } else { 
-        //$testsql = '';
+        $testsql = " {$tbpref}words, {$tbpref}textitems2 
+        WHERE Ti2LgID = WoLgID AND Ti2WoID = WoID AND Ti2TxID = " . 
+        $_REQUEST['text'] . " ";
+    } else {
         //$title = 'Request Error!';
         //pagestart($title, true);
         my_die("do_test_test.php called with wrong parameters"); 
@@ -110,9 +114,9 @@ function do_test_test_css()
 function do_test_test_finished($testsql, $totaltests)
 {
     $count2 = get_first_value(
-        'SELECT count(distinct WoID) AS value 
-        FROM ' . $testsql . ' AND WoStatus BETWEEN 1 AND 5 
-        AND WoTranslation != \'\' AND WoTranslation != \'*\' AND WoTomorrowScore < 0'
+        "SELECT COUNT(DISTINCT WoID) AS value 
+        FROM $testsql AND WoStatus BETWEEN 1 AND 5 
+        AND WoTranslation != '' AND WoTranslation != '*' AND WoTomorrowScore < 0"
     );
     echo '<p class="center">
             <img src="img/ok.png" alt="Done!" />
@@ -120,14 +124,17 @@ function do_test_test_finished($testsql, $totaltests)
             <span class="red2">
                 Nothing ' . ($totaltests ? 'more ' : '') . 'to test here!
                 <br /><br />
-                Tomorrow you\'ll find here ' . $count2 . ' test' . ($count2 == 1 ? '' : 's') . '!
+                Tomorrow you\'ll find here ' . $count2 . ' test' . 
+                ($count2 == 1 ? '' : 's') . '!
             </span>
         </p>
     </div>';
 }
 
 /**
- * Get a sentence containing the word.
+ * Get a sentence containing the word. 
+ * 
+ * The sentence should contain at least 70% of known words.
  * 
  * @param int    $wid    The word to test.
  * @param string $lang   ID of the language
@@ -136,57 +143,60 @@ function do_test_test_finished($testsql, $totaltests)
  * @global string $tbpref Table prefix
  * @global int    $debug  Echo the passage number if 1. 
  * 
- * @return array{0: int, 1: int} Sentence with escaped word and a confirmation number if sentence was found.
+ * @return array{0: string|null, 1: int} Sentence with escaped word and not a 0 
+ *                                       if sentence was found.
+ * 
+ * @since 2.5.3-fork Properly return sentences with at least 70% of known words.
+ *                   Previously, it was supposed to be 100%, but buggy. 
  */
 function do_test_test_sentence($wid, $lang, $wordlc)
 {
     global $debug, $tbpref;
-    $pass = 0;
-    $sentexcl = '';
-    $num = null;
+    $num = 0;
     $sent = null;
-    while ($pass < 3) {
-        $pass++;
+    // Select senetences where at least 70 % of words are known
+    $sql = "SELECT DISTINCT SeID, UnknownRate
+    FROM {$tbpref}sentences
+    JOIN (
+        SELECT total.Ti2SeID, UnknownWords / TotalWords AS UnknownRate
+        FROM (
+            SELECT Ti2SeID, COUNT(*) AS UnknownWords
+            FROM {$tbpref}textitems2
+            WHERE Ti2WordCount = 1 AND Ti2WoID = 0
+            GROUP BY Ti2SeID
+        ) AS unknowns JOIN (
+            SELECT Ti2SeID, COUNT(*) AS TotalWords
+            FROM {$tbpref}textitems2
+            WHERE Ti2WordCount = 1
+            GROUP BY Ti2SeID
+        ) AS total
+        ON unknowns.Ti2SeId = total.Ti2SeId
+    ) AS ti_with_rate 
+    ON SeID = ti_with_rate.Ti2SeID
+    JOIN {$tbpref}textitems2 AS ti_words
+    ON SeID = ti_words.Ti2SeID
+    WHERE Ti2WoID = $wid AND SeLgID = $lang AND UnknownRate < .3
+    ORDER BY RAND() 
+    LIMIT 1";
+    $res = do_mysqli_query($sql);
+    $record = mysqli_fetch_assoc($res);
+    // If sentence found
+    if ($record) {
+        $num = 1;
+        $seid = $record['SeID'];
+        list($_, $sent) = getSentence(
+            $seid, $wordlc, (int)getSettingWithDefault('set-test-sentence-count')
+        );
         if ($debug) { 
-            echo "DEBUG search sent: pass: $pass <br />"; 
+            echo "DEBUG sent: $seid OK: $sent <br />"; 
         }
-        $sql = 'SELECT DISTINCT SeID 
-        FROM ' . $tbpref . 'sentences, ' . $tbpref . 'textitems2 
-        WHERE Ti2WoID = ' . $wid . $sentexcl . ' AND SeID = Ti2SeID AND SeLgID = ' . $lang . ' 
-        ORDER BY rand() LIMIT 1';
-        $res = do_mysqli_query($sql);
-        $record = mysqli_fetch_assoc($res);
-        if ($record) {  // random sent found
-            $num = 1;
-            $seid = $record['SeID'];
-            if (areUnknownWordsInSentence($seid)) {
-                if ($debug) { 
-                    echo "DEBUG sent: $seid has unknown words<br />"; 
-                }
-                $sentexcl = ' AND SeID != ' . $seid . ' ';
-                $num = 0;
-                // not yet found, $num == 0 (unknown words in sent)
-            } else {
-                // echo ' OK ';
-                list($_, $sent) = getSentence(
-                    $seid, $wordlc, (int)getSettingWithDefault('set-test-sentence-count')
-                );
-                if ($debug) { 
-                    echo "DEBUG sent: $seid OK: $sent <br />"; 
-                }
-                $pass = 3;
-                // found, $num == 1
-            }
-        } else {  // no random sent found
-            $num = 0;
-            $pass = 3;
-            if ($debug) { 
-                echo "DEBUG no random sent found<br />"; 
-            }
-            // no sent. take term sent. $num == 0
+    } else {
+        if ($debug) { 
+            echo "DEBUG no random sent found<br />"; 
         }
-        mysqli_free_result($res);
-    } // while ( $pass < 3 )
+    }
+    mysqli_free_result($res);
+        
     return array($sent, $num);
 }
 
@@ -205,7 +215,8 @@ function print_term_test($wo_record, $sent, $testtype, $nosent, $regexword)
 {
     $wid = $wo_record['WoID'];
     $word = $wo_record['WoText'];
-    $trans = repl_tab_nl($wo_record['WoTranslation']) . getWordTagList($wid, ' ', 1, 0);
+    $trans = repl_tab_nl($wo_record['WoTranslation']) . 
+    getWordTagList($wid, ' ', 1, 0);
     $roman = $wo_record['WoRomanization'];
     $status = $wo_record['WoStatus'];
 
@@ -217,7 +228,8 @@ function print_term_test($wo_record, $sent, $testtype, $nosent, $regexword)
     for ($i=0; $i < $l; $i++) {  // go thru sent
         $c = mb_substr($sent, $i, 1, 'UTF-8');
         if ($c == '}') {
-            $r .= ' <span style="word-break:normal;" class="click todo todosty word wsty word' 
+            $r .= ' <span style="word-break:normal;" ' . 
+            'class="click todo todosty word wsty word' 
             . $wid . 
             '" data_wid="' . $wid . '" data_trans="' . tohtml($trans) . 
             '" data_text="' . tohtml($word) . '" data_rom="' . tohtml($roman) . 
@@ -230,12 +242,10 @@ function print_term_test($wo_record, $sent, $testtype, $nosent, $regexword)
             if ($testtype == 2) {
                 if ($nosent) { 
                     $r .= tohtml($trans); 
-                }
-                else { 
+                } else { 
                     $r .= '<span dir="ltr">[' . tohtml($trans) . ']</span>'; 
                 }
-            }
-            elseif ($testtype == 3) { 
+            } elseif ($testtype == 3) { 
                 $r .= tohtml(
                     str_replace(
                         "{", '[', str_replace(
@@ -252,16 +262,13 @@ function print_term_test($wo_record, $sent, $testtype, $nosent, $regexword)
             }
             $r .= '</span> ';
             $on = 0;
-        }
-        elseif ($c == '{') {
+        } elseif ($c == '{') {
             $on = 1;
             $save = '';
-        }
-        else {
+        } else {
             if ($on) { 
                 $save .= $c; 
-            }
-            else { 
+            } else { 
                 $r .= tohtml($c); 
             }
         }
@@ -309,7 +316,7 @@ function prepare_test_area($testsql, $totaltests, $count, $testtype): int
     $record = mysqli_fetch_assoc($res);
     $wb1 = isset($record['LgDict1URI']) ? $record['LgDict1URI'] : "";
     $wb2 = isset($record['LgDict2URI']) ? $record['LgDict2URI'] : "";
-    $wb3 = isset($record['LgGoogleTranslateURI']) ? $record['LgGoogleTranslateURI'] : "";
+    $wb3 = isset($record['LgGoogleTranslateURI'])?$record['LgGoogleTranslateURI']:"";
     $textsize = $record['LgTextSize'];
     $removeSpaces = $record['LgRemoveSpaces'];
     $regexword = $record['LgRegexpWordCharacters'];
@@ -327,14 +334,16 @@ function prepare_test_area($testsql, $totaltests, $count, $testtype): int
     $wordlc = null;
     while ($pass < 2) {
         $pass++;
-        $sql = "SELECT DISTINCT WoID, WoText, WoTextLC, WoTranslation, WoRomanization, 
-        WoSentence, WoLgID, 
-        (IFNULL(WoSentence,'') NOT LIKE CONCAT('%{',WoText,'}%')) AS notvalid, WoStatus, 
+        $sql = "SELECT DISTINCT WoID, WoText, WoTextLC, WoTranslation, 
+        WoRomanization, WoSentence, WoLgID, 
+        (IFNULL(WoSentence, '') NOT LIKE CONCAT('%{', WoText, '}%')) AS notvalid, 
+        WoStatus, 
         DATEDIFF( NOW( ), WoStatusChanged ) AS Days, WoTodayScore AS Score 
-        FROM " . $testsql . " AND WoStatus BETWEEN 1 AND 5 
-        AND WoTranslation != '' AND WoTranslation != '*' 
-        AND WoTodayScore < 0 " . ($pass == 1 ? 'AND WoRandom > RAND()' : '') . ' 
-        ORDER BY WoTodayScore, WoRandom LIMIT 1';
+        FROM $testsql AND WoStatus BETWEEN 1 AND 5 
+        AND WoTranslation != '' AND WoTranslation != '*' AND WoTodayScore < 0 " . 
+        ($pass == 1 ? 'AND WoRandom > RAND()' : '') . ' 
+        ORDER BY WoTodayScore, WoRandom 
+        LIMIT 1';
         if ($debug) { 
             echo 'DEBUG TEST-SQL: ' . $sql . '<br />'; 
         }
@@ -353,23 +362,27 @@ function prepare_test_area($testsql, $totaltests, $count, $testtype): int
     }
     
     if ($num == 0) {
-        // should not occur but...
+        // Should not occur but...
         do_test_test_finished($testsql, $totaltests);
         return 0;
     }
 
-    if ($nosent) {  // No sent. mode 4+5
+    if ($nosent) {
+        // No sentence mode (4+5)
         $num = 0;
         $notvalid = 1;
-    } else { // $nosent == FALSE, mode 1-3
+    } else {
+        // $nosent == FALSE, mode 1-3
         list($sent, $num) = do_test_test_sentence($wid, $lang, $wordlc);
-    }  // $nosent == FALSE
+        if ($sent === null) {
+            $notvalid = 1;
+        }
+    }
 
     if ($num == 0) {
         // take term sent. if valid
         if ($notvalid) {
-            $sent = '{' . $word . '}'; 
-             
+            $sent = "{" . $word . "}";
         }
         if ($debug) { 
             echo "DEBUG not found, use sent = $sent<br />"; 
@@ -382,11 +395,16 @@ function prepare_test_area($testsql, $totaltests, $count, $testtype): int
     'font-size:' . $textsize . '%;
     line-height: 1.4; text-align:center; margin-bottom:300px;">';
     
-    list($r, $save) = print_term_test($record, $sent, $testtype, $nosent, $regexword);
+    list($r, $save) = print_term_test(
+        $record, $sent, $testtype, $nosent, $regexword
+    );
     
-    echo $r;  // Show Sentence
+    // Show Sentence
+    echo $r;
     
-    do_test_test_javascript_interaction($record, $wb1, $wb2, $wb3, $testtype, $nosent, $save);
+    do_test_test_javascript_interaction(
+        $record, $wb1, $wb2, $wb3, $testtype, $nosent, $save
+    );
 
     echo '</p></div>';
 
@@ -396,7 +414,8 @@ function prepare_test_area($testsql, $totaltests, $count, $testtype): int
 /**
  * Prepare JavaScript code so that you can click on words.
  * 
- * @param array  $wo_record Word record. Associative array with keys 'WoID', 'WoTranslation'.
+ * @param array  $wo_record Word record. Associative array with keys 'WoID', 
+ *                          'WoTranslation'.
  * @param string $wb1       URL of the first dictionary.
  * @param string $wb2       URL of the secondary dictionary.
  * @param string $wb3       URL of the google translate dictionary.
@@ -409,12 +428,14 @@ function prepare_test_area($testsql, $totaltests, $count, $testtype): int
  * @global string $tbpref  Database table prefix
  * @global string $angDefs Languages definition array
  */
-function do_test_test_javascript_interaction($wo_record, $wb1, $wb2, $wb3, $testtype, $nosent, $save)
-{
+function do_test_test_javascript_interaction(
+    $wo_record, $wb1, $wb2, $wb3, $testtype, $nosent, $save
+) {
     global $tbpref, $langDefs;
 
     $wid = $wo_record['WoID'];
-    $trans = repl_tab_nl($wo_record['WoTranslation']) . getWordTagList($wid, ' ', 1, 0);
+    $trans = repl_tab_nl($wo_record['WoTranslation']) . 
+    getWordTagList($wid, ' ', 1, 0);
     $lang = get_first_value(
         'SELECT LgName AS value FROM ' . $tbpref . 'languages
         WHERE LgID = ' . $wo_record['WoLgID'] . '
@@ -435,11 +456,6 @@ function do_test_test_javascript_interaction($wo_record, $wb1, $wb2, $wb3, $test
             const text = <?php echo json_encode($phoneticText); ?>;
             const lang = <?php echo json_encode($abbr); ?>;
             readRawTextAloud(text, lang);
-            /*let msg = new SpeechSynthesisUtterance(text);
-            msg.text = text;
-            msg.lang = lang;
-            msg.rate = 0.8;
-            speechSynthesis.speak(msg);*/
         }
     }
 
@@ -586,15 +602,15 @@ function do_test_test_content()
     $totaltests = $_SESSION['testtotal'];
     $testtype = get_test_type();
     $count = get_first_value(
-        'SELECT count(distinct WoID) AS value 
-        FROM ' . $testsql . ' AND WoStatus BETWEEN 1 AND 5 
-        AND WoTranslation != \'\' AND WoTranslation != \'*\' AND WoTodayScore < 0'
+        "SELECT COUNT(DISTINCT WoID) AS value 
+        FROM $testsql AND WoStatus BETWEEN 1 AND 5 
+        AND WoTranslation != '' AND WoTranslation != '*' AND WoTodayScore < 0"
     );
     if ($debug) { 
-        echo 'DEBUG - COUNT TO TEST: ' . $count . '<br />'; 
+        echo "DEBUG - COUNT TO TEST: $count<br />"; 
     }
     if (!is_numeric($count)) {
-        my_die('The number of words left to test is not an integer: "' . $count . '"!');
+        my_die("The number of words left to test is not an integer: \"$count\"!");
     }
     $notyettested = (int) $count;
 
@@ -605,7 +621,9 @@ function do_test_test_content()
 
 }
 
-if (isset($_REQUEST['selection']) || isset($_REQUEST['lang']) || isset($_REQUEST['text'])) {
+if (isset($_REQUEST['selection']) || isset($_REQUEST['lang'])  
+    || isset($_REQUEST['text'])
+) {
     //do_test_test_content();
 }
 
