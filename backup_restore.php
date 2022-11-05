@@ -65,9 +65,11 @@ if (isset($_REQUEST['restore'])) {
             $tbpref . $table, $table, str_replace("\n", " ", $row2[1])
         ) . ";\n";
         if ($table !== 'sentences' && $table !== 'textitems2') {
-            while ($row = mysqli_fetch_row($result)) { // foreach record
+            while ($row = mysqli_fetch_row($result)) { 
+                // foreach record
                 $return = 'INSERT INTO ' . $table . ' VALUES(';
-                for ($j=0; $j < $num_fields; $j++) { // foreach field
+                for ($j=0; $j < $num_fields; $j++) { 
+                    // foreach field
                     $return .= convert_string_to_sqlsyntax_nonull($row[$j]);
                     if ($j < ($num_fields-1)) { 
                         $return .= ','; 
@@ -77,9 +79,9 @@ if (isset($_REQUEST['restore'])) {
             } // foreach record
         } // if
     } // foreach table
-    header('Content-type: application/x-gzip');
-    header("Content-disposition: attachment; filename=" . $fname);
-    echo gzencode($out, 9);
+    header('Content-Type: application/plain');
+    header('Content-Disposition: attachment; filename="' . $fname . '"');
+    echo gzencode($out);
     exit();
 } elseif (isset($_REQUEST['orig_backup'])) {
     $tables = array(
@@ -305,9 +307,9 @@ if (isset($_REQUEST['restore'])) {
         } // if
     } // foreach table
 
-    header('Content-type: application/x-gzip');
-    header("Content-disposition: attachment; filename=" . $fname);
-    echo gzencode($out, 9);
+    header('Content-Type: application/plain');
+    header('Content-Disposition: attachment; filename="' . $fname . '"');
+    echo gzencode($out);
     exit();
 } elseif (isset($_REQUEST['empty'])) {
     // EMPTY
