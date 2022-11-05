@@ -10,6 +10,8 @@
  *  ... backup=xxx ... do backup 
  * ... empty=xxx ... do truncate
  * 
+ * php version 8.1.12
+ * 
  * @package Lwt
  * @author  LWT Project <lwt-project@hotmail.com>
  * @license Unlicense <http://unlicense.org/>
@@ -32,9 +34,9 @@ $num_fields = null;
 $result = null;
 if (isset($_REQUEST['restore'])) {
     // RESTORE
-    if (
-        isset($_FILES["thefile"]) && $_FILES["thefile"]["tmp_name"] != "" && 
-        $_FILES["thefile"]["error"] == 0) {
+    if (isset($_FILES["thefile"]) && $_FILES["thefile"]["tmp_name"] != ""  
+        && $_FILES["thefile"]["error"] == 0
+    ) {
         $handle = gzopen($_FILES["thefile"]["tmp_name"], "r");
         if ($handle === false) {
             // $handle not OK
@@ -56,7 +58,8 @@ if (isset($_REQUEST['restore'])) {
     );
     $fname = "lwt-backup-exp_version-" . $pref . date('Y-m-d-H-i-s') . ".sql.gz";
     $out = "-- " . $fname . "\n";
-    foreach($tables as $table) { // foreach table
+    foreach ($tables as $table) { 
+        // foreach table
         $result = do_mysqli_query('SELECT * FROM ' . $tbpref . $table);
         $num_fields = mysqli_num_fields($result);
         $out .= "\nDROP TABLE IF EXISTS " . $table . ";\n";
@@ -91,7 +94,7 @@ if (isset($_REQUEST['restore'])) {
     $fname = "lwt-backup-" . $pref . date('Y-m-d-H-i-s') . ".sql.gz";
     $out = "-- " . $fname . "\n";
 
-    foreach($tables as $table) {
+    foreach ($tables as $table) {
         if ($table == 'texts') {
             $result = do_mysqli_query(
                 'SELECT TxID, TxLgID, TxTitle, TxText, TxAnnotatedText, TxAudioURI, 
@@ -120,9 +123,8 @@ if (isset($_REQUEST['restore'])) {
                 FROM ' . $tbpref . 'languages where LgName<>""'
             );
             $num_fields = mysqli_num_fields($result);
-        } elseif (
-            $table !== 'sentences' && $table !== 'textitems' && 
-            $table !== 'settings'
+        } elseif ($table !== 'sentences' && $table !== 'textitems'  
+            && $table !== 'settings'
         ) {
             $result = do_mysqli_query('SELECT * FROM ' . $tbpref . $table);
             $num_fields = mysqli_num_fields($result);
@@ -263,7 +265,7 @@ if (isset($_REQUEST['restore'])) {
                 `WoRomanization` varchar(100) DEFAULT NULL,   
                 `WoSentence` varchar(1000) DEFAULT NULL,   
                 `WoCreated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,   
-                `WoStatusChanged` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',   
+                `WoStatusChanged` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
                 `WoTodayScore` double NOT NULL DEFAULT '0',   
                 `WoTomorrowScore` double NOT NULL DEFAULT '0',   
                 `WoRandom` double NOT NULL DEFAULT '0',   
@@ -291,8 +293,7 @@ if (isset($_REQUEST['restore'])) {
             break;
         }
 
-        if (
-            $table !== 'sentences' && $table !== 'textitems' && $table !== 'settings'
+        if ($table !== 'sentences' && $table !== 'textitems' && $table !== 'settings'
         ) {
             while ($row = mysqli_fetch_row($result)) { // foreach record
                 $return = 'INSERT INTO ' . $table . ' VALUES(';
@@ -344,7 +345,8 @@ if ($tbpref == '') {
 }
 
 ?>
-<form enctype="multipart/form-data" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" onsubmit="return confirm('Are you sure?');">
+<form enctype="multipart/form-data" action="<?php echo $_SERVER['PHP_SELF']; ?>" 
+method="post" onsubmit="return confirm('Are you sure?');">
 <table class="tab1" cellspacing="0" cellpadding="5">
     <tr>
         <th class="th1 center">Backup</th>
@@ -361,7 +363,8 @@ if ($tbpref == '') {
         </p>
         <p class="right">
             &nbsp;<br />
-            <input type="submit" name="orig_backup" value="Download OFFICIAL LWT Backup" />
+            <input type="submit" name="orig_backup" 
+            value="Download OFFICIAL LWT Backup" />
             <input type="submit" name="backup" value="Download LWT Backup" />
         </p>
     </td>
@@ -392,7 +395,8 @@ if ($tbpref == '') {
                 <span class="red2">
                     YOU MAY LOSE DATA - BE CAREFUL: &nbsp; &nbsp; &nbsp;
                 </span> 
-                <input type="submit" name="restore" value="Restore from LWT Backup" />
+                <input type="submit" name="restore" 
+                value="Restore from LWT Backup" />
             </p>
         </td>
     </tr>
@@ -406,7 +410,8 @@ if ($tbpref == '') {
             </p>
             <p class="right">
                 &nbsp;<br /> 
-                <input type="button" value="Install LWT Demo Database" onclick="location.href='install_demo.php';" />
+                <input type="button" value="Install LWT Demo Database" 
+                onclick="location.href='install_demo.php';" />
             </p>
         </td>
     </tr>
@@ -429,7 +434,8 @@ if ($tbpref == '') {
     </tr>
     <tr>
         <td class="td1 right" colspan="2"> 
-            <input type="button" value="&lt;&lt; Back" onclick="location.href='index.php';" />
+            <input type="button" value="&lt;&lt; Back" 
+            onclick="location.href='index.php';" />
         </td>
     </tr>
 </table>

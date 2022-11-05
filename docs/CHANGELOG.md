@@ -23,7 +23,9 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
   * Setting all words to well-known was resulting in a crash when multiple words had the same lowercase value. See issue [#46](https://github.com/HugoFara/lwt/issues/46)!
   * Words were not updated in the view unless reparsing the text ([#48](https://github.com/HugoFara/lwt/pull/48)). Merged pull request [#49](https://github.com/HugoFara/lwt/pull/49). 
 * In the main dropdown menu, the option "Text-to-Speech Settings" was still leading to ``tts.php`` (now ``text_to_speech_settings.php``). Merged pull request [#51](https://github.com/HugoFara/lwt/pull/51), thanks [@jzohrab](https://github.com/jzohrab).
-* Fixed the database restoration, apparently broken since 2.0.3-fork. Pull request [#56](https://github.com/HugoFara/lwt/pull/56) by [@jzohrab](https://github.com/jzohrab).
+* Database backup/restoration:
+  * Fixed database backup, signalled in [#55](https://github.com/HugoFara/lwt/pull/55).
+  * Fixed the database restoration, apparently broken since 2.0.3-fork. Pull request [#56](https://github.com/HugoFara/lwt/pull/56) by [@jzohrab](https://github.com/jzohrab).
 * Sentences with unknown words were showned in test when it was not supposed to be the case ([#52](https://github.com/HugoFara/lwt/issues/52)).
 
 
