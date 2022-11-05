@@ -101,8 +101,8 @@ function insert_word_wellknown_javascript($word, $wid, $hex, $textid)
     .attr('data_wid','<?php echo $wid; ?>')
     .attr('title',title);
     $('#learnstatus', contexth).html('<?php echo addslashes(texttodocount2($textid)); ?>');
-    window.parent.document.getElementById('frame-l').focus();
-    window.parent.setTimeout('cClick()', 100);
+
+    cleanupRightFrames();
     //]]>
     </script>
     <?php
