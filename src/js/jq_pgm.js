@@ -1133,7 +1133,7 @@ function cleanupRightFrames() {
     var rf = window.parent.document.getElementById('frames-r');
     rf.click();
   }
-  window.parent.setTimeout(mytimeout, 400);
+  window.parent.setTimeout(mytimeout, 800);
 
   window.parent.document.getElementById('frame-l').focus();
   window.parent.setTimeout('cClick()', 100);

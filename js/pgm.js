@@ -170,7 +170,7 @@ return!1}
 function hideRightFrames(){if($('#frames-r').length){$('#frames-r').animate({right:'-100%'});return!0}
 return!1}
 function cleanupRightFrames(){let mytimeout=function(){var rf=window.parent.document.getElementById('frames-r');rf.click()}
-window.parent.setTimeout(mytimeout,400);window.parent.document.getElementById('frame-l').focus();window.parent.setTimeout('cClick()',100)}
+window.parent.setTimeout(mytimeout,800);window.parent.document.getElementById('frame-l').focus();window.parent.setTimeout('cClick()',100)}
 function successSound(){document.getElementById('success_sound').pause();document.getElementById('failure_sound').pause();return document.getElementById('success_sound').play()}
 function failureSound(){document.getElementById('success_sound').pause();document.getElementById('failure_sound').pause();return document.getElementById('failure_sound').play()}
 $.fn.serializeObject=function(){const o={};const a=this.serializeArray();$.each(a,function(){if(o[this.name]!==undefined){if(!o[this.name].push){o[this.name]=[o[this.name]]}
