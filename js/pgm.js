@@ -254,19 +254,7 @@ function make_overlib_audio(txt,lang){let img=document.createElement("img");img.
 function getStatusName(status){return(STATUSES[status]?STATUSES[status].name:'Unknown')}
 function getStatusAbbr(status){return(STATUSES[status]?STATUSES[status].abbr:'?')}
 function translateSentence(url,sentctl){if((typeof sentctl!=='undefined')&&(url!='')){text=sentctl.value;if(typeof text==='string'){showRightFrames(undefined,createTheDictUrl(url,text.replace(/[{}]/g,'')))}}}
-
-function translateSentence2(url,sentctl) {
-  if((typeof sentctl!=='undefined')&&(url!='')) {
-    text=sentctl.value;
-    if(typeof text==='string') {
-      newtext=text.replace(/[{}]/g,'');
-      finalurl=url.replace('###', encodeURIComponent(newtext));
-      console.log('finalurl => ' + finalurl);
-      owin(finalurl);
-    }
-  }
-}
-
+function translateSentence2(url,sentctl){if((typeof sentctl!=='undefined')&&(url!='')){text=sentctl.value;if(typeof text==='string'){newtext=text.replace(/[{}]/g,'');finalurl=url.replace('###',encodeURIComponent(newtext));owin(finalurl)}}}
 function translateWord(url,wordctl){if((typeof wordctl!=='undefined')&&(url!='')){text=wordctl.value;if(typeof text==='string'){showRightFrames(undefined,createTheDictUrl(url,text))}}}
 function translateWord2(url,wordctl){if((typeof wordctl!=='undefined')&&(url!='')){text=wordctl.value;if(typeof text==='string'){owin(createTheDictUrl(url,text))}}}
 function translateWord3(url,word){owin(createTheDictUrl(url,word))}

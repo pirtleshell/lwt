@@ -710,9 +710,9 @@ function translateSentence2 (url, sentctl) {
   if ((typeof sentctl !== 'undefined') && (url != '')) {
     text = sentctl.value;
     if (typeof text === 'string') {
-      owin(
-        createTheDictUrl(url, text.replace(/[{}]/g, ''))
-      );
+      newtext = text.replace(/[{}]/g,'');
+      finalurl = url.replace('###', encodeURIComponent(newtext));
+      owin(finalurl);
     }
   }
 }
