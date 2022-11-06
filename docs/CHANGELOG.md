@@ -4,7 +4,7 @@ Changelog
 This project's changelog. Versions marked with "-fork" come from the community, other versions come from the canonical LWT ("official" branch on Git).
 For git tags, official releases are marked like "v1.0.0", while unofficial ones are marked like "v1.0.0-fork".
 
-## [Unreleased]
+## 2.5.3-fork (November 06 2022)
 ### Added
 * Links to the Discord community (``README.md`` and ``inc/kernel_utility.php``).
 
@@ -17,17 +17,19 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 
 ### Fixed
 * Left-to-right languages where displayed as right-to-left when checking them, as signaled in [pull request #42](https://github.com/HugoFara/lwt/pull/42), thanks [@Helioza](https://github.com/Heliozoa)!
-* People who didn't fill the URL for Google Translate were seeing deprecation warnings while using using the ``bulk_translate`` functionality (clicking in "TO DO" for editing multiple new words). Bulk translate itself is not fixed, but warnings are no longer displayed. Merged [pull request #44](https://github.com/HugoFara/lwt/pull/42), from [@Helioza](https://github.com/Heliozoa).
+* People who didn't fill the URL for Google Translate were seeing deprecation warnings while using using the ``bulk_translate`` functionality (clicking in "TO DO" for editing multiple new words). Bulk translate itself is not fixed, but warnings are no longer displayed. Merged [pull request #44](https://github.com/HugoFara/lwt/pull/44), from [@Helioza](https://github.com/Heliozoa).
 * Multiple fixes to the "I Known All Words" feature. Great thanks to [@jzohrab](https://github.com/jzohrab)!
   * Setting all words to well-known was resulting in a crash when no words were added as well-known (``all_words_wellknown.php``).
   * Setting all words to well-known was resulting in a crash when multiple words had the same lowercase value. See issue [#46](https://github.com/HugoFara/lwt/issues/46)!
   * Words were not updated in the view unless reparsing the text ([#48](https://github.com/HugoFara/lwt/pull/48)). Merged pull request [#49](https://github.com/HugoFara/lwt/pull/49). 
 * In the main dropdown menu, the option "Text-to-Speech Settings" was still leading to ``tts.php`` (now ``text_to_speech_settings.php``). Merged pull request [#51](https://github.com/HugoFara/lwt/pull/51), thanks [@jzohrab](https://github.com/jzohrab).
 * Database backup/restoration:
-  * Fixed database backup, signalled in [#55](https://github.com/HugoFara/lwt/pull/55).
+  * Fixed database backup, signaled in [#55](https://github.com/HugoFara/lwt/pull/55).
   * Fixed the database restoration, apparently broken since 2.0.3-fork. Pull request [#56](https://github.com/HugoFara/lwt/pull/56) by [@jzohrab](https://github.com/jzohrab).
-* Sentences with unknown words were showned in test when it was not supposed to be the case ([#52](https://github.com/HugoFara/lwt/issues/52)).
+* Sentences with unknown words were showed in test when it was not supposed to be the case ([#52](https://github.com/HugoFara/lwt/issues/52), [#64](https://github.com/HugoFara/lwt/issues/64) and PR [#65](https://github.com/HugoFara/lwt/pull/65)).
 
+### Full Changelog
+* [2.5.2...2.5.3](https://github.com/HugoFara/lwt/compare/2.5.2...2.5.3)
 
 ## 2.5.2-fork (September 27 2022)
 ### Changed

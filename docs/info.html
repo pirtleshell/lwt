@@ -213,7 +213,7 @@
 			</h2>
 
 			<p>
-				The current version is 2.5.2-fork (September 27 2022).
+				The current version is 2.5.3-fork (November 06 2022).
 				<br>
 				<a href="#CHANGELOG">View the Changelog.</a>
 			</p>
@@ -1915,7 +1915,7 @@ KEY NfUpdate (NfUpdate)</p>
 			<h2 id="CHANGELOG" name="CHANGELOG">▶ Changelog - <a href="#">[↑]</a></h2>
 <p>This project's changelog. Versions marked with "-fork" come from the community, other versions come from the canonical LWT ("official" branch on Git).
 For git tags, official releases are marked like "v1.0.0", while unofficial ones are marked like "v1.0.0-fork".</p>
-<h3>[Unreleased]</h3>
+<h3>2.5.3-fork (November 06 2022)</h3>
 <h4>Added</h4>
 <ul>
 <li>Links to the Discord community (<code>README.md</code> and <code>inc/kernel_utility.php</code>).</li>
@@ -1931,7 +1931,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 <h4>Fixed</h4>
 <ul>
 <li>Left-to-right languages where displayed as right-to-left when checking them, as signaled in <a href="https://github.com/HugoFara/lwt/pull/42">pull request #42</a>, thanks <a href="https://github.com/Heliozoa">@Helioza</a>!</li>
-<li>People who didn't fill the URL for Google Translate were seeing deprecation warnings while using using the <code>bulk_translate</code> functionality (clicking in "TO DO" for editing multiple new words). Bulk translate itself is not fixed, but warnings are no longer displayed. Merged <a href="https://github.com/HugoFara/lwt/pull/42">pull request #44</a>, from <a href="https://github.com/Heliozoa">@Helioza</a>.</li>
+<li>People who didn't fill the URL for Google Translate were seeing deprecation warnings while using using the <code>bulk_translate</code> functionality (clicking in "TO DO" for editing multiple new words). Bulk translate itself is not fixed, but warnings are no longer displayed. Merged <a href="https://github.com/HugoFara/lwt/pull/44">pull request #44</a>, from <a href="https://github.com/Heliozoa">@Helioza</a>.</li>
 <li>Multiple fixes to the "I Known All Words" feature. Great thanks to <a href="https://github.com/jzohrab">@jzohrab</a>!
 <ul>
 <li>Setting all words to well-known was resulting in a crash when no words were added as well-known (<code>all_words_wellknown.php</code>).</li>
@@ -1942,11 +1942,17 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 <li>In the main dropdown menu, the option "Text-to-Speech Settings" was still leading to <code>tts.php</code> (now <code>text_to_speech_settings.php</code>). Merged pull request <a href="https://github.com/HugoFara/lwt/pull/51">#51</a>, thanks <a href="https://github.com/jzohrab">@jzohrab</a>.</li>
 <li>Database backup/restoration:
 <ul>
-<li>Fixed database backup, signalled in <a href="https://github.com/HugoFara/lwt/pull/55">#55</a>.</li>
+<li>Fixed database backup, signaled in <a href="https://github.com/HugoFara/lwt/pull/55">#55</a>.</li>
 <li>Fixed the database restoration, apparently broken since 2.0.3-fork. Pull request <a href="https://github.com/HugoFara/lwt/pull/56">#56</a> by <a href="https://github.com/jzohrab">@jzohrab</a>.</li>
 </ul>
 </li>
-<li>Sentences with unknown words were showned in test when it was not supposed to be the case (<a href="https://github.com/HugoFara/lwt/issues/52">#52</a>).</li>
+<li>Sentences with unknown words were showed in test when it was not supposed to be the case (<a href="https://github.com/HugoFara/lwt/issues/52">#52</a>, <a href="https://github.com/HugoFara/lwt/issues/64">#64</a> and PR <a href="https://github.com/HugoFara/lwt/pull/65">#65</a>).</li>
+</ul>
+<h4>Full Changelog</h4>
+<ul>
+<li>
+<a href="https://github.com/HugoFara/lwt/compare/2.5.2...2.5.3">2.5.2...2.5.3</a>
+</li>
 </ul>
 <h3>2.5.2-fork (September 27 2022)</h3>
 <h4>Changed</h4>

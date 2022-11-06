@@ -154,30 +154,25 @@ function do_test_test_sentence($wid, $lang, $wordlc)
     global $debug, $tbpref;
     $num = 0;
     $sent = null;
-    // Select senetences where at least 70 % of words are known
-    $sql = "SELECT DISTINCT SeID, UnknownRate
-    FROM {$tbpref}sentences
+
+    // Select sentences where at least 70 % of words are known
+    $sql = "SELECT DISTINCT ti.Ti2SeID AS SeID
+    FROM {$tbpref}textitems2 ti
     JOIN (
-        SELECT total.Ti2SeID, UnknownWords / TotalWords AS UnknownRate
-        FROM (
-            SELECT Ti2SeID, COUNT(*) AS UnknownWords
-            FROM {$tbpref}textitems2
-            WHERE Ti2WordCount = 1 AND Ti2WoID = 0
-            GROUP BY Ti2SeID
-        ) AS unknowns JOIN (
-            SELECT Ti2SeID, COUNT(*) AS TotalWords
-            FROM {$tbpref}textitems2
-            WHERE Ti2WordCount = 1
-            GROUP BY Ti2SeID
-        ) AS total
-        ON unknowns.Ti2SeId = total.Ti2SeId
-    ) AS ti_with_rate 
-    ON SeID = ti_with_rate.Ti2SeID
-    JOIN {$tbpref}textitems2 AS ti_words
-    ON SeID = ti_words.Ti2SeID
-    WHERE Ti2WoID = $wid AND SeLgID = $lang AND UnknownRate < .3
-    ORDER BY RAND() 
-    LIMIT 1";
+      SELECT t.Ti2SeID, COUNT(*) AS c
+      FROM {$tbpref}textitems2 t
+      WHERE t.Ti2WordCount = 1
+      GROUP BY t.Ti2SeID
+    ) AS sWordCount ON sWordCount.Ti2SeID = ti.Ti2SeID
+    LEFT JOIN (
+      SELECT t.Ti2SeID, COUNT(*) AS c
+      FROM {$tbpref}textitems2 t
+      WHERE t.Ti2WordCount = 1 AND t.Ti2WoID = 0
+      GROUP BY t.Ti2SeID
+    ) AS sUnknownCount on sUnknownCount.Ti2SeID = ti.Ti2SeID
+    WHERE ti.Ti2WoID = $wid
+    AND IFNULL(sUnknownCount.c, 0) / sWordCount.c < 0.3
+    ORDER BY RAND() LIMIT 1";
     $res = do_mysqli_query($sql);
     $record = mysqli_fetch_assoc($res);
     // If sentence found
