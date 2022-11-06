@@ -156,7 +156,7 @@ function do_test_test_sentence($wid, $lang, $wordlc)
     $sent = null;
 
     // Select sentences where at least 70 % of words are known
-    $sql = "SELECT ti.Ti2SeID as SeID
+    $sql = "SELECT DISTINCT ti.Ti2SeID AS SeID
     FROM {$tbpref}textitems2 ti
     JOIN (
       SELECT t.Ti2SeID, COUNT(*) AS c
@@ -171,7 +171,7 @@ function do_test_test_sentence($wid, $lang, $wordlc)
       GROUP BY t.Ti2SeID
     ) AS sUnknownCount on sUnknownCount.Ti2SeID = ti.Ti2SeID
     WHERE ti.Ti2WoID = $wid
-    AND (IFNULL(sUnknownCount.c, 0) / sWordCount.c) < 0.3
+    AND IFNULL(sUnknownCount.c, 0) / sWordCount.c < 0.3
     ORDER BY RAND() LIMIT 1";
     $res = do_mysqli_query($sql);
     $record = mysqli_fetch_assoc($res);
