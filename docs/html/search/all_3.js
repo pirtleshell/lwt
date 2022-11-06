@@ -12,7 +12,7 @@ var searchData=
   ['check_5fupdate_5fdb_9',['check_update_db',['../database__connect_8php.html#a960bf3f2e9821f403140330ac38c27de',1,'database_connect.php']]],
   ['connect_2einc_2ephp_10',['connect.inc.php',['../connect_8inc_8php.html',1,'']]],
   ['connect_5feasyphp_2einc_2ephp_11',['connect_easyphp.inc.php',['../connect__easyphp_8inc_8php.html',1,'']]],
-  ['connect_5fmamp_2ephp_12',['connect_mamp.php',['../connect__mamp_8php.html',1,'']]],
+  ['connect_5fmamp_2einc_2ephp_12',['connect_mamp.inc.php',['../connect__mamp_8inc_8php.html',1,'']]],
   ['connect_5fto_5fdatabase_13',['connect_to_database',['../database__connect_8php.html#a6e362f15877268f0dcff6be0c499f493',1,'database_connect.php']]],
   ['connect_5fwordpress_2einc_2ephp_14',['connect_wordpress.inc.php',['../connect__wordpress_8inc_8php.html',1,'']]],
   ['contributing_20to_20lwt_15',['Contributing to LWT',['../md_docs_contribute.html',1,'']]],

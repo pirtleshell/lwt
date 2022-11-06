@@ -22,7 +22,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="lwt_icon.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Learning with Texts - Fork<span id="projectnumber">&#160;2.5.2-fork</span>
+   <div id="projectname">Learning with Texts - Fork<span id="projectnumber">&#160;2.5.3-fork</span>
    </div>
    <div id="projectbrief">Learn foreign languages with texts</div>
   </td>
@@ -351,7 +351,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p >Return a machine readable version number.</p>
-<dl class="section return"><dt>Returns</dt><dd>string Machine-readable version, for instance v001.006.031 </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>string Machine-readable version, for instance v001.006.031 for version 1.6.31. </dd></dl>
 
 </div>
 </div>
@@ -452,7 +452,12 @@ Functions</h2></td></tr>
 <p >Make a random score for a new word.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">'iv'|'id'|'u'|string</td><td>$type Type of insertion</td></tr>
+    <tr><td class="paramname">'iv'|'id'|'u'|string</td><td>$type Type of insertion<ul>
+<li>'iv': Keys only (TodayScore, Tomorrow, Random)</li>
+<li>'id': Values only</li>
+<li>'u': Key = value pairs</li>
+</ul>
+</td></tr>
   </table>
   </dd>
 </dl>
@@ -482,7 +487,8 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>never </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>never</dd></dl>
+<dl class="section since"><dt>Since</dt><dd>2.5.3-fork Add a link to the Discord community </dd></dl>
 
 </div>
 </div>
