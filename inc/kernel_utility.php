@@ -26,7 +26,7 @@
 function get_version(): string 
 {
     global $debug;
-    $version = '2.5.2-fork (September 27 2022)'; 
+    $version = '2.5.3-fork (November 06 2022)'; 
     if ($debug) {
         $version .= ' <span class="red">DEBUG</span>';
     }
@@ -36,7 +36,8 @@ function get_version(): string
 /**
  * Return a machine readable version number.
  *
- * @return string Machine-readable version, for instance v001.006.031
+ * @return string Machine-readable version, for instance v001.006.031 
+ *                for version 1.6.31.
  */
 function get_version_number(): string 
 {
@@ -55,7 +56,7 @@ function get_version_number(): string
     for ($i=0; $i<3; $i++) { 
         $r .= substr('000' . $vn[$i], -3); 
     }
-    return $r;  // 'vXXXYYYZZZ' when version = x.y.z
+    return $r;
 }
 
 /**
