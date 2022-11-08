@@ -253,10 +253,10 @@ function make_overlib_link_ignore_word(txid,torder){return' <a href="insert_word
 function make_overlib_audio(txt,lang){let img=document.createElement("img");img.title="Click to read!";img.src="icn/speaker-volume.png";img.style.cursor="pointer";img.setAttribute("onclick","readTextAloud('"+escape_html_chars(txt)+"', '"+(lang||"")+"')");return img.outerHTML}
 function getStatusName(status){return(STATUSES[status]?STATUSES[status].name:'Unknown')}
 function getStatusAbbr(status){return(STATUSES[status]?STATUSES[status].abbr:'?')}
-function translateSentence(url,sentctl){if((typeof sentctl!=='undefined')&&(url!='')){text=sentctl.value;if(typeof text==='string'){showRightFrames(undefined,createTheDictUrl(url,text.replace(/[{}]/g,'')))}}}
-function translateSentence2(url,sentctl){if((typeof sentctl!=='undefined')&&(url!='')){text=sentctl.value;if(typeof text==='string'){newtext=text.replace(/[{}]/g,'');finalurl=url.replace('###',encodeURIComponent(newtext));owin(finalurl)}}}
-function translateWord(url,wordctl){if((typeof wordctl!=='undefined')&&(url!='')){text=wordctl.value;if(typeof text==='string'){showRightFrames(undefined,createTheDictUrl(url,text))}}}
-function translateWord2(url,wordctl){if((typeof wordctl!=='undefined')&&(url!='')){text=wordctl.value;if(typeof text==='string'){owin(createTheDictUrl(url,text))}}}
+function translateSentence(url,sentctl){if(typeof sentctl!=='undefined'&&url!=''){const text=sentctl.value;if(typeof text==='string'){showRightFrames(undefined,createTheDictUrl(url,text.replace(/[{}]/g,'')))}}}
+function translateSentence2(url,sentctl){if(typeof sentctl!=='undefined'&&url!=''){const text=sentctl.value;if(typeof text==='string'){const finalurl=createTheDictUrl(url,text.replace(/[{}]/g,''));owin(finalurl)}}}
+function translateWord(url,wordctl){if(typeof wordctl!=='undefined'&&url!=''){const text=wordctl.value;if(typeof text==='string'){showRightFrames(undefined,createTheDictUrl(url,text))}}}
+function translateWord2(url,wordctl){if(typeof wordctl!=='undefined'&&url!=''){const text=wordctl.value;if(typeof text==='string'){owin(createTheDictUrl(url,text))}}}
 function translateWord3(url,word){owin(createTheDictUrl(url,word))}
 function getLangFromDict(wblink3){return wblink3.replace(/.*[?&]sl=([a-zA-Z\-]*)(&.*)*$/,"$1")}
 function make_tooltip(word,trans,roman,status){const nl='\x0d';let title=word;if(roman!=''){if(title!='')title+=nl;title+='▶ '+roman}
@@ -265,7 +265,10 @@ if(title!='')title+=nl;title+='▶ '+getStatusName(status)+' ['+getStatusAbbr(st
 function escape_html_chars_2(title,ann){if(ann!=''){const ann2=escape_html_chars(ann);return escape_html_chars(title).replace(ann2,'<span style="color:red">'+ann2+'</span>')}else{return escape_html_chars(title)}}
 function owin(url){window.open(url,'dictwin','width=800, height=400, scrollbars=yes, menubar=no, resizable=yes, status=no')}
 function oewin(url){window.open(url,'editwin','width=800, height=600, scrollbars=yes, menubar=no, resizable=yes, status=no')}
-function createTheDictUrl(u,w){const url=u.trim();const trm=w.trim();const r='trans.php?x=2&i='+escape(u)+'&t='+w;return r}
+function createTheDictUrl(u,w){const url=u.trim();const trm=w.trim();const pos=url.indexOf('###');if(pos==-1){return url+encodeURIComponent(trm)}
+const pos2=url.indexOf('###',pos+1);if(pos2===-1){return url.replace("###",trm==''?'+':encodeURIComponent(trm))}
+const enc=url.substring(pos+3,pos2-pos-3).trim();console.warn("Trying to use encoding '"+enc+"'. This feature is abandonned since "+"2.5.4-fork. Using default UTF-8.");let output=url.substring(0,pos)+encodeURIComponent(trm);if(pos2+3<url.length){output+=url.substring(pos2+3)}
+return output}
 function createTheDictLink(u,w,t,b){const url=u.trim();const trm=w.trim();const txt=t.trim();const txtbefore=b.trim();let r='';if(url!=''&&txt!=''){if(url.substring(0,1)=='*'){r=' '+txtbefore+' <span class="click" onclick="owin(\''+createTheDictUrl(url.substring(1),escape_apostrophes(trm))+'\');">'+txt+'</span> '}else{r=' '+txtbefore+' <a href="'+createTheDictUrl(url,trm)+'" target="ru" onclick="showRightFrames();">'+txt+'</a> '}}
 return r}
 function createSentLookupLink(torder,txid,url,txt){var url=url.trim();var txt=txt.trim();let r='';if(url==''||txt==''){return r}

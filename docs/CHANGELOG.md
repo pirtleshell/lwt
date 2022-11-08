@@ -4,6 +4,10 @@ Changelog
 This project's changelog. Versions marked with "-fork" come from the community, other versions come from the canonical LWT ("official" branch on Git).
 For git tags, official releases are marked like "v1.0.0", while unofficial ones are marked like "v1.0.0-fork".
 
+## [Unreleased]
+### Removed
+* The ability to use a dictionary with a specific encoding, introduced in 1.0.2, is being removed. It was making things overwhelmingly complex and caused issues, as signaled in [#58](https://github.com/HugoFara/lwt/issues/58). Adapted from PR [#59](https://github.com/HugoFara/lwt/pull/59). 
+
 ## 2.5.3-fork (November 06 2022)
 ### Added
 * Links to the Discord community (``README.md`` and ``inc/kernel_utility.php``).

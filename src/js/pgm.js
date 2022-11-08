@@ -697,21 +697,35 @@ function getStatusAbbr (status) {
   return (STATUSES[status] ? STATUSES[status].abbr : '?');
 }
 
+
+/*
+ * Translate a sentence.
+ * 
+ * @param {string} url     Translation URL with "{term}" marking the interesting term 
+ * @param {object} sentctl Textarea contaning sentence 
+ * @returns {void}
+ */
 function translateSentence (url, sentctl) {
-  if ((typeof sentctl !== 'undefined') && (url != '')) {
-    text = sentctl.value;
+  if (typeof sentctl !== 'undefined' && url != '') {
+    const text = sentctl.value;
     if (typeof text === 'string') {
       showRightFrames(undefined, createTheDictUrl(url, text.replace(/[{}]/g, '')));
     }
   }
 }
 
+/*
+ * Translate a sentence.
+ * 
+ * @param {string} url     Translation URL with "{term}" marking the interesting term 
+ * @param {object} sentctl Textarea contaning sentence 
+ * @returns {void}
+ */
 function translateSentence2 (url, sentctl) {
-  if ((typeof sentctl !== 'undefined') && (url != '')) {
-    text = sentctl.value;
+  if (typeof sentctl !== 'undefined' && url != '') {
+    const text = sentctl.value;
     if (typeof text === 'string') {
-      newtext = text.replace(/[{}]/g,'');
-      finalurl = url.replace('###', encodeURIComponent(newtext));
+      const finalurl = createTheDictUrl(url, text.replace(/[{}]/g, ''));
       owin(finalurl);
     }
   }
@@ -721,12 +735,12 @@ function translateSentence2 (url, sentctl) {
  * Open a new window with the translation of the word.
  * 
  * @param {string} url     Dictionary URL
- * @param {string} wordctl Word to translate.
+ * @param {object} wordctl Textarea containing word to translate.
  * @returns {void}
  */
 function translateWord (url, wordctl) {
-  if ((typeof wordctl !== 'undefined') && (url != '')) {
-    text = wordctl.value;
+  if (typeof wordctl !== 'undefined' && url != '') {
+    const text = wordctl.value;
     if (typeof text === 'string') {
       showRightFrames(undefined, createTheDictUrl(url, text));
     }
@@ -737,12 +751,12 @@ function translateWord (url, wordctl) {
  * Open a new window with the translation of the word.
  * 
  * @param {string} url     Dictionary URL
- * @param {string} wordctl Word to translate.
+ * @param {object} wordctl Textarea containing word to translate.
  * @returns {void}
  */
 function translateWord2 (url, wordctl) {
-  if ((typeof wordctl !== 'undefined') && (url != '')) {
-    text = wordctl.value;
+  if (typeof wordctl !== 'undefined' && url != '') {
+    const text = wordctl.value;
     if (typeof text === 'string') {
       owin(createTheDictUrl(url, text));
     }
@@ -842,17 +856,47 @@ function oewin (url) {
 }
 
 /**
- * Create a dictionary URL
+ * Create a dictionary URL.
+ * 
+ * JS alter ego of the createTheDictLink PHP function.
+ * 
+ * Case 1: url without any ###: append UTF-8-term
+ * Case 2: url with one ###: substitute UTF-8-term
  * 
  * @param {string} u Dictionary URL
- * @param {string} w Word
- * @returns {string} A link to trans.php to get a translation of the word
+ * @param {string} w Term to be inserted in the URL
+ * @returns {string} A link to external dictionary to get a translation of the word
+ * 
+ * @since 2.5.4-fork Internals rewrote, do no longer use PHP code.
+ * @since 2.5.4-fork The option putting encoding between ###enc### does no 
+ *                   longer work. It is deprecated and will be removed.
  */
 function createTheDictUrl (u, w) {
   const url = u.trim();
   const trm = w.trim();
-  const r = 'trans.php?x=2&i=' + escape(u) + '&t=' + w;
-  return r;
+  const pos = url.indexOf('###');
+  // no ### found
+  if (pos == -1) {
+      return url + encodeURIComponent(trm);
+  }
+  // ### found
+  const pos2 = url.indexOf('###', pos + 1);
+  if (pos2 === -1) {
+      // 1 ### found
+      return url.replace("###", trm == '' ? '+' : encodeURIComponent(trm));
+  }
+  // 2 ### found
+  // Get encoding
+  const enc = url.substring(pos + 3, pos2 - pos - 3).trim();
+  console.warn(
+   "Trying to use encoding '" + enc + "'. This feature is abandonned since " + 
+   "2.5.4-fork. Using default UTF-8." 
+  );
+  let output = url.substring(0, pos) + encodeURIComponent(trm);
+  if (pos2+3 < url.length) { 
+   output += url.substring(pos2 + 3); 
+  }
+  return output;
 }
 
 /**
