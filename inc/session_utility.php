@@ -2685,6 +2685,12 @@ function makeStatusClassFilterHelper($status, &$array): void
 /**
  * Create and verify a dictionary URL link
  *
+ * Case 1: url without any ###: append UTF-8-term
+ * Case 2: url with one ###: substitute UTF-8-term
+ * Case 3: url with two ###enc###: unsoported encoding changed, 
+ *         abandonned since 2.5.4-fork
+ * see http://php.net/manual/en/mbstring.supported-encodings.php for supported encodings
+ * 
  * @param string $u Dictionary URL. It may contain ### that will get parsed
  * @param string $t Text that substite the ###
  * 
@@ -2693,10 +2699,6 @@ function makeStatusClassFilterHelper($status, &$array): void
 
 function createTheDictLink($u, $t) 
 {
-    // Case 1: url without any ###: append UTF-8-term
-    // Case 2: url with one ###: substitute UTF-8-term
-    // Case 3: url with two ###enc###: substitute enc-encoded-term
-    // see http://php.net/manual/en/mbstring.supported-encodings.php for supported encodings
     $url = trim($u);
     $trm = trim($t);
     $pos = stripos($url, '###');
@@ -2706,16 +2708,18 @@ function createTheDictLink($u, $t)
         return $r;
     }
     // ### found
-    $pos2 = strripos($url, '###');
-    if (($pos2-$pos-3) > 1 ) {  // 2 ### found
-        $enc = trim(substr($url, $pos+3, $pos2-$pos-3));
-        $r = substr($url, 0, $pos);
-        $r .= urlencode(mb_convert_encoding($trm, $enc, 'UTF-8'));
-        if (($pos2+3) < strlen($url)) { 
-            $r .= substr($url, $pos2+3); 
-        }
-    } elseif ($pos == $pos2) {  // 1 ### found
-        $r = str_replace("###", ($trm == '' ? '+' : urlencode($trm)), $url);
+    $pos2 = stripos($url, '###', $pos + 1);
+    if ($pos2 === false) {
+        // 1 ### found
+        return str_replace("###", ($trm == '' ? '+' : urlencode($trm)), $url);
+    }
+    // 2 ### found
+    // Get encoding
+    $enc = trim(substr($url, $pos + 3, $pos2 - $pos - 3));
+    $r = substr($url, 0, $pos);
+    $r .= urlencode(mb_convert_encoding($trm, $enc, 'UTF-8'));
+    if ($pos2+3 < strlen($url)) { 
+        $r .= substr($url, $pos2 + 3); 
     }
     return $r;
 }

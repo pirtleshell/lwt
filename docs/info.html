@@ -1915,6 +1915,15 @@ KEY NfUpdate (NfUpdate)</p>
 			<h2 id="CHANGELOG" name="CHANGELOG">▶ Changelog - <a href="#">[↑]</a></h2>
 <p>This project's changelog. Versions marked with "-fork" come from the community, other versions come from the canonical LWT ("official" branch on Git).
 For git tags, official releases are marked like "v1.0.0", while unofficial ones are marked like "v1.0.0-fork".</p>
+<h3>[Unreleased]</h3>
+<h4>Changed</h4>
+<ul>
+<li>Some deprecated functions <code>escape</code> and <code>unescape</code> were replaced by modern equivalents <code>encodeURIcomponent</code> and <code>decodeURIcomponent</code>. This may lead to changes in cookies, notably making them work better.</li>
+</ul>
+<h4>Removed</h4>
+<ul>
+<li>The ability to use a dictionary with a specific encoding, introduced in 1.0.2, is being removed. It was making things overwhelmingly complex and caused issues, as signaled in <a href="https://github.com/HugoFara/lwt/issues/58">#58</a>. Adapted from PR <a href="https://github.com/HugoFara/lwt/pull/59">#59</a>.</li>
+</ul>
 <h3>2.5.3-fork (November 06 2022)</h3>
 <h4>Added</h4>
 <ul>
@@ -1926,12 +1935,12 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 <li>"I KNOW ALL" button becomes "Set All to Known" and "IGNORE ALL" becomes "Ignore All".</li>
 <li>Changed the messages when clicking "Set All to Known" or "Ignore All".</li>
 <li>Uncomplete code linting in <code>bulk_translate_words.php</code>. For phone users, it now properly focuses on the main screen after use.</li>
-<li>Only sentences containing more than 70% of known words are shown were testing sentences. Based on an idea from <a href="https://github.com/HugoFara/lwt/issues/53">#53</a>.</li>
+<li>Only sentences containing more than 70% of known words are shown were testing sentences. Based on an idea from <a href="https://github.com/HugoFara/lwt/issues/53">#53</a>, with contribution of PR <a href="https://github.com/HugoFara/lwt/pull/65">#65</a>.</li>
 </ul>
 <h4>Fixed</h4>
 <ul>
-<li>Left-to-right languages where displayed as right-to-left when checking them, as signaled in <a href="https://github.com/HugoFara/lwt/pull/42">pull request #42</a>, thanks <a href="https://github.com/Heliozoa">@Helioza</a>!</li>
-<li>People who didn't fill the URL for Google Translate were seeing deprecation warnings while using using the <code>bulk_translate</code> functionality (clicking in "TO DO" for editing multiple new words). Bulk translate itself is not fixed, but warnings are no longer displayed. Merged <a href="https://github.com/HugoFara/lwt/pull/44">pull request #44</a>, from <a href="https://github.com/Heliozoa">@Helioza</a>.</li>
+<li>Left-to-right languages where displayed as right-to-left when checking them, as signaled in <a href="https://github.com/HugoFara/lwt/pull/42">pull request #42</a>, thanks <a href="https://github.com/Heliozoa">@Heliozoa</a>!</li>
+<li>People who didn't fill the URL for Google Translate were seeing deprecation warnings while using using the <code>bulk_translate</code> functionality (clicking in "TO DO" for editing multiple new words). Bulk translate itself is not fixed, but warnings are no longer displayed. Merged <a href="https://github.com/HugoFara/lwt/pull/44">pull request #44</a>, from <a href="https://github.com/Heliozoa">@Heliozoa</a>.</li>
 <li>Multiple fixes to the "I Known All Words" feature. Great thanks to <a href="https://github.com/jzohrab">@jzohrab</a>!
 <ul>
 <li>Setting all words to well-known was resulting in a crash when no words were added as well-known (<code>all_words_wellknown.php</code>).</li>
@@ -1946,7 +1955,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 <li>Fixed the database restoration, apparently broken since 2.0.3-fork. Pull request <a href="https://github.com/HugoFara/lwt/pull/56">#56</a> by <a href="https://github.com/jzohrab">@jzohrab</a>.</li>
 </ul>
 </li>
-<li>Sentences with unknown words were showed in test when it was not supposed to be the case (<a href="https://github.com/HugoFara/lwt/issues/52">#52</a>, <a href="https://github.com/HugoFara/lwt/issues/64">#64</a> and PR <a href="https://github.com/HugoFara/lwt/pull/65">#65</a>).</li>
+<li>Sentences with unknown words were showed in test when it was not supposed to be the case (<a href="https://github.com/HugoFara/lwt/issues/52">#52</a> and <a href="https://github.com/HugoFara/lwt/issues/64">#64</a>).</li>
 </ul>
 <h4>Full Changelog</h4>
 <ul>

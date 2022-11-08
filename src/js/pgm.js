@@ -56,8 +56,8 @@ var ol_fgcolor = '#FFFFE8';
 var ol_closecolor = '#FFFFFF';
 
 /**************************************************************
-Helper functions for overlib
-***************************************************************/
+ * Helper functions for overlib
+ ***************************************************************/
 
 /**
  * Handle click event on ignored words
@@ -80,7 +80,8 @@ function run_overlib_status_98(
 ) {
   const lang = getLangFromDict(WBLINK3);
   return overlib(
-    make_overlib_audio(txt, lang) + '<b>' + escape_html_chars_2(hints, ann) + '</b><br/>' +
+    make_overlib_audio(txt, lang) + 
+    '<b>' + escape_html_chars_2(hints, ann) + '</b><br/>' +
     make_overlib_link_new_word(txid, torder, wid) + ' | ' +
     make_overlib_link_delete_word(txid, wid) +
     make_overlib_link_new_multiword(txid, torder, multi_words, rtl) + ' <br /> ' +
@@ -106,10 +107,13 @@ function run_overlib_status_98(
  * @param {*} ann 
  * @returns {boolean}
  */
-function run_overlib_status_99 (wblink1, wblink2, wblink3, hints, txid, torder, txt, wid, multi_words, rtl, ann) {
+function run_overlib_status_99 (
+  wblink1, wblink2, wblink3, hints, txid, torder, txt, wid, multi_words, rtl, ann
+  ) {
   const lang = getLangFromDict(WBLINK3);
   return overlib(
-    make_overlib_audio(txt, lang) + '<b>' + escape_html_chars_2(hints, ann) + '</b><br/> ' +
+    make_overlib_audio(txt, lang) + 
+    '<b>' + escape_html_chars_2(hints, ann) + '</b><br/> ' +
 		make_overlib_link_new_word(txid, torder, wid) + ' | ' +
 		make_overlib_link_delete_word(txid, wid) +
 		make_overlib_link_new_multiword(txid, torder, multi_words, rtl) + ' <br /> ' +
@@ -136,7 +140,10 @@ function run_overlib_status_99 (wblink1, wblink2, wblink3, hints, txid, torder, 
  * @param {*}         ann         Unused
  * @returns {boolean}
  */
-function run_overlib_status_1_to_5 (wblink1, wblink2, wblink3, hints, txid, torder, txt, wid, stat, multi_words, rtl, ann) {
+function run_overlib_status_1_to_5 (
+  wblink1, wblink2, wblink3, hints, txid, 
+  torder, txt, wid, stat, multi_words, rtl, ann
+  ) {
   const lang = getLangFromDict(WBLINK3);
   return overlib(
     '<div>' + make_overlib_audio(txt, lang) + '<span>(Read)</span></div>' +
@@ -147,7 +154,8 @@ function run_overlib_status_1_to_5 (wblink1, wblink2, wblink3, hints, txid, tord
 		make_overlib_link_wb(wblink1, wblink2, wblink3, txt, txid, torder),
     CAPTION, 
     make_overlib_link_edit_word_title(
-      'Word &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;', txid, torder, wid
+      'Word &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;', 
+      txid, torder, wid
     )
   );
 }
@@ -166,7 +174,9 @@ function run_overlib_status_1_to_5 (wblink1, wblink2, wblink3, hints, txid, tord
  * @param {int}           rtl         1 if right-to-left language
  * @returns {boolean}
  */
-function run_overlib_status_unknown (wblink1, wblink2, wblink3, hints, txid, torder, txt, multi_words, rtl) {
+function run_overlib_status_unknown (
+  wblink1, wblink2, wblink3, hints, txid, torder, txt, multi_words, rtl
+  ) {
   const lang = getLangFromDict(WBLINK3);
   return overlib(
     make_overlib_audio(txt, lang) + '<b>' + escape_html_chars(hints) + '</b><br /> ' +
@@ -193,7 +203,9 @@ function run_overlib_status_unknown (wblink1, wblink2, wblink3, hints, txid, tor
  * @param {int}           rtl         1 if right-to-left language
  * @returns {boolean}
  */
-function run_overlib_multiword (wblink1, wblink2, wblink3, hints, txid, torder, txt, wid, stat, wcnt, ann) {
+function run_overlib_multiword (
+  wblink1, wblink2, wblink3, hints, txid, torder, txt, wid, stat, wcnt, ann
+  ) {
   const lang = getLangFromDict(WBLINK3);
   return overlib(
     make_overlib_audio(txt, lang) + '<b>' + escape_html_chars_2(hints, ann) + '</b><br /> ' +
@@ -202,7 +214,9 @@ function run_overlib_multiword (wblink1, wblink2, wblink3, hints, txid, torder, 
 		make_overlib_link_delete_multiword(txid, wid) + ' <br /> ' +
 		make_overlib_link_wb(wblink1, wblink2, wblink3, txt, txid, torder),
     CAPTION, 
-    make_overlib_link_edit_multiword_title(wcnt.trim() + '-Word-Expression', txid, torder, wid)
+    make_overlib_link_edit_multiword_title(
+      wcnt.trim() + '-Word-Expression', txid, torder, wid
+    )
   );
 }
 
@@ -242,7 +256,8 @@ function run_overlib_test(
 		  make_overlib_link_change_status_test(
         wid, 
         1, 
-        '<img src="icn/thumb-up.png" title="Got it!" alt="Got it!" /> Got it! [' + cc + ']'
+        '<img src="icn/thumb-up.png" title="Got it!" alt="Got it!" /> Got it! [' + 
+        cc + ']'
       ) +
 		'<hr noshade size=1 />' +
 		make_overlib_link_change_status_test(
@@ -285,36 +300,22 @@ function make_overlib_link_new_multiword (txid, torder, multi_words, rtl) {
   if (rtl) {
     for (var i = 7; i < 0; i--) { 
       if (multi_words[i]) {
-        output += make_overlib_link_create_edit_multiword_rtl(i + 2, txid, torder, multi_words[i]) + ' ';
+        output += make_overlib_link_create_edit_multiword_rtl(
+          i + 2, txid, torder, multi_words[i]
+        ) + ' ';
       } 
     }
   } else {
     for (var i = 0; i < 7; i++) { 
       if (multi_words[i]) {
-        output += make_overlib_link_create_edit_multiword_rtl(i + 2, txid, torder, multi_words[i]) + ' ';
+        output += make_overlib_link_create_edit_multiword_rtl(
+          i + 2, txid, torder, multi_words[i]
+        ) + ' ';
       } 
     }
   }
   output += ' ';
   return output;
-  /* if (rtl) return ' <br />Expr: ' +
-	(mw9 ? make_overlib_link_create_edit_multiword_rtl(9,txid,torder,mw9) + ' ' : '') +
-	(mw8 ? make_overlib_link_create_edit_multiword_rtl(8,txid,torder,mw8) + ' ' : '') +
-	(mw7 ? make_overlib_link_create_edit_multiword_rtl(7,txid,torder,mw7) + ' ' : '') +
-	(mw6 ? make_overlib_link_create_edit_multiword_rtl(6,txid,torder,mw6) + ' ' : '') +
-	(mw5 ? make_overlib_link_create_edit_multiword_rtl(5,txid,torder,mw5) + ' ' : '') +
-	(mw4 ? make_overlib_link_create_edit_multiword_rtl(4,txid,torder,mw4) + ' ' : '') +
-	(mw3 ? make_overlib_link_create_edit_multiword_rtl(3,txid,torder,mw3) + ' ' : '') +
-	(mw2 ? make_overlib_link_create_edit_multiword_rtl(2,txid,torder,mw2) : '') + ' ';
-	else return ' <br />Expr: ' +
-	(mw2 ? make_overlib_link_create_edit_multiword(2,txid,torder,mw2) + ' ' : '') +
-	(mw3 ? make_overlib_link_create_edit_multiword(3,txid,torder,mw3) + ' ' : '') +
-	(mw4 ? make_overlib_link_create_edit_multiword(4,txid,torder,mw4) + ' ' : '') +
-	(mw5 ? make_overlib_link_create_edit_multiword(5,txid,torder,mw5) + ' ' : '') +
-	(mw6 ? make_overlib_link_create_edit_multiword(6,txid,torder,mw6) + ' ' : '') +
-	(mw7 ? make_overlib_link_create_edit_multiword(7,txid,torder,mw7) + ' ' : '') +
-	(mw8 ? make_overlib_link_create_edit_multiword(8,txid,torder,mw8) + ' ' : '') +
-	(mw9 ? make_overlib_link_create_edit_multiword(9,txid,torder,mw9) : '') + ' '; */
 }
 
 /**
@@ -334,7 +335,8 @@ function make_overlib_link_wb (wblink1, wblink2, wblink3, txt, txid, torder) {
 	createTheDictLink(wblink2, txt, 'Dict2', '') +
 	createTheDictLink(wblink3, txt, 'GTr', '');
   if (torder > 0 && txid > 0) {
-    s += '<br />Lookup Sentence: ' + createSentLookupLink(torder, txid, wblink3, 'GTr');
+    s += '<br />Lookup Sentence: ' + 
+    createSentLookupLink(torder, txid, wblink3, 'GTr');
   }
   return s;
 }
@@ -436,8 +438,8 @@ function make_overlib_link_change_status (txid, torder, wid, oldstat, newstat) {
   return ' <a href="set_word_status.php?tid=' + txid +
     '&amp;ord=' + torder +
     '&amp;wid=' + wid +
-    '&amp;status=' + newstat + '" target="ro" onclick="showRightFrames();"><span title="' +
-    getStatusName(newstat) + '">[' +
+    '&amp;status=' + newstat + '" target="ro" onclick="showRightFrames();">' + 
+    '<span title="' + getStatusName(newstat) + '">[' +
     getStatusAbbr(newstat) + ']</span></a> ';
 }
 
@@ -567,7 +569,8 @@ function make_overlib_link_edit_word (txid, torder, wid) {
   const url = 'edit_word.php?tid=' + txid + 
   '&amp;ord=' + torder +
   '&amp;wid=' + wid;
-  return ' <a href="' + url + ' " target="ro" onclick="showRightFrames()">Edit term</a> ';
+  return ' <a href="' + url + 
+  ' " target="ro" onclick="showRightFrames()">Edit term</a> ';
 }
 
 /**
@@ -594,8 +597,9 @@ function make_overlib_link_edit_word_title (text, txid, torder, wid) {
  * @returns {string} HTML-formatted link.
  */
 function make_overlib_link_delete_word (txid, wid) {
-  return ' <a onclick="showRightFrames(); return confirmDelete();" href="delete_word.php?wid=' +
-		wid + '&amp;tid=' + txid + '" target="ro">Delete term</a> ';
+  return ' <a onclick="showRightFrames(); return confirmDelete();" ' + 
+  'href="delete_word.php?wid=' + wid + '&amp;tid=' + txid + 
+  '" target="ro">Delete term</a> ';
 }
 
 /**
@@ -606,8 +610,9 @@ function make_overlib_link_delete_word (txid, wid) {
  * @returns {string} HTML-formatted string
  */
 function make_overlib_link_delete_multiword (txid, wid) {
-  return ' <a onclick="showRightFrames(); return confirmDelete();" href="delete_mword.php?wid=' +
-		wid + '&amp;tid=' + txid + '" target="ro">Delete term</a> ';
+  return ' <a onclick="showRightFrames(); return confirmDelete();" ' + 
+  'href="delete_mword.php?wid=' + wid + '&amp;tid=' + txid + 
+  '" target="ro">Delete term</a> ';
 }
 
 /**
@@ -640,7 +645,8 @@ function make_overlib_link_ignore_word (txid, torder) {
  * Create a clickable button to read a word aloud.
  * 
  * @param {string} txt  Word to say
- * @param {string} lang Language name (two letters or four letters separated with a caret)
+ * @param {string} lang Language name (two letters or four letters separated with a 
+ *                      caret)
  * @return {string} HTML-formatted clickable icon
  */
 function make_overlib_audio(txt, lang) {
@@ -655,27 +661,10 @@ function make_overlib_audio(txt, lang) {
   return img.outerHTML;
 }
 
-/**************************************************************
-String extensions
-
-Still in use? (commented on 2.2.2-fork)
-***************************************************************
-
-String.prototype.rtrim = function () {
-  return this.replace(/\s+$/, '');
-};
-
-String.prototype.ltrim = function () {
-  return this.replace(/^\s+/, '');
-};
-
-String.prototype.trim = function (clist) {
-  return this.ltrim().rtrim();
-};*/
 
 /**************************************************************
-Other JS utility functions
-***************************************************************/
+ * Other JS utility functions
+ **************************************************************/
 
 /**
  * Return the name of a given status.
@@ -684,7 +673,7 @@ Other JS utility functions
  * @returns {string}
  */
 function getStatusName (status) {
-  return (STATUSES[status] ? STATUSES[status].name : 'Unknown');
+  return STATUSES[status] ? STATUSES[status].name : 'Unknown';
 }
 
 /**
@@ -694,25 +683,39 @@ function getStatusName (status) {
  * @returns {string} Abbreviation
  */
 function getStatusAbbr (status) {
-  return (STATUSES[status] ? STATUSES[status].abbr : '?');
+  return STATUSES[status] ? STATUSES[status].abbr : '?';
 }
 
+
+/*
+ * Translate a sentence.
+ * 
+ * @param {string} url     Translation URL with "{term}" marking the interesting term 
+ * @param {object} sentctl Textarea contaning sentence 
+ * @returns {void}
+ */
 function translateSentence (url, sentctl) {
-  if ((typeof sentctl !== 'undefined') && (url != '')) {
-    text = sentctl.value;
+  if (typeof sentctl !== 'undefined' && url != '') {
+    const text = sentctl.value;
     if (typeof text === 'string') {
       showRightFrames(undefined, createTheDictUrl(url, text.replace(/[{}]/g, '')));
     }
   }
 }
 
+/*
+ * Translate a sentence.
+ * 
+ * @param {string} url     Translation URL with "{term}" marking the interesting term 
+ * @param {object} sentctl Textarea contaning sentence 
+ * @returns {void}
+ */
 function translateSentence2 (url, sentctl) {
-  if ((typeof sentctl !== 'undefined') && (url != '')) {
-    text = sentctl.value;
+  if (typeof sentctl !== 'undefined' && url != '') {
+    const text = sentctl.value;
     if (typeof text === 'string') {
-      owin(
-        createTheDictUrl(url, text.replace(/[{}]/g, ''))
-      );
+      const finalurl = createTheDictUrl(url, text.replace(/[{}]/g, ''));
+      owin(finalurl);
     }
   }
 }
@@ -721,12 +724,12 @@ function translateSentence2 (url, sentctl) {
  * Open a new window with the translation of the word.
  * 
  * @param {string} url     Dictionary URL
- * @param {string} wordctl Word to translate.
+ * @param {object} wordctl Textarea containing word to translate.
  * @returns {void}
  */
 function translateWord (url, wordctl) {
-  if ((typeof wordctl !== 'undefined') && (url != '')) {
-    text = wordctl.value;
+  if (typeof wordctl !== 'undefined' && url != '') {
+    const text = wordctl.value;
     if (typeof text === 'string') {
       showRightFrames(undefined, createTheDictUrl(url, text));
     }
@@ -737,12 +740,12 @@ function translateWord (url, wordctl) {
  * Open a new window with the translation of the word.
  * 
  * @param {string} url     Dictionary URL
- * @param {string} wordctl Word to translate.
+ * @param {object} wordctl Textarea containing word to translate.
  * @returns {void}
  */
 function translateWord2 (url, wordctl) {
-  if ((typeof wordctl !== 'undefined') && (url != '')) {
-    text = wordctl.value;
+  if (typeof wordctl !== 'undefined' && url != '') {
+    const text = wordctl.value;
     if (typeof text === 'string') {
       owin(createTheDictUrl(url, text));
     }
@@ -783,7 +786,6 @@ function getLangFromDict(wblink3) {
 function make_tooltip (word, trans, roman, status) {
   const nl = '\x0d';
   let title = word;
-  // if (title != '' ) title = '▶ ' + title;
   if (roman != '') {
     if (title != '') title += nl;
     title += '▶ ' + roman;
@@ -810,9 +812,8 @@ function escape_html_chars_2 (title, ann) {
     const ann2 = escape_html_chars(ann);
     return escape_html_chars(title).replace(ann2,
       '<span style="color:red">' + ann2 + '</span>');
-  } else { 
-    return escape_html_chars(title); 
-  }
+  } 
+  return escape_html_chars(title);
 }
 
 /**
@@ -842,17 +843,47 @@ function oewin (url) {
 }
 
 /**
- * Create a dictionary URL
+ * Create a dictionary URL.
+ * 
+ * JS alter ego of the createTheDictLink PHP function.
+ * 
+ * Case 1: url without any ###: append UTF-8-term
+ * Case 2: url with one ###: substitute UTF-8-term
  * 
  * @param {string} u Dictionary URL
- * @param {string} w Word
- * @returns {string} A link to trans.php to get a translation of the word
+ * @param {string} w Term to be inserted in the URL
+ * @returns {string} A link to external dictionary to get a translation of the word
+ * 
+ * @since 2.5.4-fork Internals rewrote, do no longer use PHP code.
+ * @since 2.5.4-fork The option putting encoding between ###enc### does no 
+ *                   longer work. It is deprecated and will be removed.
  */
 function createTheDictUrl (u, w) {
   const url = u.trim();
   const trm = w.trim();
-  const r = 'trans.php?x=2&i=' + escape(u) + '&t=' + w;
-  return r;
+  const pos = url.indexOf('###');
+  // no ### found
+  if (pos == -1) {
+      return url + encodeURIComponent(trm);
+  }
+  // ### found
+  const pos2 = url.indexOf('###', pos + 1);
+  if (pos2 === -1) {
+      // 1 ### found
+      return url.replace("###", trm == '' ? '+' : encodeURIComponent(trm));
+  }
+  // 2 ### found
+  // Get encoding
+  const enc = url.substring(pos + 3, pos2 - pos - 3).trim();
+  console.warn(
+   "Trying to use encoding '" + enc + "'. This feature is abandonned since " + 
+   "2.5.4-fork. Using default UTF-8." 
+  );
+  let output = url.substring(0, pos) + encodeURIComponent(trm);
+  if (pos2+3 < url.length) { 
+   output += url.substring(pos2 + 3); 
+  }
+  return output;
 }
 
 /**
@@ -902,7 +933,8 @@ function createSentLookupLink (torder, txid, url, txt) {
     return r;
   }
   if (url.substring(0, 8) == '*http://' || url.substring(0, 9) == '*https://') {
-    r = ' <span class="click" onclick="owin(\'trans.php?x=1&i=' + torder + '&t=' + txid + '\');">' + txt + '</span> ';
+    r = ' <span class="click" onclick="owin(\'trans.php?x=1&i=' + torder + 
+    '&t=' + txid + '\');">' + txt + '</span> ';
   } else if (url.substring(0, 7) == 'http://' || url.substring(0, 8) == 'https://') {
     r = ' <a href="trans.php?x=1&i=' + torder + '&t=' + txid + 
     '" target="ru" onclick="showRightFrames();">' + txt + '</a> ';
@@ -956,7 +988,14 @@ function multiActionGo (f, sel) {
         let notok = 1;
         var answer = '';
         while (notok) {
-          answer = prompt('*** ' + t + ' ***\n\n*** ' + $('input.markcheck:checked').length + ' Record(s) will be affected ***\n\nPlease enter one tag (20 char. max., no spaces, no commas -- or leave empty to cancel:', answer);
+          answer = prompt(
+            '*** ' + t + ' ***' +
+            '\n\n*** ' + $('input.markcheck:checked').length + 
+            ' Record(s) will be affected ***' + 
+            '\n\nPlease enter one tag (20 char. max., no spaces, no commas -- ' + 
+            'or leave empty to cancel:', 
+            answer
+          );
           if (typeof answer === 'object') answer = '';
           if (answer.indexOf(' ') > 0 || answer.indexOf(',') > 0) {
             alert('Please no spaces or commas!');
@@ -970,8 +1009,15 @@ function multiActionGo (f, sel) {
           f.data.value = answer;
           f.submit();
         }
-      } else if (v == 'del' || v == 'smi1' || v == 'spl1' || v == 's1' || v == 's5' || v == 's98' || v == 's99' || v == 'today' || v == 'delsent' || v == 'lower' || v == 'cap') {
-        var answer = confirm('*** ' + t + ' ***\n\n*** ' + $('input.markcheck:checked').length + ' Record(s) will be affected ***\n\nAre you sure?');
+      } else if (
+        v == 'del' || v == 'smi1' || v == 'spl1' || v == 's1' || v == 's5' || 
+        v == 's98' || v == 's99' || v == 'today' || v == 'delsent' || 
+        v == 'lower' || v == 'cap'
+      ) {
+        var answer = confirm(
+          '*** ' + t + ' ***\n\n*** ' + $('input.markcheck:checked').length + 
+          ' Record(s) will be affected ***\n\nAre you sure?'
+        );
         if (answer) {
           f.submit();
         }
@@ -984,7 +1030,7 @@ function multiActionGo (f, sel) {
 }
 
 function allActionGo (f, sel, n) {
-  if ((typeof f !== 'undefined') && (typeof sel !== 'undefined')) {
+  if (typeof f !== 'undefined' && typeof sel !== 'undefined') {
     const v = sel.value;
     const t = sel.options[sel.selectedIndex].text;
     if (typeof v === 'string') {
@@ -992,7 +1038,14 @@ function allActionGo (f, sel, n) {
         let notok = 1;
         var answer = '';
         while (notok) {
-          answer = prompt('THIS IS AN ACTION ON ALL RECORDS\nON ALL PAGES OF THE CURRENT QUERY!\n\n*** ' + t + ' ***\n\n*** ' + n + ' Record(s) will be affected ***\n\nPlease enter one tag (20 char. max., no spaces, no commas -- or leave empty to cancel:', answer);
+          answer = prompt(
+            'THIS IS AN ACTION ON ALL RECORDS\n' + 
+            'ON ALL PAGES OF THE CURRENT QUERY!\n\n' + 
+            '*** ' + t + ' ***\n\n*** ' + n + ' Record(s) will be affected ***\n\n' +
+            'Please enter one tag (20 char. max., no spaces, no commas -- ' + 
+            'or leave empty to cancel:', 
+            answer
+          );
           if (typeof answer === 'object') answer = '';
           if (answer.indexOf(' ') > 0 || answer.indexOf(',') > 0) {
             alert('Please no spaces or commas!');
@@ -1006,8 +1059,16 @@ function allActionGo (f, sel, n) {
           f.data.value = answer;
           f.submit();
         }
-      } else if (v == 'delall' || v == 'smi1all' || v == 'spl1all' || v == 's1all' || v == 's5all' || v == 's98all' || v == 's99all' || v == 'todayall' || v == 'delsentall' || v == 'capall' || v == 'lowerall') {
-        var answer = confirm('THIS IS AN ACTION ON ALL RECORDS\nON ALL PAGES OF THE CURRENT QUERY!\n\n*** ' + t + ' ***\n\n*** ' + n + ' Record(s) will be affected ***\n\nARE YOU SURE?');
+      } else if (
+        v == 'delall' || v == 'smi1all' || v == 'spl1all' || v == 's1all' || 
+        v == 's5all' || v == 's98all' || v == 's99all' || v == 'todayall' || 
+        v == 'delsentall' || v == 'capall' || v == 'lowerall'
+      ) {
+        var answer = confirm(
+          'THIS IS AN ACTION ON ALL RECORDS\nON ALL PAGES OF THE CURRENT QUERY!\n\n'+
+          '*** ' + t + ' ***\n\n*** ' + n + ' Record(s) will be affected ***\n\n' + 
+          'ARE YOU SURE?'
+        );
         if (answer) {
           f.submit();
         }
@@ -1056,6 +1117,8 @@ function resetAll (url) {
  * 
  * @param {string} check_name Cookie name 
  * @returns {string|null} Value of the cookie if found, null otherwise
+ * 
+ * @since 2.5.4-fork Use decodeURIComponent instead of deprecated unescape
  */
 function getCookie (check_name) {
   const a_all_cookies = document.cookie.split(';');
@@ -1070,10 +1133,11 @@ function getCookie (check_name) {
     if (cookie_name == check_name) {
       b_cookie_found = true;
       if (a_temp_cookie.length > 1) {
-        cookie_value = unescape(a_temp_cookie[1].replace(/^\s+|\s+$/g, ''));
+        cookie_value = decodeURIComponent(
+          a_temp_cookie[1].replace(/^\s+|\s+$/g, '')
+        );
       }
       return cookie_value;
-      break;
     }
     a_temp_cookie = null;
     cookie_name = '';
@@ -1093,6 +1157,8 @@ function getCookie (check_name) {
  * @param {string} domain  Cookie domain 
  * @param {boolean} secure If it should only be sent through secure connection 
  * @returns {void}
+ * 
+ * @since 2.5.4-fork Use encodeURIComponent instead of deprecated escape
  */
 function setCookie (name, value, expires, path, domain, secure) {
   const today = new Date();
@@ -1101,11 +1167,11 @@ function setCookie (name, value, expires, path, domain, secure) {
     expires = expires * 1000 * 60 * 60 * 24;
   }
   const expires_date = new Date(today.getTime() + (expires));
-  document.cookie = name + '=' + escape(value) +
-		((expires) ? ';expires=' + expires_date.toGMTString() : '') +
-		((path) ? ';path=' + path : '') +
-		((domain) ? ';domain=' + domain : '') +
-		((secure) ? ';secure' : '');
+  document.cookie = name + '=' + encodeURIComponent(value) +
+		(expires ? ';expires=' + expires_date.toGMTString() : '') +
+		(path ? ';path=' + path : '') +
+		(domain ? ';domain=' + domain : '') +
+		(secure ? ';secure' : '');
 }
 
 /**
@@ -1119,8 +1185,8 @@ function setCookie (name, value, expires, path, domain, secure) {
 function deleteCookie (name, path, domain) {
   if (getCookie(name)) {
     document.cookie = name + '=' +
-		((path) ? ';path=' + path : '') +
-		((domain) ? ';domain=' + domain : '') +
+		(path ? ';path=' + path : '') +
+		(domain ? ';domain=' + domain : '') +
 		';expires=Thu, 01-Jan-1970 00:00:01 GMT';
   }
 }
