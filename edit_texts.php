@@ -28,6 +28,7 @@
  */
 
 require_once 'inc/session_utility.php';
+require_once 'inc/start_session.php';
 
 /**
  * Get the value of $wh_query.
@@ -71,7 +72,8 @@ function edit_texts_get_wh_query($currentquery, $currentquerymode, $currentregex
             $wh_query = '';
             unset($_SESSION['currentwordquery']);
             if (isset($_REQUEST['query'])) { 
-                echo '<p id="hide3" style="color:red;text-align:center;">+++ Warning: Invalid Search +++</p>'; 
+                echo '<p id="hide3" style="color:red;text-align:center;">' + 
+                '+++ Warning: Invalid Search +++</p>'; 
             }
         }
     } else { 

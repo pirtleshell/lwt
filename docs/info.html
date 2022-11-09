@@ -1919,10 +1919,16 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 <h4>Changed</h4>
 <ul>
 <li>Some deprecated functions <code>escape</code> and <code>unescape</code> were replaced by modern equivalents <code>encodeURIcomponent</code> and <code>decodeURIcomponent</code>. This may lead to changes in cookies, notably making them work better.</li>
+<li>
+<code>do_test.php</code>, <code>edit_texts.php</code>, <code>edit_words.php</code> and <code>set_test_status.php</code> now explicitly require a running session. They were silently failing before this release.</li>
 </ul>
 <h4>Removed</h4>
 <ul>
 <li>The ability to use a dictionary with a specific encoding, introduced in 1.0.2, is being removed. It was making things overwhelmingly complex and caused issues, as signaled in <a href="https://github.com/HugoFara/lwt/issues/58">#58</a>. Adapted from PR <a href="https://github.com/HugoFara/lwt/pull/59">#59</a>.</li>
+</ul>
+<h4>Fixed</h4>
+<ul>
+<li>Testing specific terms was broken (<a href="https://github.com/HugoFara/lwt/issues/66">#66</a>) and tests were sometimes not counting score. Solution inspired from PR <a href="https://github.com/HugoFara/lwt/issues/67">#67</a> from <a href="https://github.com/jzohrab">@jzohrab</a>.</li>
 </ul>
 <h3>2.5.3-fork (November 06 2022)</h3>
 <h4>Added</h4>

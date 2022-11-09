@@ -456,9 +456,8 @@ function getsess($s)
 {
     if (isset($_SESSION[$s]) ) {
         return trim($_SESSION[$s]);
-    } else {
-        return ''; 
-    }
+    } 
+    return '';
 }
 
 /**

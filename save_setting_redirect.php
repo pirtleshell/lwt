@@ -1,9 +1,10 @@
 <?php
 
-/**************************************************************
-Call: save_setting_redirect.php?k=[key]&v=[value]&u=[RedirURI]
-Save a Setting (k/v) and redirect to URI u
- ***************************************************************/
+/**
+ * Save a Setting (k/v) and redirect to URI u
+ * 
+ * Call: save_setting_redirect.php?k=[key]&v=[value]&u=[RedirURI]
+ */
 
 require_once 'inc/session_utility.php';
 
@@ -11,7 +12,7 @@ $k = getreq('k');
 $v = getreq('v');
 $u = getreq('u');
 
-if($k == 'currentlanguage') {
+if ($k == 'currentlanguage') {
 
     unset($_SESSION['currenttextpage']);
     unset($_SESSION['currenttextquery']);

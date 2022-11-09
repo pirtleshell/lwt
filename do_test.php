@@ -20,6 +20,7 @@
 
 require_once 'inc/session_utility.php';
 require_once 'inc/mobile_interactions.php';
+require_once 'inc/start_session.php';
 require_once 'do_test_header.php';    
 require_once 'do_test_test.php';
 require_once 'do_test_table.php';
@@ -102,7 +103,9 @@ function get_test_property()
  */
 function do_test_mobile_page_content($property) 
 {
-    do_frameset_mobile_page_content("do_test_header.php?" . $property, "empty.html", true);
+    do_frameset_mobile_page_content(
+        "do_test_header.php?$property", "empty.html", true
+    );
 }
 
 /**
@@ -118,7 +121,9 @@ function do_test_mobile_page($property)
 {
     do_frameset_mobile_css();
     do_frameset_mobile_js();
-    do_frameset_mobile_page_content("do_test_header.php?" . $property, "empty.html", true);
+    do_frameset_mobile_page_content(
+        "do_test_header.php?$property", "empty.html", true
+    );
 }
 
 /**
@@ -149,7 +154,8 @@ function do_test_desktop_page($property)
         ?>
     </div>
 </div>
-<div id="frames-r" style="position: fixed; top: 0; right: -100%; width: 100%; height: 100%;" 
+<div id="frames-r" 
+style="position: fixed; top: 0; right: -100%; width: 100%; height: 100%;" 
 onclick="hideRightFrames();">
     <!-- iFrames wrapper for events -->
     <div style="margin-left: 50%; height: 99%;">
@@ -185,11 +191,7 @@ function do_test_page($p)
 {
     pagestart_nobody('Test');
     
-    if (is_mobile()) {
-        do_test_mobile_page($p);
-    } else {
-        do_test_desktop_page($p);
-    }
+    do_test_desktop_page($p);
 
     pageend();
 }

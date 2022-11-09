@@ -15,6 +15,7 @@
  */
 
 require_once 'inc/session_utility.php';
+require_once 'inc/start_session.php';
 
 /**
  * Echo the page HTML content when setting word status.
