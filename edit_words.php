@@ -1,7 +1,6 @@
 <?php
 
-
-/**************************************************************
+/**
  * Manage terms
  * 
  * Call: edit_words.php?....
@@ -21,10 +20,11 @@
  *  ... tag1=[tagid] ... tag filter 1   
  *  ... tag2=[tagid] ... tag filter 2   
  *  ... tag12=0/1 ... tag1-tag2 OR=0, AND=1  
-***************************************************************/
+ */
 
 require_once 'inc/session_utility.php';
 require_once 'inc/simterms.php';
+require_once 'inc/start_session.php';
 
 $currentlang = validateLang(processDBParam("filterlang", 'currentlanguage', '', 0));
 $currentsort = processDBParam("sort", 'currentwordsort', '1', 1);
@@ -84,8 +84,8 @@ case 'transl':
     $wh_query=' and (WoTranslation ' . $wh_query . ')';
     break;
 }
-if($currentquery!=='') {
-    if($currentregexmode!=='') {
+if ($currentquery!=='') {
+    if ($currentregexmode!=='') {
         if (
             @mysqli_query(
                 $GLOBALS["DBCONNECTION"], 
@@ -115,7 +115,8 @@ else {
             $wh_tag1 = "group_concat(WtTgID) IS NULL"; 
         }
         else {
-            $wh_tag1 = "concat('/',group_concat(WtTgID separator '/'),'/') like '%/" . $currenttag1 . "/%'"; 
+            $wh_tag1 = "concat('/',group_concat(WtTgID separator '/'),'/') like '%/" . 
+            $currenttag1 . "/%'"; 
         }
     } 
     if ($currenttag2 != '') {
@@ -123,7 +124,8 @@ else {
             $wh_tag2 = "group_concat(WtTgID) IS NULL"; 
         }
         else {
-            $wh_tag2 = "concat('/',group_concat(WtTgID separator '/'),'/') like '%/" . $currenttag2 . "/%'"; 
+            $wh_tag2 = "concat('/',group_concat(WtTgID separator '/'),'/') like '%/" . 
+            $currenttag2 . "/%'"; 
         }
     } 
     if ($currenttag1 != '' && $currenttag2 == '') {    
@@ -132,7 +134,8 @@ else {
     elseif ($currenttag2 != '' && $currenttag1 == '') {    
         $wh_tag = " having (" . $wh_tag2 . ') ';
     } else {
-        $wh_tag = " having ((" . $wh_tag1 . ($currenttag12 ? ') AND (' : ') OR (') . $wh_tag2 . ')) '; 
+        $wh_tag = " having ((" . $wh_tag1 . ($currenttag12 ? ') AND (' : ') OR (') . 
+        $wh_tag2 . ')) '; 
     }
 }
 
@@ -395,9 +398,20 @@ if (isset($_REQUEST['allaction'])) {
             $id = $record['WoID'];
             $message='0';
             if ($allaction == 'delall' ) {
-                $message = runsql('delete from ' . $tbpref . 'words where WoID = ' . $id, "");
-                do_mysqli_query('update ' . $tbpref . 'textitems2 set Ti2WoID = 0 where Ti2WordCount = 1 and Ti2WoID = ' . $id);
-                do_mysqli_query('delete from ' . $tbpref . 'textitems2 where Ti2WoID  = ' . $id);
+                $message = runsql(
+                    'delete from ' . $tbpref . 'words 
+                    where WoID = ' . $id, 
+                    ""
+                );
+                do_mysqli_query(
+                    'update ' . $tbpref . 'textitems2 
+                    set Ti2WoID = 0 
+                    where Ti2WordCount = 1 and Ti2WoID = ' . $id
+                );
+                do_mysqli_query(
+                    'delete from ' . $tbpref . 'textitems2 
+                    where Ti2WoID  = ' . $id
+                );
             } elseif ($allaction == 'addtagall' ) {
                 addtaglist($actiondata, '(' . $id . ')');
                 $message = 1;
@@ -405,25 +419,73 @@ if (isset($_REQUEST['allaction'])) {
                 removetaglist($actiondata, '(' . $id . ')');
                 $message = 1;
             } elseif ($allaction == 'spl1all' ) {
-                $message = runsql('update ' . $tbpref . 'words set WoStatus=WoStatus+1, WoStatusChanged = NOW(),' . make_score_random_insert_update('u') . ' where WoStatus in (1,2,3,4) and WoID = ' . $id, "");
+                $message = runsql(
+                    'update ' . $tbpref . 'words 
+                    set WoStatus=WoStatus+1, WoStatusChanged = NOW(),' . 
+                    make_score_random_insert_update('u') . ' 
+                    where WoStatus in (1,2,3,4) and WoID = ' . $id, 
+                    ""
+                );
             } elseif ($allaction == 'smi1all' ) {
-                $message = runsql('update ' . $tbpref . 'words set WoStatus=WoStatus-1, WoStatusChanged = NOW(),' . make_score_random_insert_update('u') . ' where WoStatus in (2,3,4,5) and WoID = ' . $id, "");
+                $message = runsql(
+                    'update ' . $tbpref . 'words 
+                    set WoStatus=WoStatus-1, WoStatusChanged = NOW(),' .
+                    make_score_random_insert_update('u') . ' 
+                    where WoStatus in (2,3,4,5) and WoID = ' . $id, 
+                    ""
+                );
             } elseif ($allaction == 's5all' ) {
-                $message = runsql('update ' . $tbpref . 'words set WoStatus=5, WoStatusChanged = NOW(),' . make_score_random_insert_update('u') . ' where WoID = ' . $id, "");
+                $message = runsql(
+                    'update ' . $tbpref . 'words 
+                    set WoStatus=5, WoStatusChanged = NOW(),' . 
+                    make_score_random_insert_update('u') . ' where WoID = ' . $id, 
+                    ""
+                );
             } elseif ($allaction == 's1all' ) {
-                $message = runsql('update ' . $tbpref . 'words set WoStatus=1, WoStatusChanged = NOW(),' . make_score_random_insert_update('u') . ' where WoID = ' . $id, "");
+                $message = runsql(
+                    'update ' . $tbpref . 'words 
+                    set WoStatus=1, WoStatusChanged = NOW(),' . 
+                    make_score_random_insert_update('u') . ' where WoID = ' . $id, 
+                    ""
+                );
             } elseif ($allaction == 's99all' ) {
-                $message = runsql('update ' . $tbpref . 'words set WoStatus=99, WoStatusChanged = NOW(),' . make_score_random_insert_update('u') . ' where WoID = ' . $id, "");
+                $message = runsql(
+                    'update ' . $tbpref . 'words 
+                    set WoStatus=99, WoStatusChanged = NOW(),' . 
+                    make_score_random_insert_update('u') . ' where WoID = ' . $id, 
+                    ""
+                );
             } elseif ($allaction == 's98all' ) {
-                $message = runsql('update ' . $tbpref . 'words set WoStatus=98, WoStatusChanged = NOW(),' . make_score_random_insert_update('u') . ' where WoID = ' . $id, "");
+                $message = runsql(
+                    'update ' . $tbpref . 'words 
+                    set WoStatus=98, WoStatusChanged = NOW(),' . 
+                    make_score_random_insert_update('u') . ' where WoID = ' . $id, 
+                    ""
+                );
             } elseif ($allaction == 'todayall' ) {
-                $message = runsql('update ' . $tbpref . 'words set WoStatusChanged = NOW(),' . make_score_random_insert_update('u') . ' where WoID = ' . $id, "");
+                $message = runsql(
+                    'update ' . $tbpref . 'words 
+                    set WoStatusChanged = NOW(),' . 
+                    make_score_random_insert_update('u') . ' where WoID = ' . $id, 
+                    ""
+                );
             } elseif ($allaction == 'delsentall' ) {
-                $message = runsql('update ' . $tbpref . 'words set WoSentence = NULL where WoID = ' . $id, "");
+                $message = runsql(
+                    'update ' . $tbpref . 'words 
+                    set WoSentence = NULL where WoID = ' . $id, 
+                    ""
+                );
             } elseif ($allaction == 'lowerall' ) {
-                $message = runsql('update ' . $tbpref . 'words set WoText = WoTextLC where WoID = ' . $id, "");
+                $message = runsql('update ' . $tbpref . 'words 
+                set WoText = WoTextLC where WoID = ' . $id, 
+                ""
+            );
             } elseif ($allaction == 'capall' ) {
-                $message = runsql('update ' . $tbpref . 'words set WoText = CONCAT(UPPER(LEFT(WoTextLC,1)),SUBSTRING(WoTextLC,2)) where WoID = ' . $id, "");
+                $message = runsql(
+                    'update ' . $tbpref . 'words 
+                    set WoText = CONCAT(UPPER(LEFT(WoTextLC,1)),SUBSTRING(WoTextLC,2)) 
+                    where WoID = ' . $id, 
+                    "");
             }
             $cnt += (int)$message;
         }
@@ -438,33 +500,81 @@ if (isset($_REQUEST['allaction'])) {
             $message = "Deleted: $cnt Terms";
             adjust_autoincr('words', 'WoID');
             runsql(
-                "DELETE " . $tbpref . "wordtags FROM (" . $tbpref . "wordtags LEFT JOIN " . $tbpref . "words on WtWoID = WoID) WHERE WoID IS NULL", '');
+                "DELETE " . $tbpref . "wordtags FROM (
+                    " . $tbpref . "wordtags 
+                    LEFT JOIN " . $tbpref . "words 
+                    on WtWoID = WoID
+                ) WHERE WoID IS NULL", 
+                ''
+            );
         } else {
             $message = "$cnt Terms changed";
         }
     } elseif ($allaction == 'expall' ) {
         if ($currenttext == '') {
-            anki_export('select distinct WoID, LgRightToLeft, LgRegexpWordCharacters, LgName, WoText, WoTranslation, WoRomanization, WoSentence, ifnull(group_concat(distinct TgText order by TgText separator \' \'),\'\') as taglist from ((' . $tbpref . 'words left JOIN ' . $tbpref . 'wordtags ON WoID = WtWoID) left join ' . $tbpref . 'tags on TgID = WtTgID), ' . $tbpref . 'languages where WoLgID = LgID AND WoTranslation != \'*\' and WoSentence like concat(\'%{\',WoText,\'}%\') ' . $wh_lang . $wh_stat .  $wh_query . ' group by WoID ' . $wh_tag);
+            anki_export(
+                'select distinct WoID, LgRightToLeft, LgRegexpWordCharacters, 
+                LgName, WoText, WoTranslation, WoRomanization, WoSentence, 
+                ifnull(
+                    group_concat(distinct TgText order by TgText separator \' \'),
+                    \'\') as taglist 
+                from (
+                    (
+                        ' . $tbpref . 'words 
+                        left JOIN ' . $tbpref . 'wordtags 
+                        ON WoID = WtWoID
+                    ) 
+                    left join ' . $tbpref . 'tags 
+                    on TgID = WtTgID
+                ), ' . $tbpref . 'languages 
+                where WoLgID = LgID AND WoTranslation != \'*\' and 
+                WoSentence like concat(\'%{\',WoText,\'}%\') ' . $wh_lang . 
+                $wh_stat . $wh_query . ' 
+                group by WoID ' . $wh_tag
+            );
         } else {
-            anki_export('select distinct WoID, LgRightToLeft, LgRegexpWordCharacters, LgName, WoText, WoTranslation, WoRomanization, WoSentence, ifnull(group_concat(distinct TgText order by TgText separator \' \'),\'\') as taglist from ((' . $tbpref . 'words left JOIN ' . $tbpref . 'wordtags ON WoID = WtWoID) left join ' . $tbpref . 'tags on TgID = WtTgID), ' . $tbpref . 'languages, ' . $tbpref . 'textitems2 where Ti2LgID = WoLgID and Ti2WoID = WoID and Ti2TxID in (' . $currenttext . ')' . ' and WoLgID = LgID AND WoTranslation != \'*\' and WoSentence like concat(\'%{\',WoText,\'}%\') ' . $wh_lang . $wh_stat . $wh_query . ' group by WoID ' . $wh_tag);
+            anki_export(
+                'select distinct WoID, LgRightToLeft, LgRegexpWordCharacters, 
+                LgName, WoText, WoTranslation, WoRomanization, WoSentence, 
+                ifnull(group_concat(distinct TgText order by TgText separator \' \'),\'\') as taglist 
+                from ((' . $tbpref . 'words left JOIN ' . $tbpref . 'wordtags ON WoID = WtWoID) left join ' . $tbpref . 'tags on TgID = WtTgID), ' . $tbpref . 'languages, ' . $tbpref . 'textitems2 where Ti2LgID = WoLgID and Ti2WoID = WoID and Ti2TxID in (' . $currenttext . ')' . ' and WoLgID = LgID AND WoTranslation != \'*\' and WoSentence like concat(\'%{\',WoText,\'}%\') ' . $wh_lang . $wh_stat . $wh_query . ' group by WoID ' . $wh_tag);
         }
     } elseif ($allaction == 'expall2' ) {
         if ($currenttext == '') {
-            tsv_export('select distinct WoID, LgName, WoText, WoTranslation, WoRomanization, WoSentence, WoStatus, ifnull(group_concat(distinct TgText order by TgText separator \' \'),\'\') as taglist from ((' . $tbpref . 'words left JOIN ' . $tbpref . 'wordtags ON WoID = WtWoID) left join ' . $tbpref . 'tags on TgID = WtTgID), ' . $tbpref . 'languages where WoLgID = LgID ' . $wh_lang . $wh_stat .  $wh_query . ' group by WoID ' . $wh_tag);
+            tsv_export(
+                'select distinct WoID, LgName, WoText, WoTranslation, 
+                WoRomanization, WoSentence, WoStatus, 
+                ifnull(group_concat(distinct TgText order by TgText separator \' \'),\'\') as taglist from ((' . $tbpref . 'words left JOIN ' . $tbpref . 'wordtags ON WoID = WtWoID) left join ' . $tbpref . 'tags on TgID = WtTgID), ' . $tbpref . 'languages where WoLgID = LgID ' . $wh_lang . $wh_stat .  $wh_query . ' group by WoID ' . $wh_tag);
         } else {
-            tsv_export('select distinct WoID, LgName, WoText, WoTranslation, WoRomanization, WoSentence, WoStatus, ifnull(group_concat(distinct TgText order by TgText separator \' \'),\'\') as taglist from ((' . $tbpref . 'words left JOIN ' . $tbpref . 'wordtags ON WoID = WtWoID) left join ' . $tbpref . 'tags on TgID = WtTgID), ' . $tbpref . 'languages, ' . $tbpref . 'textitems2 where Ti2LgID = WoLgID and Ti2WoID = WoID and Ti2TxID in (' . $currenttext . ')' . ' and WoLgID = LgID ' . $wh_lang . $wh_stat . $wh_query . ' group by WoID ' . $wh_tag);
+            tsv_export(
+                'select distinct WoID, LgName, WoText, WoTranslation, 
+                WoRomanization, WoSentence, WoStatus, 
+                ifnull(group_concat(distinct TgText order by TgText separator \' \'),\'\') as taglist from ((' . $tbpref . 'words left JOIN ' . $tbpref . 'wordtags ON WoID = WtWoID) left join ' . $tbpref . 'tags on TgID = WtTgID), ' . $tbpref . 'languages, ' . $tbpref . 'textitems2 where Ti2LgID = WoLgID and Ti2WoID = WoID and Ti2TxID in (' . $currenttext . ')' . ' and WoLgID = LgID ' . $wh_lang . $wh_stat . $wh_query . ' group by WoID ' . $wh_tag);
         }
     } elseif ($allaction == 'expall3' ) {
         if ($currenttext == '') {
-            flexible_export('select distinct WoID, LgName, LgExportTemplate, LgRightToLeft, WoText, WoTextLC, WoTranslation, WoRomanization, WoSentence, WoStatus, ifnull(group_concat(distinct TgText order by TgText separator \' \'),\'\') as taglist from ((' . $tbpref . 'words left JOIN ' . $tbpref . 'wordtags ON WoID = WtWoID) left join ' . $tbpref . 'tags on TgID = WtTgID), ' . $tbpref . 'languages where WoLgID = LgID ' . $wh_lang . $wh_stat .  $wh_query . ' group by WoID ' . $wh_tag);
+            flexible_export(
+                'select distinct WoID, LgName, LgExportTemplate, LgRightToLeft,
+                 WoText, WoTextLC, WoTranslation, WoRomanization, WoSentence, 
+                 WoStatus, 
+                 ifnull(group_concat(distinct TgText order by TgText separator \' \'),\'\') as taglist from ((' . $tbpref . 'words left JOIN ' . $tbpref . 'wordtags ON WoID = WtWoID) left join ' . $tbpref . 'tags on TgID = WtTgID), ' . $tbpref . 'languages where WoLgID = LgID ' . $wh_lang . $wh_stat .  $wh_query . ' group by WoID ' . $wh_tag);
         } else {
-            flexible_export('select distinct WoID, LgName, LgExportTemplate, LgRightToLeft, WoText, WoTextLC, WoTranslation, WoRomanization, WoSentence, WoStatus, ifnull(group_concat(distinct TgText order by TgText separator \' \'),\'\') as taglist from ((' . $tbpref . 'words left JOIN ' . $tbpref . 'wordtags ON WoID = WtWoID) left join ' . $tbpref . 'tags on TgID = WtTgID), ' . $tbpref . 'languages, ' . $tbpref . 'textitems2 where Ti2LgID = WoLgID and Ti2WoID = WoID and Ti2TxID in (' . $currenttext . ')' . ' and WoLgID = LgID ' . $wh_lang . $wh_stat . $wh_query . ' group by WoID ' . $wh_tag);
+            flexible_export(
+                'select distinct WoID, LgName, LgExportTemplate, LgRightToLeft, 
+                WoText, WoTextLC, WoTranslation, WoRomanization, WoSentence, 
+                WoStatus, 
+                ifnull(group_concat(distinct TgText order by TgText separator \' \'),\'\') as taglist from ((' . $tbpref . 'words left JOIN ' . $tbpref . 'wordtags ON WoID = WtWoID) left join ' . $tbpref . 'tags on TgID = WtTgID), ' . $tbpref . 'languages, ' . $tbpref . 'textitems2 where Ti2LgID = WoLgID and Ti2WoID = WoID and Ti2TxID in (' . $currenttext . ')' . ' and WoLgID = LgID ' . $wh_lang . $wh_stat . $wh_query . ' group by WoID ' . $wh_tag);
         }
     } elseif ($allaction == 'testall' ) {
         if ($currenttext == '') {
-            $sql = 'select distinct WoID from (' . $tbpref . 'words left JOIN ' . $tbpref . 'wordtags ON WoID = WtWoID) where (1=1) ' . $wh_lang . $wh_stat .  $wh_query . ' group by WoID ' . $wh_tag;
+            $sql = 'select distinct WoID 
+            from (' . $tbpref . 'words left JOIN ' . $tbpref . 'wordtags ON WoID = WtWoID) 
+            where (1=1) ' . $wh_lang . $wh_stat .  $wh_query . ' group by WoID ' . $wh_tag;
         } else {
-            $sql = 'select distinct WoID from (' . $tbpref . 'words left JOIN ' . $tbpref . 'wordtags ON WoID = WtWoID), ' . $tbpref . 'textitems2 where Ti2LgID = WoLgID and Ti2WoID = WoID and Ti2TxID in (' . $currenttext . ')' . $wh_lang . $wh_stat . $wh_query . ' group by WoID ' . $wh_tag;
+            $sql = 'select distinct WoID 
+            from (' . $tbpref . 'words left JOIN ' . $tbpref . 'wordtags ON WoID = WtWoID), ' . $tbpref . 'textitems2 
+            where Ti2LgID = WoLgID and Ti2WoID = WoID and Ti2TxID in (' . $currenttext . ')' . $wh_lang . $wh_stat . $wh_query . ' 
+            group by WoID ' . $wh_tag;
         }
         $cnt = 0;
         $list = '(';
@@ -523,7 +633,11 @@ if (isset($_REQUEST['allaction'])) {
         if($len > 1) {
             insertExpressions($textlc, $_REQUEST["WoLgID"], $wid, $len, 1);
         } else {
-            do_mysqli_query('UPDATE ' . $tbpref . 'textitems2 SET Ti2WoID = ' . $wid . ' WHERE Ti2LgID = ' . $_REQUEST["WoLgID"] . ' AND LOWER(Ti2Text) = ' . convert_string_to_sqlsyntax_notrim_nonull($textlc));
+            do_mysqli_query(
+                'UPDATE ' . $tbpref . 'textitems2 
+                SET Ti2WoID = ' . $wid . ' 
+                WHERE Ti2LgID = ' . $_REQUEST["WoLgID"] . ' AND LOWER(Ti2Text) = ' . 
+                convert_string_to_sqlsyntax_notrim_nonull($textlc));
         }
     } else {
         // UPDATE
