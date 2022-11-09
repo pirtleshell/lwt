@@ -691,7 +691,7 @@ function edit_languages_display($message)
         } else {
             $tdth = 'td';
             echo '<td class="td1 center">
-                <a href="save_setting_redirect.php?k=currentlanguage&amp;v=' . $lid . '&amp;u=edit_languages.php">
+                <a href="inc/save_setting_redirect.php?k=currentlanguage&amp;v=' . $lid . '&amp;u=edit_languages.php">
                 <img src="icn/tick-button.png" title="Set as Current Language" alt="Set as Current Language" />
                 </a>
                 </td>';
