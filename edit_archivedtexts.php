@@ -1,7 +1,9 @@
 <?php
 
 
-/**************************************************************
+/***
+Manage archived texts
+
 Call: edit_archivedtexts.php?....
       ... markaction=[opcode] ... do actions on marked texts
       ... del=[textid] ... do delete
@@ -12,8 +14,7 @@ Call: edit_archivedtexts.php?....
       ... sort=[sortcode] ... sort 
       ... page=[pageno] ... page  
       ... query=[titlefilter] ... title filter   
-Manage archived texts
- ***************************************************************/
+ */
 
 require_once 'inc/session_utility.php';
 
@@ -22,15 +23,28 @@ $currentsort = processDBParam("sort", 'currentarchivesort', '1', 1);
 
 $currentpage = processSessParam("page", "currentarchivepage", '1', 1);
 $currentquery = processSessParam("query", "currentarchivequery", '', 0);
-$currentquerymode = processSessParam("query_mode", "currentarchivequerymode", 'title,text', 0);
+$currentquerymode = processSessParam(
+    "query_mode", "currentarchivequerymode", 'title,text', 0
+);
 $currentregexmode = getSettingWithDefault("set-regex-mode");
-$currenttag1 = validateArchTextTag(processSessParam("tag1", "currentarchivetexttag1", '', 0), $currentlang);
-$currenttag2 = validateArchTextTag(processSessParam("tag2", "currentarchivetexttag2", '', 0), $currentlang);
+$currenttag1 = validateArchTextTag(
+    processSessParam("tag1", "currentarchivetexttag1", '', 0), 
+    $currentlang
+);
+$currenttag2 = validateArchTextTag(
+    processSessParam("tag2", "currentarchivetexttag2", '', 0), 
+    $currentlang
+);
 $currenttag12 = processSessParam("tag12", "currentarchivetexttag12", '', 0);
 
 $wh_lang = ($currentlang != '') ? (' and AtLgID=' . $currentlang) : '';
-$wh_query = $currentregexmode . 'like ' .  convert_string_to_sqlsyntax(($currentregexmode == '') ? str_replace("*", "%", mb_strtolower($currentquery, 'UTF-8')) : $currentquery);
-switch($currentquerymode){
+$wh_query = $currentregexmode . 'LIKE ' .  
+convert_string_to_sqlsyntax(
+    ($currentregexmode == '') ? 
+    str_replace("*", "%", mb_strtolower($currentquery, 'UTF-8')) : 
+    $currentquery
+);
+switch ($currentquerymode) {
 case 'title,text':
     $wh_query=' and (AtTitle ' . $wh_query . ' or AtText ' . $wh_query . ')';
     break;
@@ -41,13 +55,18 @@ case 'text':
     $wh_query=' and (AtText ' . $wh_query . ')';
     break;
 }
-if($currentquery!=='') {
-    if($currentregexmode!=='') {
-        if(@mysqli_query($GLOBALS["DBCONNECTION"], 'select "test" rlike ' . convert_string_to_sqlsyntax($currentquery))===false) {
+if ($currentquery!=='') {
+    if ($currentregexmode!=='') {
+        if (@mysqli_query(
+            $GLOBALS["DBCONNECTION"], 
+            'select "test" rlike ' . convert_string_to_sqlsyntax($currentquery)
+            ) === false) {
             $currentquery='';
             $wh_query = '';
             unset($_SESSION['currentwordquery']);
-            if(isset($_REQUEST['query'])) { echo '<p id="hide3" style="color:red;text-align:center;">+++ Warning: Invalid Search +++</p>'; 
+            if(isset($_REQUEST['query'])) { 
+                echo '<p id="hide3" style="color:red;text-align:center;">' + 
+                '+++ Warning: Invalid Search +++</p>'; 
             }
         }
     }
@@ -64,14 +83,16 @@ if ($currenttag1 == '' && $currenttag2 == '') {
         if ($currenttag1 == -1) {
             $wh_tag1 = "group_concat(AgT2ID) IS NULL"; 
         } else {
-            $wh_tag1 = "concat('/',group_concat(AgT2ID separator '/'),'/') like '%/" . $currenttag1 . "/%'"; 
+            $wh_tag1 = "concat('/',group_concat(AgT2ID separator '/'),'/') like '%/" . 
+            $currenttag1 . "/%'"; 
         }
     } 
     if ($currenttag2 != '') {
         if ($currenttag2 == -1) {
             $wh_tag2 = "group_concat(AgT2ID) IS NULL"; 
         } else {
-            $wh_tag2 = "concat('/',group_concat(AgT2ID separator '/'),'/') like '%/" . $currenttag2 . "/%'"; 
+            $wh_tag2 = "concat('/',group_concat(AgT2ID separator '/'),'/') like '%/" . 
+            $currenttag2 . "/%'"; 
         }
     } 
     if ($currenttag1 != '' && $currenttag2 == '') {    
@@ -79,7 +100,8 @@ if ($currenttag1 == '' && $currenttag2 == '') {
     } elseif ($currenttag2 != '' && $currenttag1 == '') {    
         $wh_tag = " having (" . $wh_tag2 . ') ';
     } else {
-        $wh_tag = " having ((" . $wh_tag1 . ($currenttag12 ? ') AND (' : ') OR (') . $wh_tag2 . ')) '; 
+        $wh_tag = " having ((" . $wh_tag1 . ($currenttag12 ? ') AND (' : ') OR (') . 
+        $wh_tag2 . ')) '; 
     }
 }
 
@@ -194,9 +216,9 @@ if (isset($_REQUEST['markaction'])) {
     }
 }
 
-// DEL
 
 if (isset($_REQUEST['del'])) {
+    // DEL
     $message = runsql(
         'delete from ' . $tbpref . 'archivedtexts where AtID = ' . $_REQUEST['del'], 
         "Archived Texts deleted"
@@ -211,11 +233,8 @@ if (isset($_REQUEST['del'])) {
         WHERE AtID IS NULL", 
         ''
     );
-}
-
-// UNARCH
-
-elseif (isset($_REQUEST['unarch'])) {
+} elseif (isset($_REQUEST['unarch'])) {
+    // UNARCH
     $message2 = runsql(
         'insert into ' . $tbpref . 'texts (
             TxLgID, TxTitle, TxText, TxAnnotatedText, TxAudioURI, TxSourceURI
@@ -262,15 +281,10 @@ elseif (isset($_REQUEST['unarch'])) {
         LEFT JOIN " . $tbpref . "archivedtexts on AgAtID = AtID) 
         WHERE AtID IS NULL", ''
     );
-}
-
-// UPD
-
-elseif (isset($_REQUEST['op'])) {
-    
-    // UPDATE
-    
+} elseif (isset($_REQUEST['op'])) {
+    // UPD    
     if ($_REQUEST['op'] == 'Change') {
+        // UPDATE
         $oldtext = get_first_value(
             'select AtText as value 
             from ' . $tbpref . 'archivedtexts 
@@ -283,9 +297,10 @@ elseif (isset($_REQUEST['op'])) {
             'AtLgID = ' . $_REQUEST["AtLgID"] . ', ' .
             'AtTitle = ' . convert_string_to_sqlsyntax($_REQUEST["AtTitle"]) . ', ' .
             'AtText = ' . convert_string_to_sqlsyntax($_REQUEST["AtText"]) . ', ' .
-            'AtAudioURI = ' . convert_string_to_sqlsyntax($_REQUEST["AtAudioURI"]) . ', ' .
-            'AtSourceURI = ' . convert_string_to_sqlsyntax($_REQUEST["AtSourceURI"]) . ' ' .
-            'where AtID = ' . $_REQUEST["AtID"], 
+            'AtAudioURI = ' . convert_string_to_sqlsyntax($_REQUEST["AtAudioURI"]) . 
+            ', ' .
+            'AtSourceURI = ' .convert_string_to_sqlsyntax($_REQUEST["AtSourceURI"]) .
+            ' WHERE AtID = ' . $_REQUEST["AtID"], 
             "Updated"
         );
         if ($message == 'Updated: 1' && $textsdiffer) {
@@ -302,10 +317,9 @@ elseif (isset($_REQUEST['op'])) {
     
 }
 
-// CHG
 
 if (isset($_REQUEST['chg'])) {
-    
+    // CHG
     $sql = 'select AtLgID, AtTitle, AtText, AtAudioURI, AtSourceURI, 
     length(AtAnnotatedText) as annotlen 
     from ' . $tbpref . 'archivedtexts 
@@ -322,53 +336,56 @@ if (isset($_REQUEST['chg'])) {
      <form class="validate" action="<?php echo $_SERVER['PHP_SELF']; ?>#rec<?php echo $_REQUEST['chg']; ?>" method="post">
      <input type="hidden" name="AtID" value="<?php echo $_REQUEST['chg']; ?>" />
      <table class="tab3" cellspacing="0" cellpadding="5">
-     <tr>
-     <td class="td1 right">Language:</td>
-     <td class="td1">
-     <select name="AtLgID" class="notempty setfocus">
-        <?php
-        echo get_languages_selectoptions($record['AtLgID'], "[Choose...]");
-        ?>
-     </select> <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
-     </td>
-     </tr>
-     <tr>
-     <td class="td1 right">Title:</td>
-     <td class="td1"><input type="text" class="notempty checkoutsidebmp" data_info="Title" name="AtTitle" value="<?php echo tohtml($record['AtTitle']); ?>" maxlength="200" size="60" /> <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /></td>
-     </tr>
-     <tr>
-     <td class="td1 right">Text:</td>
-     <td class="td1">
-     <textarea name="AtText" class="notempty checkbytes checkoutsidebmp" data_maxlength="65000" data_info="Text" cols="60" rows="20"><?php echo tohtml($record['AtText']); ?></textarea> <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
-     </td>
-     </tr>
-     <tr>
-     <td class="td1 right">Ann.Text:</td>
-     <td class="td1">
-        <?php echo ($record['annotlen'] ? '<img src="icn/tick.png" title="With Annotation" alt="With Annotation" /> Exists - May be partially or fully lost if you change the text!' : '<img src="icn/cross.png" title="No Annotation" alt="No Annotation" /> - None'); ?>
-     </td>
-     </tr>
-     <tr>
-     <td class="td1 right">Source URI:</td>
-     <td class="td1"><input type="text" class="checkurl checkoutsidebmp" data_info="Source URI" name="AtSourceURI" value="<?php echo tohtml($record['AtSourceURI']); ?>" maxlength="1000" size="60" /></td>
-     </tr>
-     <tr>
-     <td class="td1 right">Tags:</td>
-     <td class="td1">
-        <?php echo getArchivedTextTags($_REQUEST['chg']); ?>
-     </td>
-     </tr>
-     <tr>
-     <td class="td1 right">Audio-URI:</td>
-     <td class="td1"><input type="text" class="checkoutsidebmp" data_info="Audio-URI" name="AtAudioURI" value="<?php echo tohtml($record['AtAudioURI']); ?>" maxlength="200" size="60" />
-     <span id="mediaselect"><?php echo selectmediapath('AtAudioURI'); ?></span>        
-     </td>
-     </tr>
-     <tr>
-     <td class="td1 right" colspan="2">
-     <input type="button" value="Cancel" onclick="{resetDirty(); location.href='edit_archivedtexts.php#rec<?php echo $_REQUEST['chg']; ?>';}" /> 
-     <input type="submit" name="op" value="Change" /></td>
-     </tr>
+        <tr>
+            <td class="td1 right">Language:</td>
+            <td class="td1">
+            <select name="AtLgID" class="notempty setfocus">
+                <?php
+                echo get_languages_selectoptions($record['AtLgID'], "[Choose...]");
+                ?>
+            </select>
+            <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+        </td>
+        </tr>
+        <tr>
+            <td class="td1 right">Title:</td>
+            <td class="td1"><input type="text" class="notempty checkoutsidebmp" data_info="Title" name="AtTitle" value="<?php echo tohtml($record['AtTitle']); ?>" maxlength="200" size="60" /> <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /></td>
+        </tr>
+        <tr>
+            <td class="td1 right">Text:</td>
+            <td class="td1">
+            <textarea name="AtText" class="notempty checkbytes checkoutsidebmp" data_maxlength="65000" data_info="Text" cols="60" rows="20"><?php echo tohtml($record['AtText']); ?></textarea> <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+        </td>
+        </tr>
+        <tr>
+            <td class="td1 right">Ann.Text:</td>
+            <td class="td1">
+                <?php echo ($record['annotlen'] ? '<img src="icn/tick.png" title="With Annotation" alt="With Annotation" /> Exists - May be partially or fully lost if you change the text!' : '<img src="icn/cross.png" title="No Annotation" alt="No Annotation" /> - None'); ?>
+            </td>
+        </tr>
+        <tr>
+            <td class="td1 right">Source URI:</td>
+            <td class="td1"><input type="text" class="checkurl checkoutsidebmp" data_info="Source URI" name="AtSourceURI" value="<?php echo tohtml($record['AtSourceURI']); ?>" maxlength="1000" size="60" /></td>
+        </tr>
+        <tr>
+            <td class="td1 right">Tags:</td>
+            <td class="td1">
+                <?php echo getArchivedTextTags($_REQUEST['chg']); ?>
+            </td>
+        </tr>
+        <tr>
+            <td class="td1 right">Audio-URI:</td>
+            <td class="td1">
+                <input type="text" class="checkoutsidebmp" data_info="Audio-URI" name="AtAudioURI" value="<?php echo tohtml($record['AtAudioURI']); ?>" maxlength="200" size="60" />
+                <span id="mediaselect"><?php echo selectmediapath('AtAudioURI'); ?></span>        
+            </td>
+        </tr>
+        <tr>
+            <td class="td1 right" colspan="2">
+                <input type="button" value="Cancel" onclick="{resetDirty(); location.href='edit_archivedtexts.php#rec<?php echo $_REQUEST['chg']; ?>';}" /> 
+                <input type="submit" name="op" value="Change" />
+            </td>
+        </tr>
      </table>
      </form>
         
@@ -377,11 +394,8 @@ if (isset($_REQUEST['chg'])) {
     }
     mysqli_free_result($res);
 
-}
-
-// DISPLAY
-
-else {
+} else {
+    // DISPLAY
 
     echo error_message_with_hide($message, 0);
 
@@ -449,66 +463,76 @@ else {
 </div>
 <form name="form1" action="#" onsubmit="document.form1.querybutton.click(); return false;">
 <table class="tab1" cellspacing="0" cellpadding="5">
-<tr>
-<th class="th1" colspan="4">Filter <img src="icn/funnel.png" title="Filter" alt="Filter" />&nbsp;
-<input type="button" value="Reset All" onclick="resetAll('edit_archivedtexts.php');" /></th>
-</tr>
-<tr>
-<td class="td1 center" colspan="2">
-Language:
-<select name="filterlang" onchange="{setLang(document.form1.filterlang,'edit_archivedtexts.php');}">
-    <?php echo get_languages_selectoptions($currentlang, '[Filter off]'); ?></select>
-</td>
-<td class="td1 center" colspan="2">
-<select name="query_mode" onchange="{val=document.form1.query.value;mode=document.form1.query_mode.value; location.href='edit_archivedtexts.php?page=1&amp;query=' + val + '&amp;query_mode=' + mode;}">
-<option value="title,text"<?php if($currentquerymode=="title,text") { echo ' selected="selected"'; 
-} ?>>Title &amp; Text</option>
-<option disabled="disabled">------------</option>
-<option value="title"<?php if($currentquerymode=="title") { echo ' selected="selected"'; 
-} ?>>Title</option>
-<option value="text"<?php if($currentquerymode=="text") { echo ' selected="selected"'; 
-} ?>>Text</option>
-</select><?php
-if($currentregexmode=='') { 
-    echo '<span style="vertical-align: middle"> (Wildc.=*): </span>'; 
-}
-elseif($currentregexmode=='r') { 
-    echo '<span style="vertical-align: middle"> RegEx Mode: </span>';
-} else { 
-    echo '<span style="vertical-align: middle"> RegEx(CS) Mode: </span>'; 
-}?>
-<input type="text" name="query" value="<?php echo tohtml($currentquery); ?>" maxlength="50" size="15" />&nbsp;
-<input type="button" name="querybutton" value="Filter" onclick="{val=document.form1.query.value;val=encodeURIComponent(val); location.href='edit_archivedtexts.php?page=1&amp;query=' + val;}" />&nbsp;
-<input type="button" value="Clear" onclick="{location.href='edit_archivedtexts.php?page=1&amp;query=';}" />
-</td>
-</tr>
-<tr>
-<td class="td1 center" colspan="2" nowrap="nowrap">
-Tag #1:
-<select name="tag1" onchange="{val=document.form1.tag1.options[document.form1.tag1.selectedIndex].value; location.href='edit_archivedtexts.php?page=1&amp;tag1=' + val;}"><?php echo get_archivedtexttag_selectoptions($currenttag1, $currentlang); ?></select>
-</td>
-<td class="td1 center" nowrap="nowrap">
-Tag #1 .. <select name="tag12" onchange="{val=document.form1.tag12.options[document.form1.tag12.selectedIndex].value; location.href='edit_archivedtexts.php?page=1&amp;tag12=' + val;}"><?php echo get_andor_selectoptions($currenttag12); ?></select> .. Tag #2
-</td>
-<td class="td1 center" nowrap="nowrap">
-Tag #2:
-<select name="tag2" onchange="{val=document.form1.tag2.options[document.form1.tag2.selectedIndex].value; location.href='edit_archivedtexts.php?page=1&amp;tag2=' + val;}"><?php echo get_archivedtexttag_selectoptions($currenttag2, $currentlang); ?></select>
-</td>
-</tr>
-    <?php if($recno > 0) { ?>
-<tr>
-<th class="th1" colspan="2" nowrap="nowrap">
-        <?php echo $recno; ?> Text<?php echo ($recno==1?'':'s'); ?>
-</th>
-<th class="th1" colspan="1" nowrap="nowrap">
-        <?php makePager($currentpage, $pages, 'edit_archivedtexts.php', 'form1'); ?>
-</th>
-<th class="th1" nowrap="nowrap">
-Sort Order:
-<select name="sort" onchange="{val=document.form1.sort.options[document.form1.sort.selectedIndex].value; location.href='edit_archivedtexts.php?page=1&amp;sort=' + val;}"><?php echo get_textssort_selectoptions($currentsort); ?></select>
-</th></tr>
-        <?php 
-    } ?>
+    <tr>
+        <th class="th1" colspan="4">Filter <img src="icn/funnel.png" title="Filter" alt="Filter" />&nbsp;
+            <input type="button" value="Reset All" onclick="resetAll('edit_archivedtexts.php');" />
+        </th>
+    </tr>
+    <tr>
+        <td class="td1 center" colspan="2">
+            Language:
+            <select name="filterlang" onchange="{setLang(document.form1.filterlang,'edit_archivedtexts.php');}">
+                <?php echo get_languages_selectoptions($currentlang, '[Filter off]'); ?>
+            </select>
+        </td>
+        <td class="td1 center" colspan="2">
+            <select name="query_mode" onchange="{val=document.form1.query.value;mode=document.form1.query_mode.value; location.href='edit_archivedtexts.php?page=1&amp;query=' + val + '&amp;query_mode=' + mode;}">
+                <option value="title,text"<?php 
+                if($currentquerymode=="title,text") { 
+                    echo ' selected="selected"'; 
+                } ?>>Title &amp; Text</option>
+                <option disabled="disabled">------------</option>
+                <option value="title"<?php 
+                if($currentquerymode=="title") { 
+                    echo ' selected="selected"'; 
+                } ?>>Title</option>
+                <option value="text"<?php 
+                if($currentquerymode=="text") { 
+                    echo ' selected="selected"'; 
+                } ?>>Text</option>
+            </select>
+            <?php
+            if($currentregexmode=='') { 
+                echo '<span style="vertical-align: middle"> (Wildc.=*): </span>'; 
+            }
+            elseif($currentregexmode=='r') { 
+                echo '<span style="vertical-align: middle"> RegEx Mode: </span>';
+            } else { 
+                echo '<span style="vertical-align: middle"> RegEx(CS) Mode: </span>'; 
+            }?>
+            <input type="text" name="query" value="<?php echo tohtml($currentquery); ?>" maxlength="50" size="15" />&nbsp;
+            <input type="button" name="querybutton" value="Filter" onclick="{val=document.form1.query.value;val=encodeURIComponent(val); location.href='edit_archivedtexts.php?page=1&amp;query=' + val;}" />&nbsp;
+            <input type="button" value="Clear" onclick="{location.href='edit_archivedtexts.php?page=1&amp;query=';}" />
+        </td>
+    </tr>
+    <tr>
+        <td class="td1 center" colspan="2" nowrap="nowrap">
+            Tag #1:
+            <select name="tag1" onchange="{val=document.form1.tag1.options[document.form1.tag1.selectedIndex].value; location.href='edit_archivedtexts.php?page=1&amp;tag1=' + val;}"><?php echo get_archivedtexttag_selectoptions($currenttag1, $currentlang); ?></select>
+        </td>
+        <td class="td1 center" nowrap="nowrap">
+            Tag #1 .. 
+            <select name="tag12" onchange="{val=document.form1.tag12.options[document.form1.tag12.selectedIndex].value; location.href='edit_archivedtexts.php?page=1&amp;tag12=' + val;}"><?php echo get_andor_selectoptions($currenttag12); ?></select> .. Tag #2
+        </td>
+        <td class="td1 center" nowrap="nowrap">
+            Tag #2:
+            <select name="tag2" onchange="{val=document.form1.tag2.options[document.form1.tag2.selectedIndex].value; location.href='edit_archivedtexts.php?page=1&amp;tag2=' + val;}"><?php echo get_archivedtexttag_selectoptions($currenttag2, $currentlang); ?></select>
+        </td>
+    </tr>
+        <?php if($recno > 0) { ?>
+    <tr>
+    <th class="th1" colspan="2" nowrap="nowrap">
+            <?php echo $recno; ?> Text<?php echo ($recno==1?'':'s'); ?>
+    </th>
+    <th class="th1" colspan="1" nowrap="nowrap">
+            <?php makePager($currentpage, $pages, 'edit_archivedtexts.php', 'form1'); ?>
+    </th>
+    <th class="th1" nowrap="nowrap">
+    Sort Order:
+    <select name="sort" onchange="{val=document.form1.sort.options[document.form1.sort.selectedIndex].value; location.href='edit_archivedtexts.php?page=1&amp;sort=' + val;}"><?php echo get_textssort_selectoptions($currentsort); ?></select>
+    </th></tr>
+            <?php 
+        } ?>
 </table>
 </form>
 
@@ -522,26 +546,39 @@ Sort Order:
 <form name="form2" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 <input type="hidden" name="data" value="" />
 <table class="tab1" cellspacing="0" cellpadding="5">
-<tr><th class="th1" colspan="2">Multi Actions <img src="icn/lightning.png" title="Multi Actions" alt="Multi Actions" /></th></tr>
-<tr><td class="td1 center">
-<input type="button" value="Mark All" onclick="selectToggle(true,'form2');" />
-<input type="button" value="Mark None" onclick="selectToggle(false,'form2');" />
-</td><td class="td1 center">
-Marked Texts:&nbsp; 
-<select name="markaction" id="markaction" disabled="disabled" onchange="multiActionGo(document.form2, document.form2.markaction);"><?php echo get_multiplearchivedtextactions_selectoptions(); ?></select>
-</td></tr></table>
+    <tr>
+        <th class="th1" colspan="2">
+            Multi Actions 
+            <img src="icn/lightning.png" title="Multi Actions" alt="Multi Actions" />
+        </th>
+    </tr>
+    <tr>
+        <td class="td1 center">
+            <input type="button" value="Mark All" onclick="selectToggle(true,'form2');" />
+            <input type="button" value="Mark None" onclick="selectToggle(false,'form2');" />
+        </td>
+        <td class="td1 center">
+            Marked Texts:&nbsp; 
+            <select name="markaction" id="markaction" disabled="disabled" onchange="multiActionGo(document.form2, document.form2.markaction);"><?php echo get_multiplearchivedtextactions_selectoptions(); ?></select>
+        </td>
+    </tr>
+</table>
 
 <table class="sortable tab1" cellspacing="0" cellpadding="5">
-<tr>
-<th class="th1 sorttable_nosort">Mark</th>
-<th class="th1 sorttable_nosort">Actions</th>
+    <tr>
+        <th class="th1 sorttable_nosort">Mark</th>
+        <th class="th1 sorttable_nosort">Actions</th>
         <?php if ($currentlang == '') { 
             echo '<th class="th1 clickable">Lang.</th>'; 
         } ?>
-<th class="th1 clickable">Title [Tags] / Audio:&nbsp;<img src="<?php print_file_path('icn/speaker-volume.png'); ?>" title="With Audio" alt="With Audio" />, Src.Link:&nbsp;<img src="<?php print_file_path('icn/chain.png'); ?>" title="Source Link available" alt="Source Link available" />, Ann.Text:&nbsp;<img src="icn/tick.png" title="Annotated Text available" alt="Annotated Text available" /></th>
-</tr>
-
-        <?php
+        <th class="th1 clickable">
+            Title [Tags] / Audio:&nbsp;
+            <img src="<?php print_file_path('icn/speaker-volume.png'); ?>" title="With Audio" alt="With Audio" />, Src.Link:&nbsp;
+            <img src="<?php print_file_path('icn/chain.png'); ?>" title="Source Link available" alt="Source Link available" />, Ann.Text:&nbsp;
+            <img src="icn/tick.png" title="Annotated Text available" alt="Annotated Text available" />
+        </th>
+    </tr>
+    <?php
 
         $sql = "SELECT AtID, AtTitle, LgName, AtAudioURI, AtSourceURI, 
         length(AtAnnotatedText) as annotlen, 
@@ -571,46 +608,67 @@ Marked Texts:&nbsp;
 
         $res = do_mysqli_query($sql);
         while ($record = mysqli_fetch_assoc($res)) {
-            echo '<tr>';
-            echo '<td class="td1 center"><a name="rec' . $record['AtID'] . '">
-            <input name="marked[]" class="markcheck"  type="checkbox" value="' . $record['AtID'] . '" ' . checkTest($record['AtID'], 'marked') . ' /></a></td>';
-            echo '<td nowrap="nowrap" class="td1 center">&nbsp;<a href="' . $_SERVER['PHP_SELF'] . '?unarch=' . $record['AtID'] . '"><img src="icn/inbox-upload.png" title="Unarchive" alt="Unarchive" /></a>&nbsp; <a href="' . $_SERVER['PHP_SELF'] . '?chg=' . $record['AtID'] . '"><img src="icn/document--pencil.png" title="Edit" alt="Edit" /></a>&nbsp; <span class="click" onclick="if (confirmDelete()) location.href=\'' . $_SERVER['PHP_SELF'] . '?del=' . $record['AtID'] . '\';"><img src="icn/minus-button.png" title="Delete" alt="Delete" /></span>&nbsp;</td>';
+            echo '<tr>
+            <td class="td1 center">
+            <a name="rec' . $record['AtID'] . '">
+            <input name="marked[]" class="markcheck" type="checkbox" value="' . 
+            $record['AtID'] . '" ' . checkTest($record['AtID'], 'marked') . 
+            ' /></a></td>
+            <td nowrap="nowrap" class="td1 center">&nbsp;
+            <a href="' . $_SERVER['PHP_SELF'] . '?unarch=' . $record['AtID'] . '">
+            <img src="icn/inbox-upload.png" title="Unarchive" alt="Unarchive" />
+            </a>&nbsp; 
+            <a href="' . $_SERVER['PHP_SELF'] . '?chg=' . $record['AtID'] . '">
+            <img src="icn/document--pencil.png" title="Edit" alt="Edit" /></a>&nbsp;
+            <span class="click" onclick="if (confirmDelete()) location.href=\'' 
+            . $_SERVER['PHP_SELF'] . '?del=' . $record['AtID'] . '\';">
+            <img src="icn/minus-button.png" title="Delete" alt="Delete" />
+            </span>&nbsp;</td>';
             if ($currentlang == '') { 
                 echo '<td class="td1 center">' . tohtml($record['LgName']) . '</td>'; 
             }
-            echo '<td class="td1 center">' . tohtml($record['AtTitle']) . ' <span class="smallgray2">' . tohtml($record['taglist']) . '</span> &nbsp;'; if(isset($record['AtAudioURI'])) {echo '<img src="';print_file_path('icn/speaker-volume.png');echo'" title="With Audio" alt="With Audio" />';
-            } else { 
+            echo '<td class="td1 center">' . tohtml($record['AtTitle']) . 
+            ' <span class="smallgray2">' . tohtml($record['taglist']) . '</span> &nbsp;';
+            if (isset($record['AtAudioURI'])) {
+                echo '<img src="' . get_file_path('icn/speaker-volume.png') . 
+                '" title="With Audio" alt="With Audio" />';
+            } else {
                 echo '';
             }
             if (isset($record['AtSourceURI'])) {
-                echo ' <a href="' . $record['AtSourceURI'] . '" target="_blank"><img src="'.get_file_path('icn/chain.png').'" title="Link to Text Source" alt="Link to Text Source" /></a>';
+                echo ' <a href="' . $record['AtSourceURI'] . '" target="_blank">
+                <img src="'.get_file_path('icn/chain.png') . 
+                '" title="Link to Text Source" alt="Link to Text Source" /></a>';
             }
             if ($record['annotlen']) {
-                echo ' <img src="icn/tick.png" title="Annotated Text available" alt="Annotated Text available" />';
+                echo ' <img src="icn/tick.png" title="Annotated Text available" ' . 
+                'alt="Annotated Text available" />';
             } 
             echo '</td>';
             echo '</tr>';
         }
         mysqli_free_result($res);
-
         ?>
-
 </table>
 
 
-        <?php if($pages > 1) { ?>
+<?php if($pages > 1) { ?>
 <table class="tab1" cellspacing="0" cellpadding="5">
-<tr>
-<th class="th1" nowrap="nowrap">
+    <tr>
+        <th class="th1" nowrap="nowrap">
             <?php echo $recno; ?> Text<?php echo ($recno==1?'':'s'); ?>
-</th><th class="th1" nowrap="nowrap">
+        </th>
+        <th class="th1" nowrap="nowrap">
             <?php makePager($currentpage, $pages, 'edit_archivedtexts.php', 'form2'); ?>
-</th></tr></table></form>
-            <?php 
-        } ?>
+        </th>
+    </tr>
+</table>
+</form>
+<?php 
+} 
+?>
 
         <?php
-
     }
 }
 
