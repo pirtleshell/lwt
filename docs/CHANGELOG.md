@@ -17,6 +17,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 * Testing specific terms was broken ([#66](https://github.com/HugoFara/lwt/issues/66)) and tests were sometimes not counting score. Solution inspired from PR [#67](https://github.com/HugoFara/lwt/issues/67) from [@jzohrab](https://github.com/jzohrab).
 * Right frames should hide automatically but they often don't [#61](https://github.com/HugoFara/lwt/issues/61). Merge PR (#62)[https://github.com/HugoFara/lwt/pull/62].
   * You should also see less annoying console messages of "cClick" crashing.
+* Save text position (``inc/ajax_save_text_position.php``) was broken for all texts. This is fixed.
 
 ## 2.5.3-fork (November 06 2022)
 ### Added

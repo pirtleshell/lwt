@@ -65,12 +65,12 @@ if (getreq('textid') != '') {
     if (getreq('position')) {
         save_text_position(
             (int)$textid, 
-            is_numeric(getreq($position)) ? (int)getreq($position) : null
+            is_numeric(getreq('position')) ? (int)getreq('position') : null
         );
     } else if (getreq('audioposition')) {
         save_audio_position(
             (int)$textid, 
-            is_numeric(getreq($audioposition)) ? (int)getreq($audioposition) : null
+            is_numeric(getreq('audioposition')) ? (int)getreq('audioposition') : null
         );
     }
 }
