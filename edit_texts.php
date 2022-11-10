@@ -68,7 +68,6 @@ function edit_texts_get_wh_query($currentquery, $currentquerymode, $currentregex
                 'SELECT "test" RLIKE ' . convert_string_to_sqlsyntax($currentquery)
             ) === false
         ) {
-            $currentquery = '';
             $wh_query = '';
             unset($_SESSION['currentwordquery']);
             if (isset($_REQUEST['query'])) { 
@@ -134,18 +133,20 @@ function edit_texts_get_wh_tag($currentlang)
 
 /**
  * When a mark action is in use, do the action.
- * 
+ *
  * @param string $markaction Type of action
  * @param array  $marked     Texts marked.
  * @param string $actiondata Values to insert to the database
- * 
- * @return string[2] Number of rows edited, the second string is always null.
- * 
+ *
+ * @return array{0: int, 1: null} Number of rows edited, the second element is always null.
+ *
  * @global string $tbpref Database table prefix
- * 
+ *
  * @since 2.4.1-fork The second return field is always null 
+ *
+ * @psalm-return array{0: string, 1: null}
  */
-function edit_texts_mark_action($markaction, $marked, $actiondata)
+function edit_texts_mark_action($markaction, $marked, $actiondata): array
 {
     global $tbpref;
     $message = "Multiple Actions: 0";
@@ -327,14 +328,14 @@ function edit_texts_mark_action($markaction, $marked, $actiondata)
 
 /**
  * Delete an existing text.
- * 
+ *
  * @param string $txid Text ID
- * 
- * @return string Texts, sentences, and text items deleted. 
- * 
+ *
+ * @return string Texts, sentences, and text items deleted.
+ *
  * @global string $tbpref Database table prefix
  */
-function edit_texts_delete($txid)
+function edit_texts_delete($txid): string
 {
     global $tbpref;
     $message3 = runsql(
@@ -368,15 +369,14 @@ function edit_texts_delete($txid)
 
 /**
  * Archive a text.
- * 
+ *
  * @param int $txid text ID
- * 
- * @return string Number of archives saved, texts deleted, sentences deleted, 
- *                text items deleted.
- * 
+ *
+ * @return string Number of archives saved, texts deleted, sentences deleted, text items deleted.
+ *
  * @global string $tbpref Database table prefix
  */
-function edit_texts_archive($txid)
+function edit_texts_archive($txid): string
 {
     global $tbpref;
     $message3 = runsql(
@@ -425,18 +425,18 @@ function edit_texts_archive($txid)
 
 /**
  * Do an operation on texts.
- * 
+ *
  * @param string $op           Operation name
- * @param string $message1     Unnused
- * @param int    $no_pagestart If you don't want a page 
- * 
+ * @param mixed  $message1     Unnused
+ * @param int    $no_pagestart If you don't want a page
+ *
  * @return string Edition message (number of rows edited)
- * 
+ *
  * @global string $tbpref Database table prefix
- * 
+ *
  * @since 2.4.1-fork $message1 is unnused
  */
-function edit_texts_do_operation($op, $message1, $no_pagestart)
+function edit_texts_do_operation($op, $message1, $no_pagestart): string
 {
     global $tbpref;
     if (strlen(prepare_textdata($_REQUEST['TxText'])) > 65000) {
@@ -453,12 +453,13 @@ function edit_texts_do_operation($op, $message1, $no_pagestart)
 
     // CHECK
 
+    $id = null;
     if ($op == 'Check') {
         echo '<p>
             <input type="button" value="&lt;&lt; Back" onclick="history.back();" />
         </p>';
-        echo splitCheckText(
-            remove_soft_hyphens($_REQUEST['TxText']), $_REQUEST['TxLgID'], -1
+        splitCheckText(
+            remove_soft_hyphens($_REQUEST['TxText']), (int)$_REQUEST['TxLgID'], -1
         );
         echo '<p>
             <input type="button" value="&lt;&lt; Back" onclick="history.back();" />
@@ -894,7 +895,7 @@ function edit_texts_other_pages($recno)
 /**
  * Display the content of a table row for text edition.
  * 
- * @param array<string, string>                         $txrecord    
+ * @param array                                         $txrecord    
  *                                                                   Various information about the text should contain 'TxID' at least.
  * @param string                                        $currentlang 
  *                                                                   Current language ID
@@ -902,6 +903,8 @@ function edit_texts_other_pages($recno)
  * List of statuses WITH unknown words (status 0)
  * 
  * @return void
+ * 
+ * @since 2.5.4-fork Audio was never shown
  */
 function edit_texts_show_text_row($txrecord, $currentlang, $statuses)
 {
@@ -925,8 +928,8 @@ function edit_texts_show_text_row($txrecord, $currentlang, $statuses)
     }
     }
     */
-    if (isset($record['TxAudioURI'])) {
-        $audio = trim($record['TxAudioURI']);
+    if (isset($txrecord['TxAudioURI'])) {
+        $audio = trim($txrecord['TxAudioURI']);
     } else {
         $audio = ''; 
     }
@@ -1163,15 +1166,6 @@ function edit_texts_display($message)
         $currentquery, $currentquerymode, $currentregexmode
     );
 
-    if ($currentquery!=='' && $currentregexmode!=='') {
-        if (@mysqli_query(
-            $GLOBALS["DBCONNECTION"], 
-            'SELECT "test" RLIKE ' . convert_string_to_sqlsyntax($currentquery)
-        )===false
-        ) {
-            $currentquery = '';
-        }
-    }
 
     $wh_tag = edit_texts_get_wh_tag($currentlang);
 

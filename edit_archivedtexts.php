@@ -173,7 +173,7 @@ if (isset($_REQUEST['markaction'])) {
                             ""
                         );
                         $count += $mess;
-                        $id = (int)get_last_key();
+                        $id = get_last_key();
                         runsql(
                             'insert into ' . $tbpref . 'texttags (TtTxID, TtT2ID) 
                             select ' . $id . ', AgT2ID 
@@ -243,7 +243,7 @@ if (isset($_REQUEST['del'])) {
         where AtID = ' . $_REQUEST['unarch'], 
         "Texts added"
     );
-    $id = (int)get_last_key();
+    $id = get_last_key();
     runsql(
         'insert into ' . $tbpref . 'texttags (TtTxID, TtT2ID) 
         select ' . $id . ', AgT2ID 

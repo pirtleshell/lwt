@@ -42,7 +42,7 @@ function my_str_getcsv($input)
  * 
  * @global string $tbpref Database table prefix
  */
-function upload_words_import_terms($fields, $tabs, $file_upl, $col, $lang)
+function upload_words_import_terms($fields, $tabs, $file_upl, $col, $lang): void
 {
     global $tbpref;
     $sql = "SELECT * FROM {$tbpref}languages WHERE LgID=$lang";
@@ -112,26 +112,20 @@ function upload_words_import_terms($fields, $tabs, $file_upl, $col, $lang)
                     $row[] = mb_strtolower($wotext);
                 }
                 if ($fields["tr"] != 0) {
-                    $row[] = (
-                        $parsed_line[$fields["tr"] - 1]
-                    );
+                    $row[] = $parsed_line[$fields["tr"] - 1];
                 }
                 if ($fields["ro"] != 0) {
-                    $row[] = (
-                        $parsed_line[$fields["ro"] - 1]
-                    );
+                    $row[] = $parsed_line[$fields["ro"] - 1];
                 }
                 if ($fields["se"] != 0) {
-                    $row[] = (
-                        $parsed_line[$fields["se"] - 1]
-                    );
+                    $row[] = $parsed_line[$fields["se"] - 1];
                 }
 
                 $row = array_map('convert_string_to_sqlsyntax', $row);
                 $row = array_merge(
                     $row, array(
-                    $lang, $status, "NOW()", 
-                    getsqlscoreformula(2), getsqlscoreformula(3), "RAND()"
+                        (string)$lang, (string)$status, "NOW()", 
+                        getsqlscoreformula(2), getsqlscoreformula(3), "RAND()"
                     )
                 );
                 $values[] = "(" . implode(",", $row) . ")";
@@ -553,7 +547,7 @@ function showImportedTerms(last_update, rtl, count, page) {
  * 
  * @global string $tbpref Database table prefix
  */
-function upload_words_import_tags($fields, $tabs, $file_upl)
+function upload_words_import_tags($fields, $tabs, $file_upl): void
 {
     global $tbpref;
     $columns = '';
@@ -645,7 +639,7 @@ function upload_words_import_tags($fields, $tabs, $file_upl)
  * 
  * @global string $tbpref Database table prefix
  */
-function upload_words_import()
+function upload_words_import(): void
 {
     global $tbpref;
     $tabs = $_REQUEST["Tab"];
@@ -720,7 +714,7 @@ function upload_words_import()
  * 
  * @return void
  */
-function upload_words_display()
+function upload_words_display(): void
 {
 
     ?>

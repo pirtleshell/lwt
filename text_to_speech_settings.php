@@ -292,12 +292,12 @@ function tts_settings_full_page($message)
 
 /**
  * Save the text-to-speech settings as cookies.
- * 
+ *
  * @param array $form Inputs from the main form.
- * 
+ *
  * @return string A confirmation or an error message
  */
-function tts_save_settings($form)
+function tts_save_settings($form): string
 {
     $lgname = $form['LgName'];
     $prefix = 'tts[' . $lgname;

@@ -1101,15 +1101,22 @@ function areCookiesEnabled () {
  * 
  * @param {string} ctl Current language name 
  * @param {string} url 
+ * @returns {void}
  */
 function setLang (ctl, url) {
-  location.href = 'save_setting_redirect.php?k=currentlanguage&v=' +
+  location.href = 'inc/save_setting_redirect.php?k=currentlanguage&v=' +
 	ctl.options[ctl.selectedIndex].value +
 	'&u=' + url;
 }
 
+/*
+ * Reset current language to default.
+ * 
+ * @param {string} url 
+ * @returns {void} 
+ */
 function resetAll (url) {
-  location.href = 'save_setting_redirect.php?k=currentlanguage&v=&u=' + url;
+  location.href = 'inc/save_setting_redirect.php?k=currentlanguage&v=&u=' + url;
 }
 
 /**

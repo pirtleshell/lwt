@@ -24,7 +24,7 @@ require_once 'database_connect.php';
  * 
  * @global string $tbpref Table name prefix
  * 
- * @return list<string> All tags
+ * @return array<string> All tags
  */
 function get_tags($refresh = 0) 
 {
@@ -41,7 +41,7 @@ function get_tags($refresh = 0)
     $sql = 'SELECT TgText FROM ' . $tbpref . 'tags ORDER BY TgText';
     $res = do_mysqli_query($sql);
     while ($record = mysqli_fetch_assoc($res)) {
-        $tags[] = $record["TgText"];
+        $tags[] = (string)$record["TgText"];
     }
     mysqli_free_result($res);
     $_SESSION['TAGS'] = $tags;
@@ -56,7 +56,7 @@ function get_tags($refresh = 0)
  * 
  * @global string $tbpref Table name prefix
  * 
- * @return list<string> All text tags
+ * @return array<string> All text tags
  */
 function get_texttags($refresh = 0) 
 {
@@ -73,7 +73,7 @@ function get_texttags($refresh = 0)
     $sql = 'SELECT T2Text FROM ' . $tbpref . 'tags2 ORDER BY T2Text';
     $res = do_mysqli_query($sql);
     while ($record = mysqli_fetch_assoc($res)) {
-        $tags[] = $record["T2Text"];
+        $tags[] = (string)$record["T2Text"];
     }
     mysqli_free_result($res);
     $_SESSION['TEXTTAGS'] = $tags;
@@ -94,7 +94,7 @@ function getTextTitle($textid): string
     if (!isset($text)) { 
         $text = "?"; 
     }
-    return $text;
+    return (string)$text;
 }
 
 // -------------------------------------------------------------
@@ -403,11 +403,11 @@ function getWordTags($wid): string
 
 /**
  * Return a HTML-formatted list of the text tags.
- * 
+ *
  * @param int $tid Text ID. Can be below 1 to create an empty list.
- * 
+ *
  * @return string UL list of text tags
- * 
+ *
  * @global string $tbpref Database table prefix 
  */
 function getTextTags($tid): string 
@@ -432,11 +432,11 @@ function getTextTags($tid): string
 
 /**
  * Return a HTML-formatted list of the text tags for an archived text.
- * 
+ *
  * @param int $tid Text ID. Can be below 1 to create an empty list.
- * 
+ *
  * @return string UL list of text tags
- * 
+ *
  * @global string $tbpref Database table prefix 
  */
 function getArchivedTextTags($tid): string 
@@ -769,7 +769,7 @@ function write_rss_to_db($texts): string
                         convert_string_to_sqlsyntax($text['TxAudioURI']) .','.
                         convert_string_to_sqlsyntax($text['TxSourceURI']) .')'
                 );
-                $id = (int)get_last_key();
+                $id = get_last_key();
                 splitCheckText(
                     get_first_value(
                         'select TxText as value from ' . $tbpref . 'texts 
@@ -888,8 +888,11 @@ function print_last_feed_update($diff): void
     }
 }
 
-// -------------------------------------------------------------
-
+/**
+ * @return null|string|string[]
+ *
+ * @psalm-return array<string, string>|null|string
+ */
 function get_nf_option($str,$option)
 {
     $arr=explode(',', $str);
@@ -1145,8 +1148,12 @@ function get_links_from_rss($NfSourceURI,$NfArticleSection)
     return $rss_data;
 }
 
-// -------------------------------------------------------------
 
+/**
+ * @return (array|mixed|null|string)[][]|null|string
+ *
+ * @psalm-return array<array{TxTitle: mixed, TxAudioURI?: mixed|null, TxText?: string, TxSourceURI?: mixed|string, message?: string, link?: non-empty-list<mixed>}>|null|string
+ */
 function get_text_from_rsslink($feed_data, $NfArticleSection, $NfFilterTags, $NfCharset=null)
 {
     global $tbpref;
@@ -1221,8 +1228,7 @@ function get_text_from_rsslink($feed_data, $NfArticleSection, $NfFilterTags, $Nf
                 array('> ',' <'), 
                 $feed_data[$key]['text']
             );//$HTMLString=str_replace (array('>','<'),array('> ',' <'),$HTMLString);
-        }
-        else{
+        } else {
             $data[$key]['TxSourceURI'] = $feed_data[$key]['link'];
             $context = stream_context_create(array('http' => array('follow_location' => true )));
             $HTMLString = file_get_contents(trim($data[$key]['TxSourceURI']), false, $context);
@@ -1243,21 +1249,20 @@ function get_text_from_rsslink($feed_data, $NfArticleSection, $NfFilterTags, $Nf
                             if(($pos!==false) && (strpos($encod, 'text/html;')!==false)) {
                                 $encod=substr($encod, $pos+8);    
                                 break;
-                            }
-                            else { $encod=''; 
+                            } else { 
+                                $encod=''; 
                             }
                         }
                         
                     }
-                }
-                else{
-                    if($NfCharset!='meta') { 
+                } else {
+                    if ($NfCharset!='meta') { 
                         $encod  = $NfCharset; 
                     }
                 }
                 
-                if(empty($encod)) {
-                    $doc = new DomDocument;
+                if (empty($encod)) {
+                    $doc = new DOMDocument;
                     $previous_value = libxml_use_internal_errors(true);
                     $doc->loadHTML($HTMLString);
                     /*
@@ -1619,9 +1624,9 @@ function getprefixes(): array
 
 /**
  * Select the path for a media (audio or video).
- * 
+ *
  * @param string $f Previous media file URI
- * 
+ *
  * @return string HTML-formatted string for media selection
  */
 function selectmediapath($f): string 
@@ -1655,9 +1660,9 @@ function selectmediapath($f): string
 
 /**
  * Get the dirrent options to dsplay as acceptable media files.
- * 
+ *
  * @param string $dir Directory containing files
- * 
+ *
  * @return string HTML-formatted OPTION tags
  */
 function selectmediapathoptions($dir): string 
@@ -2041,11 +2046,13 @@ function getWordTagList($wid, $before=' ', $brack=1, $tohtml=1): string
 /**
  * Return the last inserted ID in the database
  * 
- * @return string|null
+ * @return int
+ * 
+ * @since 2.5.4-fork Officially returns a int in dodumentation, as it was the case
  */
 function get_last_key() 
 {
-    return get_first_value('SELECT LAST_INSERT_ID() AS value');        
+    return (int)get_first_value('SELECT LAST_INSERT_ID() AS value');        
 }
 
 /**
@@ -2374,7 +2381,7 @@ function get_set_status_option($n, $suffix = ""): string
 
 // -------------------------------------------------------------
 
-function get_status_name($n) 
+function get_status_name($n): string 
 {
     $statuses = get_statuses();
     return $statuses[$n]["name"];
@@ -2382,7 +2389,7 @@ function get_status_name($n)
 
 // -------------------------------------------------------------
 
-function get_status_abbr($n) 
+function get_status_abbr($n): string 
 {
     $statuses = get_statuses();
     return $statuses[$n]["abbr"];
@@ -3484,7 +3491,7 @@ function getSentence($seid, $wordlc, $mode): array
 
 /**
  * Show 20 sentences containg $wordlc.
- * 
+ *
  * @param int      $lang      Language ID
  * @param string   $wordlc    Term in lower case.
  * @param int|null $wid       Word ID
@@ -3493,10 +3500,10 @@ function getSentence($seid, $wordlc, $mode): array
  * @param int      $mode      * Up to 1: return only the current sentence
  *                            * Above 1: return previous and current sentence 
  *                            * Above 2: return previous, current and next sentence
- * 
- * @return string HTML-formatted string of which elements are candidate santences to
+ *
+ * @return string HTML-formatted string of which elements are candidate santences to 
  *                use.
- * 
+ *
  * @global string $tbpref Database table prefix
  */
 function get20Sentences($lang, $wordlc, $wid, $jsctlname, $mode): string 
@@ -3505,6 +3512,7 @@ function get20Sentences($lang, $wordlc, $wid, $jsctlname, $mode): string
     $r = '<p><b>Sentences in active texts with <i>' . tohtml($wordlc) . '</i></b></p>
     <p>(Click on <img src="icn/tick-button.png" title="Choose" alt="Choose" /> 
     to copy sentence into above term)</p>';
+    $mecab_str = null;
     if (empty($wid)) {
         $sql = "SELECT DISTINCT SeID, SeText 
         FROM {$tbpref}sentences, {$tbpref}textitems2 
@@ -3612,7 +3620,7 @@ function get20Sentences($lang, $wordlc, $wid, $jsctlname, $mode): string
 /**
  * Return a dictionary of languages name - id
  * 
- * @return array<string, string>
+ * @return array<string, int>
  */
 function get_languages(): array 
 {
@@ -3621,7 +3629,7 @@ function get_languages(): array
     $sql = "SELECT LgID, LgName FROM " . $tbpref . "languages WHERE LgName<>''";
     $res = do_mysqli_query($sql);
     while ($record = mysqli_fetch_assoc($res)) {
-        $langs[$record['LgName']] = $record['LgID'];
+        $langs[(string)$record['LgName']] = (int)$record['LgID'];
     }
     mysqli_free_result($res);
     return $langs;
@@ -3647,7 +3655,7 @@ function getLanguage($lid)
         WHERE LgID='" . $lid . "'"
     );
     if (isset($r)) { 
-        return $r; 
+        return (string)$r; 
     }
     return '';
 }
@@ -3682,18 +3690,21 @@ function getScriptDirectionTag($lid): string
 /**
  * Insert an expression to the database using MeCab.
  *
- * @param string $textlc Text to insert in lower case
+ * @param string $text   Text to insert
  * @param string $lid    Language ID
  * @param string $wid    Word ID
  * @param int    $mode   If equal to 0, add data in the output
  *
- * @return array<string[], string[]> Append text and values to insert to the database
- * 
- * @since 2.5.0-fork Function added. 
+ * @return array{0: string[], 1: string[]} Append text and values to insert to 
+ *                                         the database
+ *
+ * @since 2.5.0-fork Function added.
  *
  * @global string $tbpref Table name prefix
+ *
+ * @psalm-return array{0: array<int, string>, 1: list<string>}
  */
-function insert_expression_from_mecab($text, $lid, $wid, $len)
+function insert_expression_from_mecab($text, $lid, $wid, $len): array
 {
     global $tbpref;
 
@@ -3768,21 +3779,21 @@ function insert_expression_from_mecab($text, $lid, $wid, $len)
  * @param string $wid    Word ID
  * @param int    $mode   If equal to 0, add data in the output
  *
- * @return array<string[], int[]> Append text and empty array.
+ * @return array{string[], string[]} Append text and SQL array.
  * 
  * @since 2.5.0-fork Function deprecated. 
  *                   $mode is unnused, data are always returned.
  *                   The second return argument is always empty array.
- * 
+ *
  * @deprecated Use insert_expression_from_mecab instead.
  *
  * @global string $tbpref Table name prefix
+ *
+ * @psalm-return array{0: array<int, string>, 1: list<string>}
  */
-function insertExpressionFromMeCab($textlc, $lid, $wid, $len, $mode)
+function insertExpressionFromMeCab($textlc, $lid, $wid, $len, $mode): array
 {
-    return array(
-        insert_expression_from_mecab($textlc, $lid, $wid, $len)[0], array()
-    );
+    return insert_expression_from_mecab($textlc, $lid, $wid, $len);
 }
 
 /**
@@ -3791,16 +3802,18 @@ function insertExpressionFromMeCab($textlc, $lid, $wid, $len, $mode)
  * @param string $textlc Text to insert in lower case
  * @param string $lid    Language ID
  * @param string $wid    Word ID
- * @param int    $mode   
+ * @param mixed  $mode   Unnused
  *
- * @return array<string[], int[]> Append text and sentence id
- * 
+ * @return array{string[], empty[], string[]} Append text, empty and sentence id
+ *
  * @since 2.5.0-fork Mode is unnused and data are always added to the output.
  * @since 2.5.2-fork Fixed multi-words insertion for languages using no space
- * 
+ *
  * @global string $tbpref Table name prefix
+ *
+ * @psalm-return array{0: array<int, mixed|string>, 1: array<empty, empty>, 2: list<string>}
  */
-function insert_standard_expression($textlc, $lid, $wid, $len, $mode)
+function insert_standard_expression($textlc, $lid, $wid, $len, $mode): array
 {
     global $tbpref;
     $appendtext = array();
@@ -3812,7 +3825,6 @@ function insert_standard_expression($textlc, $lid, $wid, $len, $mode)
     $termchar = $record['LgRegexpWordCharacters'];
     mysqli_free_result($res);
     if ($removeSpaces == 1 && $splitEachChar == 0) {
-        $rSflag = '';
         $sql = "SELECT 
         group_concat(Ti2Text ORDER BY Ti2Order SEPARATOR ' ') AS SeText, SeID, 
         SeTxID, SeFirstPos 
@@ -3830,6 +3842,7 @@ function insert_standard_expression($textlc, $lid, $wid, $len, $mode)
     $res = do_mysqli_query($sql);
     $notermchar = "/[^$termchar]($textlc)[^$termchar]/ui";
     // For each sentence in the language containing the query
+    $matches = null;
     while ($record = mysqli_fetch_assoc($res)){
         $string = ' ' . $record['SeText'] . ' ';
         if ($splitEachChar) {
@@ -3975,7 +3988,7 @@ function new_expression_interactable2($hex, $appendtext, $wid, $len): void
 
 /**
  * Alter the database to add a new word
- * 
+ *
  * @param string $textlc Text in lower case
  * @param string $lid    Language ID
  * @param string $len
@@ -3983,13 +3996,12 @@ function new_expression_interactable2($hex, $appendtext, $wid, $len): void
  *                       - 0: Default mode, do nothing special
  *                       - 1: Runs an expresion inserter interactable 
  *                       - 2: Return the sql output
- * 
- * @return string|null If $mode == 2 return values to insert in textitems2, 
- *                     nothing otherwise.
- * 
+ *
+ * @return null|string If $mode == 2 return values to insert in textitems2, nothing otherwise.
+ *
  * @global string $tbpref Table name prefix
  */
-function insertExpressions($textlc, $lid, $wid, $len, $mode) 
+function insertExpressions($textlc, $lid, $wid, $len, $mode): ?string 
 {
     global $tbpref;
     $sql = "SELECT * FROM {$tbpref}languages WHERE LgID=$lid";
@@ -3998,7 +4010,6 @@ function insertExpressions($textlc, $lid, $wid, $len, $mode)
     $mecab = 'MECAB' == strtoupper(trim($record['LgRegexpWordCharacters']));
     $splitEachChar = !$mecab && $record['LgSplitEachChar'];
     mysqli_free_result($res);
-    $sqlarr = array();
     if ($splitEachChar) {
         $textlc = preg_replace('/([^\s])/u', "$1 ", $textlc);
     }
@@ -4036,6 +4047,7 @@ function insertExpressions($textlc, $lid, $wid, $len, $mode)
     if (isset($sqltext)) {
         do_mysqli_query($sqltext);
     }
+    return null;
 }
 
 
@@ -4134,7 +4146,7 @@ function restore_file($handle, $title): string
 
 // -------------------------------------------------------------
 
-function recreate_save_ann($textid, $oldann): ?string 
+function recreate_save_ann($textid, $oldann): string 
 {
     global $tbpref;
     $newann = create_ann($textid);
@@ -4176,7 +4188,7 @@ function recreate_save_ann($textid, $oldann): ?string
         where TxID = ' . $textid, 
         ""
     );
-    return get_first_value(
+    return (string)get_first_value(
         "select TxAnnotatedText as value 
         from " . $tbpref . "texts 
         where TxID = " . $textid
@@ -4265,7 +4277,7 @@ function insert_prefix_in_sql($sql_line)
 
 // -------------------------------------------------------------
 
-function create_save_ann($textid): ?string 
+function create_save_ann($textid): string 
 {
     global $tbpref;
     $ann = create_ann($textid);
@@ -4274,7 +4286,7 @@ function create_save_ann($textid): ?string
         'TxAnnotatedText = ' . convert_string_to_sqlsyntax($ann) . ' 
         where TxID = ' . $textid, ""
     );
-    return get_first_value(
+    return (string)get_first_value(
         "select TxAnnotatedText as value 
         from " . $tbpref . "texts 
         where TxID = " . $textid
@@ -4498,6 +4510,7 @@ function makeMediaPlayer($path, $offset=0)
 function makeVideoPlayer($path, $offset=0): void 
 {
     $online = false;
+    $url = null;
     if (preg_match(
         "/(?:https:\/\/)?www\.youtube\.com\/watch\?v=([\d\w]+)/iu", 
         $path, $matches

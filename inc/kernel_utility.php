@@ -36,8 +36,8 @@ function get_version(): string
 /**
  * Return a machine readable version number.
  *
- * @return string Machine-readable version, for instance v001.006.031 
- *                for version 1.6.31.
+ * @return string Machine-readable version, for instance v001.006.031 for version 
+ *                1.6.31.
  */
 function get_version_number(): string 
 {
@@ -207,11 +207,11 @@ function remove_spaces($s, $remove)
  *
  * @param string $mecab_args Arguments to add
  *
- * @return null|string OS-compatible command
- * 
+ * @return string OS-compatible command
+ *
  * @since 2.3.1-fork Much more verifications added
  */
-function get_mecab_path($mecab_args = ''): ?string 
+function get_mecab_path($mecab_args = ''): string 
 {
     $os = strtoupper(substr(PHP_OS, 0, 3));
     $mecab_args = escapeshellcmd($mecab_args);
@@ -490,15 +490,15 @@ function url_base(): string
 
 /**
  * Make a random score for a new word.
- * 
+ *
  * @param 'iv'|'id'|'u'|string $type Type of insertion
  *                                   * 'iv': Keys only (TodayScore, Tomorrow, Random)
  *                                   * 'id': Values only
  *                                   * 'u': Key = value pairs
- * 
+ *
  * @return string SQL code to use
  */
-function make_score_random_insert_update($type) 
+function make_score_random_insert_update($type): string 
 {
     // $type='iv'/'id'/'u'
     if ($type == 'iv') {
@@ -518,25 +518,7 @@ function make_score_random_insert_update($type)
  *
  * @param int $method Score for tomorrow (2), the day after it (3) or never (any value).
  *
- * @return string SQL score coputation string
- *
- * @psalm-return '
-        GREATEST(-125, CASE 
-            WHEN WoStatus > 5 THEN 100
-            WHEN WoStatus = 1 THEN ROUND(-7 * DATEDIFF(NOW(),WoStatusChanged))
-            WHEN WoStatus = 2 THEN ROUND(6.9 - 3.5 * DATEDIFF(NOW(),WoStatusChanged))
-            WHEN WoStatus = 3 THEN ROUND(20 - 2.3 * DATEDIFF(NOW(),WoStatusChanged))
-            WHEN WoStatus = 4 THEN ROUND(46.4 - 1.75 * DATEDIFF(NOW(),WoStatusChanged))
-            WHEN WoStatus = 5 THEN ROUND(100 - 1.4 * DATEDIFF(NOW(),WoStatusChanged))
-        END)'|'
-        GREATEST(-125, CASE 
-            WHEN WoStatus > 5 THEN 100 
-            WHEN WoStatus = 1 THEN ROUND(-7 -7 * DATEDIFF(NOW(),WoStatusChanged)) 
-            WHEN WoStatus = 2 THEN ROUND(3.4 - 3.5 * DATEDIFF(NOW(),WoStatusChanged)) 
-            WHEN WoStatus = 3 THEN ROUND(17.7 - 2.3 * DATEDIFF(NOW(),WoStatusChanged)) 
-            WHEN WoStatus = 4 THEN ROUND(44.65 - 1.75 * DATEDIFF(NOW(),WoStatusChanged)) 
-            WHEN WoStatus = 5 THEN ROUND(98.6 - 1.4 * DATEDIFF(NOW(),WoStatusChanged)) 
-        END)'|'0'
+ * @return string SQL score computation string
  */
 function getsqlscoreformula($method): string 
 {

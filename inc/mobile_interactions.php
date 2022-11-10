@@ -17,14 +17,14 @@ require_once __DIR__ . '/database_connect.php';
 
 /**
  * Return false. Before 2.2.1, return true if we should use mobile mode.
- * 
- * @return bool Mobile mode shoud be activated or not
- * 
+ *
+ * @return false Mobile mode shoud be activated or not
+ *
  * @deprecated Will always return false
- * 
+ *
  * @since 2.2.1 You should not use this function since mobiledetect is no longer used.
  */
-function is_mobile()
+function is_mobile(): bool
 {
     return false;
     /*$detect = new Mobile_Detect;

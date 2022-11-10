@@ -15,14 +15,14 @@ require_once __DIR__ . '/session_utility.php';
 
 /**
  * Get the list of feeds.
- * 
+ *
  * @param string[][] $feed A feed
- * 
- * @return array{0: string|int, 1: int} Number of imported feeds and number of duplicated feeds.
- * 
+ *
+ * @return array{0: int, 1: int} Number of imported feeds and number of duplicated feeds.
+ *
  * @global string $tbpref Database table prefix
  */
-function get_feeds_list($feed, $nfid)
+function get_feeds_list($feed, $nfid): array
 {
     global $tbpref;
     $valuesArr = array();

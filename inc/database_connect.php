@@ -73,7 +73,9 @@ function runsql($sql, $m, $sqlerrdie = true): string
  *
  * @param string $sql MySQL query
  * 
- * @return string|null
+ * @return float|int|string|null Any returned value from the database.
+ * 
+ * @since 2.5.4-fork Officially return numeric types.
  */
 function get_first_value($sql) 
 {
@@ -115,9 +117,9 @@ function prepare_textdata_js($s): string
 
 /**
  * Prepares a string to be properly recognized as a string by SQL.
- * 
+ *
  * @param string $data Input string
- * 
+ *
  * @return string Properly escaped and trimmed string. "NULL" if the input string is empty.
  */
 function convert_string_to_sqlsyntax($data): string 
@@ -134,9 +136,9 @@ function convert_string_to_sqlsyntax($data): string
 
 /**
  * Prepares a string to be properly recognized as a string by SQL.
- * 
+ *
  * @param string $data Input string
- * 
+ *
  * @return string Properly escaped and trimmed string
  */
 function convert_string_to_sqlsyntax_nonull($data): string 
@@ -147,9 +149,9 @@ function convert_string_to_sqlsyntax_nonull($data): string
 
 /**
  * Prepares a string to be properly recognized as a string by SQL.
- * 
+ *
  * @param string $data Input string
- * 
+ *
  * @return string Properly escaped string
  */
 function convert_string_to_sqlsyntax_notrim_nonull($data): string 
@@ -161,7 +163,7 @@ function convert_string_to_sqlsyntax_notrim_nonull($data): string
 
 // -------------------------------------------------------------
 
-function convert_regexp_to_sqlsyntax($input) 
+function convert_regexp_to_sqlsyntax($input): string 
 {
     $output = preg_replace_callback(
         "/\\\\x\{([\da-z]+)\}/ui", 
@@ -493,10 +495,10 @@ function LWTTableSet($key, $val): void
 
 // -------------------------------------------------------------
 
-function LWTTableGet($key): ?string
+function LWTTableGet($key): string
 {
     LWTTableCheck();
-    return get_first_value(
+    return (string)get_first_value(
         "SELECT LWTValue as value 
         FROM _lwtgeneral 
         WHERE LWTKey = " . convert_string_to_sqlsyntax($key)
@@ -717,18 +719,20 @@ function set_word_count()
 
 /**
  * Parse a Japanese text using MeCab and add it to the database.
- * 
+ *
  * @param string $text Text to parse.
  * @param int    $id   Text ID. If $id = -1 print results, 
  *                     if $id = -2 return splitted texts
- * 
- * @return string[]|void Splitted sentence if $id = -2
- * 
+ *
+ * @return null|string[] Splitted sentence if $id = -2
+ *
  * @since 2.5.1-fork Works even if LOAD DATA LOCAL INFILE operator is disabled.
- * 
+ *
  * @global string $tbpref Database table prefix
+ *
+ * @psalm-return non-empty-list<string>|null
  */
-function parse_japanese_text($text, $id)
+function parse_japanese_text($text, $id): ?array
 {
     global $tbpref;
     $text = preg_replace('/[ \t]+/u', ' ', $text);
@@ -868,22 +872,25 @@ function parse_japanese_text($text, $id)
     );
     do_mysqli_query("DROP TABLE {$tbpref}temptextitems2");
     unlink($file_name);
+    return null;
 }
 
 /**
  * Parse a text using the default tools. It is a not-japanese text.
- * 
+ *
  * @param string $text Text to parse
  * @param int    $id   Text ID. If $id == -2, only split the text.
- * @param int    $lid  Language ID. 
- * 
- * @return void|string[] If $id == -2 return a splitted version of the text.
- * 
+ * @param int    $lid  Language ID.
+ *
+ * @return null|string[] If $id == -2 return a splitted version of the text.
+ *
  * @since 2.5.1-fork Works even if LOAD DATA LOCAL INFILE operator is disabled.
- * 
+ *
  * @global string $tbpref Database table prefix
+ *
+ * @psalm-return non-empty-list<string>|null
  */
-function parse_standard_text($text, $id, $lid)
+function parse_standard_text($text, $id, $lid): ?array
 {
     global $tbpref;
     $sql = "SELECT * FROM {$tbpref}languages WHERE LgID=$lid";
@@ -1029,21 +1036,24 @@ function parse_standard_text($text, $id, $lid)
             ) VALUES " . implode(',', $values)
         );
     }
+    return null;
 }
 
 
 /**
  * Pre-parse the input text before a definitive parsing by a specialized parser.
- * 
+ *
  * @param string $text Text to parse
  * @param int    $id   Text ID
  * @param int    $lid  Language ID
- * 
- * @return string[]|void If $id = -2 return a splitted version of the text
- * 
+ *
+ * @return null|string[] If $id = -2 return a splitted version of the text
+ *
  * @global string $tbpref Database table prefix
+ *
+ * @psalm-return non-empty-list<string>|null
  */
-function prepare_text_parsing($text, $id, $lid)
+function prepare_text_parsing($text, $id, $lid): ?array
 {
     global $tbpref;
     $sql = "SELECT * FROM " . $tbpref . "languages WHERE LgID=" . $lid;
@@ -1234,18 +1244,18 @@ function check_text($sql, $rtlScript, $wl)
 
 /**
  * Check a text that contains expressions.
- * 
+ *
  * @param int    $id     Text ID
  * @param int    $lid    Language ID
  * @param int[]  $wl     Word length
  * @param int    $wl_max Maximum word length
  * @param string $mw_sql SQL-formatted string
- * 
+ *
  * @return string SQL-formatted query string
- * 
+ *
  * @global string $tbpref Database table prefix
  */
-function check_text_with_expressions($id, $lid, $wl, $wl_max, $mw_sql)
+function check_text_with_expressions($id, $lid, $wl, $wl_max, $mw_sql): string
 {
     global $tbpref;
 
@@ -1328,9 +1338,9 @@ function check_text_with_expressions($id, $lid, $wl, $wl_max, $mw_sql)
 /**
  * Parse the input text.
  *
- * @param string $text Text to parse
- * @param string $lid  Language ID (LgID from languages table)
- * @param int    $id   References whether the text is new to the database
+ * @param string     $text Text to parse
+ * @param string|int $lid  Language ID (LgID from languages table)
+ * @param int        $id   References whether the text is new to the database
  *                     $id = -1     => Check, return protocol
  *                     $id = -2     => Only return sentence array
  *                     $id = TextID => Split: insert sentences/textitems entries in DB
@@ -1385,7 +1395,7 @@ function splitCheckText($text, $lid, $id)
         if ($wl_max < $record['word_count']) { 
             $wl_max = $record['word_count'];
         }
-        $wl[] = $record['word_count'];
+        $wl[] = (string)$record['word_count'];
         $mw_sql .= ' WHEN ' . $record['word_count'] . 
         ' THEN @a' . (intval($record['word_count']) * 2 - 1);
     }
@@ -1436,11 +1446,13 @@ function reparse_all_texts(): void
 
 /**
  * Update the database if it is using an outdate version.
- * 
+ *
  * @param string $dbname Name of the database
- * 
+ *
  * @global string $tbpref Database table prefix
  * @global 0|1    $debug  Output debug messages.
+ * 
+ * @return void
  */
 function update_database($dbname)
 {
@@ -1805,12 +1817,12 @@ function check_update_db($debug, $tbpref, $dbname): void
 
 /**
  * Make the connection to the database.
- * 
- * @return mysqli|false Connection to the database
- * 
+ *
+ * @return mysqli Connection to the database
+ *
  * @psalm-suppress UndefinedDocblockClass
  */
-function connect_to_database($server, $userid, $passwd, $dbname) 
+function connect_to_database($server, $userid, $passwd, $dbname): mysqli 
 {
     // @ suppresses error messages
     

@@ -16,16 +16,18 @@ require_once __DIR__ . '/session_utility.php';
 
 /**
  * Save data from printed text.
- * 
+ *
  * @param int    $textid Text ID
  * @param int    $line   Line number to save
  * @param string $val
- * 
+ *
  * @return string Success string
- * 
+ *
  * @global string $tbpref Database table prefix.
+ *
+ * @psalm-return 'NOTOK'|'OK'
  */
-function save_impr_text_data($textid, $line, $val)
+function save_impr_text_data($textid, $line, $val): string
 {
     global $tbpref;
     $success = "NOTOK";
@@ -53,14 +55,16 @@ function save_impr_text_data($textid, $line, $val)
 
 /**
  * Save a printed text.
- * 
+ *
  * @param int    $textid Text ID
  * @param string $elem   Element to edit
  * @param mixed  $data   JSON data
- * 
+ *
  * @return string Success string
+ *
+ * @psalm-return 'NOTOK'|'OK'
  */
-function do_ajax_save_impr_text($textid, $elem, $data) 
+function do_ajax_save_impr_text($textid, $elem, $data): string 
 {
     chdir('..');
 

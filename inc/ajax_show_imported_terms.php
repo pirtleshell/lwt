@@ -17,14 +17,14 @@ require_once __DIR__ . '/session_utility.php';
 
 /**
  * Get the list of imported terms and start the display.
- * 
+ *
  * @param int    $recno       Record number
  * @param int    $currentpage Current page
  * @param string $last_update Last update
- * 
+ *
  * @return string SQL-formatted query to limit the number of results
  */
-function get_imported_terms($recno, $currentpage, $last_update)
+function get_imported_terms($recno, $currentpage, $last_update): string
 {
     $maxperpage = 100;
     
@@ -96,9 +96,11 @@ function get_imported_terms($recno, $currentpage, $last_update)
 
 /**
  * Show the imported terms.
- * 
+ *
  * @param string $last_update Last update
  * @param string $limit       SQL-formatted query to limit the number of results
+ * 
+ * @return void
  */
 function show_imported_terms($last_update, $limit, $rtl)
 {

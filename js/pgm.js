@@ -169,6 +169,8 @@ if($('#frames-r').length){$('#frames-r').animate({right:'5px'});return!0}
 return!1}
 function hideRightFrames(){if($('#frames-r').length){$('#frames-r').animate({right:'-100%'});return!0}
 return!1}
+function cleanupRightFrames(){const mytimeout=function(){const rf=window.parent.document.getElementById('frames-r');rf.click()}
+window.parent.setTimeout(mytimeout,800);window.parent.document.getElementById('frame-l').focus();window.parent.setTimeout(window.parent.cClick,100)}
 function successSound(){document.getElementById('success_sound').pause();document.getElementById('failure_sound').pause();return document.getElementById('success_sound').play()}
 function failureSound(){document.getElementById('success_sound').pause();document.getElementById('failure_sound').pause();return document.getElementById('failure_sound').play()}
 $.fn.serializeObject=function(){const o={};const a=this.serializeArray();$.each(a,function(){if(o[this.name]!==undefined){if(!o[this.name].push){o[this.name]=[o[this.name]]}
@@ -287,8 +289,8 @@ if(answer!=''){f.data.value=answer;f.submit()}}else if(v=='delall'||v=='smi1all'
 sel.value=''}}
 function areCookiesEnabled(){setCookie('test','none','','/','','');if(getCookie('test')){cookie_set=!0;deleteCookie('test','/','')}else{cookie_set=!1}
 return cookie_set}
-function setLang(ctl,url){location.href='save_setting_redirect.php?k=currentlanguage&v='+ctl.options[ctl.selectedIndex].value+'&u='+url}
-function resetAll(url){location.href='save_setting_redirect.php?k=currentlanguage&v=&u='+url}
+function setLang(ctl,url){location.href='inc/save_setting_redirect.php?k=currentlanguage&v='+ctl.options[ctl.selectedIndex].value+'&u='+url}
+function resetAll(url){location.href='inc/save_setting_redirect.php?k=currentlanguage&v=&u='+url}
 function getCookie(check_name){const a_all_cookies=document.cookie.split(';');let a_temp_cookie='';let cookie_name='';let cookie_value='';let b_cookie_found=!1;let i='';for(i=0;i<a_all_cookies.length;i++){a_temp_cookie=a_all_cookies[i].split('=');cookie_name=a_temp_cookie[0].replace(/^\s+|\s+$/g,'');if(cookie_name==check_name){b_cookie_found=!0;if(a_temp_cookie.length>1){cookie_value=decodeURIComponent(a_temp_cookie[1].replace(/^\s+|\s+$/g,''))}
 return cookie_value}
 a_temp_cookie=null;cookie_name=''}

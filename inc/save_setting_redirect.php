@@ -4,16 +4,35 @@
  * Save a Setting (k/v) and redirect to URI u
  * 
  * Call: save_setting_redirect.php?k=[key]&v=[value]&u=[RedirURI]
+ * 
+ * @since 2.5.4-fork You can omit either u, or (k, v).
  */
 
-require_once 'inc/session_utility.php';
+namespace SaveSetting;
 
-$k = getreq('k');
-$v = getreq('v');
-$u = getreq('u');
+require_once __DIR__ . '/session_utility.php';
 
-if ($k == 'currentlanguage') {
+/*
+ * Return the parameters from the URL.
+ * 
+ * @return array{0: string, 1: string, 2: string} Setting key, setting value 
+ *                                                and target URL
+ */
+function get_parameters(): array 
+{
+    $k = getreq('k');
+    $v = getreq('v');
+    $url = getreq('u');
+    return array($k, $v, $url);
+}
 
+/*
+ * Unset all session settings, and set current text to default.
+ * 
+ * @return void 
+ */
+function unset_settings(): void
+{
     unset($_SESSION['currenttextpage']);
     unset($_SESSION['currenttextquery']);
     unset($_SESSION['currenttextquerymode']);
@@ -49,9 +68,40 @@ if ($k == 'currentlanguage') {
     
     
     saveSetting('currenttext', '');
+
 }
 
-saveSetting($k, $v);
-header("Location: " . $u);
-exit(); 
+/*
+ * Save settings and go to a page.
+ * 
+ * @param string k Setting key
+ * @param string v Setting value
+ * @param string u URL to go to
+ * 
+ * @return void
+ */
+function save($k, $v): void
+{
+    if ($k == 'currentlanguage') {
+        unset_settings();
+    }
+    
+    saveSetting($k, $v);
+
+}
+
+list($k, $v, $url) = get_parameters();
+if ($k != '') {
+    save($k, $v);
+}
+if ($url != '') {
+    if (isset(parse_url($url)['host'])) {
+        // Absolute URL, go to header
+        header("Location: " . $url);
+    } else {
+        // Relative, change current path
+        header("Location: ../" . $url);
+    }
+    exit();
+}
 ?>

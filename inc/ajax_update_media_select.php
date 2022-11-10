@@ -18,6 +18,8 @@ require_once __DIR__ . '/session_utility.php';
 
 /**
  * Change the current working directory and find media path
+ * 
+ * @return string Media path
  */
 function do_ajax_update_media_select()
 {

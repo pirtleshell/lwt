@@ -1921,6 +1921,9 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 <li>Some deprecated functions <code>escape</code> and <code>unescape</code> were replaced by modern equivalents <code>encodeURIcomponent</code> and <code>decodeURIcomponent</code>. This may lead to changes in cookies, notably making them work better.</li>
 <li>
 <code>do_test.php</code>, <code>edit_texts.php</code>, <code>edit_words.php</code> and <code>set_test_status.php</code> now explicitly require a running session. They were silently failing before this release.</li>
+<li>
+<code>save_setting_redirect.php</code> moved to <code>inc/save_setting_redirect.php</code>.</li>
+<li>Psalm code analysis of all PHP files.</li>
 </ul>
 <h4>Removed</h4>
 <ul>
@@ -1929,6 +1932,21 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 <h4>Fixed</h4>
 <ul>
 <li>Testing specific terms was broken (<a href="https://github.com/HugoFara/lwt/issues/66">#66</a>) and tests were sometimes not counting score. Solution inspired from PR <a href="https://github.com/HugoFara/lwt/issues/67">#67</a> from <a href="https://github.com/jzohrab">@jzohrab</a>.</li>
+<li>Right frames should hide automatically but they often don't <a href="https://github.com/HugoFara/lwt/issues/61">#61</a>. Merge PR (#62)[https://github.com/HugoFara/lwt/pull/62].
+<ul>
+<li>You should also see less annoying console messages of "cClick" crashing.</li>
+</ul>
+</li>
+<li>Save text position (<code>inc/ajax_save_text_position.php</code>) was broken for all texts. This is fixed.</li>
+<li>Type fixes thanks to psalm:
+<ul>
+<li>
+<code>get_first_value</code> documentation updated since it was also returning <code>float</code> and <code>int</code>.</li>
+<li>
+<code>get_similar_terms</code> in <code>simterms.php</code> officially returns int.</li>
+</ul>
+</li>
+<li>Audio in <code>edit_texts.php</code> was never shown.</li>
 </ul>
 <h3>2.5.3-fork (November 06 2022)</h3>
 <h4>Added</h4>

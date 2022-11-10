@@ -20,14 +20,14 @@ require_once 'inc/session_utility.php';
  * @param string $textid  ID of the text
  * @param string $textpos Position of the word in the text.
  * 
- * @return string|null A word
+ * @return string A word
  * 
  * @global string $tbpref 
  */
 function get_word($textid, $textpos) 
 {
     global $tbpref;
-    $word = get_first_value(
+    $word = (string)get_first_value(
         "SELECT Ti2Text AS value 
         FROM " . $tbpref . "textitems2 
         WHERE Ti2WordCount = 1 AND Ti2TxID = " . $textid . " AND Ti2Order = " . $textpos
@@ -43,7 +43,7 @@ function get_word($textid, $textpos)
  * @param string $textif ID of the text
  * @param string $word   Word to add
  * 
- * @return string|null Word ID 
+ * @return int Word ID 
  * 
  * @global string $tbpref 
  */
@@ -106,8 +106,8 @@ function do_javascript_action($word, $wid, $hex, $textid)
     .attr('data_wid','<?php echo $wid; ?>')
     .attr('title',title);
     $('#learnstatus', contexth).html('<?php echo addslashes(texttodocount2($textid)); ?>');
-    window.parent.document.getElementById('frame-l').focus();
-    window.parent.setTimeout('cClick()', 100);
+
+    cleanupRightFrames();
     //]]>
     </script>
     <?php

@@ -24,7 +24,7 @@ require_once 'inc/simterms.php';
  * @param string $textlc      The word to insert, in lowercase
  * @param string $translation Translation of this term
  * 
- * @return array{0: string, 1: string} Word id, and then an insertion message 
+ * @return array{0: int, 1: string} Word id, and then an insertion message 
  */
 function insert_new_word($textlc, $translation)
 {
@@ -49,7 +49,8 @@ function insert_new_word($textlc, $translation)
             convert_string_to_sqlsyntax(repl_tab_nl($_REQUEST["WoSentence"])) . ', 1, ' .
             convert_string_to_sqlsyntax($_REQUEST["WoRomanization"]) . ', NOW(), ' .  
             make_score_random_insert_update('id') . 
-        ')', "Term saved"
+        ')', 
+        "Term saved"
     );
     $wid = get_last_key();
     do_mysqli_query(
@@ -158,9 +159,8 @@ function change_term_display($wid, $translation, $hex): void
     }
     ?>
     $('#learnstatus', contexth).html('<?php echo addslashes(texttodocount2($_REQUEST['tid'])); ?>');
-    window.parent.document.getElementById('frame-l').focus();
-    //window.parent.document.getElementById('frame-l').setTimeout('cClick()', 100);
-    window.parent.setTimeout('cClick()', 100);
+
+    cleanupRightFrames();
     //]]>
 </script>
     <?php
@@ -235,12 +235,10 @@ if (isset($_REQUEST['op'])) {
     } else {
         change_term_display($wid, $translation, $hex);
     }
-
-} // if (isset($_REQUEST['op']))
-
-// FORM
-
-else {  // if (! isset($_REQUEST['op']))
+    // if (isset($_REQUEST['op']))
+} else {  
+    // FORM
+    // if (! isset($_REQUEST['op']))
 
     // edit_word.php?tid=..&ord=..&wid=..
     
@@ -358,12 +356,8 @@ else {  // if (! isset($_REQUEST['op']))
  <div id="exsent"><span class="click" onclick="do_ajax_show_sentences(<?php echo $lang; ?>, <?php echo prepare_textdata_js($termlc) . ', ' . prepare_textdata_js("document.forms['newword'].WoSentence") . ', 0'; ?>);"><img src="icn/sticky-notes-stack.png" title="Show Sentences" alt="Show Sentences" /> Show Sentences</span></div>    
         <?php
         
-    }
-    
-    // CHG
-    
-    else {
-        
+    } else {
+        // CHG
         $sql = 'select WoTranslation, WoSentence, WoRomanization, WoStatus from ' . $tbpref . 'words where WoID = ' . $wid;
         $res = do_mysqli_query($sql);
         if ($record = mysqli_fetch_assoc($res)) {
