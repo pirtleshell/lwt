@@ -1110,6 +1110,36 @@ function hideRightFrames() {
   return false;
 }
 
+
+/**
+ * Hide the right frame and any popups.
+ *
+ * Called from several places: insert_word_ignore.php,
+ * set_word_status.php, delete_word.php, etc.
+ */
+function cleanupRightFrames() {
+
+  // A very annoying hack to get right frames to hide correctly.
+  // Calling hideRightFrames directly in window.parent.setTimeout
+  // does  //not work* for some reason ... when called that way,
+  // in hideRightFrames $('#frames-r').length is always 0.  I'm not
+  // sure why.  Using the mytimeout method lets the js find the
+  // element at runtime, and then it's clicked, invoking the function
+  // hideRightFrames, which then works.
+  //
+  // We have to use an anon function to ensure that the frames-r
+  // gets resolved when the timeout fires.
+  let mytimeout = function() {
+    var rf = window.parent.document.getElementById('frames-r');
+    rf.click();
+  }
+  window.parent.setTimeout(mytimeout, 800);
+
+  window.parent.document.getElementById('frame-l').focus();
+  window.parent.setTimeout('cClick()', 100);
+}
+
+
 /**
  * Play the success sound.
  *  

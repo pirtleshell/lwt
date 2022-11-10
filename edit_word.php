@@ -158,9 +158,8 @@ function change_term_display($wid, $translation, $hex): void
     }
     ?>
     $('#learnstatus', contexth).html('<?php echo addslashes(texttodocount2($_REQUEST['tid'])); ?>');
-    window.parent.document.getElementById('frame-l').focus();
-    //window.parent.document.getElementById('frame-l').setTimeout('cClick()', 100);
-    window.parent.setTimeout('cClick()', 100);
+
+    cleanupRightFrames();
     //]]>
 </script>
     <?php

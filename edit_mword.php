@@ -148,8 +148,7 @@ function edit_mword_do_operation($term)
     }
     ?>
     <script type="text/javascript">
-        window.parent.document.getElementById('frame-l').focus();
-        window.parent.setTimeout('cClick()', 100);
+        cleanupRightFrames();
     </script>
 
     <?php

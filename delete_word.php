@@ -103,8 +103,8 @@ function delete_word_javascript($wid, $tid)
         .attr('title', title)
         .removeAttr("data_img");
         $('#learnstatus', context).html('<?php echo addslashes(texttodocount2($tid)); ?>');
-        window.parent.document.getElementById('frame-l').focus();
-        window.parent.setTimeout('cClick()', 100);
+
+        cleanupRightFrames();
     }
 
     delete_word(<?php echo $wid; ?>);

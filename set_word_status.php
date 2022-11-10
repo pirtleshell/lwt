@@ -96,8 +96,8 @@ function set_word_status_javascript($tid, $wid, $status, $word, $trans, $roman)
     .attr('data_status','<?php echo $status; ?>')
     .attr('title',title);
     $('#learnstatus', contexth).html('<?php echo addslashes(texttodocount2($tid)); ?>');
-    window.parent.document.getElementById('frame-l').focus();
-    window.parent.setTimeout('cClick()', 100);
+
+    cleanupRightFrames();
     //]]>
 </script>
     <?php
