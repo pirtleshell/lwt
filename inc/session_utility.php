@@ -769,7 +769,7 @@ function write_rss_to_db($texts): string
                         convert_string_to_sqlsyntax($text['TxAudioURI']) .','.
                         convert_string_to_sqlsyntax($text['TxSourceURI']) .')'
                 );
-                $id = (int)get_last_key();
+                $id = get_last_key();
                 splitCheckText(
                     get_first_value(
                         'select TxText as value from ' . $tbpref . 'texts 
@@ -1228,8 +1228,7 @@ function get_text_from_rsslink($feed_data, $NfArticleSection, $NfFilterTags, $Nf
                 array('> ',' <'), 
                 $feed_data[$key]['text']
             );//$HTMLString=str_replace (array('>','<'),array('> ',' <'),$HTMLString);
-        }
-        else{
+        } else {
             $data[$key]['TxSourceURI'] = $feed_data[$key]['link'];
             $context = stream_context_create(array('http' => array('follow_location' => true )));
             $HTMLString = file_get_contents(trim($data[$key]['TxSourceURI']), false, $context);
@@ -3513,6 +3512,7 @@ function get20Sentences($lang, $wordlc, $wid, $jsctlname, $mode): string
     $r = '<p><b>Sentences in active texts with <i>' . tohtml($wordlc) . '</i></b></p>
     <p>(Click on <img src="icn/tick-button.png" title="Choose" alt="Choose" /> 
     to copy sentence into above term)</p>';
+    $mecab_str = null;
     if (empty($wid)) {
         $sql = "SELECT DISTINCT SeID, SeText 
         FROM {$tbpref}sentences, {$tbpref}textitems2 
@@ -3825,7 +3825,6 @@ function insert_standard_expression($textlc, $lid, $wid, $len, $mode): array
     $termchar = $record['LgRegexpWordCharacters'];
     mysqli_free_result($res);
     if ($removeSpaces == 1 && $splitEachChar == 0) {
-        $rSflag = '';
         $sql = "SELECT 
         group_concat(Ti2Text ORDER BY Ti2Order SEPARATOR ' ') AS SeText, SeID, 
         SeTxID, SeFirstPos 
@@ -3843,6 +3842,7 @@ function insert_standard_expression($textlc, $lid, $wid, $len, $mode): array
     $res = do_mysqli_query($sql);
     $notermchar = "/[^$termchar]($textlc)[^$termchar]/ui";
     // For each sentence in the language containing the query
+    $matches = null;
     while ($record = mysqli_fetch_assoc($res)){
         $string = ' ' . $record['SeText'] . ' ';
         if ($splitEachChar) {
@@ -4010,7 +4010,6 @@ function insertExpressions($textlc, $lid, $wid, $len, $mode): ?string
     $mecab = 'MECAB' == strtoupper(trim($record['LgRegexpWordCharacters']));
     $splitEachChar = !$mecab && $record['LgSplitEachChar'];
     mysqli_free_result($res);
-    $sqlarr = array();
     if ($splitEachChar) {
         $textlc = preg_replace('/([^\s])/u', "$1 ", $textlc);
     }
@@ -4048,6 +4047,7 @@ function insertExpressions($textlc, $lid, $wid, $len, $mode): ?string
     if (isset($sqltext)) {
         do_mysqli_query($sqltext);
     }
+    return null;
 }
 
 
@@ -4510,6 +4510,7 @@ function makeMediaPlayer($path, $offset=0)
 function makeVideoPlayer($path, $offset=0): void 
 {
     $online = false;
+    $url = null;
     if (preg_match(
         "/(?:https:\/\/)?www\.youtube\.com\/watch\?v=([\d\w]+)/iu", 
         $path, $matches

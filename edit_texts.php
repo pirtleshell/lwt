@@ -68,7 +68,6 @@ function edit_texts_get_wh_query($currentquery, $currentquerymode, $currentregex
                 'SELECT "test" RLIKE ' . convert_string_to_sqlsyntax($currentquery)
             ) === false
         ) {
-            $currentquery = '';
             $wh_query = '';
             unset($_SESSION['currentwordquery']);
             if (isset($_REQUEST['query'])) { 
@@ -454,11 +453,12 @@ function edit_texts_do_operation($op, $message1, $no_pagestart): string
 
     // CHECK
 
+    $id = null;
     if ($op == 'Check') {
         echo '<p>
             <input type="button" value="&lt;&lt; Back" onclick="history.back();" />
         </p>';
-        echo splitCheckText(
+        splitCheckText(
             remove_soft_hyphens($_REQUEST['TxText']), (int)$_REQUEST['TxLgID'], -1
         );
         echo '<p>
@@ -1166,15 +1166,6 @@ function edit_texts_display($message)
         $currentquery, $currentquerymode, $currentregexmode
     );
 
-    if ($currentquery!=='' && $currentregexmode!=='') {
-        if (@mysqli_query(
-            $GLOBALS["DBCONNECTION"], 
-            'SELECT "test" RLIKE ' . convert_string_to_sqlsyntax($currentquery)
-        )===false
-        ) {
-            $currentquery = '';
-        }
-    }
 
     $wh_tag = edit_texts_get_wh_tag($currentlang);
 

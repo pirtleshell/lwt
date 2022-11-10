@@ -42,15 +42,17 @@ function get_text_data($textid)
 
 /**
  * Get the record for this text in the database.
- * 
+ *
  * @param string $textid ID of the text
  * 
  * @return array{TxLgID: int, TxTitle: string, TxAnnotatedText: string, 
  * TxPosition: int}|false|null Record corresponding to this text.
  * 
  * @global string $tbpref Table name prefix
- * 
+ *
  * @deprecated Use get_text_data instead.
+ *
+ * @psalm-return array<string, float|int|null|string>|false|null
  */
 function getTextData($textid)
 {
@@ -97,7 +99,7 @@ function get_language_settings($langid)
  *
  * @deprecated Use get_language_settings instead.
  *
- * @psalm-return array{LgName: string, LgDict1URI: string, LgDict2URI: string, LgGoogleTranslateURI: string, LgTextSize: int, LgRemoveSpaces: int, LgRightToLeft: int}|false|null
+ * @psalm-return array<string, float|int|null|string>|false|null
  */
 function getLanguagesSettings($langid)
 {
@@ -221,7 +223,6 @@ function echoTerm(
  */
 function wordProcessor($record, $showAll, $currcharcount): int
 {
-    $hideuntil = -1;
     $cnt = 1;
     $sid = 0;
 
@@ -237,14 +238,6 @@ function wordProcessor($record, $showAll, $currcharcount): int
 
     // Check if work should be hidden
     $hidetag = '';
-    if ($hideuntil > 0) {
-        if ($record['Ti2Order'] <= $hideuntil) {
-            $hidetag = ' hide'; 
-        } else {
-            $hideuntil = -1;
-            $hidetag = '';
-        }
-    }
 
     if ($cnt < $record['Ti2Order']) {
         echo '<span id="ID-' . $cnt++ . '-1"></span>';

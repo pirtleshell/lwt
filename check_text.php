@@ -24,7 +24,7 @@ if (isset($_REQUEST['op'])) {
     if (strlen(prepare_textdata($_REQUEST['TxText'])) > 65000) {
         echo "<p>Error: Text too long, must be below 65000 Bytes.</p>"; 
     } else {
-        echo splitCheckText(
+        splitCheckText(
             (string)$_REQUEST['TxText'], (int)$_REQUEST['TxLgID'], -1
         ); 
     }

@@ -78,6 +78,8 @@ require_once 'inc/session_utility.php';
  *
  * @global string $tbpref       Database table prefix
  * @global string $fixed_tbpref Fixed database table prefix
+ *
+ * @psalm-return array{0: '<span title="Manage Table Sets" onclick="location.href='table_set_management.php';" class="click">'|'<span>', 1: string, 2: '<span title="Select Table Set" onclick="location.href='start.php';" class="click">'|'<span>'}
  */
 function get_span_groups(): array
 {

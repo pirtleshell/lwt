@@ -235,12 +235,10 @@ if (isset($_REQUEST['op'])) {
     } else {
         change_term_display($wid, $translation, $hex);
     }
-
-} // if (isset($_REQUEST['op']))
-
-// FORM
-
-else {  // if (! isset($_REQUEST['op']))
+    // if (isset($_REQUEST['op']))
+} else {  
+    // FORM
+    // if (! isset($_REQUEST['op']))
 
     // edit_word.php?tid=..&ord=..&wid=..
     
@@ -358,12 +356,8 @@ else {  // if (! isset($_REQUEST['op']))
  <div id="exsent"><span class="click" onclick="do_ajax_show_sentences(<?php echo $lang; ?>, <?php echo prepare_textdata_js($termlc) . ', ' . prepare_textdata_js("document.forms['newword'].WoSentence") . ', 0'; ?>);"><img src="icn/sticky-notes-stack.png" title="Show Sentences" alt="Show Sentences" /> Show Sentences</span></div>    
         <?php
         
-    }
-    
-    // CHG
-    
-    else {
-        
+    } else {
+        // CHG
         $sql = 'select WoTranslation, WoSentence, WoRomanization, WoStatus from ' . $tbpref . 'words where WoID = ' . $wid;
         $res = do_mysqli_query($sql);
         if ($record = mysqli_fetch_assoc($res)) {

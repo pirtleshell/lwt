@@ -872,6 +872,7 @@ function parse_japanese_text($text, $id): ?array
     );
     do_mysqli_query("DROP TABLE {$tbpref}temptextitems2");
     unlink($file_name);
+    return null;
 }
 
 /**
@@ -1035,6 +1036,7 @@ function parse_standard_text($text, $id, $lid): ?array
             ) VALUES " . implode(',', $values)
         );
     }
+    return null;
 }
 
 

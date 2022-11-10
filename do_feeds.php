@@ -18,7 +18,11 @@ $currentquerymode = processSessParam("query_mode", "currentrssquerymode", 'title
 $currentregexmode = getSettingWithDefault("set-regex-mode");
 $currentpage = processSessParam("page", "currentrsspage", '1', 1);
 $currentfeed = processSessParam("selected_feed", "currentrssfeed", '', 0);
-$wh_query = $currentregexmode . 'like ' .  convert_string_to_sqlsyntax(($currentregexmode == '') ? (str_replace("*", "%", mb_strtolower($currentquery, 'UTF-8'))) : ($currentquery));
+$wh_query = $currentregexmode . 'like ' .  convert_string_to_sqlsyntax(
+    ($currentregexmode == '') ? 
+    str_replace("*", "%", mb_strtolower($currentquery, 'UTF-8')) : 
+    $currentquery
+);
 switch($currentquerymode){
 case 'title,desc,text':
     $wh_query=' and (FlTitle ' . $wh_query . ' or FlDescription ' . $wh_query . ' or FlText ' . $wh_query . ')';
@@ -39,8 +43,8 @@ if($currentquery!=='') {
             }
         }
     }
-}
-else { $wh_query = ''; 
+} else { 
+    $wh_query = ''; 
 }
 
 $message = '';
@@ -189,7 +193,7 @@ if (isset($_REQUEST['marked_items'])) {
                         convert_string_to_sqlsyntax($text['TxSourceURI']) .'
                     )'
                 );
-                $id = (int)get_last_key();
+                $id = get_last_key();
                 splitCheckText(
                     get_first_value(
                         'select TxText as value from ' . $tbpref . 'texts 

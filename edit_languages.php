@@ -62,9 +62,9 @@ function edit_languages_alert_duplicate()
  * Refresh sentence and text items from a specific language.
  *
  * @param int $lid Language ID
- * 
+ *
  * @return string Number of sentences and textitems refreshed
- * 
+ *
  * @global string $tbpref Database table prefix
  */
 function edit_languages_refresh($lid): string
@@ -224,9 +224,9 @@ function edit_languages_op_save(): string
  * Edit an existing text in the database.
  *
  * @param int $lid Language ID
- * 
+ *
  * @return string Number of texts updated and items reparsed.
- * 
+ *
  * @global string $tbpref Database table prefix
  */
 function edit_languages_op_change($lid): string 

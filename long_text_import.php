@@ -173,7 +173,6 @@ function long_text_save(): void
     }
     $textcount = (int)$_REQUEST["TextCount"];
     $texts = $_REQUEST["text"];
-    $message = '';
     
     if (count($texts) != $textcount ) {
         $message = "Error: Number of texts wrong: " .  count($texts) . " != " . $textcount;
@@ -198,7 +197,7 @@ function long_text_save(): void
             );
             $id = get_last_key();
             saveTextTags($id);    
-            splitCheckText($texts[$i], $langid, (int) $id);
+            splitCheckText($texts[$i], $langid, $id);
         }
         $message = $imported . " Text(s) imported!";
     }

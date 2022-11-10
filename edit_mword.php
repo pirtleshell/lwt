@@ -139,12 +139,12 @@ function edit_mword_do_operation($term)
         // INSERT
         $term->status = (int) $_REQUEST["WoStatus"];
         $term->lgid = (int) $_REQUEST["WoLgID"];
-        $message = edit_mword_do_insert($term);
+        edit_mword_do_insert($term);
     } else {  
         // UPDATE
         $term->id = (int) $_REQUEST["WoID"];
         $term->status = (int) $_REQUEST["WoOldStatus"];
-        $message = edit_mword_do_update($term, (int) $_REQUEST["WoStatus"]);
+        edit_mword_do_update($term, (int) $_REQUEST["WoStatus"]);
     }
     ?>
     <script type="text/javascript">
@@ -331,7 +331,7 @@ function edit_mword_update($wid, $tid, $ord)
 
     $term = new Term();
 
-    $term->id = (int) $wid;
+    $term->id = $wid;
     $sql = "SELECT WoText, WoLgID FROM {$tbpref}words WHERE WoID = $term->id";
     $res = do_mysqli_query($sql);
     $record = mysqli_fetch_assoc($res);

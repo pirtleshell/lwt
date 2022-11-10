@@ -124,7 +124,7 @@ function upload_words_import_terms($fields, $tabs, $file_upl, $col, $lang): void
                 $row = array_map('convert_string_to_sqlsyntax', $row);
                 $row = array_merge(
                     $row, array(
-                        $lang, $status, "NOW()", 
+                        (string)$lang, (string)$status, "NOW()", 
                         getsqlscoreformula(2), getsqlscoreformula(3), "RAND()"
                     )
                 );

@@ -18,7 +18,6 @@ $from = trim($_REQUEST["from"]);
 $dest = trim($_REQUEST["dest"]);
 $destorig = $dest;
 $phrase = mb_strtolower(trim($_REQUEST["phrase"]), 'UTF-8');
-$ok = false;
 
 pagestart_nobody('');
 $titletext = '<a href="http://glosbe.com/' . $from . '/' . $dest . '/' . $phrase . '">Glosbe Dictionary (' . tohtml($from) . "-" . tohtml($dest) . "):  &nbsp; <span class=\"red2\">" . tohtml($phrase) . "</span></a>";
