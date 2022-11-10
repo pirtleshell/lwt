@@ -29,7 +29,8 @@ function letterPairs($str): array
 }
 
 /**
- * @psalm-return list<mixed>
+ * @psalm-return list<string>
+ * @return string[]
  */
 function wordLetterPairs($str): array 
 {
@@ -67,9 +68,10 @@ function getSimilarityRanking($str1, $str2)
  * For a language $lang_id and a term $compared_term (UTF-8).
  * If string is already in database, it will be excluded in results.
  *
- * @return string[] All $max_count wordids with a similarity ranking > $min_ranking, sorted decending
+ * @return int[] All $max_count wordids with a similarity ranking > $min_ranking, 
+ *               sorted decending
  *
- * @psalm-return array<positive-int, string>
+ * @psalm-return array<positive-int, int>
  */
 function get_similar_terms(
     $lang_id, $compared_term, $max_count, $min_ranking
@@ -77,11 +79,15 @@ function get_similar_terms(
 
     global $tbpref;
     $compared_term_lc = mb_strtolower($compared_term, 'UTF-8');
-    $sql = "select WoID, WoTextLC from " . $tbpref . "words where WoLgID = " . $lang_id . " AND WoTextLC <> " . convert_string_to_sqlsyntax($compared_term_lc);
+    $sql = "select WoID, WoTextLC from " . $tbpref . "words 
+    where WoLgID = " . $lang_id . 
+    " AND WoTextLC <> " . convert_string_to_sqlsyntax($compared_term_lc);
     $res = do_mysqli_query($sql);
     $termlsd = array();
     while ($record = mysqli_fetch_assoc($res)) {
-        $termlsd[$record["WoID"]] = getSimilarityRanking($compared_term_lc, $record["WoTextLC"]);
+        $termlsd[(int)$record["WoID"]] = getSimilarityRanking(
+            $compared_term_lc, $record["WoTextLC"]
+        );
     }
     mysqli_free_result($res);
     arsort($termlsd, SORT_NUMERIC);

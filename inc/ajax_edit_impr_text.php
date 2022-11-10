@@ -17,13 +17,13 @@ require_once __DIR__ . '/session_utility.php';
 
 /**
  * Make the translation for a word.
- * 
+ *
  * @param int      $i     Index
  * @param int|null $wid   Word ID or null 
  * @param string   $trans Translation
  * @param string   $word
  * @param int      $lang  Language ID
- * 
+ *
  * @return string HTML-formatted string
  */
 function make_trans($i, $wid, $trans, $word, $lang): string 
@@ -96,12 +96,12 @@ function make_trans($i, $wid, $trans, $word, $lang): string
 
 /**
  * Prepare the form for printed text.
- * 
+ *
  * @param int    $textid Text ID
  * @param string $wordlc Lowercase word
- * 
- * @return string[] $r and $rr.
- * 
+ *
+ * @return array{0: string, 1: string} $r and $rr.
+ *
  * @global string $tbpref Database table prefix.
  */
 function make_form($textid, $wordlc)

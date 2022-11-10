@@ -15,9 +15,10 @@ require_once __DIR__ . '/session_utility.php';
 /*
  * Return the parameters from the URL.
  * 
- * @return {string, string, string} Setting key, setting value and target URL
+ * @return array{0: string, 1: string, 2: string} Setting key, setting value 
+ *                                                and target URL
  */
-function get_parameters() 
+function get_parameters(): array 
 {
     $k = getreq('k');
     $v = getreq('v');
@@ -28,9 +29,9 @@ function get_parameters()
 /*
  * Unset all session settings, and set current text to default.
  * 
- * @return undefined 
+ * @return void 
  */
-function unset_settings()
+function unset_settings(): void
 {
     unset($_SESSION['currenttextpage']);
     unset($_SESSION['currenttextquery']);
@@ -77,9 +78,9 @@ function unset_settings()
  * @param string v Setting value
  * @param string u URL to go to
  * 
- * @return undefined
+ * @return void
  */
-function save($k, $v)
+function save($k, $v): void
 {
     if ($k == 'currentlanguage') {
         unset_settings();

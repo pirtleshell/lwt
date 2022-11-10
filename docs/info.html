@@ -1923,6 +1923,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 <code>do_test.php</code>, <code>edit_texts.php</code>, <code>edit_words.php</code> and <code>set_test_status.php</code> now explicitly require a running session. They were silently failing before this release.</li>
 <li>
 <code>save_setting_redirect.php</code> moved to <code>inc/save_setting_redirect.php</code>.</li>
+<li>Psalm linting of all <code>inc/*.php</code> files.</li>
 </ul>
 <h4>Removed</h4>
 <ul>
@@ -1937,6 +1938,14 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 </ul>
 </li>
 <li>Save text position (<code>inc/ajax_save_text_position.php</code>) was broken for all texts. This is fixed.</li>
+<li>Type fixes thanks to psalm:
+<ul>
+<li>
+<code>get_first_value</code> documentation updated since it was also returning <code>float</code> and <code>int</code>.</li>
+<li>
+<code>get_similar_terms</code> in <code>simterms.php</code> officially returns int.</li>
+</ul>
+</li>
 </ul>
 <h3>2.5.3-fork (November 06 2022)</h3>
 <h4>Added</h4>

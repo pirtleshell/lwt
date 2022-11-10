@@ -89,7 +89,7 @@ function edit_term_transl($wid, $new_trans)
             WHERE WoID = ' . $wid, ""
         );
     }
-    return get_first_value(
+    return (string)get_first_value(
         "SELECT WoTextLC AS value 
         FROM " . $tbpref . "words 
         WHERE WoID = " . $wid
