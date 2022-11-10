@@ -24,7 +24,7 @@ require_once 'inc/simterms.php';
  * @param string $textlc      The word to insert, in lowercase
  * @param string $translation Translation of this term
  * 
- * @return array{0: string, 1: string} Word id, and then an insertion message 
+ * @return array{0: int, 1: string} Word id, and then an insertion message 
  */
 function insert_new_word($textlc, $translation)
 {
@@ -49,7 +49,8 @@ function insert_new_word($textlc, $translation)
             convert_string_to_sqlsyntax(repl_tab_nl($_REQUEST["WoSentence"])) . ', 1, ' .
             convert_string_to_sqlsyntax($_REQUEST["WoRomanization"]) . ', NOW(), ' .  
             make_score_random_insert_update('id') . 
-        ')', "Term saved"
+        ')', 
+        "Term saved"
     );
     $wid = get_last_key();
     do_mysqli_query(

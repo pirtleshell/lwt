@@ -1,14 +1,13 @@
 <?php
 
-
-/**************************************************************
+/**
  * \file
  * \brief Edit term while testing
  * 
  * Call: edit_tword.php?....
-      ... op=Change ... do update
-      ... wid=[wordid] ... display edit screen
- ***************************************************************/
+ *  ... op=Change ... do update
+ *  ... wid=[wordid] ... display edit screen
+ */
 
 require_once 'inc/session_utility.php';
 require_once 'inc/simterms.php';
@@ -16,15 +15,14 @@ require_once 'inc/simterms.php';
 $translation_raw = repl_tab_nl(getreq("WoTranslation"));
 if ($translation_raw == '' ) { 
     $translation = '*'; 
-}
-else { 
+} else { 
     $translation = $translation_raw; 
 }
 
 // UPDATE
 
 $lang = null;
-$message = null;
+$message = '';
 $rom = null;
 $sentence = null;
 $status = null;
@@ -49,25 +47,28 @@ if (isset($_REQUEST['op'])) {
             $oldstatus = $_REQUEST["WoOldStatus"];
             $newstatus = $_REQUEST["WoStatus"];
             $xx = '';
-            if ($oldstatus != $newstatus) { $xx = ', WoStatus = ' .    $newstatus . ', WoStatusChanged = NOW()'; 
+            if ($oldstatus != $newstatus) { 
+                $xx = ', WoStatus = ' .    $newstatus . ', WoStatusChanged = NOW()'; 
             }
         
             runsql(
                 'update ' . $tbpref . 'words set WoText = ' . 
                 convert_string_to_sqlsyntax($_REQUEST["WoText"]) . ', WoTranslation = ' . 
                 convert_string_to_sqlsyntax($translation) . ', WoSentence = ' . 
-                convert_string_to_sqlsyntax(repl_tab_nl($_REQUEST["WoSentence"])) . ', WoRomanization = ' .
-                convert_string_to_sqlsyntax($_REQUEST["WoRomanization"]) . $xx . ',' . make_score_random_insert_update('u') . ' where WoID = ' . $_REQUEST["WoID"], "Updated"
+                convert_string_to_sqlsyntax(repl_tab_nl($_REQUEST["WoSentence"])) . 
+                ', WoRomanization = ' .
+                convert_string_to_sqlsyntax($_REQUEST["WoRomanization"]) . $xx . 
+                ',' . make_score_random_insert_update('u') . 
+                ' where WoID = ' . $_REQUEST["WoID"], 
+                "Updated"
             );
-            $wid = $_REQUEST["WoID"];
+            $wid = (int)$_REQUEST["WoID"];
             saveWordTags($wid);
             
         }  // $_REQUEST['op'] == 'Change'
-
-    } // (mb_strtolower($text, 'UTF-8') == $textlc)
-    
-    else { // (mb_strtolower($text, 'UTF-8') != $textlc)
-    
+    // (mb_strtolower($text, 'UTF-8') == $textlc)
+    } else { 
+        // (mb_strtolower($text, 'UTF-8') != $textlc)
         $titletext = "New/Edit Term: " . tohtml(prepare_textdata($_REQUEST["WoTextLC"]));
         pagestart_nobody($titletext);
         echo '<h4><span class="bigger">' . $titletext . '</span></h4>';        
@@ -75,7 +76,6 @@ if (isset($_REQUEST['op'])) {
         echo error_message_with_hide($message, 0);
         pageend();
         exit();
-    
     }
 
     ?>

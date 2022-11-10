@@ -427,7 +427,7 @@ function edit_texts_archive($txid)
  * Do an operation on texts.
  * 
  * @param string $op           Operation name
- * @param string $message1     Unnused
+ * @param mixed  $message1     Unnused
  * @param int    $no_pagestart If you don't want a page 
  * 
  * @return string Edition message (number of rows edited)
@@ -458,7 +458,7 @@ function edit_texts_do_operation($op, $message1, $no_pagestart)
             <input type="button" value="&lt;&lt; Back" onclick="history.back();" />
         </p>';
         echo splitCheckText(
-            remove_soft_hyphens($_REQUEST['TxText']), $_REQUEST['TxLgID'], -1
+            remove_soft_hyphens($_REQUEST['TxText']), (int)$_REQUEST['TxLgID'], -1
         );
         echo '<p>
             <input type="button" value="&lt;&lt; Back" onclick="history.back();" />
@@ -894,7 +894,7 @@ function edit_texts_other_pages($recno)
 /**
  * Display the content of a table row for text edition.
  * 
- * @param array<string, string>                         $txrecord    
+ * @param array                                         $txrecord    
  *                                                                   Various information about the text should contain 'TxID' at least.
  * @param string                                        $currentlang 
  *                                                                   Current language ID
@@ -902,6 +902,8 @@ function edit_texts_other_pages($recno)
  * List of statuses WITH unknown words (status 0)
  * 
  * @return void
+ * 
+ * @since 2.5.4-fork Audio was never shown
  */
 function edit_texts_show_text_row($txrecord, $currentlang, $statuses)
 {
@@ -925,8 +927,8 @@ function edit_texts_show_text_row($txrecord, $currentlang, $statuses)
     }
     }
     */
-    if (isset($record['TxAudioURI'])) {
-        $audio = trim($record['TxAudioURI']);
+    if (isset($txrecord['TxAudioURI'])) {
+        $audio = trim($txrecord['TxAudioURI']);
     } else {
         $audio = ''; 
     }

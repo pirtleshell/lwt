@@ -200,7 +200,9 @@ function wordpress_logout_link()
 /**
  * Return a lot of different server state variables.
  * 
- * @return string[]
+ * @return array{0: string, 1: float, 2: string[], 3: string, 4: string, 5: string} 
+ * Table prefix, database size, server software, apache version, PHP version, MySQL 
+ * version
  * 
  * @global string $tbpref Database table prefix
  * @global string $dbname Database name
@@ -209,7 +211,7 @@ function get_server_data()
 {
     global $tbpref, $dbname;
     $p = convert_string_to_sqlsyntax_nonull($tbpref);
-    $mb = get_first_value(
+    $mb = (float)get_first_value(
         "SELECT round(sum(data_length+index_length)/1024/1024,1) AS value 
         FROM information_schema.TABLES 
         WHERE table_schema = " . convert_string_to_sqlsyntax($dbname) . " 
@@ -231,7 +233,7 @@ function get_server_data()
         )"
     );
     if (!isset($mb)) { 
-        $mb = '0.0'; 
+        $mb = 0.0; 
     }
 
     $serversoft = explode(' ', $_SERVER['SERVER_SOFTWARE']);
@@ -242,7 +244,7 @@ function get_server_data()
     }
     // }
     $php = phpversion();
-    $mysql = get_first_value("SELECT VERSION() as value");
+    $mysql = (string)get_first_value("SELECT VERSION() as value");
     return array($p, $mb, $serversoft, $apache, $php, $mysql);
 }
 

@@ -1923,7 +1923,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 <code>do_test.php</code>, <code>edit_texts.php</code>, <code>edit_words.php</code> and <code>set_test_status.php</code> now explicitly require a running session. They were silently failing before this release.</li>
 <li>
 <code>save_setting_redirect.php</code> moved to <code>inc/save_setting_redirect.php</code>.</li>
-<li>Psalm linting of all <code>inc/*.php</code> files.</li>
+<li>Psalm code analysis of all PHP files.</li>
 </ul>
 <h4>Removed</h4>
 <ul>
@@ -1946,6 +1946,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 <code>get_similar_terms</code> in <code>simterms.php</code> officially returns int.</li>
 </ul>
 </li>
+<li>Audio in <code>edit_texts.php</code> was never shown.</li>
 </ul>
 <h3>2.5.3-fork (November 06 2022)</h3>
 <h4>Added</h4>

@@ -112,26 +112,20 @@ function upload_words_import_terms($fields, $tabs, $file_upl, $col, $lang)
                     $row[] = mb_strtolower($wotext);
                 }
                 if ($fields["tr"] != 0) {
-                    $row[] = (
-                        $parsed_line[$fields["tr"] - 1]
-                    );
+                    $row[] = $parsed_line[$fields["tr"] - 1];
                 }
                 if ($fields["ro"] != 0) {
-                    $row[] = (
-                        $parsed_line[$fields["ro"] - 1]
-                    );
+                    $row[] = $parsed_line[$fields["ro"] - 1];
                 }
                 if ($fields["se"] != 0) {
-                    $row[] = (
-                        $parsed_line[$fields["se"] - 1]
-                    );
+                    $row[] = $parsed_line[$fields["se"] - 1];
                 }
 
                 $row = array_map('convert_string_to_sqlsyntax', $row);
                 $row = array_merge(
                     $row, array(
-                    $lang, $status, "NOW()", 
-                    getsqlscoreformula(2), getsqlscoreformula(3), "RAND()"
+                        $lang, $status, "NOW()", 
+                        getsqlscoreformula(2), getsqlscoreformula(3), "RAND()"
                     )
                 );
                 $values[] = "(" . implode(",", $row) . ")";

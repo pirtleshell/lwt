@@ -60,9 +60,9 @@ function getTextData($textid)
  * 
  * @param int $langid Language ID as defined in the database.
  * 
- * @return array{LgName: string, LgDict1URI: string, 
+ * @return array<array{LgName: string, LgDict1URI: string, 
  * LgDict2URI: string, LgGoogleTranslateURI: string, LgTextSize: int, 
- * LgRemoveSpaces: int, LgRightToLeft: int}|false|null Record corresponding to this language.
+ * LgRemoveSpaces: int, LgRightToLeft: int}>|false|null Record corresponding to this language.
  * 
  * @global string $tbpref Table name prefix
  */
@@ -257,7 +257,7 @@ function wordProcessor($record, $showAll, $currcharcount): int
     }
     
     if ($actcode == 1) { 
-        $currcharcount += $record['TiTextLength'];
+        $currcharcount += (int)$record['TiTextLength'];
     }
 
     return $currcharcount;
@@ -302,7 +302,7 @@ function sentenceParser($sid, $old_sid)
 /**
  * Process each text item (can be punction, term, etc...)
  *
- * @param string[] $record        Text item information
+ * @param array    $record        Text item information
  * @param 0|1      $showAll       Show all words or not
  * @param int      $currcharcount Current number of caracters
  * @param bool     $hide          Should some item be hidden, depends on $showAll
@@ -369,7 +369,7 @@ function word_parser($record, $showAll, $currcharcount, $hideuntil): int
             $actcode, $showAll, $spanid, $hidetag, $currcharcount, $record
         );
         if ($hideuntil == -1) {
-            $hideuntil = $record['Ti2Order'] + ($actcode - 1) * 2;
+            $hideuntil = (int)$record['Ti2Order'] + ($actcode - 1) * 2;
         }
     }
 
@@ -644,7 +644,7 @@ function do_text_text_content($textid, $only_body=true): void
     // Text settings
     $record = get_text_data($textid);
     $title = $record['TxTitle'];
-    $langid = $record['TxLgID'];
+    $langid = (int)$record['TxLgID'];
     $ann = $record['TxAnnotatedText'];
     $pos = $record['TxPosition'];
     
@@ -703,7 +703,7 @@ function do_text_text_content($textid, $only_body=true): void
         'POS' => $pos
     );
     do_text_text_javascript($var_array);
-    echo do_text_text_style($showLearning, $mode_trans, $textsize, strlen($ann) > 0);
+    do_text_text_style($showLearning, $mode_trans, $textsize, strlen($ann) > 0);
     ?>
 
     <div id="thetext" <?php echo ($rtlScript ? 'dir="rtl"' : '') ?>>

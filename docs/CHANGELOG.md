@@ -9,7 +9,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 * Some deprecated functions ``escape`` and ``unescape`` were replaced by modern equivalents ``encodeURIcomponent`` and ``decodeURIcomponent``. This may lead to changes in cookies, notably making them work better.
 * ``do_test.php``, ``edit_texts.php``, ``edit_words.php`` and ``set_test_status.php`` now explicitly require a running session. They were silently failing before this release.
 * ``save_setting_redirect.php`` moved to ``inc/save_setting_redirect.php``.
-* Psalm linting of all ``inc/*.php`` files.
+* Psalm code analysis of all PHP files.
 
 ### Removed
 * The ability to use a dictionary with a specific encoding, introduced in 1.0.2, is being removed. It was making things overwhelmingly complex and caused issues, as signaled in [#58](https://github.com/HugoFara/lwt/issues/58). Adapted from PR [#59](https://github.com/HugoFara/lwt/pull/59).
@@ -22,6 +22,8 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 * Type fixes thanks to psalm:
   * ``get_first_value`` documentation updated since it was also returning ``float`` and ``int``.
   * ``get_similar_terms`` in ``simterms.php`` officially returns int.
+* Audio in ``edit_texts.php`` was never shown.
+
 
 ## 2.5.3-fork (November 06 2022)
 ### Added

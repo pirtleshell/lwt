@@ -154,12 +154,12 @@ function edit_mword_do_operation($term)
     <?php
     /*
      * Unreachable code, at least since 2.3.0-fork.
-     */
-    if (isset($sqltext)) {
+     * 
+     * if (isset($sqltext)) {
         flush();
         do_mysqli_query($sqltext);
         echo '<p>OK: ',tohtml($message),'</p>';
-    }
+    }*/
 }
 
 /**
@@ -167,7 +167,7 @@ function edit_mword_do_operation($term)
  * 
  * @param Term $term Multi-word to be inserted.
  * 
- * @return void
+ * @return string "Terms saved: n"
  * 
  * @global string $tbpref Database table prefix.
  * 
@@ -215,7 +215,7 @@ function edit_mword_do_insert($term)
  * @param Term $term      Multi-word to be inserted.
  * @param int  $newstatus New multi-word status
  * 
- * @return void
+ * @return string "Terms updated: n"
  * 
  * @global string $tbpref Database table prefix.
  */

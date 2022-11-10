@@ -1334,9 +1334,9 @@ function check_text_with_expressions($id, $lid, $wl, $wl_max, $mw_sql): string
 /**
  * Parse the input text.
  *
- * @param string $text Text to parse
- * @param string $lid  Language ID (LgID from languages table)
- * @param int    $id   References whether the text is new to the database
+ * @param string     $text Text to parse
+ * @param string|int $lid  Language ID (LgID from languages table)
+ * @param int        $id   References whether the text is new to the database
  *                     $id = -1     => Check, return protocol
  *                     $id = -2     => Only return sentence array
  *                     $id = TextID => Split: insert sentences/textitems entries in DB

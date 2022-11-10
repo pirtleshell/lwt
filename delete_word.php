@@ -17,7 +17,7 @@ require_once 'inc/session_utility.php';
  * 
  * @param string $wid ID of the word
  * 
- * @return string|null A word
+ * @return string A word
  * 
  * @global string $tbpref 
  */
@@ -29,7 +29,7 @@ function get_term($wid)
         FROM " . $tbpref . "words 
         WHERE WoID = " . $wid
     );
-    return $term;
+    return (string)$term;
 }
 
 /**

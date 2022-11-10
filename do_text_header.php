@@ -26,9 +26,8 @@ require_once 'inc/langdefs.php' ;
  *
  * @since 2.0.3-fork
  *
- * @return null|string[]
- *
- * @psalm-return array<string, string>|null
+ * @return null|array LgName, TxLgID, TxText, TxTitle, TxAudioURI, TxSourceURI, 
+ *                    TxAudioPosition for the text. 
  */
 function getData($textid): ?array
 {

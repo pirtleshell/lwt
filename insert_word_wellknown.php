@@ -25,7 +25,7 @@ require_once 'inc/session_utility.php';
 function get_word($textid, $textpos) 
 {
     global $tbpref;
-    $word = get_first_value(
+    $word = (string)get_first_value(
         "SELECT Ti2Text AS value 
         FROM " . $tbpref . "textitems2 
         WHERE Ti2WordCount = 1 AND Ti2TxID = " . $textid . " AND Ti2Order = " . $textpos
@@ -39,7 +39,7 @@ function get_word($textid, $textpos)
  * @param string $textif ID of the text
  * @param string $word   Word to add
  * 
- * @return string|null Word ID 
+ * @return int Word ID 
  * 
  * @global string $tbpref 
  */

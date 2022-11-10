@@ -30,8 +30,7 @@ function get_annotated_text($textid)
         FROM " . $tbpref . "texts 
         WHERE TxID = " . $textid
     );
-
-    return $ann;
+    return (string)$ann;
 }
 
 /**
