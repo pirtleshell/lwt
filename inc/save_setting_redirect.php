@@ -21,8 +21,8 @@ function get_parameters()
 {
     $k = getreq('k');
     $v = getreq('v');
-    $u = getreq('u');
-    return array($k, $v, $u);
+    $url = getreq('u');
+    return array($k, $v, $url);
 }
 
 /*
@@ -89,17 +89,17 @@ function save($k, $v)
 
 }
 
-list($k, $v, $u) = get_parameters();
+list($k, $v, $url) = get_parameters();
 if ($k != '') {
     save($k, $v);
 }
-if ($u != '') {
+if ($url != '') {
     if (isset(parse_url($url)['host'])) {
         // Absolute URL, go to header
-        header("Location: " . $u);
+        header("Location: " . $url);
     } else {
         // Relative, change current path
-        header("Location: ../" . $u);
+        header("Location: ../" . $url);
     }
     exit();
 }
