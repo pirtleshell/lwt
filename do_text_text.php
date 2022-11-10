@@ -17,13 +17,15 @@ require_once 'inc/session_utility.php';
 
 /**
  * Get the record for this text in the database.
- * 
+ *
  * @param string $textid ID of the text
  * 
  * @return array{TxLgID: int, TxTitle: string, TxAnnotatedText: string, 
  * TxPosition: int}|false|null Record corresponding to this text.
  * 
  * @global string $tbpref Table name prefix
+ *
+ * @psalm-return array<string, float|int|null|string>|false|null
  */
 function get_text_data($textid)
 {
@@ -57,14 +59,16 @@ function getTextData($textid)
 
 /**
  * Return the settings relative to this language.
- * 
+ *
  * @param int $langid Language ID as defined in the database.
  * 
- * @return array<array{LgName: string, LgDict1URI: string, 
+ * @return array{LgName: string, LgDict1URI: string, 
  * LgDict2URI: string, LgGoogleTranslateURI: string, LgTextSize: int, 
- * LgRemoveSpaces: int, LgRightToLeft: int}>|false|null Record corresponding to this language.
+ * LgRemoveSpaces: int, LgRightToLeft: int}|false|null Record corresponding to this language.
  * 
  * @global string $tbpref Table name prefix
+ *
+ * @psalm-return array<string, float|int|null|string>|false|null
  */
 function get_language_settings($langid)
 {
@@ -82,7 +86,7 @@ function get_language_settings($langid)
 
 /**
  * Return the settings relative to this language.
- * 
+ *
  * @param int $langid Language ID as defined in the database.
  * 
  * @return array{LgName: string, LgDict1URI: string, 
@@ -90,8 +94,10 @@ function get_language_settings($langid)
  * LgRemoveSpaces: int, LgRightToLeft: int}|false|null Record corresponding to this language.
  * 
  * @global string $tbpref Table name prefix
- * 
+ *
  * @deprecated Use get_language_settings instead.
+ *
+ * @psalm-return array{LgName: string, LgDict1URI: string, LgDict2URI: string, LgGoogleTranslateURI: string, LgTextSize: int, LgRemoveSpaces: int, LgRightToLeft: int}|false|null
  */
 function getLanguagesSettings($langid)
 {
@@ -189,11 +195,9 @@ function echo_term($actcode, $showAll, $spanid, $hidetag, $currcharcount, $recor
  * @param string                $spanid        ID for this span element
  * @param int                   $currcharcount Current number of characters
  * @param array<string, string> $record        Various data
- * 
- * @return int 0
- * 
+ *
  * @since 2.2.1 Return 0 instead of a new value for $hideuntil
- * 
+ *
  * @deprecated Use echo_term instead.
  */
 function echoTerm(

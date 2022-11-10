@@ -23,7 +23,7 @@ require_once 'inc/session_utility.php';
  * 
  * @return void
  */
-function long_text_check($max_input_vars)
+function long_text_check($max_input_vars): void
 {
         
     $langid = $_REQUEST["LgID"];
@@ -162,7 +162,7 @@ function long_text_check($max_input_vars)
  * 
  * @global string $tppref Database table prefix.
  */
-function long_text_save()
+function long_text_save(): void
 {
     global $tbpref;
     $langid = (int) $_REQUEST["LgID"];
@@ -353,7 +353,7 @@ function long_text_display($max_input_vars)
  * 
  * @return void
  */
-function long_text_do_page()
+function long_text_do_page(): void
 {
     pagestart('Long Text Import', true);
 

@@ -42,10 +42,10 @@
  */
 
  /**
-  * Echo an error page if connect.inc.php was not found.
-  * 
-  * @return void
-  */
+ * Echo an error page if connect.inc.php was not found.
+ *
+ * @return never
+ */
 function no_connectinc_error_page() 
 {
     ?>
@@ -73,13 +73,13 @@ require_once 'inc/session_utility.php';
 
 /**
  * Prepare the different SPAN opening tags
- * 
- * @return string[] 3 different span levels 
- * 
+ *
+ * @return string[] 3 different span levels
+ *
  * @global string $tbpref       Database table prefix
  * @global string $fixed_tbpref Fixed database table prefix
  */
-function get_span_groups()
+function get_span_groups(): array
 {
     global $tbpref, $fixed_tbpref;
 
@@ -206,8 +206,10 @@ function wordpress_logout_link()
  * 
  * @global string $tbpref Database table prefix
  * @global string $dbname Database name
+ *
+ * @psalm-return array{0: string, 1: float, 2: non-empty-list<string>, 3: string, 4: false|string, 5: string}
  */
-function get_server_data() 
+function get_server_data(): array 
 {
     global $tbpref, $dbname;
     $p = convert_string_to_sqlsyntax_nonull($tbpref);

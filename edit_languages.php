@@ -60,14 +60,14 @@ function edit_languages_alert_duplicate()
 
 /**
  * Refresh sentence and text items from a specific language.
+ *
+ * @param int $lid Language ID
  * 
- * @param {int} $lid Language ID
+ * @return string Number of sentences and textitems refreshed
  * 
- * @return {string} Number of sentences and textitems refreshed
- * 
- * @global {string} $tbpref Database table prefix
+ * @global string $tbpref Database table prefix
  */
-function edit_languages_refresh($lid)
+function edit_languages_refresh($lid): string
 {
     global $tbpref;
     $message2 = runsql(
@@ -108,14 +108,14 @@ function edit_languages_refresh($lid)
 
 /**
  * Delete a language.
+ *
+ * @param int $lid Language ID
  * 
- * @param {int} $lid Language ID
+ * @return string Info on the number of languages deleted
  * 
- * @return {string} Info on the number of languages deleted
- * 
- * @global {string} $tbpref Database table prefix
+ * @global string $tbpref Database table prefix
  */
-function edit_languages_delete($lid)
+function edit_languages_delete($lid): string
 {
     global $tbpref;
     $anztexts = get_first_value(
@@ -159,11 +159,11 @@ function edit_languages_delete($lid)
 /**
  * Save a new language to the database.
  * 
- * @return {string} Success or error message
+ * @return string Success or error message
  * 
- * @global {string} $tbpref Database table prefix
+ * @global string $tbpref Database table prefix
  */
-function edit_languages_op_save()
+function edit_languages_op_save(): string
 {
     global $tbpref;
     $val = get_first_value(
@@ -222,14 +222,14 @@ function edit_languages_op_save()
 
 /**
  * Edit an existing text in the database.
+ *
+ * @param int $lid Language ID
  * 
- * @param {int} $lid Language ID
+ * @return string Number of texts updated and items reparsed.
  * 
- * @return {string} Number of texts updated and items reparsed.
- * 
- * @global {string} $tbpref Database table prefix
+ * @global string $tbpref Database table prefix
  */
-function edit_languages_op_change($lid) 
+function edit_languages_op_change($lid): string 
 {
     global $tbpref;
     // Get old values

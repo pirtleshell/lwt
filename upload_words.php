@@ -42,7 +42,7 @@ function my_str_getcsv($input)
  * 
  * @global string $tbpref Database table prefix
  */
-function upload_words_import_terms($fields, $tabs, $file_upl, $col, $lang)
+function upload_words_import_terms($fields, $tabs, $file_upl, $col, $lang): void
 {
     global $tbpref;
     $sql = "SELECT * FROM {$tbpref}languages WHERE LgID=$lang";
@@ -547,7 +547,7 @@ function showImportedTerms(last_update, rtl, count, page) {
  * 
  * @global string $tbpref Database table prefix
  */
-function upload_words_import_tags($fields, $tabs, $file_upl)
+function upload_words_import_tags($fields, $tabs, $file_upl): void
 {
     global $tbpref;
     $columns = '';
@@ -639,7 +639,7 @@ function upload_words_import_tags($fields, $tabs, $file_upl)
  * 
  * @global string $tbpref Database table prefix
  */
-function upload_words_import()
+function upload_words_import(): void
 {
     global $tbpref;
     $tabs = $_REQUEST["Tab"];
@@ -714,7 +714,7 @@ function upload_words_import()
  * 
  * @return void
  */
-function upload_words_display()
+function upload_words_display(): void
 {
 
     ?>

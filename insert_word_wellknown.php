@@ -14,15 +14,15 @@ require_once 'inc/session_utility.php';
 
 /**
  * Return the word at a specific position in a text.
- * 
+ *
  * @param string $textid  ID of the text
  * @param string $textpos Position of the word in the text.
- * 
- * @return string|null A word
- * 
+ *
+ * @return string A word
+ *
  * @global string $tbpref 
  */
-function get_word($textid, $textpos) 
+function get_word($textid, $textpos): string 
 {
     global $tbpref;
     $word = (string)get_first_value(

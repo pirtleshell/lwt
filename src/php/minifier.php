@@ -53,15 +53,15 @@ function minifyCSS($path, $outputPath)
 
 /**
  * Minify all JavaScript files
- * 
+ *
  * @global array<string> $jsFiles All the file to be minified
  * 
- * @return void
+ * @return string Minified code
  * 
  * @since 2.0.3-fork
  * @since 2.3.0-fork JS code is "combined" above being minified: only one file is outputted.
  */
-function minifyAllJS() 
+function minifyAllJS(): string 
 {
     global $jsFiles;
     $minifier = new Minify\JS();

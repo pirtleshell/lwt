@@ -3,7 +3,7 @@
 require_once 'inc/session_utility.php';
 
 
-function feed_wizard_edit_options()
+function feed_wizard_edit_options(): void
 {
     global $tbpref;
     pagestart('Feed Wizard', false);
@@ -233,7 +233,7 @@ function feed_wizard_edit_options()
     <?php
 }
 
-function feed_wizard_filter_text()
+function feed_wizard_filter_text(): void
 {
     if(isset($_REQUEST['NfName'])) { 
         $_SESSION['wizard']['feed']['feed_title']=$_REQUEST['NfName']; 
@@ -503,7 +503,7 @@ function feed_wizard_filter_text()
     <?php
 }
 
-function feed_wizard_select_text()
+function feed_wizard_select_text(): void
 {
     global $tbpref;
     if(isset($_REQUEST['edit_feed']) && !isset($_SESSION['wizard'])) {
@@ -863,7 +863,7 @@ function feed_wizard_select_text()
     <?php
 }
 
-function feed_wizard_insert_uri()
+function feed_wizard_insert_uri(): void
 {
     if(isset($_REQUEST['select_mode'])) { 
         $_SESSION['wizard']['select_mode'] = $_REQUEST['select_mode']; 

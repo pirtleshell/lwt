@@ -3695,7 +3695,8 @@ function getScriptDirectionTag($lid): string
  * @param string $wid    Word ID
  * @param int    $mode   If equal to 0, add data in the output
  *
- * @return string[][] Append text and values to insert to the database
+ * @return array{0: string[], 1: string[]} Append text and values to insert to 
+ *                                         the database
  *
  * @since 2.5.0-fork Function added.
  *
@@ -3783,12 +3784,14 @@ function insert_expression_from_mecab($text, $lid, $wid, $len): array
  * @since 2.5.0-fork Function deprecated. 
  *                   $mode is unnused, data are always returned.
  *                   The second return argument is always empty array.
- * 
+ *
  * @deprecated Use insert_expression_from_mecab instead.
  *
  * @global string $tbpref Table name prefix
+ *
+ * @psalm-return array{0: array<int, string>, 1: list<string>}
  */
-function insertExpressionFromMeCab($textlc, $lid, $wid, $len, $mode)
+function insertExpressionFromMeCab($textlc, $lid, $wid, $len, $mode): array
 {
     return insert_expression_from_mecab($textlc, $lid, $wid, $len);
 }
@@ -3801,7 +3804,7 @@ function insertExpressionFromMeCab($textlc, $lid, $wid, $len, $mode)
  * @param string $wid    Word ID
  * @param mixed  $mode   Unnused
  *
- * @return (mixed|string)[][] Append text, empty and sentence id
+ * @return array{string[], empty[], string[]} Append text, empty and sentence id
  *
  * @since 2.5.0-fork Mode is unnused and data are always added to the output.
  * @since 2.5.2-fork Fixed multi-words insertion for languages using no space

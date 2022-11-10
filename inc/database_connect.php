@@ -1040,16 +1040,18 @@ function parse_standard_text($text, $id, $lid): ?array
 
 /**
  * Pre-parse the input text before a definitive parsing by a specialized parser.
- * 
+ *
  * @param string $text Text to parse
  * @param int    $id   Text ID
  * @param int    $lid  Language ID
- * 
- * @return string[]|void If $id = -2 return a splitted version of the text
- * 
+ *
+ * @return null|string[] If $id = -2 return a splitted version of the text
+ *
  * @global string $tbpref Database table prefix
+ *
+ * @psalm-return non-empty-list<string>|null
  */
-function prepare_text_parsing($text, $id, $lid)
+function prepare_text_parsing($text, $id, $lid): ?array
 {
     global $tbpref;
     $sql = "SELECT * FROM " . $tbpref . "languages WHERE LgID=" . $lid;

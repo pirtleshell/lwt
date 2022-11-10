@@ -100,11 +100,13 @@ function make_trans($i, $wid, $trans, $word, $lang): string
  * @param int    $textid Text ID
  * @param string $wordlc Lowercase word
  *
- * @return array{0: string, 1: string} $r and $rr.
+ * @return string[] $r and $rr.
  *
  * @global string $tbpref Database table prefix.
+ *
+ * @psalm-return array{0: string, 1: string}
  */
-function make_form($textid, $wordlc)
+function make_form($textid, $wordlc): array
 { 
     global $tbpref;
     $sql = 'SELECT TxLgID, TxAnnotatedText FROM ' . $tbpref . 'texts WHERE TxID = ' . $textid;

@@ -49,6 +49,11 @@ function get_test_table_sql()
 }
 
 
+/**
+ * @return (float|int|null|string)[]|false|null
+ *
+ * @psalm-return array<string, float|int|null|string>|false|null
+ */
 function do_test_table_language_settings($testsql)
 {
     global $tbpref;
@@ -70,7 +75,12 @@ function do_test_table_language_settings($testsql)
     return $record;
 }
 
-function get_test_table_settings() 
+/**
+ * @return int[]
+ *
+ * @psalm-return array{0: 0|1, 1: 0|1, 2: 0|1, 3: 0|1, 4: 0|1, 5: 0|1}
+ */
+function get_test_table_settings(): array 
 {
     $currenttabletestsetting1 = getSettingZeroOrOne('currenttabletestsetting1', 1);
     $currenttabletestsetting2 = getSettingZeroOrOne('currenttabletestsetting2', 1);
@@ -84,7 +94,7 @@ function get_test_table_settings()
     );
 }
 
-function do_test_table_javascript()
+function do_test_table_javascript(): void
 {
     ?>
 <script type="text/javascript">
@@ -183,7 +193,7 @@ function do_test_table_javascript()
 }
 
 
-function do_test_table_settings($settings)
+function do_test_table_settings($settings): void
 {
     ?>
 <p>
@@ -198,7 +208,7 @@ function do_test_table_settings($settings)
 }
 
 
-function do_test_table_header()
+function do_test_table_header(): void
 {
     ?>
     <tr>
@@ -212,7 +222,7 @@ function do_test_table_header()
     <?php
 }
 
-function do_test_table_table_content($lang_record, $testsql) 
+function do_test_table_table_content($lang_record, $testsql): void 
 {
     global $debug;
 
@@ -239,7 +249,7 @@ function do_test_table_table_content($lang_record, $testsql)
     mysqli_free_result($res);
 }
 
-function do_test_table_row($record, $regexword, $textsize, $span1, $span2)
+function do_test_table_row($record, $regexword, $textsize, $span1, $span2): void
 {
     $sent = tohtml(repl_tab_nl($record["WoSentence"]));
     $sent1 = str_replace(
@@ -289,7 +299,7 @@ function do_test_table_row($record, $regexword, $textsize, $span1, $span2)
     <?php
 }
 
-function do_test_table()
+function do_test_table(): void
 {
     //pagestart_nobody('', 'html, body { margin:3px; padding:0; }');
     $testsql = get_test_table_sql();

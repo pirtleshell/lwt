@@ -26,10 +26,11 @@ require_once 'inc/langdefs.php' ;
  *
  * @since 2.0.3-fork
  *
- * @return null|array LgName, TxLgID, TxText, TxTitle, TxAudioURI, TxSourceURI, 
- *                    TxAudioPosition for the text. 
+ * @return (float|int|null|string)[]|false|null LgName, TxLgID, TxText, TxTitle, TxAudioURI, TxSourceURI, TxAudioPosition for the text.
+ *
+ * @psalm-return array<string, float|int|null|string>|false|null
  */
-function getData($textid): ?array
+function getData($textid)
 {
     global $tbpref;
     $sql = 

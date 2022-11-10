@@ -41,7 +41,7 @@ function all_words_wellknown_get_words($txid)
 
 /**
  * For each word, add the word to the database.
- * 
+ *
  * @param int    $status New word status
  * @param string $term   Word to mark
  * @param string $termlc Same as $term, but in lowercase.
@@ -51,8 +51,10 @@ function all_words_wellknown_get_words($txid)
  * 
  * @since 2.5.3-fork Do not crash when echoing an error
  * @since 2.5.3-fork Do not crash when a word is already registred to the database
+ *
+ * @psalm-return array{0: int, 1: string}
  */
-function all_words_wellknown_process_word($status, $term, $termlc, $langid)
+function all_words_wellknown_process_word($status, $term, $termlc, $langid): array
 {
     global $tbpref;
     $wid = get_first_value(
@@ -103,7 +105,7 @@ function all_words_wellknown_process_word($status, $term, $termlc, $langid)
 
 /**
  * Main processing loop to mark all words of a text with a new status.
- * 
+ *
  * @param int $txid   Text ID
  * @param int $status New status to apply to all words.
  * 
@@ -111,8 +113,10 @@ function all_words_wellknown_process_word($status, $term, $termlc, $langid)
  *                                  and JavaScript query to change their display
  * 
  * @since 2.5.3-fork Use 'let' instead of 'var' in returned JS
+ *
+ * @psalm-return array{0: int, 1: string}
  */
-function all_words_wellknown_main_loop($txid, $status)
+function all_words_wellknown_main_loop($txid, $status): array
 {
     global $tbpref;
     $langid = get_first_value(
