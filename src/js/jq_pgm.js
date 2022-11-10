@@ -1110,12 +1110,13 @@ function hideRightFrames() {
   return false;
 }
 
-
-/**
+/*
  * Hide the right frame and any popups.
  *
  * Called from several places: insert_word_ignore.php,
  * set_word_status.php, delete_word.php, etc.
+ * 
+ * @returns {undefined}
  */
 function cleanupRightFrames() {
 
@@ -1129,14 +1130,14 @@ function cleanupRightFrames() {
   //
   // We have to use an anon function to ensure that the frames-r
   // gets resolved when the timeout fires.
-  let mytimeout = function() {
-    var rf = window.parent.document.getElementById('frames-r');
+  const mytimeout = function() {
+    const rf = window.parent.document.getElementById('frames-r');
     rf.click();
   }
   window.parent.setTimeout(mytimeout, 800);
 
   window.parent.document.getElementById('frame-l').focus();
-  window.parent.setTimeout('cClick()', 100);
+  window.parent.setTimeout(window.parent.cClick, 100);
 }
 
 

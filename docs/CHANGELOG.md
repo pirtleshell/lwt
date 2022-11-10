@@ -14,7 +14,9 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 * The ability to use a dictionary with a specific encoding, introduced in 1.0.2, is being removed. It was making things overwhelmingly complex and caused issues, as signaled in [#58](https://github.com/HugoFara/lwt/issues/58). Adapted from PR [#59](https://github.com/HugoFara/lwt/pull/59).
 
 ### Fixed
-* Testing specific terms was broken ([#66](https://github.com/HugoFara/lwt/issues/66)) and tests were sometimes not counting score. Solution inspired from PR [#67](https://github.com/HugoFara/lwt/issues/67) from [@jzohrab](https://github.com/jzohrab). 
+* Testing specific terms was broken ([#66](https://github.com/HugoFara/lwt/issues/66)) and tests were sometimes not counting score. Solution inspired from PR [#67](https://github.com/HugoFara/lwt/issues/67) from [@jzohrab](https://github.com/jzohrab).
+* Right frames should hide automatically but they often don't [#61](https://github.com/HugoFara/lwt/issues/61). Merge PR (#62)[https://github.com/HugoFara/lwt/pull/62].
+  * You should also see less annoying console messages of "cClick" crashing.
 
 ## 2.5.3-fork (November 06 2022)
 ### Added
