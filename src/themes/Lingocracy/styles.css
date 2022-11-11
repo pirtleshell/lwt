@@ -450,6 +450,7 @@ img {
 	display:inline-block;
 }
 #footer {
+	left: 0;
 	bottom: 0;
 	position: absolute;
 	width: 100%;

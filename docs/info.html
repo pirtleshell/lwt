@@ -1924,6 +1924,12 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 <li>
 <code>save_setting_redirect.php</code> moved to <code>inc/save_setting_redirect.php</code>.</li>
 <li>Psalm code analysis of all PHP files.</li>
+<li>Tests have a better general aspect thanks to CSS cleanning.</li>
+</ul>
+<h4>Deprecated</h4>
+<ul>
+<li>
+<code>do_test_test_css</code> in <code>do_test_test.php</code> is deprecated since it was causing display issues. Its CSS rules were trimmed.</li>
 </ul>
 <h4>Removed</h4>
 <ul>
@@ -1947,6 +1953,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 </ul>
 </li>
 <li>Audio in <code>edit_texts.php</code> was never shown.</li>
+<li>Header was hidden during tests on Chrome-based browsers.</li>
 </ul>
 <h3>2.5.3-fork (November 06 2022)</h3>
 <h4>Added</h4>

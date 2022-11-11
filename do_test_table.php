@@ -122,9 +122,12 @@ function do_test_table_javascript(): void
                 $('td:nth-child(2),th:nth-child(2)').hide();
                 do_ajax_save_setting('currenttabletestsetting2','0');
             }
-            $('th,td').css('border-top-left-radius','').css('border-bottom-left-radius','');
-            $('th:visible').eq(0).css('border-top-left-radius','inherit').css('border-bottom-left-radius','0px');
-            $('tr:last-child>td:visible').eq(0).css('border-bottom-left-radius','inherit');                    
+            $('th,td').css('border-top-left-radius','')
+            .css('border-bottom-left-radius','');
+            $('th:visible').eq(0).css('border-top-left-radius','inherit')
+            .css('border-bottom-left-radius','0px');
+            $('tr:last-child>td:visible').eq(0)
+            .css('border-bottom-left-radius','inherit');                    
         });
         
         $('#cbTerm').change(function() {
@@ -148,16 +151,18 @@ function do_test_table_javascript(): void
         });
         
         $('#cbRom').change(function() {
-            if($('#cbRom').is(':checked')) {
+            if ($('#cbRom').is(':checked')) {
                 $('td:nth-child(5),th:nth-child(5)').show();
                 do_ajax_save_setting('currenttabletestsetting5','1');
             } else {
                 $('td:nth-child(5),th:nth-child(5)').hide();
                 do_ajax_save_setting('currenttabletestsetting5','0');
             }
-            $('th,td').css('border-top-right-radius','').css('border-bottom-right-radius','');
+            $('th,td').css('border-top-right-radius','')
+            .css('border-bottom-right-radius','');
             $('th:visible:last').css('border-top-right-radius','inherit');
-            $('tr:last-child>td:visible:last').css('border-bottom-right-radius','inherit');                    
+            $('tr:last-child>td:visible:last')
+            .css('border-bottom-right-radius','inherit');                    
         });
         
         $('#cbSentence').change(function() {
@@ -168,9 +173,11 @@ function do_test_table_javascript(): void
                 $('td:nth-child(6),th:nth-child(6)').hide();
                 do_ajax_save_setting('currenttabletestsetting6','0');
             }
-            $('th,td').css('border-top-right-radius','').css('border-bottom-right-radius','');
+            $('th,td').css('border-top-right-radius','')
+            .css('border-bottom-right-radius','');
             $('th:visible:last').css('border-top-right-radius','inherit');
-            $('tr:last-child>td:visible:last').css('border-bottom-right-radius','inherit');                    
+            $('tr:last-child>td:visible:last')
+            .css('border-bottom-right-radius','inherit');                    
         });
         
         $('td').on('click', function() {
@@ -197,12 +204,18 @@ function do_test_table_settings($settings): void
 {
     ?>
 <p>
-    <input type="checkbox" id="cbEdit" <?php echo get_checked($settings[0]); ?> /> Edit
-    <input type="checkbox" id="cbStatus" <?php echo get_checked($settings[1]); ?> /> Status
-    <input type="checkbox" id="cbTerm" <?php echo get_checked($settings[2]); ?> /> Term
-    <input type="checkbox" id="cbTrans" <?php echo get_checked($settings[3]); ?> /> Translation
-    <input type="checkbox" id="cbRom" <?php echo get_checked($settings[4]); ?> /> Romanization
-    <input type="checkbox" id="cbSentence" <?php echo get_checked($settings[5]); ?> /> Sentence
+    <input type="checkbox" id="cbEdit" <?php echo get_checked($settings[0]); ?> /> 
+    Edit
+    <input type="checkbox" id="cbStatus" <?php echo get_checked($settings[1]); ?> /> 
+    Status
+    <input type="checkbox" id="cbTerm" <?php echo get_checked($settings[2]); ?> /> 
+    Term
+    <input type="checkbox" id="cbTrans" <?php echo get_checked($settings[3]); ?> /> 
+    Translation
+    <input type="checkbox" id="cbRom" <?php echo get_checked($settings[4]); ?> /> 
+    Romanization
+    <input type="checkbox" id="cbSentence" <?php echo get_checked($settings[5]); ?> /> 
+    Sentence
 </p>
     <?php
 }
@@ -270,7 +283,11 @@ function do_test_table_row($record, $regexword, $textsize, $span1, $span2): void
     </td>
     <td class="td1 center" nowrap="nowrap">
         <span id="STAT<?php echo $record['WoID']; ?>">
-            <?php echo make_status_controls_test_table($record['Score'], $record['WoStatus'], $record['WoID']); ?>
+            <?php 
+            echo make_status_controls_test_table(
+                $record['Score'], $record['WoStatus'], $record['WoID']
+            ); 
+            ?>
         </span>
     </td>
     <td class="td1 center" style="font-size:<?php echo $textsize; ?>%;">
@@ -301,7 +318,6 @@ function do_test_table_row($record, $regexword, $textsize, $span1, $span2): void
 
 function do_test_table(): void
 {
-    //pagestart_nobody('', 'html, body { margin:3px; padding:0; }');
     $testsql = get_test_table_sql();
     $lang_record = do_test_table_language_settings($testsql);
     $settings = get_test_table_settings();
@@ -313,7 +329,5 @@ function do_test_table(): void
     do_test_table_header();
     do_test_table_table_content($lang_record, $testsql);
     echo '</table>';
-
-    //pageend();
 }
 ?>
