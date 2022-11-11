@@ -114,12 +114,6 @@ if(isset($pos)) {
     $wb3 = isset($record['LgGoogleTranslateURI']) ? $record['LgGoogleTranslateURI'] : "";
     ?>
 <style>
-    body {
-        top:0px ! important;
-    }
-    td.td1{
-        vertical-align:middle ! important;
-    }
     span.dict1,span.dict2,span.dict3 {
         opacity:0.1;
         cursor: pointer;
@@ -151,9 +145,6 @@ if(isset($pos)) {
     }
     .del_trans:hover:after{
         opacity:1;
-    }
-    .trans{
-        position:relative;
     }
 </style>
 <script type="text/javascript" src="js/jquery.hoverIntent.js" charset="utf-8"></script>
@@ -333,34 +324,34 @@ function googleTranslateElementInit() {
     <span class="notranslate">
         <div id="google_translate_element"></div>
         <table class="tab3" cellspacing="0">
-        <tr class="notranslate">
-            <th class="th1 center" colspan="3">
-                <input type="button" value="Mark All" onclick="markAll()" />
-                <input type="button" value="Mark None" onclick="markNone()" />
-                <br />
-            </th>
-        </tr>
-        <tr class="notranslate">
-            <td class="td1">Marked Terms: </td>
-            <td class="td1">
-                <select onchange="changeTermToggles($(this));">
-                    <option value="0" selected="selected">[Choose...]</option>
-                    <option value="1">Set Status To [1]</option>
-                    <option value="2">Set Status To [2]</option>
-                    <option value="3">Set Status To [3]</option>
-                    <option value="4">Set Status To [4]</option>
-                    <option value="5">Set Status To [5]</option>
-                    <option value="99">Set Status To [WKn]</option>
-                    <option value="98">Set Status To [Ign]</option>
-                    <option value="6">Set To Lowercase</option>
-                    <option value="7">Delete Translation</option>
-                </select>
-            </td>
-            <td class="td1" style="min-width: 45px;">
-                <input  type="submit" value="Save" />
-            </td>
-        </tr>
-    </table>
+            <tr class="notranslate">
+                <th class="th1 center" colspan="3">
+                    <input type="button" value="Mark All" onclick="markAll()" />
+                    <input type="button" value="Mark None" onclick="markNone()" />
+                    <br />
+                </th>
+            </tr>
+            <tr class="notranslate">
+                <td class="td1">Marked Terms: </td>
+                <td class="td1">
+                    <select onchange="changeTermToggles($(this));">
+                        <option value="0" selected="selected">[Choose...]</option>
+                        <option value="1">Set Status To [1]</option>
+                        <option value="2">Set Status To [2]</option>
+                        <option value="3">Set Status To [3]</option>
+                        <option value="4">Set Status To [4]</option>
+                        <option value="5">Set Status To [5]</option>
+                        <option value="99">Set Status To [WKn]</option>
+                        <option value="98">Set Status To [Ign]</option>
+                        <option value="6">Set To Lowercase</option>
+                        <option value="7">Delete Translation</option>
+                    </select>
+                </td>
+                <td class="td1" style="min-width: 45px;">
+                    <input  type="submit" value="Save" />
+                </td>
+            </tr>
+        </table>
     </span>
     <table class="tab3" cellspacing="0">
         <tr class="notranslate">
@@ -403,8 +394,7 @@ function googleTranslateElementInit() {
                 <input type="hidden" name="term[', $cnt ,'][lg]" value="',tohtml($record['Ti2LgID']),'" />
             </td>
             </tr>',"\n";
-        }
-        else { 
+        } else { 
             $offset = '<input type="hidden" name="offset" value="' . ($pos + $limit - 1) . '" />
             <input type="hidden" name="sl" value="' . $sl . '" />
             <input type="hidden" name="tl" value="' . $tl . '" />'; 

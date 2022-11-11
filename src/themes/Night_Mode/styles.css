@@ -249,11 +249,13 @@ top: 1px;color:#AAA;*/
 
 	select{
 		-moz-appearance: none;
+		-webkit-appearance: none;
+        appearance: none;
 		text-indent: 0.01px;
 		text-overflow: '';
 		margin: 0;
 		padding-right: 1.2em;
-		}
+	}
 	.wrap_select {
 		position:relative;
 		display: inline-block;
@@ -727,6 +729,7 @@ img {
 }
 
 #footer {
+	left: 0;
     bottom: 0;
     position: absolute;
     width: 100%;

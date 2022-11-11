@@ -33,9 +33,13 @@ function get_sql_test_data(&$title, &$p)
     global $tbpref;
     $p = "selection=" . $_REQUEST['selection']; 
     $testsql = $_SESSION['testsql'];
-    $totalcount = get_first_value('SELECT count(distinct WoID) AS value FROM ' . $testsql);
+    $totalcount = get_first_value(
+        "SELECT count(distinct WoID) AS value FROM $testsql"
+    );
     $title = 'Selected ' . $totalcount . ' Term' . ($totalcount==1 ? '' : 's');
-    $cntlang = get_first_value('SELECT count(distinct WoLgID) AS value FROM ' . $testsql);
+    $cntlang = get_first_value(
+        'SELECT count(distinct WoLgID) AS value FROM ' . $testsql
+    );
     if ($cntlang > 1) {
         $message = 'Error: The selected terms are in ' . $cntlang . ' languages, ' . 
         'but tests are only possible in one language at a time.'; 
@@ -66,7 +70,7 @@ function get_lang_test_data(&$title, &$p): string
     $langid = getreq('lang');
     $p = "lang=" . $langid; 
     $title = "All Terms in " . get_first_value(
-        'SELECT LgName AS value FROM ' . $tbpref . 'languages WHERE LgID = ' . $langid
+        "SELECT LgName AS value FROM {$tbpref}languages WHERE LgID = $langid"
     );
     $testsql = ' ' . $tbpref . 'words WHERE WoLgID = ' . $langid . ' ';
     return $testsql;
@@ -217,12 +221,19 @@ function do_test_header_content($title, $p, $totalcountdue, $totalcount, $langua
 <div>
     <input type="button" value="..[<?php echo $language; ?>].." 
     onclick="startWordTest(1, '<?php echo $p; ?>')" />
-    <input type="button" value="..[L1].." onclick="startWordTest(2, '<?php echo $p; ?>')" />
-    <input type="button" value="..[••].." onclick="startWordTest(3, '<?php echo $p; ?>')" /> &nbsp; | &nbsp; 
+    <input type="button" value="..[L1].." 
+    onclick="startWordTest(2, '<?php echo $p; ?>')" />
+    <input type="button" value="..[••].." 
+    onclick="startWordTest(3, '<?php echo $p; ?>')" /> 
+    &nbsp; | &nbsp; 
     <input type="button" value="[<?php echo $language; ?>]" 
     onclick="startWordTest(4, '<?php echo $p; ?>')" />
-    <input type="button" value="[L1]" onclick="startWordTest(5, '<?php echo $p; ?>')" /> &nbsp; | &nbsp; 
-    <input type="button" value="Table" onclick="startTestTable('<?php echo $p; ?>')" /> &nbsp; | &nbsp; 
+    <input type="button" value="[L1]" 
+    onclick="startWordTest(5, '<?php echo $p; ?>')" /> 
+    &nbsp; | &nbsp; 
+    <input type="button" value="Table" 
+    onclick="startTestTable('<?php echo $p; ?>')" /> 
+    &nbsp; | &nbsp; 
     <input type="checkbox" id="utterance-allowed">Read words aloud</input>
 </div>
     <?php
@@ -279,8 +290,6 @@ function do_test_header_page($title, $p, $totalcountdue, $totalcount, $language)
 
     do_test_header_row($p);
     do_test_header_content($title, $p, $totalcountdue, $totalcount, $language);
-
-    //pageend();
 }
 
 

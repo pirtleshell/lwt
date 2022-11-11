@@ -37,10 +37,8 @@ function get_test_sql()
             FROM $testsql"
         );
         if ($cntlang > 1) {
-            //pagestart('', false);
             echo "<p>Sorry - The selected terms are in $cntlang languages," . 
             " but tests are only possible in one language at a time.</p>";
-            //pageend();
             exit();
         }
     } else if (isset($_REQUEST['lang'])) {
@@ -50,8 +48,6 @@ function get_test_sql()
         WHERE Ti2LgID = WoLgID AND Ti2WoID = WoID AND Ti2TxID = " . 
         $_REQUEST['text'] . " ";
     } else {
-        //$title = 'Request Error!';
-        //pagestart($title, true);
         my_die("do_test_test.php called with wrong parameters"); 
     }
     return $testsql;
@@ -77,6 +73,9 @@ function get_test_type()
 /**
  * Prepare the css code for tests.
  * 
+ * @deprecated 2.5.4-fork Do not use this function since it was acusing wrong 
+ *                        display. Will be removed in 2.6.0. 
+ * 
  * @return void
  */
 function do_test_test_css()
@@ -88,17 +87,6 @@ function do_test_test_css()
         height:100%; 
     } 
 
-    html {
-        display:table;
-    } 
-    body { 
-        display:table-cell; 
-        vertical-align:middle; 
-    } 
-    #body { 
-        max-width:95%; 
-        margin:0 auto; 
-    }
 </style>
     <?php
 }
@@ -302,7 +290,7 @@ function prepare_test_area($testsql, $totaltests, $count, $testtype): int
         return 0;
     } 
 
-    $lang = get_first_value('SELECT WoLgID AS value FROM ' . $testsql . ' LIMIT 1');
+    $lang = get_first_value("SELECT WoLgID AS value FROM $testsql LIMIT 1");
     
     $sql = 'SELECT LgName, LgDict1URI, LgDict2URI, LgGoogleTranslateURI, LgTextSize, 
     LgRemoveSpaces, LgRegexpWordCharacters, LgRightToLeft 
@@ -523,13 +511,18 @@ function do_test_footer($notyettested, $wrong, $correct)
     <span id="timer" title="Elapsed Time"></span>
     &nbsp; &nbsp; &nbsp; 
     <img 
-    class="<?php echo $b_notyet; ?>" src="<?php print_file_path('icn/test_notyet.png');?>" 
-    title="Not yet tested" alt="Not yet tested" height="10" width="<?php echo $l_notyet; ?>" />
+    class="<?php echo $b_notyet; ?>" 
+    src="<?php print_file_path('icn/test_notyet.png');?>" 
+    title="Not yet tested" alt="Not yet tested" height="10" 
+    width="<?php echo $l_notyet; ?>" />
 
-    <img class="<?php echo $b_wrong; ?>" src="<?php print_file_path('icn/test_wrong.png');?>" 
+    <img class="<?php echo $b_wrong; ?>" 
+    src="<?php print_file_path('icn/test_wrong.png');?>" 
     title="Wrong" alt="Wrong" height="10" width="<?php echo $l_wrong; ?>" />
 
-    <img class="<?php echo $b_correct; ?>" src="<?php print_file_path('icn/test_correct.png');?>" 
+    <img 
+    class="<?php echo $b_correct; ?>" 
+    src="<?php print_file_path('icn/test_correct.png');?>" 
     title="Correct" alt="Correct" height="10" width="<?php echo $l_correct; ?>" />
     
     &nbsp; &nbsp; &nbsp; 
@@ -590,8 +583,6 @@ function do_test_test_javascript($count)
 function do_test_test_content()
 {
     global $debug;
-    //pagestart_nobody('');
-    do_test_test_css();
     
     $testsql = get_test_sql();
     $totaltests = $_SESSION['testtotal'];
@@ -612,8 +603,6 @@ function do_test_test_content()
     $count2 = prepare_test_area($testsql, $totaltests, $notyettested, $testtype);
     prepare_test_footer($notyettested);
     do_test_test_javascript($count2);
-    //pageend();
-
 }
 
 if (isset($_REQUEST['selection']) || isset($_REQUEST['lang'])  

@@ -242,8 +242,10 @@ top: 1px;color:#AAA;*/
 }
 @-moz-document url-prefix() {
 
-	select{
+	select {
 		-moz-appearance: none;
+		-webkit-appearance: none;
+        appearance: none;
 		text-indent: 0.01px;
 		text-overflow: '';
 		margin: 0;
@@ -691,6 +693,7 @@ img {
 	display:inline-block;
 }
 #footer {
+    left: 0;
     bottom: 0;
     position: absolute;
     width: 100%;
