@@ -1268,6 +1268,23 @@ function prepareMainAreas() {
   $('input.markcheck').on('click', markClick);
   $('.confirmdelete').on('click', confirmDelete);
   $('textarea.textarea-noreturn').on('keydown', textareaKeydown);
+  // Resizable from right frames
+  $('#frames-r').resizable({
+    handles: "w",
+    stop: function (_event, ui) {
+      // Resize left frames
+      $('#frames-l').css('width', ui.position.left - 20);
+      // Save settings
+      $.ajax({
+        type: "POST",
+        url:'inc/ajax_save_setting.php', 
+        data: {
+          k: 'set-text-l-framewidth-percent', 
+          v: Math.round($('#frames-l').width() / $(window).width() * 100)
+        },
+      });
+    }
+  });
   $('#termtags').tagit(
     {
       beforeTagAdded: function (_event, ui) {

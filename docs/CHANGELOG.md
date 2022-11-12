@@ -5,6 +5,12 @@ This project's changelog. Versions marked with "-fork" come from the community, 
 For git tags, official releases are marked like "v1.0.0", while unofficial ones are marked like "v1.0.0-fork".
 
 ## [Unreleased]
+### Added
+* Frames resizing is back! The text reading interface was updated in several ways.
+  * The desktop interface is now much similar to what it was before 2.2.1-fork.
+  * The mobile was unchanged (2.2.1-fork to 2.5.3-fork).
+* You can resize frames on desktop.
+
 ### Changed
 * Some deprecated functions ``escape`` and ``unescape`` were replaced by modern equivalents ``encodeURIcomponent`` and ``decodeURIcomponent``. This may lead to changes in cookies, notably making them work better.
 * ``do_test.php``, ``edit_texts.php``, ``edit_words.php`` and ``set_test_status.php`` now explicitly require a running session. They were silently failing before this release.

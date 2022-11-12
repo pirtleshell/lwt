@@ -20,14 +20,29 @@ require_once __DIR__ . '/database_connect.php';
  *
  * @return false Mobile mode shoud be activated or not
  *
- * @deprecated Will always return false
- *
  * @since 2.2.1 You should not use this function since mobiledetect is no longer used.
+ * @since 2.5.4-fork No longer deprecated and use no external library.
  */
 function is_mobile(): bool
 {
+    $mobileDisplayMode = (int)getSettingWithDefault('set-mobile-display-mode');
+    if ($mobileDisplayMode == 2) {
+        return true;
+    }
+    $mobile_detect = preg_match(
+        "/(android|avantgo|blackberry|bolt|boost|cricket|docomo|fone|hiptop|mini" . 
+        "|mobi|palm|phone|pie|tablet|up\.browser|up\.link|webos|wos)/i", 
+        $_SERVER["HTTP_USER_AGENT"]
+    );
+    if ($mobileDisplayMode == 0 && $mobile_detect) {
+        return true;
+    }
+    
     return false;
-    /*$detect = new Mobile_Detect;
+    /*
+    Code before version 2.2.1-fork: use Mobile_Detect library.
+
+    $detect = new Mobile_Detect;
     $mobileDisplayMode = (int)getSettingWithDefault('set-mobile-display-mode');
     $mobile = (
         ($mobileDisplayMode == 0 && $detect->isMobile()) 
