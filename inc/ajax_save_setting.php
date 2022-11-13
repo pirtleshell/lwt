@@ -11,6 +11,8 @@
  * @license Unlicense <http://unlicense.org/>
  * @link    https://hugofara.github.io/lwt/docs/html/ajax__save__setting_8php.html
  * @since   1.2.1
+ * @since   2.2.2-fork Refactored, use will GET methods
+ * @since   2.5.4-fork Use POST method in priority 
  */
 
 require_once __DIR__ . '/session_utility.php';
@@ -30,7 +32,7 @@ function do_ajax_save_setting($key, $value)
     saveSetting($key, $value);
 }
 
-if (isset($_GET['k']) && isset($_GET['v'])) {
+if (isset($_POST['k']) && isset($_POST['v'])) {
     do_ajax_save_setting(getreq('k'), getreq('v'));
 }
 

@@ -34,6 +34,9 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
   * ``get_similar_terms`` in ``simterms.php`` officially returns int.
 * Audio in ``edit_texts.php`` was never shown.
 * Header was hidden during tests on Chrome-based browsers.
+* Unconsistent option in ``inc/ajax_save_setting.php``. 
+  * Since 2.2.2-fork, you had to use a GET request to use it, resulting in authorization errors.
+  * POST requests are now again the default way to use it.
 
 
 ## 2.5.3-fork (November 06 2022)
