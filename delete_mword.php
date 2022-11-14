@@ -49,8 +49,7 @@ $('.mword', sid).each(function(){
 
 });
 $('#learnstatus', context).html('<?php echo addslashes(texttodocount2($tid)); ?>');
-window.parent.focus();
-window.parent.setTimeout('cClick()', 100);
+cleanupRightFrames();
 //]]>
 </script>
 <?php

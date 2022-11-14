@@ -121,8 +121,7 @@ if(window.parent.location.href.includes('type=table')) {
     var roman = <?php echo prepare_textdata_js($_REQUEST["WoRomanization"]); ?>;
     $('.word' + woid, context).attr('data_text',wotext).attr('data_trans',trans).attr('data_rom',roman).attr('data_status',status);
 }  
-window.parent.getElementById('frame-l').focus();
-window.parent.setTimeout('cClick()', 100);
+cleanupRightFrames();
 //]]>
 </script>
     

@@ -60,8 +60,7 @@ $langid = get_first_value("select TxLgID as value from " . $tbpref . "texts wher
     .attr('title',title)
     .attr('data_trans','<?php echo tohtml($translation); ?>');
     $('#learnstatus', context).html('<?php echo addslashes(texttodocount2($_REQUEST['tid'])); ?>');
-    window.parent.getElementById('frame-l').focus();
-    window.parent.setTimeout('cClick()', 100);
+    cleanupRightFrames();
     //]]>
 </script>
 <?php
