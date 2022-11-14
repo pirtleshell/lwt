@@ -37,6 +37,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 * Unconsistent option in ``inc/ajax_save_setting.php``. 
   * Since 2.2.2-fork, you had to use a GET request to use it, resulting in authorization errors.
   * POST requests are now again the default way to use it.
+* Do no longer show "[]" near words when they are no tags. ``getWordTagList`` behavior fixed (``inc/session_utility.php``).
 
 
 ## 2.5.3-fork (November 06 2022)
