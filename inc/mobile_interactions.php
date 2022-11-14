@@ -8,11 +8,11 @@
  * @license Unlicense <http://unlicense.org/>
  * @link    https://hugofara.github.io/lwt/docs/html/mobile__interactions_8php.html
  * @since   2.2.0
- * @since   2.2.1 You should not longer use this library as mobile detect is removed. However, this 
- * interface is unchanged for backward compatibility. 
+ * @since   2.2.1 You should not longer use this library as mobile detect is removed.
+ *                However, this interface is unchanged for backward compatibility.
+ * @since   2.5.4 Mobile detect is back and does no longer use external libraries. 
  */
 
-//require_once __DIR__ . '/../vendor/mobiledetect/mobiledetectlib/Mobile_Detect.php';
 require_once __DIR__ . '/database_connect.php';
 
 /**
@@ -39,16 +39,6 @@ function is_mobile(): bool
     }
     
     return false;
-    /*
-    Code before version 2.2.1-fork: use Mobile_Detect library.
-
-    $detect = new Mobile_Detect;
-    $mobileDisplayMode = (int)getSettingWithDefault('set-mobile-display-mode');
-    $mobile = (
-        ($mobileDisplayMode == 0 && $detect->isMobile()) 
-        || $mobileDisplayMode == 2
-    );
-    return $mobile;*/
 }
 
 /**
@@ -59,6 +49,8 @@ function is_mobile(): bool
  * @param bool   $right_frames Create or not a space for right frames.
  * 
  * @return void
+ * 
+ * @deprecated Since 2.2.1-fork, Do not use frames
  */
 function do_frameset_mobile_page_content($frame_h_uri, $frame_l_uri, $right_frames) 
 {
@@ -94,6 +86,9 @@ function do_frameset_mobile_page_content($frame_h_uri, $frame_l_uri, $right_fram
  * Echo the CSS content for mobile frameset page.
  * 
  * @return void
+ * 
+ * @deprecated Since 2.5.4-fork, the display for mobile changed, making this code 
+ *             useless  
  */
 function do_frameset_mobile_css() 
 {
@@ -123,6 +118,8 @@ function do_frameset_mobile_css()
  * @param string|null $audio Audio URI
  * 
  * @return void
+ * 
+ * @deprecated Since 2.2.1-fork, we do no longer use frameset
  */
 function do_frameset_mobile_js($audio=null)
 {

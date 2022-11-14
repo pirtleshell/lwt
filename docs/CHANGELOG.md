@@ -6,9 +6,9 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 
 ## [Unreleased]
 ### Added
-* Frames resizing is back! The text reading interface was updated in several ways.
+* Frames resizing is back! The text reading and test interfaces updated in several ways. Based several suggestions as [#60](https://github.com/HugoFara/lwt/issues/60).
   * The desktop interface is now much similar to what it was before 2.2.1-fork.
-  * The mobile was unchanged (2.2.1-fork to 2.5.3-fork).
+  * The mobile interface for texts unchanged (2.2.1-fork to 2.5.3-fork).
 * You can resize frames on desktop.
 
 ### Changed
