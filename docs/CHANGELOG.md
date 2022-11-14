@@ -17,6 +17,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 * ``save_setting_redirect.php`` moved to ``inc/save_setting_redirect.php``.
 * Psalm code analysis of all PHP files.
 * Tests have a better general aspect thanks to CSS cleanning.
+* Faster testing: you do no longer need to enter "Space" first for speed testing, except for status down and change. Related to [#71](https://github.com/HugoFara/lwt/pull/71).
 
 ### Deprecated
 * ``do_test_test_css`` in ``do_test_test.php`` is deprecated since it was causing display issues. Its CSS rules were trimmed.

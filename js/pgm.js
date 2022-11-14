@@ -65,7 +65,7 @@ $('input[name=\'step\']').val(++val);document.lwt_form1.submit();return!1});$(do
  * @author  andreask7 <andreasks7@users.noreply.github.com>
  * @since   1.6.16-fork
  */
-var TEXTPOS=-1;var OPENED=0;var WID=0;var TID=0;var WBLINK1='';var WBLINK2='';var WBLINK3='';var SOLUTION='';var ADDFILTER='';var RTL=0;var ANN_ARRAY={};var DELIMITER='';var JQ_TOOLTIP=0;function setTransRoman(tra,rom){if($('textarea[name="WoTranslation"]').length==1){$('textarea[name="WoTranslation"]').val(tra)}
+TEXTPOS=-1;OPENED=0;WID=0;TID=0;WBLINK1='';WBLINK2='';WBLINK3='';SOLUTION='';ADDFILTER='';RTL=0;ANN_ARRAY={};DELIMITER='';JQ_TOOLTIP=0;function setTransRoman(tra,rom){if($('textarea[name="WoTranslation"]').length==1){$('textarea[name="WoTranslation"]').val(tra)}
 if($('input[name="WoRomanization"]').length==1){$('input[name="WoRomanization"]').val(rom)}
 makeDirty()}
 function containsCharacterOutsideBasicMultilingualPlane(s){return/[\uD800-\uDFFF]/.test(s)}
@@ -90,14 +90,14 @@ $('input:submit').last().trigger('click');return!1}else{return!0}}
 function noShowAfter3Secs(){$('#hide3').slideUp()}
 function setTheFocus(){$('.setfocus').trigger('focus').trigger('select')}
 function word_click_event_do_test_test(){run_overlib_test(WBLINK1,WBLINK2,WBLINK3,$(this).attr('data_wid'),$(this).attr('data_text'),$(this).attr('data_trans'),$(this).attr('data_rom'),$(this).attr('data_status'),$(this).attr('data_sent'),$(this).attr('data_todo'));$('.todo').text(SOLUTION);return!1}
-function keydown_event_do_test_test(e){if(e.which==32&&OPENED==0){$('.word').trigger('click');cClick();showRightFrames('show_word.php?wid='+$('.word').attr('data_wid')+'&ann=');OPENED=1;return!1}
-if(OPENED==0)return!0;if(e.which==38){showRightFrames('set_test_status.php?wid='+WID+'&stchange=1');return!1}
-if(e.which==40){showRightFrames('set_test_status.php?wid='+WID+'&stchange=-1');return!1}
+function keydown_event_do_test_test(e){if(e.key=='Space'&&OPENED==0){$('.word').trigger('click');cleanupRightFrames();showRightFrames('show_word.php?wid='+$('.word').attr('data_wid')+'&ann=');OPENED=1;return!1}
+if(e.which==38){showRightFrames('set_test_status.php?wid='+WID+'&stchange=1');return!1}
 if(e.which==27){showRightFrames('set_test_status.php?wid='+WID+'&status='+$('.word').attr('data_status'));return!1}
-for(let i=1;i<=5;i++){if(e.which==(48+i)||e.which==(96+i)){showRightFrames('set_test_status.php?wid='+WID+'&status='+i);return!1}}
 if(e.which==73){showRightFrames('set_test_status.php?wid='+WID+'&status=98');return!1}
 if(e.which==87){showRightFrames('set_test_status.php?wid='+WID+'&status=99');return!1}
 if(e.which==69){showRightFrames('edit_tword.php?wid='+WID);return!1}
+if(OPENED==0)return!0;if(e.which==40){showRightFrames('set_test_status.php?wid='+WID+'&stchange=-1');return!1}
+for(let i=1;i<=5;i++){if(e.which==(48+i)||e.which==(96+i)){showRightFrames('set_test_status.php?wid='+WID+'&status='+i);return!1}}
 return!0}
 function word_each_do_text_text(_){const wid=$(this).attr('data_wid');if(wid!=''){const order=$(this).attr('data_order');if(order in ANN_ARRAY){if(wid==ANN_ARRAY[order][1]){const ann=ANN_ARRAY[order][2];const re=new RegExp('(['+DELIMITER+'][ ]{0,1}|^)('+ann.replace(/[-\/\\^$*+?.()|[\]{}]/g,'\\$&')+')($|[ ]{0,1}['+DELIMITER+'])','');if(!re.test($(this).attr('data_trans').replace(/ \[.*$/,''))){const trans=ann+' / '+$(this).attr('data_trans');$(this).attr('data_trans',trans.replace(' / *',''))}
 $(this).attr('data_ann',ann)}}}

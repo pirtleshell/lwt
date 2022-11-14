@@ -12,25 +12,25 @@
 Global variables used in LWT jQuery functions
 ***************************************************************/
 
-var TEXTPOS = -1;
-var OPENED = 0;
+TEXTPOS = -1;
+OPENED = 0;
 /** @var {int} WID - Word ID */
-var WID = 0;
+WID = 0;
 /** Text ID (int) */
-var TID = 0;
+TID = 0;
 /** First dictionary URL */
-var WBLINK1 = '';
+WBLINK1 = '';
 /** Second dictionary URL */
-var WBLINK2 = '';
+WBLINK2 = '';
 /** Google Translate */
-var WBLINK3 = '';
-var SOLUTION = '';
-var ADDFILTER = '';
+WBLINK3 = '';
+SOLUTION = '';
+ADDFILTER = '';
 /** Right-to-left indicator */
-var RTL = 0;
-var ANN_ARRAY = {};
-var DELIMITER = '';
-var JQ_TOOLTIP = 0;
+RTL = 0;
+ANN_ARRAY = {};
+DELIMITER = '';
+JQ_TOOLTIP = 0;
 
 /**************************************************************
 LWT jQuery functions
@@ -388,45 +388,53 @@ function word_click_event_do_test_test () {
  * @returns {bool} true if nothing was done, false otherwise
  */
 function keydown_event_do_test_test (e) {
-  if (e.which == 32 && OPENED == 0) { // space : show sol.
+  if (e.key == 'Space'  && OPENED == 0) { 
+    // space : show sol.
     $('.word').trigger('click');
-    cClick();
+    cleanupRightFrames();
     showRightFrames('show_word.php?wid=' + $('.word').attr('data_wid') + '&ann=');
     OPENED = 1;
     return false;
   }
-  if (OPENED == 0) return true;
-  if (e.which == 38) { // up : status+1
+  if (e.which == 38) { 
+    // up : status+1
 		showRightFrames('set_test_status.php?wid=' + WID + '&stchange=1');
     return false;
   }
-  if (e.which == 40) { // down : status-1
-		showRightFrames('set_test_status.php?wid=' + WID + '&stchange=-1');
-    return false;
-  }
-  if (e.which == 27) { // esc : dont change status
+  if (e.which == 27) { 
+    // esc : dont change status
 		showRightFrames(
       'set_test_status.php?wid=' + WID + '&status=' + $('.word').attr('data_status')
     );
     return false;
   }
-  for (let i = 1; i <= 5; i++) {
-    if (e.which == (48 + i) || e.which == (96 + i)) { // 1,.. : status=i
-			showRightFrames('set_test_status.php?wid=' + WID + '&status=' + i);
-      return false;
-    }
-  }
-  if (e.which == 73) { // I : status=98
+  if (e.which == 73) { 
+    // I : status=98
 		showRightFrames('set_test_status.php?wid=' + WID + '&status=98');
     return false;
   }
-  if (e.which == 87) { // W : status=99
+  if (e.which == 87) { 
+    // W : status=99
 		showRightFrames('set_test_status.php?wid=' + WID + '&status=99');
     return false;
   }
-  if (e.which == 69) { // E : EDIT
+  if (e.which == 69) { 
+    // E : EDIT
 		showRightFrames('edit_tword.php?wid=' + WID);
     return false;
+  }
+  if (OPENED == 0) return true;
+  if (e.which == 40) { 
+    // down : status-1
+		showRightFrames('set_test_status.php?wid=' + WID + '&stchange=-1');
+    return false;
+  }
+  for (let i = 1; i <= 5; i++) {
+    if (e.which == (48 + i) || e.which == (96 + i)) { 
+      // 1,.. : status=i
+			showRightFrames('set_test_status.php?wid=' + WID + '&status=' + i);
+      return false;
+    }
   }
   return true;
 }
