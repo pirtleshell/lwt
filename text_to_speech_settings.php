@@ -217,7 +217,6 @@ function tts_js()
      */
     function presetTTSData()
     {
-        //console.log();
         $('#get-language')[0].value = CURRENT_LANGUAGE;
         $('#region-code')[0].value = getCookie(
             'tts[' + CURRENT_LANGUAGE + 'RegName]'

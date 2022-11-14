@@ -89,10 +89,8 @@ function do_set_test_status_javascript($wid, $status, $stchange)
     echo json_encode((int)getSettingWithDefault('set-test-main-frame-waiting-time')); 
     ?> + 500;
     if (waittime <= 0) {
-        console.log("aaa");
         window.parent.location.reload();
     } else {
-        console.log("bbb");
         setTimeout('window.parent.location.reload();', waittime);
     }
     //]]>
