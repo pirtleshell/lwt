@@ -43,7 +43,8 @@ function click_single() {
 }
 
 function click_repeat() {
-    $("#jquery_jplayer_1").on('bind', $.jPlayer.event.ended + ".jp-repeat", function(event) { 
+    $("#jquery_jplayer_1")
+    .on('bind', $.jPlayer.event.ended + ".jp-repeat", function(event) { 
         $(this).jPlayer("play"); 
     });
     $("#do-repeat").addClass('hide');
@@ -74,7 +75,8 @@ function click_forw() {
 function click_slower() {
     val=parseFloat($("#pbvalue").text()) - 0.1;
     if(val>=0.5){
-        $("#pbvalue").text(val.toFixed(1)).css({'color': '#BBB'}).animate({color: '#888'},150,function() {});
+        $("#pbvalue").text(val.toFixed(1)).css({'color': '#BBB'})
+        .animate({color: '#888'},150,function() {});
         $("#jquery_jplayer_1").jPlayer("playbackRate",val);
     }
 }
@@ -82,7 +84,8 @@ function click_slower() {
 function click_faster() {
     val = parseFloat($("#pbvalue").text()) + 0.1;
     if (val<=4.0){
-        $("#pbvalue").text(val.toFixed(1)).css({'color': '#BBB'}).animate({color: '#888'},150,function() {});
+        $("#pbvalue").text(val.toFixed(1)).css({'color': '#BBB'})
+        .animate({color: '#888'},150,function() {});
         $("#jquery_jplayer_1").jPlayer("playbackRate",val);
     }
 }

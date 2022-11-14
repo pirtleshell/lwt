@@ -198,7 +198,8 @@ function getPhoneticText(text, lang) {
  * Read a text aloud, only work with a phonetic version.
  * 
  * @param {string} text  Text to read, won't be parsed further.
- * @param {string} lang  Language code with BCP 47 convention  (e. g. "en-US" for English with an American accent) 
+ * @param {string} lang  Language code with BCP 47 convention  
+ *                       (e. g. "en-US" for English with an American accent) 
  * @param {number} rate  Reading rate 
  * @param {number} pitch Pitch value 
  */
@@ -229,7 +230,8 @@ function getPhoneticText(text, lang) {
  * Read a text aloud, may parse the text to get a phonetic version.
  * 
  * @param {string} text  Text to read, do not need to be phonetic
- * @param {string} lang  Language code with BCP 47 convention  (e. g. "en-US" for English with an American accent) 
+ * @param {string} lang  Language code with BCP 47 convention  
+ *                       (e. g. "en-US" for English with an American accent) 
  * @param {number} rate  Reading rate 
  * @param {number} pitch Pitch value 
  */
