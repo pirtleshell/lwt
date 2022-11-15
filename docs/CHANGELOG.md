@@ -39,7 +39,8 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 * Unconsistent option in ``inc/ajax_save_setting.php``. 
   * Since 2.2.2-fork, you had to use a GET request to use it, resulting in authorization errors.
   * POST requests are now again the default way to use it.
-* Removed the last JS error messages of "obj is null" when calling ``cClick``.  
+* Removed the last JS error messages of "obj is null" when calling ``cClick``.
+* Sometimes tests were loop-reloading clicking after setting new status, this is fixed.
 
 
 ## 2.5.3-fork (November 06 2022)

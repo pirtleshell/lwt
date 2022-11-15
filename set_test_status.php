@@ -91,7 +91,7 @@ function do_set_test_status_javascript($wid, $status, $stchange)
     if (waittime <= 0) {
         window.parent.location.reload();
     } else {
-        setTimeout('window.parent.location.reload();', waittime);
+        setTimeout(window.location.reload.bind(window.parent.location), waittime);
     }
     //]]>
 </script>
@@ -119,15 +119,13 @@ function do_set_test_status_content($wid, $status, $oldstatus, $stchange)
     );
 
     $oldscore = (int)get_first_value(
-        'SELECT greatest(0,round(WoTodayScore,0)) AS value FROM ' . $tbpref . 'words 
-        WHERE WoID = ' . $wid
+        "SELECT greatest(0,round(WoTodayScore,0)) AS value 
+        FROM {$tbpref}words WHERE WoID = $wid"
     );
-
-
     runsql(
-        'UPDATE ' . $tbpref . 'words SET WoStatus = ' . 
-        $status . ', WoStatusChanged = NOW(),' . make_score_random_insert_update('u') . ' 
-        WHERE WoID = ' . $wid, 
+        "UPDATE {$tbpref}words SET WoStatus = $status, WoStatusChanged = NOW()," . 
+        make_score_random_insert_update('u') . " 
+        WHERE WoID = $wid", 
         'Status changed'
     );
         
@@ -171,7 +169,6 @@ function start_set_text_status()
         } else if ($stchange > 0) { 
             $stchange = 1; 
         }
-        
     } else {
         $stchange = (int)getreq('stchange');
         $status = $oldstatus + $stchange;
