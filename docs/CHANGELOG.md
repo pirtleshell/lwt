@@ -18,6 +18,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 * Psalm code analysis of all PHP files.
 * Tests have a better general aspect thanks to CSS cleanning.
 * Faster testing: you do no longer need to enter "Space" first for speed testing, except for status down and change. Related to [#71](https://github.com/HugoFara/lwt/pull/71).
+* Do no longer show "[]" near words when they are no tags. ``getWordTagList`` behavior changed (``inc/session_utility.php``).
 
 ### Deprecated
 * ``do_test_test_css`` in ``do_test_test.php`` is deprecated since it was causing display issues. Its CSS rules were trimmed.
@@ -38,7 +39,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 * Unconsistent option in ``inc/ajax_save_setting.php``. 
   * Since 2.2.2-fork, you had to use a GET request to use it, resulting in authorization errors.
   * POST requests are now again the default way to use it.
-* Do no longer show "[]" near words when they are no tags. ``getWordTagList`` behavior fixed (``inc/session_utility.php``).
+* Removed the last JS error messages of "obj is null" when calling ``cClick``.  
 
 
 ## 2.5.3-fork (November 06 2022)

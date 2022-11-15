@@ -1936,6 +1936,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 <li>Psalm code analysis of all PHP files.</li>
 <li>Tests have a better general aspect thanks to CSS cleanning.</li>
 <li>Faster testing: you do no longer need to enter "Space" first for speed testing, except for status down and change. Related to <a href="https://github.com/HugoFara/lwt/pull/71">#71</a>.</li>
+<li>Do no longer show "[]" near words when they are no tags. <code>getWordTagList</code> behavior changed (<code>inc/session_utility.php</code>).</li>
 </ul>
 <h4>Deprecated</h4>
 <ul>
@@ -1971,7 +1972,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 <li>POST requests are now again the default way to use it.</li>
 </ul>
 </li>
-<li>Do no longer show "[]" near words when they are no tags. <code>getWordTagList</code> behavior fixed (<code>inc/session_utility.php</code>).</li>
+<li>Removed the last JS error messages of "obj is null" when calling <code>cClick</code>.</li>
 </ul>
 <h3>2.5.3-fork (November 06 2022)</h3>
 <h4>Added</h4>

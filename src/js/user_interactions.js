@@ -132,9 +132,9 @@ function goToLastPosition() {
         }
     }
     $(document).scrollTo(pos);
-    window.focus();
-    window.setTimeout('overlib()', 10);
-    window.setTimeout('cClick()', 100);
+    focus();
+    setTimeout(overlib, 10);
+    setTimeout(cClick, 100);
 }
 
 

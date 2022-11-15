@@ -199,7 +199,7 @@ function all_words_wellknown_javascript($txid, $javascript)
     <?php echo $javascript; ?> 
     $('#learnstatus', context)
     .html('<?php echo addslashes(texttodocount2($txid)); ?>');
-    window.parent.setTimeout('cClick()', 1000);
+    window.parent.setTimeout(window.parent.cClick, 1000);
     //]]>
 </script>
     <?php
