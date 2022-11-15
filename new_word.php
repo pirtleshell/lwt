@@ -98,8 +98,7 @@ if (isset($_REQUEST['op'])) {
                 flush();
             } ?>
 <script type="text/javascript">
-    window.parent.getElementById('frame-l').focus();
-    window.parent.setTimeout('cClick()', 100);
+    cleanupRightFrames();
 </script>
             <?php
         } // (substr($message,0,5) != 'Error')

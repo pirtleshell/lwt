@@ -41,34 +41,14 @@ function get_text_id()
  * Echo the page content for the mobile version of do_text.
  * 
  * @param int    $textid Text ID
- * @param string $audio  Audio URI
+ * @param string $audio  Audio URI, unnused
  * 
  * @return void
- * 
- * @deprecated Use do_text_desktop_content instead.
  * 
  * @since 2.2.1 It also calls do_frameset_mobile_css and do_frameset_mobile_js
+ * @since 2.5.4-fork Rewrote to match the desktop version (between 2.2.1 and 2.5.4)
  */
 function do_text_mobile_content($textid, $audio)
-{
-    do_frameset_mobile_css();
-    do_frameset_mobile_js($audio);
-    do_frameset_mobile_page_content(
-        "do_text_header.php?text=" . $textid, 
-        "do_text_text.php?text=" . $textid, 
-        true
-    );
-}
-
-/**
- * Echo the page content for the desktop version of do_text.
- * 
- * @param int         $textid Text ID
- * @param string|null $audio  Audio URI
- * 
- * @return void
- */
-function do_text_desktop_content($textid, $audio)
 {
     ?>
 <div style="width: 95%; height: 100%;">
@@ -80,17 +60,58 @@ function do_text_desktop_content($textid, $audio)
         <?php do_text_text_content($textid, true); ?>
     </div>
 </div>
-<div id="frames-r" style="position: fixed; top: 0; right: -100%; width: 100%; height: 100%;" 
+<div id="frames-r" 
+style="position: fixed; top: 0; right: -100%; width: 100%; height: 100%;" 
 onclick="hideRightFrames();">
     <!-- iFrames wrapper for events -->
     <div style="margin-left: 50%; height: 99%;">
-        <iframe src="empty.html" scrolling="auto" name="ro" style="height: 50%; width: 100%;">
+        <iframe src="empty.html" scrolling="auto" name="ro" 
+        style="height: 50%; width: 100%;">
             Your browser doesn't support iFrames, update it!
         </iframe>
-        <iframe src="empty.html" scrolling="auto" name="ru" style="height: 50%; width: 100%;">
+        <iframe src="empty.html" scrolling="auto" name="ru" 
+        style="height: 50%; width: 100%;">
             Your browser doesn't support iFrames, update it!
         </iframe>
     </div>
+</div>
+
+    <?php
+}
+
+/**
+ * Echo the page content for the desktop version of do_text.
+ * 
+ * @param int         $textid Text ID
+ * @param string|null $audio  Audio URI, unnused
+ * 
+ * @return void
+ */
+function do_text_desktop_content($textid, $audio)
+{
+    $frame_l_width = (int)getSettingWithDefault('set-text-l-framewidth-percent');
+    ?>
+<div style="width: <?php echo $frame_l_width; ?>%;" id="frames-l">
+    <div id="frame-h">
+        <?php do_text_header_content($textid, true); ?>
+    </div>
+    <hr />
+    <div id="frame-l">
+        <?php do_text_text_content($textid, true); ?>
+    </div>
+</div>
+<div id="frames-r" 
+style="position: fixed; top: 2%; right: 0; height: 95%; 
+width: <?php echo 97 - $frame_l_width; ?>%;">
+    <!-- iFrames wrapper for events -->
+    <iframe src="empty.html" scrolling="auto" name="ro" 
+    style="height: 50%; width: 100%;">
+        Your browser doesn't support iFrames, update it!
+    </iframe>
+    <iframe src="empty.html" scrolling="auto" name="ru" 
+    style="height: 50%; width: 100%;">
+        Your browser doesn't support iFrames, update it!
+    </iframe>
 </div>
 
     <?php
@@ -124,7 +145,6 @@ function do_text_page($textid)
     if (is_mobile()) {
         do_text_mobile_content($textid, $audio);
     } else {
-        // Not mobile
         do_text_desktop_content($textid, $audio);
     }
     pageend();

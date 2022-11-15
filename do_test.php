@@ -111,29 +111,13 @@ function do_test_mobile_page_content($property)
 /**
  * Make the mobile test page.
  * 
- * @param string $property URL property for HEADER
+ * @param string $property Unnused. URL property for HEADER
  * 
  * @return void
  * 
- * @deprecated Use do_test_desktop_page instead
+ * @since 2.5.4-fork Function rewrote and no longer deprecated
  */
 function do_test_mobile_page($property) 
-{
-    do_frameset_mobile_css();
-    do_frameset_mobile_js();
-    do_frameset_mobile_page_content(
-        "do_test_header.php?$property", "empty.html", true
-    );
-}
-
-/**
- * Make the desktop test page
- * 
- * @param string $property URL property for HEADER
- * 
- * @return void
- */
-function do_test_desktop_page($property) 
 {
     $language = get_l2_language_name();
     ?>
@@ -179,11 +163,65 @@ onclick="hideRightFrames();">
 }
 
 /**
+ * Make the desktop test page
+ * 
+ * @param string $property Unnused. URL property for HEADER
+ * 
+ * @return void
+ */
+function do_test_desktop_page($property) 
+{
+    $frame_l_width = (int)getSettingWithDefault('set-text-l-framewidth-percent');
+    $language = get_l2_language_name();
+    ?>
+<div id="frames-l" style="width: <?php echo $frame_l_width; ?>%;">
+    <div id="frame-h">
+        <?php
+        start_test_header_page($language);
+        ?>
+    </div>
+    <hr />
+    <div id="frame-l">
+        <?php
+        if (getreq('type') == 'table') {
+            do_test_table();
+        } else {
+            do_test_test_content();
+        }
+        ?>
+    </div>
+</div>
+<div id="frames-r" 
+style="position: fixed; top: 2%; right: 0; height: 90%; 
+width: <?php echo 97 - $frame_l_width; ?>%;">
+    <!-- iFrames wrapper for events -->
+    <iframe src="empty.html" scrolling="auto" name="ro" 
+    style="height: 50%; width: 100%;">
+        Your browser doesn't support iFrames, update it!
+    </iframe>
+    <iframe src="empty.html" scrolling="auto" name="ru" 
+    style="height: 50%; width: 100%;">
+        Your browser doesn't support iFrames, update it!
+    </iframe>
+</div>
+<audio id="success_sound">
+    <source src="<?php print_file_path("sounds/success.mp3") ?>" type="audio/mpeg" />
+    Your browser does not support audio element!
+</audio>
+<audio id="failure_sound">
+    <source src="<?php print_file_path("sounds/failure.mp3") ?>" type="audio/mpeg" />
+    Your browser does not support audio element!
+</audio>
+    <?php
+}
+
+/**
  * Start the test page.
  * 
  * @param string $p Some property to add to the URL of do_test_test.php.
  * 
- * @since 2.2.1 The $mobile paramater is no longer required.
+ * @since 2.2.1 The $mobile parameter is no longer required.
+ * @since 2.5.4 Mobile interface is back and self-set.
  * 
  * @return void
  */
@@ -191,7 +229,11 @@ function do_test_page($p)
 {
     pagestart_nobody('Test');
     
-    do_test_desktop_page($p);
+    if (is_mobile()) {
+        do_test_mobile_page($p);
+    } else {
+        do_test_desktop_page($p);
+    }
 
     pageend();
 }

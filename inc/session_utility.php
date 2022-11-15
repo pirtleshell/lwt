@@ -2023,21 +2023,31 @@ function processDBParam($reqkey, $dbkey, $default, $isnum)
 function getWordTagList($wid, $before=' ', $brack=1, $tohtml=1): string 
 {
     global $tbpref;
+    $lbrack = $rbrack = '';
+    if ($brack) {
+        $lbrack = "[";
+        $rbrack = "]";
+    }
     $r = get_first_value(
-        "SELECT IFNULL(" . ($brack ? "CONCAT('['," : "") . 
-        "GROUP_CONCAT(DISTINCT TgText ORDER BY TgText separator ', ')" . 
-        ($brack ? ",']')" : "") . ",'') as value 
-        FROM ((" . $tbpref . "words 
-        LEFT JOIN " . $tbpref . "wordtags 
-        ON WoID = WtWoID) 
-        LEFT JOIN " . $tbpref . "tags 
-        ON TgID = WtTgID) 
-        WHERE WoID = " . $wid
+        "SELECT IFNULL(
+            GROUP_CONCAT(DISTINCT TgText ORDER BY TgText separator ', '),
+            ''
+        ) AS value 
+        FROM (
+            (
+                {$tbpref}words 
+                LEFT JOIN {$tbpref}wordtags 
+                ON WoID = WtWoID
+            ) 
+            LEFT JOIN {$tbpref}tags 
+            ON TgID = WtTgID
+        ) 
+        WHERE WoID = $wid"
     );
     if ($r != '') { 
-        $r = $before . $r; 
+        $r = $before . $lbrack . $r . $rbrack; 
     }
-    if ($tohtml) { 
+    if ($tohtml) {
         $r = tohtml($r); 
     }
     return $r;

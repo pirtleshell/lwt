@@ -16,7 +16,8 @@ if ($wid == '') {
     my_die('Word not found in show_word.php'); 
 }
 
-$sql = 'select WoLgID, WoText, WoTranslation, WoSentence, WoRomanization, WoStatus from ' . $tbpref . 'words where WoID = ' . $wid;
+$sql = 'select WoLgID, WoText, WoTranslation, WoSentence, WoRomanization, WoStatus 
+from ' . $tbpref . 'words where WoID = ' . $wid;
 $res = do_mysqli_query($sql);
 if ($record = mysqli_fetch_assoc($res)) {
 
@@ -34,12 +35,12 @@ if ($record = mysqli_fetch_assoc($res)) {
 
 <table class="tab2" cellspacing="0" cellpadding="5">
 <tr>
-<td class="td1 right" style="width:30px;">Term:</td>
-<td class="td1" style="font-size:120%; border-top-right-radius:inherit;" <?php echo $scrdir; ?>><b><?php echo tohtml($record['WoText']); ?></b></td>
+    <td class="td1 right" style="width:30px;">Term:</td>
+    <td class="td1" style="font-size:120%; border-top-right-radius:inherit;" <?php echo $scrdir; ?>><b><?php echo tohtml($record['WoText']); ?></b></td>
 </tr>
 <tr>
-<td class="td1 right">Translation:</td>
-<td class="td1" style="font-size:120%;"><b><?php
+    <td class="td1 right">Translation:</td>
+    <td class="td1" style="font-size:120%;"><b><?php
 if(!empty($ann)) {
     echo 
     str_replace_first(
@@ -47,8 +48,7 @@ if(!empty($ann)) {
         '<span style="color:red">' . tohtml($ann) . '</span>', 
         tohtml($transl)
     );
-}
-else { 
+} else { 
     echo tohtml($transl); 
 }
 ?></b></td>
@@ -79,10 +79,9 @@ else {
 </table>
 
 <script type="text/javascript">
-//<![CDATA[
-window.parent.getElementById('frame-l').focus();
-window.parent.setTimeout('cClick()', 100);
-//]]>
+    //<![CDATA[
+    cleanupRightFrames();
+    //]]>
 </script>
 
     <?php

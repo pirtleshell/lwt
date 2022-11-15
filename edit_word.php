@@ -89,7 +89,8 @@ function edit_term($translation)
         convert_string_to_sqlsyntax($translation) . ', WoSentence = ' . 
         convert_string_to_sqlsyntax(repl_tab_nl($_REQUEST["WoSentence"])) . ', WoRomanization = ' .
         convert_string_to_sqlsyntax($_REQUEST["WoRomanization"]) . $xx . ',' . 
-        make_score_random_insert_update('u') . ' where WoID = ' . $_REQUEST["WoID"], "Updated"
+        make_score_random_insert_update('u') . 
+        ' where WoID = ' . $_REQUEST["WoID"], "Updated"
     );
     $wid = $_REQUEST["WoID"];
     return array($wid, $message);
@@ -120,18 +121,21 @@ function change_term_display($wid, $translation, $hex): void
     ?>
 <script type="text/javascript">
     //<![CDATA[
-    var context = window.parent.document.getElementById('frame-l');
-    var contexth = window.parent.document.getElementById('frame-h');
-    var woid = <?php echo prepare_textdata_js($wid); ?>;
-    var status = <?php echo prepare_textdata_js($_REQUEST["WoStatus"]); ?>;
-    var trans = <?php echo prepare_textdata_js($translation . getWordTagList($wid, ' ', 1, 0)); ?>;
-    var roman = <?php echo prepare_textdata_js($_REQUEST["WoRomanization"]); ?>;
-    var title;
+    const context = window.parent.document.getElementById('frame-l');
+    const contexth = window.parent.document.getElementById('frame-h');
+    const woid = <?php echo prepare_textdata_js($wid); ?>;
+    const status = <?php echo prepare_textdata_js($_REQUEST["WoStatus"]); ?>;
+    const trans = <?php 
+    echo prepare_textdata_js($translation . getWordTagList($wid, ' ', 1, 0)); 
+    ?>;
+    const roman = <?php echo prepare_textdata_js($_REQUEST["WoRomanization"]); ?>;
+    let title;
     if (window.parent.document.getElementById('frame-l').JQ_TOOLTIP) {
         title = '';
     } else {
         title = make_tooltip(
-            <?php echo prepare_textdata_js($_REQUEST["WoText"]); ?>, trans, roman, status
+            <?php echo prepare_textdata_js($_REQUEST["WoText"]); ?>, 
+            trans, roman, status
         );
     }
     <?php
@@ -158,7 +162,8 @@ function change_term_display($wid, $translation, $hex): void
         <?php
     }
     ?>
-    $('#learnstatus', contexth).html('<?php echo addslashes(texttodocount2($_REQUEST['tid'])); ?>');
+    $('#learnstatus', contexth)
+    .html('<?php echo addslashes(texttodocount2($_REQUEST['tid'])); ?>');
 
     cleanupRightFrames();
     //]]>

@@ -12,25 +12,25 @@
 Global variables used in LWT jQuery functions
 ***************************************************************/
 
-var TEXTPOS = -1;
-var OPENED = 0;
+TEXTPOS = -1;
+OPENED = 0;
 /** @var {int} WID - Word ID */
-var WID = 0;
+WID = 0;
 /** Text ID (int) */
-var TID = 0;
+TID = 0;
 /** First dictionary URL */
-var WBLINK1 = '';
+WBLINK1 = '';
 /** Second dictionary URL */
-var WBLINK2 = '';
+WBLINK2 = '';
 /** Google Translate */
-var WBLINK3 = '';
-var SOLUTION = '';
-var ADDFILTER = '';
+WBLINK3 = '';
+SOLUTION = '';
+ADDFILTER = '';
 /** Right-to-left indicator */
-var RTL = 0;
-var ANN_ARRAY = {};
-var DELIMITER = '';
-var JQ_TOOLTIP = 0;
+RTL = 0;
+ANN_ARRAY = {};
+DELIMITER = '';
+JQ_TOOLTIP = 0;
 
 /**************************************************************
 LWT jQuery functions
@@ -53,11 +53,18 @@ function containsCharacterOutsideBasicMultilingualPlane (s) {
 function alertFirstCharacterOutsideBasicMultilingualPlane (s, info) {
   const match = /[\uD800-\uDFFF]/.exec(s);
   if (match) {
-    alert('ERROR\n\nText "' + info + '" contains invalid character(s) (in the Unicode Supplementary Multilingual Planes, > U+FFFF) like emojis or very rare characters.\n\nFirst invalid character: "' + s.substring(match.index, match.index + 2) + '" at position ' + (match.index + 1) + '.\n\nMore info: https://en.wikipedia.org/wiki/Plane_(Unicode)\n\nPlease remove this/these character(s) and try again.');
+    alert(
+      'ERROR\n\nText "' + info + '" contains invalid character(s) ' + 
+      '(in the Unicode Supplementary Multilingual Planes, > U+FFFF) like emojis ' + 
+      'or very rare characters.\n\nFirst invalid character: "' + 
+      s.substring(match.index, match.index + 2) + '" at position ' + 
+      (match.index + 1) + '.\n\n' + 
+      'More info: https://en.wikipedia.org/wiki/Plane_(Unicode)\n\n' + 
+      'Please remove this/these character(s) and try again.'
+    );
     return 1;
-  } else {
-    return 0;
   }
+  return 0;
 }
 
 function getUTF8Length (s) {
@@ -78,7 +85,9 @@ function changeImprAnnText () {
   $.post('inc/ajax_save_impr_text.php', { id: textid, elem: elem, data: thedata }
     , function (d) {
       $(idwait).html('<img src="icn/empty.gif" />');
-      if (d != 'OK') { alert('Saving your changes failed, please reload page and try again!'); }
+      if (d != 'OK') { 
+        alert('Saving your changes failed, please reload page and try again!'); 
+      }
     }
   );
 }
@@ -92,7 +101,9 @@ function changeImprAnnRadio () {
   $.post('inc/ajax_save_impr_text.php', { id: textid, elem: elem, data: thedata }
     , function (d) {
       $(idwait).html('<img src="icn/empty.gif" />');
-      if (d != 'OK') { alert('Saving your changes failed, please reload page and try again!'); }
+      if (d != 'OK') { 
+        alert('Saving your changes failed, please reload page and try again!'); 
+      }
     }
   );
 }
@@ -104,10 +115,15 @@ function addTermTranslation (wordid, txid, word, lang) {
     alert('Text Field is empty or = \'*\'!');
     return;
   }
-  $.post('inc/ajax_add_term_transl.php', { id: wordid, data: thedata, text: word, lang: lang }
-    , function (d) {
+  $.post(
+    'inc/ajax_add_term_transl.php', 
+    { id: wordid, data: thedata, text: word, lang: lang }, 
+    function (d) {
       if (d == '') {
-        alert('Adding translation to term OR term creation failed, please reload page and try again!');
+        alert(
+          'Adding translation to term OR term creation failed, ' + 
+          'please reload page and try again!'
+        );
       } else {
         do_ajax_edit_impr_text(pagepos, d);
       }
@@ -150,8 +166,13 @@ function check () {
   count = 0;
   $('input.checkurl').each(function (_n) {
     if ($(this).val().trim().length > 0) {
-      if (($(this).val().trim().indexOf('http://') != 0) && ($(this).val().trim().indexOf('https://') != 0) && ($(this).val().trim().indexOf('#') != 0)) {
-        alert('ERROR\n\nField "' + $(this).attr('data_info') + '" must start with "http://" or "https://" if not empty.');
+      if (($(this).val().trim().indexOf('http://') != 0) && 
+      ($(this).val().trim().indexOf('https://') != 0) && 
+      ($(this).val().trim().indexOf('#') != 0)) {
+        alert(
+          'ERROR\n\nField "' + $(this).attr('data_info') + 
+          '" must start with "http://" or "https://" if not empty.'
+        );
         count++;
       }
     }
@@ -176,18 +197,33 @@ function check () {
   // To enable limits of custom feed texts/articl.
   // change the following «input[class*="max_int_"]» into «input[class*="maxint_"]»
   $('input[class*="max_int_"]').each(function (_n) {
-    const maxvalue = parseInt($(this).attr('class').replace(/.*maxint_([0-9]+).*/, '$1'));
+    const maxvalue = parseInt($(this).attr('class')
+    .replace(/.*maxint_([0-9]+).*/, '$1'));
     if ($(this).val().trim().length > 0) {
       if ($(this).val() > maxvalue) {
-        alert('ERROR\n\n Max Value of Field "' + $(this).attr('data_info') + '" is ' + maxvalue);
+        alert(
+          'ERROR\n\n Max Value of Field "' + $(this).attr('data_info') + 
+          '" is ' + maxvalue
+        );
         count++;
       }
     }
   });
   $('input.checkdicturl').each(function (_n) {
     if ($(this).val().trim().length > 0) {
-      if (($(this).val().trim().indexOf('http://') != 0) && ($(this).val().trim().indexOf('https://') != 0) && ($(this).val().trim().indexOf('*http://') != 0) && ($(this).val().trim().indexOf('*https://') != 0) && ($(this).val().trim().indexOf('glosbe_api.php') != 0) && ($(this).val().trim().indexOf('ggl.php') != 0)) {
-        alert('ERROR\n\nField "' + $(this).attr('data_info') + '" must start with "http://" or "https://" or "*http://" or "*https://" or "glosbe_api.php" or "ggl.php" if not empty.');
+      if (
+        ($(this).val().trim().indexOf('http://') != 0) && 
+        ($(this).val().trim().indexOf('https://') != 0) && 
+        ($(this).val().trim().indexOf('*http://') != 0) && 
+        ($(this).val().trim().indexOf('*https://') != 0) && 
+        ($(this).val().trim().indexOf('glosbe_api.php') != 0) && 
+        ($(this).val().trim().indexOf('ggl.php') != 0)
+      ) {
+        alert(
+          'ERROR\n\nField "' + $(this).attr('data_info') + 
+          '" must start with "http://" or "https://" or "*http://" or "*https://" ' +
+          'or "glosbe_api.php" or "ggl.php" if not empty.'
+        );
         count++;
       }
     }
@@ -195,7 +231,10 @@ function check () {
   $('input.posintnumber').each(function (_n) {
     if ($(this).val().trim().length > 0) {
       if (!(isInt($(this).val().trim()) && (parseInt($(this).val().trim(), 10) > 0))) {
-        alert('ERROR\n\nField "' + $(this).attr('data_info') + '" must be an integer number > 0.');
+        alert(
+          'ERROR\n\nField "' + $(this).attr('data_info') + 
+          '" must be an integer number > 0.'
+        );
         count++;
       }
     }
@@ -203,7 +242,10 @@ function check () {
   $('input.zeroposintnumber').each(function (_n) {
     if ($(this).val().trim().length > 0) {
       if (!(isInt($(this).val().trim()) && (parseInt($(this).val().trim(), 10) >= 0))) {
-        alert('ERROR\n\nField "' + $(this).attr('data_info') + '" must be an integer number >= 0.');
+        alert(
+          'ERROR\n\nField "' + $(this).attr('data_info') + 
+          '" must be an integer number >= 0.'
+        );
         count++;
       }
     }
@@ -211,30 +253,45 @@ function check () {
   $('input.checkoutsidebmp').each(function (_n) {
     if ($(this).val().trim().length > 0) {
       if (containsCharacterOutsideBasicMultilingualPlane($(this).val())) {
-        count += alertFirstCharacterOutsideBasicMultilingualPlane($(this).val(), $(this).attr('data_info'));
+        count += alertFirstCharacterOutsideBasicMultilingualPlane(
+          $(this).val(), $(this).attr('data_info')
+        );
       }
     }
   });
   $('textarea.checklength').each(function (_n) {
     if ($(this).val().trim().length > (0 + $(this).attr('data_maxlength'))) {
-      alert('ERROR\n\nText is too long in field "' + $(this).attr('data_info') + '", please make it shorter! (Maximum length: ' + $(this).attr('data_maxlength') + ' char.)');
+      alert(
+        'ERROR\n\nText is too long in field "' + $(this).attr('data_info') + 
+        '", please make it shorter! (Maximum length: ' + 
+        $(this).attr('data_maxlength') + ' char.)'
+      );
       count++;
     }
   });
   $('textarea.checkoutsidebmp').each(function (_n) {
     if (containsCharacterOutsideBasicMultilingualPlane($(this).val())) {
-      count += alertFirstCharacterOutsideBasicMultilingualPlane($(this).val(), $(this).attr('data_info'));
+      count += alertFirstCharacterOutsideBasicMultilingualPlane(
+        $(this).val(), $(this).attr('data_info')
+      );
     }
   });
   $('textarea.checkbytes').each(function (_n) {
     if (getUTF8Length($(this).val().trim()) > (0 + $(this).attr('data_maxlength'))) {
-      alert('ERROR\n\nText is too long in field "' + $(this).attr('data_info') + '", please make it shorter! (Maximum length: ' + $(this).attr('data_maxlength') + ' bytes.)');
+      alert(
+        'ERROR\n\nText is too long in field "' + $(this).attr('data_info') + 
+        '", please make it shorter! (Maximum length: ' + 
+        $(this).attr('data_maxlength') + ' bytes.)'
+      );
       count++;
     }
   });
   $('input.noblanksnocomma').each(function (_n) {
     if ($(this).val().indexOf(' ') > 0 || $(this).val().indexOf(',') > 0) {
-      alert('ERROR\n\nNo spaces or commas allowed in field "' + $(this).attr('data_info') + '", please remove!');
+      alert(
+        'ERROR\n\nNo spaces or commas allowed in field "' + 
+        $(this).attr('data_info') + '", please remove!'
+      );
       count++;
     }
   });
@@ -273,7 +330,8 @@ function showAllwordsClick () {
   // Timeout necessary because the button is clicked on the left (would hide frames)
 	setTimeout(function () {
     showRightFrames(
-      'set_text_mode.php?mode=' + showAll + '&showLearning=' + showLeaning + '&text=' + text
+      'set_text_mode.php?mode=' + showAll + '&showLearning=' + showLeaning + 
+      '&text=' + text
   );}, 500);
   setTimeout(function () {window.location.reload();}, 4000);
 }
@@ -330,43 +388,53 @@ function word_click_event_do_test_test () {
  * @returns {bool} true if nothing was done, false otherwise
  */
 function keydown_event_do_test_test (e) {
-  if (e.which == 32 && OPENED == 0) { // space : show sol.
+  if (e.key == 'Space'  && OPENED == 0) { 
+    // space : show sol.
     $('.word').trigger('click');
-    cClick();
+    cleanupRightFrames();
     showRightFrames('show_word.php?wid=' + $('.word').attr('data_wid') + '&ann=');
     OPENED = 1;
     return false;
   }
-  if (OPENED == 0) return true;
-  if (e.which == 38) { // up : status+1
+  if (e.which == 38) { 
+    // up : status+1
 		showRightFrames('set_test_status.php?wid=' + WID + '&stchange=1');
     return false;
   }
-  if (e.which == 40) { // down : status-1
-		showRightFrames('set_test_status.php?wid=' + WID + '&stchange=-1');
+  if (e.which == 27) { 
+    // esc : dont change status
+		showRightFrames(
+      'set_test_status.php?wid=' + WID + '&status=' + $('.word').attr('data_status')
+    );
     return false;
   }
-  if (e.which == 27) { // esc : dont change status
-		showRightFrames('set_test_status.php?wid=' + WID + '&status=' + $('.word').attr('data_status'));
-    return false;
-  }
-  for (let i = 1; i <= 5; i++) {
-    if (e.which == (48 + i) || e.which == (96 + i)) { // 1,.. : status=i
-			showRightFrames('set_test_status.php?wid=' + WID + '&status=' + i);
-      return false;
-    }
-  }
-  if (e.which == 73) { // I : status=98
+  if (e.which == 73) { 
+    // I : status=98
 		showRightFrames('set_test_status.php?wid=' + WID + '&status=98');
     return false;
   }
-  if (e.which == 87) { // W : status=99
+  if (e.which == 87) { 
+    // W : status=99
 		showRightFrames('set_test_status.php?wid=' + WID + '&status=99');
     return false;
   }
-  if (e.which == 69) { // E : EDIT
+  if (e.which == 69) { 
+    // E : EDIT
 		showRightFrames('edit_tword.php?wid=' + WID);
     return false;
+  }
+  if (OPENED == 0) return true;
+  if (e.which == 40) { 
+    // down : status-1
+		showRightFrames('set_test_status.php?wid=' + WID + '&stchange=-1');
+    return false;
+  }
+  for (let i = 1; i <= 5; i++) {
+    if (e.which == (48 + i) || e.which == (96 + i)) { 
+      // 1,.. : status=i
+			showRightFrames('set_test_status.php?wid=' + WID + '&status=' + i);
+      return false;
+    }
   }
   return true;
 }
@@ -383,7 +451,12 @@ function word_each_do_text_text(_) {
     if (order in ANN_ARRAY) {
       if (wid == ANN_ARRAY[order][1]) {
         const ann = ANN_ARRAY[order][2];
-        const re = new RegExp('([' + DELIMITER + '][ ]{0,1}|^)(' + ann.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + ')($|[ ]{0,1}[' + DELIMITER + '])', '');
+        const re = new RegExp(
+          '([' + DELIMITER + '][ ]{0,1}|^)(' + 
+          ann.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + ')($|[ ]{0,1}[' + 
+          DELIMITER + '])', 
+          ''
+        );
         if (!re.test($(this).attr('data_trans').replace(/ \[.*$/, ''))) {
           const trans = ann + ' / ' + $(this).attr('data_trans');
           $(this).attr('data_trans', trans.replace(' / *', ''));
@@ -394,7 +467,10 @@ function word_each_do_text_text(_) {
   }
   if (!JQ_TOOLTIP) {
     this.title = make_tooltip(
-      $(this).text(), $(this).attr('data_trans'), $(this).attr('data_rom'), $(this).attr('data_status')
+      $(this).text(), 
+      $(this).attr('data_trans'), 
+      $(this).attr('data_rom'), 
+      $(this).attr('data_status')
     );
   }
 }
@@ -409,7 +485,12 @@ function mword_each_do_text_text(_) {
         if (index in ANN_ARRAY) {
           if (wid == ANN_ARRAY[index][1]) {
             const ann = ANN_ARRAY[index][2];
-            const re = new RegExp('([' + DELIMITER + '][ ]{0,1}|^)(' + ann.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + ')($|[ ]{0,1}[' + DELIMITER + '])', '');
+            const re = new RegExp(
+              '([' + DELIMITER + '][ ]{0,1}|^)(' + 
+              ann.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + ')($|[ ]{0,1}[' + 
+              DELIMITER + '])', 
+              ''
+            );
             if (!re.test($(this).attr('data_trans').replace(/ \[.*$/, ''))) {
               const trans = ann + ' / ' + $(this).attr('data_trans');
               $(this).attr('data_trans', trans.replace(' / *', ''));
@@ -498,10 +579,20 @@ function mword_click_event_do_text_text () {
   const status = $(this).attr('data_status');
   if (status != '') {
     let ann = '';
-    if ((typeof $(this).attr('data_ann')) !== 'undefined') { ann = $(this).attr('data_ann'); }
-    run_overlib_multiword(WBLINK1, WBLINK2, WBLINK3, JQ_TOOLTIP ? make_tooltip($(this).text(), $(this).attr('data_trans'), $(this).attr('data_rom'), status) : $(this).attr('title'),
+    if ((typeof $(this).attr('data_ann')) !== 'undefined') { 
+      ann = $(this).attr('data_ann'); 
+    }
+    run_overlib_multiword(
+      WBLINK1, WBLINK2, WBLINK3, 
+      JQ_TOOLTIP ? make_tooltip(
+        $(this).text(), 
+        $(this).attr('data_trans'), 
+        $(this).attr('data_rom'), 
+        status
+      ) : $(this).attr('title'),
       TID, $(this).attr('data_order'), $(this).attr('data_text'),
-      $(this).attr('data_wid'), status, $(this).attr('data_code'), ann);
+      $(this).attr('data_wid'), status, $(this).attr('data_code'), ann
+    );
   }
   return false;
 }
@@ -521,27 +612,40 @@ function mword_drag_n_drop_select (event) {
   to = setTimeout(function () {
     let pos;
     context.off('mouseout');
-    $('.wsty', context).css('background-color', 'inherit').css('border-bottom-color', 'rgba(0,0,0,0)').not('.hide,.word').each(function () {
-      f = parseInt($(this).attr('data_code')) * 2 + parseInt($(this).attr('data_order')) - 1;
+    $('.wsty', context).css('background-color', 'inherit')
+    .css('border-bottom-color', 'rgba(0,0,0,0)').not('.hide,.word')
+    .each(function () {
+      f = parseInt($(this).attr('data_code')) * 2 + 
+      parseInt($(this).attr('data_order')) - 1;
       h = '';
-      $(this).nextUntil($('[id^="ID-' + f + '-"]', context), '[id$="-1"]').each(function () {
+      $(this).nextUntil($('[id^="ID-' + f + '-"]', context), '[id$="-1"]')
+      .each(function () {
         l = $(this).attr('data_order');
         if (typeof l !== 'undefined') {
-          h += '<span class="tword" data_order="' + l + '">' + $(this).text() + '</span>';
+          h += '<span class="tword" data_order="' + l + '">' + $(this).text() + 
+          '</span>';
         } else {
-          h += '<span class="nword" data_order="' + $(this).attr('id').split('-')[1] + '">' + $(this).text() + '</span>';
+          h += '<span class="nword" data_order="' + 
+          $(this).attr('id').split('-')[1] + '">' + $(this).text() + '</span>';
         }
       });
       $(this).html(h);
     });
     $('#pe').remove();
-    $('body').append('<style id="pe">#' + context.attr('id') + ' .wsty:after,#' + context.attr('id') + ' .wsty:before{opacity:0}</style>');
+    $('body')
+    .append(
+      '<style id="pe">#' + context.attr('id') + ' .wsty:after,#' + 
+      context.attr('id') + ' .wsty:before{opacity:0}</style>'
+    );
 
     $('[id$="-1"]', context).not('.hide,.wsty').addClass('nword').each(function () {
       $(this).attr('data_order', $(this).attr('id').split('-')[1]);
     });
     $('.word', context).not('.hide').each(function () {
-      $(this).html('<span class="tword" data_order="' + $(this).attr('data_order') + '">' + $(this).text() + '</span>');
+      $(this).html(
+        '<span class="tword" data_order="' + $(this).attr('data_order') + '">' + 
+        $(this).text() + '</span>'
+      );
     });
     if (event.data.annotation == 1) {
       $('.wsty', context)
@@ -550,7 +654,12 @@ function mword_drag_n_drop_select (event) {
         $(this).children('.tword').last()
         .attr('data_ann', $(this).attr('data_ann'))
         .attr('data_trans', $(this).attr('data_trans'))
-        .addClass('content' + $(this).removeClass('status1 status2 status3 status4 status5 status98 status99').attr('data_status')); });
+        .addClass(
+          'content' + $(this)
+          .removeClass('status1 status2 status3 status4 status5 status98 status99')
+          .attr('data_status')
+        ); 
+      });
     } else if (event.data.annotation == 3) {
       $('.wsty', context)
       .not('.hide')
@@ -558,15 +667,22 @@ function mword_drag_n_drop_select (event) {
         $(this).children('.tword').first()
         .attr('data_ann', $(this).attr('data_ann'))
         .attr('data_trans', $(this).attr('data_trans'))
-        .addClass('content' + $(this).removeClass('status1 status2 status3 status4 status5 status98 status99').attr('data_status')); 
+        .addClass(
+          'content' + $(this)
+          .removeClass('status1 status2 status3 status4 status5 status98 status99')
+          .attr('data_status')
+        ); 
       });
     }
       $(context).one('mouseover', '.tword', function () {
       $('html').one('mouseup', function () {
-        $('.wsty', context).each(function () { $(this).addClass('status' + $(this).attr('data_status')); });
+        $('.wsty', context).each(function () { 
+          $(this).addClass('status' + $(this).attr('data_status')); 
+        });
         if (!$(this).hasClass('tword')) {
           $('span', context).removeClass('nword tword lword');
-          $('.wsty', context).css('background-color', '').css('border-bottom-color', '');
+          $('.wsty', context).css('background-color', '')
+          .css('border-bottom-color', '');
           $('#pe').remove();
         }
       });
@@ -582,14 +698,21 @@ function mword_drag_n_drop_select (event) {
           if (len > 0) {
             g = $('.lword', context).first().attr('data_order');
             if (len > 1) {
-              const text = $('.lword', context).map(function () { return $(this).text(); }).get().join('');
+              const text = $('.lword', context)
+              .map(function () { return $(this).text(); }).get().join('');
               if (text.length > 250) {
                 alert('selected text is too long!!!');
               } else {
-                showRightFrames('edit_mword.php?tid=' + TID + '&len=' + len + '&ord=' + g + '&txt=' + text);
+                showRightFrames(
+                  'edit_mword.php?tid=' + TID + '&len=' + len + '&ord=' + g + 
+                  '&txt=' + text
+                );
               }
             } else {
-              showRightFrames('edit_word.php?tid=' + TID + '&ord=' + g + '&txt=' + $('#ID-' + g + '-1').text());
+              showRightFrames(
+                'edit_word.php?tid=' + TID + '&ord=' + g + '&txt=' + 
+                $('#ID-' + g + '-1').text()
+              );
             }
           }
           $('span', context).removeClass('tword nword');
@@ -604,11 +727,17 @@ function mword_drag_n_drop_select (event) {
         $(this).addClass('lword');
         if (lpos > pos) {
           for (var i = pos; i < lpos; i++) {
-            $('.tword[data_order="' + i + '"],.nword[data_order="' + i + '"]', context).addClass('lword');
+            $(
+              '.tword[data_order="' + i + '"],.nword[data_order="' + i + '"]', 
+              context
+            ).addClass('lword');
           }
         } else {
           for (var i = pos; i > lpos; i--) {
-            $('.tword[data_order="' + i + '"],.nword[data_order="' + i + '"]', context).addClass('lword');
+            $(
+              '.tword[data_order="' + i + '"],.nword[data_order="' + i + '"]', 
+              context
+            ).addClass('lword');
           }
         }
       },
@@ -639,7 +768,8 @@ jQuery.fn.extend({
     var re = new RegExp('([' + DELIMITER + '])(?! )', 'g');
     let title = '';
     if ($(this).hasClass('mwsty')) {
-      title =  "<p><b style='font-size:120%'>" + $(this).attr('data_text') + '</b></p>';
+      title = "<p><b style='font-size:120%'>" + $(this).attr('data_text') + 
+      '</b></p>';
     } else {
       title = "<p><b style='font-size:120%'>" + $(this).text() + '</b></p>';
     }
@@ -659,13 +789,19 @@ jQuery.fn.extend({
       if ($(this).attr('data_ann')) {
         const ann = $(this).attr('data_ann');
         if (ann != '' && ann != '*') {
-          var re = new RegExp('(.*[' + DELIMITER + '][ ]{0,1}|^)(' + ann.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + ')($|[ ]{0,1}[' + DELIMITER + '].*$| \\[.*$)', '');
+          var re = new RegExp(
+            '(.*[' + DELIMITER + '][ ]{0,1}|^)(' + 
+            ann.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + ')($|[ ]{0,1}[' + 
+            DELIMITER + '].*$| \\[.*$)', 
+            ''
+          );
           trans = trans.replace(re, '$1<span style="color:red">$2</span>$3');
         }
       }
       title += '<p><b>Transl.</b>: ' + trans + '</p>';
     }
-    title += '<p><b>Status</b>: <span class="status' + status + '">' + statname + '</span></p>';
+    title += '<p><b>Status</b>: <span class="status' + status + '">' + statname + 
+    '</span></p>';
     return title;
   }
 });
@@ -706,7 +842,10 @@ function keydown_event_do_text_text (e) {
     return false;
   }
 
-  const knownwordlist = $('span.word:not(.hide):not(.status0)' + ADDFILTER + ',span.mword:not(.hide)' + ADDFILTER);
+  const knownwordlist = $(
+    'span.word:not(.hide):not(.status0)' + ADDFILTER + 
+    ',span.mword:not(.hide)' + ADDFILTER
+  );
   const l_knownwordlist = knownwordlist.size();
   // console.log(knownwordlist);
   if (l_knownwordlist == 0) return true;
@@ -722,7 +861,10 @@ function keydown_event_do_text_text (e) {
     if ((typeof curr.attr('data_ann')) !== 'undefined') { 
       ann = curr.attr('data_ann');
     }
-    showRightFrames('show_word.php?wid=' + curr.attr('data_wid') + '&ann=' + encodeURIComponent(ann));
+    showRightFrames(
+      'show_word.php?wid=' + curr.attr('data_wid') + '&ann=' + 
+      encodeURIComponent(ann)
+    );
     return false;
   }
   if (e.which == 35) { // end : known word navigation -> last
@@ -735,7 +877,10 @@ function keydown_event_do_text_text (e) {
     if ((typeof curr.attr('data_ann')) !== 'undefined') { 
       ann = curr.attr('data_ann');
     }
-    showRightFrames('show_word.php?wid=' + curr.attr('data_wid') + '&ann=' + encodeURIComponent(ann));
+    showRightFrames(
+      'show_word.php?wid=' + curr.attr('data_wid') + '&ann=' + 
+      encodeURIComponent(ann)
+    );
     return false;
   }
   if (e.which == 37) { // left : known word navigation
@@ -763,7 +908,10 @@ function keydown_event_do_text_text (e) {
     if ((typeof curr.attr('data_ann')) !== 'undefined') { 
       ann = curr.attr('data_ann'); 
     }
-    showRightFrames('show_word.php?wid=' + curr.attr('data_wid') + '&ann=' + encodeURIComponent(ann));
+    showRightFrames(
+      'show_word.php?wid=' + curr.attr('data_wid') + '&ann=' + 
+      encodeURIComponent(ann)
+    );
     return false;
   }
   if (e.which == 39 || e.which == 32) { // space /right : known word navigation
@@ -791,7 +939,10 @@ function keydown_event_do_text_text (e) {
     if ((typeof curr.attr('data_ann')) !== 'undefined') { 
       ann = curr.attr('data_ann'); 
     }
-    showRightFrames('show_word.php?wid=' + curr.attr('data_wid') + '&ann=' + encodeURIComponent(ann));
+    showRightFrames(
+      'show_word.php?wid=' + curr.attr('data_wid') + '&ann=' + 
+      encodeURIComponent(ann)
+    );
     return false;
   }
 
@@ -817,26 +968,42 @@ function keydown_event_do_text_text (e) {
           if (sl != WBLINK3 && tl != WBLINK3)
             i = i + '&sl=' + sl + '&tl=' + tl;
         }
-        showRightFrames('set_word_on_hover.php?text=' + txt + '&tid=' + TID + '&status=' + i);
+        showRightFrames(
+          'set_word_on_hover.php?text=' + txt + '&tid=' + TID + '&status=' + i
+        );
       } else {
-				showRightFrames('set_word_status.php?wid=' + wid + '&tid=' + TID + '&ord=' + ord + '&status=' + i);
+				showRightFrames(
+          'set_word_status.php?wid=' + wid + '&tid=' + TID + '&ord=' + ord + 
+          '&status=' + i
+        );
         return false;
       }
     }
   }
   if (e.which == 73) { // I : status=98
     if (stat == '0') {
-			showRightFrames('set_word_on_hover.php?text=' + txt + '&tid=' + TID + '&status=98');
+			showRightFrames(
+        'set_word_on_hover.php?text=' + txt + '&tid=' + TID + 
+        '&status=98'
+      );
     } else {
-			showRightFrames('set_word_status.php?wid=' + wid + '&tid=' + TID + '&ord=' + ord + '&status=98');
+			showRightFrames(
+        'set_word_status.php?wid=' + wid + '&tid=' + TID + 
+        '&ord=' + ord + '&status=98'
+      );
       return false;
     }
   }
   if (e.which == 87) { // W : status=99
     if (stat == '0') {
-			showRightFrames('set_word_on_hover.php?text=' + txt + '&tid=' + TID + '&status=99');
+			showRightFrames(
+        'set_word_on_hover.php?text=' + txt + '&tid=' + TID + '&status=99'
+      );
     } else {
-			showRightFrames('set_word_status.php?wid=' + wid + '&tid=' + TID + '&ord=' + ord + '&status=99');
+			showRightFrames(
+        'set_word_status.php?wid=' + wid + '&tid=' + TID + '&ord=' + ord + 
+        '&status=99'
+      );
     }
     return false;
   }
@@ -879,7 +1046,8 @@ function keydown_event_do_text_text (e) {
   if (e.which == 69 || e.which == 71) { //  E / G: edit term
     let url = '';
     if (curr.hasClass('mword')) {
-      url = 'edit_mword.php?wid=' + wid + '&len=' + curr.attr('data_code') + '&tid=' + TID + '&ord=' + ord + dict;
+      url = 'edit_mword.php?wid=' + wid + '&len=' + curr.attr('data_code') + 
+      '&tid=' + TID + '&ord=' + ord + dict;
     } else if (stat == '0') {
 			url =	'edit_word.php?wid=&tid=' + TID + '&ord=' + ord + dict;
     } else {
@@ -960,9 +1128,11 @@ function set_barchart_item() {
   /** @var {int} v Number of terms in the text */
   let v;
   if (SUW & 16) {
-    v = parseInt(WORDCOUNTS.expru[id] || 0, 10) + parseInt(WORDCOUNTS.totalu[id], 10);
+    v = parseInt(WORDCOUNTS.expru[id] || 0, 10) + 
+    parseInt(WORDCOUNTS.totalu[id], 10);
   } else {
-    v = parseInt(WORDCOUNTS.expr[id] || 0, 10) + parseInt(WORDCOUNTS.total[id], 10);
+    v = parseInt(WORDCOUNTS.expr[id] || 0, 10) + 
+    parseInt(WORDCOUNTS.total[id], 10);
   }
   $(this).children('li').each(function () {
     /** {number} Word count in the category */
@@ -975,10 +1145,14 @@ function set_barchart_item() {
     Logarithmic version
     (25 / v) is vocab per pixel
     log scale so the size scaled becomes Math.log(($(this).children('span').text()))
-    so the total height corresponding to text vocab after scaling should be Math.log(v)
-    the proportion of column height to box height is thus (Math.log(($(this).children('span').text())) / Math.log(v))
-    putting this back in pixel, we get (Math.log(($(this).children('span').text())) / Math.log(v)) * 25 should be the column height
-    so (25 - (Math.log(($(this).children('span').text())) / Math.log(v)) * 25) is the intended border top size.
+    so the total height corresponding to text vocab after scaling should be 
+    Math.log(v) the proportion of column height to box height is thus 
+    (Math.log(($(this).children('span').text())) / Math.log(v))
+    putting this back in pixel, we get 
+    (Math.log(($(this).children('span').text())) / Math.log(v)) * 25 
+    should be the column height
+    so (25 - (Math.log(($(this).children('span').text())) / Math.log(v)) * 25) 
+    is the intended border top size.
     */
     // Avoid to put 0 in logarithm
     cat_word_count += 1;
@@ -1184,8 +1358,10 @@ $.fn.serializeObject = function () {
  * Wrap the radio buttons into stylised elements.
  */
 function wrapRadioButtons() {
-  $(':input,.wrap_checkbox span,.wrap_radio span,a:not([name^=rec]),select,#mediaselect span.click,#forwbutt,#backbutt')
-  .each(function (i) { $(this).attr('tabindex', i + 1); });
+  $(
+    ':input,.wrap_checkbox span,.wrap_radio span,a:not([name^=rec]),select,' + 
+    '#mediaselect span.click,#forwbutt,#backbutt'
+  ).each(function (i) { $(this).attr('tabindex', i + 1); });
   $('.wrap_radio span').on('keydown', function (e) {
     if (e.keyCode == 32) {
       $(this).parent().parent().find('input[type=radio]').trigger('click');
@@ -1232,7 +1408,10 @@ function prepareMainAreas() {
     if (typeof $(this).attr('id') === 'undefined') {
       $(this).attr('id', 'cb_' + z++);
     }
-    $(this).after('<label class="wrap_checkbox" for="' + $(this).attr('id') + '"><span></span></label>');
+    $(this).after(
+      '<label class="wrap_checkbox" for="' + $(this).attr('id') + 
+      '"><span></span></label>'
+    );
   });
   $('span[class*="tts_"]').on('click', function () {
     const lg = $(this).attr('class').replace(/.*tts_([a-zA-Z-]+).*/, '$1');
@@ -1256,7 +1435,10 @@ function prepareMainAreas() {
     if (typeof $(this).attr('id') === 'undefined') {
       $(this).attr('id', 'rb_' + z++);
     }
-    $(this).after('<label class="wrap_radio" for="' + $(this).attr('id') + '"><span></span></label>');
+    $(this).after(
+      '<label class="wrap_radio" for="' + $(this).attr('id') + 
+      '"><span></span></label>'
+    );
   });
   $('.button-file').on('click', function () { 
     $(this).next('input[type="file"]').trigger('click'); 
@@ -1268,6 +1450,19 @@ function prepareMainAreas() {
   $('input.markcheck').on('click', markClick);
   $('.confirmdelete').on('click', confirmDelete);
   $('textarea.textarea-noreturn').on('keydown', textareaKeydown);
+  // Resizable from right frames
+  $('#frames-r').resizable({
+    handles: "w",
+    stop: function (_event, ui) {
+      // Resize left frames
+      $('#frames-l').css('width', ui.position.left - 20);
+      // Save settings
+      do_ajax_save_setting(
+        'set-text-l-framewidth-percent', 
+        Math.round($('#frames-l').width() / $(window).width() * 100)
+      );
+    }
+  });
   $('#termtags').tagit(
     {
       beforeTagAdded: function (_event, ui) {
@@ -1288,7 +1483,10 @@ function prepareMainAreas() {
   );
   markClick();
   setTheFocus();
-  if ($('#simwords').length > 0 && $('#langfield').length > 0 && $('#wordfield').length > 0) {
+  if (
+    $('#simwords').length > 0 && $('#langfield').length > 0 && 
+    $('#wordfield').length > 0
+    ) {
   	$('#wordfield').on('blur', do_ajax_show_similar_terms);
   	do_ajax_show_similar_terms();
   }

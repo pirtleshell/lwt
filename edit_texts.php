@@ -1300,12 +1300,7 @@ function edit_texts_display($message)
         $('#unknown').attr('data_wo_cnt') + 
         $('#unknownpercent').attr('data_wo_cnt') + 
         $('#chart').attr('data_wo_cnt');
-        $.ajax({
-            type: "POST",
-            url:'inc/ajax_save_setting.php', 
-            data: {k: 'set-show-text-word-counts', v: a}, 
-            async:false
-        });
+        do_ajax_save_setting('set-show-text-word-counts', a);
     }
 
     $(document).ready(prepare_word_count_click);

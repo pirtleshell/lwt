@@ -89,8 +89,7 @@ if (isset($_REQUEST['term'])) {
     .html('",addslashes(texttodocount2($tid)),"');
     $('#displ_message').remove();";
     if (!isset($pos)) {
-        echo "window.parent.document.getElementById('frame-l').focus();
-        window.parent.setTimeout('cClick()', 100);";
+        echo "cleanupRightFrames();";
     }
     echo "</script>";
     flush();

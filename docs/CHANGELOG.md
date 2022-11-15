@@ -5,12 +5,20 @@ This project's changelog. Versions marked with "-fork" come from the community, 
 For git tags, official releases are marked like "v1.0.0", while unofficial ones are marked like "v1.0.0-fork".
 
 ## [Unreleased]
+### Added
+* Frames resizing is back! The text reading and test interfaces updated in several ways. Based several suggestions as [#60](https://github.com/HugoFara/lwt/issues/60).
+  * The desktop interface is now much similar to what it was before 2.2.1-fork.
+  * The mobile interface for texts unchanged (2.2.1-fork to 2.5.3-fork).
+* You can resize frames on desktop.
+
 ### Changed
 * Some deprecated functions ``escape`` and ``unescape`` were replaced by modern equivalents ``encodeURIcomponent`` and ``decodeURIcomponent``. This may lead to changes in cookies, notably making them work better.
 * ``do_test.php``, ``edit_texts.php``, ``edit_words.php`` and ``set_test_status.php`` now explicitly require a running session. They were silently failing before this release.
 * ``save_setting_redirect.php`` moved to ``inc/save_setting_redirect.php``.
 * Psalm code analysis of all PHP files.
 * Tests have a better general aspect thanks to CSS cleanning.
+* Faster testing: you do no longer need to enter "Space" first for speed testing, except for status down and change. Related to [#71](https://github.com/HugoFara/lwt/pull/71).
+* Do no longer show "[]" near words when they are no tags. ``getWordTagList`` behavior changed (``inc/session_utility.php``).
 
 ### Deprecated
 * ``do_test_test_css`` in ``do_test_test.php`` is deprecated since it was causing display issues. Its CSS rules were trimmed.
@@ -28,6 +36,11 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
   * ``get_similar_terms`` in ``simterms.php`` officially returns int.
 * Audio in ``edit_texts.php`` was never shown.
 * Header was hidden during tests on Chrome-based browsers.
+* Unconsistent option in ``inc/ajax_save_setting.php``. 
+  * Since 2.2.2-fork, you had to use a GET request to use it, resulting in authorization errors.
+  * POST requests are now again the default way to use it.
+* Removed the last JS error messages of "obj is null" when calling ``cClick``.
+* Sometimes tests were loop-reloading clicking after setting new status, this is fixed.
 
 
 ## 2.5.3-fork (November 06 2022)
