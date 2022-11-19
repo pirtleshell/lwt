@@ -12,13 +12,15 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 * You can resize frames on desktop.
 
 ### Changed
-* Some deprecated functions ``escape`` and ``unescape`` were replaced by modern equivalents ``encodeURIcomponent`` and ``decodeURIcomponent``. This may lead to changes in cookies, notably making them work better.
-* ``do_test.php``, ``edit_texts.php``, ``edit_words.php`` and ``set_test_status.php`` now explicitly require a running session. They were silently failing before this release.
-* ``save_setting_redirect.php`` moved to ``inc/save_setting_redirect.php``.
-* Psalm code analysis of all PHP files.
-* Tests have a better general aspect thanks to CSS cleanning.
-* Faster testing: you do no longer need to enter "Space" first for speed testing, except for status down and change. Related to [#71](https://github.com/HugoFara/lwt/pull/71).
-* Do no longer show "[]" near words when they are no tags. ``getWordTagList`` behavior changed (``inc/session_utility.php``).
+* UX: Faster testing: you do no longer need to enter "Space" first for speed testing, except for status down and change. Related to [#71](https://github.com/HugoFara/lwt/pull/71).
+* UI: 
+  * Do no longer show "[]" near words when they are no tags. ``getWordTagList`` behavior changed (``inc/session_utility.php``).
+  * Tests have a better general aspect thanks to CSS cleanning.
+* PHP:
+  * ``do_test.php``, ``edit_texts.php``, ``edit_words.php`` and ``set_test_status.php`` now explicitly require a running session. They were silently failing before this release.
+  * ``save_setting_redirect.php`` moved to ``inc/save_setting_redirect.php``.
+  * Psalm static code analysis of all PHP files.
+* JS: Some deprecated functions ``escape`` and ``unescape`` were replaced by modern equivalents ``encodeURIcomponent`` and ``decodeURIcomponent``. This may lead to changes in cookies, notably making them work better.
 
 ### Deprecated
 * ``do_test_test_css`` in ``do_test_test.php`` is deprecated since it was causing display issues. Its CSS rules were trimmed.
@@ -27,21 +29,26 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 * The ability to use a dictionary with a specific encoding, introduced in 1.0.2, is being removed. It was making things overwhelmingly complex and caused issues, as signaled in [#58](https://github.com/HugoFara/lwt/issues/58). Adapted from PR [#59](https://github.com/HugoFara/lwt/pull/59).
 
 ### Fixed
-* The *audio* player was no onger working since 2.1.0-fork since the play button was hidden.
-* Testing specific terms was broken ([#66](https://github.com/HugoFara/lwt/issues/66)) and tests were sometimes not counting score. Solution inspired from PR [#67](https://github.com/HugoFara/lwt/issues/67) from [@jzohrab](https://github.com/jzohrab).
-* Right frames should hide automatically but they often don't ([#61](https://github.com/HugoFara/lwt/issues/61)). Merged PR (#62)[https://github.com/HugoFara/lwt/pull/62].
+* Texts:
+  * The *audio* player was no longer working since 2.1.0-fork since the play button was hidden.
+  * Save text position (``inc/ajax_save_text_position.php``) was broken for all texts. This is fixed.
+  * Right frames should hide automatically but they often don't ([#61](https://github.com/HugoFara/lwt/issues/61)). Merged PR (#62)[https://github.com/HugoFara/lwt/pull/62].
+* Tests:
+  * Header was hidden during tests on Chrome-based browsers.
+  * Testing specific terms was broken ([#66](https://github.com/HugoFara/lwt/issues/66)) and tests were sometimes not counting score. Solution inspired from PR [#67](https://github.com/HugoFara/lwt/issues/67) from [@jzohrab](https://github.com/jzohrab).
+  * Sometimes tests were loop-reloading clicking after setting new status, this is fixed.
+* JS:
   * You should no longer see annoying console messages of "cClick" crashing on "obj is null".
-* Save text position (``inc/ajax_save_text_position.php``) was broken for all texts. This is fixed.
-* Type fixes thanks to psalm:
-  * ``get_first_value`` documentation updated since it was also returning ``float`` and ``int``.
-  * ``get_similar_terms`` in ``simterms.php`` officially returns int.
-* Audio in ``edit_texts.php`` was never shown.
-* Header was hidden during tests on Chrome-based browsers.
-* Unconsistent option in ``inc/ajax_save_setting.php``. 
-  * Since 2.2.2-fork, you had to use a GET request to use it, resulting in authorization errors.
-  * POST requests are now again the default way to use it.
-* Sometimes tests were loop-reloading clicking after setting new status, this is fixed.
-
+* PHP: 
+  * Type fixes thanks to psalm:
+    * ``get_first_value`` documentation updated since it was also returning ``float`` and ``int``.
+    * ``get_similar_terms`` in ``simterms.php`` officially returns int.
+  * Unconsistent option in ``inc/ajax_save_setting.php``. 
+    * Since 2.2.2-fork, you had to use a GET request to use it, resulting in authorization errors.
+    * POST requests are now again the default way to use it.
+* UI
+  * Audio in ``edit_texts.php`` was never shown.
+  * When adding text, the user was ask to create a ``media`` folder in ``...``, corrected to ``..``.
 
 ## 2.5.3-fork (November 06 2022)
 ### Added

@@ -1928,15 +1928,23 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 </ul>
 <h4>Changed</h4>
 <ul>
-<li>Some deprecated functions <code>escape</code> and <code>unescape</code> were replaced by modern equivalents <code>encodeURIcomponent</code> and <code>decodeURIcomponent</code>. This may lead to changes in cookies, notably making them work better.</li>
+<li>UX: Faster testing: you do no longer need to enter "Space" first for speed testing, except for status down and change. Related to <a href="https://github.com/HugoFara/lwt/pull/71">#71</a>.</li>
+<li>UI:
+<ul>
+<li>Do no longer show "[]" near words when they are no tags. <code>getWordTagList</code> behavior changed (<code>inc/session_utility.php</code>).</li>
+<li>Tests have a better general aspect thanks to CSS cleanning.</li>
+</ul>
+</li>
+<li>PHP:
+<ul>
 <li>
 <code>do_test.php</code>, <code>edit_texts.php</code>, <code>edit_words.php</code> and <code>set_test_status.php</code> now explicitly require a running session. They were silently failing before this release.</li>
 <li>
 <code>save_setting_redirect.php</code> moved to <code>inc/save_setting_redirect.php</code>.</li>
-<li>Psalm code analysis of all PHP files.</li>
-<li>Tests have a better general aspect thanks to CSS cleanning.</li>
-<li>Faster testing: you do no longer need to enter "Space" first for speed testing, except for status down and change. Related to <a href="https://github.com/HugoFara/lwt/pull/71">#71</a>.</li>
-<li>Do no longer show "[]" near words when they are no tags. <code>getWordTagList</code> behavior changed (<code>inc/session_utility.php</code>).</li>
+<li>Psalm static code analysis of all PHP files.</li>
+</ul>
+</li>
+<li>JS: Some deprecated functions <code>escape</code> and <code>unescape</code> were replaced by modern equivalents <code>encodeURIcomponent</code> and <code>decodeURIcomponent</code>. This may lead to changes in cookies, notably making them work better.</li>
 </ul>
 <h4>Deprecated</h4>
 <ul>
@@ -1949,14 +1957,27 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 </ul>
 <h4>Fixed</h4>
 <ul>
-<li>The <em>audio</em> player was no onger working since 2.1.0-fork since the play button was hidden.</li>
+<li>Texts:
+<ul>
+<li>The <em>audio</em> player was no longer working since 2.1.0-fork since the play button was hidden.</li>
+<li>Save text position (<code>inc/ajax_save_text_position.php</code>) was broken for all texts. This is fixed.</li>
+<li>Right frames should hide automatically but they often don't (<a href="https://github.com/HugoFara/lwt/issues/61">#61</a>). Merged PR (#62)[https://github.com/HugoFara/lwt/pull/62].</li>
+</ul>
+</li>
+<li>Tests:
+<ul>
+<li>Header was hidden during tests on Chrome-based browsers.</li>
 <li>Testing specific terms was broken (<a href="https://github.com/HugoFara/lwt/issues/66">#66</a>) and tests were sometimes not counting score. Solution inspired from PR <a href="https://github.com/HugoFara/lwt/issues/67">#67</a> from <a href="https://github.com/jzohrab">@jzohrab</a>.</li>
-<li>Right frames should hide automatically but they often don't (<a href="https://github.com/HugoFara/lwt/issues/61">#61</a>). Merged PR (#62)[https://github.com/HugoFara/lwt/pull/62].
+<li>Sometimes tests were loop-reloading clicking after setting new status, this is fixed.</li>
+</ul>
+</li>
+<li>JS:
 <ul>
 <li>You should no longer see annoying console messages of "cClick" crashing on "obj is null".</li>
 </ul>
 </li>
-<li>Save text position (<code>inc/ajax_save_text_position.php</code>) was broken for all texts. This is fixed.</li>
+<li>PHP:
+<ul>
 <li>Type fixes thanks to psalm:
 <ul>
 <li>
@@ -1965,15 +1986,20 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 <code>get_similar_terms</code> in <code>simterms.php</code> officially returns int.</li>
 </ul>
 </li>
-<li>Audio in <code>edit_texts.php</code> was never shown.</li>
-<li>Header was hidden during tests on Chrome-based browsers.</li>
 <li>Unconsistent option in <code>inc/ajax_save_setting.php</code>.
 <ul>
 <li>Since 2.2.2-fork, you had to use a GET request to use it, resulting in authorization errors.</li>
 <li>POST requests are now again the default way to use it.</li>
 </ul>
 </li>
-<li>Sometimes tests were loop-reloading clicking after setting new status, this is fixed.</li>
+</ul>
+</li>
+<li>UI
+<ul>
+<li>Audio in <code>edit_texts.php</code> was never shown.</li>
+<li>When adding text, the user was ask to create a <code>media</code> folder in <code>...</code>, corrected to <code>..</code>.</li>
+</ul>
+</li>
 </ul>
 <h3>2.5.3-fork (November 06 2022)</h3>
 <h4>Added</h4>
