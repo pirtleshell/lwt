@@ -1636,13 +1636,13 @@ function selectmediapath($f): string
         if (is_dir('media')) { 
             $msg = ''; 
         } else { 
-            $msg = '<br />[Error: ".../' . basename(getcwd()) . '/media" exists, but it is not a directory.]'; 
+            $msg = '<br />[Error: "../' . basename(getcwd()) . '/media" exists, but it is not a directory.]'; 
         }
     } else {
-        $msg = '<br />[Directory ".../' . basename(getcwd()) . '/media" does not yet exist.]';
+        $msg = '<br />[Directory "../' . basename(getcwd()) . '/media" does not yet exist.]';
     }
     $r = '<p>
-    YouTube, Dailymotion, Vimeo or choose a file in ".../' . basename(getcwd()) . '/media"
+    YouTube, Dailymotion, Vimeo or choose a file in "../' . basename(getcwd()) . '/media"
     <br />
     (only mp3, mp4, ogg, wav, webm files shown):
     </p> ' . $msg;
@@ -4625,7 +4625,7 @@ function makeAudioPlayer($audio, $offset=0)
             <span id="do-repeat" class="click<?php echo ($repeatMode ? ' hide' : ''); ?>"
                 style="color:grey;font-weight: bold;" title="Toggle Repeat (Now OFF)">↻</span>
             <div id="playbackrateContainer" 
-                style="font-size: 80%;position:relative;-webkit-touch-callout: none;-webkit-user-select: none;-khtml-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;">
+                style="font-size: 80%;position:relative;-webkit-touch-callout: none;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;">
             </div>
         </td>
         <td class="center bordermiddle">&nbsp;</td>

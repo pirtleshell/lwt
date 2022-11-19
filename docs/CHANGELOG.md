@@ -27,9 +27,10 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 * The ability to use a dictionary with a specific encoding, introduced in 1.0.2, is being removed. It was making things overwhelmingly complex and caused issues, as signaled in [#58](https://github.com/HugoFara/lwt/issues/58). Adapted from PR [#59](https://github.com/HugoFara/lwt/pull/59).
 
 ### Fixed
+* The *audio* player was no onger working since 2.1.0-fork since the play button was hidden.
 * Testing specific terms was broken ([#66](https://github.com/HugoFara/lwt/issues/66)) and tests were sometimes not counting score. Solution inspired from PR [#67](https://github.com/HugoFara/lwt/issues/67) from [@jzohrab](https://github.com/jzohrab).
-* Right frames should hide automatically but they often don't [#61](https://github.com/HugoFara/lwt/issues/61). Merge PR (#62)[https://github.com/HugoFara/lwt/pull/62].
-  * You should also see less annoying console messages of "cClick" crashing.
+* Right frames should hide automatically but they often don't ([#61](https://github.com/HugoFara/lwt/issues/61)). Merged PR (#62)[https://github.com/HugoFara/lwt/pull/62].
+  * You should no longer see annoying console messages of "cClick" crashing on "obj is null".
 * Save text position (``inc/ajax_save_text_position.php``) was broken for all texts. This is fixed.
 * Type fixes thanks to psalm:
   * ``get_first_value`` documentation updated since it was also returning ``float`` and ``int``.
@@ -39,7 +40,6 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 * Unconsistent option in ``inc/ajax_save_setting.php``. 
   * Since 2.2.2-fork, you had to use a GET request to use it, resulting in authorization errors.
   * POST requests are now again the default way to use it.
-* Removed the last JS error messages of "obj is null" when calling ``cClick``.
 * Sometimes tests were loop-reloading clicking after setting new status, this is fixed.
 
 
