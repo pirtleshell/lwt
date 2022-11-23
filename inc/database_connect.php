@@ -1689,15 +1689,19 @@ function check_update_db($debug, $tbpref, $dbname): void
         // Add data from the old database system
         if (in_array($tbpref . 'textitems', $tables)) {
             runsql(
-                'INSERT INTO ' . $tbpref . 'textitems2 (
+                "INSERT INTO {$tbpref}textitems2 (
                     Ti2WoID, Ti2LgID, Ti2TxID, Ti2SeID, Ti2Order, Ti2WordCount, Ti2Text
                 ) 
                 SELECT IFNULL(WoID,0), TiLgID, TiTxID, TiSeID, TiOrder, 
                 CASE WHEN TiIsNotWord = 1 THEN 0 ELSE TiWordCount END as WordCount, 
-                CASE WHEN STRCMP( TiText COLLATE utf8_bin ,TiTextLC)!=0 OR TiWordCount = 1 THEN TiText ELSE "" END as Text 
-                FROM ' . $tbpref . 'textitems 
-                LEFT JOIN ' . $tbpref . 'words ON TiTextLC=WoTextLC AND TiLgID=WoLgID 
-                WHERE TiWordCount<2 OR WoID IS NOT NULL',
+                CASE 
+                    WHEN STRCMP(TiText COLLATE utf8_bin,TiTextLC)!=0 OR TiWordCount=1 
+                    THEN TiText 
+                    ELSE '' 
+                END as Text 
+                FROM {$tbpref}textitems 
+                LEFT JOIN {$tbpref}words ON TiTextLC=WoTextLC AND TiLgID=WoLgID 
+                WHERE TiWordCount<2 OR WoID IS NOT NULL",
                 ''
             );
             runsql('TRUNCATE ' . $tbpref . 'textitems', '');
@@ -1710,79 +1714,221 @@ function check_update_db($debug, $tbpref, $dbname): void
         if ($debug) { 
             echo '<p>DEBUG: rebuilding temptextitems</p>'; 
         }
-        runsql("CREATE TABLE IF NOT EXISTS " . $tbpref . "temptextitems ( TiCount smallint(5) unsigned NOT NULL, TiSeID mediumint(8) unsigned NOT NULL, TiOrder smallint(5) unsigned NOT NULL, TiWordCount tinyint(3) unsigned NOT NULL, TiText varchar(250) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL) ENGINE=MEMORY DEFAULT CHARSET=utf8", '');
+        runsql(
+            "CREATE TABLE IF NOT EXISTS {$tbpref}temptextitems ( 
+                TiCount smallint(5) unsigned NOT NULL, 
+                TiSeID mediumint(8) unsigned NOT NULL, 
+                TiOrder smallint(5) unsigned NOT NULL, 
+                TiWordCount tinyint(3) unsigned NOT NULL, 
+                TiText varchar(250) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL
+            ) ENGINE=MEMORY DEFAULT CHARSET=utf8", 
+            ''
+        );
     }
 
     if (!in_array($tbpref . 'tempwords', $tables)) {
         if ($debug) { 
             echo '<p>DEBUG: rebuilding tempwords</p>'; 
         }
-        runsql("CREATE TABLE IF NOT EXISTS " . $tbpref . "tempwords (WoText varchar(250) DEFAULT NULL, WoTextLC varchar(250) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL, WoTranslation varchar(500) NOT NULL DEFAULT '*', WoRomanization varchar(100) DEFAULT NULL, WoSentence varchar(1000) DEFAULT NULL, WoTaglist varchar(255) DEFAULT NULL, PRIMARY KEY(WoTextLC) ) ENGINE=MEMORY DEFAULT CHARSET=utf8", '');
+        runsql(
+            "CREATE TABLE IF NOT EXISTS {$tbpref}tempwords (
+                WoText varchar(250) DEFAULT NULL, 
+                WoTextLC varchar(250) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL, 
+                WoTranslation varchar(500) NOT NULL DEFAULT '*', 
+                WoRomanization varchar(100) DEFAULT NULL, 
+                WoSentence varchar(1000) DEFAULT NULL, 
+                WoTaglist varchar(255) DEFAULT NULL, 
+                PRIMARY KEY(WoTextLC) 
+            ) ENGINE=MEMORY DEFAULT CHARSET=utf8", 
+            ''
+        );
     }
 
     if (!in_array($tbpref . 'texts', $tables)) {
         if ($debug) { 
             echo '<p>DEBUG: rebuilding texts</p>'; 
         }
-        runsql("CREATE TABLE IF NOT EXISTS " . $tbpref . "texts ( TxID smallint(5) unsigned NOT NULL AUTO_INCREMENT, TxLgID tinyint(3) unsigned NOT NULL, TxTitle varchar(200) NOT NULL, TxText text NOT NULL, TxAnnotatedText longtext NOT NULL, TxAudioURI varchar(200) DEFAULT NULL, TxSourceURI varchar(1000) DEFAULT NULL, TxPosition smallint(5) DEFAULT 0, TxAudioPosition float DEFAULT 0, PRIMARY KEY (TxID), KEY TxLgID (TxLgID), KEY TxLgIDSourceURI (TxSourceURI(20),TxLgID) ) ENGINE=MyISAM DEFAULT CHARSET=utf8", '');
+        runsql(
+            "CREATE TABLE IF NOT EXISTS {$tbpref}texts ( 
+                TxID smallint(5) unsigned NOT NULL AUTO_INCREMENT, 
+                TxLgID tinyint(3) unsigned NOT NULL, 
+                TxTitle varchar(200) NOT NULL, 
+                TxText text NOT NULL, 
+                TxAnnotatedText longtext NOT NULL, 
+                TxAudioURI varchar(200) DEFAULT NULL, 
+                TxSourceURI varchar(1000) DEFAULT NULL, 
+                TxPosition smallint(5) DEFAULT 0, 
+                TxAudioPosition float DEFAULT 0, 
+                PRIMARY KEY (TxID), 
+                KEY TxLgID (TxLgID), 
+                KEY TxLgIDSourceURI (TxSourceURI(20),TxLgID) 
+            ) ENGINE=MyISAM DEFAULT CHARSET=utf8", 
+            ''
+        );
     }
     
     if (!in_array($tbpref . 'words', $tables)) {
         if ($debug) { 
             echo '<p>DEBUG: rebuilding words</p>'; 
         }
-        runsql("CREATE TABLE IF NOT EXISTS " . $tbpref . "words ( WoID mediumint(8) unsigned NOT NULL AUTO_INCREMENT, WoLgID tinyint(3) unsigned NOT NULL, WoText varchar(250) NOT NULL, WoTextLC varchar(250) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL, WoStatus tinyint(4) NOT NULL, WoTranslation varchar(500) NOT NULL DEFAULT '*', WoRomanization varchar(100) DEFAULT NULL, WoSentence varchar(1000) DEFAULT NULL, WoWordCount tinyint(3) unsigned NOT NULL DEFAULT 0, WoCreated timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, WoStatusChanged timestamp NOT NULL DEFAULT '0000-00-00 00:00:00', WoTodayScore double NOT NULL DEFAULT '0', WoTomorrowScore double NOT NULL DEFAULT '0', WoRandom double NOT NULL DEFAULT '0', PRIMARY KEY (WoID), UNIQUE KEY WoTextLCLgID (WoTextLC,WoLgID), KEY WoLgID (WoLgID), KEY WoStatus (WoStatus), KEY WoTranslation (WoTranslation(20)), KEY WoCreated (WoCreated), KEY WoStatusChanged (WoStatusChanged), KEY WoWordCount(WoWordCount), KEY WoTodayScore (WoTodayScore), KEY WoTomorrowScore (WoTomorrowScore), KEY WoRandom (WoRandom) ) ENGINE=MyISAM DEFAULT CHARSET=utf8", '');
+        runsql(
+            "CREATE TABLE IF NOT EXISTS {$tbpref}words ( 
+                WoID mediumint(8) unsigned NOT NULL AUTO_INCREMENT, 
+                WoLgID tinyint(3) unsigned NOT NULL, 
+                WoText varchar(250) NOT NULL, 
+                WoTextLC varchar(250) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL, 
+                WoStatus tinyint(4) NOT NULL, 
+                WoTranslation varchar(500) NOT NULL DEFAULT '*', 
+                WoRomanization varchar(100) DEFAULT NULL, 
+                WoSentence varchar(1000) DEFAULT NULL, 
+                WoWordCount tinyint(3) unsigned NOT NULL DEFAULT 0, 
+                WoCreated timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, 
+                WoStatusChanged timestamp NOT NULL DEFAULT '0000-00-00 00:00:01', 
+                WoTodayScore double NOT NULL DEFAULT '0', 
+                WoTomorrowScore double NOT NULL DEFAULT '0', 
+                WoRandom double NOT NULL DEFAULT '0', 
+                PRIMARY KEY (WoID), 
+                UNIQUE KEY WoTextLCLgID (WoTextLC,WoLgID), 
+                KEY WoLgID (WoLgID), 
+                KEY WoStatus (WoStatus), 
+                KEY WoTranslation (WoTranslation(20)), 
+                KEY WoCreated (WoCreated), 
+                KEY WoStatusChanged (WoStatusChanged), 
+                KEY WoWordCount(WoWordCount), 
+                KEY WoTodayScore (WoTodayScore), 
+                KEY WoTomorrowScore (WoTomorrowScore), 
+                KEY WoRandom (WoRandom) 
+            ) 
+            ENGINE=MyISAM DEFAULT CHARSET=utf8", 
+            ''
+        );
     }
     
     if (!in_array($tbpref . 'tags', $tables)) {
         if ($debug) { 
             echo '<p>DEBUG: rebuilding tags</p>'; 
         }
-        runsql("CREATE TABLE IF NOT EXISTS " . $tbpref . "tags ( TgID smallint(5) unsigned NOT NULL AUTO_INCREMENT, TgText varchar(20) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL, TgComment varchar(200) NOT NULL DEFAULT '', PRIMARY KEY (TgID), UNIQUE KEY TgText (TgText) ) ENGINE=MyISAM DEFAULT CHARSET=utf8", '');
+        runsql(
+            "CREATE TABLE IF NOT EXISTS {$tbpref}tags ( 
+                TgID smallint(5) unsigned NOT NULL AUTO_INCREMENT, 
+                TgText varchar(20) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL, 
+                TgComment varchar(200) NOT NULL DEFAULT '', 
+                PRIMARY KEY (TgID), 
+                UNIQUE KEY TgText (TgText) 
+            ) ENGINE=MyISAM DEFAULT CHARSET=utf8", 
+            ''
+        );
     }
     
     if (!in_array($tbpref . 'wordtags', $tables)) {
         if ($debug) { 
             echo '<p>DEBUG: rebuilding wordtags</p>'; 
         }
-        runsql("CREATE TABLE IF NOT EXISTS " . $tbpref . "wordtags ( WtWoID mediumint(8) unsigned NOT NULL, WtTgID smallint(5) unsigned NOT NULL, PRIMARY KEY (WtWoID,WtTgID), KEY WtTgID (WtTgID) ) ENGINE=MyISAM DEFAULT CHARSET=utf8", '');
+        runsql(
+            "CREATE TABLE IF NOT EXISTS {$tbpref}wordtags ( 
+                WtWoID mediumint(8) unsigned NOT NULL, 
+                WtTgID smallint(5) unsigned NOT NULL, 
+                PRIMARY KEY (WtWoID,WtTgID), 
+                KEY WtTgID (WtTgID) 
+            ) ENGINE=MyISAM DEFAULT CHARSET=utf8", 
+            ''
+        );
     }
     
     if (!in_array($tbpref . 'tags2', $tables)) {
         if ($debug) { 
             echo '<p>DEBUG: rebuilding tags2</p>'; 
         }
-        runsql("CREATE TABLE IF NOT EXISTS " . $tbpref . "tags2 ( T2ID smallint(5) unsigned NOT NULL AUTO_INCREMENT, T2Text varchar(20) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL, T2Comment varchar(200) NOT NULL DEFAULT '', PRIMARY KEY (T2ID), UNIQUE KEY T2Text (T2Text) ) ENGINE=MyISAM DEFAULT CHARSET=utf8", '');
+        runsql(
+            "CREATE TABLE IF NOT EXISTS {$tbpref}tags2 ( 
+                T2ID smallint(5) unsigned NOT NULL AUTO_INCREMENT, 
+                T2Text varchar(20) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL, 
+                T2Comment varchar(200) NOT NULL DEFAULT '', 
+                PRIMARY KEY (T2ID), 
+                UNIQUE KEY T2Text (T2Text) 
+            ) ENGINE=MyISAM DEFAULT CHARSET=utf8", 
+            ''
+        );
     }
     
     if (!in_array($tbpref . 'texttags', $tables)) {
         if ($debug) { 
             echo '<p>DEBUG: rebuilding texttags</p>'; 
         }
-        runsql("CREATE TABLE IF NOT EXISTS " . $tbpref . "texttags ( TtTxID smallint(5) unsigned NOT NULL, TtT2ID smallint(5) unsigned NOT NULL, PRIMARY KEY (TtTxID,TtT2ID), KEY TtT2ID (TtT2ID) ) ENGINE=MyISAM DEFAULT CHARSET=utf8", '');
+        runsql(
+            "CREATE TABLE IF NOT EXISTS {$tbpref}texttags ( 
+                TtTxID smallint(5) unsigned NOT NULL, 
+                TtT2ID smallint(5) unsigned NOT NULL, 
+                PRIMARY KEY (TtTxID,TtT2ID), KEY TtT2ID (TtT2ID) 
+            ) ENGINE=MyISAM DEFAULT CHARSET=utf8", 
+            ''
+        );
     }
     
     if (!in_array($tbpref . 'newsfeeds', $tables)) {
         if ($debug) { 
             echo '<p>DEBUG: rebuilding newsfeeds</p>'; 
         }
-        runsql("CREATE TABLE IF NOT EXISTS " . $tbpref . "newsfeeds (NfID tinyint(3) unsigned NOT NULL AUTO_INCREMENT,NfLgID tinyint(3) unsigned NOT NULL,NfName varchar(40) NOT NULL,NfSourceURI varchar(200) NOT NULL,NfArticleSectionTags text NOT NULL,NfFilterTags text NOT NULL,NfUpdate int(12) unsigned NOT NULL,NfOptions varchar(200) NOT NULL,PRIMARY KEY (NfID), KEY NfLgID (NfLgID), KEY NfUpdate (NfUpdate)) ENGINE=MyISAM  DEFAULT CHARSET=utf8", '');
+        runsql(
+            "CREATE TABLE IF NOT EXISTS {$tbpref}newsfeeds (
+                NfID tinyint(3) unsigned NOT NULL AUTO_INCREMENT,
+                NfLgID tinyint(3) unsigned NOT NULL,
+                NfName varchar(40) NOT NULL,
+                NfSourceURI varchar(200) NOT NULL,
+                NfArticleSectionTags text NOT NULL,
+                NfFilterTags text NOT NULL,
+                NfUpdate int(12) unsigned NOT NULL,
+                NfOptions varchar(200) NOT NULL,
+                PRIMARY KEY (NfID), 
+                KEY NfLgID (NfLgID), 
+                KEY NfUpdate (NfUpdate)
+            ) ENGINE=MyISAM DEFAULT CHARSET=utf8", 
+            ''
+        );
     }
     
     if (!in_array($tbpref . 'feedlinks', $tables)) {
         if ($debug) { 
             echo '<p>DEBUG: rebuilding feedlinks</p>'; 
         }
-        runsql("CREATE TABLE IF NOT EXISTS " . $tbpref . "feedlinks (FlID mediumint(8) unsigned NOT NULL AUTO_INCREMENT,FlTitle varchar(200) NOT NULL,FlLink varchar(400) NOT NULL,FlDescription text NOT NULL,FlDate datetime NOT NULL,FlAudio varchar(200) NOT NULL,FlText longtext NOT NULL,FlNfID tinyint(3) unsigned NOT NULL,PRIMARY KEY (FlID), KEY FlLink (FlLink), KEY FlDate (FlDate), UNIQUE KEY FlTitle (FlNfID,FlTitle)) ENGINE=MyISAM  DEFAULT CHARSET=utf8", '');
+        runsql(
+            "CREATE TABLE IF NOT EXISTS {$tbpref}feedlinks (
+                FlID mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+                FlTitle varchar(200) NOT NULL,
+                FlLink varchar(400) NOT NULL,
+                FlDescription text NOT NULL,
+                FlDate datetime NOT NULL,
+                FlAudio varchar(200) NOT NULL,
+                FlText longtext NOT NULL,
+                FlNfID tinyint(3) unsigned NOT NULL,
+                PRIMARY KEY (FlID), 
+                KEY FlLink (FlLink), 
+                KEY FlDate (FlDate), 
+                UNIQUE KEY FlTitle (FlNfID,FlTitle)
+            ) ENGINE=MyISAM DEFAULT CHARSET=utf8", 
+            ''
+        );
     }
     
     if (!in_array($tbpref . 'archtexttags', $tables)) {
         if ($debug) { 
             echo '<p>DEBUG: rebuilding archtexttags</p>'; 
         }
-        runsql("CREATE TABLE IF NOT EXISTS " . $tbpref . "archtexttags ( AgAtID smallint(5) unsigned NOT NULL, AgT2ID smallint(5) unsigned NOT NULL, PRIMARY KEY (AgAtID,AgT2ID), KEY AgT2ID (AgT2ID) ) ENGINE=MyISAM DEFAULT CHARSET=utf8", '');
+        runsql(
+            "CREATE TABLE IF NOT EXISTS {$tbpref}archtexttags ( 
+                AgAtID smallint(5) unsigned NOT NULL, 
+                AgT2ID smallint(5) unsigned NOT NULL, 
+                PRIMARY KEY (AgAtID,AgT2ID), 
+                KEY AgT2ID (AgT2ID) 
+            ) ENGINE=MyISAM DEFAULT CHARSET=utf8", 
+            ''
+        );
     }
-    runsql('ALTER TABLE `' . $tbpref . 'sentences`  ADD SeFirstPos smallint(5) NOT NULL', '', $sqlerrdie = false);
+    runsql(
+        "ALTER TABLE `{$tbpref}sentences` ADD SeFirstPos smallint(5) NOT NULL", 
+        '', 
+        $sqlerrdie = false
+    );
     
     if ($count > 0) {        
         // Rebuild Text Cache if cache tables new
@@ -1802,13 +1948,54 @@ function check_update_db($debug, $tbpref, $dbname): void
         if ($debug) { 
             echo '<p>DEBUG: Doing score recalc. Today: ' . $today . ' / Last: ' . $lastscorecalc . '</p>'; 
         }
-        runsql("UPDATE " . $tbpref . "words SET " . make_score_random_insert_update('u') ." where WoTodayScore>=-100 and WoStatus<98", '');
-        runsql("DELETE " . $tbpref . "wordtags FROM (" . $tbpref . "wordtags LEFT JOIN " . $tbpref . "tags on WtTgID = TgID) WHERE TgID IS NULL", '');
-        runsql("DELETE " . $tbpref . "wordtags FROM (" . $tbpref . "wordtags LEFT JOIN " . $tbpref . "words on WtWoID = WoID) WHERE WoID IS NULL", '');
-        runsql("DELETE " . $tbpref . "texttags FROM (" . $tbpref . "texttags LEFT JOIN " . $tbpref . "tags2 on TtT2ID = T2ID) WHERE T2ID IS NULL", '');
-        runsql("DELETE " . $tbpref . "texttags FROM (" . $tbpref . "texttags LEFT JOIN " . $tbpref . "texts on TtTxID = TxID) WHERE TxID IS NULL", '');
-        runsql("DELETE " . $tbpref . "archtexttags FROM (" . $tbpref . "archtexttags LEFT JOIN " . $tbpref . "tags2 on AgT2ID = T2ID) WHERE T2ID IS NULL", '');
-        runsql("DELETE " . $tbpref . "archtexttags FROM (" . $tbpref . "archtexttags LEFT JOIN " . $tbpref . "archivedtexts on AgAtID = AtID) WHERE AtID IS NULL", '');
+        runsql(
+            "UPDATE {$tbpref}words 
+            SET " . make_score_random_insert_update('u') ." 
+            WHERE WoTodayScore>=-100 AND WoStatus<98", 
+            ''
+        );
+        runsql(
+            "DELETE {$tbpref}wordtags 
+            FROM ({$tbpref}wordtags LEFT JOIN {$tbpref}tags on WtTgID = TgID) 
+            WHERE TgID IS NULL", 
+            ''
+        );
+        runsql(
+            "DELETE {$tbpref}wordtags 
+            FROM ({$tbpref}wordtags LEFT JOIN {$tbpref}words ON WtWoID = WoID) 
+            WHERE WoID IS NULL", 
+            ''
+        );
+        runsql(
+            "DELETE {$tbpref}texttags 
+            FROM ({$tbpref}texttags LEFT JOIN {$tbpref}tags2 ON TtT2ID = T2ID) 
+            WHERE T2ID IS NULL", 
+            ''
+        );
+        runsql(
+            "DELETE {$tbpref}texttags 
+            FROM ({$tbpref}texttags LEFT JOIN {$tbpref}texts ON TtTxID = TxID) 
+            WHERE TxID IS NULL", 
+            ''
+        );
+        runsql(
+            "DELETE {$tbpref}archtexttags 
+            FROM (
+                {$tbpref}archtexttags 
+                LEFT JOIN {$tbpref}tags2 ON AgT2ID = T2ID
+            ) 
+            WHERE T2ID IS NULL", 
+            ''
+        );
+        runsql(
+            "DELETE {$tbpref}archtexttags 
+            FROM (
+                {$tbpref}archtexttags 
+                LEFT JOIN {$tbpref}archivedtexts ON AgAtID = AtID
+            ) 
+            WHERE AtID IS NULL", 
+            ''
+        );
         optimizedb();
         saveSetting('lastscorecalc', $today);
     }

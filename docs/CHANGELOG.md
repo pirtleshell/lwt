@@ -21,6 +21,9 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
   * ``save_setting_redirect.php`` moved to ``inc/save_setting_redirect.php``.
   * Psalm static code analysis of all PHP files.
 * JS: Some deprecated functions ``escape`` and ``unescape`` were replaced by modern equivalents ``encodeURIcomponent`` and ``decodeURIcomponent``. This may lead to changes in cookies, notably making them work better.
+* DB: the NO_ZERO_DATE mode is no longer required, see [#78](https://github.com/HugoFara/lwt/issues/78).
+  * In the ``words`` table, replaced the default timestamp ``0000-00-00 00:00:00`` by ``0000-00-00 00:00:01``.
+  * The demo database underwent the same change.  
 
 ### Deprecated
 * ``do_test_test_css`` in ``do_test_test.php`` is deprecated since it was causing display issues. Its CSS rules were trimmed.
@@ -49,6 +52,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 * UI
   * Audio in ``edit_texts.php`` was never shown.
   * When adding text, the user was ask to create a ``media`` folder in ``...``, corrected to ``..``.
+* DB: for some users it was impossible to install the default database due to the use of a ZERO date ([#78](https://github.com/HugoFara/lwt/issues/78)).
 
 ## 2.5.3-fork (November 06 2022)
 ### Added
