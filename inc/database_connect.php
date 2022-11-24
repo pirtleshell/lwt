@@ -120,16 +120,15 @@ function prepare_textdata_js($s): string
  *
  * @param string $data Input string
  *
- * @return string Properly escaped and trimmed string. "NULL" if the input string is empty.
+ * @return string Properly escaped and trimmed string. "NULL" if the input string is 
+ *                empty.
  */
 function convert_string_to_sqlsyntax($data): string 
 {
     $result = "NULL";
     $data = trim(prepare_textdata($data));
     if ($data != "") { 
-        $result = "'" . 
-        mysqli_real_escape_string($GLOBALS['DBCONNECTION'], $data) . 
-        "'"; 
+        $result = "'".mysqli_real_escape_string($GLOBALS['DBCONNECTION'], $data)."'"; 
     }
     return $result;
 }
@@ -240,17 +239,33 @@ function validateTag($currenttag,$currentlang)
         $sql = "SELECT (
             " . $currenttag . " IN (
                 SELECT TgID 
-                FROM " . $tbpref . "words, " . $tbpref . "tags, " . $tbpref . "wordtags 
+                FROM {$tbpref}words, {$tbpref}tags, {$tbpref}wordtags 
                 WHERE TgID = WtTgID AND WtWoID = WoID" . 
                 ($currentlang != '' ? " AND WoLgID = " . $currentlang : '') .
                 " group by TgID order by TgText
             )
         ) AS value";
         /*if ($currentlang == '') {
-            $sql = "select (" . $currenttag . " in (select TgID from " . $tbpref . "words, " . $tbpref . "tags, " . $tbpref . "wordtags where TgID = WtTgID and WtWoID = WoID group by TgID order by TgText)) as value"; 
-        }
-        else {
-            $sql = "select (" . $currenttag . " in (select TgID from " . $tbpref . "words, " . $tbpref . "tags, " . $tbpref . "wordtags where TgID = WtTgID and WtWoID = WoID and WoLgID = " . $currentlang . " group by TgID order by TgText)) as value"; 
+            $sql = "SELECT (
+                $currenttag in (
+                    select TgID from {$tbpref}words, 
+                    {$tbpref}tags, 
+                    {$tbpref}wordtags 
+                    where TgID = WtTgID and WtWoID = WoID 
+                    group by TgID 
+                    order by TgText
+                    )
+                ) as value"; 
+        } else {
+            $sql = "SELECT (
+                $currenttag in (
+                    select TgID 
+                    from {$tbpref}words, {$tbpref}tags, 
+                    {$tbpref}wordtags 
+                    where TgID = WtTgID and WtWoID = WoID and WoLgID = $currentlang 
+                    group by TgID order by TgText
+                )
+                ) as value"; 
         }*/
         $r = get_first_value($sql);
         if ($r == 0) { 
@@ -270,9 +285,9 @@ function validateArchTextTag($currenttag,$currentlang)
             $sql = "select (
                 " . $currenttag . " in (
                     select T2ID 
-                    from " . $tbpref . "archivedtexts, 
-                    " . $tbpref . "tags2, 
-                    " . $tbpref . "archtexttags 
+                    from {$tbpref}archivedtexts, 
+                    {$tbpref}tags2, 
+                    {$tbpref}archtexttags 
                     where T2ID = AgT2ID and AgAtID = AtID 
                     group by T2ID order by T2Text
                 )
@@ -282,10 +297,10 @@ function validateArchTextTag($currenttag,$currentlang)
             $sql = "select (
                 " . $currenttag . " in (
                     select T2ID 
-                    from " . $tbpref . "archivedtexts, 
-                    " . $tbpref . "tags2, 
-                    " . $tbpref . "archtexttags 
-                    where T2ID = AgT2ID and AgAtID = AtID and AtLgID = " . $currentlang . " 
+                    from {$tbpref}archivedtexts, 
+                    {$tbpref}tags2, 
+                    {$tbpref}archtexttags 
+                    where T2ID = AgT2ID and AgAtID = AtID and AtLgID = $currentlang 
                     group by T2ID order by T2Text
                 )
             ) as value"; 
@@ -306,25 +321,20 @@ function validateTextTag($currenttag,$currentlang)
     if ($currenttag != '' && $currenttag != -1) {
         if ($currentlang == '') {
             $sql = "select (
-                " . $currenttag . " in (
+                $currenttag in (
                     select T2ID 
-                    from " . $tbpref . "texts, 
-                    " . $tbpref . "tags2, 
-                    " . $tbpref . "texttags 
+                    from {$tbpref}texts, {$tbpref}tags2, {$tbpref}texttags 
                     where T2ID = TtT2ID and TtTxID = TxID 
                     group by T2ID 
                     order by T2Text
                 )
             ) as value"; 
-        }
-        else {
+        } else {
             $sql = "select (
-                " . $currenttag . " in (
+                $currenttag in (
                     select T2ID 
-                    from " . $tbpref . "texts, 
-                    " . $tbpref . "tags2, 
-                    " . $tbpref . "texttags 
-                    where T2ID = TtT2ID and TtTxID = TxID and TxLgID = " . $currentlang . " 
+                    from {$tbpref}texts, {$tbpref}tags2, {$tbpref}texttags 
+                    where T2ID = TtT2ID and TtTxID = TxID and TxLgID = $currentlang 
                     group by T2ID order by T2Text
                 )
             ) as value"; 
@@ -693,7 +703,7 @@ function init_word_count(): void
     }
     mysqli_free_result($result);
     if (!empty($sqlarr)) {
-        $sqltext = "UPDATE  " . $tbpref . "words 
+        $sqltext = "UPDATE {$tbpref}words 
         SET WoWordCount = CASE WoID" . implode(' ', $sqlarr) . ' 
         END where WoWordCount=0';
         do_mysqli_query($sqltext);
@@ -846,8 +856,8 @@ function parse_japanese_text($text, $id): ?array
             } else {
                 $term_type = 1;
             }
-            $order += (($term_type == 0) && ($last_term_type == 0)) + 
-            !(($term_type == 1) && ($last_term_type == 1));
+            $order += (int)(($term_type == 0) && ($last_term_type == 0)) + 
+            (int)!(($term_type == 1) && ($last_term_type == 1));
             $row[2] = $order; // TiOrder
             $row[3] = convert_string_to_sqlsyntax_notrim_nonull($term); // TiText
             $row[4] = $term_type == 0 ? 1 : 0; // TiWordCount
@@ -896,10 +906,10 @@ function parse_standard_text($text, $id, $lid): ?array
     $sql = "SELECT * FROM {$tbpref}languages WHERE LgID=$lid";
     $res = do_mysqli_query($sql);
     $record = mysqli_fetch_assoc($res);
-    $removeSpaces = $record['LgRemoveSpaces'];
-    $splitSentence = $record['LgRegexpSplitSentences'];
-    $noSentenceEnd = $record['LgExceptionsSplitSentences'];
-    $termchar = $record['LgRegexpWordCharacters'];
+    $removeSpaces = (string)$record['LgRemoveSpaces'];
+    $splitSentence = (string)$record['LgRegexpSplitSentences'];
+    $noSentenceEnd = (string)$record['LgExceptionsSplitSentences'];
+    $termchar = (string)$record['LgRegexpWordCharacters'];
     $rtlScript = $record['LgRightToLeft'];
     // Split text paragraphs using " ¶" symbol 
     $text = str_replace("\n", " ¶", $text);
@@ -979,10 +989,10 @@ function parse_standard_text($text, $id, $lid): ?array
         do_mysqli_query(
             "SET @order=0, 
             @sid=" . (
-                $id>0?"(SELECT ifnull(max(`SeID`)+1,1) FROM `{$tbpref}sentences`)" : 1) . 
+                $id>0?"(SELECT ifnull(max(`SeID`)+1,1) FROM `{$tbpref}sentences`)":1). 
             ", @count = 0;"
         );
-        $sql = "LOAD DATA LOCAL INFILE " . convert_string_to_sqlsyntax($file_name) . "
+        $sql = "LOAD DATA LOCAL INFILE " . convert_string_to_sqlsyntax($file_name) ."
         INTO TABLE {$tbpref}temptextitems 
         FIELDS TERMINATED BY '\\t' LINES TERMINATED BY '\\n' (@word_count, @term)
         SET 
@@ -1056,10 +1066,10 @@ function parse_standard_text($text, $id, $lid): ?array
 function prepare_text_parsing($text, $id, $lid): ?array
 {
     global $tbpref;
-    $sql = "SELECT * FROM " . $tbpref . "languages WHERE LgID=" . $lid;
+    $sql = "SELECT * FROM {$tbpref}languages WHERE LgID = $lid";
     $res = do_mysqli_query($sql);
     $record = mysqli_fetch_assoc($res);
-    $termchar = $record['LgRegexpWordCharacters'];
+    $termchar = (string)$record['LgRegexpWordCharacters'];
     $replace = explode("|", $record['LgCharacterSubstitutions']);
     mysqli_free_result($res);
     $text = prepare_textdata($text);
@@ -1084,6 +1094,8 @@ function prepare_text_parsing($text, $id, $lid): ?array
 /**
  * Echo the sentences in a text. Prepare JS data for words and word count.
  * 
+ * @param int $lid Language ID
+ * 
  * @global string $tbpref Database table prefix
  * 
  * @return void
@@ -1103,11 +1115,11 @@ function check_text_valid($lid)
     mysqli_free_result($res);
     echo '</ol>';
     $res = do_mysqli_query(
-        'SELECT count(`TiOrder`) cnt, if(0=TiWordCount,0,1) as len, 
+        "SELECT count(`TiOrder`) cnt, if(0=TiWordCount,0,1) as len, 
         LOWER(TiText) as word, WoTranslation 
-        FROM ' . $tbpref . 'temptextitems 
-        LEFT JOIN ' . $tbpref . 'words ON lower(TiText)=WoTextLC AND WoLgID=' . $lid . ' 
-        GROUP BY lower(TiText)'
+        FROM {$tbpref}temptextitems 
+        LEFT JOIN {$tbpref}words ON lower(TiText)=WoTextLC AND WoLgID=$lid 
+        GROUP BY lower(TiText)"
     );
     while ($record = mysqli_fetch_assoc($res)) {
         if ($record['len']==1) {
@@ -1117,7 +1129,10 @@ function check_text_valid($lid)
                 tohtml($record['WoTranslation'])
             );
         } else{
-            $nw[] = array(tohtml($record['word']), tohtml($record['cnt']));
+            $nw[] = array(
+                tohtml((string)$record['word']), 
+                tohtml((string)$record['cnt'])
+            );
         }
     }
     mysqli_free_result($res);
@@ -1201,9 +1216,9 @@ function check_text($sql, $rtlScript, $wl)
         $res = do_mysqli_query($sql);
         while($record = mysqli_fetch_assoc($res)){
             $mw[]= array(
-                tohtml($record['word']),
+                tohtml((string)$record['word']),
                 $record['cnt'],
-                tohtml($record['WoTranslation'])
+                tohtml((string)$record['WoTranslation'])
             );
         }
         mysqli_free_result($res);
@@ -1216,7 +1231,8 @@ function check_text($sql, $rtlScript, $wl)
             $("li").attr("dir", "rtl");
         });
     }
-    let h='<h4>Word List <span class="red2">(red = already saved)</span></h4><ul class="wordlist">';
+    let h='<h4>Word List <span class="red2">(red = already saved)</span></h4>' + 
+    '<ul class="wordlist">';
     $.each(
         WORDS, 
         function (k,v) {
@@ -1263,21 +1279,33 @@ function check_text_with_expressions($id, $lid, $wl, $wl_max, $mw_sql): string
     do_mysqli_query('SET GLOBAL max_heap_table_size = 1024 * 1024 * 1024 * 2');
     do_mysqli_query('SET GLOBAL tmp_table_size = 1024 * 1024 * 1024 * 2');
     for ($i=$wl_max*2 -1; $i>1; $i--) {
-        $set_wo_sql = 'WHEN (@a' . strval($i) . ':=@a' . strval($i-1) . ') IS NULL THEN NULL ';
-        $set_wo_sql_2 = 'WHEN (@a' . strval($i) . ':=@a' . strval($i-2) . ') IS NULL THEN NULL ';
+        $set_wo_sql = 'WHEN (@a' . strval($i) . ':=@a' . strval($i-1) . 
+        ') IS NULL THEN NULL ';
+        $set_wo_sql_2 = 'WHEN (@a' . strval($i) . ':=@a' . strval($i-2) . 
+        ') IS NULL THEN NULL ';
         $del_wo_sql = 'WHEN (@a' . strval($i) . ':=@a0) IS NULL THEN NULL ';
         $init_var = '@a' . strval($i) . '=0,';
     }
-    do_mysqli_query('set ' . $init_var . '@a1=0,@a0=0,@b=0,@c="",@d=0,@e=0,@f="",@h=0;');
     do_mysqli_query(
-        'CREATE TEMPORARY TABLE IF NOT EXISTS ' . $tbpref . 'numbers( n  tinyint(3) unsigned NOT NULL);'
+        'set ' . $init_var . '@a1=0,@a0=0,@b=0,@c="",@d=0,@e=0,@f="",@h=0;'
+    );
+    do_mysqli_query(
+        "CREATE TEMPORARY TABLE IF NOT EXISTS {$tbpref}numbers( 
+            n  tinyint(3) unsigned NOT NULL
+        );"
     );
     do_mysqli_query('TRUNCATE TABLE ' . $tbpref . 'numbers');
-    do_mysqli_query('INSERT IGNORE INTO ' . $tbpref . 'numbers(n) VALUES (' . implode('),(', $wl) . ');');
+    do_mysqli_query(
+        "INSERT IGNORE INTO {$tbpref}numbers(n) VALUES (" . 
+        implode('),(', $wl) . 
+        ');'
+    );
     if ($id>0) {
-        $sql = 'SELECT straight_join WoID, sent, TiOrder - (2*(n-1)) TiOrder, n TiWordCount,word';
+        $sql = 'SELECT straight_join WoID, sent, TiOrder - (2*(n-1)) TiOrder, 
+        n TiWordCount,word';
     } else {
-        $sql = 'SELECT straight_join count(WoID) cnt, n as len, lower(WoText) as word, WoTranslation';
+        $sql = 'SELECT straight_join count(WoID) cnt, n as len, 
+        lower(WoText) as word, WoTranslation';
     }
     $sql .= 
     ' FROM (
@@ -1376,9 +1404,9 @@ function splitCheckText($text, $lid, $id)
             LWT 3.0.0. Use format_text instead.", 
             E_USER_WARNING
         );*/
-        return prepare_text_parsing($text, -2, $lid);
+        return prepare_text_parsing($text, -2, (int)$lid);
     }
-    prepare_text_parsing($text, $id, $lid);
+    prepare_text_parsing($text, $id, (int)$lid);
 
     // Check text
     if ($id == -1) {
@@ -1392,8 +1420,8 @@ function splitCheckText($text, $lid, $id)
         GROUP BY WoWordCount"
     );
     while ($record = mysqli_fetch_assoc($res)){
-        if ($wl_max < $record['word_count']) { 
-            $wl_max = $record['word_count'];
+        if ($wl_max < (int)$record['word_count']) { 
+            $wl_max = (int)$record['word_count'];
         }
         $wl[] = (string)$record['word_count'];
         $mw_sql .= ' WHEN ' . $record['word_count'] . 
@@ -1403,10 +1431,10 @@ function splitCheckText($text, $lid, $id)
     $sql = '';
     // Text has multi-words
     if (!empty($wl)) {
-        $sql = check_text_with_expressions($id, $lid, $wl, $wl_max, $mw_sql);
+        $sql = check_text_with_expressions($id, (int)$lid, $wl, $wl_max, $mw_sql);
     }
     if ($id > 0) {
-        update_default_values($id, $lid, $sql);
+        update_default_values($id, (int)$lid, $sql);
     }
     // Check text
     if ($id == -1) {
@@ -1428,17 +1456,17 @@ function reparse_all_texts(): void
     runsql('TRUNCATE ' . $tbpref . 'textitems2', '');
     adjust_autoincr('sentences', 'SeID');
     init_word_count();
-    $sql = "select TxID, TxLgID from " . $tbpref . "texts";
+    $sql = "select TxID, TxLgID from {$tbpref}texts";
     $res = do_mysqli_query($sql);
     while ($record = mysqli_fetch_assoc($res)) {
         $id = (int) $record['TxID'];
         splitCheckText(
-            get_first_value(
-                'select TxText as value 
-                from ' . $tbpref . 'texts 
-                where TxID = ' . $id
+            (string)get_first_value(
+                "SELECT TxText as value 
+                from {$tbpref}texts 
+                where TxID = $id"
             ), 
-            $record['TxLgID'], $id 
+            (string)$record['TxLgID'], $id 
         );
     }
     mysqli_free_result($res);
@@ -1463,9 +1491,9 @@ function update_database($dbname)
     
     $res = mysqli_query(
         $GLOBALS['DBCONNECTION'], 
-        "select StValue as value 
-        from " . $tbpref . "settings 
-        where StKey = 'dbversion'"
+        "SELECT StValue AS value 
+        FROM {$tbpref}settings 
+        WHERE StKey = 'dbversion'"
     );
     if (mysqli_errno($GLOBALS['DBCONNECTION']) != 0) { 
         my_die(
@@ -1495,8 +1523,11 @@ function update_database($dbname)
         )
         ) {
             runsql("SET collation_connection = 'utf8_general_ci'", '');
-            runsql('ALTER DATABASE `' . $dbname . '` CHARACTER SET utf8 COLLATE utf8_general_ci', '');
-            
+            runsql(
+                'ALTER DATABASE `' . $dbname . 
+                '` CHARACTER SET utf8 COLLATE utf8_general_ci', 
+                ''
+            );
             if ($debug) { 
                 echo 'changed to utf8_general_ci</p>'; 
             }
@@ -1507,41 +1538,196 @@ function update_database($dbname)
         if ($debug) { 
             echo "<p>DEBUG: do DB updates: $dbversion --&gt; $currversion</p>"; 
         }
-        runsql("ALTER TABLE " . $tbpref . "words ADD WoTodayScore DOUBLE NOT NULL DEFAULT 0, ADD WoTomorrowScore DOUBLE NOT NULL DEFAULT 0, ADD WoRandom DOUBLE NOT NULL DEFAULT 0", '', $sqlerrdie = false);
-        runsql("ALTER TABLE " . $tbpref . "words ADD WoWordCount tinyint(3) unsigned NOT NULL DEFAULT 0 AFTER WoSentence", '', $sqlerrdie = false);
-        runsql("ALTER TABLE " . $tbpref . "words ADD INDEX WoTodayScore (WoTodayScore), ADD INDEX WoTomorrowScore (WoTomorrowScore), ADD INDEX WoRandom (WoRandom)", '', $sqlerrdie = false);
-        runsql("ALTER TABLE " . $tbpref . "languages ADD LgRightToLeft tinyint(1) UNSIGNED NOT NULL DEFAULT  0", '', $sqlerrdie = false);
-        runsql("ALTER TABLE " . $tbpref . "texts ADD TxAnnotatedText LONGTEXT NOT NULL AFTER TxText", '', $sqlerrdie = false);
-        runsql("ALTER TABLE " . $tbpref . "archivedtexts ADD AtAnnotatedText LONGTEXT NOT NULL AFTER AtText", '', $sqlerrdie = false);
-        runsql("ALTER TABLE " . $tbpref . "tags CHANGE TgComment TgComment VARCHAR(200) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT ''", '', $sqlerrdie = false);
-        runsql("ALTER TABLE " . $tbpref . "tags2 CHANGE T2Comment T2Comment VARCHAR(200) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT ''", '', $sqlerrdie = false);
-        runsql("ALTER TABLE " . $tbpref . "languages CHANGE LgGoogleTTSURI LgExportTemplate VARCHAR(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL", '', $sqlerrdie = false);
-        runsql("ALTER TABLE " . $tbpref . "texts ADD TxSourceURI VARCHAR(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL", '', $sqlerrdie = false);
-        runsql("ALTER TABLE " . $tbpref . "archivedtexts ADD AtSourceURI VARCHAR(1000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL", '', $sqlerrdie = false);
-        runsql("ALTER TABLE " . $tbpref . "texts ADD TxPosition smallint(5) NOT NULL DEFAULT  0", '', $sqlerrdie = false);
-        runsql("ALTER TABLE " . $tbpref . "texts ADD TxAudioPosition float NOT NULL DEFAULT  0", '', $sqlerrdie = false);
-        runsql('ALTER TABLE `' . $tbpref . 'wordtags` DROP INDEX WtWoID', '', $sqlerrdie = false);
-        runsql('ALTER TABLE `' . $tbpref . 'texttags` DROP INDEX TtTxID', '', $sqlerrdie = false);
-        runsql('ALTER TABLE `' . $tbpref . 'archtexttags` DROP INDEX AgAtID', '', $sqlerrdie = false);
+        runsql(
+            "ALTER TABLE {$tbpref}words 
+            ADD WoTodayScore DOUBLE NOT NULL DEFAULT 0, 
+            ADD WoTomorrowScore DOUBLE NOT NULL DEFAULT 0, 
+            ADD WoRandom DOUBLE NOT NULL DEFAULT 0", 
+            '', false);
+        runsql(
+            "ALTER TABLE {$tbpref}words 
+            ADD WoWordCount tinyint(3) unsigned NOT NULL DEFAULT 0 AFTER WoSentence", 
+            '', 
+            false);
+        runsql(
+            "ALTER TABLE {$tbpref}words 
+            ADD INDEX WoTodayScore (WoTodayScore), 
+            ADD INDEX WoTomorrowScore (WoTomorrowScore), 
+            ADD INDEX WoRandom (WoRandom)", 
+            '', 
+            false
+        );
+        runsql(
+            "ALTER TABLE {$tbpref}languages 
+            ADD LgRightToLeft tinyint(1) UNSIGNED NOT NULL DEFAULT 0", 
+            '', 
+            false
+        );
+        runsql(
+            "ALTER TABLE {$tbpref}texts 
+            ADD TxAnnotatedText LONGTEXT NOT NULL AFTER TxText", 
+            '', false
+        );
+        runsql(
+            "ALTER TABLE {$tbpref}archivedtexts 
+            ADD AtAnnotatedText LONGTEXT NOT NULL AFTER AtText", 
+            '', false
+        );
+        runsql(
+            "ALTER TABLE {$tbpref}tags 
+            CHANGE TgComment TgComment VARCHAR(200) 
+            CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT ''", 
+            '', false
+        );
+        runsql(
+            "ALTER TABLE {$tbpref}tags2 
+            CHANGE T2Comment T2Comment VARCHAR(200) 
+            CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT ''", 
+            '', false
+        );
+        runsql(
+            "ALTER TABLE {$tbpref}languages 
+            CHANGE LgGoogleTTSURI LgExportTemplate VARCHAR(1000) 
+            CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL", 
+            '', false
+        );
+        runsql(
+            "ALTER TABLE {$tbpref}texts 
+            ADD TxSourceURI VARCHAR(1000) 
+            CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL", 
+            '', false
+        );
+        runsql(
+            "ALTER TABLE {$tbpref}archivedtexts 
+            ADD AtSourceURI VARCHAR(1000) 
+            CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL", 
+            '', false
+        );
+        runsql(
+            "ALTER TABLE {$tbpref}texts ADD TxPosition smallint(5) NOT NULL DEFAULT 0", 
+            '', false
+        );
+        runsql(
+            "ALTER TABLE {$tbpref}texts ADD TxAudioPosition float NOT NULL DEFAULT 0", 
+            '', false
+        );
+        runsql(
+            'ALTER TABLE `' . $tbpref . 'wordtags` DROP INDEX WtWoID', '', false
+        );
+        runsql(
+            'ALTER TABLE `' . $tbpref . 'texttags` DROP INDEX TtTxID', '', false
+        );
+        runsql(
+            'ALTER TABLE `' . $tbpref . 'archtexttags` DROP INDEX AgAtID', '', false
+        );
 
-        runsql('ALTER TABLE `' . $tbpref . 'archivedtexts` MODIFY COLUMN `AtLgID` tinyint(3) unsigned NOT NULL, MODIFY COLUMN `AtID` smallint(5) unsigned NOT NULL, ADD INDEX AtLgIDSourceURI (AtSourceURI(20),AtLgID)', '', $sqlerrdie = false);
-        runsql('ALTER TABLE `' . $tbpref . 'languages` MODIFY COLUMN `LgID` tinyint(3) unsigned NOT NULL AUTO_INCREMENT, MODIFY COLUMN `LgRemoveSpaces` tinyint(1) unsigned NOT NULL, MODIFY COLUMN `LgSplitEachChar` tinyint(1) unsigned NOT NULL, MODIFY COLUMN `LgRightToLeft` tinyint(1) unsigned NOT NULL', '', $sqlerrdie = false);
-        runsql('ALTER TABLE `' . $tbpref . 'sentences` MODIFY COLUMN `SeID` mediumint(8) unsigned NOT NULL AUTO_INCREMENT, MODIFY COLUMN `SeLgID` tinyint(3) unsigned NOT NULL, MODIFY COLUMN `SeTxID` smallint(5) unsigned NOT NULL, MODIFY COLUMN `SeOrder` smallint(5) unsigned NOT NULL', '', $sqlerrdie = false);
-        runsql('ALTER TABLE `' . $tbpref . 'texts` MODIFY COLUMN `TxID` smallint(5) unsigned NOT NULL AUTO_INCREMENT, MODIFY COLUMN `TxLgID` tinyint(3) unsigned NOT NULL, ADD INDEX TxLgIDSourceURI (TxSourceURI(20),TxLgID)', '', $sqlerrdie = false);
-        runsql('ALTER TABLE `' . $tbpref . 'words` MODIFY COLUMN `WoID` mediumint(8) unsigned NOT NULL AUTO_INCREMENT, MODIFY COLUMN `WoLgID` tinyint(3) unsigned NOT NULL, MODIFY COLUMN `WoStatus` tinyint(4) NOT NULL', '', $sqlerrdie = false);        
-        runsql('ALTER TABLE `' . $tbpref . 'words` DROP INDEX WoTextLC', '', $sqlerrdie = false);
-        runsql('ALTER TABLE `' . $tbpref . 'words` DROP INDEX WoLgIDTextLC, ADD UNIQUE INDEX WoTextLCLgID (WoTextLC,WoLgID)', '', $sqlerrdie = false);
-        runsql('ALTER TABLE `' . $tbpref . 'words` ADD INDEX WoWordCount (WoWordCount)', '', $sqlerrdie = false);
-        runsql('ALTER TABLE `' . $tbpref . 'archtexttags` MODIFY COLUMN `AgAtID` smallint(5) unsigned NOT NULL, MODIFY COLUMN `AgT2ID` smallint(5) unsigned NOT NULL', '', $sqlerrdie = false);
-        runsql('ALTER TABLE `' . $tbpref . 'tags` MODIFY COLUMN `TgID` smallint(5) unsigned NOT NULL AUTO_INCREMENT', '', $sqlerrdie = false);
-        runsql('ALTER TABLE `' . $tbpref . 'tags2` MODIFY COLUMN `T2ID` smallint(5) unsigned NOT NULL AUTO_INCREMENT', '', $sqlerrdie = false);
-        runsql('ALTER TABLE `' . $tbpref . 'wordtags` MODIFY COLUMN `WtTgID` smallint(5) unsigned NOT NULL AUTO_INCREMENT', '', $sqlerrdie = false);
-        runsql('ALTER TABLE `' . $tbpref . 'texttags` MODIFY COLUMN `TtTxID` smallint(5) unsigned NOT NULL, MODIFY COLUMN `TtT2ID` smallint(5) unsigned NOT NULL', '', $sqlerrdie = false);
-        runsql('ALTER TABLE `' . $tbpref . 'temptextitems` ADD TiCount smallint(5) unsigned NOT NULL, DROP TiLgID, DROP TiTxID', '', $sqlerrdie = false);
-        runsql('ALTER TABLE `' . $tbpref . 'temptextitems` ADD DROP INDEX TiTextLC', '', $sqlerrdie = false);
-        runsql('ALTER TABLE `' . $tbpref . 'temptextitems` ADD  DROP TiTextLC', '', $sqlerrdie = false);
-        runsql('ALTER TABLE `' . $tbpref . 'temptextitems` ADD TiCount smallint(5) unsigned NOT NULL', '', $sqlerrdie = false);
-        runsql('UPDATE ' . $tbpref . 'sentences join ' . $tbpref . 'textitems2 on Ti2SeID=SeID and Ti2Order=SeFirstPos and Ti2WordCount=0 SET SeFirstPos=SeFirstPos+1', '', $sqlerrdie = false);
+        // Database manipulations to upgrade from the official LWT to the community 
+        // fork
+        runsql(
+            'ALTER TABLE `' . $tbpref . 'archivedtexts` 
+            MODIFY COLUMN `AtLgID` tinyint(3) unsigned NOT NULL, 
+            MODIFY COLUMN `AtID` smallint(5) unsigned NOT NULL, 
+            ADD INDEX AtLgIDSourceURI (AtSourceURI(20),AtLgID)', 
+            '', false
+        );
+        runsql(
+            'ALTER TABLE `' . $tbpref . 'languages` 
+            MODIFY COLUMN `LgID` tinyint(3) unsigned NOT NULL AUTO_INCREMENT, 
+            MODIFY COLUMN `LgRemoveSpaces` tinyint(1) unsigned NOT NULL, 
+            MODIFY COLUMN `LgSplitEachChar` tinyint(1) unsigned NOT NULL, 
+            MODIFY COLUMN `LgRightToLeft` tinyint(1) unsigned NOT NULL', 
+            '', false
+        );
+        runsql(
+            'ALTER TABLE `' . $tbpref . 'sentences` 
+            MODIFY COLUMN `SeID` mediumint(8) unsigned NOT NULL AUTO_INCREMENT, 
+            MODIFY COLUMN `SeLgID` tinyint(3) unsigned NOT NULL, 
+            MODIFY COLUMN `SeTxID` smallint(5) unsigned NOT NULL, 
+            MODIFY COLUMN `SeOrder` smallint(5) unsigned NOT NULL', 
+            '', false
+        );
+        runsql(
+            'ALTER TABLE `' . $tbpref . 'texts` 
+            MODIFY COLUMN `TxID` smallint(5) unsigned NOT NULL AUTO_INCREMENT, 
+            MODIFY COLUMN `TxLgID` tinyint(3) unsigned NOT NULL, 
+            ADD INDEX TxLgIDSourceURI (TxSourceURI(20),TxLgID)', 
+            '', false
+        );
+        runsql(
+            'ALTER TABLE `' . $tbpref . 'words` 
+            MODIFY COLUMN `WoID` mediumint(8) unsigned NOT NULL AUTO_INCREMENT, 
+            MODIFY COLUMN `WoLgID` tinyint(3) unsigned NOT NULL, 
+            MODIFY COLUMN `WoStatus` tinyint(4) NOT NULL', 
+            '', false
+        ); 
+        runsql(
+            'ALTER TABLE `' . $tbpref . 'words` DROP INDEX WoTextLC', 
+            '', false
+        );
+        runsql(
+            'ALTER TABLE `' . $tbpref . 'words` DROP INDEX WoLgIDTextLC, 
+            ADD UNIQUE INDEX WoTextLCLgID (WoTextLC,WoLgID)', 
+            '', false
+        );
+        runsql(
+            'ALTER TABLE `' . $tbpref . 'words` ADD INDEX WoWordCount (WoWordCount)', 
+            '', false
+        );
+        runsql(
+            'ALTER TABLE `' . $tbpref . 'archtexttags` 
+            MODIFY COLUMN `AgAtID` smallint(5) unsigned NOT NULL, 
+            MODIFY COLUMN `AgT2ID` smallint(5) unsigned NOT NULL', 
+            '', false
+        );
+        runsql(
+            'ALTER TABLE `' . $tbpref . 'tags` 
+            MODIFY COLUMN `TgID` smallint(5) unsigned NOT NULL AUTO_INCREMENT', 
+            '', false
+        );
+        runsql(
+            'ALTER TABLE `' . $tbpref . 'tags2` 
+            MODIFY COLUMN `T2ID` smallint(5) unsigned NOT NULL AUTO_INCREMENT', 
+            '', false
+        );
+        runsql(
+            'ALTER TABLE `' . $tbpref . 'wordtags` 
+            MODIFY COLUMN `WtTgID` smallint(5) unsigned NOT NULL AUTO_INCREMENT', 
+            '', false
+        );
+        runsql(
+            'ALTER TABLE `' . $tbpref . 'texttags` 
+            MODIFY COLUMN `TtTxID` smallint(5) unsigned NOT NULL, 
+            MODIFY COLUMN `TtT2ID` smallint(5) unsigned NOT NULL', 
+            '', false
+        );
+        runsql(
+            'ALTER TABLE `' . $tbpref . 'temptextitems` 
+            ADD TiCount smallint(5) unsigned NOT NULL, 
+            DROP TiLgID, 
+            DROP TiTxID',
+            '', false
+        );
+        runsql(
+            'ALTER TABLE `' . $tbpref . 'temptextitems` 
+            ADD DROP INDEX TiTextLC', 
+            '', false
+        );
+        runsql(
+            'ALTER TABLE `' . $tbpref . 'temptextitems` ADD DROP TiTextLC', 
+            '', false
+        );
+        runsql(
+            'ALTER TABLE `' . $tbpref . 'temptextitems` 
+            ADD TiCount smallint(5) unsigned NOT NULL', 
+            '', false
+        );
+        runsql(
+            'UPDATE ' . $tbpref . 'sentences 
+            join ' . $tbpref . 'textitems2 
+            on Ti2SeID=SeID and Ti2Order=SeFirstPos and Ti2WordCount=0 
+            SET SeFirstPos=SeFirstPos+1', 
+            '', false
+        );
         if ($debug) { 
             echo '<p>DEBUG: rebuilding tts</p>'; 
         }
@@ -1571,7 +1757,13 @@ function check_update_db($debug, $tbpref, $dbname): void
 {
     $tables = array();
     
-    $res = do_mysqli_query(str_replace('_', "\\_", "SHOW TABLES LIKE " . convert_string_to_sqlsyntax_nonull($tbpref . '%')));
+    $res = do_mysqli_query(
+        str_replace(
+            '_', 
+            "\\_", 
+            "SHOW TABLES LIKE " . convert_string_to_sqlsyntax_nonull($tbpref . '%')
+        )
+    );
     while ($row = mysqli_fetch_row($res)) {
         $tables[] = $row[0]; 
     }
@@ -1586,7 +1778,7 @@ function check_update_db($debug, $tbpref, $dbname): void
             echo '<p>DEBUG: rebuilding archivedtexts</p>'; 
         }
         runsql(
-            "CREATE TABLE IF NOT EXISTS " . $tbpref . "archivedtexts ( 
+            "CREATE TABLE IF NOT EXISTS {$tbpref}archivedtexts ( 
                 AtID smallint(5) unsigned NOT NULL AUTO_INCREMENT, 
                 AtLgID tinyint(3) unsigned NOT NULL, 
                 AtTitle varchar(200) NOT NULL, 
@@ -1608,7 +1800,7 @@ function check_update_db($debug, $tbpref, $dbname): void
             echo '<p>DEBUG: rebuilding languages</p>'; 
         }
         runsql(
-            "CREATE TABLE IF NOT EXISTS " . $tbpref . "languages ( 
+            "CREATE TABLE IF NOT EXISTS {$tbpref}languages ( 
                 LgID tinyint(3) unsigned NOT NULL AUTO_INCREMENT, 
                 LgName varchar(40) NOT NULL, 
                 LgDict1URI varchar(200) NOT NULL, 
@@ -1636,7 +1828,7 @@ function check_update_db($debug, $tbpref, $dbname): void
             echo '<p>DEBUG: rebuilding sentences</p>'; 
         }
         runsql(
-            "CREATE TABLE IF NOT EXISTS " . $tbpref . "sentences ( 
+            "CREATE TABLE IF NOT EXISTS {$tbpref}sentences ( 
                 SeID mediumint(8) unsigned NOT NULL AUTO_INCREMENT, 
                 SeLgID tinyint(3) unsigned NOT NULL, 
                 SeTxID smallint(5) unsigned NOT NULL, 
@@ -1658,7 +1850,7 @@ function check_update_db($debug, $tbpref, $dbname): void
              echo '<p>DEBUG: rebuilding settings</p>'; 
         }
         runsql(
-            "CREATE TABLE IF NOT EXISTS " . $tbpref . "settings ( 
+            "CREATE TABLE IF NOT EXISTS {$tbpref}settings ( 
                 StKey varchar(40) NOT NULL, 
                 StValue varchar(40) DEFAULT NULL, 
                 PRIMARY KEY (StKey)
@@ -1673,7 +1865,7 @@ function check_update_db($debug, $tbpref, $dbname): void
             echo '<p>DEBUG: rebuilding textitems2</p>'; 
         }
         runsql(
-            "CREATE TABLE IF NOT EXISTS " . $tbpref . "textitems2 (
+            "CREATE TABLE IF NOT EXISTS {$tbpref}textitems2 (
                 Ti2WoID mediumint(8) unsigned NOT NULL, 
                 Ti2LgID tinyint(3) unsigned NOT NULL, 
                 Ti2TxID smallint(5) unsigned NOT NULL, 
@@ -1690,7 +1882,8 @@ function check_update_db($debug, $tbpref, $dbname): void
         if (in_array($tbpref . 'textitems', $tables)) {
             runsql(
                 "INSERT INTO {$tbpref}textitems2 (
-                    Ti2WoID, Ti2LgID, Ti2TxID, Ti2SeID, Ti2Order, Ti2WordCount, Ti2Text
+                    Ti2WoID, Ti2LgID, Ti2TxID, Ti2SeID, Ti2Order, Ti2WordCount, 
+                    Ti2Text
                 ) 
                 SELECT IFNULL(WoID,0), TiLgID, TiTxID, TiSeID, TiOrder, 
                 CASE WHEN TiIsNotWord = 1 THEN 0 ELSE TiWordCount END as WordCount, 
@@ -1946,7 +2139,8 @@ function check_update_db($debug, $tbpref, $dbname): void
     $today = date('Y-m-d');
     if ($lastscorecalc != $today) {
         if ($debug) { 
-            echo '<p>DEBUG: Doing score recalc. Today: ' . $today . ' / Last: ' . $lastscorecalc . '</p>'; 
+            echo '<p>DEBUG: Doing score recalc. Today: ' . $today . 
+            ' / Last: ' . $lastscorecalc . '</p>'; 
         }
         runsql(
             "UPDATE {$tbpref}words 
@@ -2023,8 +2217,10 @@ function connect_to_database($server, $userid, $passwd, $dbname): mysqli
         $DBCONNECTION = @mysqli_connect($server, $userid, $passwd);
         if (!$DBCONNECTION) { 
             my_die(
-                'DB connect error (MySQL not running or connection parameters are wrong; start MySQL and/or correct file "connect.inc.php"). 
-                Please read the documentation: https://hugofara.github.io/lwt/docs/install.html 
+                'DB connect error (MySQL not running or connection parameters are ' .
+                'wrong; start MySQL and/or correct file "connect.inc.php"). 
+                Please read the documentation: ' . 
+                'https://hugofara.github.io/lwt/docs/install.html 
                 [Error Code: ' . mysqli_connect_errno() . 
                 ' / Error Message: ' . mysqli_connect_error() . ']'
             );
@@ -2043,8 +2239,10 @@ function connect_to_database($server, $userid, $passwd, $dbname): mysqli
 
     if (!$DBCONNECTION) { 
         my_die(
-            'DB connect error (MySQL not running or connection parameters are wrong; start MySQL and/or correct file "connect.inc.php"). 
-            Please read the documentation: https://hugofara.github.io/lwt/docs/install.html 
+            'DB connect error (MySQL not running or connection parameters are wrong;' .
+            ' start MySQL and/or correct file "connect.inc.php"). 
+            Please read the documentation: '. 
+            'https://hugofara.github.io/lwt/docs/install.html 
             [Error Code: ' . mysqli_connect_errno() . 
             ' / Error Message: ' . mysqli_connect_error() . ']'
         ); 
@@ -2083,7 +2281,11 @@ function get_database_prefixes(&$tbpref)
     $len_tbpref = strlen($tbpref); 
     if ($len_tbpref > 0) {
         if ($len_tbpref > 20) { 
-            my_die('Table prefix/set "' . $tbpref . '" longer than 20 digits or characters. Please fix in "connect.inc.php".'); 
+            my_die(
+                'Table prefix/set "' . $tbpref .
+                '" longer than 20 digits or characters.' . 
+                ' Please fix in "connect.inc.php".'
+            );
         }
         for ($i=0; $i < $len_tbpref; $i++) { 
             if (strpos(
@@ -2093,7 +2295,8 @@ function get_database_prefixes(&$tbpref)
             ) {
                 my_die(
                     'Table prefix/set "' . $tbpref . 
-                    '" contains characters or digits other than 0-9, a-z, A-Z or _. Please fix in "connect.inc.php".'
+                    '" contains characters or digits other than 0-9, a-z, A-Z ' .
+                    'or _. Please fix in "connect.inc.php".'
                 ); 
             } 
         } 
