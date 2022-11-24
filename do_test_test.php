@@ -73,8 +73,8 @@ function get_test_type()
 /**
  * Prepare the css code for tests.
  * 
- * @deprecated 2.5.4-fork Do not use this function since it was acusing wrong 
- *                        display. Will be removed in 2.6.0. 
+ * @deprecated 2.6.0-fork Do not use this function since it was causing wrong 
+ *                        display. Will be removed in 3.0.0. 
  * 
  * @return void
  */

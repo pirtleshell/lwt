@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * \file 
  * \brief Long Text Import
  * 
@@ -16,7 +16,7 @@
 
 require_once 'inc/session_utility.php';
 
-/*
+/**
  * Display the check page before a long text import.
  * 
  * @param int $max_input_vars Maximale bytes size for the text.
@@ -155,7 +155,7 @@ function long_text_check($max_input_vars): void
 
 }
 
-/*
+/**
  * Save a long text to the database.
  * 
  * @return void
@@ -347,7 +347,7 @@ function long_text_display($max_input_vars)
 
 }
 
-/*
+/**
  * Do the main page for the long text import.
  * 
  * @return void

@@ -75,7 +75,7 @@ function runsql($sql, $m, $sqlerrdie = true): string
  * 
  * @return float|int|string|null Any returned value from the database.
  * 
- * @since 2.5.4-fork Officially return numeric types.
+ * @since 2.6.0-fork Officially return numeric types.
  */
 function get_first_value($sql) 
 {

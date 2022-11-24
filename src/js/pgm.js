@@ -687,7 +687,7 @@ function getStatusAbbr (status) {
 }
 
 
-/*
+/**
  * Translate a sentence.
  * 
  * @param {string} url     Translation URL with "{term}" marking the interesting term 
@@ -703,7 +703,7 @@ function translateSentence (url, sentctl) {
   }
 }
 
-/*
+/**
  * Translate a sentence.
  * 
  * @param {string} url     Translation URL with "{term}" marking the interesting term 
@@ -854,8 +854,8 @@ function oewin (url) {
  * @param {string} w Term to be inserted in the URL
  * @returns {string} A link to external dictionary to get a translation of the word
  * 
- * @since 2.5.4-fork Internals rewrote, do no longer use PHP code.
- * @since 2.5.4-fork The option putting encoding between ###enc### does no 
+ * @since 2.6.0-fork Internals rewrote, do no longer use PHP code. 
+ *                   The option putting encoding between ###enc### does no 
  *                   longer work. It is deprecated and will be removed.
  */
 function createTheDictUrl (u, w) {
@@ -877,7 +877,7 @@ function createTheDictUrl (u, w) {
   const enc = url.substring(pos + 3, pos2 - pos - 3).trim();
   console.warn(
    "Trying to use encoding '" + enc + "'. This feature is abandonned since " + 
-   "2.5.4-fork. Using default UTF-8." 
+   "2.6.0-fork. Using default UTF-8." 
   );
   let output = url.substring(0, pos) + encodeURIComponent(trm);
   if (pos2+3 < url.length) { 
@@ -1109,7 +1109,7 @@ function setLang (ctl, url) {
 	'&u=' + url;
 }
 
-/*
+/**
  * Reset current language to default.
  * 
  * @param {string} url 
@@ -1125,7 +1125,7 @@ function resetAll (url) {
  * @param {string} check_name Cookie name 
  * @returns {string|null} Value of the cookie if found, null otherwise
  * 
- * @since 2.5.4-fork Use decodeURIComponent instead of deprecated unescape
+ * @since 2.6.0-fork Use decodeURIComponent instead of deprecated unescape
  */
 function getCookie (check_name) {
   const a_all_cookies = document.cookie.split(';');
@@ -1165,7 +1165,7 @@ function getCookie (check_name) {
  * @param {boolean} secure If it should only be sent through secure connection 
  * @returns {void}
  * 
- * @since 2.5.4-fork Use encodeURIComponent instead of deprecated escape
+ * @since 2.6.0-fork Use encodeURIComponent instead of deprecated escape
  */
 function setCookie (name, value, expires, path, domain, secure) {
   const today = new Date();

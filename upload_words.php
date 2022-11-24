@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * \file
  * \brief Import terms from file or Text area
  * 
@@ -29,7 +29,7 @@ function my_str_getcsv($input)
     return $data;
 }
 
-/*
+/**
  * Import terms to the database.
  * 
  * @param array    $fields   Fields indexes
@@ -536,7 +536,7 @@ function showImportedTerms(last_update, rtl, count, page) {
     <?php
 }
 
-/*
+/**
  * Import term tags only to the database.
  * 
  * @param array    $fields   Fields indexes
@@ -632,7 +632,7 @@ function upload_words_import_tags($fields, $tabs, $file_upl): void
     }
 }
 
-/*
+/**
  * Import terms of tags to the database.
  * 
  * @return void
@@ -709,16 +709,14 @@ function upload_words_import(): void
 }
 
 
-/*
+/**
  * Display the main for adding new words.
  * 
  * @return void
  */
 function upload_words_display(): void
 {
-
     ?>
-
     <form enctype="multipart/form-data" class="validate" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" >
     <table class="tab3" cellspacing="0" cellpadding="5">
     <tr>

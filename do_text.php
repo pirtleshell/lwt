@@ -46,7 +46,7 @@ function get_text_id()
  * @return void
  * 
  * @since 2.2.1 It also calls do_frameset_mobile_css and do_frameset_mobile_js
- * @since 2.5.4-fork Rewrote to match the desktop version (between 2.2.1 and 2.5.4)
+ * @since 2.6.0-fork Rewrote to match the desktop version (between 2.2.1 and 2.6.0)
  */
 function do_text_mobile_content($textid, $audio)
 {

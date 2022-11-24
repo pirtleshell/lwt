@@ -9,7 +9,8 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 * Frames resizing is back! The text reading and test interfaces updated in several ways. Based several suggestions as [#60](https://github.com/HugoFara/lwt/issues/60).
   * The desktop interface is now much similar to what it was before 2.2.1-fork.
   * The mobile interface for texts unchanged (2.2.1-fork to 2.5.3-fork).
-* You can resize frames on desktop.
+  * You can resize frames on desktop.
+* Many new functions officially introduced in PHP and JS. Some of these function were already present in the code but undocumented.
 
 ### Changed
 * UX: Faster testing: you do no longer need to enter "Space" first for speed testing, except for status down and change. Related to [#71](https://github.com/HugoFara/lwt/pull/71).

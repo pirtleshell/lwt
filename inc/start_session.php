@@ -12,7 +12,7 @@
 
 require_once __DIR__ . '/kernel_utility.php';
 
-/*
+/**
  * Starts or not the error reporting.
  * 
  * @param int $dsplerrors not 0: start error reporting for ALL errors  
@@ -33,7 +33,7 @@ function set_error_reporting($dsplerrors): void
     }
 }
 
-/*
+/**
  * Set configuration values as script limit time and such...
  * 
  * @return void
@@ -47,7 +47,7 @@ function set_configuration_options(): void
     @ini_set('memory_limit', '999M');
 }  
 
-/*
+/**
  * Start the session and checks for its sanity.
  * 
  * @return void
@@ -67,7 +67,7 @@ function start_session(): void
     }
 }
 
-/*
+/**
 * Launch a new session for WordPress.
 *
 * @return void

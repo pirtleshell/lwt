@@ -115,7 +115,7 @@ function do_test_mobile_page_content($property)
  * 
  * @return void
  * 
- * @since 2.5.4-fork Function rewrote and no longer deprecated
+ * @since 2.6.0-fork Function rewrote and no longer deprecated
  */
 function do_test_mobile_page($property) 
 {
@@ -221,7 +221,7 @@ width: <?php echo 97 - $frame_l_width; ?>%;">
  * @param string $p Some property to add to the URL of do_test_test.php.
  * 
  * @since 2.2.1 The $mobile parameter is no longer required.
- * @since 2.5.4 Mobile interface is back and self-set.
+ * @since 2.6.0 Mobile interface is back and self-set.
  * 
  * @return void
  */

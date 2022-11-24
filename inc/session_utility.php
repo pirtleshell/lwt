@@ -2058,7 +2058,7 @@ function getWordTagList($wid, $before=' ', $brack=1, $tohtml=1): string
  * 
  * @return int
  * 
- * @since 2.5.4-fork Officially returns a int in dodumentation, as it was the case
+ * @since 2.6.0-fork Officially returns a int in documentation, as it was the case
  */
 function get_last_key() 
 {
@@ -2704,9 +2704,8 @@ function makeStatusClassFilterHelper($status, &$array): void
  *
  * Case 1: url without any ###: append UTF-8-term
  * Case 2: url with one ###: substitute UTF-8-term
- * Case 3: url with two ###enc###: unsoported encoding changed, 
- *         abandonned since 2.5.4-fork
- * see http://php.net/manual/en/mbstring.supported-encodings.php for supported encodings
+ * Case 3: url with two ###enc###: unsupported encoding changed, 
+ *         abandonned since 2.6.0-fork
  * 
  * @param string $u Dictionary URL. It may contain ### that will get parsed
  * @param string $t Text that substite the ###
@@ -4061,7 +4060,7 @@ function insertExpressions($textlc, $lid, $wid, $len, $mode): ?string
 }
 
 
-/*
+/**
  * Restore the database from a file.
  * 
  * @param resource $handle Backup file handle

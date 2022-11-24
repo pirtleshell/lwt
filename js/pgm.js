@@ -276,7 +276,7 @@ function owin(url){window.open(url,'dictwin','width=800, height=400, scrollbars=
 function oewin(url){window.open(url,'editwin','width=800, height=600, scrollbars=yes, menubar=no, resizable=yes, status=no')}
 function createTheDictUrl(u,w){const url=u.trim();const trm=w.trim();const pos=url.indexOf('###');if(pos==-1){return url+encodeURIComponent(trm)}
 const pos2=url.indexOf('###',pos+1);if(pos2===-1){return url.replace("###",trm==''?'+':encodeURIComponent(trm))}
-const enc=url.substring(pos+3,pos2-pos-3).trim();console.warn("Trying to use encoding '"+enc+"'. This feature is abandonned since "+"2.5.4-fork. Using default UTF-8.");let output=url.substring(0,pos)+encodeURIComponent(trm);if(pos2+3<url.length){output+=url.substring(pos2+3)}
+const enc=url.substring(pos+3,pos2-pos-3).trim();console.warn("Trying to use encoding '"+enc+"'. This feature is abandonned since "+"2.6.0-fork. Using default UTF-8.");let output=url.substring(0,pos)+encodeURIComponent(trm);if(pos2+3<url.length){output+=url.substring(pos2+3)}
 return output}
 function createTheDictLink(u,w,t,b){const url=u.trim();const trm=w.trim();const txt=t.trim();const txtbefore=b.trim();let r='';if(url!=''&&txt!=''){if(url.substring(0,1)=='*'){r=' '+txtbefore+' <span class="click" onclick="owin(\''+createTheDictUrl(url.substring(1),escape_apostrophes(trm))+'\');">'+txt+'</span> '}else{r=' '+txtbefore+' <a href="'+createTheDictUrl(url,trm)+'" target="ru" onclick="showRightFrames();">'+txt+'</a> '}}
 return r}

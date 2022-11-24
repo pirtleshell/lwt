@@ -5,14 +5,14 @@
  * 
  * Call: save_setting_redirect.php?k=[key]&v=[value]&u=[RedirURI]
  * 
- * @since 2.5.4-fork You can omit either u, or (k, v).
+ * @since 2.6.0-fork You can omit either u, or (k, v).
  */
 
 namespace SaveSetting;
 
 require_once __DIR__ . '/session_utility.php';
 
-/*
+/**
  * Return the parameters from the URL.
  * 
  * @return array{0: string, 1: string, 2: string} Setting key, setting value 
@@ -26,7 +26,7 @@ function get_parameters(): array
     return array($k, $v, $url);
 }
 
-/*
+/**
  * Unset all session settings, and set current text to default.
  * 
  * @return void 
@@ -71,7 +71,7 @@ function unset_settings(): void
 
 }
 
-/*
+/**
  * Save settings and go to a page.
  * 
  * @param string k Setting key
