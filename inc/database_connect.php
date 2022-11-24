@@ -1661,16 +1661,19 @@ function update_database($dbname)
             '', false
         ); 
         runsql(
-            'ALTER TABLE `' . $tbpref . 'words` DROP INDEX WoTextLC', 
+            'ALTER TABLE `' . $tbpref . 'words` 
+            DROP INDEX WoTextLC', 
             '', false
         );
         runsql(
-            'ALTER TABLE `' . $tbpref . 'words` DROP INDEX WoLgIDTextLC, 
-            ADD UNIQUE INDEX WoTextLCLgID (WoTextLC,WoLgID)', 
+            'ALTER TABLE `' . $tbpref . 'words` 
+            DROP INDEX WoLgIDTextLC, 
+            ADD UNIQUE INDEX WoTextLCLgID (WoTextLC, WoLgID)', 
             '', false
         );
         runsql(
-            'ALTER TABLE `' . $tbpref . 'words` ADD INDEX WoWordCount (WoWordCount)', 
+            'ALTER TABLE `' . $tbpref . 'words` 
+            ADD INDEX WoWordCount (WoWordCount)', 
             '', false
         );
         runsql(
@@ -1707,15 +1710,21 @@ function update_database($dbname)
             DROP TiTxID',
             '', false
         );
+        /*
+        Commented as of 2.6.0-fork, this code do not seem to be able to serve any 
+        intended behavior.
+
         runsql(
             'ALTER TABLE `' . $tbpref . 'temptextitems` 
             ADD DROP INDEX TiTextLC', 
             '', false
         );
         runsql(
-            'ALTER TABLE `' . $tbpref . 'temptextitems` ADD DROP TiTextLC', 
+            'ALTER TABLE `' . $tbpref . 'temptextitems` 
+            ADD DROP TiTextLC', 
             '', false
         );
+        */
         runsql(
             'ALTER TABLE `' . $tbpref . 'temptextitems` 
             ADD TiCount smallint(5) unsigned NOT NULL', 

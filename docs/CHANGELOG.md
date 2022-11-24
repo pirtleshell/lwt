@@ -52,7 +52,10 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 * UI
   * Audio in ``edit_texts.php`` was never shown.
   * When adding text, the user was ask to create a ``media`` folder in ``...``, corrected to ``..``.
-* DB: for some users it was impossible to install the default database due to the use of a ZERO date ([#78](https://github.com/HugoFara/lwt/issues/78)).
+* DB: 
+  * For some users it was impossible to install the default database due to the use of a ZERO date ([#78](https://github.com/HugoFara/lwt/issues/78)).
+  * Deleted wrong database instructions ``ADD DROP INDEX TiTextLC`` altering ``temptextitems`` in ``update_database`` of ``database_connect.php``. 
+
 
 ## 2.5.3-fork (November 06 2022)
 ### Added

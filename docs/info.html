@@ -2006,7 +2006,12 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 <li>When adding text, the user was ask to create a <code>media</code> folder in <code>...</code>, corrected to <code>..</code>.</li>
 </ul>
 </li>
-<li>DB: for some users it was impossible to install the default database due to the use of a ZERO date (<a href="https://github.com/HugoFara/lwt/issues/78">#78</a>).</li>
+<li>DB:
+<ul>
+<li>For some users it was impossible to install the default database due to the use of a ZERO date (<a href="https://github.com/HugoFara/lwt/issues/78">#78</a>).</li>
+<li>Deleted wrong database instructions <code>ADD DROP INDEX TiTextLC</code> altering <code>temptextitems</code> in <code>update_database</code> of <code>database_connect.php</code>.</li>
+</ul>
+</li>
 </ul>
 <h3>2.5.3-fork (November 06 2022)</h3>
 <h4>Added</h4>
