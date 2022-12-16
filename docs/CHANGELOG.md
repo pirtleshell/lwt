@@ -21,6 +21,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
   * ``do_test.php``, ``edit_texts.php``, ``edit_words.php`` and ``set_test_status.php`` now explicitly require a running session. They were silently failing before this release.
   * ``save_setting_redirect.php`` moved to ``inc/save_setting_redirect.php``.
   * Psalm static code analysis of all PHP files.
+  * We use "EOP" for end-of-paragraph markers instead of misleading "EOS" (MeCab).
 * JS: Some deprecated functions ``escape`` and ``unescape`` were replaced by modern equivalents ``encodeURIcomponent`` and ``decodeURIcomponent``. This may lead to changes in cookies, notably making them work better.
 * DB: the NO_ZERO_DATE mode is no longer required, see [#78](https://github.com/HugoFara/lwt/issues/78).
   * In the ``words`` table, replaced the default timestamp ``0000-00-00 00:00:00`` by ``0000-00-00 00:00:01``.
@@ -37,6 +38,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
   * The *audio* player was no longer working since 2.1.0-fork since the play button was hidden.
   * Save text position (``inc/ajax_save_text_position.php``) was broken for all texts. This is fixed.
   * Right frames should hide automatically but they often don't ([#61](https://github.com/HugoFara/lwt/issues/61)). Merged PR (#62)[https://github.com/HugoFara/lwt/pull/62].
+  * Japanese parsing is now better, and uses PHP only (the local_infile SQL functionality is no longer used). Related to PR (#43)[https://github.com/HugoFara/lwt/pull/43].
 * Tests:
   * Header was hidden during tests on Chrome-based browsers.
   * Testing specific terms was broken ([#66](https://github.com/HugoFara/lwt/issues/66)) and tests were sometimes not counting score. Solution inspired from PR [#67](https://github.com/HugoFara/lwt/issues/67) from [@jzohrab](https://github.com/jzohrab).

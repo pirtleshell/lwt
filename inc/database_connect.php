@@ -737,6 +737,7 @@ function set_word_count()
  * @return null|string[] Splitted sentence if $id = -2
  *
  * @since 2.5.1-fork Works even if LOAD DATA LOCAL INFILE operator is disabled.
+ * @since 2.6.0-fork Use PHP instead of SQL, slower but works better.
  *
  * @global string $tbpref Database table prefix
  *
@@ -758,7 +759,7 @@ function parse_japanese_text($text, $id): ?array
 
     $file_name = tempnam(sys_get_temp_dir(), $tbpref . "tmpti");
     // We use the format "word  num num" for all nodes
-    $mecab_args = " -F %m\\t%t\\t%h\\n -U %m\\t%t\\t%h\\n -E EOS\\t3\\t7\\n";
+    $mecab_args = " -F %m\\t%t\\t%h\\n -U %m\\t%t\\t%h\\n -E EOP\\t3\\t7\\n";
     $mecab_args .= " -o $file_name ";
     $mecab = get_mecab_path($mecab_args);
     
@@ -768,7 +769,7 @@ function parse_japanese_text($text, $id): ?array
     pclose($handle);
 
     runsql(
-        "CREATE TEMPORARY TABLE IF NOT EXISTS {$tbpref}temptextitems2 (
+        "CREATE TEMPORARY TABLE IF NOT EXISTS temptextitems2 (
             TiCount smallint(5) unsigned NOT NULL,
             TiSeID mediumint(8) unsigned NOT NULL,
             TiOrder smallint(5) unsigned NOT NULL,
@@ -777,110 +778,64 @@ function parse_japanese_text($text, $id): ?array
         ) DEFAULT CHARSET=utf8", 
         ''
     );
-    // It is faster to write to a file and let SQL do its magic, but may run into
-    // security restrictions
-    if (get_first_value("SELECT @@GLOBAL.local_infile as value")) {
-        do_mysqli_query(
-            "SET @order:=0, @term_type:=0,
-            @sid:=" . (
-                $id>0 ?
-                "(SELECT ifnull(max(`SeID`)+1,1) FROM `{$tbpref}sentences`)" 
-                : 1 
-            ) . ", @count:=0,@last_term_type:=0;"
+    $handle = fopen($file_name, 'r');
+    $mecabed = fread($handle, filesize($file_name));
+    fclose($handle);
+    $values = array();
+    $order = 0;
+    $sid = 1;
+    if ($id > 0) {
+        $sid = (int)get_first_value(
+            "SELECT IFNULL(MAX(`SeID`)+1,1) as value 
+            FROM {$tbpref}sentences"
         );
-        
-        $sql = 
-        "LOAD DATA LOCAL INFILE " . convert_string_to_sqlsyntax($file_name) . "
-        INTO TABLE {$tbpref}temptextitems2
-        FIELDS TERMINATED BY '\\t' 
-        LINES TERMINATED BY '" . PHP_EOL . "' 
-        (@term, @node_type, @third)
-        SET 
-        TiSeID = IF(@term_type=2 OR (@term='EOS' AND @third='7'), @sid:=@sid+1,@sid),
-        TiCount = (@count:= @count + CHAR_LENGTH(@term)) + 1 - CHAR_LENGTH(@term),
-        TiOrder = IF(
-            CASE
-                WHEN @third = '7' THEN IF(
-                    @term = 'EOS',
-                    (@term_type := 2) AND (@term := '¶'), 
-                    @g := 2
-                ) 
-                WHEN LOCATE(@node_type, '267') THEN @term_type:=0 
-                ELSE @term_type:=1 
-            END IS NULL,
-            NULL,
-            @order := @order + IF((@last_term_type=1) AND (@term_type=1), 0, 1) 
-            + IF((@last_term_type=0) AND (@term_type=0), 1, 0) 
-        ), 
-        TiText = @term,
-        TiWordCount =
-        CASE 
-            WHEN (@last_term_type:=@term_type) IS NULL THEN NULL
-            WHEN @term_type=0 THEN 1
-            ELSE 0 
-        END";
-        do_mysqli_query($sql);
-        do_mysqli_query("DELETE FROM {$tbpref}temptextitems2 WHERE TiOrder=@order");
-    } else {
-        $handle = fopen($file_name, 'r');
-        $mecabed = fread($handle, filesize($file_name));
-        fclose($handle);
-        $values = array();
-        $order = 0;
-        $sid = 1;
-        if ($id > 0) {
-            $sid = (int)get_first_value(
-                "SELECT IFNULL(MAX(`SeID`)+1,1) as value 
-                FROM {$tbpref}sentences"
-            );
-        }
-        $term_type = 0;
-        $count = 0;
-        $row = array(0, 0, 0, "", 0);
-        foreach (explode(PHP_EOL, $mecabed) as $line) {
-            list($term, $node_type, $third) = explode(mb_chr(9), $line);
-            if ($term_type == 2 || $term == 'EOS' && $third == '7') {
-                $sid += 1;
-            }
-            $row[0] = $sid; // TiSeID
-            $row[1] = $count + 1; // TiCount
-            $count += mb_strlen($term);
-            $last_term_type = $term_type;
-            if ($third == '7') {
-                if ($term == 'EOS') {
-                    $term = '¶';
-                }
-                $term_type = 2;
-            } else if (str_contains('267', $node_type)) {
-                $term_type = 0;
-            } else {
-                $term_type = 1;
-            }
-            $order += (int)(($term_type == 0) && ($last_term_type == 0)) + 
-            (int)!(($term_type == 1) && ($last_term_type == 1));
-            $row[2] = $order; // TiOrder
-            $row[3] = convert_string_to_sqlsyntax_notrim_nonull($term); // TiText
-            $row[4] = $term_type == 0 ? 1 : 0; // TiWordCount
-            $values[] = "(" . implode(",", $row) . ")";
-        }
-        do_mysqli_query(
-            "INSERT INTO {$tbpref}temptextitems2 (
-                TiSeID, TiCount, TiOrder, TiText, TiWordCount
-            ) VALUES " . implode(',', $values)
-        );
-        // Delete elements TiOrder=@order
-        do_mysqli_query("DELETE FROM {$tbpref}temptextitems2 WHERE TiOrder=$order");
     }
+    $term_type = 0;
+    $count = 0;
+    $row = array(0, 0, 0, "", 0);
+    foreach (explode(PHP_EOL, $mecabed) as $line) {
+        list($term, $node_type, $third) = explode(mb_chr(9), $line);
+        if ($term_type == 2 || $term == 'EOP' && $third == '7') {
+            $sid += 1;
+        }
+        $row[0] = $sid; // TiSeID
+        $row[1] = $count + 1; // TiCount
+        $count += mb_strlen($term);
+        $last_term_type = $term_type;
+        if ($third == '7') {
+            if ($term == 'EOP') {
+                $term = '¶';
+            }
+            $term_type = 2;
+        } else if (str_contains('267', $node_type)) {
+            $term_type = 0;
+        } else {
+            $term_type = 1;
+        }
+        $order += (int)(($term_type == 0) && ($last_term_type == 0)) + 
+        (int)!(($term_type == 1) && ($last_term_type == 1));
+        $row[2] = $order; // TiOrder
+        $row[3] = convert_string_to_sqlsyntax_notrim_nonull($term); // TiText
+        $row[4] = $term_type == 0 ? 1 : 0; // TiWordCount
+        $values[] = "(" . implode(",", $row) . ")";
+    }
+    do_mysqli_query(
+        "INSERT INTO temptextitems2 (
+            TiSeID, TiCount, TiOrder, TiText, TiWordCount
+        ) VALUES " . implode(',', $values)
+    );
+    // Delete elements TiOrder=@order
+    do_mysqli_query("DELETE FROM temptextitems2 WHERE TiOrder=$order");
     do_mysqli_query(
         "INSERT INTO {$tbpref}temptextitems (
             TiCount, TiSeID, TiOrder, TiWordCount, TiText
         ) 
         SELECT MIN(TiCount) s, TiSeID, TiOrder, TiWordCount, 
         group_concat(TiText ORDER BY TiCount SEPARATOR '')
-        FROM {$tbpref}temptextitems2
+        FROM temptextitems2
         GROUP BY TiOrder"
     );
-    do_mysqli_query("DROP TABLE {$tbpref}temptextitems2");
+    do_mysqli_query("DROP TABLE temptextitems2");
     unlink($file_name);
     return null;
 }

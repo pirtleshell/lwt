@@ -3542,7 +3542,7 @@ function get20Sentences($lang, $wordlc, $wid, $jsctlname, $mode): string
             $mecab_file = sys_get_temp_dir() . "/" . $tbpref . "mecab_to_db.txt";
             //$mecab_args = ' -F {%m%t\\t -U {%m%t\\t -E \\n ';
             // For instance, "このラーメン" becomes "この    6    68\nラーメン    7    38"
-            $mecab_args = ' -F %m\\t%t\\t%h\\n -U %m\\t%t\\t%h\\n -E EOS\\t3\\t7\\n ';
+            $mecab_args = ' -F %m\\t%t\\t%h\\n -U %m\\t%t\\t%h\\n -E EOP\\t3\\t7\\n ';
             if (file_exists($mecab_file)) { 
                 unlink($mecab_file); 
             }
@@ -3718,7 +3718,7 @@ function insert_expression_from_mecab($text, $lid, $wid, $len): array
     global $tbpref;
 
     $db_to_mecab = tempnam(sys_get_temp_dir(), "{$tbpref}db_to_mecab");
-    $mecab_args = " -F %m\\t%t\\t%h\\n -U %m\\t%t\\t%h\\n -E EOS\\t3\\t7\\n ";
+    $mecab_args = " -F %m\\t%t\\t%h\\n -U %m\\t%t\\t%h\\n -E EOP\\t3\\t7\\n ";
 
     $mecab = get_mecab_path($mecab_args);
     $sql = "SELECT SeID, SeTxID, SeFirstPos, SeText FROM {$tbpref}sentences 
@@ -3742,7 +3742,7 @@ function insert_expression_from_mecab($text, $lid, $wid, $len): array
             $row = fgets($handle, 16132);
             $arr = explode("\t", $row, 4);
             // Not a word (punctuation)
-            if (empty($arr[0]) || $arr[0] == "EOS" 
+            if (empty($arr[0]) || $arr[0] == "EOP" 
                 || strpos("2 6 7", $arr[1]) === false
             ) {
                 continue;

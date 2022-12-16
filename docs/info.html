@@ -1943,6 +1943,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 <li>
 <code>save_setting_redirect.php</code> moved to <code>inc/save_setting_redirect.php</code>.</li>
 <li>Psalm static code analysis of all PHP files.</li>
+<li>We use "EOP" for end-of-paragraph markers instead of misleading "EOS" (MeCab).</li>
 </ul>
 </li>
 <li>JS: Some deprecated functions <code>escape</code> and <code>unescape</code> were replaced by modern equivalents <code>encodeURIcomponent</code> and <code>decodeURIcomponent</code>. This may lead to changes in cookies, notably making them work better.</li>
@@ -1969,6 +1970,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 <li>The <em>audio</em> player was no longer working since 2.1.0-fork since the play button was hidden.</li>
 <li>Save text position (<code>inc/ajax_save_text_position.php</code>) was broken for all texts. This is fixed.</li>
 <li>Right frames should hide automatically but they often don't (<a href="https://github.com/HugoFara/lwt/issues/61">#61</a>). Merged PR (#62)[https://github.com/HugoFara/lwt/pull/62].</li>
+<li>Japanese parsing is now better, and uses PHP only (the local_infile SQL functionality is no longer used). Related to PR (#43)[https://github.com/HugoFara/lwt/pull/43].</li>
 </ul>
 </li>
 <li>Tests:
