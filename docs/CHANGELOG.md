@@ -25,7 +25,8 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 * JS: Some deprecated functions ``escape`` and ``unescape`` were replaced by modern equivalents ``encodeURIcomponent`` and ``decodeURIcomponent``. This may lead to changes in cookies, notably making them work better.
 * DB: the NO_ZERO_DATE mode is no longer required, see [#78](https://github.com/HugoFara/lwt/issues/78).
   * In the ``words`` table, replaced the default timestamp ``0000-00-00 00:00:00`` by ``0000-00-00 00:00:01``.
-  * The demo database underwent the same change.  
+  * The demo database underwent the same change.
+* Updated ``composer.lock``.
 
 ### Deprecated
 * ``do_test_test_css`` in ``do_test_test.php`` is deprecated since it was causing display issues. Its CSS rules were trimmed.
