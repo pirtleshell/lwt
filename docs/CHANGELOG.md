@@ -22,6 +22,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
   * ``save_setting_redirect.php`` moved to ``inc/save_setting_redirect.php``.
   * Psalm static code analysis of all PHP files.
   * We use "EOP" for end-of-paragraph markers instead of misleading "EOS" (MeCab).
+  * Slightly changed how a connection is established with SQL. It makes messages more relevant when SQL is not running.
 * JS: Some deprecated functions ``escape`` and ``unescape`` were replaced by modern equivalents ``encodeURIcomponent`` and ``decodeURIcomponent``. This may lead to changes in cookies, notably making them work better.
 * DB: the NO_ZERO_DATE mode is no longer required, see [#78](https://github.com/HugoFara/lwt/issues/78).
   * In the ``words`` table, replaced the default timestamp ``0000-00-00 00:00:00`` by ``0000-00-00 00:00:01``.
@@ -53,6 +54,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
   * Unconsistent option in ``inc/ajax_save_setting.php``. 
     * Since 2.2.2-fork, you had to use a GET request to use it, resulting in authorization errors.
     * POST requests are now again the default way to use it.
+    * PHP tries to set the allow_local_infile option during the connection with SQL ([#20](https://github.com/HugoFara/lwt/issues/20), [#40](https://github.com/HugoFara/lwt/issues/40)). 
 * UI
   * Audio in ``edit_texts.php`` was never shown.
   * When adding text, the user was ask to create a ``media`` folder in ``...``, corrected to ``..``.

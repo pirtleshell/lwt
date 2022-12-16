@@ -2162,51 +2162,68 @@ function check_update_db($debug, $tbpref, $dbname): void
 
 /**
  * Make the connection to the database.
- *
+ * 
  * @return mysqli Connection to the database
- *
+ * 
  * @psalm-suppress UndefinedDocblockClass
+ * 
+ * @since 2.6.0-fork Use mysqli_init and mysql_real_connect instead of deprecated mysql_connect
+ * @since 2.6.0-fork Tries to allow local infiles for the connection.
  */
-function connect_to_database($server, $userid, $passwd, $dbname): mysqli 
+function connect_to_database($server, $userid, $passwd, $dbname) 
 {
     // @ suppresses error messages
     
     // Necessary since mysqli_report default setting in PHP 8.1+ has changed
-    @mysqli_report(MYSQLI_REPORT_OFF); 
+    @mysqli_report(MYSQLI_REPORT_OFF);
 
-    $DBCONNECTION = @mysqli_connect($server, $userid, $passwd, $dbname);
+    $DBCONNECTION = mysqli_init();
 
-    if (!$DBCONNECTION && mysqli_connect_errno() == 1049) {
+    if ($DBCONNECTION === false) {
+        my_die(
+            'Database connection error. Is MySQL running? 
+            You can refer to the documentation: 
+            https://hugofara.github.io/lwt/docs/install.html 
+            [Error Code: ' . mysqli_connect_errno() . 
+            ' / Error Message: ' . mysqli_connect_error() . ']'
+        );
+    }
+
+    @mysqli_options($DBCONNECTION, MYSQLI_OPT_LOCAL_INFILE, 1);
+
+    $success = @mysqli_real_connect($DBCONNECTION, $server, $userid, $passwd, $dbname);
+
+    if (!$success && mysqli_connect_errno() == 1049) {
         // Database unknown, try with generic database
-        $DBCONNECTION = @mysqli_connect($server, $userid, $passwd);
-        if (!$DBCONNECTION) { 
+        $success = @mysqli_real_connect($DBCONNECTION, $server, $userid, $passwd);
+        if (!$success || !$DBCONNECTION) { 
             my_die(
-                'DB connect error (MySQL not running or connection parameters are ' .
-                'wrong; start MySQL and/or correct file "connect.inc.php"). 
-                Please read the documentation: ' . 
-                'https://hugofara.github.io/lwt/docs/install.html 
+                'DB connect error, connection parameters may be wrong, 
+                please check file "connect.inc.php". 
+                You can refer to the documentation:  
+                https://hugofara.github.io/lwt/docs/install.html 
                 [Error Code: ' . mysqli_connect_errno() . 
                 ' / Error Message: ' . mysqli_connect_error() . ']'
             );
         }
         $result = mysqli_query(
             $DBCONNECTION, 
-            "CREATE DATABASE `" . $dbname . "` 
+            "CREATE DATABASE `$dbname` 
             DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci"
         );
         if (!$result) {
             my_die("Failed to create database! " . $result);
         }
         mysqli_close($DBCONNECTION);
-        $DBCONNECTION = @mysqli_connect($server, $userid, $passwd, $dbname);
+        $success = @mysqli_real_connect($DBCONNECTION, $server, $userid, $passwd, $dbname);
     }
 
-    if (!$DBCONNECTION) { 
+    if (!$success) { 
         my_die(
-            'DB connect error (MySQL not running or connection parameters are wrong;' .
-            ' start MySQL and/or correct file "connect.inc.php"). 
-            Please read the documentation: '. 
-            'https://hugofara.github.io/lwt/docs/install.html 
+            'DB connect error, connection parameters may be wrong, 
+            please check file "connect.inc.php"
+            You can refer to the documentation:
+            https://hugofara.github.io/lwt/docs/install.html 
             [Error Code: ' . mysqli_connect_errno() . 
             ' / Error Message: ' . mysqli_connect_error() . ']'
         ); 

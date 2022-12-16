@@ -1944,6 +1944,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 <code>save_setting_redirect.php</code> moved to <code>inc/save_setting_redirect.php</code>.</li>
 <li>Psalm static code analysis of all PHP files.</li>
 <li>We use "EOP" for end-of-paragraph markers instead of misleading "EOS" (MeCab).</li>
+<li>Slightly changed how a connection is established with SQL. It makes messages more relevant when SQL is not running.</li>
 </ul>
 </li>
 <li>JS: Some deprecated functions <code>escape</code> and <code>unescape</code> were replaced by modern equivalents <code>encodeURIcomponent</code> and <code>decodeURIcomponent</code>. This may lead to changes in cookies, notably making them work better.</li>
@@ -2000,6 +2001,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 <ul>
 <li>Since 2.2.2-fork, you had to use a GET request to use it, resulting in authorization errors.</li>
 <li>POST requests are now again the default way to use it.</li>
+<li>PHP tries to set the allow_local_infile option during the connection with SQL (<a href="https://github.com/HugoFara/lwt/issues/20">#20</a>, <a href="https://github.com/HugoFara/lwt/issues/40">#40</a>).</li>
 </ul>
 </li>
 </ul>
