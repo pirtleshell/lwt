@@ -5,12 +5,14 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        - DB_HOSTNAME
-        - DB_USER
-        - DB_PASSWORD
-        - DB_DATABASE
+        - DB_HOSTNAME=db
+        - DB_USER=root
+        - DB_PASSWORD=root
+        - DB_DATABASE=learning-with-texts
     container_name: lwt
     depends_on:
+      - db
+    links:
       - db
     ports:
       - "8010:80"
@@ -26,4 +28,4 @@ services:
     volumes:
         - lwt_db_data:/var/lib/mysql
 volumes:
-  lwt_db_data:
+  lwt_db_data: {}
