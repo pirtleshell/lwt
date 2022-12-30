@@ -547,11 +547,20 @@ THE SOFTWARE.</p>
 			<h2 id="install" name="install">▶ LWT Installation - <a href="#">[↑]</a></h2>
 <ul>
 <li>
-<em>Last update</em>: October 28 2022</li>
+<em>Last update</em>: December 30 2022</li>
 </ul>
 <p>Let's install the LWT server. LWT uses a client-server architecture, which means it
 will run in your browser as a classical website. You can use any computer as the
 server, here are some ways to do it.</p>
+<h3>A bird's-eye view</h3>
+<p>Whatever installation you choose, the steps will look like the following:</p>
+<ol>
+<li>Set-up a server with a database system.</li>
+<li>Download <a href="https://github.com/HugoFara/lwt/releases">LWT</a>.</li>
+<li>Create <code>connect.inc.php</code> file with your password.</li>
+<li>Start the server and ready to go!</li>
+</ol>
+<p>There are two main ways to install LWT: on your computer or using <a href="#run-in-a-docker-container">containers</a>. We recommend the first solution as the most straightforward. The second solution has a simpler installation method, but takes a lot of storage.</p>
 <h3>Windows 10/11</h3>
 <p>Two main softwares can be used to set up a local server on your computer: XAMPP and EasyPHP. We recommand XAMPP because it supports higher PHP version, but feel free to use any softare you like.</p>
 <h4>Possibility (a): Using XAMPP</h4>
@@ -561,7 +570,7 @@ server, here are some ways to do it.</p>
 <ol>
 <li>Go to <a href="https://www.apachefriends.org/download.html">https://www.apachefriends.org/download.html</a>
 </li>
-<li>Download "XAMPP for <strong>Windows</strong>". PHP starting from 7.4 is supported, we recommend PHP 8.</li>
+<li>Download "XAMPP for <strong>Windows</strong>". PHP starting from <strong>8.0</strong> is supported.</li>
 <li>Open your Downloads folder and run the downloaded "xampp-windows-x64-xxx-installer.exe". Please install the components Apache, MySQL, PHP and phpMyAdmin into the folder C:\xampp.</li>
 </ol>
 </li>
@@ -691,16 +700,20 @@ sudo apt-get install apache2 libapache2-mod-php php php-mbstring php-mysql mysql
 <li>
 <p>Set MySQL root Password to "abcxyz"</p>
 <pre><code class="language-bash">sudo mysql
-ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'abcxyz';
+</code></pre>
+<p>Then type</p>
+<pre><code class="language-MySQL">ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'abcxyz';
 FLUSH privileges;
 QUIT; 
 </code></pre>
 </li>
 <li>
-<p>Check MySQL access (if you see the MySQL prompt <code>mysql&gt;</code> after the first command, everything is OK):</p>
+<p>Check MySQL access (optionnal)</p>
 <pre><code class="language-bash">mysql -u root -p
 abcxyz
-QUIT;
+</code></pre>
+<p>If you see the MySQL prompt <code>mysql&gt;</code> after the first command, everything is OK. Quit with</p>
+<pre><code class="language-MySQL">QUIT;
 </code></pre>
 </li>
 </ol>
@@ -737,21 +750,18 @@ sudo service mysql restart
 </ol>
 <p>If you want to use LWT again, just do step 7.</p>
 <h3>Run in a Docker container</h3>
-<blockquote>
-<p>Currently being repaired! See <a href="https://github.com/HugoFara/lwt/issues/37">issue #37</a> for more details!
-It is the easiest way to install LWT, but the drawback is that it will use more or
+<p>It is the easiest way to install LWT, but the drawback is that it will use more or
 less 1 GB on your system.</p>
-</blockquote>
-<p>If LWT is already downloaded, you only need to build the image by going into the
-project root folder and run using</p>
-<pre><code class="language-bash">docker compose -f docker-compose.yml up -d
+<p>We provide on online image, you can download it using.</p>
+<pre><code class="language-bash">docker pull ghcr.io/hugofara/lwt
+</code></pre>
+<p><strong>If you want to build the image from source</strong>, you can use the following command.
+You can build the image by running</p>
+<pre><code class="language-bash">docker compose up
 </code></pre>
 <p>By default the server can be accessed on port 8010 (<a href="http://localhost:8010">http://localhost:8010</a>).</p>
 <p>To remove the created containers run</p>
-<pre><code class="language-bash">docker compose -f docker-compose.yml down
-</code></pre>
-<p>Otherwise, you can download the official image with</p>
-<pre><code class="language-bash">docker pull ghcr.io/hugofara/lwt
+<pre><code class="language-bash">docker compose  down
 </code></pre>
 <h3>Dependency management with Composer</h3>
 <p>If you have a technical knowledge of how Composer works for dependency management, you may consider using
@@ -778,6 +788,7 @@ The official repository is at <a href="https://packagist.org/packages/hugofara/l
 </ol>
 <h3>Something Went Wrong</h3>
 <p>Need more help? You can contact us through  <a href="https://github.com/HugoFara/lwt/issues">GitHub</a> and <a href="https://discord.gg/xrkRZR2jtt">Discord</a>!</p>
+<p>Please note that PHP below version 8.0 is not supported.</p>
 
 			<h2 id="learn" name="learn">▶ How to Learn - <a href="#">[↑]</a></h2>
 <ul>
@@ -1955,6 +1966,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 </ul>
 </li>
 <li>Updated <code>composer.lock</code>.</li>
+<li>Docker: more default options, documentation updated.</li>
 </ul>
 <h4>Deprecated</h4>
 <ul>
@@ -1967,6 +1979,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 </ul>
 <h4>Fixed</h4>
 <ul>
+<li>Docker: Docker integration repaired (<a href="https://github.com/HugoFara/lwt/issues/37">#37</a>)! Huge thanks to <a href="https://github.com/hakuro-jp">@hakuro-jp</a> for the initial help and <a href="https://github.com/darkone23">@darkone23</a> for the final solution. Without you two I would have long given up with Docker.</li>
 <li>Texts:
 <ul>
 <li>The <em>audio</em> player was no longer working since 2.1.0-fork since the play button was hidden.</li>
