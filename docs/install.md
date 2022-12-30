@@ -1,9 +1,18 @@
 # LWT Installation
-* *Last update*: October 28 2022
+* *Last update*: December 30 2022
 
 Let's install the LWT server. LWT uses a client-server architecture, which means it 
 will run in your browser as a classical website. You can use any computer as the 
 server, here are some ways to do it. 
+
+## A bird's-eye view
+Whatever installation you choose, the steps will look like the following:
+1. Set-up a server with a database system.
+2. Download [LWT](https://github.com/HugoFara/lwt/releases).
+3. Create ``connect.inc.php`` file with your password.
+4. Start the server and ready to go!
+
+There are two main ways to install LWT: on your computer or using [containers](#run-in-a-docker-container). We recommend the first solution as the most straightforward. The second solution has a simpler installation method, but takes a lot of storage. 
 
 ## Windows 10/11
 Two main softwares can be used to set up a local server on your computer: XAMPP and EasyPHP. We recommand XAMPP because it supports higher PHP version, but feel free to use any softare you like.
@@ -12,7 +21,7 @@ Two main softwares can be used to set up a local server on your computer: XAMPP 
 
 1. Install XAMPP
    1. Go to https://www.apachefriends.org/download.html
-   2. Download "XAMPP for **Windows**". PHP starting from 7.4 is supported, we recommend PHP 8.
+   2. Download "XAMPP for **Windows**". PHP starting from **8.0** is supported.
    3. Open your Downloads folder and run the downloaded "xampp-windows-x64-xxx-installer.exe". Please install the components Apache, MySQL, PHP and phpMyAdmin into the folder C:\xampp.
 
 2. Get the [latest GitHub release](https://github.com/HugoFara/lwt/releases), unzip it.
@@ -114,16 +123,22 @@ The following instruction were tested on Raspbian Stretch.
 
       ```bash 
       sudo mysql
+      ```
+      Then type
+      ```MySQL
       ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'abcxyz';
       FLUSH privileges;
       QUIT; 
       ```
 
-    4. Check MySQL access (if you see the MySQL prompt ``mysql>`` after the first command, everything is OK):
+    4. Check MySQL access (optionnal)
 
        ```bash
        mysql -u root -p
        abcxyz
+       ```
+       If you see the MySQL prompt ``mysql>`` after the first command, everything is OK. Quit with
+       ```MySQL
        QUIT;
        ```
 
@@ -155,15 +170,19 @@ The following instruction were tested on Raspbian Stretch.
 If you want to use LWT again, just do step 7.
 
 ## Run in a [Docker](https://docs.docker.com/get-docker/) container
-> Currently being repaired! See [issue #37](https://github.com/HugoFara/lwt/issues/37) for more details!
 It is the easiest way to install LWT, but the drawback is that it will use more or 
-less 1 GB on your system. 
+less 1 GB on your system.
 
-If LWT is already downloaded, you only need to build the image by going into the 
-project root folder and run using 
+We provide on online image, you can download it using.
+```bash
+docker pull ghcr.io/hugofara/lwt
+```
+
+**If you want to build the image from source**, you can use the following command. 
+You can build the image by running 
 
 ```bash
-docker compose -f docker-compose.yml up -d
+docker compose up
 ```
 
 By default the server can be accessed on port 8010 (http://localhost:8010).
@@ -171,12 +190,7 @@ By default the server can be accessed on port 8010 (http://localhost:8010).
 To remove the created containers run
 
 ```bash
-docker compose -f docker-compose.yml down
-```
-
-Otherwise, you can download the official image with
-```bash
-docker pull ghcr.io/hugofara/lwt
+docker compose  down
 ```
 
 ## Dependency management with Composer
@@ -200,3 +214,5 @@ The official repository is at https://packagist.org/packages/hugofara/lwt.
 
 ## Something Went Wrong
 Need more help? You can contact us through  [GitHub](https://github.com/HugoFara/lwt/issues) and [Discord](https://discord.gg/xrkRZR2jtt)!
+
+Please note that PHP below version 8.0 is not supported. 
