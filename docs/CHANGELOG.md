@@ -23,6 +23,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
   * Psalm static code analysis of all PHP files.
   * We use "EOP" for end-of-paragraph markers instead of misleading "EOS" (MeCab).
   * Slightly changed how a connection is established with SQL. It makes messages more relevant when SQL is not running.
+  * Not-japanese texts now always use the PHP parser. The SQL parser is no longer used.
 * JS: Some deprecated functions ``escape`` and ``unescape`` were replaced by modern equivalents ``encodeURIcomponent`` and ``decodeURIcomponent``. This may lead to changes in cookies, notably making them work better.
 * DB: the NO_ZERO_DATE mode is no longer required, see [#78](https://github.com/HugoFara/lwt/issues/78).
   * In the ``words`` table, replaced the default timestamp ``0000-00-00 00:00:00`` by ``0000-00-00 00:00:01``.

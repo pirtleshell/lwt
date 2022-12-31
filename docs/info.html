@@ -1956,6 +1956,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 <li>Psalm static code analysis of all PHP files.</li>
 <li>We use "EOP" for end-of-paragraph markers instead of misleading "EOS" (MeCab).</li>
 <li>Slightly changed how a connection is established with SQL. It makes messages more relevant when SQL is not running.</li>
+<li>Not-japanese texts now always use the PHP parser. The SQL parser is no longer used.</li>
 </ul>
 </li>
 <li>JS: Some deprecated functions <code>escape</code> and <code>unescape</code> were replaced by modern equivalents <code>encodeURIcomponent</code> and <code>decodeURIcomponent</code>. This may lead to changes in cookies, notably making them work better.</li>

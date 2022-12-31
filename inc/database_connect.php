@@ -841,6 +841,51 @@ function parse_japanese_text($text, $id): ?array
 }
 
 /**
+ * Insert a processed text in the data in pure SQL way.
+ * 
+ * @param string $text Preprocessed text to insert
+ * @param int    $id   Text ID
+ * 
+ * @return null
+ * 
+ * @global string $tbpref Database table prefix
+ */
+function save_processed_text_with_sql($text, $id)
+{
+    global $tbpref;
+    $file_name = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $tbpref . "tmpti.txt";
+    $fp = fopen($file_name, 'w');
+    fwrite($fp, $text);
+    fclose($fp);
+    do_mysqli_query("SET @order=0, @sid=1, @count = 0;");
+    if ($id > 0) {
+        do_mysqli_query(
+            "SET @sid=(SELECT ifnull(max(`SeID`)+1,1) FROM `{$tbpref}sentences`);"
+        );
+    }
+    $sql = "LOAD DATA LOCAL INFILE " . convert_string_to_sqlsyntax($file_name) ."
+    INTO TABLE {$tbpref}temptextitems 
+    FIELDS TERMINATED BY '\\t' LINES TERMINATED BY '\\n' (@word_count, @term)
+    SET 
+        TiSeID = @sid, 
+        TiCount = (@count:=@count+CHAR_LENGTH(@term))+1-CHAR_LENGTH(@term),
+        TiOrder = IF(
+            @term LIKE '%\\r',
+            CASE 
+                WHEN (@term:=REPLACE(@term,'\\r','')) IS NULL THEN NULL 
+                WHEN (@sid:=@sid+1) IS NULL THEN NULL 
+                WHEN @count:= 0 IS NULL THEN NULL 
+                ELSE @order := @order+1 
+            END, 
+            @order := @order+1
+        ), 
+        TiText = @term,
+        TiWordCount = @word_count";
+    do_mysqli_query($sql);
+    unlink($file_name);
+}
+
+/**
  * Parse a text using the default tools. It is a not-japanese text.
  *
  * @param string $text Text to parse
@@ -866,6 +911,7 @@ function parse_standard_text($text, $id, $lid): ?array
     $noSentenceEnd = (string)$record['LgExceptionsSplitSentences'];
     $termchar = (string)$record['LgRegexpWordCharacters'];
     $rtlScript = $record['LgRightToLeft'];
+    mysqli_free_result($res);
     // Split text paragraphs using " ¶" symbol 
     $text = str_replace("\n", " ¶", $text);
     $text = trim($text);
@@ -883,7 +929,7 @@ function parse_standard_text($text, $id, $lid): ?array
     // "\r" => Sentence delimiter, "\t" and "\n" => Word delimiter
     $text = preg_replace_callback(
         "/(\S+)\s*((\.+)|([$splitSentence]))([]'`\"”)‘’‹›“„«»』」]*)(?=(\s*)(\S+|$))/u",
-        // Arrow functions got introduced in PHP 7.4 
+        // Arrow functions were introduced in PHP 7.4 
         //fn ($matches) => find_latin_sentence_end($matches, $noSentenceEnd)
         function ($matches) use ($noSentenceEnd) {
             return find_latin_sentence_end($matches, $noSentenceEnd); 
@@ -946,37 +992,7 @@ function parse_standard_text($text, $id, $lid): ?array
         $use_local_infile = false;
     }
     if ($use_local_infile) {
-        $file_name = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $tbpref . "tmpti.txt";
-        $fp = fopen($file_name, 'w');
-        fwrite($fp, $text);
-        fclose($fp);
-        do_mysqli_query("SET @order=0, @sid=1, @count = 0;");
-        if ($id > 0) {
-            do_mysqli_query(
-                "SET @sid=(SELECT ifnull(max(`SeID`)+1,1) FROM `{$tbpref}sentences`);"
-            );
-        }
-        $sql = "LOAD DATA LOCAL INFILE " . convert_string_to_sqlsyntax($file_name) ."
-        INTO TABLE {$tbpref}temptextitems 
-        FIELDS TERMINATED BY '\\t' LINES TERMINATED BY '\\n' (@word_count, @term)
-        SET 
-            TiSeID = @sid, 
-            TiCount = (@count:=@count+CHAR_LENGTH(@term))+1-CHAR_LENGTH(@term),
-            TiOrder = IF(
-                @term LIKE '%\\r',
-                CASE 
-                    WHEN (@term:=REPLACE(@term,'\\r','')) IS NULL THEN NULL 
-                    WHEN (@sid:=@sid+1) IS NULL THEN NULL 
-                    WHEN @count:= 0 IS NULL THEN NULL 
-                    ELSE @order := @order+1 
-                END, 
-                @order := @order+1
-            ), 
-            TiText = @term,
-            TiWordCount = @word_count";
-        do_mysqli_query($sql);
-        mysqli_free_result($res);
-        unlink($file_name);
+        save_processed_text_with_sql($text, $id);
     } else {
         $values = array();
         $order = 0;
