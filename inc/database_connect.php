@@ -936,17 +936,26 @@ function parse_standard_text($text, $id, $lid): ?array
     );
     // It is faster to write to a file and let SQL do its magic, but may run into
     // security restrictions
-    if (get_first_value("SELECT @@GLOBAL.local_infile as value")) {
+    $use_local_infile = false;
+    if (
+        !in_array(
+        get_first_value("SELECT @@GLOBAL.local_infile as value"), 
+        array(1, '1', 'ON')
+        )
+    ) {
+        $use_local_infile = false;
+    }
+    if ($use_local_infile) {
         $file_name = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $tbpref . "tmpti.txt";
         $fp = fopen($file_name, 'w');
         fwrite($fp, $text);
         fclose($fp);
-        do_mysqli_query(
-            "SET @order=0, 
-            @sid=" . (
-                $id>0?"(SELECT ifnull(max(`SeID`)+1,1) FROM `{$tbpref}sentences`)":1). 
-            ", @count = 0;"
-        );
+        do_mysqli_query("SET @order=0, @sid=1, @count = 0;");
+        if ($id > 0) {
+            do_mysqli_query(
+                "SET @sid=(SELECT ifnull(max(`SeID`)+1,1) FROM `{$tbpref}sentences`);"
+            );
+        }
         $sql = "LOAD DATA LOCAL INFILE " . convert_string_to_sqlsyntax($file_name) ."
         INTO TABLE {$tbpref}temptextitems 
         FIELDS TERMINATED BY '\\t' LINES TERMINATED BY '\\n' (@word_count, @term)
@@ -992,7 +1001,7 @@ function parse_standard_text($text, $id, $lid): ?array
             }
             $row[2] = ++$order; // TiOrder
             $row[3] = convert_string_to_sqlsyntax_notrim_nonull($term); // TiText
-            $row[4] = $word_count; // TiWordCount
+            $row[4] = (int)$word_count; // TiWordCount
             $values[] = "(" . implode(",", $row) . ")";
         }
         do_mysqli_query(

@@ -45,6 +45,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
   * Save text position (``inc/ajax_save_text_position.php``) was broken for all texts. This is fixed.
   * Right frames should hide automatically but they often don't ([#61](https://github.com/HugoFara/lwt/issues/61)). Merged PR (#62)[https://github.com/HugoFara/lwt/pull/62].
   * Japanese parsing is now better, and uses PHP only (the local_infile SQL functionality is no longer used). Related to PR (#43)[https://github.com/HugoFara/lwt/pull/43].
+  * One-word not-Japanese texts do no longer result in a crash ([#80](https://github.com/HugoFara/lwt/issues/80)), whoever uses them.
 * Tests:
   * Header was hidden during tests on Chrome-based browsers.
   * Testing specific terms was broken ([#66](https://github.com/HugoFara/lwt/issues/66)) and tests were sometimes not counting score. Solution inspired from PR [#67](https://github.com/HugoFara/lwt/issues/67) from [@jzohrab](https://github.com/jzohrab).
