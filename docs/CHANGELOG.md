@@ -37,7 +37,9 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 * The ability to use a dictionary with a specific encoding, introduced in 1.0.2, is being removed. It was making things overwhelmingly complex and caused issues, as signaled in [#58](https://github.com/HugoFara/lwt/issues/58). Adapted from PR [#59](https://github.com/HugoFara/lwt/pull/59).
 
 ### Fixed
-* Docker: Docker integration repaired ([#37](https://github.com/HugoFara/lwt/issues/37))! Huge thanks to [@hakuro-jp](https://github.com/hakuro-jp) for the initial help and [@darkone23](https://github.com/darkone23) for the final solution. Without you two I would have long given up with Docker. 
+* Docker: 
+  * Docker integration repaired ([#37](https://github.com/HugoFara/lwt/issues/37))! Huge thanks to [@hakuro-jp](https://github.com/hakuro-jp) for the initial help and [@darkone23](https://github.com/darkone23) for the final solution. Without you two I would have long given up with Docker.
+  * Docker continous integration is back as well due to a rewrite of the worflow. 
 * Texts:
   * The *audio* player was no longer working since 2.1.0-fork since the play button was hidden.
   * Save text position (``inc/ajax_save_text_position.php``) was broken for all texts. This is fixed.
