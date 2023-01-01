@@ -169,9 +169,9 @@ The following instruction were tested on Raspbian Stretch.
 
 If you want to use LWT again, just do step 7.
 
-## Run in a [Docker](https://docs.docker.com/get-docker/) container
-It is the easiest way to install LWT, but the drawback is that it will use more or 
-less 1 GB on your system.
+## Run in a Docker container
+[Docker](https://docs.docker.com/get-docker/) is the easiest way to install LWT, but it will use more or less 1 GB 
+on your system.
 
 We provide on online image, you can download it using.
 ```bash

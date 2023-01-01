@@ -22,5 +22,6 @@ var searchData=
   ['minifyjs_19',['minifyJS',['../minifier_8php.html#abdc82ffc0d382f3b60097c3239833994',1,'minifier.php']]],
   ['mobile_2ephp_20',['mobile.php',['../mobile_8php.html',1,'']]],
   ['mobile_5finteractions_2ephp_21',['mobile_interactions.php',['../mobile__interactions_8php.html',1,'']]],
-  ['my_5fdie_22',['my_die',['../kernel__utility_8php.html#a66b15236d14629cb1bc2f6ed300bd38e',1,'kernel_utility.php']]]
+  ['my_5fdie_22',['my_die',['../kernel__utility_8php.html#a66b15236d14629cb1bc2f6ed300bd38e',1,'kernel_utility.php']]],
+  ['my_5fstr_5fgetcsv_23',['my_str_getcsv',['../upload__words_8php.html#a61545539a192cfd7d8a9b4e47d0b4813',1,'upload_words.php']]]
 ];

@@ -17,5 +17,6 @@ var searchData=
   ['minifyalljs_14',['minifyAllJS',['../minifier_8php.html#a1f3f639fda5fba4d6f3dd22ba4dba582',1,'minifier.php']]],
   ['minifycss_15',['minifyCSS',['../minifier_8php.html#a642f36bdb39201d18ebac2d4b4f08e26',1,'minifier.php']]],
   ['minifyjs_16',['minifyJS',['../minifier_8php.html#abdc82ffc0d382f3b60097c3239833994',1,'minifier.php']]],
-  ['my_5fdie_17',['my_die',['../kernel__utility_8php.html#a66b15236d14629cb1bc2f6ed300bd38e',1,'kernel_utility.php']]]
+  ['my_5fdie_17',['my_die',['../kernel__utility_8php.html#a66b15236d14629cb1bc2f6ed300bd38e',1,'kernel_utility.php']]],
+  ['my_5fstr_5fgetcsv_18',['my_str_getcsv',['../upload__words_8php.html#a61545539a192cfd7d8a9b4e47d0b4813',1,'upload_words.php']]]
 ];

@@ -23,7 +23,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
   * Psalm static code analysis of all PHP files.
   * We use "EOP" for end-of-paragraph markers instead of misleading "EOS" (MeCab).
   * Slightly changed how a connection is established with SQL. It makes messages more relevant when SQL is not running.
-  * Not-japanese texts now always use the PHP parser. The SQL parser is no longer used.
+  * Not Japanese texts now always use the PHP parser. The SQL parser is no longer used.
 * JS: Some deprecated functions ``escape`` and ``unescape`` were replaced by modern equivalents ``encodeURIcomponent`` and ``decodeURIcomponent``. This may lead to changes in cookies, notably making them work better.
 * DB: the NO_ZERO_DATE mode is no longer required, see [#78](https://github.com/HugoFara/lwt/issues/78).
   * In the ``words`` table, replaced the default timestamp ``0000-00-00 00:00:00`` by ``0000-00-00 00:00:01``.
@@ -40,7 +40,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 ### Fixed
 * Docker: 
   * Docker integration repaired ([#37](https://github.com/HugoFara/lwt/issues/37))! Huge thanks to [@hakuro-jp](https://github.com/hakuro-jp) for the initial help and [@darkone23](https://github.com/darkone23) for the final solution. Without you two I would have long given up with Docker.
-  * Docker continous integration is back as well due to a rewrite of the worflow. 
+  * Docker continuous integration is back as well due to a rewrite of the workflow. 
 * Texts:
   * The *audio* player was no longer working since 2.1.0-fork since the play button was hidden.
   * Save text position (``inc/ajax_save_text_position.php``) was broken for all texts. This is fixed.
@@ -57,7 +57,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
   * Type fixes thanks to psalm:
     * ``get_first_value`` documentation updated since it was also returning ``float`` and ``int``.
     * ``get_similar_terms`` in ``simterms.php`` officially returns int.
-  * Unconsistent option in ``inc/ajax_save_setting.php``. 
+  * Inconsistent option in ``inc/ajax_save_setting.php``. 
     * Since 2.2.2-fork, you had to use a GET request to use it, resulting in authorization errors.
     * POST requests are now again the default way to use it.
     * PHP tries to set the allow_local_infile option during the connection with SQL ([#20](https://github.com/HugoFara/lwt/issues/20), [#40](https://github.com/HugoFara/lwt/issues/40)). 
@@ -68,6 +68,8 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
   * For some users it was impossible to install the default database due to the use of a ZERO date ([#78](https://github.com/HugoFara/lwt/issues/78)).
   * Deleted wrong database instructions ``ADD DROP INDEX TiTextLC`` altering ``temptextitems`` in ``update_database`` of ``database_connect.php``. 
 
+### Full Changelog
+* [2.5.3...2.6.0](https://github.com/HugoFara/lwt/compare/2.5.3...2.6.0)
 
 ## 2.5.3-fork (November 06 2022)
 ### Added
