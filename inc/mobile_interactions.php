@@ -10,7 +10,7 @@
  * @since   2.2.0
  * @since   2.2.1 You should not longer use this library as mobile detect is removed.
  *                However, this interface is unchanged for backward compatibility.
- * @since   2.5.4 Mobile detect is back and does no longer use external libraries. 
+ * @since   2.6.0 Mobile detect is back and does no longer use external libraries. 
  */
 
 require_once __DIR__ . '/database_connect.php';
@@ -21,7 +21,7 @@ require_once __DIR__ . '/database_connect.php';
  * @return false Mobile mode shoud be activated or not
  *
  * @since 2.2.1 You should not use this function since mobiledetect is no longer used.
- * @since 2.5.4-fork No longer deprecated and use no external library.
+ * @since 2.6.0-fork No longer deprecated and use no external library.
  */
 function is_mobile(): bool
 {
@@ -87,7 +87,7 @@ function do_frameset_mobile_page_content($frame_h_uri, $frame_l_uri, $right_fram
  * 
  * @return void
  * 
- * @deprecated Since 2.5.4-fork, the display for mobile changed, making this code 
+ * @deprecated Since 2.6.0-fork, the display for mobile changed, making this code 
  *             useless  
  */
 function do_frameset_mobile_css() 

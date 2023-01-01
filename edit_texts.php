@@ -904,30 +904,11 @@ function edit_texts_other_pages($recno)
  * 
  * @return void
  * 
- * @since 2.5.4-fork Audio was never shown
+ * @since 2.6.0-fork Audio was never shown
  */
 function edit_texts_show_text_row($txrecord, $currentlang, $statuses)
 {
     $txid = $txrecord['TxID'];
-    /*
-    Added by merge and makes statistics crash. To be removed?
-    if ($showCounts) {
-    flush();
-    echo "ID" . $record['TxID'];
-    $txttotalwords = textwordcount($record['TxID']);
-    $txtworkedwords = textworkcount($record['TxID']);
-    $txtworkedexpr = textexprcount($record['TxID']);
-    $txtworkedall = $txtworkedwords + $txtworkedexpr;
-    $txttodowords = $txttotalwords - $txtworkedwords;
-    $percentunknown = 0;
-    if ($txttotalwords != 0) {
-    $percentunknown = 
-    round(100*$txttodowords/$txttotalwords,0);
-    if ($percentunknown > 100) $percentunknown = 100;
-    if ($percentunknown < 0) $percentunknown = 0;
-    }
-    }
-    */
     if (isset($txrecord['TxAudioURI'])) {
         $audio = trim($txrecord['TxAudioURI']);
     } else {

@@ -4,12 +4,13 @@ Changelog
 This project's changelog. Versions marked with "-fork" come from the community, other versions come from the canonical LWT ("official" branch on Git).
 For git tags, official releases are marked like "v1.0.0", while unofficial ones are marked like "v1.0.0-fork".
 
-## [Unreleased]
+## 2.6.0-fork (January 01 2023)
 ### Added
 * Frames resizing is back! The text reading and test interfaces updated in several ways. Based several suggestions as [#60](https://github.com/HugoFara/lwt/issues/60).
   * The desktop interface is now much similar to what it was before 2.2.1-fork.
   * The mobile interface for texts unchanged (2.2.1-fork to 2.5.3-fork).
-* You can resize frames on desktop.
+  * You can resize frames on desktop.
+* Many new functions officially introduced in PHP and JS. Some of these function were already present in the code but undocumented.
 
 ### Changed
 * UX: Faster testing: you do no longer need to enter "Space" first for speed testing, except for status down and change. Related to [#71](https://github.com/HugoFara/lwt/pull/71).
@@ -20,7 +21,14 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
   * ``do_test.php``, ``edit_texts.php``, ``edit_words.php`` and ``set_test_status.php`` now explicitly require a running session. They were silently failing before this release.
   * ``save_setting_redirect.php`` moved to ``inc/save_setting_redirect.php``.
   * Psalm static code analysis of all PHP files.
+  * We use "EOP" for end-of-paragraph markers instead of misleading "EOS" (MeCab).
+  * Slightly changed how a connection is established with SQL. It makes messages more relevant when SQL is not running.
+  * Not-japanese texts now always use the PHP parser. The SQL parser is no longer used.
 * JS: Some deprecated functions ``escape`` and ``unescape`` were replaced by modern equivalents ``encodeURIcomponent`` and ``decodeURIcomponent``. This may lead to changes in cookies, notably making them work better.
+* DB: the NO_ZERO_DATE mode is no longer required, see [#78](https://github.com/HugoFara/lwt/issues/78).
+  * In the ``words`` table, replaced the default timestamp ``0000-00-00 00:00:00`` by ``0000-00-00 00:00:01``.
+  * The demo database underwent the same change.
+* Updated ``composer.lock``.
 * Docker: more default options, documentation updated.
 
 ### Deprecated
@@ -37,6 +45,8 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
   * The *audio* player was no longer working since 2.1.0-fork since the play button was hidden.
   * Save text position (``inc/ajax_save_text_position.php``) was broken for all texts. This is fixed.
   * Right frames should hide automatically but they often don't ([#61](https://github.com/HugoFara/lwt/issues/61)). Merged PR (#62)[https://github.com/HugoFara/lwt/pull/62].
+  * Japanese parsing is now better, and uses PHP only (the local_infile SQL functionality is no longer used). Related to PR (#43)[https://github.com/HugoFara/lwt/pull/43].
+  * One-word not-Japanese texts do no longer result in a crash ([#80](https://github.com/HugoFara/lwt/issues/80)), whoever uses them.
 * Tests:
   * Header was hidden during tests on Chrome-based browsers.
   * Testing specific terms was broken ([#66](https://github.com/HugoFara/lwt/issues/66)) and tests were sometimes not counting score. Solution inspired from PR [#67](https://github.com/HugoFara/lwt/issues/67) from [@jzohrab](https://github.com/jzohrab).
@@ -50,9 +60,14 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
   * Unconsistent option in ``inc/ajax_save_setting.php``. 
     * Since 2.2.2-fork, you had to use a GET request to use it, resulting in authorization errors.
     * POST requests are now again the default way to use it.
+    * PHP tries to set the allow_local_infile option during the connection with SQL ([#20](https://github.com/HugoFara/lwt/issues/20), [#40](https://github.com/HugoFara/lwt/issues/40)). 
 * UI
   * Audio in ``edit_texts.php`` was never shown.
   * When adding text, the user was ask to create a ``media`` folder in ``...``, corrected to ``..``.
+* DB: 
+  * For some users it was impossible to install the default database due to the use of a ZERO date ([#78](https://github.com/HugoFara/lwt/issues/78)).
+  * Deleted wrong database instructions ``ADD DROP INDEX TiTextLC`` altering ``temptextitems`` in ``update_database`` of ``database_connect.php``. 
+
 
 ## 2.5.3-fork (November 06 2022)
 ### Added

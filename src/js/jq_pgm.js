@@ -1284,7 +1284,7 @@ function hideRightFrames() {
   return false;
 }
 
-/*
+/**
  * Hide the right frame and any popups.
  *
  * Called from several places: insert_word_ignore.php,

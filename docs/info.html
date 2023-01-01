@@ -213,7 +213,7 @@
 			</h2>
 
 			<p>
-				The current version is 2.5.3-fork (November 06 2022).
+				The current version is 2.6.0-fork (January 01 2023).
 				<br>
 				<a href="#CHANGELOG">View the Changelog.</a>
 			</p>
@@ -1926,16 +1926,17 @@ KEY NfUpdate (NfUpdate)</p>
 			<h2 id="CHANGELOG" name="CHANGELOG">▶ Changelog - <a href="#">[↑]</a></h2>
 <p>This project's changelog. Versions marked with "-fork" come from the community, other versions come from the canonical LWT ("official" branch on Git).
 For git tags, official releases are marked like "v1.0.0", while unofficial ones are marked like "v1.0.0-fork".</p>
-<h3>[Unreleased]</h3>
+<h3>2.6.0-fork (January 01 2023)</h3>
 <h4>Added</h4>
 <ul>
 <li>Frames resizing is back! The text reading and test interfaces updated in several ways. Based several suggestions as <a href="https://github.com/HugoFara/lwt/issues/60">#60</a>.
 <ul>
 <li>The desktop interface is now much similar to what it was before 2.2.1-fork.</li>
 <li>The mobile interface for texts unchanged (2.2.1-fork to 2.5.3-fork).</li>
+<li>You can resize frames on desktop.</li>
 </ul>
 </li>
-<li>You can resize frames on desktop.</li>
+<li>Many new functions officially introduced in PHP and JS. Some of these function were already present in the code but undocumented.</li>
 </ul>
 <h4>Changed</h4>
 <ul>
@@ -1953,9 +1954,19 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 <li>
 <code>save_setting_redirect.php</code> moved to <code>inc/save_setting_redirect.php</code>.</li>
 <li>Psalm static code analysis of all PHP files.</li>
+<li>We use "EOP" for end-of-paragraph markers instead of misleading "EOS" (MeCab).</li>
+<li>Slightly changed how a connection is established with SQL. It makes messages more relevant when SQL is not running.</li>
+<li>Not-japanese texts now always use the PHP parser. The SQL parser is no longer used.</li>
 </ul>
 </li>
 <li>JS: Some deprecated functions <code>escape</code> and <code>unescape</code> were replaced by modern equivalents <code>encodeURIcomponent</code> and <code>decodeURIcomponent</code>. This may lead to changes in cookies, notably making them work better.</li>
+<li>DB: the NO_ZERO_DATE mode is no longer required, see <a href="https://github.com/HugoFara/lwt/issues/78">#78</a>.
+<ul>
+<li>In the <code>words</code> table, replaced the default timestamp <code>0000-00-00 00:00:00</code> by <code>0000-00-00 00:00:01</code>.</li>
+<li>The demo database underwent the same change.</li>
+</ul>
+</li>
+<li>Updated <code>composer.lock</code>.</li>
 <li>Docker: more default options, documentation updated.</li>
 </ul>
 <h4>Deprecated</h4>
@@ -1980,6 +1991,8 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 <li>The <em>audio</em> player was no longer working since 2.1.0-fork since the play button was hidden.</li>
 <li>Save text position (<code>inc/ajax_save_text_position.php</code>) was broken for all texts. This is fixed.</li>
 <li>Right frames should hide automatically but they often don't (<a href="https://github.com/HugoFara/lwt/issues/61">#61</a>). Merged PR (#62)[https://github.com/HugoFara/lwt/pull/62].</li>
+<li>Japanese parsing is now better, and uses PHP only (the local_infile SQL functionality is no longer used). Related to PR (#43)[https://github.com/HugoFara/lwt/pull/43].</li>
+<li>One-word not-Japanese texts do no longer result in a crash (<a href="https://github.com/HugoFara/lwt/issues/80">#80</a>), whoever uses them.</li>
 </ul>
 </li>
 <li>Tests:
@@ -2008,6 +2021,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 <ul>
 <li>Since 2.2.2-fork, you had to use a GET request to use it, resulting in authorization errors.</li>
 <li>POST requests are now again the default way to use it.</li>
+<li>PHP tries to set the allow_local_infile option during the connection with SQL (<a href="https://github.com/HugoFara/lwt/issues/20">#20</a>, <a href="https://github.com/HugoFara/lwt/issues/40">#40</a>).</li>
 </ul>
 </li>
 </ul>
@@ -2016,6 +2030,12 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 <ul>
 <li>Audio in <code>edit_texts.php</code> was never shown.</li>
 <li>When adding text, the user was ask to create a <code>media</code> folder in <code>...</code>, corrected to <code>..</code>.</li>
+</ul>
+</li>
+<li>DB:
+<ul>
+<li>For some users it was impossible to install the default database due to the use of a ZERO date (<a href="https://github.com/HugoFara/lwt/issues/78">#78</a>).</li>
+<li>Deleted wrong database instructions <code>ADD DROP INDEX TiTextLC</code> altering <code>temptextitems</code> in <code>update_database</code> of <code>database_connect.php</code>.</li>
 </ul>
 </li>
 </ul>
