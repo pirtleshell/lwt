@@ -1721,35 +1721,7 @@ function get_playbackrate_selectoptions($v): string
     return $r;
 }
 
-// -------------------------------------------------------------
 
-function error_message_with_hide($msg,$noback): string 
-{
-    if (trim($msg) == '') { return ''; 
-    }
-    if (substr($msg, 0, 5) == "Error" ) {
-        return '<p class="red">*** ' . tohtml($msg) . ' ***' . 
-        ($noback ? 
-        '' : 
-        '<br /><input type="button" value="&lt;&lt; Go back and correct &lt;&lt;" onclick="history.back();" />' ) . 
-        '</p>'; 
-    }
-    else {
-        return '<p id="hide3" class="msgblue">+++ ' . tohtml($msg) . ' +++</p>'; 
-    }
-}
-
-// -------------------------------------------------------------
-
-function errorbutton($msg): string 
-{
-    if (substr($msg, 0, 5) == "Error" ) {
-        return '<input type="button" value="&lt;&lt; Back" onclick="history.back();" />'; 
-    }
-    else {
-        return ''; 
-    }
-} 
 
 
 // -------------------------------------------------------------
@@ -1757,15 +1729,6 @@ function errorbutton($msg): string
 function remove_soft_hyphens($str): string 
 {
     return str_replace('­', '', $str);  // first '..' contains Softhyphen 0xC2 0xAD
-}
-
-// -------------------------------------------------------------
-
-function limitlength($s, $l) 
-{
-    if (mb_strlen($s, 'UTF-8') <= $l) { return $s; 
-    }
-    return mb_substr($s, 0, $l, 'UTF-8');
 }
 
 
@@ -1781,15 +1744,16 @@ function replace_supp_unicode_planes_char($s): ?string
 
 function makeCounterWithTotal($max, $num): string 
 {
-    if ($max == 1) { return ''; 
+    if ($max == 1) { 
+        return ''; 
     }
-    if ($max < 10) { return $num . "/" . $max; 
+    if ($max < 10) { 
+        return $num . "/" . $max; 
     }
     return substr(
         str_repeat("0", strlen($max)) . $num,
         -strlen($max)
-    )  . 
-    "/" . $max;
+    ) . "/" . $max;
 }
 
 // -------------------------------------------------------------

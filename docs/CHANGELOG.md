@@ -1,8 +1,15 @@
-Changelog
-=========
+# Changelog
 
 This project's changelog. Versions marked with "-fork" come from the community, other versions come from the canonical LWT ("official" branch on Git).
 For git tags, official releases are marked like "v1.0.0", while unofficial ones are marked like "v1.0.0-fork".
+
+## [Unreleased]
+
+### Added
+
+* Database creation wizard (``database_wizard.php``) to help setting the connection with the database.
+* In ``index.php``, ``get_server_data_table`` replaces ``get_server_data`` as a better designed function.
+* ``pagestart_kernel_nobody`` in ``inc/kernel.php`` that display the minimal HTML formatting.
 
 ## 2.6.0-fork (January 01 2023)
 ### Added

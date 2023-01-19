@@ -42,10 +42,12 @@
  */
 
  /**
- * Echo an error page if connect.inc.php was not found.
- *
- * @return never
- */
+  * Echo an error page if connect.inc.php was not found.
+  * 
+  * @return never
+  * 
+  * @since 2.5.0-fork Now display a link to the connect.ing.php creation wizard.
+  */
 function no_connectinc_error_page() 
 {
     ?>
@@ -54,9 +56,18 @@ function no_connectinc_error_page()
             <div style="padding: 1em; color:red; font-size:120%; background-color:#CEECF5;">
                 <p>
                     <b>Fatal Error:</b> 
-                    Cannot find file: "connect.inc.php". Please rename the correct file "connect_[servertype].inc.php" to "connect.inc.php"
-                    ([servertype] is the name of your server: xampp, mamp, or easyphp). 
-                    Please read the documentation: https://learning-with-texts.sourceforge.io
+                    Cannot find file: "connect.inc.php"!<br />
+                    Please do one of the following:
+                    <ul>
+                        <li>
+                            Rename the correct file "connect_[servertype].inc.php" to "connect.inc.php"
+                            ([servertype] is the name of your server: xampp, mamp, or easyphp).
+                        </li>
+                        <li>
+                            <a href="database_wizard.php">Use the wizard</a>.
+                        </li>
+                    </ul>  
+                    Please read the documentation: <a href="https://hugofara.github.io/lwt/README.md">https://hugofara.github.io/lwt/README.md</a>
                 </p>
             </div>
         </body>
@@ -202,54 +213,65 @@ function wordpress_logout_link()
 /**
  * Return a lot of different server state variables.
  * 
- * @return array{0: string, 1: float, 2: string[], 3: string, 4: string, 5: string} 
+ * @return array{"prefix": string, "db_size": float, "serversoft": string[], "apache": string, "php": string, "mysql": string} 
  * Table prefix, database size, server software, apache version, PHP version, MySQL 
  * version
  * 
  * @global string $tbpref Database table prefix
  * @global string $dbname Database name
  *
+ * @psalm-return array{
+ *  "prefix": string, "db_size": float, "serversoft": non-empty-list<string>, 
+ *  "apache": string, "php": false|string, "mysql": string
+ * }
+ */
+function get_server_data_table(): array 
+{
+    global $tbpref, $dbname;
+    $dbaccess_format = convert_string_to_sqlsyntax($dbname);
+    $data_table = array();
+    $data_table["prefix"] = convert_string_to_sqlsyntax_nonull($tbpref);
+    $data_table["db_size"] = (float)get_first_value(
+        "SELECT ROUND(SUM(data_length+index_length)/1024/1024, 1) AS value 
+        FROM information_schema.TABLES 
+        WHERE table_schema = $dbaccess_format 
+        AND table_name IN (
+            '{$tbpref}archivedtexts', '{$tbpref}archtexttags', '{$tbpref}feedlinks', '{$tbpref}languages',
+            '{$tbpref}newsfeeds', '{$tbpref}sentences', '{$tbpref}settings', '{$tbpref}tags', '{$tbpref}tags2', 
+            '{$tbpref}textitems2', '{$tbpref}texts', '{$tbpref}texttags', '{$tbpref}words', '{$tbpref}wordtags'
+        )"
+    );
+    if (!isset($data_table["db_size"])) { 
+        $data_table["db_size"] = 0.0; 
+    }
+
+    $data_table["serversoft"] = explode(' ', $_SERVER['SERVER_SOFTWARE']);
+    $data_table["apache"] = "Apache/?";
+    // if (count($serversoft) >= 1) { Not supposed to happen
+    if (substr($data_table["serversoft"][0], 0, 7) == "Apache/") { 
+        $data_table["apache"] = $data_table["serversoft"][0]; 
+    }
+    // }
+    $data_table["php"] = phpversion();
+    $data_table["mysql"] = (string)get_first_value("SELECT VERSION() as value");
+    return $data_table;
+}
+
+/**
+ * Return a lot of different server state variables.
+ * 
+ * @return array{0: string, 1: float, 2: string[], 3: string, 4: string, 5: string} 
+ * Table prefix, database size, server software, apache version, PHP version, MySQL 
+ * version
+ * 
+ * @deprecated Use get_server_data_table, will be removed in 3.0.0. 
+ *
  * @psalm-return array{0: string, 1: float, 2: non-empty-list<string>, 3: string, 4: false|string, 5: string}
  */
 function get_server_data(): array 
 {
-    global $tbpref, $dbname;
-    $p = convert_string_to_sqlsyntax_nonull($tbpref);
-    $mb = (float)get_first_value(
-        "SELECT round(sum(data_length+index_length)/1024/1024,1) AS value 
-        FROM information_schema.TABLES 
-        WHERE table_schema = " . convert_string_to_sqlsyntax($dbname) . " 
-        AND table_name IN (" .
-            "CONCAT(" . $p . ",'archivedtexts')," .
-            "CONCAT(" . $p . ",'archtexttags')," .
-            "CONCAT(" . $p . ",'feedlinks')," .
-            "CONCAT(" . $p . ",'languages')," .
-            "CONCAT(" . $p . ",'newsfeeds')," .
-            "CONCAT(" . $p . ",'sentences')," .
-            "CONCAT(" . $p . ",'settings')," .
-            "CONCAT(" . $p . ",'tags')," .
-            "CONCAT(" . $p . ",'tags2')," .
-            "CONCAT(" . $p . ",'textitems2')," .
-            "CONCAT(" . $p . ",'texts')," .
-            "CONCAT(" . $p . ",'texttags')," .
-            "CONCAT(" . $p . ",'words')," .
-            "CONCAT(" . $p . ",'wordtags')
-        )"
-    );
-    if (!isset($mb)) { 
-        $mb = 0.0; 
-    }
-
-    $serversoft = explode(' ', $_SERVER['SERVER_SOFTWARE']);
-    $apache = "Apache/?";
-    // if (count($serversoft) >= 1) { Not supposed to happen
-    if (substr($serversoft[0], 0, 7) == "Apache/") { 
-        $apache = $serversoft[0]; 
-    }
-    // }
-    $php = phpversion();
-    $mysql = (string)get_first_value("SELECT VERSION() as value");
-    return array($p, $mb, $serversoft, $apache, $php, $mysql);
+    $data = get_server_data_table();
+    return array($data["prefix"], $data["db_size"], $data["serversoft"], $data["apache"], $data["php"], $data["mysql"]);
 }
 
 
@@ -265,7 +287,7 @@ if (is_numeric(getSetting('currenttext'))) {
     $currenttext = (int) getSetting('currenttext');
 }
 
-$langcnt = (int) get_first_value('SELECT COUNT(*) AS value FROM ' . $tbpref . 'languages');
+$langcnt = (int) get_first_value("SELECT COUNT(*) AS value FROM {$tbpref}languages");
 
 list($p, $mb, $serversoft, $apache, $php, $mysql) = get_server_data();
 

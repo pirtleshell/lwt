@@ -357,6 +357,73 @@ function quickMenu(): void
     <?php
 }
 
+/**
+ * Start a page without connecting to the database with a complete header and a non-closed body.
+ *
+ * @param string $title  Title of the page
+ * @param string $addcss Some CSS to be embed in a style tag
+ *
+ * @global string $tbpref The database table prefix if true
+ * @global int    $debug  Show the requests if true
+ */
+function pagestart_kernel_nobody($title, $addcss=''): void 
+{
+    global $tbpref, $debug;
+    @header('Expires: Wed, 11 Jan 1984 05:00:00 GMT');
+    @header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+    @header('Cache-Control: no-cache, must-revalidate, max-age=0');
+    @header('Pragma: no-cache');
+    ?><!DOCTYPE html>
+    <?php 
+    echo '<html lang="en">';
+    ?>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <!-- 
+        <?php echo file_get_contents("UNLICENSE.md");?> 
+    -->
+    <meta name="viewport" content="width=900" />
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
+    <link rel="apple-touch-icon" href="img/apple-touch-icon-57x57.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="img/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="img/apple-touch-icon-114x114.png" />
+    <link rel="apple-touch-startup-image" href="img/apple-touch-startup.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    
+    <link rel="stylesheet" type="text/css" href="css/jquery-ui.css" />
+    <link rel="stylesheet" type="text/css" href="css/jquery.tagit.css" />
+    <link rel="stylesheet" type="text/css" href="css/styles.css" />
+    <link rel="stylesheet" type="text/css" href="css/feed_wizard.css" />
+    <style type="text/css">
+        <?php echo $addcss . "\n"; ?>
+    </style>
+    
+    <script type="text/javascript" src="js/jquery.js" charset="utf-8"></script>
+    <script type="text/javascript" src="js/jquery.scrollTo.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="js/jquery-ui.min.js"  charset="utf-8"></script>
+    <script type="text/javascript" src="js/jquery.jeditable.mini.js" charset="utf-8"></script>
+    <script type="text/javascript" src="js/tag-it.js" charset="utf-8"></script>
+    <script type="text/javascript" src="js/overlib/overlib_mini.js" charset="utf-8"></script>
+    <!-- URLBASE : "<?php echo tohtml(url_base()); ?>" -->
+    <!-- TBPREF  : "<?php echo tohtml($tbpref);  ?>" -->
+    <script type="text/javascript">
+        //<![CDATA[
+        var STATUSES = <?php echo json_encode(get_statuses()); ?>;
+        //]]>
+    </script>
+    
+    <title>LWT :: <?php echo tohtml($title); ?></title>
+</head>
+    <?php
+    echo '<body>';
+    ?>
+<div id="overDiv" style="position:absolute; visibility:hidden; z-index:1000;"></div>
+    <?php
+    flush();
+    if ($debug) { 
+        showRequest(); 
+    }
+}
 
 /**
  * Add a closing body tag.
@@ -579,6 +646,30 @@ function getsqlscoreformula($method): string
         END)';
     } 
     return '0';
+}
+
+
+/**
+ * Display a error message vanishing after a few seconds.
+ * 
+ * @param string $msg Message to display.
+ * @param bool $noback If true, don't display a button to go back
+ * 
+ * @return string HTML-formatted string for an automating vanishing message.
+ */
+function error_message_with_hide($msg, $noback): string 
+{
+    if (trim($msg) == '') { 
+        return ''; 
+    }
+    if (substr($msg, 0, 5) == "Error" ) {
+        return '<p class="red">*** ' . tohtml($msg) . ' ***' . 
+        ($noback ? 
+        '' : 
+        '<br /><input type="button" value="&lt;&lt; Go back and correct &lt;&lt;" onclick="history.back();" />' ) . 
+        '</p>'; 
+    } 
+    return '<p id="hide3" class="msgblue">+++ ' . tohtml($msg) . ' +++</p>'; 
 }
 
 ?>
