@@ -327,10 +327,10 @@ function edit_languages_op_change($lid): string
 function edit_languages_new() 
 {
     ?>
-    <h4>
+    <h1>
         New Language <a target="_blank" href="docs/info.html#howtolang">
         <img src="icn/question-frame.png" title="Help" alt="Help" /></a>
-    </h4>
+    </h1>
 
     <script type="text/javascript" charset="utf-8">
          $(document).ready(ask_before_exiting);
@@ -458,10 +458,10 @@ function edit_languages_change($lid)
     
         ?>
     
-     <h4>Edit Language 
+     <h1>Edit Language 
          <a target="_blank" href="docs/info.html#howtolang">
              <img src="icn/question-frame.png" title="Help" alt="Help" /></a>
-    </h4>
+    </h1>
      <script type="text/javascript" charset="utf-8">
          $(document).ready(ask_before_exiting);
      </script>

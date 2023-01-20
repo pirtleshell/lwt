@@ -64,20 +64,14 @@ if (isset($_REQUEST['allaction'])) {
         runsql("DELETE " . $tbpref . "archtexttags FROM (" . $tbpref . "archtexttags LEFT JOIN " . $tbpref . "tags2 on AgT2ID = T2ID) WHERE T2ID IS NULL", '');
         adjust_autoincr('tags2', 'T2ID');
     }
-}
-
-// DEL
-
-elseif (isset($_REQUEST['del'])) {
+} elseif (isset($_REQUEST['del'])) {
+    // DEL
     $message = runsql('delete from ' . $tbpref . 'tags2 where T2ID = ' . $_REQUEST['del'], "Deleted");
     runsql("DELETE " . $tbpref . "texttags FROM (" . $tbpref . "texttags LEFT JOIN " . $tbpref . "tags2 on TtT2ID = T2ID) WHERE T2ID IS NULL", '');
     runsql("DELETE " . $tbpref . "archtexttags FROM (" . $tbpref . "archtexttags LEFT JOIN " . $tbpref . "tags2 on AgT2ID = T2ID) WHERE T2ID IS NULL", '');
     adjust_autoincr('tags2', 'T2ID');
-}
-
-// INS/UPD
-
-elseif (isset($_REQUEST['op'])) {
+} elseif (isset($_REQUEST['op'])) {
+    // INS/UPD
 
     // INSERT
     
@@ -89,11 +83,8 @@ elseif (isset($_REQUEST['op'])) {
             convert_string_to_sqlsyntax_nonull($_REQUEST["T2Comment"]) . ')', "Saved", $sqlerrdie = false
         );
 
-    }    
-    
-    // UPDATE
-    
-    elseif ($_REQUEST['op'] == 'Change') {
+    } elseif ($_REQUEST['op'] == 'Change') {
+        // UPDATE
 
         $message = runsql(
             'update ' . $tbpref . 'tags2 set T2Text = ' . 
@@ -111,7 +102,7 @@ if (isset($_REQUEST['new'])) {
     
     ?>
 
-    <h4>New Tag</h4>
+    <h1>New Tag</h1>
     <script type="text/javascript" charset="utf-8">
         $(document).ready(ask_before_exiting);
     </script>
@@ -135,17 +126,14 @@ if (isset($_REQUEST['new'])) {
     
     <?php
     
-}
-
-// CHG
-
-elseif (isset($_REQUEST['chg'])) {
+} elseif (isset($_REQUEST['chg'])) {
+    // CHG
     
     $sql = 'select * from ' . $tbpref . 'tags2 where T2ID = ' . $_REQUEST['chg'];
     $res = do_mysqli_query($sql);
     if ($record = mysqli_fetch_assoc($res)) {
         ?>
-     <h4>Edit Tag</h4>
+     <h1>Edit Tag</h1>
      <script type="text/javascript" charset="utf-8">
          $(document).ready(ask_before_exiting);
      </script>
@@ -170,11 +158,8 @@ elseif (isset($_REQUEST['chg'])) {
         <?php
     }
     mysqli_free_result($res);
-}
-
-// DISPLAY
-
-else {
+} else {
+    // DISPLAY
     if (substr($message, 0, 24) == "Error: Duplicate entry '"  
         && substr($message, -18) == "' for key 'T2Text'"
     ) {
@@ -196,9 +181,11 @@ else {
 
     $pages = $recno == 0 ? 0 : (intval(($recno-1) / $maxperpage) + 1);
     
-    if ($currentpage < 1) { $currentpage = 1; 
+    if ($currentpage < 1) { 
+        $currentpage = 1; 
     }
-    if ($currentpage > $pages) { $currentpage = $pages; 
+    if ($currentpage > $pages) { 
+        $currentpage = $pages; 
     }
     $limit = 'LIMIT ' . (($currentpage-1) * $maxperpage) . ',' . $maxperpage;
 
@@ -206,7 +193,8 @@ else {
     $lsorts = count($sorts);
     if ($currentsort < 1) { $currentsort = 1; 
     }
-    if ($currentsort > $lsorts) { $currentsort = $lsorts; 
+    if ($currentsort > $lsorts) { 
+        $currentsort = $lsorts; 
     }
     
     ?>

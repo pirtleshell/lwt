@@ -30,13 +30,13 @@ if ($ann_exists) {
     $ann_exists = (strlen($ann) > 0);
 }
 
-if($textid==0) {
+if ($textid==0) {
     header("Location: edit_texts.php");
     exit();
 }
 
-if ($delmode ) {  // Delete
-    if ($ann_exists ) { 
+if ($delmode) {  // Delete
+    if ($ann_exists) { 
         runsql(
             'update ' . $tbpref . 'texts set ' .
             'TxAnnotatedText = ' . convert_string_to_sqlsyntax("") . 
@@ -48,7 +48,7 @@ if ($delmode ) {  // Delete
         "SELECT length(TxAnnotatedText) AS value 
         FROM " . $tbpref . "texts where TxID = " . $textid
     ) > 0;
-    if (!$ann_exists ) {
+    if (!$ann_exists) {
         header("Location: print_text.php?text=" . $textid);
         exit();
     }
@@ -62,7 +62,7 @@ $sourceURI = $record['TxSourceURI'];
 $langid = $record['TxLgID'];
 $audio = $record['TxAudioURI'];
 if (!isset($audio)) { 
-    $audio=''; 
+    $audio = ''; 
 }
 $audio = trim($audio);
 mysqli_free_result($res);
@@ -72,16 +72,14 @@ $res = do_mysqli_query($sql);
 $record = mysqli_fetch_assoc($res);
 $textsize = $record['LgTextSize'];
 $rtlScript = $record['LgRightToLeft'];
-if(!empty($record['LgGoogleTranslateURI'])) {
+if (!empty($record['LgGoogleTranslateURI'])) {
     $ttsLg=preg_replace('/.*[?&]sl=([a-zA-Z\-]*)(&.*)*$/', '$1', $record['LgGoogleTranslateURI']);
-    if($record['LgGoogleTranslateURI']==$ttsLg) {
+    if ($record['LgGoogleTranslateURI']==$ttsLg) {
         $ttsClass='';
-    }
-    else { 
+    } else { 
         $ttsClass = 'tts_'.$ttsLg.' '; 
     }
-}
-else { 
+} else { 
     $ttsClass=''; 
 }
 mysqli_free_result($res);
@@ -90,61 +88,75 @@ saveSetting('currenttext', $textid);
 
 pagestart_nobody('Annotated Text', 'input[type="radio"]{display:inline;}');
 
-echo '<div class="noprint">';
-
-echo '<h4>';
-echo '<a href="edit_texts.php" target="_top">';
+echo '<div class="noprint">
+<div>
+<a href="edit_texts.php" target="_top">';
 echo_lwt_logo();
-echo 'LWT';
-echo '</a>&nbsp; | &nbsp;';
+echo 'LWT</a>&nbsp; | &nbsp;';
 quickMenu();
 echo getPreviousAndNextTextLinks($textid, 'print_impr_text.php?text=', true, '&nbsp; | &nbsp;');
-echo '&nbsp; | &nbsp;<a href="do_text.php?start=' . $textid . '" target="_top"><img src="icn/book-open-bookmark.png" title="Read" alt="Read" /></a> &nbsp;<a href="do_test.php?text=' . $textid . '" target="_top"><img src="icn/question-balloon.png" title="Test" alt="Test" /></a> &nbsp;<a href="print_text.php?text=' . $textid . '" target="_top"><img src="icn/printer.png" title="Print" alt="Print" /> &nbsp;<a target="_top" href="edit_texts.php?chg=' . $textid . '"><img src="icn/document--pencil.png" title="Edit Text" alt="Edit Text" /></a>';
-echo '</h4><h3>ANN.TEXT&nbsp;▶ ' . tohtml($title) . (isset($sourceURI) && substr(trim($sourceURI), 0, 1)!='#' ? ' <a href="' . $sourceURI . '" target="_blank"><img src="'.get_file_path('icn/chain.png').'" title="Text Source" alt="Text Source" /></a>' : '') . '</h3>';
+echo '&nbsp; | &nbsp;<a href="do_text.php?start=' . $textid . '" target="_top">
+<img src="icn/book-open-bookmark.png" title="Read" alt="Read" /></a> &nbsp;
+<a href="do_test.php?text=' . $textid . '" target="_top">
+<img src="icn/question-balloon.png" title="Test" alt="Test" />
+</a> &nbsp;<a href="print_text.php?text=' . $textid . '" target="_top">
+<img src="icn/printer.png" title="Print" alt="Print" /> &nbsp;
+<a target="_top" href="edit_texts.php?chg=' . $textid . '">
+<img src="icn/document--pencil.png" title="Edit Text" alt="Edit Text" /></a>
+</div>
+<div class="bigger">ANN.TEXT&nbsp;▶ ' . tohtml($title) . 
+(isset($sourceURI) && substr(trim($sourceURI), 0, 1)!='#' ? 
+' <a href="' . $sourceURI . '" target="_blank"><img src="'.get_file_path('icn/chain.png').'" title="Text Source" alt="Text Source" /></a>' 
+: '') . 
+'</div>
+<div id="printoptions"><h1>Improved Annotated Text';
 
-echo "<p id=\"printoptions\"><b>Improved Annotated Text";
-
-if($editmode) {
-    echo " (Edit Mode)</b> <img src=\"icn/question-frame.png\" title=\"Help\" alt=\"Help\" class=\"click\" onclick=\"window.open('info.php#il');\" /><br /><input type=\"button\" value=\"Display/Print Mode\" onclick=\"location.href='print_impr_text.php?text=" . $textid . "';\" />\n";
+if ($editmode) {
+    echo " (Edit Mode) 
+    <img src=\"icn/question-frame.png\" title=\"Help\" alt=\"Help\" class=\"click\" onclick=\"window.open('info.php#il');\" />
+    </h1>
+    <input type=\"button\" value=\"Display/Print Mode\" onclick=\"location.href='print_impr_text.php?text=" . $textid . "';\" />\n";
 } else {
-    echo " (Display/Print Mode)</b><br /><input type=\"button\" value=\"Edit\" onclick=\"location.href='print_impr_text.php?edit=1&amp;text=" . $textid . "';\" />";
-    echo " &nbsp; | &nbsp; ";
-    echo "<input type=\"button\" value=\"Delete\" onclick=\"if (confirm ('Are you sure?')) location.href='print_impr_text.php?del=1&amp;text=" . $textid . "';\" /> ";
-    echo " &nbsp; | &nbsp; ";
-    echo "<input type=\"button\" value=\"Print\" onclick=\"window.print();\" />";
-    echo " &nbsp; | &nbsp; ";
-    echo "<input type=\"button\" value=\"Display" . (($audio != '') ? ' with Audio Player' : '') . " in new Window\" onclick=\"window.open('display_impr_text.php?text=" . $textid . "');\" />";
+    echo " (Display/Print Mode)</h1>
+    <input type=\"button\" value=\"Edit\" onclick=\"location.href='print_impr_text.php?edit=1&amp;text=" . $textid . "';\" /> 
+    &nbsp; | &nbsp; 
+    <input type=\"button\" value=\"Delete\" onclick=\"if (confirm ('Are you sure?')) location.href='print_impr_text.php?del=1&amp;text=" . $textid . "';\" /> 
+    &nbsp; | &nbsp; <input type=\"button\" value=\"Print\" onclick=\"window.print();\" />
+    &nbsp; | &nbsp; <input type=\"button\" value=\"Display" . 
+    (($audio != '') ? ' with Audio Player' : '') . " in new Window\" onclick=\"window.open('display_impr_text.php?text=" . $textid . "');\" />";
 }
-echo "</p></div> <!-- noprint -->";
+echo "</div>
+</div> 
+<!-- noprint -->";
 
 // --------------------------------------------------------
 
-if ($editmode ) {  // Edit Mode
+if ($editmode) {  // Edit Mode
 
-    if (! $ann_exists ) {  // No Ann., Create...
+    if (!$ann_exists) {  // No Ann., Create...
         $ann = create_save_ann($textid);
         $ann_exists = (strlen($ann) > 0);
     }
     
-    if (! $ann_exists ) {  // No Ann., not possible
+    if (!$ann_exists) {  // No Ann., not possible
         echo '<p>No annotated text found, and creation seems not possible.</p>';
     } else { // Ann. exists, set up for editing.
         echo "\n";
-        ?>
-        <?php
         echo '<div data_id="' . $textid . '" id="editimprtextdata"></div>';
         echo "\n";
         ?>
     <script type="text/javascript">
-    //<![CDATA[
-    $(document).ready( function() {
-    do_ajax_edit_impr_text(0,'');
-    } ); 
-    //]]>
+        //<![CDATA[
+        $(document).ready(function() {
+            do_ajax_edit_impr_text(0,'');
+        } ); 
+        //]]>
     </script>
         <?php
     }
-    echo '<div class="noprint"><input type="button" value="Display/Print Mode" onclick="location.href=\'print_impr_text.php?text=' . $textid . '\';" /></div>';
+    echo '<div class="noprint">
+    <input type="button" value="Display/Print Mode" onclick="location.href=\'print_impr_text.php?text=' . $textid . '\';" />
+    </div>';
 
 } else {  // Print Mode
 

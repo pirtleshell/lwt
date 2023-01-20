@@ -56,7 +56,7 @@ function getData($textid)
 function do_header_row($textid, $langid): void
 {
     ?>
-<h4>
+<div>
     <a href="edit_texts.php" target="_top">
         <?php echo_lwt_logo(); ?> LWT
     </a>
@@ -83,7 +83,7 @@ function do_header_row($textid, $langid): void
     >
         <img src="icn/sticky-note--plus.png" title="New Term" alt="New Term" />
     </a>
-</h4>
+</div>
     <?php
 }
 
@@ -98,27 +98,18 @@ function do_header_row($textid, $langid): void
 function do_title($title, $sourceURI): void
 {
     ?>
-<table>
-    <tr>
-        <td>
-            <h3>READ&nbsp;▶</h3>
-        </td>
-        <td class="width99pc">
-            <h3>
-                <?php 
-                echo tohtml($title);
-                if (isset($sourceURI) && substr(trim($sourceURI), 0, 1) != '#') { 
-                    ?>
-                    <a href="<?php echo $sourceURI ?>" target="_blank">
-                        <img src="<?php echo get_file_path('icn/chain.png') ?>" title="Text Source" alt="Text Source" />
-                    </a>
-                    <?php 
-                } 
-                ?>
-            </h3>
-        </td>
-    </tr>
-</table>
+    <div class="bigger">READ ▶ 
+        <?php 
+    echo tohtml($title);
+    if (isset($sourceURI) && substr(trim($sourceURI), 0, 1) != '#') { 
+        ?>
+        <a href="<?php echo $sourceURI ?>" target="_blank">
+            <img src="<?php echo get_file_path('icn/chain.png') ?>" title="Text Source" alt="Text Source" />
+        </a>
+        <?php 
+    } 
+    ?>
+    </div>
     <?php
 }
 

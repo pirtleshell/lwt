@@ -4849,7 +4849,7 @@ function pagestart($title, $close): void
 {
     global $debug;
     pagestart_nobody($title);
-    echo '<h4>';
+    echo '<div>';
     if ($close) { 
         echo '<a href="index.php" target="_top">'; 
     }
@@ -4860,9 +4860,8 @@ function pagestart($title, $close): void
         quickMenu();
         echo '</span>';
     }
-    echo '</h4><h3>' . tohtml($title) . 
-    ($debug ? ' <span class="red">DEBUG</span>' : '') . '</h3>';
-    echo "<p>&nbsp;</p>";
+    echo '</div><div class="bigger" style="font-weight: bold;">' . tohtml($title) . 
+    ($debug ? ' <span class="red">DEBUG</span>' : '') . '</div>';
 } 
 
 /**

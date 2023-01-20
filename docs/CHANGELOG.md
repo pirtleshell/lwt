@@ -4,6 +4,10 @@ Changelog
 This project's changelog. Versions marked with "-fork" come from the community, other versions come from the canonical LWT ("official" branch on Git).
 For git tags, official releases are marked like "v1.0.0", while unofficial ones are marked like "v1.0.0-fork".
 
+## [Unreleased]
+
+* Graphic review: headers reviewed. Most h4 headers became div.bigger, and h3 became h1 level headers.
+
 ## 2.6.0-fork (January 01 2023)
 ### Added
 * Frames resizing is back! The text reading and test interfaces updated in several ways. Based several suggestions as [#60](https://github.com/HugoFara/lwt/issues/60).

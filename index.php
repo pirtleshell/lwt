@@ -289,10 +289,10 @@ pagestart_nobody(
     }"
 );
 echo '<div>' . 
-    echo_lwt_logo() . '<h1>' . 
+    echo_lwt_logo() . '<div class="bigger" style="font-weight: bold;">' . 
         $span3 . 'Learning With Texts (LWT)</span>
-    </h1>
-    <h2>Home' . ($debug ? ' <span class="red">DEBUG</span>' : '') . '</h2>
+    </div>
+    <h1>Home' . ($debug ? ' <span class="red">DEBUG</span>' : '') . '</h1>
 </div>';
 
 ?>

@@ -62,7 +62,7 @@ if(isset($_REQUEST['load_feed']) || isset($_REQUEST['check_autoupdate']) || (iss
 elseif(isset($_REQUEST['new_feed'])) {
     $result = do_mysqli_query("SELECT LgName,LgID FROM " . $tbpref . "languages where LgName<>'' ORDER BY LgName");
     ?>
-<h4>New Feed <a target="_blank" href="docs/info.html#new_feed"><img src="icn/question-frame.png" title="Help" alt="Help" /></a> </h4>
+<h1>New Feed <a target="_blank" href="docs/info.html#new_feed"><img src="icn/question-frame.png" title="Help" alt="Help" /></a></h1>
 <a href="do_feeds.php?page=1"> My Feeds</a> &nbsp; | &nbsp;
 <a href="feed_wizard.php?step=1"><img src="icn/wizard.png" title="new_feed_wizard" alt="new_feed_wizard" /> New Feed Wizard</a>
 <br></br>
@@ -129,12 +129,16 @@ elseif(isset($_REQUEST['edit_feed'])) {
     $row = mysqli_fetch_assoc($result);
     $result = do_mysqli_query("SELECT LgName,LgID FROM " . $tbpref . "languages where LgName<>'' ORDER BY LgName");
     ?>
-<h4>Edit Feed <a target="_blank" href="docs/info.html#new_feed"><img src="icn/question-frame.png" title="Help" alt="Help" /></a> </h4>
+<h2>Edit Feed <a target="_blank" href="docs/info.html#new_feed"><img src="icn/question-frame.png" title="Help" alt="Help" /></a> </h2>
 <a href="do_feeds.php?page=1"> My Feeds</a> &nbsp; | &nbsp;
-<a href="feed_wizard.php?step=2&amp;edit_feed=<?php echo $currentfeed;?>"><img src="icn/wizard.png" title="feed_wizard" alt="feed_wizard" /> Feed Wizard</a>
+<a href="feed_wizard.php?step=2&amp;edit_feed=<?php echo $currentfeed;?>">
+<img src="icn/wizard.png" title="feed_wizard" alt="feed_wizard" /> Feed Wizard</a>
 <form class="validate" action="edit_feeds.php" method="post">
 <table class="tab1" cellspacing="0" cellpadding="5">
-<tr><td class="td1">Language: </td><td class="td1"><select name="NfLgID">
+<tr>
+    <td class="td1">Language: </td>
+    <td class="td1">
+        <select name="NfLgID">
     <?php	
     while($row_l = mysqli_fetch_assoc($result)){
         echo '<option value="' . $row_l['LgID'] . '"';
@@ -147,29 +151,57 @@ elseif(isset($_REQUEST['edit_feed'])) {
     $auto_upd_i=get_nf_option($row['NfOptions'], 'autoupdate');
     if($auto_upd_i==null) { 
         $auto_upd_v=null; 
-    }
-    else{
+    } else {
         $auto_upd_v=substr($auto_upd_i, -1);
         $auto_upd_i=substr($auto_upd_i, 0, -1);
     }
     ?>
-</select></td></tr>
-<tr><td class="td1">
-Name: </td><td class="td1"><input class="notempty" style="width:95%" type="text" name="NfName" value="<?php echo tohtml($row['NfName']); ?>" /> <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
-</td></tr>
-<tr><td class="td1">Newsfeed url: </td><td class="td1"><input class="notempty" style="width:95%" type="text" name="NfSourceURI" value="<?php echo tohtml($row['NfSourceURI']); ?>" /> <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
-</td></tr>
-<tr><td class="td1">Article Section: </td><td class="td1"><input class="notempty" style="width:95%" type="text" name="NfArticleSectionTags" value="<?php echo tohtml($row['NfArticleSectionTags']); ?>" /> <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
-</td></tr>
-<tr><td class="td1">Filter Tags: </td><td class="td1"><input type="text" style="width:95%" name="NfFilterTags" value="<?php echo tohtml($row['NfFilterTags']); ?>" /></td></tr>
-<tr><td class="td1">Options: </td><td class="td1"><table style="width:100%"><tr><td style="width:35%"><input type="checkbox" name="edit_text"<?php if(get_nf_option($row['NfOptions'], 'edit_text')!==null) { echo ' checked="checked"'; 
-} ?> /> Edit Text </td><td><input type="checkbox" name="c_autoupdate"<?php if($auto_upd_i!==null) { 
+        </select>
+    </td>
+</tr>
+<tr>
+    <td class="td1">Name: </td>
+    <td class="td1">
+        <input class="notempty" style="width:95%" type="text" name="NfName" value="<?php echo tohtml($row['NfName']); ?>" /> <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+    </td>
+</tr>
+<tr>
+    <td class="td1">Newsfeed url: </td>
+    <td class="td1">
+        <input class="notempty" style="width:95%" type="text" name="NfSourceURI" value="<?php echo tohtml($row['NfSourceURI']); ?>" /> 
+        <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+    </td>
+</tr>
+<tr>
+    <td class="td1">Article Section: </td>
+    <td class="td1">
+        <input class="notempty" style="width:95%" type="text" name="NfArticleSectionTags" value="<?php echo tohtml($row['NfArticleSectionTags']); ?>" /> 
+        <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+    </td>
+</tr>
+<tr>
+    <td class="td1">Filter Tags: </td>
+    <td class="td1">
+        <input type="text" style="width:95%" name="NfFilterTags" value="<?php echo tohtml($row['NfFilterTags']); ?>" />
+    </td>
+</tr>
+<tr>
+    <td class="td1">Options: </td>
+    <td class="td1">
+        <table style="width:100%">
+        <tr>
+            <td style="width:35%">
+            <input type="checkbox" name="edit_text"<?php if(get_nf_option($row['NfOptions'], 'edit_text')!==null) { echo ' checked="checked"'; 
+} ?> /> Edit Text </td>
+<td>
+    <input type="checkbox" name="c_autoupdate"<?php if($auto_upd_i!==null) { 
     echo ' checked="checked"'; 
-} ?> /> Auto Update Interval: <input class="posintnumber<?php if(get_nf_option($row['NfOptions'], 'autoupdate')!==null) { 
+} ?> /> Auto Update Interval: 
+<input class="posintnumber<?php if(get_nf_option($row['NfOptions'], 'autoupdate')!==null) { 
     echo ' notempty'; 
 } ?>" data_info="Auto Update Interval" type="text" size="4" name="autoupdate" value="<?php 
 echo $auto_upd_i . '"';
-if($auto_upd_i==null) { 
+if ($auto_upd_i==null) { 
     echo ' disabled'; 
 } ?> />
 <select name="autoupdate" value="<?php echo $auto_upd_v . '"';if($auto_upd_v==null) { 
@@ -229,11 +261,10 @@ if(get_nf_option($row['NfOptions'], 'article_source')==null) {
 </form>
 <script type="text/javascript">
 $('[name^="c_"]').change(function(){
-    if(this.checked){
+    if (this.checked){
         $(this).parent().children('input[type="text"]').removeAttr('disabled').addClass("notempty");
         $(this).parent().find('select').removeAttr('disabled');
-    }
-    else{
+    } else {
         $(this).parent().children('input[type="text"]').attr('disabled','disabled').removeClass("notempty");
         $(this).parent().find('select').attr('disabled','disabled');
     }
@@ -249,14 +280,11 @@ $('[type="submit"]').on('click', function(){
     $('input[name="NfOptions"]').val(str);
 });
 </script>
-    <?php	
-}
-
-elseif(isset($_REQUEST['multi_load_feed'])) {
+    <?php 
+} elseif (isset($_REQUEST['multi_load_feed'])) {
     if(!empty($currentlang)) {
         $result = do_mysqli_query("SELECT NfName,NfID,NfUpdate FROM " . $tbpref . "newsfeeds WHERE NfLgID=$currentlang ORDER BY NfUpdate DESC");
-    }
-    else{
+    } else {
         $result = do_mysqli_query("SELECT NfName,NfID,NfUpdate FROM " . $tbpref . "newsfeeds ORDER BY NfUpdate DESC");
     }
     ?>

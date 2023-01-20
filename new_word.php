@@ -28,7 +28,7 @@ if (isset($_REQUEST['op'])) {
     
         $titletext = "New Term: " . tohtml($textlc);
         pagestart_nobody($titletext);
-        echo '<h4><span class="bigger">' . $titletext . '</span></h4>';
+        echo '<h1>' . $titletext . '</h1>';
     
         $message = runsql(
             'insert into ' . $tbpref . 'words (WoLgID, WoTextLC, WoText, ' .

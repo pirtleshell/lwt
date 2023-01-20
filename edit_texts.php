@@ -560,10 +560,10 @@ function edit_texts_new($lid)
 {
     ?>
 
-<h4>
+<h1>
     New Text <a target="_blank" href="docs/info.html#howtotext">
     <img src="icn/question-frame.png" title="Help" alt="Help" /></a> 
-</h4>
+</h1>
 <script type="text/javascript" charset="utf-8">
     $(document).ready(ask_before_exiting);
 </script>
@@ -657,14 +657,12 @@ function edit_texts_change($txid)
     WHERE TxID = {$txid}";
     $res = do_mysqli_query($sql);
     if ($record = mysqli_fetch_assoc($res)) {
-
         ?>
-
-<h4>
+<h1>
     Edit Text <a target="_blank" href="docs/info.html#howtotext">
     <img src="icn/question-frame.png" title="Help" alt="Help" />
     </a>
-</h4>
+</h1>
 <script type="text/javascript" charset="utf-8">
     $(document).ready(ask_before_exiting);
 </script>
