@@ -1,6 +1,6 @@
 # Key Bindings
 
-* **Important**: Before using the keyboard you must set the focus within the frame by clicking once on the frame!
+> **Important**: Before using the keyboard you must set the focus within the frame by clicking once on the frame!
 
 Key Bindings in the TEXT Frame
 
@@ -21,7 +21,6 @@ Key Bindings in the TEXT Frame
 | T              | Translate sentence                                                  |
 | P              | Pronounce term                                                      |
 | ESC            | Reset marked term(s)                                                |
-
 
 (*) Only saved terms with the status(es) defined/filtered in the settings are visited and marked!
 

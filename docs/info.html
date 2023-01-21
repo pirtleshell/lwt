@@ -174,10 +174,9 @@
 			</p>
 
 			<h2 id="preface" name="preface">▶ Preface - <a href="#">[↑]</a></h2>
-<ul>
-<li>
-<strong>THIS IS A THIRD PARTY VERSION</strong> - IT DIFFERS IN MANY RESPECTS FROM THE OFFICIAL LWT-VERSION (see the <a href="#newfeatures">new features</a>)</li>
-</ul>
+<blockquote>
+<p><strong>THIS IS A THIRD PARTY VERSION</strong> - IT DIFFERS IN MANY RESPECTS FROM THE OFFICIAL LWT VERSION! See the <a href="info.html#newfeatures">new features</a> for more information.</p>
+</blockquote>
 <h3>Preface by lang-learn-guy (original author)</h3>
 <ul>
 <li>I started this software application in 2010 as a hobby project for my personal learning (reading &amp; listening to foreign texts, saving &amp; reviewing new words and expressions).</li>
@@ -189,10 +188,11 @@
 <li>Thank you for your attention. I hope you will enjoy this application as I do every day.</li>
 </ul>
 <h3>Contributions by HugoFara (GitHub  version maintainer)</h3>
-<p>I started using LWT in 2021, and continued its development almost instantly. I felt that the core idea was very good, but its implementation seemed unnadapted, and the code was quite obfuscated. While I do not have any official responsibility to LWT (I don't know lang-learn-guy), I am the the <em>de facto</em> maintainer of the community version. I dedicated myself to the following points (see the <a href="https://github.com/HugoFara/lwt/discussions/6">GitHub post</a>):</p>
+<p>I started using LWT in 2021, and continued its development almost instantly. I felt that the core idea was very good, but its implementation seemed unnadapted, and the code was quite obfuscated. While I do not have any official responsibility to LWT (we don't have any kind of official agreement with lang-learn-guy), I am the the <em>de facto</em> maintainer of the community version. I dedicated myself to the following points (see the <a href="https://github.com/HugoFara/lwt/discussions/6">GitHub post</a>):</p>
 <ul>
 <li>Make LWT Open Source: document and refactor code</li>
 <li>Meet the HTML5 standards: the interface was relying on deprecated systmes like frames, making it difficult to use on small screens.</li>
+<li>Simplify users' lives: avoid complex installation or procedures whenever possible.</li>
 </ul>
 <p>If you spot any problem, please post any <a href="https://github.com/HugoFara/lwt/issues">issue on GitHub</a>, and we will look at it.</p>
 <p>While work is not yet finished, I also aim to expand LWT:</p>
@@ -201,12 +201,12 @@
 <li>Better UX: as of today (2022), 60 % of the web is done through mobile devices. It means less content at once and more intuitive behaviors.</li>
 <li>Sounds: language learning is not just language reading.
 <ul>
-<li>Motivational sounds to keep users motivated.</li>
 <li>Text-to-speech features.</li>
+<li>Motivational sounds when testing terms to makes things more lively.</li>
 </ul>
 </li>
 </ul>
-<p>But there is much more! The community version of LWT is no longer feat of one man, it belongs to everyone. As such, it gets well easier to implement new features, discuss and exchange code and ideas. I don't know if LWT contains <em>your</em> killer feature, but I can say that it <em>can be implemented</em> with this version. Enjoy!</p>
+<p>But there is much more! The community version of LWT is no longer the feat of one man, it belongs to everyone. As such, it gets well easier to implement new features, discuss and exchange code and ideas. I don't know if LWT contains <em>your</em> killer feature, but I can say that it <em>can be implemented</em> with this version. Enjoy!</p>
 
 			<h2 name="current" id="current">
 				▶ Current Version - <a href="#">[↑]</a>
@@ -451,7 +451,7 @@ The installation is explained <a href="info.html#install">here</a>.</li>
 </ul>
 <h3>More than LWT</h3>
 <ul>
-<li>Automatically import texts from RSS feeds (for more info see: <a href="#feed_imp">Newsfeed Import</a>)</li>
+<li>Automatically import texts from RSS feeds (for more info see: <a href="info.html#feed_imp">Newsfeed Import</a>)</li>
 <li>Longer (&gt; 9 characters) expressions can now be saved (up to 250 characters)</li>
 <li>Text to speech</li>
 <li>Improved Search/Query for Words/Texts</li>
@@ -626,7 +626,7 @@ server, here are some ways to do it.</p>
 <li>
 <p>Install everything</p>
 <ol>
-<li>Go into "C:\Program Files (x86)\EasyPHP-Devserver-17\eds-www\lwt".</li>
+<li>Go to "C:\Program Files (x86)\EasyPHP-Devserver-17\eds-www\lwt".</li>
 <li>Rename the file "connect_easyphp.inc.php" to "connect.inc.php". Sometimes the "php" extension is hidden, so be careful! You can display file extensions via the Windows Explorer settings and check it.</li>
 </ol>
 </li>
@@ -791,37 +791,16 @@ The official repository is at <a href="https://packagist.org/packages/hugofara/l
 <p>Please note that PHP below version 8.0 is not supported.</p>
 
 			<h2 id="learn" name="learn">▶ How to Learn - <a href="#">[↑]</a></h2>
+<p>First, find a text you want to study, preferably with an audio file, and load it into LWT. The <a href="http://lingq.com">LingQ Library</a> has many texts with audio, and only a free registration is needed. Or look into <a href="https://www.lingq.com/en/forum/updates-tips-and-known-issues/where-to-find-good-content-to-import/">this thread</a> in the LingQ Forum, you will find there lots of great links to resources. Or click (within the LingQ library) on "My Imports" - you will find a list of links of "Suggested resources".</p>
+<p>Read the text, look up the new words and expressions (=terms) and save them for review and test. The good thing with LWT: Every saved term will show up with its translation, status, etc. in all other occurrences of the same text and every other text! So you'll see immediately what you already know and how well you know it. And of course you'll see what you don't know!</p>
+<p>Train: load the MP3 file also on your portable MP3 player and listen to it often. Review (by reading again) or test your saved words and expressions.</p>
+<p>In short:</p>
 <ul>
-<li>
-<p>Find an interesting text (preferably with an mp3 audio file) in the Internet and load it into LWT. If you are a beginner, look for beginner courses or podcasts in the Internet.</p>
-</li>
-<li>
-<p>You don't know where to find texts with audio? The <a href="http://lingq.com">LingQ Library</a> has many (only a free registration is needed). Or look into <a href="https://www.lingq.com/en/forum/updates-tips-and-known-issues/where-to-find-good-content-to-import/">this thread</a> in the LingQ Forum, you will find there lots of great links to resources. Or click (within the LingQ library) on "My Imports" - you will find a list of links of "Suggested resources".</p>
-</li>
-<li>
-<p>Read the text, look up the new words and expressions (=terms) and save them for review and test.</p>
-</li>
-<li>
-<p>The good thing with LWT: Every saved term will show up with its translation, status, etc. in all other occurrences of the same text and every other text! So you'll see immediately what you already know and how well you know it. And of course you'll see what you don't know!</p>
-</li>
-<li>
-<p>Load the MP3 file also on your portable MP3 player and listen to it often.</p>
-</li>
-<li>
-<p>Review (by reading again) or test your saved words and expressions.</p>
-</li>
-<li>
-<p>Listen â¶ Read â¶ Review/Test.<br>
-Listen â¶ Read â¶ Review/Test.<br>
-......</p>
-</li>
-<li>
-<p>That's it. It's that simple.</p>
-</li>
-<li>
-<p>If you want to know more, watch <a href="http://www.youtube.com/user/lingosteve">Steve Kaufmann's videos on YouTube</a>: "The 7 secrets of language learning", "Language learning FAQ", and many more.</p>
-</li>
+<li>Listen â¶ Read â¶ Review/Test.</li>
+<li>Listen â¶ Read â¶ Review/Test.</li>
+<li>......</li>
 </ul>
+<p>That's it. It's that simple. You can also watch <a href="http://www.youtube.com/user/lingosteve">Steve Kaufmann's videos on YouTube</a>: "The 7 secrets of language learning", "Language learning FAQ", and many more to learn more eficiently.</p>
 
 			<h2 id="howto" name="howto">▶ How to Use - <a href="#">[↑]</a></h2>
 <ul>
@@ -1256,6 +1235,9 @@ Now execute:<br>
 </ul>
 
 			<h2 id="ipad" name="ipad">▶ Setup for Tablets - <a href="#">[↑]</a></h2>
+<blockquote>
+<p><strong>Note</strong>: this is a deprecated feature, LWT should with your tablet out of the box!</p>
+</blockquote>
 <ul>
 <li>If you want to use LWT on a tablet: that's possible (even the audio player works!).</li>
 <li>In "Settings/Preferences", set the "Frame Set Display Mode" to "Auto" or "Force Mobile". On other mobile devices, you may also try "Force Non-Mobile" if you are unhappy with the results.</li>
@@ -1267,7 +1249,7 @@ Now execute:<br>
 			<h2 id="langsetup" name="langsetup">▶ Language Setup - <a href="#">[↑]</a></h2>
 <ul>
 <li>
-<p>This section shows some language setups ("RegExp Split Sentences", "RegExp Word Characters", "Make each character a word", "Remove spaces") for different languages. They are only recommendations, and you may change them according to your needs (and texts). See also <a href="#go1">here</a>.</p>
+<p>This section shows some language setups ("RegExp Split Sentences", "RegExp Word Characters", "Make each character a word", "Remove spaces") for different languages. They are only recommendations, and you may change them according to your needs (and texts). See also <a href="info.html#go1">here</a>.</p>
 </li>
 <li>
 <p>If you are unsure, try the "Language Settings Wizard" first. Later you can adjust the settings.</p>
@@ -1378,10 +1360,9 @@ Now execute:<br>
 <p><img src="../img/score3.png" alt="Image"></p>
 
 			<h2 id="keybind" name="keybind">▶ Key Bindings - <a href="#">[↑]</a></h2>
-<ul>
-<li>
-<strong>Important</strong>: Before using the keyboard you must set the focus within the frame by clicking once on the frame!</li>
-</ul>
+<blockquote>
+<p><strong>Important</strong>: Before using the keyboard you must set the focus within the frame by clicking once on the frame!</p>
+</blockquote>
 <p>Key Bindings in the TEXT Frame</p>
 <table>
 <thead>
@@ -1722,11 +1703,18 @@ As a consequence:</p>
 			<h2 id="wordpress" name="wordpress">▶ Wordpress Integration - <a href="#">[↑]</a></h2>
 <ul>
 <li>
-<strong>IMPORTANT: Please read this <a href="#mue">THIS WARNING</a> first!</strong><br>
-I CANNOT give any support for this feature, NOR can I help you with any WordPress problems!<br>
-<strong>USE AT YOUR OWN RISK!</strong>
+<strong>IMPORTANT: Please read this <a href="info.html#mue">THIS WARNING</a> first!</strong>
 </li>
 </ul>
+<blockquote>
+<p>lang-learn-guy:
+I CANNOT give any support for this feature, NOR can I help you with any WordPress problems!
+<strong>USE AT YOUR OWN RISK!</strong></p>
+</blockquote>
+<blockquote>
+<p>Hugo:
+The WordPress feature is a legacy function no longer maintained. It should be considered experimental as it may break with a new release of LWT.</p>
+</blockquote>
 <p>The following instructions are for users who have installed WordPress, and want to install LWT for multiple WordPress users in conjunction with WordPress authentication. Every WordPress user will have his/her own LWT table set.</p>
 <ol>
 <li>
@@ -1736,13 +1724,13 @@ I CANNOT give any support for this feature, NOR can I help you with any WordPres
 <li>In subdirectory "lwt", rename the file <em>connect_wordpress.inc.php</em> into <em>connect.inc.php</em>, and enter the database parameters $server (database server), $userid (database user id), $passwd (database password), and $dbname (database name, can be the same like your wordpress database, or a different one) by editing the file with a text editor.</li>
 <li>In the WordPress General Settings, decide whether anyone can register and use LWT (Membership = "Anyone can register"), or not (an administrator must create new users). The "New User Default Role" should be "Subscriber".</li>
 <li>The link to start LWT with <strong>complete</strong> WordPress authentication is:<br>
-<em><a href="http://...path-to-wp-blog">http://...path-to-wp-blog</a>.../lwt/wp_lwt_start.php</em>
+_<a href="http://...path-to-wp-blog.../lwt/wp%5C">http://...path-to-wp-blog.../lwt/wp\</a><em>lwt_start.php</em>
 </li>
 <li>The link to start LWT (without WordPress authentication, only by checking the session cookie that is valid until the browser is closed) is:<br>
-<em><a href="http://...path-to-wp-blog">http://...path-to-wp-blog</a>.../lwt/</em><br>
+<em><a href="http://...path-to-wp-blog.../lwt/">http://...path-to-wp-blog.../lwt/</a></em><br>
 If the session cookie does not exist, both above start methods are the same.</li>
 <li>To properly log out from both WordPress and LWT, use the link:<br>
-<em><a href="http://...path-to-wp-blog">http://...path-to-wp-blog</a>.../lwt/wp_lwt_stop.php</em><br>
+_<a href="http://...path-to-wp-blog.../lwt/wp%5C">http://...path-to-wp-blog.../lwt/wp\</a><em>lwt_stop.php</em><br>
 The LWT home page has such a link. If you only log out via the links on the WordPress pages, you will still be able to use LWT until the browser is closed. If you want to log out from both WordPress and LWT, use the above link, or click on the link on the LWT home page!</li>
 <li>If you delete a user, you must find out its user number (table "wp_users"). After deleting the user in WordPress, you can delete all LWT tables with table names beginning with the user number plus an underscore "_". You can do this in phpMyAdmin.</li>
 </ol>
