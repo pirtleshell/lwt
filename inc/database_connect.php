@@ -1762,7 +1762,7 @@ function check_update_db($debug, $tbpref, $dbname): void
     
     // Rebuild Tables if missing (current versions!)
     
-    if (!in_array($tbpref . 'archivedtexts', $tables)) {
+    if (!in_array("{$tbpref}archivedtexts", $tables)) {
         if ($debug) { 
             echo '<p>DEBUG: rebuilding archivedtexts</p>'; 
         }
@@ -1784,7 +1784,7 @@ function check_update_db($debug, $tbpref, $dbname): void
         );
     }
     
-    if (!in_array($tbpref . 'languages', $tables)) {
+    if (!in_array("{$tbpref}languages", $tables)) {
         if ($debug) { 
             echo '<p>DEBUG: rebuilding languages</p>'; 
         }
@@ -1812,7 +1812,7 @@ function check_update_db($debug, $tbpref, $dbname): void
         );
     }
     
-    if (!in_array($tbpref . 'sentences', $tables)) {
+    if (!in_array("{$tbpref}sentences", $tables)) {
         if ($debug) { 
             echo '<p>DEBUG: rebuilding sentences</p>'; 
         }
@@ -1834,7 +1834,7 @@ function check_update_db($debug, $tbpref, $dbname): void
         $count++;
     }
     
-    if (!in_array($tbpref . 'settings', $tables)) {
+    if (!in_array("{$tbpref}settings", $tables)) {
         if ($debug) {
              echo '<p>DEBUG: rebuilding settings</p>'; 
         }
@@ -1849,7 +1849,7 @@ function check_update_db($debug, $tbpref, $dbname): void
         );
     }
     
-    if (!in_array($tbpref . 'textitems2', $tables)) {
+    if (!in_array("{$tbpref}textitems2", $tables)) {
         if ($debug) { 
             echo '<p>DEBUG: rebuilding textitems2</p>'; 
         }
@@ -1868,7 +1868,7 @@ function check_update_db($debug, $tbpref, $dbname): void
             ''
         );
         // Add data from the old database system
-        if (in_array($tbpref . 'textitems', $tables)) {
+        if (in_array("{$tbpref}textitems", $tables)) {
             runsql(
                 "INSERT INTO {$tbpref}textitems2 (
                     Ti2WoID, Ti2LgID, Ti2TxID, Ti2SeID, Ti2Order, Ti2WordCount, 
@@ -1886,13 +1886,13 @@ function check_update_db($debug, $tbpref, $dbname): void
                 WHERE TiWordCount<2 OR WoID IS NOT NULL",
                 ''
             );
-            runsql('TRUNCATE ' . $tbpref . 'textitems', '');
+            runsql("TRUNCATE {$tbpref}textitems", '');
         }
         $count++;
     }
 
 
-    if (!in_array($tbpref . 'temptextitems', $tables)) {
+    if (!in_array("{$tbpref}temptextitems", $tables)) {
         if ($debug) { 
             echo '<p>DEBUG: rebuilding temptextitems</p>'; 
         }
@@ -1908,7 +1908,7 @@ function check_update_db($debug, $tbpref, $dbname): void
         );
     }
 
-    if (!in_array($tbpref . 'tempwords', $tables)) {
+    if (!in_array("{$tbpref}tempwords", $tables)) {
         if ($debug) { 
             echo '<p>DEBUG: rebuilding tempwords</p>'; 
         }
@@ -1926,7 +1926,7 @@ function check_update_db($debug, $tbpref, $dbname): void
         );
     }
 
-    if (!in_array($tbpref . 'texts', $tables)) {
+    if (!in_array("{$tbpref}texts", $tables)) {
         if ($debug) { 
             echo '<p>DEBUG: rebuilding texts</p>'; 
         }
@@ -1949,7 +1949,7 @@ function check_update_db($debug, $tbpref, $dbname): void
         );
     }
     
-    if (!in_array($tbpref . 'words', $tables)) {
+    if (!in_array("{$tbpref}words", $tables)) {
         if ($debug) { 
             echo '<p>DEBUG: rebuilding words</p>'; 
         }
@@ -1965,7 +1965,7 @@ function check_update_db($debug, $tbpref, $dbname): void
                 WoSentence varchar(1000) DEFAULT NULL, 
                 WoWordCount tinyint(3) unsigned NOT NULL DEFAULT 0, 
                 WoCreated timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, 
-                WoStatusChanged timestamp NOT NULL DEFAULT '0000-00-00 00:00:01', 
+                WoStatusChanged timestamp NOT NULL DEFAULT '1970-01-01 12:00:00', 
                 WoTodayScore double NOT NULL DEFAULT '0', 
                 WoTomorrowScore double NOT NULL DEFAULT '0', 
                 WoRandom double NOT NULL DEFAULT '0', 
@@ -1986,7 +1986,7 @@ function check_update_db($debug, $tbpref, $dbname): void
         );
     }
     
-    if (!in_array($tbpref . 'tags', $tables)) {
+    if (!in_array("{$tbpref}tags", $tables)) {
         if ($debug) { 
             echo '<p>DEBUG: rebuilding tags</p>'; 
         }
@@ -2002,7 +2002,7 @@ function check_update_db($debug, $tbpref, $dbname): void
         );
     }
     
-    if (!in_array($tbpref . 'wordtags', $tables)) {
+    if (!in_array("{$tbpref}wordtags", $tables)) {
         if ($debug) { 
             echo '<p>DEBUG: rebuilding wordtags</p>'; 
         }
@@ -2017,7 +2017,7 @@ function check_update_db($debug, $tbpref, $dbname): void
         );
     }
     
-    if (!in_array($tbpref . 'tags2', $tables)) {
+    if (!in_array("{$tbpref}tags2", $tables)) {
         if ($debug) { 
             echo '<p>DEBUG: rebuilding tags2</p>'; 
         }
@@ -2033,7 +2033,7 @@ function check_update_db($debug, $tbpref, $dbname): void
         );
     }
     
-    if (!in_array($tbpref . 'texttags', $tables)) {
+    if (!in_array("{$tbpref}texttags", $tables)) {
         if ($debug) { 
             echo '<p>DEBUG: rebuilding texttags</p>'; 
         }
@@ -2047,7 +2047,7 @@ function check_update_db($debug, $tbpref, $dbname): void
         );
     }
     
-    if (!in_array($tbpref . 'newsfeeds', $tables)) {
+    if (!in_array("{$tbpref}newsfeeds", $tables)) {
         if ($debug) { 
             echo '<p>DEBUG: rebuilding newsfeeds</p>'; 
         }
@@ -2069,7 +2069,7 @@ function check_update_db($debug, $tbpref, $dbname): void
         );
     }
     
-    if (!in_array($tbpref . 'feedlinks', $tables)) {
+    if (!in_array("{$tbpref}feedlinks", $tables)) {
         if ($debug) { 
             echo '<p>DEBUG: rebuilding feedlinks</p>'; 
         }
@@ -2092,7 +2092,7 @@ function check_update_db($debug, $tbpref, $dbname): void
         );
     }
     
-    if (!in_array($tbpref . 'archtexttags', $tables)) {
+    if (!in_array("{$tbpref}archtexttags", $tables)) {
         if ($debug) { 
             echo '<p>DEBUG: rebuilding archtexttags</p>'; 
         }

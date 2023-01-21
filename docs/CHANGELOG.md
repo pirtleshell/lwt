@@ -8,6 +8,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 ### Fixed
 
 * Markdown: enforced consistency with official style recomendations. The documentation display got improved.
+* The default date for new words was note accepted depending on the SQL configuration, causing issues with Docker installation. See [#78](https://github.com/HugoFara/lwt/issues/78).
 
 ## [Unreleased]
 
