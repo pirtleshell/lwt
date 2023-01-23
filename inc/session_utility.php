@@ -4889,7 +4889,7 @@ function pagestart_nobody($title, $addcss=''): void
     <!-- 
         <?php echo file_get_contents("UNLICENSE.md");?> 
     -->
-    <meta name="viewport" content="width=900" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
     <link rel="apple-touch-icon" href="<?php print_file_path('img/apple-touch-icon-57x57.png');?>" />
     <link rel="apple-touch-icon" sizes="72x72" href="<?php print_file_path('img/apple-touch-icon-72x72.png');?>" />

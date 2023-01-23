@@ -391,9 +391,10 @@ echo '<div>' .
     </table>
 
 </div>
-<p>This is LWT Version <?php echo get_version(); ?></p>
-<hr />
-<footer>
+<p style="margin-bottom: 60px;">This is LWT Version <?php echo get_version(); ?></p>
+<br style="clear: both;" />
+<footer style="position: fixed; bottom: 0; width: 100%; background-color: white;">
+    <hr />
     <table>
         <tr>
             <td class="width50px">

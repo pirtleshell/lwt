@@ -8,6 +8,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 ### Changed
 
 * Graphic review: headers reviewed. Most h4 headers became div.bigger, and h3 became h1 level headers.
+* We now use responsive design instead of fixed-size.
 
 ### Fixed
 
