@@ -182,7 +182,8 @@ will be <b>annotated</b> with
 <option value=\"2\"" . get_selected(2, $annplcmnt) . ">above (ruby)</option>
 </select> the term.<br />
 <input type=\"button\" value=\"Print it!\" onclick=\"window.print();\" />  
-(only the text below the line) &nbsp; | &nbsp; ";
+(only the text below the line)
+<span class=\"nowrap\"></span>";
 if (((int)get_first_value("select length(TxAnnotatedText) as value from " . $tbpref . "texts where TxID = " . $textid)) > 0) {
     echo "Or <input type=\"button\" value=\"Print/Edit/Delete\" onclick=\"location.href='print_impr_text.php?text=" . $textid . "';\" /> your <b>Improved Annotated Text</b>" . get_annotation_link($textid) . ".";
 } else {
