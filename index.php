@@ -272,6 +272,11 @@ list($p, $mb, $serversoft, $apache, $php, $mysql) = get_server_data();
 pagestart_nobody(
     "Home", 
     "
+    body {
+        max-width: 1920px;
+        margin: 20px;
+    }
+
     .menu {
         display: flex; 
         flex-direction: column; 
@@ -393,25 +398,16 @@ echo '<div>' .
 </div>
 <p style="margin-bottom: 60px;">This is LWT Version <?php echo get_version(); ?></p>
 <br style="clear: both;" />
-<footer style="position: fixed; bottom: 0; width: 100%; background-color: white;">
-    <hr />
-    <table>
-        <tr>
-            <td class="width50px">
-                <a target="_blank" href="http://unlicense.org/">
-                    <img alt="Public Domain" title="Public Domain" src="img/public_domain.png" />
-                </a>
-            </td>
-            <td>
-                <p class="small">
-                    <a href="https://sourceforge.net/projects/learning-with-texts/" target="_blank">"Learning with Texts" (LWT)</a> is free 
-                    and unencumbered software released into the 
-                    <a href="https://en.wikipedia.org/wiki/Public_domain_software" target="_blank">PUBLIC DOMAIN</a>. 
-                    <a href="http://unlicense.org/" target="_blank">More information and detailed Unlicense ...</a>
-                </p>
-            </td>
-        </tr>
-    </table>
+<footer>
+    <p class="small">
+        <a target="_blank" href="http://unlicense.org/" style="vertical-align: top;">
+            <img alt="Public Domain" title="Public Domain" src="img/public_domain.png" style="display: inline;" />
+        </a>
+        <a href="https://sourceforge.net/projects/learning-with-texts/" target="_blank">"Learning with Texts" (LWT)</a> is free 
+        and unencumbered software released into the 
+        <a href="https://en.wikipedia.org/wiki/Public_domain_software" target="_blank">PUBLIC DOMAIN</a>. 
+        <a href="http://unlicense.org/" target="_blank">More information and detailed Unlicense ...</a>
+    </p>
 </footer>
 <?php
 
