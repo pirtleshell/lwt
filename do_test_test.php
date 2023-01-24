@@ -605,11 +605,4 @@ function do_test_test_content()
     do_test_test_javascript($count2);
 }
 
-if (isset($_REQUEST['selection']) || isset($_REQUEST['lang'])  
-    || isset($_REQUEST['text'])
-) {
-    //do_test_test_content();
-}
-
-
 ?>
