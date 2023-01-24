@@ -610,6 +610,23 @@ footer
   max-width: fit-content;
 }
 
+/**
+* Dropdown to navigate between pages.
+*/
+#quickmenu 
+{
+  float: right;
+}
+
+/**
+* Formats a header with flexbox.
+*/
+.flex-header 
+{
+  display: flex; 
+  justify-content: space-evenly;
+  align-items: center;
+}
 /**************************************************************
 Additional styles for printing
 ***************************************************************/

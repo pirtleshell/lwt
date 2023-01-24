@@ -2591,7 +2591,9 @@ Page
     }
     else {
         ?>
-<select name="page" onchange="{val=document.<?php echo $formname; ?>.page.options[document.<?php echo $formname; ?>.page.selectedIndex].value; location.href='<?php echo $script; ?>?page=' + val;}"><?php echo get_paging_selectoptions($currentpage, $pages); ?></select>
+<select name="page" onchange="{val=document.<?php echo $formname; ?>.page.options[document.<?php echo $formname; ?>.page.selectedIndex].value; location.href='<?php echo $script; ?>?page=' + val;}">
+    <?php echo get_paging_selectoptions($currentpage, $pages); ?>
+</select>
         <?php
     }
     echo ' of ' . $pages . '&nbsp; ';
@@ -4856,9 +4858,8 @@ function pagestart($title, $close): void
     echo_lwt_logo();
     echo "<span>LWT</span>";
     if ($close) {
-        echo '</a><span>&nbsp; | &nbsp;';
+        echo '</a>';
         quickMenu();
-        echo '</span>';
     }
     echo '</div><div class="bigger" style="font-weight: bold;">' . tohtml($title) . 
     ($debug ? ' <span class="red">DEBUG</span>' : '') . '</div>';

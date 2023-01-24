@@ -136,23 +136,29 @@ saveSetting('currentprintannotationplacement', $annplcmnt);
 
 pagestart_nobody('Print');
 
-echo '<div class="noprint">
-<div>
-<a href="edit_texts.php" target="_top">';
+echo '<div class="noprint">';
 echo_lwt_logo();
-echo 'LWT</a>&nbsp; | &nbsp;';
-quickMenu();
-echo getPreviousAndNextTextLinks($textid, 'print_text.php?text=', false, '&nbsp; | &nbsp;');
-echo '&nbsp; | &nbsp;<a href="do_text.php?start=' . $textid . '" target="_top">
-<img src="icn/book-open-bookmark.png" title="Read" alt="Read" /></a> &nbsp;
+echo '<div class="flex-header">
+<div><a href="edit_texts.php" target="_top">LWT</a>
+</div>
+<div>' . 
+getPreviousAndNextTextLinks($textid, 'print_text.php?text=', false, '') . 
+'</div>
+<div>
+<a href="do_text.php?start=' . $textid . '" target="_top">
+<img src="icn/book-open-bookmark.png" title="Read" alt="Read" /></a>
 <a href="do_test.php?text=' . $textid . '" target="_top">
 <img src="icn/question-balloon.png" title="Test" alt="Test" />
-</a>' . get_annotation_link($textid) . ' &nbsp;
+</a>' . get_annotation_link($textid) . '
 <a target="_top" href="edit_texts.php?chg=' . $textid . '">
 <img src="icn/document--pencil.png" title="Edit Text" alt="Edit Text" />
 </a>
 </div>
-<div class="bigger">PRINT&nbsp;▶ ' . tohtml($title) . 
+<div>';
+quickMenu();
+echo '</div>
+</div>
+<div class="bigger">PRINT ▶ ' . tohtml($title) . 
 (isset($sourceURI) && substr(trim($sourceURI), 0, 1)!='#' ? 
 ' <a href="' . $sourceURI . '" target="_blank">
 <img src="'.get_file_path('icn/chain.png').'" title="Text Source" alt="Text Source" /></a>' : 

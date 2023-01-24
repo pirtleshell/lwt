@@ -134,30 +134,39 @@ function get_test_counts($testsql)
 function do_test_header_row($_p)
 {
     ?>
-<a href="edit_texts.php" target="_top">
-    <?php echo_lwt_logo(); ?>
-    <span class="bigger">LWT</span>
-</a>&nbsp; | &nbsp;
+<div class="flex-header">
+    <div>
+        <a href="edit_texts.php" target="_top">
+            <?php echo_lwt_logo(); ?>
+            <span class="bigger">LWT</span>
+        </a>
+    </div>
     <?php 
-    quickMenu();
     // This part only works if $textid is set
     if (!is_numeric(getreq('text'))) {
         return;
     }
     $textid = (int) getreq('text');
-    echo getPreviousAndNextTextLinks(
-        $textid, 'do_test.php?text=', false, '&nbsp; | &nbsp;'
-    );
+    echo '<div>' . getPreviousAndNextTextLinks(
+        $textid, 'do_test.php?text=', false, ''
+    ) . '</div>';
     ?>
-&nbsp; | &nbsp;
-<a href="do_text.php?start=<?php echo $textid; ?>" target="_top">
-    <img src="icn/book-open-bookmark.png" title="Read" alt="Read" />
-</a> &nbsp;
-<a href="print_text.php?text=<?php echo $textid; ?>" target="_top">
-    <img src="icn/printer.png" title="Print" alt="Print" />
-</a>
+    <div>
+        <a href="do_text.php?start=<?php echo $textid; ?>" target="_top">
+            <img src="icn/book-open-bookmark.png" title="Read" alt="Read" />
+        </a>
+        <a href="print_text.php?text=<?php echo $textid; ?>" target="_top">
+            <img src="icn/printer.png" title="Print" alt="Print" />
+        </a>
+    </div>
+    <div>
     <?php
     echo get_annotation_link($textid);
+    quickMenu();
+    ?>
+    </div>
+</div>
+    <?php
 }
 
 /**
@@ -214,23 +223,28 @@ function do_test_header_content($title, $p, $totalcountdue, $totalcount, $langua
     <?php echo tohtml($title) 
     . ' (Due: ' . $totalcountdue . ' of ' . $totalcount . ')'; ?>
 </h1>
-<div>
-    <input type="button" value="..[<?php echo $language; ?>].." 
-    onclick="startWordTest(1, '<?php echo $p; ?>')" />
-    <input type="button" value="..[L1].." 
-    onclick="startWordTest(2, '<?php echo $p; ?>')" />
-    <input type="button" value="..[••].." 
-    onclick="startWordTest(3, '<?php echo $p; ?>')" /> 
-    &nbsp; | &nbsp; 
-    <input type="button" value="[<?php echo $language; ?>]" 
-    onclick="startWordTest(4, '<?php echo $p; ?>')" />
-    <input type="button" value="[L1]" 
-    onclick="startWordTest(5, '<?php echo $p; ?>')" /> 
-    &nbsp; | &nbsp; 
-    <input type="button" value="Table" 
-    onclick="startTestTable('<?php echo $p; ?>')" /> 
-    &nbsp; | &nbsp; 
-    <input type="checkbox" id="utterance-allowed">Read words aloud</input>
+<div class="flex-header">
+    <div>
+        <input type="button" value="..[<?php echo $language; ?>].." 
+        onclick="startWordTest(1, '<?php echo $p; ?>')" />
+        <input type="button" value="..[L1].." 
+        onclick="startWordTest(2, '<?php echo $p; ?>')" />
+        <input type="button" value="..[••].." 
+        onclick="startWordTest(3, '<?php echo $p; ?>')" /> 
+    </div>
+    <div> 
+        <input type="button" value="[<?php echo $language; ?>]" 
+        onclick="startWordTest(4, '<?php echo $p; ?>')" />
+        <input type="button" value="[L1]" 
+        onclick="startWordTest(5, '<?php echo $p; ?>')" /> 
+    </div>
+    <div> 
+        <input type="button" value="Table" 
+        onclick="startTestTable('<?php echo $p; ?>')" /> 
+    </div>
+    <div> 
+        <input type="checkbox" id="utterance-allowed">Read words aloud</input>
+    </div>
 </div>
     <?php
 }
