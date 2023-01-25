@@ -329,7 +329,7 @@ if (isset($_REQUEST['chg'])) {
 
         ?>
     
-     <h4>Edit Archived Text</h4>
+     <h1>Edit Archived Text</h1>
      <script type="text/javascript" charset="utf-8">
          $(document).ready(ask_before_exiting);
      </script>
@@ -665,10 +665,7 @@ if (isset($_REQUEST['chg'])) {
 </table>
 </form>
 <?php 
-} 
-?>
-
-        <?php
+}
     }
 }
 

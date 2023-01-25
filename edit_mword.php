@@ -105,7 +105,7 @@ function edit_mword_prepare_term()
     if (mb_strtolower(trim(getreq("WoText")), 'UTF-8') != $textlc) {
         $titletext = "New/Edit Term: " . tohtml($textlc);
         pagestart_nobody($titletext);
-        echo '<h4><span class="bigger">' . $titletext . '</span></h4>';
+        echo '<h1>' . $titletext . '</h1>';
         $message = 'Error: Term in lowercase must be exactly = "' . $textlc . 
         '", please go back and correct this!';
         echo error_message_with_hide($message, 0);
@@ -179,7 +179,7 @@ function edit_mword_do_insert($term)
     global $tbpref;
     $titletext = "New Term: " . tohtml($term->textlc);
     pagestart_nobody($titletext);
-    echo '<h4><span class="bigger">' . $titletext . '</span></h4>';
+    echo '<h1>' . $titletext . '</h1>';
 
     $message = runsql(
         "INSERT INTO {$tbpref}words (
@@ -224,7 +224,7 @@ function edit_mword_do_update($term, $newstatus)
     global $tbpref;
     $titletext = "Edit Term: " . tohtml($term->textlc);
     pagestart_nobody($titletext);
-    echo '<h4><span class="bigger">' . $titletext . '</span></h4>';
+    echo '<h1>' . $titletext . '</h1>';
 
     $oldstatus = $term->status;
     $status_change = '';

@@ -1337,6 +1337,42 @@ function failureSound() {
   return document.getElementById('failure_sound').play();
 }
 
+const lwt = {
+
+  /**
+   * Prepare the action so that a click switches between 
+   * unique word count and total word count.
+   * 
+   * @returns {undefined}
+   */
+  prepare_word_count_click: function () {
+    $('#total,#saved,#unknown,#chart,#unknownpercent')
+    .on('click', function( event ) {
+        $(this).attr('data_wo_cnt',parseInt($(this).attr('data_wo_cnt'))^1);
+        word_count_click();
+        event.stopImmediatePropagation();
+    }).attr('title',"u: Unique Word Counts\nt: Total  Word  Counts");
+    do_ajax_word_counts();
+  },
+
+  /**
+   * Save the settings about unique/total words count.
+   * 
+   * @returns {undefined}
+   */
+  save_text_word_count_settings: function () {
+      if (SUW == SHOWUNIQUE) {
+          return;
+      }
+      const a = $('#total').attr('data_wo_cnt') + 
+      $('#saved').attr('data_wo_cnt') + 
+      $('#unknown').attr('data_wo_cnt') + 
+      $('#unknownpercent').attr('data_wo_cnt') + 
+      $('#chart').attr('data_wo_cnt');
+      do_ajax_save_setting('set-show-text-word-counts', a);
+  }
+}
+
 // Present data in a handy way, for instance in a form
 $.fn.serializeObject = function () {
   const o = {};

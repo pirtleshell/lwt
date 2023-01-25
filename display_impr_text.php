@@ -95,7 +95,6 @@ function do_display_impr_text_page($textid)
         WHERE TxID = ' . $_REQUEST['text']
     );
     pagestart_nobody('Display');
-    //framesetheader('Display');
 
     if (is_mobile()) {
         do_mobile_display_impr_text($textid, $audio);

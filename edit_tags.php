@@ -108,8 +108,7 @@ elseif (isset($_REQUEST['op'])) {
 if (isset($_REQUEST['new'])) {
     
     ?>
-
-    <h4>New Tag</h4>
+    <h1>New Tag</h1>
     <script type="text/javascript" charset="utf-8">
         $(document).ready(ask_before_exiting);
     </script> 
@@ -133,17 +132,13 @@ if (isset($_REQUEST['new'])) {
     
     <?php
     
-}
-
-// CHG
-
-elseif (isset($_REQUEST['chg'])) {
-    
+} elseif (isset($_REQUEST['chg'])) {
+    // CHG
     $sql = 'select * from ' . $tbpref . 'tags where TgID = ' . $_REQUEST['chg'];
     $res = do_mysqli_query($sql);
     if ($record = mysqli_fetch_assoc($res)) {
         ?>
-     <h4>Edit Tag</h4>
+     <h1>Edit Tag</h1>
      <script type="text/javascript" charset="utf-8">
          $(document).ready(ask_before_exiting);
      </script>  
@@ -168,11 +163,8 @@ elseif (isset($_REQUEST['chg'])) {
         <?php
     }
     mysqli_free_result($res);
-}
-
-// DISPLAY
-
-else {
+} else {
+    // DISPLAY
     
     if (substr($message, 0, 24) == "Error: Duplicate entry '"  
         && substr($message, -18) == "' for key 'TgText'"

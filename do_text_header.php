@@ -56,34 +56,43 @@ function getData($textid)
 function do_header_row($textid, $langid): void
 {
     ?>
-<h4>
+<div class="flex-header">
+    <div>
     <a href="edit_texts.php" target="_top">
         <?php echo_lwt_logo(); ?> LWT
     </a>
-    &nbsp; | &nbsp;
-    <?php 
-    quickMenu();
+    </div>
+    <div>
+        <?php 
     echo getPreviousAndNextTextLinks(
-        $textid, 'do_text.php?start=', false, '&nbsp; | &nbsp;'
+        $textid, 'do_text.php?start=', false, ''
     );
-    ?>&nbsp; | &nbsp;
-    <a href="do_test.php?text=<?php echo $textid; ?>" target="_top">
-        <img src="icn/question-balloon.png" title="Test" alt="Test" />
-    </a>&nbsp;
-    <a href="print_text.php?text=<?php echo $textid; ?>" target="_top">
-        <img src="icn/printer.png" title="Print" alt="Print" />
-    </a>
-    <?php echo get_annotation_link($textid); ?>&nbsp;
-    <a target="_top" href="edit_texts.php?chg=<?php echo $textid; ?>">
-        <img src="icn/document--pencil.png" title="Edit Text" alt="Edit Text" />
-    </a>&nbsp; | &nbsp;
-    <a 
-        href="new_word.php?text=<?php echo $textid; ?>&amp;lang=<?php echo $langid; ?>" 
-        target="ro" onclick="showRightFrames();"
-    >
-        <img src="icn/sticky-note--plus.png" title="New Term" alt="New Term" />
-    </a>
-</h4>
+        ?>
+    </div>
+    <div>
+        <a href="do_test.php?text=<?php echo $textid; ?>" target="_top">
+            <img src="icn/question-balloon.png" title="Test" alt="Test" />
+        </a> 
+        <a href="print_text.php?text=<?php echo $textid; ?>" target="_top">
+            <img src="icn/printer.png" title="Print" alt="Print" />
+        </a>
+        <?php echo get_annotation_link($textid); ?> 
+        <a target="_top" href="edit_texts.php?chg=<?php echo $textid; ?>">
+            <img src="icn/document--pencil.png" title="Edit Text" alt="Edit Text" />
+        </a>
+    </div>
+    <div>
+        <a 
+            href="new_word.php?text=<?php echo $textid; ?>&amp;lang=<?php echo $langid; ?>" 
+            target="ro" onclick="showRightFrames();"
+        >
+            <img src="icn/sticky-note--plus.png" title="New Term" alt="New Term" />
+        </a>
+    </div>
+    <div>
+        <?php quickMenu(); ?>
+    </div>
+</div>
     <?php
 }
 
@@ -98,27 +107,18 @@ function do_header_row($textid, $langid): void
 function do_title($title, $sourceURI): void
 {
     ?>
-<table>
-    <tr>
-        <td>
-            <h3>READ&nbsp;▶</h3>
-        </td>
-        <td class="width99pc">
-            <h3>
-                <?php 
-                echo tohtml($title);
-                if (isset($sourceURI) && substr(trim($sourceURI), 0, 1) != '#') { 
-                    ?>
-                    <a href="<?php echo $sourceURI ?>" target="_blank">
-                        <img src="<?php echo get_file_path('icn/chain.png') ?>" title="Text Source" alt="Text Source" />
-                    </a>
-                    <?php 
-                } 
-                ?>
-            </h3>
-        </td>
-    </tr>
-</table>
+    <h1>READ ▶ 
+        <?php 
+    echo tohtml($title);
+    if (isset($sourceURI) && substr(trim($sourceURI), 0, 1) != '#') { 
+        ?>
+        <a href="<?php echo $sourceURI ?>" target="_blank">
+            <img src="<?php echo get_file_path('icn/chain.png') ?>" title="Text Source" alt="Text Source" />
+        </a>
+        <?php 
+    } 
+    ?>
+    </h1>
     <?php
 }
 

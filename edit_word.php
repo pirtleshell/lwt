@@ -32,7 +32,7 @@ function insert_new_word($textlc, $translation)
 
     $titletext = "New Term: " . tohtml(prepare_textdata($_REQUEST["WoTextLC"]));
     pagestart_nobody($titletext);
-    echo '<h4><span class="bigger">' . $titletext . '</span></h4>';
+    echo '<h1>' . $titletext . '</h1>';
 
     $message = runsql(
         'INSERT INTO ' . $tbpref . 'words 
@@ -74,7 +74,7 @@ function edit_term($translation)
 
     $titletext = "Edit Term: " . tohtml(prepare_textdata($_REQUEST["WoTextLC"]));
     pagestart_nobody($titletext);
-    echo '<h4><span class="bigger">' . $titletext . '</span></h4>';
+    echo '<h1>' . $titletext . '</h1>';
     
     $oldstatus = $_REQUEST["WoOldStatus"];
     $newstatus = $_REQUEST["WoStatus"];
@@ -106,7 +106,7 @@ function lowercase_term_not_equal($textlc): void
 {
     $titletext = "New/Edit Term: " . tohtml(prepare_textdata($_REQUEST["WoTextLC"]));
     pagestart_nobody($titletext);
-    echo '<h4><span class="bigger">' . $titletext . '</span></h4>';        
+    echo '<h1>' . $titletext . '</h1>';        
     $message = 
     'Error: Term in lowercase must be exactly = "' . 
     $textlc . '", please go back and correct this!'; 

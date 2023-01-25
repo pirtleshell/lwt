@@ -6,8 +6,7 @@ An export template consists of a string of characters. Some parts of this string
 
 If the export template is **empty, no terms of this language** will be exported.
 
-
-| Placeholders |  Placeholders replaced by ...                                                                    | 
+| Placeholders |  Placeholders replaced by ...                                                                    |
 |--------------|--------------------------------------------------------------------------------------------------|
 | **%...**     | **Raw Text**                                                                                     |
 | %w           | Term (Word/Expression) - as raw text.                                                            |

@@ -2555,7 +2555,9 @@ Page
     }
     else {
         ?>
-<select name="page" onchange="{val=document.<?php echo $formname; ?>.page.options[document.<?php echo $formname; ?>.page.selectedIndex].value; location.href='<?php echo $script; ?>?page=' + val;}"><?php echo get_paging_selectoptions($currentpage, $pages); ?></select>
+<select name="page" onchange="{val=document.<?php echo $formname; ?>.page.options[document.<?php echo $formname; ?>.page.selectedIndex].value; location.href='<?php echo $script; ?>?page=' + val;}">
+    <?php echo get_paging_selectoptions($currentpage, $pages); ?>
+</select>
         <?php
     }
     echo ' of ' . $pages . '&nbsp; ';
@@ -4813,20 +4815,18 @@ function pagestart($title, $close): void
 {
     global $debug;
     pagestart_nobody($title);
-    echo '<h4>';
+    echo '<div>';
     if ($close) { 
         echo '<a href="index.php" target="_top">'; 
     }
     echo_lwt_logo();
     echo "<span>LWT</span>";
     if ($close) {
-        echo '</a><span>&nbsp; | &nbsp;';
+        echo '</a>';
         quickMenu();
-        echo '</span>';
     }
-    echo '</h4><h3>' . tohtml($title) . 
-    ($debug ? ' <span class="red">DEBUG</span>' : '') . '</h3>';
-    echo "<p>&nbsp;</p>";
+    echo '</div><div class="bigger" style="font-weight: bold;">' . tohtml($title) . 
+    ($debug ? ' <span class="red">DEBUG</span>' : '') . '</div>';
 } 
 
 /**
@@ -4854,7 +4854,7 @@ function pagestart_nobody($title, $addcss=''): void
     <!-- 
         <?php echo file_get_contents("UNLICENSE.md");?> 
     -->
-    <meta name="viewport" content="width=900" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
     <link rel="apple-touch-icon" href="<?php print_file_path('img/apple-touch-icon-57x57.png');?>" />
     <link rel="apple-touch-icon" sizes="72x72" href="<?php print_file_path('img/apple-touch-icon-72x72.png');?>" />

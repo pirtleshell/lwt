@@ -31,10 +31,8 @@ function get_test_table_sql()
         $testsql = $_SESSION['testsql'];
         $cntlang = get_first_value('SELECT count(distinct WoLgID) AS value FROM ' . $testsql);
         if ($cntlang > 1) {
-            //pagestart('', false);
             echo '<p>Sorry - The selected terms are in ' . $cntlang . 
             ' languages, but tests are only possible in one language at a time.</p>';
-            //pageend();
             exit();
         }
     } else if (isset($_REQUEST['lang'])) {

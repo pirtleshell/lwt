@@ -674,7 +674,7 @@ if (isset($_REQUEST['new']) && isset($_REQUEST['lang'])) {
     
     ?>
 
-    <h4>New Term</h4>
+    <h1>New Term</h1>
     <script type="text/javascript" charset="utf-8">
         $(document).ready(ask_before_exiting);
     </script>  
@@ -735,13 +735,14 @@ if (isset($_REQUEST['new']) && isset($_REQUEST['lang'])) {
         
         $wordlc = $record['WoTextLC'];
         $transl = repl_tab_nl($record['WoTranslation']);
-        if($transl == '*') { $transl=''; 
+        if ($transl == '*') { 
+            $transl=''; 
         }
         $scrdir = ($record['LgRightToLeft'] ? ' dir="rtl" ' : '');
     
         ?>
     
-     <h4>Edit Term</h4>
+     <h1>Edit Term</h1>
      <script type="text/javascript" charset="utf-8">
          $(document).ready(ask_before_exiting);
      </script>

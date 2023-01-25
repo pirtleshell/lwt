@@ -294,6 +294,11 @@ list($p, $mb, $serversoft, $apache, $php, $mysql) = get_server_data();
 pagestart_nobody(
     "Home", 
     "
+    body {
+        max-width: 1920px;
+        margin: 20px;
+    }
+
     .menu {
         display: flex; 
         flex-direction: column; 
@@ -311,10 +316,10 @@ pagestart_nobody(
     }"
 );
 echo '<div>' . 
-    echo_lwt_logo() . '<h1>' . 
+    echo_lwt_logo() . '<div class="bigger" style="font-weight: bold;">' . 
         $span3 . 'Learning With Texts (LWT)</span>
-    </h1>
-    <h2>Home' . ($debug ? ' <span class="red">DEBUG</span>' : '') . '</h2>
+    </div>
+    <h1>Home' . ($debug ? ' <span class="red">DEBUG</span>' : '') . '</h1>
 </div>';
 
 ?>
@@ -413,26 +418,18 @@ echo '<div>' .
     </table>
 
 </div>
-<p>This is LWT Version <?php echo get_version(); ?></p>
-<hr />
+<p style="margin-bottom: 60px;">This is LWT Version <?php echo get_version(); ?></p>
+<br style="clear: both;" />
 <footer>
-    <table>
-        <tr>
-            <td class="width50px">
-                <a target="_blank" href="http://unlicense.org/">
-                    <img alt="Public Domain" title="Public Domain" src="img/public_domain.png" />
-                </a>
-            </td>
-            <td>
-                <p class="small">
-                    <a href="https://sourceforge.net/projects/learning-with-texts/" target="_blank">"Learning with Texts" (LWT)</a> is free 
-                    and unencumbered software released into the 
-                    <a href="https://en.wikipedia.org/wiki/Public_domain_software" target="_blank">PUBLIC DOMAIN</a>. 
-                    <a href="http://unlicense.org/" target="_blank">More information and detailed Unlicense ...</a>
-                </p>
-            </td>
-        </tr>
-    </table>
+    <p class="small">
+        <a target="_blank" href="http://unlicense.org/" style="vertical-align: top;">
+            <img alt="Public Domain" title="Public Domain" src="img/public_domain.png" style="display: inline;" />
+        </a>
+        <a href="https://sourceforge.net/projects/learning-with-texts/" target="_blank">"Learning with Texts" (LWT)</a> is free 
+        and unencumbered software released into the 
+        <a href="https://en.wikipedia.org/wiki/Public_domain_software" target="_blank">PUBLIC DOMAIN</a>. 
+        <a href="http://unlicense.org/" target="_blank">More information and detailed Unlicense ...</a>
+    </p>
 </footer>
 <?php
 
