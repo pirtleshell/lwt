@@ -111,13 +111,13 @@ function do_test_mobile_page_content($property)
 /**
  * Make the mobile test page.
  * 
- * @param string $property Unnused. URL property for HEADER
+ * @param string $property Unnused, null by default
  * 
  * @return void
  * 
  * @since 2.6.0-fork Function rewrote and no longer deprecated
  */
-function do_test_mobile_page($property) 
+function do_test_mobile_page($property=null) 
 {
     $language = get_l2_language_name();
     ?>
@@ -165,11 +165,11 @@ onclick="hideRightFrames();">
 /**
  * Make the desktop test page
  * 
- * @param string $property Unnused. URL property for HEADER
+ * @param string $property Unnused, null by default
  * 
  * @return void
  */
-function do_test_desktop_page($property) 
+function do_test_desktop_page($property=null) 
 {
     $frame_l_width = (int)getSettingWithDefault('set-text-l-framewidth-percent');
     $language = get_l2_language_name();
@@ -218,21 +218,29 @@ width: <?php echo 97 - $frame_l_width; ?>%;">
 /**
  * Start the test page.
  * 
- * @param string $p Some property to add to the URL of do_test_test.php.
+ * @param string $p Unnused.
  * 
  * @since 2.2.1 The $mobile parameter is no longer required.
  * @since 2.6.0 Mobile interface is back and self-set.
+ * @since 2.7.0 Adds a CSS rule to auto-enlarge the body.
  * 
  * @return void
  */
 function do_test_page($p)
 {
-    pagestart_nobody('Test');
+    pagestart_nobody(
+        'Test',
+    
+        "body {
+            margin: 20px;
+            max-width: 100%;
+        }"
+    );
     
     if (is_mobile()) {
-        do_test_mobile_page($p);
+        do_test_mobile_page();
     } else {
-        do_test_desktop_page($p);
+        do_test_desktop_page();
     }
 
     pageend();

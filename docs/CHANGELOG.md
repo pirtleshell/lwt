@@ -1,20 +1,7 @@
 # Changelog
-# Changelog
 
 This project's changelog. Versions marked with "-fork" come from the community, other versions come from the canonical LWT ("official" branch on Git).
 For git tags, official releases are marked like "v1.0.0", while unofficial ones are marked like "v1.0.0-fork".
-
-## [Unreleased]
-
-### Changed
-
-* Graphic review: headers reviewed. Most h4 headers became div.bigger, and h3 became h1 level headers.
-* We now use responsive design instead of fixed-size.
-
-### Fixed
-
-* Markdown: enforced consistency with official style recomendations. The documentation display got improved.
-* The default date for new words was note accepted depending on the SQL configuration, causing issues with Docker installation. See [#78](https://github.com/HugoFara/lwt/issues/78).
 
 ## [Unreleased]
 
@@ -23,6 +10,17 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 * Database creation wizard (``database_wizard.php``) to help setting the connection with the database.
 * In ``index.php``, ``get_server_data_table`` replaces ``get_server_data`` as a better designed function.
 * ``pagestart_kernel_nobody`` in ``inc/kernel.php`` that display the minimal HTML formatting.
+
+### Changed
+
+* Graphic review: headers reviewed. Most h4 headers became div.bigger, and h3 became h1 level headers.
+* We now use responsive design instead of fixed-size.
+* ``do_text_page`` (``do_text.php``) and ``do_test_page`` (``do_test.php``) now enlarge the body.
+
+### Fixed
+
+* Markdown: enforced consistency with official style recomendations. The documentation display got improved.
+* The default date for new words was note accepted depending on the SQL configuration, causing issues with Docker installation. See [#78](https://github.com/HugoFara/lwt/issues/78).
 
 ## 2.6.0-fork (January 01 2023)
 

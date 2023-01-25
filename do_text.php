@@ -40,15 +40,15 @@ function get_text_id()
 /**
  * Echo the page content for the mobile version of do_text.
  * 
- * @param int    $textid Text ID
- * @param string $audio  Audio URI, unnused
+ * @param int   $textid Text ID
+ * @param mixed $audio  Audio URI, unnused, null by default
  * 
  * @return void
  * 
  * @since 2.2.1 It also calls do_frameset_mobile_css and do_frameset_mobile_js
  * @since 2.6.0-fork Rewrote to match the desktop version (between 2.2.1 and 2.6.0)
  */
-function do_text_mobile_content($textid, $audio)
+function do_text_mobile_content($textid, $audio=null)
 {
     ?>
 <div style="width: 95%; height: 100%;">
@@ -82,12 +82,12 @@ onclick="hideRightFrames();">
 /**
  * Echo the page content for the desktop version of do_text.
  * 
- * @param int         $textid Text ID
- * @param string|null $audio  Audio URI, unnused
+ * @param int   $textid Text ID
+ * @param mixed $audio  Audio URI, unnused, null by default
  * 
  * @return void
  */
-function do_text_desktop_content($textid, $audio)
+function do_text_desktop_content($textid, $audio=null)
 {
     $frame_l_width = (int)getSettingWithDefault('set-text-l-framewidth-percent');
     ?>
@@ -124,28 +124,24 @@ width: <?php echo 97 - $frame_l_width; ?>%;">
  * @param bool $mobile Set to true if you want the mobile version of the page.
  * 
  * @since 2.2.1 The $mobile parameter is no longer required.
+ * @since 2.7.0 Adds a CSS rule to auto-enlarge the body.
  * 
  * @return void
- * 
- * @global string $tbpref Database table prefix.
  */
 function do_text_page($textid)
 {
-    global $tbpref;
-
-    //framesetheader('Read');
-    pagestart_nobody('Read');
-    
-    $audio = get_first_value(
-        'SELECT TxAudioURI AS value 
-        FROM ' . $tbpref . 'texts 
-        WHERE TxID = ' . $textid
+    pagestart_nobody(
+        'Read', 
+        "body {
+            margin: 20px;
+            max-width: 100%;
+        }"
     );
     
     if (is_mobile()) {
-        do_text_mobile_content($textid, $audio);
+        do_text_mobile_content($textid);
     } else {
-        do_text_desktop_content($textid, $audio);
+        do_text_desktop_content($textid);
     }
     pageend();
 }
