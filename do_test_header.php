@@ -220,7 +220,7 @@ function do_test_header_content($title, $p, $totalcountdue, $totalcount, $langua
     <?php echo tohtml($title) 
     . ' (Due: ' . $totalcountdue . ' of ' . $totalcount . ')'; ?>
 </h1>
-<div class="flex-header">
+<div class="flex-spaced">
     <div>
         <input type="button" value="..[<?php echo $language; ?>].." 
         onclick="startWordTest(1, '<?php echo $p; ?>')" />

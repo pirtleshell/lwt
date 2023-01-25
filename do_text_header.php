@@ -136,27 +136,26 @@ function do_settings($textid): void
     $showLearning = getSettingZeroOrOne('showlearningtranslations', 1);
 
     ?>
-<table class="width99pc">
-    <tr>
-        <td>TO DO:
-            <span id="learnstatus"><?php echo texttodocount2($textid); ?></span>
-        </td>
-        <td 
-        title="[Show All] = ON: ALL terms are shown, and all multi-word terms are shown as superscripts before the first word. The superscript indicates the number of words in the multi-word term.
+<div class="flex-spaced">
+    <div>
+        TO DO:
+        <span id="learnstatus"><?php echo texttodocount2($textid); ?></span>
+    </div>
+    <div 
+    title="[Show All] = ON: ALL terms are shown, and all multi-word terms are shown as superscripts before the first word. The superscript indicates the number of words in the multi-word term.
 [Show All] = OFF: Multi-word terms now hide single words and shorter or overlapping multi-word terms.">
-            Show All&nbsp;
-            <input type="checkbox" id="showallwords" <?php echo get_checked($showAll); ?> onclick="showAllwordsClick();" />
-        </td>
-        <td 
-        title="[Learning Translations] = ON: Terms with Learning Level&nbsp;1 display their translations under the term.
+        Show All&nbsp;
+        <input type="checkbox" id="showallwords" <?php echo get_checked($showAll); ?> onclick="showAllwordsClick();" />
+</div>
+    <div 
+    title="[Learning Translations] = ON: Terms with Learning Level&nbsp;1 display their translations under the term.
 [Learning Translations] = OFF: No translations are shown in the reading mode.">
-            Learning Translations&nbsp;
-            <input type="checkbox" id="showlearningtranslations" <?php echo get_checked($showLearning); ?> onclick="showAllwordsClick();" />
-        </td>
-        <td id="thetextid" class="hide"><?php echo $textid; ?></td>
-        <td><button id="readTextButton">Read in browser</button></td>
-    </tr>
-</table>
+        Learning Translations&nbsp;
+        <input type="checkbox" id="showlearningtranslations" <?php echo get_checked($showLearning); ?> onclick="showAllwordsClick();" />
+</div>
+    <div id="thetextid" class="hide"><?php echo $textid; ?></div>
+    <div><button id="readTextButton">Read in browser</button></div>
+</div>
     <?php
 }
 

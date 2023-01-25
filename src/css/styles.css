@@ -625,6 +625,16 @@ footer
 .flex-header 
 {
   display: flex; 
+  justify-content: space-between;
+  align-items: center;
+}
+
+/**
+* Space evenly article content.
+*/
+.flex-spaced
+{
+  display: flex; 
   justify-content: space-evenly;
   align-items: center;
 }

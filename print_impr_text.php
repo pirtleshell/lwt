@@ -67,7 +67,8 @@ if (!isset($audio)) {
 $audio = trim($audio);
 mysqli_free_result($res);
 
-$sql = 'select LgTextSize, LgRemoveSpaces, LgRightToLeft, LgGoogleTranslateURI from ' . $tbpref . 'languages where LgID = ' . $langid;
+$sql = 'select LgTextSize, LgRemoveSpaces, LgRightToLeft, LgGoogleTranslateURI 
+from ' . $tbpref . 'languages where LgID = ' . $langid;
 $res = do_mysqli_query($sql);
 $record = mysqli_fetch_assoc($res);
 $textsize = $record['LgTextSize'];
@@ -88,54 +89,58 @@ saveSetting('currenttext', $textid);
 
 pagestart_nobody('Annotated Text', 'input[type="radio"]{display:inline;}');
 
-echo '<div class="noprint"> 
+?>
+<div class="noprint"> 
 <div class="flex-header">
-<div>'; 
-echo_lwt_logo();
-echo '</div>
-<div>' . 
-getPreviousAndNextTextLinks($textid, 'print_impr_text.php?text=', true, '') .
-'</div>
-<div><a href="do_text.php?start=' . $textid . '" target="_top">
+<div>
+<?php echo_lwt_logo(); ?>
+</div>
+<div>
+<?php echo getPreviousAndNextTextLinks($textid, 'print_impr_text.php?text=', true, ''); ?>
+</div>
+<div><a href="do_text.php?start=<?php echo $textid; ?>" target="_top">
 <img src="icn/book-open-bookmark.png" title="Read" alt="Read" /></a>
-<a href="do_test.php?text=' . $textid . '" target="_top">
+<a href="do_test.php?text=<?php echo $textid; ?>" target="_top">
 <img src="icn/question-balloon.png" title="Test" alt="Test" />
 </a>
-<a href="print_text.php?text=' . $textid . '" target="_top">
+<a href="print_text.php?text=<?php echo $textid; ?>" target="_top">
 <img src="icn/printer.png" title="Print" alt="Print" />
-<a target="_top" href="edit_texts.php?chg=' . $textid . '">
+<a target="_top" href="edit_texts.php?chg=<?php echo $textid; ?>">
 <img src="icn/document--pencil.png" title="Edit Text" alt="Edit Text" /></a>
 </div>
-<div>';
-quickMenu();
-echo '</div></div>
-<h1>ANN.TEXT ▶ ' . tohtml($title) . 
+<div>
+<?php quickMenu(); ?>
+</div></div>
+<h1>ANN.TEXT ▶ <?php echo tohtml($title) . 
 (isset($sourceURI) && substr(trim($sourceURI), 0, 1)!='#' ? 
-' <a href="' . $sourceURI . '" target="_blank"><img src="'.get_file_path('icn/chain.png') .
+' <a href="<?php echo $sourceURI; ?>" target="_blank"><img src="'.get_file_path('icn/chain.png') .
 '" title="Text Source" alt="Text Source" /></a>' 
-: '') . 
-'</h1>
+: '') ?></h1>
 <div id="printoptions">
-<h2>Improved Annotated Text';
+<h2>Improved Annotated Text<?php
 
 if ($editmode) {
-    echo " (Edit Mode) 
-    <img src=\"icn/question-frame.png\" title=\"Help\" alt=\"Help\" class=\"click\" onclick=\"window.open('info.php#il');\" />
+    ?> (Edit Mode) 
+    <img src="icn/question-frame.png" title="Help" alt="Help" class="click" onclick="window.open('info.php#il');" />
     </h2>
-    <input type=\"button\" value=\"Display/Print Mode\" onclick=\"location.href='print_impr_text.php?text=" . $textid . "';\" />\n";
+    <input type="button" value="Display/Print Mode" onclick="location.href='print_impr_text.php?text=<?php echo $textid; ?>';" />
+    <?php
 } else {
-    echo " (Display/Print Mode)</h2>
-    <div class=\"flex-header\">
-    <input type=\"button\" value=\"Edit\" onclick=\"location.href='print_impr_text.php?edit=1&amp;text=" . $textid . "';\" /> 
-    <input type=\"button\" value=\"Delete\" onclick=\"if (confirm ('Are you sure?')) location.href='print_impr_text.php?del=1&amp;text=" . $textid . "';\" /> 
-    <input type=\"button\" value=\"Print\" onclick=\"window.print();\" />
-    <input type=\"button\" value=\"Display" . 
-    (($audio != '') ? ' with Audio Player' : '') . " in new Window\" onclick=\"window.open('display_impr_text.php?text=" . $textid . "');\" />" .
-    "</div>";
+    ?> (Display/Print Mode)</h2>
+    <div class="flex-spaced">
+    <input type="button" value="Edit" onclick="location.href='print_impr_text.php?edit=1&amp;text=<?php echo $textid; ?>';" /> 
+    <input type="button" value="Delete" onclick="if (confirm ('Are you sure?')) location.href='print_impr_text.php?del=1&amp;text=<?php echo $textid; ?>';" /> 
+    <input type="button" value="Print" onclick="window.print();" />
+    <input type="button" value="Display <?php echo (($audio != '') ? ' with Audio Player' : ''); ?> in new Window" 
+    onclick="window.open('display_impr_text.php?text=<?php echo $textid; ?>');" />
+    </div>
+    <?php
 }
-echo "</div>
+?>
+</div>
 </div> 
-<!-- noprint -->";
+<!-- noprint -->
+<?php
 
 // --------------------------------------------------------
 
