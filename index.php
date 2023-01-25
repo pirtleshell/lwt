@@ -2,7 +2,7 @@
 
 /**
  * \file
- * \brief LWT Start Screen / Main Menu / Home
+ * \brief LWT Start screen and main menu
  * 
  * Call: index.php
  * 
@@ -210,22 +210,22 @@ function wordpress_logout_link()
     }
 }
 
+
 /**
  * Return a lot of different server state variables.
  * 
- * @return array{"prefix": string, "db_size": float, "serversoft": string[], "apache": string, "php": string, "mysql": string} 
+ * @return array{0: string, 1: float, 2: string[], 3: string, 4: string, 5: string} 
  * Table prefix, database size, server software, apache version, PHP version, MySQL 
  * version
  * 
+ * @deprecated Use get_server_data_table, will be removed in 3.0.0. 
+ *
+ * @psalm-return array{0: string, 1: float, 2: non-empty-list<string>, 3: string, 4: false|string, 5: string}
+ * 
  * @global string $tbpref Database table prefix
  * @global string $dbname Database name
- *
- * @psalm-return array{
- *  "prefix": string, "db_size": float, "serversoft": non-empty-list<string>, 
- *  "apache": string, "php": false|string, "mysql": string
- * }
  */
-function get_server_data_table(): array 
+function get_server_data(): array 
 {
     global $tbpref, $dbname;
     $dbaccess_format = convert_string_to_sqlsyntax($dbname);
@@ -247,31 +247,15 @@ function get_server_data_table(): array
 
     $data_table["serversoft"] = explode(' ', $_SERVER['SERVER_SOFTWARE']);
     $data_table["apache"] = "Apache/?";
-    // if (count($serversoft) >= 1) { Not supposed to happen
     if (substr($data_table["serversoft"][0], 0, 7) == "Apache/") { 
         $data_table["apache"] = $data_table["serversoft"][0]; 
     }
-    // }
     $data_table["php"] = phpversion();
     $data_table["mysql"] = (string)get_first_value("SELECT VERSION() as value");
-    return $data_table;
-}
-
-/**
- * Return a lot of different server state variables.
- * 
- * @return array{0: string, 1: float, 2: string[], 3: string, 4: string, 5: string} 
- * Table prefix, database size, server software, apache version, PHP version, MySQL 
- * version
- * 
- * @deprecated Use get_server_data_table, will be removed in 3.0.0. 
- *
- * @psalm-return array{0: string, 1: float, 2: non-empty-list<string>, 3: string, 4: false|string, 5: string}
- */
-function get_server_data(): array 
-{
-    $data = get_server_data_table();
-    return array($data["prefix"], $data["db_size"], $data["serversoft"], $data["apache"], $data["php"], $data["mysql"]);
+    return array(
+        $data_table["prefix"], $data_table["db_size"], $data_table["serversoft"], 
+        $data_table["apache"], $data_table["php"], $data_table["mysql"]
+    );
 }
 
 
@@ -288,8 +272,6 @@ if (is_numeric(getSetting('currenttext'))) {
 }
 
 $langcnt = (int) get_first_value("SELECT COUNT(*) AS value FROM {$tbpref}languages");
-
-list($p, $mb, $serversoft, $apache, $php, $mysql) = get_server_data();
 
 pagestart_nobody(
     "Home", 
@@ -356,66 +338,34 @@ echo '<div>' .
         <a href="edit_archivedtexts.php">Text Archive</a>
         
         <a href="edit_texttags.php">Text Tags</a>
-        <a href="check_text.php">Check a Text</a>
-        <a href="long_text_import.php">Long Text Import</a>
+        <a href="check_text.php">Check Text</a>
+        <a href="long_text_import.php">Import Long Text</a>
     </div>
     
     <div class="menu">
-        <a href="edit_words.php">Terms (Words and Expressions)</a>
+        <a href="edit_words.php" title="View and edit saved words and expressions">Terms</a>
         <a href="edit_tags.php">Term Tags</a>
         <a href="upload_words.php">Import Terms</a>
     </div>
     
     <div class="menu">
-        <a href="do_feeds.php?check_autoupdate=1">Newsfeed Import</a>
-        <a href="backup_restore.php">Backup / Restore / Empty Database</a>
+        <a href="do_feeds.php?check_autoupdate=1">Newsfeeds</a>
+        <a href="backup_restore.php" title="Backup, restore or empty database">Database</a>
     </div>
 
     <div class="menu">
-        <a href="statistics.php">Statistics</a>
-        <a href="docs/info.php">Help / Information</a>
+        <a href="statistics.php" title="Text statistics">Statistics</a>
+        <a href="docs/info.php">Help</a>
+        <a href="server_data.php" title="Various data useful for debug">Server Data</a>
     </div>
 
     <div class="menu">
-        <a href="settings.php">Settings / Preferences</a>
-        <a href="text_to_speech_settings.php">Text-to-Speech Settings</a>
-        <a href="mobile.php">Mobile LWT (Deprecated)</a>
+        <a href="settings.php">Settings</a>
+        <a href="text_to_speech_settings.php" title="Text-to-Speech settings">Text-to-Speech</a>
+        <a href="mobile.php" title="Mobile LWT is a legacy function">Mobile LWT (Deprecated)</a>
     </div>
         
     <?php wordpress_logout_link(); ?>
-
-    <table style="width: 500px; margin: 5px;">
-        <tbody>
-            <tr>
-                <td><a href="https://en.wikipedia.org/wiki/Database" target="_blank">Database</a> name</td>
-                <td><i><?php echo $dbname; ?></i></td>
-            </tr>
-            <tr>
-                <td>Database Location</td>
-                <td><i><?php echo $server; ?></i></td>
-            </tr>
-            <tr>
-                <td>Database Size</td>
-                <td><?php echo $mb; ?> MB</td>
-            </tr>
-            <tr>
-                <td><a href="https://en.wikipedia.org/wiki/Web_server" target="_blank">Web Server</a></td>
-                <td><i><?php echo $_SERVER['HTTP_HOST']; ?></i></td>
-            </tr>
-            <tr>
-                <td>Server Software</td>
-                <td><a href="https://en.wikipedia.org/wiki/Apache_HTTP_Server" target="_blank"><?php echo $apache; ?></a></td>
-            </tr>
-            <tr>
-                <td><a href="https://en.wikipedia.org/wiki/PHP" target="_blank">PHP</a> Version</td>
-                <td><?php echo $php; ?></td>
-            </tr>
-            <tr>
-                <td><a href="https://en.wikipedia.org/wiki/MySQL" target="_blank">MySQL</a> Version</td>
-                <td><?php echo $mysql; ?></td>
-            </tr>
-        </tbody>
-    </table>
 
 </div>
 <p style="margin-bottom: 60px;">This is LWT Version <?php echo get_version(); ?></p>
