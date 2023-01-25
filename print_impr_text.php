@@ -88,10 +88,11 @@ saveSetting('currenttext', $textid);
 
 pagestart_nobody('Annotated Text', 'input[type="radio"]{display:inline;}');
 
-echo '<div class="noprint">';
+echo '<div class="noprint"> 
+<div class="flex-header">
+<div>'; 
 echo_lwt_logo();
-echo '<div class="flex-header">
-<div><a href="edit_texts.php" target="_top">LWT</a></div>
+echo '</div>
 <div>' . 
 getPreviousAndNextTextLinks($textid, 'print_impr_text.php?text=', true, '') .
 '</div>
@@ -108,22 +109,22 @@ getPreviousAndNextTextLinks($textid, 'print_impr_text.php?text=', true, '') .
 <div>';
 quickMenu();
 echo '</div></div>
-<div class="bigger">ANN.TEXT ▶ ' . tohtml($title) . 
+<h1>ANN.TEXT ▶ ' . tohtml($title) . 
 (isset($sourceURI) && substr(trim($sourceURI), 0, 1)!='#' ? 
 ' <a href="' . $sourceURI . '" target="_blank"><img src="'.get_file_path('icn/chain.png') .
 '" title="Text Source" alt="Text Source" /></a>' 
 : '') . 
-'</div>
+'</h1>
 <div id="printoptions">
-<h1>Improved Annotated Text';
+<h2>Improved Annotated Text';
 
 if ($editmode) {
     echo " (Edit Mode) 
     <img src=\"icn/question-frame.png\" title=\"Help\" alt=\"Help\" class=\"click\" onclick=\"window.open('info.php#il');\" />
-    </h1>
+    </h2>
     <input type=\"button\" value=\"Display/Print Mode\" onclick=\"location.href='print_impr_text.php?text=" . $textid . "';\" />\n";
 } else {
-    echo " (Display/Print Mode)</h1>
+    echo " (Display/Print Mode)</h2>
     <div class=\"flex-header\">
     <input type=\"button\" value=\"Edit\" onclick=\"location.href='print_impr_text.php?edit=1&amp;text=" . $textid . "';\" /> 
     <input type=\"button\" value=\"Delete\" onclick=\"if (confirm ('Are you sure?')) location.href='print_impr_text.php?del=1&amp;text=" . $textid . "';\" /> 

@@ -59,7 +59,7 @@ function do_header_row($textid, $langid): void
 <div class="flex-header">
     <div>
     <a href="edit_texts.php" target="_top">
-        <?php echo_lwt_logo(); ?> LWT
+        <?php echo_lwt_logo(); ?>
     </a>
     </div>
     <div>

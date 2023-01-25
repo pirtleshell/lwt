@@ -138,7 +138,6 @@ function do_test_header_row($_p)
     <div>
         <a href="edit_texts.php" target="_top">
             <?php echo_lwt_logo(); ?>
-            <span class="bigger">LWT</span>
         </a>
     </div>
     <?php 

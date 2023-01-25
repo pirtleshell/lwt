@@ -99,18 +99,18 @@ $show_trans = $ann & 1;
 $show_tags = $ann & 4; 
 
 $statusrange = getreq('status');
-if($statusrange == '') { 
+if ($statusrange == '') { 
     $statusrange = getSetting('currentprintstatus'); 
 }
-if($statusrange == '') { 
+if ($statusrange == '') { 
     $statusrange = 14; 
 }
 
 $annplcmnt = getreq('annplcmnt');
-if($annplcmnt == '') { 
+if ($annplcmnt == '') { 
     $annplcmnt = getSetting('currentprintannotationplacement'); 
 }
-if($annplcmnt == '') { 
+if ($annplcmnt == '') { 
     $annplcmnt = 0; 
 }
 
@@ -136,64 +136,79 @@ saveSetting('currentprintannotationplacement', $annplcmnt);
 
 pagestart_nobody('Print');
 
-echo '<div class="noprint">';
-echo_lwt_logo();
-echo '<div class="flex-header">
-<div><a href="edit_texts.php" target="_top">LWT</a>
-</div>
-<div>' . 
-getPreviousAndNextTextLinks($textid, 'print_text.php?text=', false, '') . 
-'</div>
+?>
+<div class="noprint">
+<div class="flex-header">
+    <div>
+        <?php echo_lwt_logo(); ?>
+    </div>
+    <div> 
+        <?php echo getPreviousAndNextTextLinks($textid, 'print_text.php?text=', false, ''); ?> 
+    </div>
 <div>
-<a href="do_text.php?start=' . $textid . '" target="_top">
+<a href="do_text.php?start=<?php echo $textid; ?>" target="_top">
 <img src="icn/book-open-bookmark.png" title="Read" alt="Read" /></a>
-<a href="do_test.php?text=' . $textid . '" target="_top">
+<a href="do_test.php?text=<?php echo $textid; ?>" target="_top">
 <img src="icn/question-balloon.png" title="Test" alt="Test" />
-</a>' . get_annotation_link($textid) . '
-<a target="_top" href="edit_texts.php?chg=' . $textid . '">
+</a>
+<?php echo get_annotation_link($textid); ?>
+<a target="_top" href="edit_texts.php?chg=<?php echo $textid; ?>">
 <img src="icn/document--pencil.png" title="Edit Text" alt="Edit Text" />
 </a>
 </div>
-<div>';
-quickMenu();
-echo '</div>
+<div>
+<?php quickMenu(); ?>
 </div>
-<div class="bigger">PRINT ▶ ' . tohtml($title) . 
+</div>
+<h1>PRINT ▶ <?php 
+echo tohtml($title); 
 (isset($sourceURI) && substr(trim($sourceURI), 0, 1)!='#' ? 
 ' <a href="' . $sourceURI . '" target="_blank">
 <img src="'.get_file_path('icn/chain.png').'" title="Text Source" alt="Text Source" /></a>' : 
-'') . '</div>';
-
-echo "<p id=\"printoptions\">Terms with <b>status(es)</b> <select id=\"status\" onchange=\"{val=document.getElementById('status').options[document.getElementById('status').selectedIndex].value;location.href='print_text.php?text=" . $textid . "&amp;status=' + val;}\">";
-echo get_wordstatus_selectoptions($statusrange, true, true, false); 
-echo "</select> ...<br />
+'') ?></h1>
+<p id="printoptions">
+    Terms with <b>status(es)</b> 
+    <select id="status" onchange="{val=document.getElementById('status').options[document.getElementById('status').selectedIndex].value;location.href='print_text.php?text=<?php echo $textid; ?>&amp;status=' + val;}">";
+<?php echo get_wordstatus_selectoptions($statusrange, true, true, false); ?> 
+</select> ...<br />
 will be <b>annotated</b> with 
-<select id=\"ann\" onchange=\"{val=document.getElementById('ann').options[document.getElementById('ann').selectedIndex].value;location.href='print_text.php?text=" . $textid . "&amp;ann=' + val;}\">
-<option value=\"0\"" . get_selected(0, $ann) . ">Nothing</option>
-<option value=\"1\"" . get_selected(1, $ann) . ">Translation</option>
-<option value=\"5\"" . get_selected(5, $ann) . ">Translation &amp; Tags</option>
-<option value=\"2\"" . get_selected(2, $ann) . ">Romanization</option>
-<option value=\"3\"" . get_selected(3, $ann) . ">Romanization &amp; Translation</option>
-<option value=\"7\"" . get_selected(7, $ann) . ">Romanization, Translation &amp; Tags</option>
+<select id="ann" onchange="{val=document.getElementById('ann').options[document.getElementById('ann').selectedIndex].value;location.href='print_text.php?text=<?php echo $textid; ?>&amp;ann=' + val;}">
+<option value="0"<?php echo get_selected(0, $ann); ?>>Nothing</option>
+<option value="1"<?php echo get_selected(1, $ann); ?>>Translation</option>
+<option value="5"<?php echo get_selected(5, $ann); ?>>Translation &amp; Tags</option>
+<option value="2"<?php echo get_selected(2, $ann); ?>>Romanization</option>
+<option value="3"<?php echo get_selected(3, $ann); ?>>Romanization &amp; Translation</option>
+<option value="7"<?php echo get_selected(7, $ann); ?>>Romanization, Translation &amp; Tags</option>
 </select>
-<select id=\"annplcmnt\" onchange=\"{val=document.getElementById('annplcmnt').options[document.getElementById('annplcmnt').selectedIndex].value;location.href='print_text.php?text=" . $textid . "&amp;annplcmnt=' + val;}\">
-<option value=\"0\"" . get_selected(0, $annplcmnt) . ">behind</option>
-<option value=\"1\"" . get_selected(1, $annplcmnt) . ">in front of</option>
-<option value=\"2\"" . get_selected(2, $annplcmnt) . ">above (ruby)</option>
+<select id="annplcmnt" onchange="{val=document.getElementById('annplcmnt').options[document.getElementById('annplcmnt').selectedIndex].value;location.href='print_text.php?text=<?php echo $textid; ?>&amp;annplcmnt=' + val;}">
+<option value="0"<?php echo get_selected(0, $annplcmnt); ?>>behind</option>
+<option value="1"<?php echo get_selected(1, $annplcmnt); ?>>in front of</option>
+<option value="2"<?php echo get_selected(2, $annplcmnt); ?>>above (ruby)</option>
 </select> the term.<br />
-<input type=\"button\" value=\"Print it!\" onclick=\"window.print();\" />  
+<input type="button" value="Print it!" onclick="window.print();" />  
 (only the text below the line)
-<span class=\"nowrap\"></span>";
-if (((int)get_first_value("select length(TxAnnotatedText) as value from " . $tbpref . "texts where TxID = " . $textid)) > 0) {
-    echo "Or <input type=\"button\" value=\"Print/Edit/Delete\" onclick=\"location.href='print_impr_text.php?text=" . $textid . "';\" /> your <b>Improved Annotated Text</b>" . get_annotation_link($textid) . ".";
+<span class="nowrap"></span>
+<?php 
+if (((int)get_first_value("select length(TxAnnotatedText) as value from {$tbpref}texts where TxID = $textid")) > 0) {
+    ?> Or 
+    <input type="button" value="Print/Edit/Delete" 
+    onclick="location.href='print_impr_text.php?text=<?php echo $textid; ?>';" /> your 
+    <b>Improved Annotated Text</b> <?php echo get_annotation_link($textid) ?>. 
+    <?php
 } else {
-    echo "<input type=\"button\" value=\"Create\" onclick=\"location.href='print_impr_text.php?edit=1&amp;text=" . $textid . "';\" /> an <b>Improved Annotated Text</b> [<img src=\"icn/tick.png\" title=\"Annotated Text\" alt=\"Annotated Text\" />].";
+    ?> 
+    <input type="button" value="Create" 
+    onclick="location.href='print_impr_text.php?edit=1&amp;text=<?php echo $textid; ?>';" /> an 
+    <b>Improved Annotated Text</b> [<img src="icn/tick.png" title="Annotated Text" alt="Annotated Text" />]." 
+    <?php
 }
-echo '</p></div> 
+?>
+</p></div> 
 <!-- noprint -->
-<div id="print"' . ($rtlScript ? ' dir="rtl"' : '') . '>
-<h1>' . tohtml($title) . '</h1>
-<p style="font-size:' . $textsize . '%;line-height: 1.35; margin-bottom: 10px; ">';
+<div id="print" <?php echo ($rtlScript ? 'dir="rtl"' : '') ?>>
+<h2><?php echo tohtml($title); ?></h2>
+<p style="font-size: <?php echo $textsize; ?>%; line-height: 1.35; margin-bottom: 10px; ">
+<?php
 
 $sql = 
 'SELECT 
