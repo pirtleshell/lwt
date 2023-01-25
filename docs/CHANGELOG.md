@@ -8,6 +8,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 ### Added
 
 * Database creation wizard (``database_wizard.php``) to help setting the connection with the database.
+* A server data page at ``server_data.php`` showing all relevant information.
 * In ``index.php``, ``get_server_data_table`` replaces ``get_server_data`` as a better designed function.
 * ``pagestart_kernel_nobody`` in ``inc/kernel.php`` that display the minimal HTML formatting.
 
