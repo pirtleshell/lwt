@@ -17,6 +17,8 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 * Graphic review: headers reviewed. Most h4 headers became div.bigger, and h3 became h1 level headers.
 * We now use responsive design instead of fixed-size.
 * ``do_text_page`` (``do_text.php``) and ``do_test_page`` (``do_test.php``) now enlarge the body.
+* ``echo_lwt_logo`` in ``inc/session_utility.php`` echoes a logo, without information on the table set used
+because it was useless. This information is now displayed on the welcome page.
 
 ### Fixed
 

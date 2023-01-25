@@ -1566,7 +1566,8 @@ function getPreviousAndNextTextLinks($textid, $url, $onlyann, $add): string
             }
             if ($list[$i+1] !== 0) {
                 $title = tohtml(getTextTitle($list[$i+1]));
-                $next = '<a href="' . $url . $list[$i+1] . '" target="_top"><img src="icn/navigation-000-button.png" title="Next Text: ' . $title . '" alt="Next Text: ' . $title . '" /></a>';
+                $next = '<a href="' . $url . $list[$i+1] . 
+                '" target="_top"><img src="icn/navigation-000-button.png" title="Next Text: ' . $title . '" alt="Next Text: ' . $title . '" /></a>';
             }
             else {
                 $next = '<img src="icn/navigation-000-button-light.png" title="No Next Text" alt="No Next Text" />'; 
@@ -1574,29 +1575,21 @@ function getPreviousAndNextTextLinks($textid, $url, $onlyann, $add): string
             return $add . $prev . ' ' . $next;
         }
     }
-    return $add . '<img src="icn/navigation-180-button-light.png" title="No Previous Text" alt="No Previous Text" /> <img src="icn/navigation-000-button-light.png" title="No Next Text" alt="No Next Text" />';
+    return $add . '<img src="icn/navigation-180-button-light.png" title="No Previous Text" alt="No Previous Text" /> 
+    <img src="icn/navigation-000-button-light.png" title="No Next Text" alt="No Next Text" />';
 }
 
 
 /**
  * Return an HTML formatted logo of the application.
  *
- * @global string $tbpref Table name prefix (optional)
+ * @since 2.7.0 Do no longer indicate database prefix in logo
  */
 function echo_lwt_logo(): void 
 {
-    global $tbpref;
-    $pref = substr($tbpref, 0, -1);
-    if ($pref == '') { 
-        $pref = 'Default Table Set'; 
-    }
-    echo '<img class="lwtlogo" src="' . 
-    get_file_path('img/lwt_icon.png') . 
-    '" title="LWT - Current Table Set: ' . tohtml($pref) . 
-    '" alt="LWT - Current Table Set: ' . tohtml($pref) . '" />';
+    echo '<img class="lwtlogo" src="' . get_file_path('img/lwt_icon.png') . '" title="LWT" alt="LWT logo" />';
 }
 
-// -------------------------------------------------------------
 
 /**
  * Return all different database prefixes that are in use.
@@ -4807,7 +4800,9 @@ function framesetheader($title): void
  * Write a page header and start writing its body.
  *
  * @param string $title Title of the page
- * @param bool   $close Set to true if you are closing the header;
+ * @param bool   $close Set to true if you are closing the header
+ * 
+ * @since 2.7.0 Show no text near the logo, page title enclosed in H1
  *
  * @global bool $debug Show a DEBUG span if true
  */
@@ -4816,17 +4811,16 @@ function pagestart($title, $close): void
     global $debug;
     pagestart_nobody($title);
     echo '<div>';
-    if ($close) { 
+    if ($close) {
         echo '<a href="index.php" target="_top">'; 
     }
     echo_lwt_logo();
-    echo "<span>LWT</span>";
     if ($close) {
         echo '</a>';
         quickMenu();
     }
-    echo '</div><div class="bigger" style="font-weight: bold;">' . tohtml($title) . 
-    ($debug ? ' <span class="red">DEBUG</span>' : '') . '</div>';
+    echo '</div>
+    <h1>' . tohtml($title) . ($debug ? ' <span class="red">DEBUG</span>' : '') . '</h1>';
 } 
 
 /**

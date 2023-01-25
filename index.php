@@ -197,7 +197,6 @@ function do_language_selectable($langid)
  */
 function wordpress_logout_link()
 {
-    // ********* WORDPRESS LOGOUT *********
     if (isset($_SESSION['LWT-WP-User'])) {
         ?>
 
@@ -368,7 +367,10 @@ echo '<div>' .
     <?php wordpress_logout_link(); ?>
 
 </div>
-<p style="margin-bottom: 60px;">This is LWT Version <?php echo get_version(); ?></p>
+<p style="margin-bottom: 60px;">
+    This is LWT Version <?php echo get_version(); ?>, 
+    <?php echo ($tbpref == '' ? 'default table set' : 'table prefixed with "' . $tbpref . '"') ?>.
+    </p>
 <br style="clear: both;" />
 <footer>
     <p class="small">
