@@ -16,20 +16,29 @@
 
 require_once 'inc/session_utility.php';
 
-
-function start_save_prefix($req) {
-    $tbpref = $req;
+/**
+ * Save a database prefix.
+ * 
+ * @param string $pref Database prefix to save.
+ * 
+ * @return void
+ */
+function start_save_prefix($pref) 
+{
+    $tbpref = $pref;
     LWTTableSet("current_table_prefix", $tbpref);
-    header("Location: index.php");
-    exit(); 
 }
 
-if (isset($_REQUEST['prefix']) && $_REQUEST['prefix'] !== '-') {
-    start_save_prefix(getreq('prefix'));
-}
-
-
-function start_do_page() {
+/**
+ * Do a short page to edit the database prefix.
+ * 
+ * @global string $tbpref       Database table prefix
+ * @global int    $fixed_tbpref If the table prefix is fixed and cannot be changed
+ * 
+ * @return void
+ */
+function start_do_page() 
+{
     global $tbpref, $fixed_tbpref;
     $prefix = getprefixes();
 
@@ -69,6 +78,12 @@ function start_do_page() {
     pageend();
 }
 
+
+if (isset($_REQUEST['prefix']) && $_REQUEST['prefix'] !== '-') {
+    start_save_prefix(getreq('prefix'));
+    header("Location: index.php");
+    exit();
+}
 start_do_page();
 
 ?>
