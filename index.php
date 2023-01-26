@@ -258,7 +258,7 @@ function get_server_data(): array
 }
 
 
-list($span1, $span2, $span3) = get_span_groups();
+list($_, $_, $span3) = get_span_groups();
 
 $currentlang = null;
 if (is_numeric(getSetting('currentlanguage'))) {
