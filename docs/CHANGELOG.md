@@ -9,7 +9,10 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 
 * Database creation wizard (``database_wizard.php``) to help setting the connection with the database.
 * A server data page at ``server_data.php`` showing all relevant information.
-* In ``index.php``, ``get_server_data_table`` replaces ``get_server_data`` as a better designed function.
+* In ``index.php``:
+  * ``get_server_data_table`` replaces ``get_server_data`` as a better designed function.
+  * ``index_do_main_page`` now renders the page to avoud global variables.
+  * You get warnings if the PHP version is too low, or if a newer version of LWT is released.
 * ``pagestart_kernel_nobody`` in ``inc/kernel.php`` that display the minimal HTML formatting.
 
 ### Changed

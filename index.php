@@ -44,9 +44,10 @@
  /**
   * Echo an error page if connect.inc.php was not found.
   * 
-  * @return never
+  * @return void
   * 
-  * @since 2.5.0-fork Now display a link to the connect.ing.php creation wizard.
+  * @since 2.7.0-fork Now display a link to the connect.ing.php creation wizard, 
+  * return void instead of dying. 
   */
 function no_connectinc_error_page() 
 {
@@ -73,11 +74,11 @@ function no_connectinc_error_page()
         </body>
     </html>
     <?php
-    die('');
 }
 
 if (!file_exists('connect.inc.php')) {
     no_connectinc_error_page();
+    die('');
 }
 
 require_once 'inc/session_utility.php';
@@ -257,53 +258,94 @@ function get_server_data(): array
     );
 }
 
-$currentlang = null;
-if (is_numeric(getSetting('currentlanguage'))) {
-    $currentlang = (int) getSetting('currentlanguage');
-}
 
-$currenttext = null;
-if (is_numeric(getSetting('currenttext'))) {
-    $currenttext = (int) getSetting('currenttext');
-}
-
-$langcnt = (int) get_first_value("SELECT COUNT(*) AS value FROM {$tbpref}languages");
-
-pagestart_nobody(
-    "Home", 
-    "
-    body {
-        max-width: 1920px;
-        margin: 20px;
+/**
+ * Display the main body of the page.
+ * 
+ * @return void
+ * 
+ * @global string $tbpref Database table prefix
+ * @global int    $debug  Debug mode enabled
+ */
+function index_do_main_page() 
+{
+    global $tbpref, $debug;
+    
+    $currentlang = null;
+    if (is_numeric(getSetting('currentlanguage'))) {
+        $currentlang = (int) getSetting('currentlanguage');
     }
 
-    .menu {
-        display: flex; 
-        flex-direction: column; 
-        flex-wrap: wrap;
-        margin-bottom: 20px;
+    $currenttext = null;
+    if (is_numeric(getSetting('currenttext'))) {
+        $currenttext = (int) getSetting('currenttext');
     }
 
-    .menu > * {
-        width: 400px;
-        height: 30px;
-        margin: 5px;
-        text-align: center;
-        background-color: #8883;
-        padding-top: 15px;
-    }"
-);
-echo_lwt_logo();
-echo '<h1>Learning With Texts (LWT)</h1>
+    $langcnt = (int) get_first_value("SELECT COUNT(*) AS value FROM {$tbpref}languages");
+
+    pagestart_nobody(
+        "Home", 
+        "
+        body {
+            max-width: 1920px;
+            margin: 20px;
+        }
+
+        .menu {
+            display: flex; 
+            flex-direction: column; 
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .menu > * {
+            width: 400px;
+            height: 30px;
+            margin: 5px;
+            text-align: center;
+            background-color: #8883;
+            padding-top: 15px;
+        }"
+    );
+    echo_lwt_logo();
+    echo '<h1>Learning With Texts (LWT)</h1>
     <h2>Home' . ($debug ? ' <span class="red">DEBUG</span>' : '') . '</h2>';
 
 ?>
 <script type="text/javascript">
     //<![CDATA[
-    if (!areCookiesEnabled()) 
-        document.write('<p class="red">*** Cookies are not enabled! Please enable them! ***</p>');
+    if (!areCookiesEnabled()) {
+        $('#cookies_disabled').html('*** Cookies are not enabled! Please enable them! ***');
+    }
+    const php_min_version = '8.2';
+    const php_version = <?php echo json_encode(phpversion()); ?>;
+    if (php_version < php_min_version) {
+        $('#php_update_required').html(
+            '*** Your PHP version is ' + php_version + ', but version ' + 
+            php_min_version + ' is required. Please update it. ***'
+        )
+    }
+    const lwt_version = <?php echo json_encode(get_version()); ?>;
+    let lwt_latest_version = lwt_version;
+    $.get(
+        'https://api.github.com/repos/hugofara/lwt/releases/latest'
+    ).done(function (data) {
+        lwt_latest_version = data.tag_name;
+        console.log("bbbb" + data.tag_name);
+        if (lwt_version < lwt_latest_version || true) {
+            $('#lwt_new_version').html(
+                '*** A newer release of LWT is released: ' +
+                lwt_latest_version +', your version is ' + lwt_version + 
+                '. <a href="https://github.com/HugoFara/lwt/releases/tag/' + 
+                lwt_latest_version + '">Download</a>.***');
+        }
+    });
     //]]>
 </script>
+
+<p class="red" id="php_update_required"></p>
+<p class="red" id="cookies_disabled"></p>
+<p class="msgblue" id="lwt_new_version"></p>
 
 <p>Welcome to your language learning app!</p> 
 
@@ -378,7 +420,9 @@ echo '<h1>Learning With Texts (LWT)</h1>
     </p>
 </footer>
 <?php
+    pageend();
+}
 
-pageend();
+index_do_main_page();
 
 ?>
