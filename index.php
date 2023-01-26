@@ -258,6 +258,56 @@ function get_server_data(): array
     );
 }
 
+/**
+ * Load the content of warnings for visual display.
+ * 
+ * @return void
+ */
+function index_load_warnings()
+{
+?>
+<script type="text/javascript">
+    //<![CDATA[
+    const load_warnings = {
+        cookies_enabled: function () {
+            if (!areCookiesEnabled()) {
+            $('#cookies_disabled').html('*** Cookies are not enabled! Please enable them! ***');
+        }
+        },
+
+        php_version: function (php_version) {
+            const php_min_version = '8.0';
+            if (php_version < php_min_version) {
+                $('#php_update_required').html(
+                    '*** Your PHP version is ' + php_version + ', but version ' + 
+                    php_min_version + ' is required. Please update it. ***'
+                )
+            }
+        },
+
+        lwt_version: function(lwt_version) {
+            $.get(
+                'https://api.github.com/repos/hugofara/lwt/releases/latest'
+            ).done(function (data) {
+                const lwt_latest_version = data.tag_name;
+                if (lwt_version < lwt_latest_version) {
+                    $('#lwt_new_version').html(
+                        '*** A newer release of LWT is released: ' +
+                        lwt_latest_version +', your version is ' + lwt_version + 
+                        '. <a href="https://github.com/HugoFara/lwt/releases/tag/' + 
+                        lwt_latest_version + '">Download</a>.***');
+                }
+            });
+        }
+    }
+
+    load_warnings.cookies_enabled();
+    load_warnings.php_version(<?php echo json_encode(phpversion()); ?>);
+    load_warnings.lwt_version(<?php echo json_encode(get_version()); ?>);
+    //]]>
+</script>
+<?php
+}
 
 /**
  * Display the main body of the page.
@@ -311,38 +361,7 @@ function index_do_main_page()
     echo '<h1>Learning With Texts (LWT)</h1>
     <h2>Home' . ($debug ? ' <span class="red">DEBUG</span>' : '') . '</h2>';
 
-?>
-<script type="text/javascript">
-    //<![CDATA[
-    if (!areCookiesEnabled()) {
-        $('#cookies_disabled').html('*** Cookies are not enabled! Please enable them! ***');
-    }
-    const php_min_version = '8.2';
-    const php_version = <?php echo json_encode(phpversion()); ?>;
-    if (php_version < php_min_version) {
-        $('#php_update_required').html(
-            '*** Your PHP version is ' + php_version + ', but version ' + 
-            php_min_version + ' is required. Please update it. ***'
-        )
-    }
-    const lwt_version = <?php echo json_encode(get_version()); ?>;
-    let lwt_latest_version = lwt_version;
-    $.get(
-        'https://api.github.com/repos/hugofara/lwt/releases/latest'
-    ).done(function (data) {
-        lwt_latest_version = data.tag_name;
-        console.log("bbbb" + data.tag_name);
-        if (lwt_version < lwt_latest_version || true) {
-            $('#lwt_new_version').html(
-                '*** A newer release of LWT is released: ' +
-                lwt_latest_version +', your version is ' + lwt_version + 
-                '. <a href="https://github.com/HugoFara/lwt/releases/tag/' + 
-                lwt_latest_version + '">Download</a>.***');
-        }
-    });
-    //]]>
-</script>
-
+    ?>    
 <p class="red" id="php_update_required"></p>
 <p class="red" id="cookies_disabled"></p>
 <p class="msgblue" id="lwt_new_version"></p>
@@ -420,6 +439,7 @@ function index_do_main_page()
     </p>
 </footer>
 <?php
+    index_load_warnings();
     pageend();
 }
 
