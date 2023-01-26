@@ -1,35 +1,39 @@
 <?php
 
-
-/**************************************************************
-Call: start.php
-Analyse DB tables, select Table Set, start LWT
- ***************************************************************/
+/**
+ * \file
+ * 
+ * \brief Analyse DB tables, select Table Set, start LWT
+ * 
+ * Call: start.php
+ * 
+ * @package Lwt
+ * @author  LWT Project <lwt-project@hotmail.com>
+ * @license Unlicense <http://unlicense.org/>
+ * @link    https://hugofara.github.io/lwt/docs/html/start_8php.html
+ * @since   1.5.4
+ */
 
 require_once 'inc/session_utility.php';
 
-if ($fixed_tbpref) {
+
+function start_save_prefix($req) {
+    $tbpref = $req;
+    LWTTableSet("current_table_prefix", $tbpref);
     header("Location: index.php");
     exit(); 
 }
 
 if (isset($_REQUEST['prefix']) && $_REQUEST['prefix'] !== '-') {
-    $tbpref = $_REQUEST['prefix'];
-    LWTTableSet("current_table_prefix", $tbpref);
-    header("Location: index.php");
-    exit(); 
+    start_save_prefix(getreq('prefix'));
 }
 
-$prefix = getprefixes();
 
-if (count($prefix) == 0) {
-    $tbpref = '';
-    LWTTableSet("current_table_prefix", $tbpref);
-    header("Location: index.php");
-    exit(); 
-}
+function start_do_page() {
+    global $tbpref, $fixed_tbpref;
+    $prefix = getprefixes();
 
-pagestart('Select Table Set', false);
+    pagestart('Select Table Set', false);
 
 ?>
 
@@ -39,7 +43,10 @@ pagestart('Select Table Set', false);
             <form name="f1" class="inline" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
             <p>
                 Select: 
-                <select name="prefix">
+                <select name="prefix" <?php 
+                if ($fixed_tbpref) {
+                    echo 'disabled title="Database prefix is fixed and cannot be changed!"';
+                }?> >
                     <option value="" <?php echo ($tbpref == '' ? 'selected="selected"': ''); ?>>
                         Default Table Set
                     </option>
@@ -59,7 +66,9 @@ pagestart('Select Table Set', false);
 </table>
 
 <?php
+    pageend();
+}
 
-pageend();
+start_do_page();
 
 ?>

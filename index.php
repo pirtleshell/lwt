@@ -257,9 +257,6 @@ function get_server_data(): array
     );
 }
 
-
-list($_, $_, $span3) = get_span_groups();
-
 $currentlang = null;
 if (is_numeric(getSetting('currentlanguage'))) {
     $currentlang = (int) getSetting('currentlanguage');
@@ -296,12 +293,9 @@ pagestart_nobody(
         padding-top: 15px;
     }"
 );
-echo '<div>' . 
-    echo_lwt_logo() . '<div class="bigger" style="font-weight: bold;">' . 
-        $span3 . 'Learning With Texts (LWT)</span>
-    </div>
-    <h1>Home' . ($debug ? ' <span class="red">DEBUG</span>' : '') . '</h1>
-</div>';
+echo_lwt_logo();
+echo '<h1>Learning With Texts (LWT)</h1>
+    <h2>Home' . ($debug ? ' <span class="red">DEBUG</span>' : '') . '</h2>';
 
 ?>
 <script type="text/javascript">
@@ -369,7 +363,7 @@ echo '<div>' .
 </div>
 <p style="margin-bottom: 60px;">
     This is LWT Version <?php echo get_version(); ?>, 
-    <?php echo ($tbpref == '' ? 'default table set' : 'table prefixed with "' . $tbpref . '"') ?>.
+    <a href="start.php"><?php echo ($tbpref == '' ? 'default table set' : 'table prefixed with "' . $tbpref . '"') ?></a>.
     </p>
 <br style="clear: both;" />
 <footer>
