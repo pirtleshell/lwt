@@ -271,8 +271,8 @@ function index_load_warnings()
     const load_warnings = {
         cookies_enabled: function () {
             if (!areCookiesEnabled()) {
-            $('#cookies_disabled').html('*** Cookies are not enabled! Please enable them! ***');
-        }
+                $('#cookies_disabled').html('*** Cookies are not enabled! Please enable them! ***');
+            }
         },
 
         php_version: function (php_version) {
@@ -339,22 +339,6 @@ function index_do_main_page()
         body {
             max-width: 1920px;
             margin: 20px;
-        }
-
-        .menu {
-            display: flex; 
-            flex-direction: column; 
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-        }
-
-        .menu > * {
-            width: 400px;
-            height: 30px;
-            margin: 5px;
-            text-align: center;
-            background-color: #8883;
-            padding-top: 15px;
         }"
     );
     echo_lwt_logo();
@@ -362,11 +346,11 @@ function index_do_main_page()
     <h2>Home' . ($debug ? ' <span class="red">DEBUG</span>' : '') . '</h2>';
 
     ?>    
-<p class="red" id="php_update_required"></p>
-<p class="red" id="cookies_disabled"></p>
-<p class="msgblue" id="lwt_new_version"></p>
+<div class="red"><p id="php_update_required"></p></div>
+<div class="red"><p id="cookies_disabled"></p></div>
+<div class="msgblue"><p id="lwt_new_version"></p></div>
 
-<p>Welcome to your language learning app!</p> 
+<p style="text-align: center;">Welcome to your language learning app!</p> 
 
 <div style="display: flex; justify-content: space-evenly; flex-wrap: wrap;">
     <div class="menu">
@@ -422,7 +406,7 @@ function index_do_main_page()
     <?php wordpress_logout_link(); ?>
 
 </div>
-<p style="margin-bottom: 60px;">
+<p>
     This is LWT Version <?php echo get_version(); ?>, 
     <a href="start.php"><?php echo ($tbpref == '' ? 'default table set' : 'table prefixed with "' . $tbpref . '"') ?></a>.
     </p>

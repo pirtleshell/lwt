@@ -641,6 +641,28 @@ footer
   align-items: center;
 }
 
+/**
+* Main page (index.php) navigation menu style
+*/
+.menu {
+  display: flex; 
+  flex-direction: column; 
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+/**
+* Main page (index.php) navigation menu style elements
+*/
+.menu > * {
+  width: 400px;
+  height: 30px;
+  margin: 5px;
+  text-align: center;
+  background-color: #8883;
+  padding-top: 15px;
+}
+
 /**************************************************************
 Additional styles for printing
 ***************************************************************/
