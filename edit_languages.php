@@ -336,14 +336,14 @@ function edit_languages_new()
          $(document).ready(ask_before_exiting);
      </script>   
     <form class="validate" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" onsubmit="return check_dupl_lang(0);">
-        <table class="tab1" cellspacing="0" cellpadding="5">
+        <table class="tab2" cellspacing="0" cellpadding="5">
             <tr>
                 <td class="td1 center backlightyellow" style="border-top-left-radius:inherit;border-top-right-radius:inherit;" colspan="2">
                 <img src="icn/wizard.png" title="Language Settings Wizard" alt="Language Settings Wizard" class="click" onclick="window.open('select_lang_pair.php', 'wizard', 'width=400, height=400, scrollbars=yes, menubar=no, resizable=yes, status=no');" /><br /><span class="click" onclick="window.open('select_lang_pair.php', 'wizard', 'width=400, height=400, scrollbars=yes, menubar=no, resizable=yes, status=no');"><img src="icn/arrow-000-medium.png" title="-&gt;" alt="-&gt;" /> <b>Language Settings Wizard</b> <img src="icn/arrow-180-medium.png" title="&lt;-" alt="&lt;-" /></span><br /><span class="smallgray">Select your native (L1) and study (L2) languages, and let the wizard set all language settings marked in yellow!<br />(You can adjust the settings afterwards.)</span></td>
             </tr>
         </table>
     
-        <table class="tab1" cellspacing="0" cellpadding="5">
+        <table class="tab2" cellspacing="0" cellpadding="5">
         <tr>
         <td class="td1 right backlightyellow">Study Language "L2":</td>
         <td class="td1">
@@ -467,7 +467,7 @@ function edit_languages_change($lid)
      </script>
      <form class="validate" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" onsubmit="return check_dupl_lang(<?php echo $lid; ?>);">
      <input type="hidden" name="LgID" value="<?php echo $lid; ?>" />
-     <table class="tab1" cellspacing="0" cellpadding="5">
+     <table class="tab2" cellspacing="0" cellpadding="5">
      <tr>
      <td class="td1 right">Study Language "L2":</td>
      <td class="td1">
@@ -605,7 +605,7 @@ function edit_languages_display($message)
     }
     ?>
 
-<table class="sortable tab1" cellspacing="0" cellpadding="5">
+<table class="sortable tab2" cellspacing="0" cellpadding="5">
     <tr>
         <th class="th1 sorttable_nosort">Curr.<br />Lang.</th>
         <th class="th1 sorttable_nosort">Test<br />↓↓↓</th>

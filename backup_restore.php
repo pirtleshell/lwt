@@ -347,7 +347,7 @@ if ($tbpref == '') {
 ?>
 <form enctype="multipart/form-data" action="<?php echo $_SERVER['PHP_SELF']; ?>" 
 method="post" onsubmit="return confirm('Are you sure?');">
-<table class="tab1" cellspacing="0" cellpadding="5">
+<table class="tab2" cellspacing="0" cellpadding="5">
     <tr>
         <th class="th1 center">Backup</th>
         <td class="td1">

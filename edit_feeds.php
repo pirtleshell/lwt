@@ -102,7 +102,7 @@ if (isset($_REQUEST['load_feed']) || isset($_REQUEST['check_autoupdate']) ||
 </a>
 <br></br>
 <form class="validate" action="edit_feeds.php" method="post">
-<table class="tab1" cellspacing="0" cellpadding="5">
+<table class="tab2" cellspacing="0" cellpadding="5">
 <tr><td class="td1">Language: </td><td class="td1"><select name="NfLgID">
     <?php
     while($row_l = mysqli_fetch_assoc($result)){
@@ -194,7 +194,7 @@ $('[type="submit"]').on('click', function(){
 <a href="feed_wizard.php?step=2&amp;edit_feed=<?php echo $currentfeed;?>">
 <img src="icn/wizard.png" title="feed_wizard" alt="feed_wizard" /> Feed Wizard</a>
 <form class="validate" action="edit_feeds.php" method="post">
-<table class="tab1" cellspacing="0" cellpadding="5">
+<table class="tab2" cellspacing="0" cellpadding="5">
 <tr>
     <td class="td1">Language: </td>
     <td class="td1">
@@ -412,7 +412,7 @@ $( "button" ).on('click', function() {
 <span class="nowrap"></span>
 <a href="edit_feeds.php?new_feed=1"><img src="icn/feed--plus.png" title="new feed" alt="new feed" /> New Feed...</a>
 <form name="form1" action="#" onsubmit="document.form1.querybutton.click(); return false;">
-<table class="tab1" cellspacing="0" cellpadding="5"><tr>
+<table class="tab2" cellspacing="0" cellpadding="5"><tr>
 <th class="th1" colspan="4">Filter <img src="icn/funnel.png" title="Filter" alt="Filter" />&nbsp;
 <input type="button" value="Reset All" onclick="resetAll('edit_feeds.php');" /></th>
 </tr>
@@ -434,7 +434,7 @@ $( "button" ).on('click', function() {
 </table>
 
 <input id="map" type="hidden" name="selected_feed" value="" />
-<table class="tab1" cellspacing="0" cellpadding="5">
+<table class="tab2" cellspacing="0" cellpadding="5">
 <tr>
     <th class="th1" colspan="3">
         Multi Actions <img src="icn/lightning.png" title="Multi Actions" alt="Multi Actions" />
@@ -495,7 +495,7 @@ $( "button" ).on('click', function() {
         Sort Order:
         <select name="sort" onchange="{val=document.form1.sort.options[document.form1.sort.selectedIndex].value; location.href='edit_feeds.php?page=1&amp;sort=' + val;}"><?php echo get_textssort_selectoptions($currentsort); ?></select>
 </th></table></form><form name="form2" action="" method="get">
-<table class="sortable tab1" cellspacing="0" cellpadding="5">
+<table class="sortable tab2" cellspacing="0" cellpadding="5">
 <tr>
     <th class="th1 sorttable_nosort">Mark</th>
     <th class="th1 sorttable_nosort">Actions</th>
@@ -535,7 +535,7 @@ $( "button" ).on('click', function() {
             <?php
             if ($pages > 1) {
                 echo '<form name="form3" method="get" action ="">
-                <table class="tab1" cellspacing="0" cellpadding="5">
+                <table class="tab2" cellspacing="0" cellpadding="5">
                 <tr><th class="th1" style="width:30%;">';
                 echo $total ;
                 echo '</th><th class="th1">';

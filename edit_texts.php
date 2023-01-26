@@ -768,7 +768,7 @@ function edit_texts_filters_form($currentlang, $recno, $currentpage, $pages)
     $currenttag12 = processSessParam("tag12", "currenttexttag12", '', 0);
     ?>
 <form name="form1" action="#" onsubmit="document.form1.querybutton.click(); return false;">
-    <table class="tab1" cellspacing="0" cellpadding="5">
+    <table class="tab2" cellspacing="0" cellpadding="5">
         <tr>
             <th class="th1" colspan="4">Filter <img src="icn/funnel.png" title="Filter" alt="Filter" />&nbsp;
             <input type="button" value="Reset All" onclick="resetAll('edit_texts.php');" /></th>
@@ -877,7 +877,7 @@ function edit_texts_other_pages($recno)
         $currentpage = $pages; 
     }
     ?>
-<table class="tab1" cellspacing="0" cellpadding="5">
+<table class="tab2" cellspacing="0" cellpadding="5">
     <tr>
         <th class="th1" nowrap="nowrap">
             <?php echo $recno; ?> Text<?php echo ($recno==1?'':'s'); ?>
@@ -1022,7 +1022,7 @@ function edit_texts_texts_form($currentlang, $showCounts, $sql, $recno)
     ?>
 <form name="form2" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 <input type="hidden" name="data" value="" />
-<table class="tab1" cellspacing="0" cellpadding="5">
+<table class="tab2" cellspacing="0" cellpadding="5">
     <tr>
         <th class="th1" colspan="2">
             Multi Actions 
@@ -1042,7 +1042,7 @@ function edit_texts_texts_form($currentlang, $showCounts, $sql, $recno)
         </td>
     </tr>
 </table>
-<table class="sortable tab1" cellspacing="0" cellpadding="5">
+<table class="sortable tab2" cellspacing="0" cellpadding="5">
 <thead class="test_class_to_delete">
     <tr>
         <th class="th1 sorttable_nosort">Mark</th>

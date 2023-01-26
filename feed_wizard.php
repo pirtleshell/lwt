@@ -12,7 +12,7 @@ function feed_wizard_edit_options(): void
     }
 ?>
 <form class="validate" action="edit_feeds.php" method="post">
-    <table class="tab1" cellspacing="0" cellpadding="5">
+    <table class="tab2" cellspacing="0" cellpadding="5">
         <tr>
             <td class="td1">Language: </td>
             <td class="td1">
@@ -366,7 +366,7 @@ function feed_wizard_filter_text(): void
         <ol id="lwt_sel" style="margin-left:77px">
             <?php echo $_SESSION['wizard']['filter_tags']; ?>
         </ol>
-        <table class="tab1" style="margin-left:77px" cellspacing="0" cellpadding="5">
+        <table class="tab2" style="margin-left:77px" cellspacing="0" cellpadding="5">
             <tr>
                 <td class="td1" style="text-align:left">Name: </td>
                 <td class="td1" style="text-align:left">
@@ -712,7 +712,7 @@ function feed_wizard_select_text(): void
             echo $_SESSION['wizard']['article_tags']; 
         } ?>
         </ol>
-        <table class="tab1" style="margin-left:77px" cellspacing="0" cellpadding="5">
+        <table class="tab2" style="margin-left:77px" cellspacing="0" cellpadding="5">
             <tr>
                 <td class="td1" style="text-align:left">Name: </td>
                 <td class="td1">
@@ -881,7 +881,7 @@ function feed_wizard_insert_uri(): void
     }
 ?>
 <form class="validate" action="feed_wizard.php" method="post">
-    <table class="tab1" cellspacing="0" cellpadding="5">
+    <table class="tab2" cellspacing="0" cellpadding="5">
         <tr>
             <td class="td1">Feed URI: </td>
             <td class="td1">

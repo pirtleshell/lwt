@@ -62,7 +62,7 @@ if ($fixed_tbpref) {
 
     ?>
 
-<table class="tab1" cellspacing="0" cellpadding="5">
+<table class="tab2" cellspacing="0" cellpadding="5">
 <tr>
 <td class="td1">
     <p>These features are not currently not available.<br /><br />Reason:<br /><b>$tbpref</b> is set to a fixed value in <i>connect.inc.php</i>.<br />Please remove the definition<br /><span class="red"><b>$tbpref = '<?php echo substr($tbpref, 0, -1); ?>';</b></span></br />in <i>connect.inc.php</i> to make these features available.<br /> Then try again.</p>
@@ -79,7 +79,7 @@ if ($fixed_tbpref) {
 
     ?>
 
-<table class="tab1" style="width: auto;" cellspacing="0" cellpadding="5">
+<table class="tab2" style="width: auto;" cellspacing="0" cellpadding="5">
 
 <tr>
 <th class="th1 center">Select</th>

@@ -46,7 +46,7 @@ function start_do_page()
 
 ?>
 
-<table class="tab1" style="width: auto;" cellspacing="0" cellpadding="5">
+<table class="tab2" cellspacing="0" cellpadding="5">
     <tr>
         <th class="th1">
             <form name="f1" class="inline" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">

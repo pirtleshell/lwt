@@ -322,7 +322,7 @@ function do_test_table(): void
     do_test_table_javascript();
     do_test_table_settings($settings);
 
-    echo '<table class="sortable tab1" style="width:auto;" cellspacing="0" cellpadding="5">';
+    echo '<table class="sortable tab2" style="width:auto;" cellspacing="0" cellpadding="5">';
     
     do_test_table_header();
     do_test_table_table_content($lang_record, $testsql);

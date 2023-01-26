@@ -524,7 +524,7 @@ function showImportedTerms(last_update, rtl, count, page) {
 </script>
 <form name="form1" action="#" onsubmit="showImportedTerms('<?php echo $last_update; ?>', $('#recno').text(), document.form1.page.options[document.form1.page.selectedIndex].value); return false;">
 <div id="res_data">
-<table class="tab1"  cellspacing="0" cellpadding="2"></table>
+<table class="tab2" cellspacing="0" cellpadding="2"></table>
 </div>
 </form>
 <script type="text/javascript">

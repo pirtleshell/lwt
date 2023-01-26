@@ -206,7 +206,7 @@ if (isset($_REQUEST['new'])) {
 <p><a href="<?php echo $_SERVER['PHP_SELF']; ?>?new=1"><img src="icn/plus-button.png" title="New" alt="New" /> New Term Tag ...</a></p>
 
 <form name="form1" action="#" onsubmit="document.form1.querybutton.click(); return false;">
-<table class="tab1" cellspacing="0" cellpadding="5">
+<table class="tab2" cellspacing="0" cellpadding="5">
 <tr>
 <th class="th1" colspan="4">Filter <img src="icn/funnel.png" title="Filter" alt="Filter" />&nbsp;
 <input type="button" value="Reset All" onclick="{location.href='edit_tags.php?page=1&amp;query=';}" /></th>
@@ -243,7 +243,7 @@ Sort Order:
         ?>
 <form name="form2" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 <input type="hidden" name="data" value="" />
-<table class="tab1" cellspacing="0" cellpadding="5">
+<table class="tab2" cellspacing="0" cellpadding="5">
 <tr><th class="th1 center" colspan="2">
 Multi Actions <img src="icn/lightning.png" title="Multi Actions" alt="Multi Actions" />
 </th></tr>
@@ -259,7 +259,7 @@ Multi Actions <img src="icn/lightning.png" title="Multi Actions" alt="Multi Acti
 <select name="markaction" id="markaction" disabled="disabled" onchange="multiActionGo(document.form2, document.form2.markaction);"><?php echo get_multipletagsactions_selectoptions(); ?></select>
 </td></tr></table>
 
-<table class="sortable tab1"  cellspacing="0" cellpadding="5">
+<table class="sortable tab2"  cellspacing="0" cellpadding="5">
 <tr>
 <th class="th1 sorttable_nosort">Mark</th>
 <th class="th1 sorttable_nosort">Actions</th>
@@ -292,7 +292,7 @@ Multi Actions <img src="icn/lightning.png" title="Multi Actions" alt="Multi Acti
 
 
         <?php if($pages > 1) { ?>
-<table class="tab1" cellspacing="0" cellpadding="5">
+<table class="tab2" cellspacing="0" cellpadding="5">
 <tr>
 <th class="th1" nowrap="nowrap">
             <?php echo $recno; ?> Tag<?php echo ($recno==1?'':'s'); ?>

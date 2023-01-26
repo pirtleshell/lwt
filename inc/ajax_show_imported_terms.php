@@ -38,7 +38,7 @@ function get_imported_terms($recno, $currentpage, $last_update): string
     }
     $limit = ' LIMIT ' . (($currentpage-1) * $maxperpage) . ',' . $maxperpage;
     ?>
-<table class="tab1"  cellspacing="0" cellpadding="2">
+<table class="tab2"  cellspacing="0" cellpadding="2">
     <tr>
         <th class="th1" colspan="2" nowrap="nowrap">
             <span id="recno"><?php echo $recno; ?></span> 
@@ -105,7 +105,7 @@ function get_imported_terms($recno, $currentpage, $last_update): string
 function show_imported_terms($last_update, $limit, $rtl)
 {
     global $tbpref;
-    echo '<table class="sortable tab1"  cellspacing="0" cellpadding="5">
+    echo '<table class="sortable tab2"  cellspacing="0" cellpadding="5">
     <tr>';
     ?>
         <th class="th1 clickable">Term /<br />Romanization</th>
