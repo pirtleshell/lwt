@@ -678,6 +678,16 @@ server, here are some ways to do it.</p>
 <p>If you want to use LWT again, just do steps 6 and 7.
 The local webserver (MAMP) will be automatically stopped by quitting the MAMP application.</p>
 <h3>Linux</h3>
+<h4>Using the Linux Installer</h4>
+<p>We provide an installer that runs the commands described in the next section. To use the installer:</p>
+<ol>
+<li>Download the <a href="https://github.com/HugoFara/lwt/releases/latest">latest GitHub release</a>, unzip it.</li>
+<li>Open a terminal in the downloaded folder, enable execution with <code>chmod +x ./INSTALL.sh</code>.</li>
+<li>Run the script with <code>./INSTALL.sh</code>.</li>
+<li>You can start using LWT at <a href="http://localhost/lwt">http://localhost/lwt</a>
+</li>
+</ol>
+<h4>Installing on Linux by hand</h4>
 <p>The following instruction were tested on Raspbian Stretch.</p>
 <ol>
 <li>
@@ -729,7 +739,7 @@ abcxyz
 <p>Rename the file connect_xampp.inc.php in /[... Path to downloaded LWT ...]/lwt to connect.inc.php.</p>
 </li>
 <li>
-<p>Edit this  file connect.inc.php and set the MySQL password in line
+<p>Edit connect.inc.php and set the MySQL password in line
 <code>$passwd = "";</code>. Change it to <code>$passwd = "abcxyz";</code>. Save the edited file connect.inc.php.</p>
 </li>
 <li>
@@ -1940,8 +1950,13 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 <h3>[Unreleased]</h3>
 <h4>Added</h4>
 <ul>
+<li>LWT becomes easier to install and maintain for users:
+<ul>
+<li>An intaller for Linux users at <code>INSTALL.sh</code> helps installing requirements and configuration.</li>
 <li>Database creation wizard (<code>database_wizard.php</code>) to help setting the connection with the database.</li>
 <li>A server data page at <code>server_data.php</code> showing all relevant information.</li>
+</ul>
+</li>
 <li>In <code>index.php</code>:
 <ul>
 <li>

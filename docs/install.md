@@ -108,6 +108,17 @@ The local webserver (MAMP) will be automatically stopped by quitting the MAMP ap
 
 ## Linux
 
+### Using the Linux Installer
+
+We provide an installer that runs the commands described in the next section. To use the installer:
+
+1. Download the [latest GitHub release](https://github.com/HugoFara/lwt/releases/latest), unzip it.
+2. Open a terminal in the downloaded folder, enable execution with ``chmod +x ./INSTALL.sh``.
+3. Run the script with ``./INSTALL.sh``.
+4. You can start using LWT at <http://localhost/lwt>
+
+### Installing on Linux by hand
+
 The following instruction were tested on Raspbian Stretch.
 
 1. Open a terminal, type and execute the following commands:
@@ -158,7 +169,7 @@ The following instruction were tested on Raspbian Stretch.
 
 4. Rename the file connect_xampp.inc.php in /[... Path to downloaded LWT ...]/lwt to connect.inc.php.
 
-5. Edit this  file connect.inc.php and set the MySQL password in line
+5. Edit connect.inc.php and set the MySQL password in line
 ``$passwd = "";``. Change it to ``$passwd = "abcxyz";``. Save the edited file connect.inc.php.
 
 6. Open a Terminal window, type and execute the following commands:
