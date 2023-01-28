@@ -327,10 +327,10 @@ function edit_languages_op_change($lid): string
 function edit_languages_new() 
 {
     ?>
-    <h1>
+    <h2>
         New Language <a target="_blank" href="docs/info.html#howtolang">
         <img src="icn/question-frame.png" title="Help" alt="Help" /></a>
-    </h1>
+    </h2>
 
     <script type="text/javascript" charset="utf-8">
          $(document).ready(ask_before_exiting);
@@ -455,16 +455,16 @@ function edit_languages_change($lid)
     $sql = 'select * from ' . $tbpref . 'languages where LgID = ' . $lid;
     $res = do_mysqli_query($sql);
     if ($record = mysqli_fetch_assoc($res)) {
+    ?>
     
-        ?>
-    
-     <h1>Edit Language 
-         <a target="_blank" href="docs/info.html#howtolang">
-             <img src="icn/question-frame.png" title="Help" alt="Help" /></a>
-    </h1>
-     <script type="text/javascript" charset="utf-8">
-         $(document).ready(ask_before_exiting);
-     </script>
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(ask_before_exiting);
+    </script>
+    <h2>Edit Language 
+        <a target="_blank" href="docs/info.html#howtolang">
+            <img src="icn/question-frame.png" title="Help" alt="Help" />
+        </a>
+    </h2>
      <form class="validate" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" onsubmit="return check_dupl_lang(<?php echo $lid; ?>);">
      <input type="hidden" name="LgID" value="<?php echo $lid; ?>" />
      <table class="tab2" cellspacing="0" cellpadding="5">

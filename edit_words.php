@@ -674,7 +674,7 @@ if (isset($_REQUEST['new']) && isset($_REQUEST['lang'])) {
     
     ?>
 
-    <h1>New Term</h1>
+    <h2>New Term</h2>
     <script type="text/javascript" charset="utf-8">
         $(document).ready(ask_before_exiting);
     </script>  
@@ -742,7 +742,7 @@ if (isset($_REQUEST['new']) && isset($_REQUEST['lang'])) {
     
         ?>
     
-     <h1>Edit Term</h1>
+     <h2>Edit Term</h2>
      <script type="text/javascript" charset="utf-8">
          $(document).ready(ask_before_exiting);
      </script>

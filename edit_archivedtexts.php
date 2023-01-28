@@ -329,10 +329,10 @@ if (isset($_REQUEST['chg'])) {
 
         ?>
     
-     <h1>Edit Archived Text</h1>
      <script type="text/javascript" charset="utf-8">
          $(document).ready(ask_before_exiting);
      </script>
+     <h2>Edit Archived Text</h2>
      <form class="validate" action="<?php echo $_SERVER['PHP_SELF']; ?>#rec<?php echo $_REQUEST['chg']; ?>" method="post">
      <input type="hidden" name="AtID" value="<?php echo $_REQUEST['chg']; ?>" />
      <table class="tab3" cellspacing="0" cellpadding="5">

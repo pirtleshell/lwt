@@ -102,7 +102,7 @@ if (isset($_REQUEST['new'])) {
     
     ?>
 
-    <h1>New Tag</h1>
+    <h2>New Tag</h2>
     <script type="text/javascript" charset="utf-8">
         $(document).ready(ask_before_exiting);
     </script>
@@ -133,7 +133,7 @@ if (isset($_REQUEST['new'])) {
     $res = do_mysqli_query($sql);
     if ($record = mysqli_fetch_assoc($res)) {
         ?>
-     <h1>Edit Tag</h1>
+     <h2>Edit Tag</h2>
      <script type="text/javascript" charset="utf-8">
          $(document).ready(ask_before_exiting);
      </script>
