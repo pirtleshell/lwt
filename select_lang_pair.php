@@ -67,7 +67,7 @@ $currentnativelanguage = getSetting('currentnativelanguage');
             '*http://translate.google.com/?ie=UTF-8&sl=' + 
             LANGDEFS[l2][1] + '&tl=' + LANGDEFS[l1][1] + '&text=###'
             );    
-        $('select[name="LgTextSize"]',context).val(LANGDEFS[l2][2] ? 200 : 150);    
+        $('input[name="LgTextSize"]',context).val(LANGDEFS[l2][2] ? 200 : 150);    
         $('input[name="LgRegexpSplitSentences"]',context).val(LANGDEFS[l2][4]);    
         $('input[name="LgRegexpWordCharacters"]',context).val(LANGDEFS[l2][3]);    
         $('select[name="LgSplitEachChar"]',context).val(LANGDEFS[l2][5] ? 1 : 0);    
@@ -83,7 +83,7 @@ $currentnativelanguage = getSetting('currentnativelanguage');
 
     $(function(){
         $('.center').addClass('backlightyellow');
-        bg=$('.center').css('background-color');
+        const bg = $('.center').css('background-color');
         $('body').css('background-color',bg);
         $('.center').removeClass('backlightyellow');
     });
