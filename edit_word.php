@@ -17,6 +17,7 @@
 
 require_once 'inc/session_utility.php';
 require_once 'inc/simterms.php';
+require_once 'inc/langdefs.php';
 
 /**
  * Insert a new word to the database
@@ -322,12 +323,16 @@ if (isset($_REQUEST['op'])) {
  <table class="tab2" cellspacing="0" cellpadding="5">
  <tr title="Only change uppercase/lowercase!">
  <td class="td1 right"><b>New Term:</b></td>
- <td class="td1"><input <?php echo $scrdir; ?> class="notempty checkoutsidebmp" data_info="New Term" type="text" name="WoText" id="wordfield" value="<?php echo tohtml($term); ?>" maxlength="250" size="35" /> <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+ <td class="td1">
+    <input <?php echo $scrdir; ?> class="notempty checkoutsidebmp" data_info="New Term" type="text" name="WoText" id="wordfield" value="<?php echo tohtml($term); ?>" maxlength="250" size="35" />
+    <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
  </td></tr>
         <?php print_similar_terms_tabrow(); ?>
  <tr>
  <td class="td1 right">Translation:</td>
- <td class="td1"><textarea name="WoTranslation" class="setfocus textarea-noreturn checklength checkoutsidebmp" data_maxlength="500" data_info="Translation" cols="35" rows="3"></textarea></td>
+ <td class="td1">
+    <textarea name="WoTranslation" class="setfocus textarea-noreturn checklength checkoutsidebmp" data_maxlength="500" data_info="Translation" cols="35" rows="3"></textarea>
+</td>
  </tr>
  <tr>
  <td class="td1 right">Tags:</td>
@@ -337,11 +342,15 @@ if (isset($_REQUEST['op'])) {
  </tr>
  <tr>
  <td class="td1 right">Romaniz.:</td>
- <td class="td1"><input type="text" class="checkoutsidebmp" data_info="Romanization" name="WoRomanization" value="" maxlength="100" size="35" /></td>
+ <td class="td1">
+    <input type="text" class="checkoutsidebmp" data_info="Romanization" name="WoRomanization" value="" maxlength="100" size="35" />
+</td>
  </tr>
  <tr>
  <td class="td1 right">Sentence<br />Term in {...}:</td>
- <td class="td1"><textarea <?php echo $scrdir; ?> name="WoSentence" class="textarea-noreturn checklength checkoutsidebmp" data_maxlength="1000" data_info="Sentence" cols="35" rows="3"><?php echo tohtml(repl_tab_nl($sent[1])); ?></textarea></td>
+ <td class="td1">
+    <textarea <?php echo $scrdir; ?> name="WoSentence" class="textarea-noreturn checklength checkoutsidebmp" data_maxlength="1000" data_info="Sentence" cols="35" rows="3"><?php echo tohtml(repl_tab_nl($sent[1])); ?></textarea>
+</td>
  </tr>
         <?php print_similar_terms_tabrow(); ?>
  <tr>
@@ -358,7 +367,37 @@ if (isset($_REQUEST['op'])) {
  </tr>
  </table>
  </form>
- <div id="exsent"><span class="click" onclick="do_ajax_show_sentences(<?php echo $lang; ?>, <?php echo prepare_textdata_js($termlc) . ', ' . prepare_textdata_js("document.forms['newword'].WoSentence") . ', 0'; ?>);"><img src="icn/sticky-notes-stack.png" title="Show Sentences" alt="Show Sentences" /> Show Sentences</span></div>    
+    <script type="text/javascript">
+        const TRANS_URI = <?php 
+        echo json_encode(
+            get_first_value(
+                "SELECT LgGoogleTranslateURI as value from {$tbpref}languages WHERE LgID = $lang"
+            )
+        );
+        ?> 
+        const LANG = <?php 
+        $lgname = get_first_value("SELECT LgName as value from {$tbpref}languages WHERE LgID = $lang"); 
+        echo json_encode($langDefs[$lgname][1]); ?>;
+
+        function autoTranslate() {
+            if (TRANS_URI.startsWith("libretranslate ")) {
+                getLibreTranslateTranslation(TRANS_URI, $('#wordfield').val(), LANG, 'en')
+                .then(function (translation) {
+                    newword.WoTranslation.value = translation;
+                });
+            }
+        }
+
+        autoTranslate();
+
+    </script>
+ <div id="exsent">
+    <span class="click" onclick="do_ajax_show_sentences(
+        <?php echo $lang; ?>, <?php echo prepare_textdata_js($termlc); ?>, 
+        'document.forms.newword.WoSentence', 0)">
+        <img src="icn/sticky-notes-stack.png" title="Show Sentences" alt="Show Sentences" /> Show Sentences
+    </span>
+</div>    
         <?php
         
     } else {
@@ -436,7 +475,12 @@ if (isset($_REQUEST['op'])) {
      </tr>
      </table>
      </form>
-     <div id="exsent"><span class="click" onclick="do_ajax_show_sentences(<?php echo $lang; ?>, <?php echo prepare_textdata_js($termlc) . ', ' . prepare_textdata_js("document.forms['editword'].WoSentence") . ', ' . $wid; ?>);"><img src="icn/sticky-notes-stack.png" title="Show Sentences" alt="Show Sentences" /> Show Sentences</span></div>    
+     <div id="exsent">
+        <span class="click" onclick="do_ajax_show_sentences(
+            <?php echo $lang; ?>, <?php echo prepare_textdata_js($termlc); ?>, 
+            'document.forms.editword.WoSentence', <?php echo $wid; ?>);">
+        <img src="icn/sticky-notes-stack.png" title="Show Sentences" alt="Show Sentences" /> Show Sentences</span>
+    </div>    
             <?php
         }
         mysqli_free_result($res);

@@ -209,20 +209,23 @@ function check () {
       }
     }
   });
+  // Check that the Google Translate field is of good type
   $('input.checkdicturl').each(function (_n) {
-    if ($(this).val().trim().length > 0) {
+    const translate_input = $(this).val().trim();
+    if (translate_input.length > 0) {
       if (
-        ($(this).val().trim().indexOf('http://') != 0) && 
-        ($(this).val().trim().indexOf('https://') != 0) && 
-        ($(this).val().trim().indexOf('*http://') != 0) && 
-        ($(this).val().trim().indexOf('*https://') != 0) && 
-        ($(this).val().trim().indexOf('glosbe_api.php') != 0) && 
-        ($(this).val().trim().indexOf('ggl.php') != 0)
+        (translate_input.indexOf('http://') != 0) && 
+        (translate_input.indexOf('https://') != 0) && 
+        (translate_input.indexOf('*http://') != 0) && 
+        (translate_input.indexOf('*https://') != 0) && 
+        (translate_input.indexOf('glosbe_api.php') != 0) && 
+        (translate_input.indexOf('ggl.php') != 0) &&
+        !translate_input.startsWith('libretranslate ') 
       ) {
         alert(
           'ERROR\n\nField "' + $(this).attr('data_info') + 
-          '" must start with "http://" or "https://" or "*http://" or "*https://" ' +
-          'or "glosbe_api.php" or "ggl.php" if not empty.'
+          '" must start with "http://", "https://", "*http://", "*https://", ' +
+          '"glosbe_api.php", "ggl.php", "libretranslate " if not empty.'
         );
         count++;
       }
