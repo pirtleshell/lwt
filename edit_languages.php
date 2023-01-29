@@ -459,6 +459,13 @@ function edit_languages_change($lid)
     
     <script type="text/javascript" charset="utf-8">
 
+        function checkLanguageChanged(value) {
+            if (value == "Japanese") {
+                $(document.forms.lg_form.LgRegexpAlt).css("display", "block");
+            } else {
+                $(document.forms.lg_form.LgRegexpAlt).css("display", "none");
+            }
+        }
         /**
          * Handles any change on multi-words translate mode.
          */
@@ -467,17 +474,27 @@ function edit_languages_change($lid)
             const libretranslate = "libretranslate http://localhost:5000/translate";
 
             let result;
+            let uses_key = false;
             switch (value) {
                 case "google_translate":
                     result = ggtranslate;
                     break;
                 case "libretranslate":
                     result = libretranslate;
+                    uses_key = true;
+                    break;
+                case "ggl":
+                    result = "ggl.php?text=";
+                    break;
+                case "glosbe":
+                    result = "glosbe.php";
                     break;
             }
             if (result) {
                 document.forms.lg_form.LgGoogleTranslateURI.value = result;
             }
+            $('#LgTranslatorKeyWrapper')
+            .css("display", uses_key ? "inherit" : "none");
         }
 
         /**
@@ -519,6 +536,10 @@ function edit_languages_change($lid)
             );
         }
 
+        function changeLanguageTextSize(value) {
+            $('#LgTextSizeExample').css("font-size", value + "%");
+        }
+
         /**
          * Handle changes to the words split method.
          */
@@ -538,77 +559,125 @@ function edit_languages_change($lid)
             }
             if (result) {
                 document.forms.lg_form.LgRegexpWordCharacters.value = result;
-                document.forms.lg_form.LgRegexpWordCharacters.disabled = fixed;
+                //document.forms.lg_form.LgRegexpWordCharacters.disabled = fixed;
             }
-
         }
 
         $(document).ready(ask_before_exiting);
+        $(function () { 
+            checkLanguageChanged(document.forms.lg_form.LgName.value); 
+        })
     </script>
     <h2>Edit Language 
         <a target="_blank" href="docs/info.html#howtolang">
             <img src="icn/question-frame.png" title="Help" alt="Help" />
         </a>
     </h2>
-    <form class="validate" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" onsubmit="return check_dupl_lang(<?php echo $lid; ?>);" name="lg_form">
+    <form class="validate" action="<?php echo $_SERVER['PHP_SELF']; ?>" 
+    method="post" onsubmit="return check_dupl_lang(<?php echo $lid; ?>);" 
+    name="lg_form">
     <input type="hidden" name="LgID" value="<?php echo $lid; ?>" />
     <table class="tab2" cellspacing="0" cellpadding="5">
     <tr>
         <td class="td1 right">Study Language "L2":</td>
         <td class="td1">
-            <input type="text" class="notempty setfocus checkoutsidebmp" data_info="Study Language" name="LgName" id="LgName" value="<?php echo tohtml($record['LgName']); ?>" maxlength="40" size="40" /> 
-            <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+            <input type="text" class="notempty setfocus checkoutsidebmp" 
+            data_info="Study Language" name="LgName" id="LgName" 
+            value="<?php echo tohtml($record['LgName']); ?>" maxlength="40" 
+            size="40" oninput="checkLanguageChanged(this.value);" /> 
+            <img src="icn/status-busy.png" title="Field must not be empty" 
+            alt="Field must not be empty" />
         </td>
     </tr>
     <tr>
         <td class="td1 right">Dictionary 1 URI:</td>
         <td class="td1">
-            <input type="text" class="notempty checkdicturl checkoutsidebmp" name="LgDict1URI" value="<?php echo tohtml($record['LgDict1URI']); ?>"  maxlength="200" size="60" data_info="Dictionary 1 URI" /> 
-            <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+            <input type="text" class="notempty checkdicturl checkoutsidebmp" 
+            name="LgDict1URI" 
+            value="<?php echo tohtml($record['LgDict1URI']); ?>"  
+            maxlength="200" size="60" data_info="Dictionary 1 URI" /> 
+            <img src="icn/status-busy.png" title="Field must not be empty" 
+            alt="Field must not be empty" />
         </td>
     </tr>
     <tr>
         <td class="td1 right">Dictionary 2 URI:</td>
         <td class="td1">
-            <input type="text" class="checkdicturl checkoutsidebmp" name="LgDict2URI" value="<?php echo tohtml($record['LgDict2URI']); ?>" maxlength="200" size="60" data_info="Dictionary 2 URI" />
+            <input type="text" class="checkdicturl checkoutsidebmp" 
+            name="LgDict2URI" 
+            value="<?php echo tohtml($record['LgDict2URI']); ?>" maxlength="200"
+            size="60" data_info="Dictionary 2 URI" />
         </td>
     </tr>
     <tr>
-        <td class="td1 right">GoogleTranslate URI:</td>
+        <td class="td1 right">Sentence Translator URI:</td>
         <td class="td1">
-            <select onchange="multiWordsTranslateChange(this.value);">
-                <option value="google_translate">Google Translate</option>
-                <option value="libretranslate">LibreTranslate</option>
+            <select onchange="multiWordsTranslateChange(this.value);" 
+            name="LgTranslatorName">
+                <option value="google_translate">Google Translate URI</option>
+                <option value="libretranslate">LibreTranslate API</option>
+                <!-- ggl.php doesn't seem to work -->
+                <option value="ggl" style="display: none;">
+                    GoogleTranslate API
+                </option>
+                <!-- Glosbe has stopped the API -->
+                <option value="glosbe" style="display: none;">
+                    Glosbe API
+                </option>
             </select>
-            <input type="text" class="checkdicturl checkoutsidebmp" name="LgGoogleTranslateURI" value="<?php echo tohtml($record['LgGoogleTranslateURI']); ?>" maxlength="200" size="60" data_info="GoogleTranslate URI" oninput="checkTranslatorStatus(this.value);"/>
+            <input type="text" class="checkdicturl checkoutsidebmp" 
+            name="LgGoogleTranslateURI" 
+            value="<?php echo tohtml($record['LgGoogleTranslateURI']); ?>" 
+            maxlength="200" size="60" data_info="GoogleTranslate URI" 
+            oninput="checkTranslatorStatus(this.value);"/>
+            <div id="LgTranslatorKeyWrapper" style="display: none;">
+                <label for="LgTranslatorKey">Key :</label>
+                <input type="text" id="LgTranslatorKey" name="LgTranslatorKey"/>
+            </div>
             <div id="translator_error" class="red" ></div>
         </td>
     </tr>
     <tr>
-        <td class="td1 right">Text Size:</td>
+        <td class="td1 right">Text Size (%):</td>
         <td class="td1">
-            <select name="LgTextSize">
-                <?php echo get_languagessize_selectoptions($record['LgTextSize']); ?>
-            </select>
-            <input style="display: none;" type="number" min="100" max="250" value="100" step="50" />%
+            <input name="LgTextSize" type="number" min="100" max="250" 
+            value="<?php echo ($record['LgTextSize']); ?>" step="50" 
+            onchange="changeLanguageTextSize(this.value);"/>
+            <input type="text" 
+            style="font-size: <?php echo ($record['LgTextSize']); ?>%;" 
+            id="LgTextSizeExample" 
+            value="Text will be this size" />
         </td>
     </tr>
     <tr>
         <td class="td1 right">Character Substitutions:</td>
         <td class="td1">
-            <input type="text" class="checkoutsidebmp" data_info="Character Substitutions" name="LgCharacterSubstitutions" value="<?php echo tohtml($record['LgCharacterSubstitutions']); ?>" maxlength="500" size="60" />
+            <input type="text" class="checkoutsidebmp" 
+            data_info="Character Substitutions" name="LgCharacterSubstitutions" 
+            value="<?php echo tohtml($record['LgCharacterSubstitutions']); ?>" 
+            maxlength="500" size="60" />
         </td>
     </tr>
     <tr>
         <td class="td1 right">RegExp Split Sentences:</td>
         <td class="td1">
-            <input type="text" class="notempty checkoutsidebmp" name="LgRegexpSplitSentences" value="<?php echo tohtml($record['LgRegexpSplitSentences']); ?>" maxlength="500" size="60" data_info="RegExp Split Sentences" /> <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+            <input type="text" class="notempty checkoutsidebmp" 
+            name="LgRegexpSplitSentences" 
+            value="<?php echo tohtml($record['LgRegexpSplitSentences']); ?>" 
+            maxlength="500" size="60" 
+            data_info="RegExp Split Sentences" /> 
+            <img src="icn/status-busy.png" title="Field must not be empty" 
+            alt="Field must not be empty" />
         </td>
     </tr>
     <tr>
     <td class="td1 right">Exceptions Split Sentences:</td>
     <td class="td1">
-        <input type="text" class="checkoutsidebmp" data_info="Exceptions Split Sentences" name="LgExceptionsSplitSentences" value="<?php echo tohtml($record['LgExceptionsSplitSentences']); ?>" maxlength="500" size="60" />
+        <input type="text" class="checkoutsidebmp" 
+        data_info="Exceptions Split Sentences" 
+        name="LgExceptionsSplitSentences" 
+        value="<?php echo tohtml($record['LgExceptionsSplitSentences']); ?>" 
+        maxlength="500" size="60" />
     </td>
     </tr>
     <tr>
@@ -618,9 +687,15 @@ function edit_languages_change($lid)
                 <option value="regexp">Regular Expressions (demo)</option>
                 <option value="mecab">MeCab (recommended)</option>
             </select>
-            <input type="text" class="notempty checkoutsidebmp" data_info="RegExp Word Characters" name="LgRegexpWordCharacters" value="<?php echo tohtml($record['LgRegexpWordCharacters']); ?>" maxlength="500" size="60" /> <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+            <input type="text" class="notempty checkoutsidebmp" 
+            data_info="RegExp Word Characters" name="LgRegexpWordCharacters" 
+            value="<?php echo tohtml($record['LgRegexpWordCharacters']); ?>" 
+            maxlength="500" size="60" /> 
+            <img src="icn/status-busy.png" title="Field must not be empty" 
+            alt="Field must not be empty" />
             <div style="display: none;" class="red" id="mecab_not_installed">
-                <a href="https://en.wikipedia.org/wiki/MeCab">MeCab</a> does not seem to be installed on your server. 
+                <a href="https://en.wikipedia.org/wiki/MeCab">MeCab</a> does 
+                not seem to be installed on your server. 
                 Please read the <a href="">MeCab installation guide</a>.
             </div>
         </td>
@@ -655,7 +730,8 @@ function edit_languages_change($lid)
         <img class="click" src="icn/question-frame.png" title="Help" alt="Help" onclick="oewin('export_template.html');" /> :
     </td>
     <td class="td1">
-        <input type="text" class="checkoutsidebmp" data_info="Export Template" name="LgExportTemplate" value="<?php echo tohtml($record['LgExportTemplate']); ?>" maxlength="1000" size="60" />
+        <input type="text" class="checkoutsidebmp" data_info="Export Template" name="LgExportTemplate" 
+        value="<?php echo tohtml($record['LgExportTemplate']); ?>" maxlength="1000" size="60" />
     </td>
     </tr>
     <tr>
