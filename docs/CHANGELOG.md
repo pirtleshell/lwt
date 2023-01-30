@@ -7,6 +7,9 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 
 ### Added
 
+* The translation and romanization of new can now be automatic.
+  * Supported automatic translation is achieved using [LibreTranslate](https://libretranslate.com/), to English only.
+  * Romanization using [MeCab](https://taku910.github.io/mecab/) (Japanese only) toward katakana only. 
 * LWT becomes easier to install and maintain for users:
   * An intaller for Linux users at ``INSTALL.sh`` helps installing requirements and configuration.
   * Database creation wizard (``database_wizard.php``) to help setting the connection with the database.

@@ -375,20 +375,36 @@ if (isset($_REQUEST['op'])) {
             )
         );
         ?> 
-        const LANG = <?php 
+        const LANG_SHORT = <?php 
         $lgname = get_first_value("SELECT LgName as value from {$tbpref}languages WHERE LgID = $lang"); 
         echo json_encode($langDefs[$lgname][1]); ?>;
 
-        function autoTranslate() {
+        /**
+         * Sets the translation of a term.
+         */
+        const autoTranslate = function () {
             if (TRANS_URI.startsWith("libretranslate ")) {
-                getLibreTranslateTranslation(TRANS_URI, $('#wordfield').val(), LANG, 'en')
+                const term = $('#wordfield').val();
+                getLibreTranslateTranslation(TRANS_URI, term, LANG_SHORT, 'en')
                 .then(function (translation) {
                     newword.WoTranslation.value = translation;
                 });
             }
         }
 
+        /**
+         * Sets the romanization of a term.
+         */
+        const autoRomanization = function () {
+            const term = $('#wordfield').val();
+            getPhoneticTextAsync(term, LANG_SHORT)
+            .then(function (phonetic) {
+                newword.WoRomanization.value = phonetic;
+            });
+        }
+
         autoTranslate();
+        autoRomanization();
 
     </script>
  <div id="exsent">
