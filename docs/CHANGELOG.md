@@ -16,6 +16,9 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
   * ``index_do_main_page`` now renders the page to avoud global variables.
   * You get warnings if the PHP version is too low, or if a newer version of LWT is released.
 * ``pagestart_kernel_nobody`` in ``inc/kernel.php`` that display the minimal HTML formatting.
+* ``inc/classes/`` folder for a better imcorporation of OOP.
+  * ``inc/classes/Term`` defines the ``Term`` class representing a word or multi-word.
+  * ``inc/classes/Language`` defines the ``Language`` class representing a language.
 
 ### Changed
 
