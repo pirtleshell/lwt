@@ -21,6 +21,7 @@
  */
 
 require_once 'inc/session_utility.php';
+require_once 'inc/langdefs.php';
 require_once 'inc/classes/Language.php';
 
 
@@ -656,6 +657,18 @@ function edit_language_form($language)
 
 }
 
+/// Returns a dropdown menu of the different languages
+function get_wizard_selectoptions($v): string 
+{
+    global $langDefs;
+    $r = "<option value=\"\"" . get_selected($v, "") . ">[Choose...]</option>";
+    $keys = array_keys($langDefs);
+    foreach ($keys as $item) {
+        $r .= "<option value=\"" . $item . "\"" . get_selected($v, $item) . ">" . $item . "</option>";
+    }
+    return $r;
+}
+
 /**
  * Display a form to create a new language.
  * 
@@ -663,6 +676,9 @@ function edit_language_form($language)
  */
 function edit_languages_new() 
 {
+    global $langDefs;
+
+    $currentnativelanguage = getSetting('currentnativelanguage');
     ?>
     <h2>
         New Language <a target="_blank" href="docs/info.html#howtolang">
@@ -670,15 +686,75 @@ function edit_languages_new()
     </h2>
 
     <script type="text/javascript" charset="utf-8">
+
+        const LANGDEFS = <?php echo json_encode($langDefs); ?>;
+
+        /// Execute the wizard
+        function wizard_go() {
+            const l1 = $('#l1').val();
+            const l2 = $('#l2').val();
+            if (l1 == '') {
+                alert ('Please choose your native language (L1)!');
+                return;
+            }
+            if (l2 == '') {
+                alert ('Please choose your language you want to read/study (L2)!');
+                return;
+            }
+            if (l2 == l1) {
+                alert ('L1 L2 Languages must not be equal!');
+                return;
+            }
+            $('input[name="LgName"]').val(l2);    
+            $('input[name="LgDict1URI"]').val(
+                '*https://de.glosbe.com/' + LANGDEFS[l2][0] + '/' + 
+                LANGDEFS[l1][0] + '/###'
+                );    
+            $('input[name="LgGoogleTranslateURI"]').val(
+                '*http://translate.google.com/?ie=UTF-8&sl=' + 
+                LANGDEFS[l2][1] + '&tl=' + LANGDEFS[l1][1] + '&text=###'
+                );    
+            $('input[name="LgTextSize"]').val(LANGDEFS[l2][2] ? 200 : 150);    
+            $('input[name="LgRegexpSplitSentences"]').val(LANGDEFS[l2][4]);    
+            $('input[name="LgRegexpWordCharacters"]').val(LANGDEFS[l2][3]);    
+            $('select[name="LgSplitEachChar"]').val(LANGDEFS[l2][5]);    
+            $('select[name="LgRemoveSpaces"]').val(LANGDEFS[l2][6]);    
+            $('select[name="LgRightToLeft"]').val(LANGDEFS[l2][7]);
+        }
+
         $(document).ready(ask_before_exiting);
     </script>
-    <div class="td1 center backlightyellow" style="border-top-left-radius:inherit;border-top-right-radius:inherit;" colspan="2">
-        <img src="icn/wizard.png" title="Language Settings Wizard" alt="Language Settings Wizard" class="click" onclick="window.open('select_lang_pair.php', 'wizard', 'width=400, height=400, scrollbars=yes, menubar=no, resizable=yes, status=no');" /><br />
-        <span class="click" onclick="window.open('select_lang_pair.php', 'wizard', 'width=400, height=400, scrollbars=yes, menubar=no, resizable=yes, status=no');">
-            <img src="icn/arrow-000-medium.png" title="-&gt;" alt="-&gt;" /> 
-            <b>Language Settings Wizard</b> 
-            <img src="icn/arrow-180-medium.png" title="&lt;-" alt="&lt;-" />
-        </span><br />
+    <div class="td1 center">
+        <div class="center" style="border: 1px solid black;">
+            <p class="wizard">
+                <img src="icn/wizard.png" title="Language Settings Wizard" alt="Language Settings Wizard" />
+            </p>
+
+            <h1 class="wizard">
+                Language Settings Wizard
+            </h1>
+            <div>
+                <p class="wizard">
+                    <b>My Native language is:</b>
+                    <br />
+                    L1: 
+                    <select name="l1" id="l1" onchange="{do_ajax_save_setting('currentnativelanguage',($('#l1').val()));}">
+                        <?php echo get_wizard_selectoptions($currentnativelanguage); ?>
+                    </select>
+                </p>
+                <p class="wizard">
+                    <b>I want to study:</b>
+                    <br />
+                    L2: 
+                    <select name="l2" id="l2">
+                        <?php echo get_wizard_selectoptions(''); ?>
+                    </select>
+                </p>
+            </div>
+            <p class="wizard">
+                <input type="button" style="font-size:1.1em;" value="Set Language Settings" onclick="wizard_go();" />
+            </p>
+        </div>
         <span class="smallgray">
             Select your native (L1) and study (L2) languages, and let the 
             wizard set all language settings marked in yellow!<br />

@@ -11,7 +11,7 @@
  */
 
 require_once 'inc/session_utility.php';
-require_once 'inc/langdefs.php' ;
+require_once 'inc/langdefs.php';
 
 /// Returns a dropdown menu of the different languages
 function get_wizard_selectoptions($v): string 
@@ -34,12 +34,12 @@ $currentnativelanguage = getSetting('currentnativelanguage');
 <script type="text/javascript">
     //<![CDATA[
 
-    var LANGDEFS = <?php echo json_encode($langDefs); ?>;
+    const LANGDEFS = <?php echo json_encode($langDefs); ?>;
 
     /// Execute the wizard
     function wizard_go() {
-        var l1 = $('#l1').val();
-        var l2 = $('#l2').val();
+        const l1 = $('#l1').val();
+        const l2 = $('#l2').val();
         if (l1 == '') {
             alert ('Please choose your native language (L1)!');
             return;
@@ -54,9 +54,9 @@ $currentnativelanguage = getSetting('currentnativelanguage');
         }
         var w = window.opener;
         if (typeof w == 'undefined') {
-            alert ('Language setting cannot be set. Please try again.');
-            wizard_exit();
-        }
+                alert ('Language setting cannot be set. Please try again.');
+                wizard_exit();
+            }
         var context = w.document;
         $('input[name="LgName"]',context).val(l2);    
         $('input[name="LgDict1URI"]',context).val(
