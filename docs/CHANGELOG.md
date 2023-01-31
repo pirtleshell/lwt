@@ -31,6 +31,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 * ``echo_lwt_logo`` in ``inc/session_utility.php`` echoes a logo, without information on the table set used
 because it was useless. This information is now displayed on the welcome page.
 * Access to the database prefix edition at ``start.php`` was reviewed and simplified. It is still considered a legacy feature.
+* When creating a new language, the language wizard do no longer display in a pop-up bu in the main window.
 
 ### Fixed
 

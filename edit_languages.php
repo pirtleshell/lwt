@@ -369,6 +369,8 @@ function edit_language_form($language)
     ?>
 <script type="text/javascript">
 
+    GGTRANSLATE = <?php echo json_encode($language->translator); ?>;
+
     function checkLanguageChanged(value) {
         if (value == "Japanese") {
             $(document.forms.lg_form.LgRegexpAlt).css("display", "block");
@@ -381,14 +383,13 @@ function edit_language_form($language)
      * Handles any change on multi-words translate mode.
      */
     function multiWordsTranslateChange(value) {
-        const ggtranslate = <?php echo json_encode($language->translator); ?>;
         const libretranslate = "libretranslate http://localhost:5000/translate";
 
         let result;
         let uses_key = false;
         switch (value) {
             case "google_translate":
-                result = ggtranslate;
+                result = GGTRANSLATE;
                 break;
             case "libretranslate":
                 result = libretranslate;
@@ -681,8 +682,10 @@ function edit_languages_new()
     $currentnativelanguage = getSetting('currentnativelanguage');
     ?>
     <h2>
-        New Language <a target="_blank" href="docs/info.html#howtolang">
-        <img src="icn/question-frame.png" title="Help" alt="Help" /></a>
+        New Language 
+        <a target="_blank" href="docs/info.html#howtolang">
+            <img src="icn/question-frame.png" title="Help" alt="Help" />
+        </a>
     </h2>
 
     <script type="text/javascript" charset="utf-8">
@@ -693,6 +696,8 @@ function edit_languages_new()
         function wizard_go() {
             const l1 = $('#l1').val();
             const l2 = $('#l2').val();
+            GGTRANSLATE = '*http://translate.google.com/?ie=UTF-8&sl=' + 
+            LANGDEFS[l2][1] + '&tl=' + LANGDEFS[l1][1] + '&text=###';
             if (l1 == '') {
                 alert ('Please choose your native language (L1)!');
                 return;
@@ -705,61 +710,64 @@ function edit_languages_new()
                 alert ('L1 L2 Languages must not be equal!');
                 return;
             }
-            $('input[name="LgName"]').val(l2);    
+            $('input[name="LgName"]').val(l2).change();
+            // There may be a cleaner way to trigger the event
+            checkLanguageChanged(l2);
             $('input[name="LgDict1URI"]').val(
                 '*https://de.glosbe.com/' + LANGDEFS[l2][0] + '/' + 
                 LANGDEFS[l1][0] + '/###'
-                );    
-            $('input[name="LgGoogleTranslateURI"]').val(
-                '*http://translate.google.com/?ie=UTF-8&sl=' + 
-                LANGDEFS[l2][1] + '&tl=' + LANGDEFS[l1][1] + '&text=###'
-                );    
-            $('input[name="LgTextSize"]').val(LANGDEFS[l2][2] ? 200 : 150);    
-            $('input[name="LgRegexpSplitSentences"]').val(LANGDEFS[l2][4]);    
-            $('input[name="LgRegexpWordCharacters"]').val(LANGDEFS[l2][3]);    
-            $('select[name="LgSplitEachChar"]').val(LANGDEFS[l2][5]);    
-            $('select[name="LgRemoveSpaces"]').val(LANGDEFS[l2][6]);    
-            $('select[name="LgRightToLeft"]').val(LANGDEFS[l2][7]);
+                );
+
+            $('input[name="LgGoogleTranslateURI"]').val(GGTRANSLATE);
+            $('input[name="LgTextSize"]')
+            .val(LANGDEFS[l2][2] ? 200 : 150)
+            .change();
+            $('input[name="LgRegexpSplitSentences"]').val(LANGDEFS[l2][4]);
+            $('input[name="LgRegexpWordCharacters"]').val(LANGDEFS[l2][3]);
+            $('select[name="LgSplitEachChar"]').val(LANGDEFS[l2][5] ? 1 : 0);
+            $('select[name="LgRemoveSpaces"]').val(LANGDEFS[l2][6] ? 1 : 0);
+            $('select[name="LgRightToLeft"]').val(LANGDEFS[l2][7] ? 1 : 0);
         }
 
         $(document).ready(ask_before_exiting);
+        $(function () { $('#wizard_zone').hide(); })
     </script>
     <div class="td1 center">
         <div class="center" style="border: 1px solid black;">
-            <p class="wizard">
-                <img src="icn/wizard.png" title="Language Settings Wizard" alt="Language Settings Wizard" />
-            </p>
-
-            <h1 class="wizard">
+            <h3 class="clickedit" onclick="$('#wizard_zone').toggle(400);" >
                 Language Settings Wizard
-            </h1>
-            <div>
-                <p class="wizard">
-                    <b>My Native language is:</b>
-                    <br />
-                    L1: 
-                    <select name="l1" id="l1" onchange="{do_ajax_save_setting('currentnativelanguage',($('#l1').val()));}">
-                        <?php echo get_wizard_selectoptions($currentnativelanguage); ?>
-                    </select>
-                </p>
-                <p class="wizard">
-                    <b>I want to study:</b>
-                    <br />
-                    L2: 
-                    <select name="l2" id="l2">
-                        <?php echo get_wizard_selectoptions(''); ?>
-                    </select>
+            </h3>
+            <div id="wizard_zone">
+                <img src="icn/wizard.png" title="Language Settings Wizard" alt="Language Settings Wizard" />
+
+                <div class="flex-spaced">
+                    <div>
+                        <b>My Native language is:</b>
+                        <div>
+                            L1: 
+                            <select name="l1" id="l1" onchange="{do_ajax_save_setting('currentnativelanguage',($('#l1').val()));}">
+                                <?php echo get_wizard_selectoptions($currentnativelanguage); ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <b>I want to study:</b>
+                        <div>
+                            L2: 
+                            <select name="l2" id="l2">
+                                <?php echo get_wizard_selectoptions(''); ?>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <input type="button" style="margin: 5px;" value="Set Language Settings" onclick="wizard_go();" />
+                <p class="smallgray">
+                    Select your native (L1) and study (L2) languages, and let the 
+                    wizard set all language settings marked in yellow!<br />
+                    (You can adjust the settings afterwards.)
                 </p>
             </div>
-            <p class="wizard">
-                <input type="button" style="font-size:1.1em;" value="Set Language Settings" onclick="wizard_go();" />
-            </p>
         </div>
-        <span class="smallgray">
-            Select your native (L1) and study (L2) languages, and let the 
-            wizard set all language settings marked in yellow!<br />
-            (You can adjust the settings afterwards.)
-        </span>
     </div>
     <?php
     $language = load_language(0);
