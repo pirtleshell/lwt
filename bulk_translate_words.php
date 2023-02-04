@@ -25,6 +25,7 @@ function bulk_save_terms($terms, $tid, $pos)
 {
     global $tbpref;
     $sqlarr = array();
+    $max = get_first_value("SELECT max(WoID) AS value FROM {$tbpref}words");
     foreach ($terms as $row) {
         $sqlarr[] =  '(' . 
         convert_string_to_sqlsyntax($row['lg']) . ',' . 
@@ -50,11 +51,18 @@ function bulk_save_terms($terms, $tid, $pos)
     ) VALUES " . rtrim(implode(',', $sqlarr), ',');
     runsql($sqltext, '');
     $tooltip_mode = getSettingWithDefault('set-tooltip-mode');
-    $max = get_first_value("SELECT max(WoID) AS value FROM {$tbpref}words");
     $res = do_mysqli_query(
         "SELECT WoID, WoTextLC, WoStatus, WoTranslation 
         FROM {$tbpref}words 
         where WoID > $max"
+    );
+
+
+    do_mysqli_query(
+        "UPDATE {$tbpref}textitems2 
+        JOIN {$tbpref}words 
+        ON lower(Ti2Text)=WoTextLC AND Ti2WordCount=1 AND Ti2LgID=WoLgID AND WoID>$max 
+        SET Ti2WoID = WoID"
     );
     ?>
 <p id="displ_message">
@@ -84,31 +92,27 @@ function bulk_save_terms($terms, $tid, $pos)
         } else {
             $(".TERM" + term.hex, context).attr('title', '');
         }
+
     }
     <?php
     while ($record = mysqli_fetch_assoc($res)) {
         $record["hex"] = strToClassName(prepare_textdata($record["WoTextLC"]));
-        $record["translation"] = prepare_textdata_js($record["WoTranslation"]);
+        $record["translation"] = $record["WoTranslation"];
         echo "change_term(" . json_encode($record) . ");";
     }
+    ?>
+
+    $('#learnstatus', context)
+    .html('<?php echo addslashes(texttodocount2($tid)); ?>');
+    $('#displ_message').remove();
+    <?php 
+    if (!isset($pos)) {
+        echo "cleanupRightFrames();";
+    } 
     ?>
 </script>
     <?php
     mysqli_free_result($res);
-    do_mysqli_query(
-        "UPDATE {$tbpref}textitems2 
-        JOIN {$tbpref}words 
-        ON lower(Ti2Text)=WoTextLC AND Ti2WordCount=1 AND Ti2LgID=WoLgID AND WoID>$max 
-        SET Ti2WoID = WoID"
-    );
-    echo "<script type=\"text/javascript\">
-    $('#learnstatus', window.parent.document)
-    .html('",addslashes(texttodocount2($tid)),"');
-    $('#displ_message').remove();";
-    if (!isset($pos)) {
-        echo "cleanupRightFrames();";
-    }
-    echo "</script>";
     flush();
 }
 

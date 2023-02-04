@@ -31,15 +31,20 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 * ``echo_lwt_logo`` in ``inc/session_utility.php`` echoes a logo, without information on the table set used
 because it was useless. This information is now displayed on the welcome page.
 * Access to the database prefix edition at ``start.php`` was reviewed and simplified. It is still considered a legacy feature.
-* When creating a new language, the language wizard do no longer display in a pop-up bu in the main window.
+* When creating a new language, the language wizard do no longer display in a pop-up but in the main window.
 * Updated [hoverIntent jQuery Plug-in](http://briancherne.github.io/jquery-hoverIntent/)
 from 1.8.0 to 1.10.2. This brings some bug fixes.
-* "To DO" changed to a more explicit "Unknown words" in text header.
+* "TO DO" changed to a more explicit "Unknown words" in text header.
+* Refactored ``bulk_translate_word.php``. It has a better visual aspect and works better.
 
 ### Fixed
 
 * Markdown: enforced consistency with official style recomendations. The documentation display got improved.
 * The default date for new words was note accepted depending on the SQL configuration, causing issues with Docker installation. See [#78](https://github.com/HugoFara/lwt/issues/78).
+* Bulk translate words:
+  * Translating with bulk translate was not updating word rendering.
+  * All broom icons icon were display in the screen top-right corner, and not 
+  at the right if text field.
 
 ## 2.6.0-fork (January 01 2023)
 

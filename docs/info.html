@@ -1994,15 +1994,23 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 <code>echo_lwt_logo</code> in <code>inc/session_utility.php</code> echoes a logo, without information on the table set used
 because it was useless. This information is now displayed on the welcome page.</li>
 <li>Access to the database prefix edition at <code>start.php</code> was reviewed and simplified. It is still considered a legacy feature.</li>
-<li>When creating a new language, the language wizard do no longer display in a pop-up bu in the main window.</li>
+<li>When creating a new language, the language wizard do no longer display in a pop-up but in the main window.</li>
 <li>Updated <a href="http://briancherne.github.io/jquery-hoverIntent/">hoverIntent jQuery Plug-in</a>
 from 1.8.0 to 1.10.2. This brings some bug fixes.</li>
-<li>"To DO" changed to a more explicit "Unknown words" in text header.</li>
+<li>"TO DO" changed to a more explicit "Unknown words" in text header.</li>
+<li>Refactored <code>bulk_translate_word.php</code>. It has a better visual aspect and works better.</li>
 </ul>
 <h4>Fixed</h4>
 <ul>
 <li>Markdown: enforced consistency with official style recomendations. The documentation display got improved.</li>
 <li>The default date for new words was note accepted depending on the SQL configuration, causing issues with Docker installation. See <a href="https://github.com/HugoFara/lwt/issues/78">#78</a>.</li>
+<li>Bulk translate words:
+<ul>
+<li>Translating with bulk translate was not updating word rendering.</li>
+<li>All broom icons icon were display in the screen top-right corner, and not
+at the right if text field.</li>
+</ul>
+</li>
 </ul>
 <h3>2.6.0-fork (January 01 2023)</h3>
 <h4>Added</h4>
