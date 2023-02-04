@@ -371,12 +371,15 @@ if (isset($_REQUEST['op'])) {
         const TRANS_URI = <?php 
         echo json_encode(
             get_first_value(
-                "SELECT LgGoogleTranslateURI as value from {$tbpref}languages WHERE LgID = $lang"
+                "SELECT LgGoogleTranslateURI as value from {$tbpref}languages 
+                WHERE LgID = $lang"
             )
         );
         ?> 
         const LANG_SHORT = <?php 
-        $lgname = get_first_value("SELECT LgName as value from {$tbpref}languages WHERE LgID = $lang"); 
+        $lgname = get_first_value(
+            "SELECT LgName as value from {$tbpref}languages WHERE LgID = $lang"
+        );
         echo json_encode($langDefs[$lgname][1]); ?>;
 
         /**
@@ -385,11 +388,10 @@ if (isset($_REQUEST['op'])) {
         const autoTranslate = function () {
             if (TRANS_URI.startsWith("libretranslate ")) {
                 const term = $('#wordfield').val();
-                const uri_trimmed = TRANS_URI.substr("libretranslate ".length);
-                urlParams = new URLSearchParams(uri_trimmed);
-                uriBase = uri_trimmed.substr(0, uri_trimmed.indexOf("/?"));
+                const uri_trimmed = new URL(TRANS_URI.substring("libretranslate ".length));
+                const urlParams = new URLSearchParams(uri_trimmed.search);
                 getLibreTranslateTranslation(
-                    "libretranslate " + uriBase, term, 
+                    "libretranslate " + uri_trimmed.origin, term, 
                     (urlParams.has("source") ? 
                     urlParams.get("source") : LANG_SHORT), 
                     urlParams.get("target")

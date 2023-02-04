@@ -232,14 +232,14 @@ function run_overlib_status_unknown(wblink1,wblink2,wblink3,hints,txid,torder,tx
 function run_overlib_multiword(wblink1,wblink2,wblink3,hints,txid,torder,txt,wid,stat,wcnt,ann){const lang=getLangFromDict(WBLINK3);return overlib(make_overlib_audio(txt,lang)+'<b>'+escape_html_chars_2(hints,ann)+'</b><br /> '+make_overlib_link_change_status_all(txid,torder,wid,stat)+' <br /> '+make_overlib_link_edit_multiword(txid,torder,wid)+' | '+make_overlib_link_delete_multiword(txid,wid)+' <br /> '+make_overlib_link_wb(wblink1,wblink2,wblink3,txt,txid,torder),CAPTION,make_overlib_link_edit_multiword_title(wcnt.trim()+'-Word-Expression',txid,torder,wid))}
 function run_overlib_test(wblink1,wblink2,wblink3,wid,txt,trans,roman,stat,sent,todo,oldstat){const s=parseInt(stat,10);let c=s+1;if(c>5)c=5;let w=s-1;if(w<1)w=1;let cc=stat+' ▶ '+c;if(c==s)cc=c;let ww=stat+' ▶ '+w;if(w==s)ww=w;let overlib_string='';if(todo==1){overlib_string+='<center><hr noshade size=1 /><b>';if(stat>=1&&stat<=5){overlib_string+=make_overlib_link_change_status_test(wid,1,'<img src="icn/thumb-up.png" title="Got it!" alt="Got it!" /> Got it! ['+cc+']')+'<hr noshade size=1 />'+make_overlib_link_change_status_test(wid,-1,'<img src="icn/thumb.png" title="Oops!" alt="Oops!" /> Oops! ['+ww+']')+'<hr noshade size=1 />'}
 overlib_string+=make_overlib_link_change_status_alltest(wid,stat)+'</b></center><hr noshade size=1 />'}
-overlib_string+='<b>'+escape_html_chars(make_tooltip(txt,trans,roman,stat))+'</b><br />'+' <a href="edit_tword.php?wid='+wid+'" target="ro" onclick="showRightFrames();">Edit term</a><br />'+createTheDictLink(wblink1,txt,'Dict1','Lookup Term: ')+createTheDictLink(wblink2,txt,'Dict2','')+createTheDictLink(wblink3,txt,'GTr','')+createTheDictLink(wblink3,sent,'GTr','<br />Lookup Sentence:');return overlib(overlib_string,CAPTION,'Got it?')}
+overlib_string+='<b>'+escape_html_chars(make_tooltip(txt,trans,roman,stat))+'</b><br />'+' <a href="edit_tword.php?wid='+wid+'" target="ro" onclick="showRightFrames();">Edit term</a><br />'+createTheDictLink(wblink1,txt,'Dict1','Lookup Term: ')+createTheDictLink(wblink2,txt,'Dict2','')+createTheDictLink(wblink3,txt,'Trans','')+createTheDictLink(wblink3,sent,'Trans','<br />Lookup Sentence:');return overlib(overlib_string,CAPTION,'Got it?')}
 function make_overlib_link_new_multiword(txid,torder,multi_words,rtl){if(multi_words.every((x)=>!x))return'';let output=' <br />Expr: ';if(rtl){for(var i=7;i<0;i--){if(multi_words[i]){output+=make_overlib_link_create_edit_multiword_rtl(i+2,txid,torder,multi_words[i])+' '}}}else{for(var i=0;i<7;i++){if(multi_words[i]){output+=make_overlib_link_create_edit_multiword_rtl(i+2,txid,torder,multi_words[i])+' '}}}
 output+=' ';return output}
-function make_overlib_link_wb(wblink1,wblink2,wblink3,txt,txid,torder){let s=createTheDictLink(wblink1,txt,'Dict1','Lookup Term: ')+createTheDictLink(wblink2,txt,'Dict2','')+createTheDictLink(wblink3,txt,'GTr','');if(torder>0&&txid>0){s+='<br />Lookup Sentence: '+createSentLookupLink(torder,txid,wblink3,'GTr')}
+function make_overlib_link_wb(wblink1,wblink2,wblink3,txt,txid,torder){let s=createTheDictLink(wblink1,txt,'Dict1','Lookup Term: ')+createTheDictLink(wblink2,txt,'Dict2','')+createTheDictLink(wblink3,txt,'Trans','');if(torder>0&&txid>0){s+='<br />Lookup Sentence: '+createSentLookupLink(torder,txid,wblink3,'Trans')}
 return s}
-function make_overlib_link_wbnl(wblink1,wblink2,wblink3,txt,txid,torder){let s=createTheDictLink(wblink1,txt,'Dict1','Term: ')+createTheDictLink(wblink2,txt,'Dict2','')+createTheDictLink(wblink3,txt,'GTr','');if(torder>0&&txid>0){s+=' | Sentence: '+createSentLookupLink(torder,txid,wblink3,'GTr')}
+function make_overlib_link_wbnl(wblink1,wblink2,wblink3,txt,txid,torder){let s=createTheDictLink(wblink1,txt,'Dict1','Term: ')+createTheDictLink(wblink2,txt,'Dict2','')+createTheDictLink(wblink3,txt,'Trans','');if(torder>0&&txid>0){s+=' | Sentence: '+createSentLookupLink(torder,txid,wblink3,'Trans')}
 return s}
-function make_overlib_link_wbnl2(wblink1,wblink2,wblink3,txt,sent){let s=createTheDictLink(wblink1,txt,'Dict1','Term: ')+createTheDictLink(wblink2,txt,'Dict2','')+createTheDictLink(wblink3,txt,'GTr','');if(sent!=''){s+=createTheDictLink(wblink3,sent,'GTr',' | Sentence:')}
+function make_overlib_link_wbnl2(wblink1,wblink2,wblink3,txt,sent){let s=createTheDictLink(wblink1,txt,'Dict1','Term: ')+createTheDictLink(wblink2,txt,'Dict2','')+createTheDictLink(wblink3,txt,'Trans','');if(sent!=''){s+=createTheDictLink(wblink3,sent,'Trans',' | Sentence:')}
 return s}
 function make_overlib_link_change_status_all(txid,torder,wid,oldstat){let result='St: ';for(let newstat=1;newstat<=5;newstat++){result+=make_overlib_link_change_status(txid,torder,wid,oldstat,newstat)}
 result+=make_overlib_link_change_status(txid,torder,wid,oldstat,99);result+=make_overlib_link_change_status(txid,torder,wid,oldstat,98);return result}
@@ -268,7 +268,8 @@ function translateSentence2(url,sentctl){if(typeof sentctl!=='undefined'&&url!='
 function translateWord(url,wordctl){if(typeof wordctl!=='undefined'&&url!=''){const text=wordctl.value;if(typeof text==='string'){showRightFrames(undefined,createTheDictUrl(url,text))}}}
 function translateWord2(url,wordctl){if(typeof wordctl!=='undefined'&&url!=''){const text=wordctl.value;if(typeof text==='string'){owin(createTheDictUrl(url,text))}}}
 function translateWord3(url,word){owin(createTheDictUrl(url,word))}
-function getLangFromDict(wblink3){return wblink3.replace(/.*[?&]sl=([a-zA-Z\-]*)(&.*)*$/,"$1")}
+function getLangFromDict(wblink3){let dictUrl,urlParams;if(wblink3.startsWith("libretranslate ")){dictUrl=new URL(wblink3.substring("libretranslate ".length));urlParams=new URLSearchParams(dictUrl.search);return urlParams.get("source")||""}
+dictUrl=new URL(wblink3);urlParams=new URLSearchParams(dictUrl.search);return urlParams.get("sl")||""}
 function make_tooltip(word,trans,roman,status){const nl='\x0d';let title=word;if(roman!=''){if(title!='')title+=nl;title+='▶ '+roman}
 if(trans!=''&&trans!='*'){if(title!='')title+=nl;title+='▶ '+trans}
 if(title!='')title+=nl;title+='▶ '+getStatusName(status)+' ['+getStatusAbbr(status)+']';return title}
@@ -280,10 +281,13 @@ function createTheDictUrl(u,w){const url=u.trim();const trm=w.trim();const pos=u
 const pos2=url.indexOf('###',pos+1);if(pos2===-1){return url.replace("###",trm==''?'+':encodeURIComponent(trm))}
 const enc=url.substring(pos+3,pos2-pos-3).trim();console.warn("Trying to use encoding '"+enc+"'. This feature is abandonned since "+"2.6.0-fork. Using default UTF-8.");let output=url.substring(0,pos)+encodeURIComponent(trm);if(pos2+3<url.length){output+=url.substring(pos2+3)}
 return output}
-function createTheDictLink(u,w,t,b){const url=u.trim();const trm=w.trim();const txt=t.trim();const txtbefore=b.trim();let r='';if(url!=''&&txt!=''){if(url.substring(0,1)=='*'){r=' '+txtbefore+' <span class="click" onclick="owin(\''+createTheDictUrl(url.substring(1),escape_apostrophes(trm))+'\');">'+txt+'</span> '}else{r=' '+txtbefore+' <a href="'+createTheDictUrl(url,trm)+'" target="ru" onclick="showRightFrames();">'+txt+'</a> '}}
+function createTheDictLink(u,w,t,b){let url=u.trim();const trm=w.trim();const txt=t.trim();const txtbefore=b.trim();let r='';if(url==''||txt==''){return r}
+if(url.startsWith("libretranslate ")){url=url.substring("libretranslate ".length)}
+if(url.substring(0,1)=='*'){r=' '+txtbefore+' <span class="click" onclick="owin(\''+createTheDictUrl(url.substring(1),escape_apostrophes(trm))+'\');">'+txt+'</span> '}else{r=' '+txtbefore+' <a href="'+createTheDictUrl(url,trm)+'" target="ru" onclick="showRightFrames();">'+txt+'</a> '}
 return r}
-function createSentLookupLink(torder,txid,url,txt){var url=url.trim();var txt=txt.trim();let r='';if(url==''||txt==''){return r}
-if(url.substring(0,8)=='*http://'||url.substring(0,9)=='*https://'){r=' <span class="click" onclick="owin(\'trans.php?x=1&i='+torder+'&t='+txid+'\');">'+txt+'</span> '}else if(url.substring(0,7)=='http://'||url.substring(0,8)=='https://'){r=' <a href="trans.php?x=1&i='+torder+'&t='+txid+'" target="ru" onclick="showRightFrames();">'+txt+'</a> '}
+function createSentLookupLink(torder,txid,url,txt){url=url.trim();txt=txt.trim();let r='';const target_url='trans.php?x=1&i='+torder+'&t='+txid;if(url==''||txt==''){return r}
+if(url.startsWith("libretranslate ")){url=url.substring("libretranslate ".length)}
+if(url.startsWith('*http://')||url.startsWith('*https://')){r=' <span class="click" onclick="owin(\''+target_url+'\');">'+txt+'</span> '}else if(url.startsWith('http://')||url.startsWith('https://')){r=' <a href="'+target_url+'" target="ru" onclick="showRightFrames();">'+txt+'</a> '}
 return r}
 function escape_html_chars(s){return s.replace(/&/g,'%AMP%').replace(/</g,'&#060;').replace(/>/g,'&#062;').replace(/"/g,'&#034;').replace(/'/g,'&#039;').replace(/%AMP%/g,'&#038;').replace(/\x0d/g,'<br />')}
 function escape_apostrophes(s){return s.replace(/'/g,'\\\'')}

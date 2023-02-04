@@ -277,8 +277,8 @@ function run_overlib_test(
   '" target="ro" onclick="showRightFrames();">Edit term</a><br />' +
     createTheDictLink(wblink1, txt, 'Dict1', 'Lookup Term: ') +
     createTheDictLink(wblink2, txt, 'Dict2', '') +
-    createTheDictLink(wblink3, txt, 'GTr', '') +
-    createTheDictLink(wblink3, sent, 'GTr', '<br />Lookup Sentence:');
+    createTheDictLink(wblink3, txt, 'Trans', '') +
+    createTheDictLink(wblink3, sent, 'Trans', '<br />Lookup Sentence:');
 
   return overlib(overlib_string, CAPTION, 'Got it?');
 }
@@ -319,7 +319,7 @@ function make_overlib_link_new_multiword (txid, torder, multi_words, rtl) {
 }
 
 /**
- * Make link to translations thourgh dictionaries or all sentence lookup.
+ * Make link to translations through dictionaries or all sentences lookup.
  * 
  * @param {string} wblink1 Dictionary 1 URI
  * @param {string} wblink2 Dictionary 2 URI
@@ -329,14 +329,14 @@ function make_overlib_link_new_multiword (txid, torder, multi_words, rtl) {
  * @param {int}    torder 
  * @returns {string}
  */
-function make_overlib_link_wb (wblink1, wblink2, wblink3, txt, txid, torder) {
+function make_overlib_link_wb(wblink1, wblink2, wblink3, txt, txid, torder) {
   let s =
 	createTheDictLink(wblink1, txt, 'Dict1', 'Lookup Term: ') +
 	createTheDictLink(wblink2, txt, 'Dict2', '') +
-	createTheDictLink(wblink3, txt, 'GTr', '');
+	createTheDictLink(wblink3, txt, 'Trans', '');
   if (torder > 0 && txid > 0) {
     s += '<br />Lookup Sentence: ' + 
-    createSentLookupLink(torder, txid, wblink3, 'GTr');
+    createSentLookupLink(torder, txid, wblink3, 'Trans');
   }
   return s;
 }
@@ -356,9 +356,9 @@ function make_overlib_link_wbnl (wblink1, wblink2, wblink3, txt, txid, torder) {
   let s =
 	createTheDictLink(wblink1, txt, 'Dict1', 'Term: ') +
 	createTheDictLink(wblink2, txt, 'Dict2', '') +
-	createTheDictLink(wblink3, txt, 'GTr', '');
+	createTheDictLink(wblink3, txt, 'Trans', '');
   if (torder > 0 && txid > 0) {
-    s += ' | Sentence: ' + createSentLookupLink(torder, txid, wblink3, 'GTr');
+    s += ' | Sentence: ' + createSentLookupLink(torder, txid, wblink3, 'Trans');
   }
   return s;
 }
@@ -377,9 +377,9 @@ function make_overlib_link_wbnl2 (wblink1, wblink2, wblink3, txt, sent) {
   let s = 
   createTheDictLink(wblink1, txt, 'Dict1', 'Term: ') +
 	createTheDictLink(wblink2, txt, 'Dict2', '') +
-	createTheDictLink(wblink3, txt, 'GTr', '');
+	createTheDictLink(wblink3, txt, 'Trans', '');
   if (sent != '') {
-    s += createTheDictLink(wblink3, sent, 'GTr', ' | Sentence:');
+    s += createTheDictLink(wblink3, sent, 'Trans', ' | Sentence:');
   }
   return s;
 }
@@ -768,9 +768,21 @@ function translateWord3 (url, word) {
  * 
  * @param {string} wblink3 Google Translate Dictionary URL
  * @returns {string} Language name
+ * 
+ * @since 2.7.0 Also works with a LibreTranslate URL
  */
 function getLangFromDict(wblink3) {
-  return wblink3.replace(/.*[?&]sl=([a-zA-Z\-]*)(&.*)*$/, "$1");
+  let dictUrl, urlParams;
+  if (wblink3.startsWith("libretranslate ")) {
+    // Use LibreTranslate
+    dictUrl = new URL(wblink3.substring("libretranslate ".length));
+    urlParams = new URLSearchParams(dictUrl.search);
+    return urlParams.get("source") || "";
+  }
+  // Fallback to Google Translate
+    dictUrl = new URL(wblink3);
+    urlParams = new URLSearchParams(dictUrl.search);
+  return urlParams.get("sl") || "";
 }
 
 /**
@@ -896,22 +908,26 @@ function createTheDictUrl (u, w) {
  * @returns {string} HTML-formatted link
  */
 function createTheDictLink (u, w, t, b) {
-  const url = u.trim();
+  let url = u.trim();
   const trm = w.trim();
   const txt = t.trim();
   const txtbefore = b.trim();
   let r = '';
-  if (url != '' && txt != '') {
-    if (url.substring(0, 1) == '*') {
-      r = ' ' + txtbefore +
-			' <span class="click" onclick="owin(\'' 
-      + createTheDictUrl(url.substring(1), escape_apostrophes(trm)) 
-      + '\');">' + txt + '</span> ';
-    } else {
-      r = ' ' + txtbefore +
-			' <a href="' + createTheDictUrl(url, trm) + 
-      '" target="ru" onclick="showRightFrames();">' + txt + '</a> ';
-    }
+  if (url == '' || txt == '') {
+    return r;
+  }
+  if (url.startsWith("libretranslate ")) {
+    url = url.substring("libretranslate ".length);
+  }
+  if (url.substring(0, 1) == '*') {
+    r = ' ' + txtbefore +
+    ' <span class="click" onclick="owin(\'' 
+    + createTheDictUrl(url.substring(1), escape_apostrophes(trm)) 
+    + '\');">' + txt + '</span> ';
+  } else {
+    r = ' ' + txtbefore +
+    ' <a href="' + createTheDictUrl(url, trm) + 
+    '" target="ru" onclick="showRightFrames();">' + txt + '</a> ';
   }
   return r;
 }
@@ -919,24 +935,28 @@ function createTheDictLink (u, w, t, b) {
 /**
  * Create a sentence lookup link.
  * 
- * @param {*} torder 
- * @param {*} txid 
- * @param {string} url Google translate URL 
- * @param {string} txt Word text
+ * @param {int}    torder Text order 
+ * @param {int}    txid   Text ID
+ * @param {string} url    Translator URL 
+ * @param {string} txt    Word text
  * @returns {string} HTML-formatted link.
  */
 function createSentLookupLink (torder, txid, url, txt) {
-  var url = url.trim();
-  var txt = txt.trim();
+  url = url.trim();
+  txt = txt.trim();
   let r = '';
+  const target_url = 'trans.php?x=1&i=' + torder + '&t=' + txid;
   if (url == '' || txt == '') {
     return r;
   }
-  if (url.substring(0, 8) == '*http://' || url.substring(0, 9) == '*https://') {
-    r = ' <span class="click" onclick="owin(\'trans.php?x=1&i=' + torder + 
-    '&t=' + txid + '\');">' + txt + '</span> ';
-  } else if (url.substring(0, 7) == 'http://' || url.substring(0, 8) == 'https://') {
-    r = ' <a href="trans.php?x=1&i=' + torder + '&t=' + txid + 
+  if (url.startsWith("libretranslate ")) {
+    url = url.substring("libretranslate ".length);
+  }
+  if (url.startsWith('*http://') || url.startsWith('*https://')) {
+    r = ' <span class="click" onclick="owin(\'' + target_url + '\');">' + 
+    txt + '</span> ';
+  } else if (url.startsWith('http://') || url.startsWith('https://')) {
+    r = ' <a href="' + target_url + 
     '" target="ru" onclick="showRightFrames();">' + txt + '</a> ';
   }
   return r;
