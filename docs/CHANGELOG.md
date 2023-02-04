@@ -34,6 +34,7 @@ because it was useless. This information is now displayed on the welcome page.
 * When creating a new language, the language wizard do no longer display in a pop-up bu in the main window.
 * Updated [hoverIntent jQuery Plug-in](http://briancherne.github.io/jquery-hoverIntent/)
 from 1.8.0 to 1.10.2. This brings some bug fixes.
+* "To DO" changed to a more explicit "Unknown words" in text header.
 
 ### Fixed
 

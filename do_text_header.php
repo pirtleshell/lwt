@@ -138,7 +138,7 @@ function do_settings($textid): void
     ?>
 <div class="flex-spaced">
     <div>
-        TO DO:
+        Unknown words:
         <span id="learnstatus"><?php echo texttodocount2($textid); ?></span>
     </div>
     <div 
