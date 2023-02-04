@@ -5,7 +5,7 @@ require_once 'inc/session_utility.php';
 $tid = $_REQUEST['tid'];
 $sl = null;
 $tl = null;
-if(isset($_REQUEST["sl"])) {
+if (isset($_REQUEST["sl"])) {
     $sl=$_REQUEST["sl"];
     $tl=$_REQUEST["tl"];
     setcookie("googtrans", '/'.$sl.'/'.$tl, time() + 60, "/");
@@ -99,7 +99,7 @@ if (isset($_REQUEST['term'])) {
 } else {
     pagestart_nobody('Translate New Words');
 }
-if(isset($pos)) {
+if (isset($pos)) {
     $cnt = 0;
     $offset = '';
     $limit = (int)getSettingWithDefault('set-ggl-translation-per-page') + 1;
@@ -113,37 +113,31 @@ if(isset($pos)) {
     $wb3 = isset($record['LgGoogleTranslateURI']) ? $record['LgGoogleTranslateURI'] : "";
     ?>
 <style>
-    span.dict1,span.dict2,span.dict3 {
-        opacity:0.1;
+    .dict {
         cursor: pointer;
     }
-    .dict{
-        position:absolute;
-        z-index:10;
-        right:0;
-        top:0px;
-    }
-    span.dict1.hover,span.dict2.hover,span.dict3.hover {
+
+    .dict1:hover, .dict2:hover, .dict3:hover {
         opacity:1;
         color:red;
-        background-color:#666;
-        border-radius:2px;
     }
+
     input[name="WoTranslation"] {
         border: 1px solid red;
     }
+
     .del_trans{
-        position:absolute;
-        top:0px;
-        right:0px;
-        cursor:pointer;
+        cursor: pointer;
+        float: right;
     }
+
     .del_trans:after{
-        content:url(icn/broom.png);
-        opacity:0.2;
+        content: url(icn/broom.png);
+        opacity: 0.2;
     }
+
     .del_trans:hover:after{
-        opacity:1;
+        opacity: 1;
     }
 </style>
 <script type="text/javascript" src="js/jquery.hoverIntent.js" charset="utf-8"></script>
@@ -209,31 +203,18 @@ $(window).load(function() {
                 );
             });
             $('.term').each(function(){
-                txt=$(this).text();
-                $(this).parent().css('position','relative');
+                txt = $(this).text();
+                $(this).parent().css('position', 'relative');
                 $(this).after(
                     '<div class="dict">' +
-                    // Untested code
                      (WBLINK1 ? '<span class="dict1">D1</span>' : '') +
                      (WBLINK2 ? '<span class="dict2">D2</span>' : '') +
-                     (WBLINK1 ? '<span class="dict3">GTr</span>' : '') + // Use WBLINK3 instead?
-                    '</div'
+                     (WBLINK3 ? '<span class="dict3">GTr</span>' : '') +
+                    '</div>'
                 );
-                /* Previous version of the code 
-                $(this).after('<div class="dict"><?php 
-                if(!empty($wb1)) { 
-                    echo '<span class="dict1">D1</span>'; 
-                }
-                if(!empty($wb2)) { 
-                    echo '<span class="dict2">D2</span>'; 
-                }
-                if(!empty($wb1)) {
-                    echo '<span class="dict3">GTr</span>'; 
-                } 
-                ?></div>');*/            
             });
             $('iframe,#google_translate_element').remove();
-            selectToggle(true,'form1');
+            selectToggle(true, 'form1');
             $('[name^=term]').prop('disabled', false);
             clearInterval(myVar);
         }
