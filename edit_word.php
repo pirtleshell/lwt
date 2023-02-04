@@ -385,7 +385,15 @@ if (isset($_REQUEST['op'])) {
         const autoTranslate = function () {
             if (TRANS_URI.startsWith("libretranslate ")) {
                 const term = $('#wordfield').val();
-                getLibreTranslateTranslation(TRANS_URI, term, LANG_SHORT, 'en')
+                const uri_trimmed = TRANS_URI.substr("libretranslate ".length);
+                urlParams = new URLSearchParams(uri_trimmed);
+                uriBase = uri_trimmed.substr(0, uri_trimmed.indexOf("/?"));
+                getLibreTranslateTranslation(
+                    "libretranslate " + uriBase, term, 
+                    (urlParams.has("source") ? 
+                    urlParams.get("source") : LANG_SHORT), 
+                    urlParams.get("target")
+                )
                 .then(function (translation) {
                     newword.WoTranslation.value = translation;
                 });

@@ -156,5 +156,7 @@ async function getLibreTranslateTranslation(api_parts, text, lang, dest) {
 	if (parts[0] != "libretranslate") {
 		throw 'Translation API not supported: ' + parts[0] + "!";
 	} 
-	return getLibreTranslateTranslationBase(text, lang, dest, key=parts[2], parts[1])
+	return getLibreTranslateTranslationBase(
+		text, lang, dest, key=parts[2], parts[1] + "/translate"
+	);
 }

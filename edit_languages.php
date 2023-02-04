@@ -383,8 +383,6 @@ function edit_language_form($language)
      * Handles any change on multi-words translate mode.
      */
     function multiWordsTranslateChange(value) {
-        const libretranslate = "libretranslate http://localhost:5000/translate";
-
         let result;
         let uses_key = false;
         switch (value) {
@@ -392,7 +390,7 @@ function edit_language_form($language)
                 result = GGTRANSLATE;
                 break;
             case "libretranslate":
-                result = libretranslate;
+                result = LIBRETRANSLATE;
                 uses_key = true;
                 break;
             case "ggl":
@@ -691,13 +689,26 @@ function edit_languages_new()
     <script type="text/javascript" charset="utf-8">
 
         const LANGDEFS = <?php echo json_encode($langDefs); ?>;
+        const l1 = $('#l1').val();
+        const l2 = $('#l2').val();
+        const trans_query = {
+            source: LANGDEFS[l2][1],
+            dest: LANGDEFS[l1][1]
+        };
 
         /// Execute the wizard
         function wizard_go() {
-            const l1 = $('#l1').val();
-            const l2 = $('#l2').val();
-            GGTRANSLATE = '*http://translate.google.com/?ie=UTF-8&sl=' + 
-            LANGDEFS[l2][1] + '&tl=' + LANGDEFS[l1][1] + '&text=###';
+            GGTRANSLATE = '*http://translate.google.com/?' + $.param({
+                ie: "UTF-8",
+                sl: trans_query.source,
+                tl: trans_query.dest,
+                text: "###"
+            });
+            LIBRETRANSLATE = "http://localhost:5000/?" + $.param({
+                source: trans_query.source,
+                target: trans_query.dest,
+                q: "###"
+            });
             if (l1 == '') {
                 alert ('Please choose your native language (L1)!');
                 return;

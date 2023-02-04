@@ -2699,9 +2699,21 @@ function createTheDictLink($u, $t)
     return $r;
 }
 
-// -------------------------------------------------------------
 
-function createDictLinksInEditWin($lang,$word,$sentctljs,$openfirst): string 
+/**
+ * Returns dictionnary links formatted as HTML.
+ * 
+ * @param int    $lang      Language ID
+ * @param string $word  
+ * @param string $sentctljs 
+ * @param bool   $openfirst True if we should open right frames with translation
+ *                          first
+ * 
+ * @return string HTML-formatted interface
+ * 
+ * @global string $tbpref Database table prefix
+ */
+function createDictLinksInEditWin($lang, $word, $sentctljs, $openfirst): string 
 {
     global $tbpref;
     $sql = 'SELECT LgDict1URI, LgDict2URI, LgGoogleTranslateURI 
@@ -2711,7 +2723,8 @@ function createDictLinksInEditWin($lang,$word,$sentctljs,$openfirst): string
     $record = mysqli_fetch_assoc($res);
     $wb1 = isset($record['LgDict1URI']) ? $record['LgDict1URI'] : "";
     $wb2 = isset($record['LgDict2URI']) ? $record['LgDict2URI'] : "";
-    $wb3 = isset($record['LgGoogleTranslateURI']) ? $record['LgGoogleTranslateURI'] : "";
+    $wb3 = isset($record['LgGoogleTranslateURI']) ? 
+    $record['LgGoogleTranslateURI'] : "";
     mysqli_free_result($res);
     $r ='';
     if ($openfirst) {
@@ -2726,24 +2739,42 @@ function createDictLinksInEditWin($lang,$word,$sentctljs,$openfirst): string
         $r .= makeOpenDictStr(createTheDictLink($wb2, $word), "Dict2"); 
     } 
     if ($wb3 != "") { 
-        $r .= makeOpenDictStr(createTheDictLink($wb3, $word), "GTr") . ' | Sent.: ' . 
-        makeOpenDictStrDynSent($wb3, $sentctljs, "GTr"); 
+        $r .= makeOpenDictStr(createTheDictLink($wb3, $word), "Translator") . 
+        ' | ' . 
+        makeOpenDictStrDynSent($wb3, $sentctljs, "Translate sentence"); 
     } 
     return $r;
 }
 
-// -------------------------------------------------------------
-
+/**
+ * Create a dictionnary open URL from an pseudo-URL
+ * 
+ * @param string $url A string containing at least a URL
+ *                    * Starts with a '*': open in pop-up window
+ *                    * Starts with a 'libretranslate': open with libretranslate
+ *                    * Otherwise open in iframe
+ * @param string $txt Clickable text to display
+ * 
+ * @return string HTML-formatted string
+ */
 function makeOpenDictStr($url, $txt): string 
 {
     $r = '';
-    if ($url != '' && $txt != '') {
-        if(substr($url, 0, 1) == '*') {
-            $r = ' <span class="click" onclick="owin(' . prepare_textdata_js(substr($url, 1)) . ');">' . tohtml($txt) . '</span> ';
-        } 
-        else {
-            $r = ' <a href="' . $url . '" target="ru" onclick="showRightFrames();">' . tohtml($txt) . '</a> ';
-        } 
+    if ($url == '' || $txt == '') {
+        return $r;
+    }
+    if (str_starts_with($url, 'libretranslate ')) {
+        $url = str_replace('libretranslate ', '', $url);
+    }
+    if (substr($url, 0, 1) == '*') {
+        $r = ' <span class="click" onclick="owin(' . 
+        prepare_textdata_js(substr($url, 1)) . ');">' . 
+        tohtml($txt) . 
+        '</span> ';
+    } else {
+        $r = ' <a href="' . $url . 
+        '" target="ru" onclick="showRightFrames();">' . 
+        tohtml($txt) . '</a> ';
     }
     return $r;
 }
@@ -2764,33 +2795,56 @@ function makeOpenDictStrJS($url): string
     return $r;
 }
 
-// -------------------------------------------------------------
-
+/**
+ * Create a dictionnary open URL from an pseudo-URL
+ * 
+ * @param string $url       A string containing at least a URL
+ *                          * Starts with a '*': open in pop-up window
+ *                          * Starts with a 'libretranslate': open with libretranslate
+ *                          * Otherwise open in iframe
+ * @param string $sentctljs Clickable text to display
+ * @param string $txt       Clickable text to display
+ * 
+ * @return string HTML-formatted string
+ */
 function makeOpenDictStrDynSent($url, $sentctljs, $txt): string 
 {
     $r = '';
     if ($url != '') {
         if (substr($url, 0, 7) == 'ggl.php') {
             $url = str_replace('?', '?sent=1&', $url);
+        } else if (str_starts_with($url, 'libretranslate ')) {
+            $url = str_replace('libretranslate ', '', $url);
         }
-        if(substr($url, 0, 1) == '*') {
-            $r = '<span class="click" onclick="translateSentence2(' . prepare_textdata_js(substr($url, 1)) . ',' . $sentctljs . ');">' . tohtml($txt) . '</span>';
-        } 
-        else {
-            $r = '<span class="click" onclick="translateSentence(' . prepare_textdata_js($url) . ',' . $sentctljs . ');">' . tohtml($txt) . '</span>';
+        if (substr($url, 0, 1) == '*') {
+            $r = '<span class="click" onclick="translateSentence2(' . 
+            prepare_textdata_js(substr($url, 1)) . ',' . $sentctljs . ');">' . 
+            tohtml($txt) . '</span>';
+        } else {
+            $r = '<span class="click" onclick="translateSentence(' . 
+            prepare_textdata_js($url) . ',' . $sentctljs . ');">' . 
+            tohtml($txt) . '</span>';
         } 
     }
     return $r;
 }
 
-// -------------------------------------------------------------
-
-function createDictLinksInEditWin2($lang,$sentctljs,$wordctljs): string 
+/**
+ * Returns dictionnary links formatted as HTML.
+ * 
+ * @param int    $lang      Language ID
+ * @param string $sentctljs 
+ * @param string $wordctljs  
+ * 
+ * @return string HTM+-formatted interface
+ * 
+ * @global string $tbpref Database table prefix
+ */
+function createDictLinksInEditWin2($lang, $sentctljs, $wordctljs): string 
 {
     global $tbpref;
-    $sql = 'SELECT LgDict1URI, LgDict2URI, LgGoogleTranslateURI 
-    FROM ' . $tbpref . 'languages 
-    WHERE LgID = ' . $lang;
+    $sql = "SELECT LgDict1URI, LgDict2URI, LgGoogleTranslateURI 
+    FROM {$tbpref}languages WHERE LgID = $lang";
     $res = do_mysqli_query($sql);
     $record = mysqli_fetch_assoc($res);
     $wb1 = isset($record['LgDict1URI']) ? $record['LgDict1URI'] : "";
@@ -2798,29 +2852,36 @@ function createDictLinksInEditWin2($lang,$sentctljs,$wordctljs): string
         $wb1 = substr($wb1, 1); 
     }
     $wb2 = isset($record['LgDict2URI']) ? $record['LgDict2URI'] : "";
-    if(substr($wb2, 0, 1) == '*') {
+    if (substr($wb2, 0, 1) == '*') {
         $wb2 = substr($wb2, 1); 
     }
-    $wb3 = isset($record['LgGoogleTranslateURI']) ? $record['LgGoogleTranslateURI'] : "";
-    if(substr($wb3, 0, 1) == '*') {
+    $wb3 = isset($record['LgGoogleTranslateURI']) ? 
+    $record['LgGoogleTranslateURI'] : "";
+    if (substr($wb3, 0, 1) == '*') {
         $wb3 = substr($wb3, 1); 
     }
     mysqli_free_result($res);
-    $r ='';
-    $r .= 'Lookup Term: ';
-    $r .= '<span class="click" onclick="translateWord2(' . prepare_textdata_js($wb1) . ',' . $wordctljs . ');">Dict1</span> ';
+    $r = 'Lookup Term: 
+    <span class="click" onclick="translateWord2(' . prepare_textdata_js($wb1) .
+    ',' . $wordctljs . ');">Dict1</span> ';
     if ($wb2 != "") { 
-        $r .= '<span class="click" onclick="translateWord2(' . prepare_textdata_js($wb2) . ',' . $wordctljs . ');">Dict2</span> '; 
+        $r .= '<span class="click" onclick="translateWord2(' . 
+        prepare_textdata_js($wb2) . ',' . $wordctljs . ');">Dict2</span> '; 
     }
     if ($wb3 != "") { 
-        $r .= '<span class="click" onclick="translateWord2(' . prepare_textdata_js($wb3) . ',' . $wordctljs . ');">GTr</span> | Sent.: <span class="click" onclick="translateSentence2(' . prepare_textdata_js((substr($wb3, 0, 7) == 'ggl.php')?str_replace('?', '?sent=1&', $wb3):$wb3) . ',' . $sentctljs . ');">GTr</span>'; 
+        $r .= '<span class="click" onclick="translateWord2(' . 
+        prepare_textdata_js($wb3) . ',' . $wordctljs . ');">Translator</span>
+         | <span class="click" onclick="translateSentence2(' . 
+         prepare_textdata_js((substr($wb3, 0, 7) == 'ggl.php') ? 
+         str_replace('?', '?sent=1&', $wb3) : $wb3) . ',' . $sentctljs . 
+         ');">Translate sentence</span>'; 
     }
     return $r;
 }
 
 // -------------------------------------------------------------
 
-function makeDictLinks($lang,$wordctljs): string 
+function makeDictLinks($lang, $wordctljs): string 
 {
     global $tbpref;
     $sql = 'SELECT LgDict1URI, LgDict2URI, LgGoogleTranslateURI 
@@ -2828,25 +2889,29 @@ function makeDictLinks($lang,$wordctljs): string
     $res = do_mysqli_query($sql);
     $record = mysqli_fetch_assoc($res);
     $wb1 = isset($record['LgDict1URI']) ? $record['LgDict1URI'] : "";
-    if(substr($wb1, 0, 1) == '*') { 
+    if (substr($wb1, 0, 1) == '*') { 
         $wb1 = substr($wb1, 1); 
     }
     $wb2 = isset($record['LgDict2URI']) ? $record['LgDict2URI'] : "";
-    if(substr($wb2, 0, 1) == '*') { 
+    if (substr($wb2, 0, 1) == '*') { 
         $wb2 = substr($wb2, 1); 
     }
-    $wb3 = isset($record['LgGoogleTranslateURI']) ? $record['LgGoogleTranslateURI'] : "";
-    if(substr($wb3, 0, 1) == '*') { 
+    $wb3 = isset($record['LgGoogleTranslateURI']) ? 
+    $record['LgGoogleTranslateURI'] : "";
+    if (substr($wb3, 0, 1) == '*') { 
         $wb3 = substr($wb3, 1); 
     }
     mysqli_free_result($res);
     $r ='<span class="smaller">';
-    $r .= '<span class="click" onclick="translateWord3(' . prepare_textdata_js($wb1) . ',' . $wordctljs . ');">[1]</span> ';
+    $r .= '<span class="click" onclick="translateWord3(' . 
+    prepare_textdata_js($wb1) . ',' . $wordctljs . ');">[1]</span> ';
     if ($wb2 != "") { 
-        $r .= '<span class="click" onclick="translateWord3(' . prepare_textdata_js($wb2) . ',' . $wordctljs . ');">[2]</span> '; 
+        $r .= '<span class="click" onclick="translateWord3(' . 
+        prepare_textdata_js($wb2) . ',' . $wordctljs . ');">[2]</span> '; 
     }
     if ($wb3 != "") { 
-        $r .= '<span class="click" onclick="translateWord3(' . prepare_textdata_js($wb3) . ',' . $wordctljs . ');">[G]</span>'; 
+        $r .= '<span class="click" onclick="translateWord3(' . 
+        prepare_textdata_js($wb3) . ',' . $wordctljs . ');">[G]</span>'; 
     } 
     $r .= '</span>';
     return $r;
@@ -2878,24 +2943,33 @@ function createDictLinksInEditWin3($lang,$sentctljs,$wordctljs): string
         $f2 = 'translateWord(' . prepare_textdata_js($wb2); 
     }
 
-    $wb3 = isset($record['LgGoogleTranslateURI']) ? $record['LgGoogleTranslateURI'] : "";
+    $wb3 = isset($record['LgGoogleTranslateURI']) ? 
+    $record['LgGoogleTranslateURI'] : "";
     if(substr($wb3, 0, 1) == '*') {
         $f3 = 'translateWord2(' . prepare_textdata_js(substr($wb3, 1));
         $f4 = 'translateSentence2(' . prepare_textdata_js(substr($wb3, 1));
     } else {
         $f3 = 'translateWord(' . prepare_textdata_js($wb3);
-        $f4 = 'translateSentence(' . prepare_textdata_js((substr($wb3, 0, 7) == 'ggl.php')?str_replace('?', '?sent=1&', $wb3):$wb3);
+        $f4 = 'translateSentence(' . prepare_textdata_js(
+            (substr($wb3, 0, 7) == 'ggl.php') ? 
+            str_replace('?', '?sent=1&', $wb3) : $wb3
+        );
     }
 
     mysqli_free_result($res);
     $r ='';
     $r .= 'Lookup Term: ';
-    $r .= '<span class="click" onclick="' . $f1 . ',' . $wordctljs . ');">Dict1</span> ';
+    $r .= '<span class="click" onclick="' . $f1 . ',' . $wordctljs . ');">
+    Dict1</span> ';
     if ($wb2 != "") { 
-        $r .= '<span class="click" onclick="' . $f2 . ',' . $wordctljs . ');">Dict2</span> '; 
+        $r .= '<span class="click" onclick="' . $f2 . ',' . $wordctljs . ');">
+        Dict2</span> '; 
     }
     if ($wb3 != "") { 
-        $r .= '<span class="click" onclick="' . $f3 . ',' . $wordctljs . ');">GTr</span> | Sent.: <span class="click" onclick="' . $f4 . ',' . $sentctljs . ');">GTr</span>'; 
+        $r .= '<span class="click" onclick="' . $f3 . ',' . $wordctljs . ');">
+        Translator</span> | 
+        <span class="click" onclick="' . $f4 . ',' . $sentctljs . ');">
+        Translate sentence</span>'; 
     } 
     return $r;
 }
@@ -2904,14 +2978,16 @@ function createDictLinksInEditWin3($lang,$sentctljs,$wordctljs): string
 
 function checkTest($val, $name): string 
 {
-    if (! isset($_REQUEST[$name])) { return ' '; 
+    if (!isset($_REQUEST[$name])) { 
+        return ' '; 
     }
-    if (! is_array($_REQUEST[$name])) { return ' '; 
+    if (!is_array($_REQUEST[$name])) { 
+        return ' '; 
     }
-    if (in_array($val, $_REQUEST[$name])) { return ' checked="checked" '; 
+    if (in_array($val, $_REQUEST[$name])) { 
+        return ' checked="checked" '; 
     }
-    else { return ' '; 
-    }
+    return ' ';
 }
 
 // -------------------------------------------------------------
