@@ -268,8 +268,11 @@ function translateSentence2(url,sentctl){if(typeof sentctl!=='undefined'&&url!='
 function translateWord(url,wordctl){if(typeof wordctl!=='undefined'&&url!=''){const text=wordctl.value;if(typeof text==='string'){showRightFrames(undefined,createTheDictUrl(url,text))}}}
 function translateWord2(url,wordctl){if(typeof wordctl!=='undefined'&&url!=''){const text=wordctl.value;if(typeof text==='string'){owin(createTheDictUrl(url,text))}}}
 function translateWord3(url,word){owin(createTheDictUrl(url,word))}
-function getLangFromDict(wblink3){let dictUrl,urlParams;if(wblink3.startsWith("libretranslate ")){dictUrl=new URL(wblink3.substring("libretranslate ".length));urlParams=new URLSearchParams(dictUrl.search);return urlParams.get("source")||""}
-dictUrl=new URL(wblink3);urlParams=new URLSearchParams(dictUrl.search);return urlParams.get("sl")||""}
+function getLangFromDict(wblink3){let dictUrl,urlParams;let libretranslate=!1;if(wblink3.trim()==''){return''}
+if(wblink3.startsWith("libretranslate ")){wblink3=wblink3.substring("libretranslate ".length).trim();libretranslate=!0}
+if(wblink3.startsWith('*')){wblink3=wblink3.substring(1)}
+dictUrl=new URL(wblink3);urlParams=new URLSearchParams(dictUrl.search);if(libretranslate){return urlParams.get("source")||""}
+return urlParams.get("sl")||""}
 function make_tooltip(word,trans,roman,status){const nl='\x0d';let title=word;if(roman!=''){if(title!='')title+=nl;title+='▶ '+roman}
 if(trans!=''&&trans!='*'){if(title!='')title+=nl;title+='▶ '+trans}
 if(title!='')title+=nl;title+='▶ '+getStatusName(status)+' ['+getStatusAbbr(status)+']';return title}

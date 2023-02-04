@@ -773,15 +773,25 @@ function translateWord3 (url, word) {
  */
 function getLangFromDict(wblink3) {
   let dictUrl, urlParams;
+  let libretranslate = false;
+  if (wblink3.trim() == '') {
+    return '';
+  }
   if (wblink3.startsWith("libretranslate ")) {
     // Use LibreTranslate
-    dictUrl = new URL(wblink3.substring("libretranslate ".length));
-    urlParams = new URLSearchParams(dictUrl.search);
+    wblink3 = wblink3.substring("libretranslate ".length).trim();
+    libretranslate = true;
+  }
+  // Replace pop-up marker '*'
+  if (wblink3.startsWith('*')) {
+    wblink3 = wblink3.substring(1);
+  }
+  dictUrl = new URL(wblink3);
+  urlParams = new URLSearchParams(dictUrl.search);
+  if (libretranslate) {
     return urlParams.get("source") || "";
   }
   // Fallback to Google Translate
-    dictUrl = new URL(wblink3);
-    urlParams = new URLSearchParams(dictUrl.search);
   return urlParams.get("sl") || "";
 }
 
@@ -793,7 +803,7 @@ function getLangFromDict(wblink3) {
  * @param {string} trans  Translation of the word
  * @param {string} roman  Romanized version 
  * @param {int}    status Learning status of the word 
- * @returns {string} Toottip for this word
+ * @returns {string} Tooltip for this word
  */
 function make_tooltip (word, trans, roman, status) {
   const nl = '\x0d';
