@@ -32,6 +32,8 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 because it was useless. This information is now displayed on the welcome page.
 * Access to the database prefix edition at ``start.php`` was reviewed and simplified. It is still considered a legacy feature.
 * When creating a new language, the language wizard do no longer display in a pop-up bu in the main window.
+* Updated [hoverIntent jQuery Plug-in](http://briancherne.github.io/jquery-hoverIntent/)
+from 1.8.0 to 1.10.2. This brings some bug fixes.
 
 ### Fixed
 
