@@ -3327,7 +3327,7 @@ function texttodocount($text): string
 }
 
 /**
- * Print the number of words left to do in this text.
+ * Return the number of words left to do in this text.
  *
  * @param string|int $textid Text ID
  *
@@ -3347,8 +3347,8 @@ function texttodocount2($textid): string
         WHERE Ti2WordCount=1 AND Ti2WoID=0 AND Ti2TxID=$textid"
     );
     if ($c <= 0) {
-        return '<span title="No unknown word remaining" class="status0" 
-        style="padding: 0 5px; margin: 0 5px;">' . 
+        return '<span title="No unknown word remaining" class="status0" ' . 
+        'style="padding: 0 5px; margin: 0 5px;">' . 
         $c . '</span>'; 
     }
     $show_buttons = getSettingWithDefault('set-words-to-do-buttons');
@@ -3367,18 +3367,20 @@ function texttodocount2($textid): string
         $tl = $sl = "";
     }
     
-    $res = '<span title="Number of unknown words" class="status0" 
-    style="padding: 0 5px; margin: 0 5px;">' . $c . '</span>
-    <img src="icn/script-import.png" 
-    onclick="showRightFrames(\'bulk_translate_words.php?tid=' . $textid . 
-    '&offset=0&sl=' . $sl . '&tl=' . $tl . '\');" 
-    style="cursor: pointer; vertical-align:middle" title="Lookup New Words" 
-    alt="Lookup New Words" />';
+    $res = '<span title="Number of unknown words" class="status0" ' . 
+    'style="padding: 0 5px; margin: 0 5px;">' . $c . '</span>' .
+    '<img src="icn/script-import.png" ' . 
+    'onclick="showRightFrames(\'bulk_translate_words.php?tid=' . $textid . 
+    '&offset=0&sl=' . $sl . '&tl=' . $tl . '\');" ' . 
+    'style="cursor: pointer; vertical-align:middle" title="Lookup New Words" ' .
+    'alt="Lookup New Words" />';
     if ($show_buttons != 2) {
-        $res .= '<input type="button" onclick="iknowall(' . $textid . ');" value=" Set All to Known " />'; 
+        $res .= '<input type="button" onclick="iknowall(' . $textid . 
+        ');" value="Set All to Known" />'; 
     }
     if ($show_buttons != 1) { 
-        $res .= '<input type="button" onclick="ignoreall(' . $textid . ');" value=" Ignore All " />'; 
+        $res .= '<input type="button" onclick="ignoreall(' . $textid . 
+        ');" value="Ignore All" />'; 
     }
     return $res;
 }

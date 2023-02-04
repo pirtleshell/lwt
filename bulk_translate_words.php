@@ -20,22 +20,10 @@
 
 require_once 'inc/session_utility.php';
 
-$tid = $_REQUEST['tid'];
-$sl = null;
-$tl = null;
-if (isset($_REQUEST["sl"])) {
-    $sl = $_REQUEST["sl"];
-    $tl = $_REQUEST["tl"];
-    setcookie("googtrans", '/'.$sl.'/'.$tl, time() + 60, "/");
-}
-if (isset($_REQUEST["offset"])) { 
-    $pos = $_REQUEST["offset"]; 
-}
 
 function bulk_save_terms($terms, $tid, $pos)
 {
     global $tbpref;
-    $cnt = 0;
     $sqlarr = array();
     foreach ($terms as $row) {
         $sqlarr[] =  '(' . 
@@ -54,7 +42,6 @@ function bulk_save_terms($terms, $tid, $pos)
         NOW(), ' . 
         make_score_random_insert_update('id') . 
         ')';
-        $cnt++;
     }
     $sqltext = "INSERT INTO {$tbpref}words (
         WoLgID, WoTextLC, WoText, WoStatus, WoTranslation, WoSentence, 
@@ -69,36 +56,45 @@ function bulk_save_terms($terms, $tid, $pos)
         FROM {$tbpref}words 
         where WoID > $max"
     );
-    pagestart($cnt . ' New Word' . ($cnt != 1 ? 's' : '') . ' Saved', false);
-    echo '<p id="displ_message"><img src="icn/waiting2.gif" /> Updating Texts</p>';
-    flush();
-    echo '<script type="text/javascript">var context = window.parent.document;';
-    while ($record = mysqli_fetch_assoc($res)) {
-        $hex = strToClassName(prepare_textdata($record["WoTextLC"]));
-        echo '$(".TERM',$hex,'",context)
+    ?>
+<p id="displ_message">
+    <img src="icn/waiting2.gif" /> Updating Texts
+</p>
+<script type="text/javascript">
+    const context = window.parent.document;
+    const tooltip = <?php echo json_encode($tooltip_mode == 1); ?>;
+
+    function change_term(term) {
+        $(".TERM" + term.hex, context)
         .removeClass("status0")
-        .addClass("status',$record["WoStatus"],'")
-        .addClass("word',$record["WoID"],'")
-        .attr("data_wid","',$record["WoID"],'")
-        .attr("data_status","',$record["WoStatus"],'")
-        .attr("data_trans",',prepare_textdata_js($record["WoTranslation"]),')',"\n";
-        if ($tooltip_mode == 1) { 
-            echo '.each(
-                function(){
+        .addClass("status" + term.WoStatus)
+        .addClass("word" + term.WoID)
+        .attr("data_wid", term.WoID)
+        .attr("data_status", term.WoStatus)
+        .attr("data_trans", term.translation);
+        if (tooltip) { 
+            $(".TERM" + term.hex, context).each(
+                function() {
                     this.title = make_tooltip(
-                        $(this).text(), $(this).attr(\'data_trans\'), 
-                        $(this).attr(\'data_rom\'), $(this).attr(\'data_status\')
+                        $(this).text(), $(this).attr('data_trans'), 
+                        $(this).attr('data_rom'), $(this).attr('data_status')
                     );
                 }
-            )'; 
+            );
         } else {
-            echo ".attr('title','')"; 
+            $(".TERM" + term.hex, context).attr('title', '');
         }
-        echo ";\n";
     }
-    echo "</script>";
+    <?php
+    while ($record = mysqli_fetch_assoc($res)) {
+        $record["hex"] = strToClassName(prepare_textdata($record["WoTextLC"]));
+        $record["translation"] = prepare_textdata_js($record["WoTranslation"]);
+        echo "change_term(" . json_encode($record) . ");";
+    }
+    ?>
+</script>
+    <?php
     mysqli_free_result($res);
-    flush();
     do_mysqli_query(
         "UPDATE {$tbpref}textitems2 
         JOIN {$tbpref}words 
@@ -114,19 +110,11 @@ function bulk_save_terms($terms, $tid, $pos)
     }
     echo "</script>";
     flush();
-    if (isset($pos)) {
-        $pos -= $cnt;
-    }
-    return $pos;
 }
 
-if (isset($_REQUEST['term'])) {
-    $pos = bulk_save_terms($_REQUEST['term'], $tid, $pos);
-} else {
-    pagestart_nobody('Translate New Words');
-}
 
-function bulk_do_content($tid, $sl, $tl, $pos) {
+function bulk_do_content($tid, $sl, $tl, $pos) 
+{
     global $tbpref;
     $cnt = 0;
     $offset = '';
@@ -371,8 +359,8 @@ function googleTranslateElementInit() {
         order by pos 
         limit ' . $pos . ',' . $limit
     );
-    while($record = mysqli_fetch_assoc($res)){
-        if(++$cnt<$limit) {
+    while ($record = mysqli_fetch_assoc($res)) {
+        if (++$cnt<$limit) {
             $value=tohtml($record['word']);
             echo '<tr>
             <td class="td1 center notranslate">
@@ -409,9 +397,31 @@ function googleTranslateElementInit() {
     <?php echo $offset ?>
     </form>
     <?php
+}
 
+
+$tid = $_REQUEST['tid'];
+if (isset($_REQUEST["offset"])) { 
+    $pos = $_REQUEST["offset"]; 
+}
+if (isset($_REQUEST['term'])) {
+    $cnt = sizeof($_REQUEST['term']);
+    if (isset($pos)) {
+        $pos -= $cnt;
+    }
+    pagestart($cnt . ' New Word' . ($cnt == 1 ? '' : 's') . ' Saved', false);
+    bulk_save_terms($_REQUEST['term'], $tid, $pos);
+} else {
+    pagestart_nobody('Translate New Words');
 }
 if (isset($pos)) {
+    $sl = null;
+    $tl = null;
+    if (isset($_REQUEST["sl"])) {
+        $sl = $_REQUEST["sl"];
+        $tl = $_REQUEST["tl"];
+        //setcookie("googtrans", "/$sl/$tl", time() + 60, "/");
+    }
     bulk_do_content($tid, $sl, $tl, $pos);
 }
 pageend();
