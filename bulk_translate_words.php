@@ -1,22 +1,43 @@
 <?php
 
+/**
+ * \file
+ * \brief Translate groups of words
+ * 
+ * Call: bulk_translate_words.php?....
+ *      ... tid=[textid] ... Vocabulary from this text
+ *      ... sl=[sourcelg] ... Source language (usually two letters)
+ *      ... tl=[targetlg] ... Target language (usually two letters)
+ *      ... term=[term]   ... Term to translate
+ *      ... offset=[pos]  ... An optional offset position
+ * 
+ * @package Lwt
+ * @author  LWT Project <lwt-project@hotmail.com>
+ * @license Unlicense <http://unlicense.org/>
+ * @link    https://hugofara.github.io/lwt/docs/html/bulk__translate__words_8php.html
+ * @since   1.6.1
+ */
+
 require_once 'inc/session_utility.php';
 
 $tid = $_REQUEST['tid'];
 $sl = null;
 $tl = null;
 if (isset($_REQUEST["sl"])) {
-    $sl=$_REQUEST["sl"];
-    $tl=$_REQUEST["tl"];
+    $sl = $_REQUEST["sl"];
+    $tl = $_REQUEST["tl"];
     setcookie("googtrans", '/'.$sl.'/'.$tl, time() + 60, "/");
 }
 if (isset($_REQUEST["offset"])) { 
     $pos = $_REQUEST["offset"]; 
 }
-if (isset($_REQUEST['term'])) {
+
+function bulk_save_terms($terms, $tid, $pos)
+{
+    global $tbpref;
     $cnt = 0;
     $sqlarr = array();
-    foreach ($_REQUEST['term'] as $row){
+    foreach ($terms as $row) {
         $sqlarr[] =  '(' . 
         convert_string_to_sqlsyntax($row['lg']) . ',' . 
         convert_string_to_sqlsyntax(mb_strtolower($row['text'], 'UTF-8')) . ',' . 
@@ -52,7 +73,7 @@ if (isset($_REQUEST['term'])) {
     echo '<p id="displ_message"><img src="icn/waiting2.gif" /> Updating Texts</p>';
     flush();
     echo '<script type="text/javascript">var context = window.parent.document;';
-    while ($record = mysqli_fetch_assoc($res)){
+    while ($record = mysqli_fetch_assoc($res)) {
         $hex = strToClassName(prepare_textdata($record["WoTextLC"]));
         echo '$(".TERM',$hex,'",context)
         .removeClass("status0")
@@ -96,10 +117,17 @@ if (isset($_REQUEST['term'])) {
     if (isset($pos)) {
         $pos -= $cnt;
     }
+    return $pos;
+}
+
+if (isset($_REQUEST['term'])) {
+    $pos = bulk_save_terms($_REQUEST['term'], $tid, $pos);
 } else {
     pagestart_nobody('Translate New Words');
 }
-if (isset($pos)) {
+
+function bulk_do_content($tid, $sl, $tl, $pos) {
+    global $tbpref;
     $cnt = 0;
     $offset = '';
     $limit = (int)getSettingWithDefault('set-ggl-translation-per-page') + 1;
@@ -140,7 +168,6 @@ if (isset($pos)) {
         opacity: 1;
     }
 </style>
-<script type="text/javascript" src="js/jquery.hoverIntent.js" charset="utf-8"></script>
 <script type="text/javascript">
     WBLINK1 = '<?php echo $wb1; ?>';
     WBLINK2 = '<?php echo $wb2; ?>';
@@ -148,16 +175,10 @@ if (isset($pos)) {
     $('h3,h4,title').addClass('notranslate');
 $(window).load(function() {
     $('[name="form1"]').submit(function() {
-        $('[name="WoTranslation"]').attr('name',$('[name="WoTranslation"]').attr('data_name'));
+        $('[name="WoTranslation"]').attr('name',$('[name="WoTranslation"]')
+        .attr('data_name'));
         window.parent.frames['ru'].location.href = 'empty.html';
         return true;
-    });
-
-    $('td').hoverIntent({
-        over: function() {$( this ).addClass('hover');}, 
-        out: function() {$( this ).removeClass('hover');}, 
-        interval: 150,
-        selector:"span.dict1, span.dict2, span.dict3"
     });
 
     $('td').on(
@@ -198,8 +219,9 @@ $(window).load(function() {
                 var cnt= $(this).attr('id').replace('Trans_', '');
                 $(this).addClass('notranslate')
                 .html(
-                    '<input type="text" name="term[' + cnt + '][trans]"  value="' 
-                    + txt + '" maxlength="100" size="35"></input><div class="del_trans"></div>'
+                    '<input type="text" name="term[' + cnt + '][trans]" value="' 
+                    + txt + '" maxlength="100" size="35"></input>' + 
+                    '<div class="del_trans"></div>'
                 );
             });
             $('.term').each(function(){
@@ -387,6 +409,10 @@ function googleTranslateElementInit() {
     <?php echo $offset ?>
     </form>
     <?php
+
+}
+if (isset($pos)) {
+    bulk_do_content($tid, $sl, $tl, $pos);
 }
 pageend();
 ?>
