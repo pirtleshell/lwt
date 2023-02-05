@@ -524,7 +524,7 @@ function showImportedTerms(last_update, rtl, count, page) {
 </script>
 <form name="form1" action="#" onsubmit="showImportedTerms('<?php echo $last_update; ?>', $('#recno').text(), document.form1.page.options[document.form1.page.selectedIndex].value); return false;">
 <div id="res_data">
-<table class="tab1"  cellspacing="0" cellpadding="2"></table>
+<table class="tab2" cellspacing="0" cellpadding="2"></table>
 </div>
 </form>
 <script type="text/javascript">
@@ -717,124 +717,141 @@ function upload_words_import(): void
 function upload_words_display(): void
 {
     ?>
+    <script type="text/javascript">
+        /**
+         * Show a supplementary field depending on long text import mode.
+         */
+        function updateImportMode(value) {
+            if (parseInt(value, 10) > 3) {
+                $('#imp_transl_delim').removeClass('hide');
+                $('#imp_transl_delim input').addClass('notempty');
+            } else { 
+                $('#imp_transl_delim input').removeClass('notempty');
+                $('#imp_transl_delim').addClass('hide');
+            }
+        }
+    </script>
     <form enctype="multipart/form-data" class="validate" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" >
     <table class="tab3" cellspacing="0" cellpadding="5">
-    <tr>
-        <td class="td1 center"><b>Language:</b></td>
-        <td class="td1">
-        <select name="LgID" class="notempty setfocus">
-        <?php
-        echo get_languages_selectoptions(getSetting('currentlanguage'), '[Choose...]');
-        ?>
-        </select>
-        <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /> 
-        </td>
-    </tr>
-    <tr>
-        <td class="td1 center">
-            <b>Import Data:</b><br /><br />
-            Format per line:<br />
-            C1 D C2 D C3 D C4 D C5<br />
-            <br /><b>Field Delimiter "D":</b><br />
-            <select name="Tab">
-                <option value="c" selected="selected">Comma "," [CSV File, LingQ]</option>
-                <option value="t">TAB (ASCII 9) [TSV File]</option>
-                <option value="h">Hash "#" [Direct Input]</option>
-            </select>
-            <br />
-            <br /><b>Ignore first line</b>: 
-            <select name="IgnFirstLine">
-                <option value="0" selected="selected">No</option>
-                <option value="1">Yes</option>
-            </select>
-            <br />
-            <br />
-            <b>Column Assignment:</b><br />
-            "C1": <select name="Col1">
-                <option value="w" selected="selected">Term</option>
-                <option value="t">Translation</option>
-                <option value="r">Romanization</option>
-                <option value="s">Sentence</option>
-                <option value="g">Tag List</option>
-                <option value="x">Don't import</option>
-            </select><br />
-            "C2": <select name="Col2">
-                <option value="w">Term</option>
-                <option value="t" selected="selected">Translation</option>
-                <option value="r">Romanization</option>
-                <option value="s">Sentence</option>
-                <option value="g">Tag List</option>
-                <option value="x">Don't import</option>
-            </select><br />
-            "C3": <select name="Col3">
-                <option value="w">Term</option>
-                <option value="t">Translation</option>
-                <option value="r">Romanization</option>
-                <option value="s">Sentence</option>
-                <option value="g">Tag List</option>
-                <option value="x" selected="selected">Don't import</option>
-            </select><br />
-            "C4": <select name="Col4">
-                <option value="w">Term</option>
-                <option value="t">Translation</option>
-                <option value="r">Romanization</option>
-                <option value="s">Sentence</option>
-                <option value="g">Tag List</option>
-                <option value="x" selected="selected">Don't import</option>
-            </select><br />
-            "C5": <select name="Col5">
-                <option value="w">Term</option>
-                <option value="t">Translation</option>
-                <option value="r">Romanization</option>
-                <option value="s">Sentence</option>
-                <option value="g">Tag List</option>
-                <option value="x" selected="selected">Don't import</option>
-            </select><br />
-            <br /><b>Import Mode</b>:<br />
-            <select name="Over" onchange="if(parseInt(this.value)>3){$('#imp_transl_delim').removeClass('hide');$('#imp_transl_delim input').addClass('notempty');}else{ $('#imp_transl_delim input').removeClass('notempty');$('#imp_transl_delim').addClass('hide');}">
-                <option value="0" title="- don't overwrite existent terms&#x000A;- import new terms" selected="selected">Import only new terms</option>
-                <option value="1" title="- overwrite existent terms&#x000A;- import new terms">Replace all fields</option>
-                <option value="2" title="- update only empty fields&#x000A;- import new terms">Update empty fields</option>
-                <option value="3" title="- overwrite existing terms with new not empty values&#x000A;- don't import new terms">No new terms</option>
-                <option value="4" title="- add new translations to existing ones&#x000A;- import new terms">Merge translation fields</option>
-                <option value="5" title="- add new translations to existing ones&#x000A;- don't import new terms">Update existing translations</option>
-            </select>
-            <br />
-            <div class="hide" id="imp_transl_delim">Import Translation Delimiter:<br />
-                <input class="notempty" type="text" name="transl_delim" style="width:4em;" value="<?php echo getSettingWithDefault('set-term-translation-delimiters'); ?>" />
+        <tr>
+            <td class="td1 center"><b>Language:</b></td>
+            <td class="td1">
+                <select name="LgID" class="notempty setfocus">
+                    <?php
+    echo get_languages_selectoptions(getSetting('currentlanguage'), '[Choose...]');
+                    ?>
+                </select>
+                <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /> 
+            </td>
+        </tr>
+        <tr>
+            <td class="td1 center">
+                <b>Import Data:</b><br /><br />
+                Format per line:<br />
+                C1 D C2 D C3 D C4 D C5<br />
+                <br />
+                <b>Field Delimiter "D":</b><br />
+                <select name="Tab">
+                    <option value="c" selected="selected">Comma "," [CSV File, LingQ]</option>
+                    <option value="t">TAB (ASCII 9) [TSV File]</option>
+                    <option value="h">Hash "#" [Direct Input]</option>
+                </select>
+                <br />
+                <br /><b>Ignore first line</b>: 
+                <select name="IgnFirstLine">
+                    <option value="0" selected="selected">No</option>
+                    <option value="1">Yes</option>
+                </select>
+                <br />
+                <br />
+                <b>Column Assignment:</b><br />
+                "C1": <select name="Col1">
+                    <option value="w" selected="selected">Term</option>
+                    <option value="t">Translation</option>
+                    <option value="r">Romanization</option>
+                    <option value="s">Sentence</option>
+                    <option value="g">Tag List</option>
+                    <option value="x">Don't import</option>
+                </select><br />
+                "C2": <select name="Col2">
+                    <option value="w">Term</option>
+                    <option value="t" selected="selected">Translation</option>
+                    <option value="r">Romanization</option>
+                    <option value="s">Sentence</option>
+                    <option value="g">Tag List</option>
+                    <option value="x">Don't import</option>
+                </select><br />
+                "C3": <select name="Col3">
+                    <option value="w">Term</option>
+                    <option value="t">Translation</option>
+                    <option value="r">Romanization</option>
+                    <option value="s">Sentence</option>
+                    <option value="g">Tag List</option>
+                    <option value="x" selected="selected">Don't import</option>
+                </select><br />
+                "C4": <select name="Col4">
+                    <option value="w">Term</option>
+                    <option value="t">Translation</option>
+                    <option value="r">Romanization</option>
+                    <option value="s">Sentence</option>
+                    <option value="g">Tag List</option>
+                    <option value="x" selected="selected">Don't import</option>
+                </select><br />
+                "C5": <select name="Col5">
+                    <option value="w">Term</option>
+                    <option value="t">Translation</option>
+                    <option value="r">Romanization</option>
+                    <option value="s">Sentence</option>
+                    <option value="g">Tag List</option>
+                    <option value="x" selected="selected">Don't import</option>
+                </select><br />
+                <br /><b>Import Mode</b>:<br />
+                <select name="Over" onchange="updateImportMode(this.value)">
+                    <option value="0" title="- don't overwrite existent terms&#x000A;- import new terms" selected="selected">Import only new terms</option>
+                    <option value="1" title="- overwrite existent terms&#x000A;- import new terms">Replace all fields</option>
+                    <option value="2" title="- update only empty fields&#x000A;- import new terms">Update empty fields</option>
+                    <option value="3" title="- overwrite existing terms with new not empty values&#x000A;- don't import new terms">No new terms</option>
+                    <option value="4" title="- add new translations to existing ones&#x000A;- import new terms">Merge translation fields</option>
+                    <option value="5" title="- add new translations to existing ones&#x000A;- don't import new terms">Update existing translations</option>
+                </select>
+                <br />
+                <div class="hide" id="imp_transl_delim">Import Translation Delimiter:<br />
+                    <input class="notempty" type="text" name="transl_delim" style="width:4em;" value="<?php echo getSettingWithDefault('set-term-translation-delimiters'); ?>" />
+                    <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+                </div><br />
+                <b>Important:</b><br />
+                You must specify the term.<br />
+                Translation, romanization, <br />sentence and tag list<br />
+                are optional. The tag list <br />must be separated either<br />by spaces or commas.
+            </td>
+            <td class="td1">
+                Either specify a <b>File to upload</b>:<br />
+                <input name="thefile" type="file" /><br /><br />
+                <b>Or</b> type in or paste from clipboard (do <b>NOT</b> specify file):<br />
+                <textarea class="checkoutsidebmp" data_info="Upload" name="Upload" cols="60" rows="25"></textarea>
+            </td>
+        </tr>
+        <tr>
+            <td class="td1 center"><b>Status</b> for all uploaded terms:</td>
+            <td class="td1">
+                <select class="notempty" name="WoStatus">
+                    <?php echo get_wordstatus_selectoptions(null, false, false); ?>
+                </select>
                 <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
-            </div><br />
-            <b>Important:</b><br />
-            You must specify the term.<br />
-            Translation, romanization, <br />sentence and tag list<br />
-            are optional. The tag list <br />must be separated either<br />by spaces or commas.
-        </td>
-        <td class="td1">
-            Either specify a <b>File to upload</b>:<br />
-            <input name="thefile" type="file" /><br /><br />
-            <b>Or</b> type in or paste from clipboard (do <b>NOT</b> specify file):<br />
-            <textarea class="checkoutsidebmp" data_info="Upload" name="Upload" cols="60" rows="25"></textarea>
-        </td>
-    </tr>
-    <tr>
-        <td class="td1 center"><b>Status</b> for all uploaded terms:</td>
-        <td class="td1">
-            <select class="notempty" name="WoStatus">
-                <?php echo get_wordstatus_selectoptions(null, false, false); ?>
-            </select>
-            <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
-        </td>
-    </tr>
-    <tr>
-        <td class="td1 center" colspan="2">
-            <span class="red2">
-                A DATABASE <input type="button" value="BACKUP" onclick="location.href='backup_restore.php';" /> MAY BE ADVISABLE!<br />
-                PLEASE DOUBLE-CHECK EVERYTHING!
-            </span>
-            <br />
-            <input type="button" value="&lt;&lt; Back" onclick="location.href='index.php';" /> &nbsp; &nbsp; &nbsp; | &nbsp; &nbsp; &nbsp; <input type="submit" name="op" value="Import" />
-        </td>
-    </tr>
+            </td>
+        </tr>
+        <tr>
+            <td class="td1 center" colspan="2">
+                <span class="red2">
+                    A DATABASE <input type="button" value="BACKUP" onclick="location.href='backup_restore.php';" /> MAY BE ADVISABLE!<br />
+                    PLEASE DOUBLE-CHECK EVERYTHING!
+                </span>
+                <br />
+                <input type="button" value="&lt;&lt; Back" onclick="location.href='index.php';" />
+                <span class="nowrap"></span>
+                <input type="submit" name="op" value="Import" />
+            </td>
+        </tr>
     </table>
     </form>
     

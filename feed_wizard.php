@@ -12,7 +12,7 @@ function feed_wizard_edit_options(): void
     }
 ?>
 <form class="validate" action="edit_feeds.php" method="post">
-    <table class="tab1" cellspacing="0" cellpadding="5">
+    <table class="tab2" cellspacing="0" cellpadding="5">
         <tr>
             <td class="td1">Language: </td>
             <td class="td1">
@@ -195,7 +195,7 @@ function feed_wizard_edit_options(): void
         $('input[name="save_feed"]').attr('name','update_feed');
         $('input[type="submit"]').val('Update');
     }
-    $('h3')
+    $('h1')
     .eq(-1)
     .html(
         'Feed Wizard | Step 4 - Edit Options <a href="docs/info.html#feed_wizard" target="_blank"><img alt="Help" title="Help" src="icn/question-frame.png"></img></a>'
@@ -358,14 +358,15 @@ function feed_wizard_filter_text(): void
     <button style="position:relative;left:150px;" onclick="$('#settings').hide();return false;">OK</button></div>
     <div id="lwt_container">
         <?php echo_lwt_logo();?>
-        <b>Feed Wizard | Step 3 - Filter Text</b>
+        <h1>Feed Wizard | Step 3 - Filter Text
         <a href="docs/info.html#feed_wizard" target="_blank">
             <img alt="Help" title="Help" src="icn/question-frame.png"></img>
         </a>
+        </h1>
         <ol id="lwt_sel" style="margin-left:77px">
             <?php echo $_SESSION['wizard']['filter_tags']; ?>
         </ol>
-        <table class="tab1" style="margin-left:77px" cellspacing="0" cellpadding="5">
+        <table class="tab2" style="margin-left:77px" cellspacing="0" cellpadding="5">
             <tr>
                 <td class="td1" style="text-align:left">Name: </td>
                 <td class="td1" style="text-align:left">
@@ -697,20 +698,21 @@ function feed_wizard_select_text(): void
     </div>
     <div id="lwt_container">
         <?php echo_lwt_logo();?>
-        <b>Feed Wizard | Step 2 - Select Article Text</b>
+        <h1>Feed Wizard | Step 2 - Select Article Text
         <a href="info.php#feed_wizard" target="_blank">
             <img alt="Help" title="Help" src="icn/question-frame.png"></img>
         </a>
+        </h1>
         <ol id="lwt_sel" style="margin-left:77px">
             <?php 
-        if(isset($_REQUEST['html'])) { 
+        if (isset($_REQUEST['html'])) { 
             echo $_REQUEST['html']; 
         }
         if(isset($_REQUEST['article_tags']) || isset($_REQUEST['edit_feed'])) { 
             echo $_SESSION['wizard']['article_tags']; 
         } ?>
         </ol>
-        <table class="tab1" style="margin-left:77px" cellspacing="0" cellpadding="5">
+        <table class="tab2" style="margin-left:77px" cellspacing="0" cellpadding="5">
             <tr>
                 <td class="td1" style="text-align:left">Name: </td>
                 <td class="td1">
@@ -879,7 +881,7 @@ function feed_wizard_insert_uri(): void
     }
 ?>
 <form class="validate" action="feed_wizard.php" method="post">
-    <table class="tab1" cellspacing="0" cellpadding="5">
+    <table class="tab2" cellspacing="0" cellpadding="5">
         <tr>
             <td class="td1">Feed URI: </td>
             <td class="td1">
@@ -898,7 +900,7 @@ function feed_wizard_insert_uri(): void
     <button>Next</button>
 </form>
 <script type="text/javascript">
-    $('h3')
+    $('h1')
     .eq(-1)
     .html(
         'Feed Wizard | Step 1 - Insert Newsfeed URI <a href="docs/info.html#feed_wizard" target="_blank"><img alt="Help" title="Help" src="icn/question-frame.png"></img></a>'

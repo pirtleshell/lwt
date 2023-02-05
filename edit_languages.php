@@ -21,6 +21,8 @@
  */
 
 require_once 'inc/session_utility.php';
+require_once 'inc/langdefs.php';
+require_once 'inc/classes/Language.php';
 
 
 /**
@@ -171,7 +173,7 @@ function edit_languages_op_save(): string
         from ' . $tbpref . 'languages 
         where LgName=""'
     );
-    if (! isset($val)) {
+    if (!isset($val)) {
         $message = runsql(
             'insert into ' . $tbpref . 'languages (
                 LgName, LgDict1URI, LgDict2URI, LgGoogleTranslateURI, 
@@ -196,8 +198,7 @@ function edit_languages_op_save(): string
             ')', 
             'Saved'
         );
-    }
-    else {
+    } else {
         $message = runsql(
             'update ' . $tbpref . 'languages set ' . 
             'LgName = ' . convert_string_to_sqlsyntax($_REQUEST["LgName"]) . ', ' . 
@@ -319,126 +320,480 @@ function edit_languages_op_change($lid): string
     return $message;
 }
 
+
+function load_language($lgid)
+{
+    global $tbpref;
+
+    $language = new Language();
+    $language->id = $lgid;
+    if ($lgid == 0) {
+        // Special case: set all to empty
+        $language->dict1uri = "";
+        $language->dict2uri = "";
+        $language->translator = "";
+        $language->exporttemplate = "";
+        $language->textsize = "";
+        $language->charactersubst = "";
+        $language->regexpsplitsent = "";
+        $language->exceptionsplitsent = "";
+        $language->regexpwordchar = "";
+        $language->removespaces = "";
+        $language->spliteachchar = "";
+        $language->rightoleft = "";
+    } else {
+        // Load data from database
+        $sql = "SELECT * FROM {$tbpref}languages WHERE LgID = $lgid";
+        $res = do_mysqli_query($sql);
+        $record = mysqli_fetch_assoc($res);
+        $language->name =  $record["LgName"];
+        $language->dict1uri = $record["LgDict1URI"];
+        $language->dict2uri = $record["LgDict2URI"];
+        $language->translator = $record["LgGoogleTranslateURI"];
+        $language->exporttemplate = $record["LgExportTemplate"];
+        $language->textsize = $record["LgTextSize"];
+        $language->charactersubst = $record["LgCharacterSubstitutions"];
+        $language->regexpsplitsent = $record["LgRegexpSplitSentences"];
+        $language->exceptionsplitsent = $record["LgExceptionsSplitSentences"];
+        $language->regexpwordchar = $record["LgRegexpWordCharacters"];
+        $language->removespaces = $record["LgRemoveSpaces"];
+        $language->spliteachchar = $record["LgSplitEachChar"];
+        $language->rightoleft = $record["LgRightToLeft"];
+        mysqli_free_result($res);
+    }
+    return $language;
+}
+
+function edit_language_form($language) 
+{
+    ?>
+<script type="text/javascript">
+
+    GGTRANSLATE = <?php echo json_encode($language->translator); ?>;
+
+    function checkLanguageChanged(value) {
+        if (value == "Japanese") {
+            $(document.forms.lg_form.LgRegexpAlt).css("display", "block");
+        } else {
+            $(document.forms.lg_form.LgRegexpAlt).css("display", "none");
+        }
+    }
+
+    /**
+     * Handles any change on multi-words translate mode.
+     */
+    function multiWordsTranslateChange(value) {
+        let result;
+        let uses_key = false;
+        switch (value) {
+            case "google_translate":
+                result = GGTRANSLATE;
+                break;
+            case "libretranslate":
+                result = LIBRETRANSLATE;
+                uses_key = true;
+                break;
+            case "ggl":
+                result = "ggl.php?text=";
+                break;
+            case "glosbe":
+                result = "glosbe.php";
+                break;
+        }
+        if (result) {
+            document.forms.lg_form.LgGoogleTranslateURI.value = result;
+        }
+        $('#LgTranslatorKeyWrapper')
+        .css("display", uses_key ? "inherit" : "none");
+    }
+
+    /**
+     * Check status of the requested translation API.
+     */
+    function checkTranslatorStatus(url) {
+        if (url.startsWith("libretranslate ")) {
+            try {
+                const url_parts = url.split(' ');
+                checkLibreTranslateStatus(url_parts[1], key=url_parts[2]);
+            } catch (error) {
+                $('#translator_status')
+                .html('<a href="https://libretranslate.com/">LibreTranslate</a> server seems to be unreachable.' + 
+                'You can install it on your server with the <a href="">LibreTranslate installation guide</a>.' + 
+                'Error: ' + error); 
+            }
+        }
+    }
+
+    /**
+     * Check LibreTranslate translator status.
+     */
+    function checkLibreTranslateStatus(url, key="") {
+        getLibreTranslateTranslation('ping', 'en', 'es', key, url=url)
+        .then(
+            function (translation) {
+                if (typeof translation === "string") {
+                    $('#translator_status')
+                    .html('<a href="https://libretranslate.com/">LibreTranslate</a> online!')
+                    .attr('class', 'msgblue'); 
+                } 
+            },
+            function (error) {
+                $('#translator_status')
+                .html('<a href="https://libretranslate.com/">LibreTranslate</a> server seems to be unreachable.' + 
+                'You can install it on your server with the <a href="">LibreTranslate installation guide</a>.' + 
+                'Error: ' + error); 
+            }
+        );
+    }
+
+    function changeLanguageTextSize(value) {
+        $('#LgTextSizeExample').css("font-size", value + "%");
+    }
+
+    /**
+     * Handle changes to the words split method.
+     */
+    function wordsSplitChange(value) {
+        const regex = <?php echo json_encode($language->regexpwordchar); ?>;
+        const mecab = "mecab";
+
+        let result, fixed = false;
+        switch (value) {
+            case "regexp":
+                result = regex;
+                break;
+            case "mecab":
+                result = mecab;
+                fixed = true;
+                break;
+        }
+        if (result) {
+            document.forms.lg_form.LgRegexpWordCharacters.value = result;
+            //document.forms.lg_form.LgRegexpWordCharacters.disabled = fixed;
+        }
+    }
+
+    $(function () { 
+        checkLanguageChanged(document.forms.lg_form.LgName.value); 
+    })
+</script>
+<form class="validate" action="<?php echo $_SERVER['PHP_SELF']; ?>" 
+    method="post" onsubmit="return check_dupl_lang(<?php echo $language->id; ?>);" 
+    name="lg_form">
+    <input type="hidden" name="LgID" value="<?php echo $language->id; ?>" />
+    <table class="tab2" cellspacing="0" cellpadding="5">
+    <tr>
+        <td class="td1 right">Study Language "L2":</td>
+        <td class="td1">
+            <input type="text" class="notempty setfocus checkoutsidebmp" 
+            data_info="Study Language" name="LgName" id="LgName" 
+            value="<?php echo tohtml($language->name); ?>" maxlength="40" 
+            size="40" oninput="checkLanguageChanged(this.value);" /> 
+            <img src="icn/status-busy.png" title="Field must not be empty" 
+            alt="Field must not be empty" />
+        </td>
+    </tr>
+    <tr>
+        <td class="td1 right">Dictionary 1 URI:</td>
+        <td class="td1">
+            <input type="text" class="notempty checkdicturl checkoutsidebmp" 
+            name="LgDict1URI" 
+            value="<?php echo tohtml($language->dict1uri); ?>"  
+            maxlength="200" size="60" data_info="Dictionary 1 URI" /> 
+            <img src="icn/status-busy.png" title="Field must not be empty" 
+            alt="Field must not be empty" />
+        </td>
+    </tr>
+    <tr>
+        <td class="td1 right">Dictionary 2 URI:</td>
+        <td class="td1">
+            <input type="text" class="checkdicturl checkoutsidebmp" 
+            name="LgDict2URI" 
+            value="<?php echo tohtml($language->dict2uri); ?>" maxlength="200"
+            size="60" data_info="Dictionary 2 URI" />
+        </td>
+    </tr>
+    <tr>
+        <td class="td1 right">Sentence Translator URI:</td>
+        <td class="td1">
+            <select onchange="multiWordsTranslateChange(this.value);" 
+            name="LgTranslatorName">
+                <option value="google_translate">Google Translate URI</option>
+                <option value="libretranslate">LibreTranslate API</option>
+                <!-- ggl.php doesn't seem to work -->
+                <option value="ggl" style="display: none;">
+                    GoogleTranslate API
+                </option>
+                <!-- Glosbe has stopped the API -->
+                <option value="glosbe" style="display: none;">
+                    Glosbe API
+                </option>
+            </select>
+            <input type="text" class="checkdicturl checkoutsidebmp" 
+            name="LgGoogleTranslateURI" 
+            value="<?php echo tohtml($language->translator); ?>" 
+            maxlength="200" size="60" data_info="GoogleTranslate URI" 
+            oninput="checkTranslatorStatus(this.value);"/>
+            <div id="LgTranslatorKeyWrapper" style="display: none;">
+                <label for="LgTranslatorKey">Key :</label>
+                <input type="text" id="LgTranslatorKey" name="LgTranslatorKey"/>
+            </div>
+            <div id="translator_error" class="red" ></div>
+        </td>
+    </tr>
+    <tr>
+        <td class="td1 right">Text Size (%):</td>
+        <td class="td1">
+            <input name="LgTextSize" type="number" min="100" max="250" 
+            value="<?php echo $language->textsize; ?>" step="50" 
+            onchange="changeLanguageTextSize(this.value);"/>
+            <input type="text" 
+            style="font-size: <?php echo $language->textsize ?>%;" 
+            id="LgTextSizeExample" 
+            value="Text will be this size" />
+        </td>
+    </tr>
+    <tr>
+        <td class="td1 right">Character Substitutions:</td>
+        <td class="td1">
+            <input type="text" class="checkoutsidebmp" 
+            data_info="Character Substitutions" name="LgCharacterSubstitutions" 
+            value="<?php echo tohtml($language->charactersubst); ?>" 
+            maxlength="500" size="60" />
+        </td>
+    </tr>
+    <tr>
+        <td class="td1 right">RegExp Split Sentences:</td>
+        <td class="td1">
+            <input type="text" class="notempty checkoutsidebmp" 
+            name="LgRegexpSplitSentences" 
+            value="<?php echo tohtml($language->regexpsplitsent); ?>" 
+            maxlength="500" size="60" 
+            data_info="RegExp Split Sentences" /> 
+            <img src="icn/status-busy.png" title="Field must not be empty" 
+            alt="Field must not be empty" />
+        </td>
+    </tr>
+    <tr>
+    <td class="td1 right">Exceptions Split Sentences:</td>
+    <td class="td1">
+        <input type="text" class="checkoutsidebmp" 
+        data_info="Exceptions Split Sentences" 
+        name="LgExceptionsSplitSentences" 
+        value="<?php echo tohtml($language->exceptionsplitsent); ?>" 
+        maxlength="500" size="60" />
+    </td>
+    </tr>
+    <tr>
+        <td class="td1 right">RegExp Word Characters:</td>
+        <td class="td1">
+            <select onchange="wordsSplitChange(this.value);" style="display: none;" name="LgRegexpAlt">
+                <option value="regexp">Regular Expressions (demo)</option>
+                <option value="mecab">MeCab (recommended)</option>
+            </select>
+            <input type="text" class="notempty checkoutsidebmp" 
+            data_info="RegExp Word Characters" name="LgRegexpWordCharacters" 
+            value="<?php echo tohtml($language->regexpwordchar); ?>" 
+            maxlength="500" size="60" /> 
+            <img src="icn/status-busy.png" title="Field must not be empty" 
+            alt="Field must not be empty" />
+            <div style="display: none;" class="red" id="mecab_not_installed">
+                <a href="https://en.wikipedia.org/wiki/MeCab">MeCab</a> does 
+                not seem to be installed on your server. 
+                Please read the <a href="">MeCab installation guide</a>.
+            </div>
+        </td>
+    </tr>
+    <tr>
+    <td class="td1 right">Make each character a word:</td>
+    <td class="td1">
+        <select name="LgSplitEachChar">
+            <?php echo get_yesno_selectoptions($language->spliteachchar); ?>
+        </select>
+        (e.g. for Chinese, Japanese, etc.)</td>
+    </tr>
+    <tr>
+    <td class="td1 right">Remove spaces:</td>
+    <td class="td1">
+        <select name="LgRemoveSpaces">
+            <?php echo get_yesno_selectoptions($language->removespaces); ?>
+        </select>
+        (e.g. for Chinese, Japanese, etc.)</td>
+    </tr>
+    <tr>
+    <td class="td1 right">Right-To-Left Script:</td>
+    <td class="td1">
+        <select name="LgRightToLeft">
+            <?php echo get_yesno_selectoptions($language->rightoleft); ?>
+        </select>
+        (e.g. for Arabic, Hebrew, Farsi, Urdu,  etc.)</td>
+    </tr>
+    <tr>
+    <td class="td1 right">
+        Export Template 
+        <img class="click" src="icn/question-frame.png" title="Help" alt="Help" onclick="oewin('export_template.html');" /> :
+    </td>
+    <td class="td1">
+        <input type="text" class="checkoutsidebmp" data_info="Export Template" name="LgExportTemplate" 
+        value="<?php echo tohtml($language->exporttemplate); ?>" maxlength="1000" size="60" />
+    </td>
+    </tr>
+    <tr>
+    <td class="td1 right" colspan="2">
+        <input type="button" value="Cancel" onclick="{resetDirty(); location.href='edit_languages.php';}" /> 
+        <?php 
+        if ($language->id == 0) {
+            echo '<input type="submit" name="op" value="Save" />';
+        } else {
+            echo '<input type="submit" name="op" value="Change" />';
+        }
+        ?>
+        </td>
+    </tr>
+    </table>
+</form>
+    <?php
+
+}
+
+/// Returns a dropdown menu of the different languages
+function get_wizard_selectoptions($v): string 
+{
+    global $langDefs;
+    $r = "<option value=\"\"" . get_selected($v, "") . ">[Choose...]</option>";
+    $keys = array_keys($langDefs);
+    foreach ($keys as $item) {
+        $r .= "<option value=\"" . $item . "\"" . get_selected($v, $item) . ">" . $item . "</option>";
+    }
+    return $r;
+}
+
 /**
- * Display a form to createa new language.
+ * Display a form to create a new language.
  * 
  * @return void
  */
 function edit_languages_new() 
 {
+    global $langDefs;
+
+    $currentnativelanguage = getSetting('currentnativelanguage');
     ?>
-    <h4>
-        New Language <a target="_blank" href="docs/info.html#howtolang">
-        <img src="icn/question-frame.png" title="Help" alt="Help" /></a>
-    </h4>
+    <h2>
+        New Language 
+        <a target="_blank" href="docs/info.html#howtolang">
+            <img src="icn/question-frame.png" title="Help" alt="Help" />
+        </a>
+    </h2>
 
     <script type="text/javascript" charset="utf-8">
-         $(document).ready(ask_before_exiting);
-     </script>   
-    <form class="validate" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" onsubmit="return check_dupl_lang(0);">
-        <table class="tab1" cellspacing="0" cellpadding="5">
-            <tr>
-                <td class="td1 center backlightyellow" style="border-top-left-radius:inherit;border-top-right-radius:inherit;" colspan="2">
-                <img src="icn/wizard.png" title="Language Settings Wizard" alt="Language Settings Wizard" class="click" onclick="window.open('select_lang_pair.php', 'wizard', 'width=400, height=400, scrollbars=yes, menubar=no, resizable=yes, status=no');" /><br /><span class="click" onclick="window.open('select_lang_pair.php', 'wizard', 'width=400, height=400, scrollbars=yes, menubar=no, resizable=yes, status=no');"><img src="icn/arrow-000-medium.png" title="-&gt;" alt="-&gt;" /> <b>Language Settings Wizard</b> <img src="icn/arrow-180-medium.png" title="&lt;-" alt="&lt;-" /></span><br /><span class="smallgray">Select your native (L1) and study (L2) languages, and let the wizard set all language settings marked in yellow!<br />(You can adjust the settings afterwards.)</span></td>
-            </tr>
-        </table>
-    
-        <table class="tab1" cellspacing="0" cellpadding="5">
-        <tr>
-        <td class="td1 right backlightyellow">Study Language "L2":</td>
-        <td class="td1">
-            <input type="text" class="notempty setfocus checkoutsidebmp" data_info="Study Language" name="LgName" id="LgName" value="" maxlength="40" size="40" /> <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /></td>
-        </tr>
-        <tr>
-        <td class="td1 right backlightyellow">Dictionary 1 URI:</td>
-        <td class="td1">
-            <input type="text" class="checkdicturl notempty checkoutsidebmp" name="LgDict1URI" value="" maxlength="200" size="60" data_info="Dictionary 1 URI" /> <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /></td>
-        </tr>
-        <tr>
-        <td class="td1 right">Dictionary 2 URI:</td>
-        <td class="td1">
-            <input type="text" class="checkdicturl checkoutsidebmp" name="LgDict2URI" value="" maxlength="200" size="60" data_info="Dictionary 2 URI" /></td>
-        </tr>
-        <tr>
-        <td class="td1 right backlightyellow">GoogleTranslate URI:</td>
-        <td class="td1">
-            <input type="text" class="checkdicturl checkoutsidebmp" name="LgGoogleTranslateURI" value="*http://translate.google.com/?ie=UTF-8&sl=••&tl=••&text=###" maxlength="200" size="60" data_info="GoogleTranslate URI" /></td>
-        </tr>
-        <tr>
-        <td class="td1 right backlightyellow">Text Size:</td>
-        <td class="td1"><select name="LgTextSize" class="notempty">
-            <?php echo get_languagessize_selectoptions(150); ?></select>
-        </td>
-        </tr>
-        <tr>
-        <td class="td1 right">Character Substitutions:</td>
-        <td class="td1">
-            <input type="text" class="checkoutsidebmp" data_info="Character Substitutions" name="LgCharacterSubstitutions" value="´='|`='|’='|‘='|...=…|..=‥" maxlength="500" size="60" /></td>
-        </tr>
-        <tr>
-        <td class="td1 right backlightyellow">RegExp Split Sentences:</td>
-        <td class="td1">
-            <input type="text" class="notempty checkoutsidebmp" name="LgRegexpSplitSentences" value=".!?:;" maxlength="500" size="60" data_info="RegExp Split Sentences" /> <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /></td>
-        </tr>
-        <tr>
-        <td class="td1 right">Exceptions Split Sentences:</td>
-        <td class="td1">
-            <input type="text" class="checkoutsidebmp" data_info="Exceptions Split Sentences" name="LgExceptionsSplitSentences" value="Mr.|Dr.|[A-Z].|Vd.|Vds." maxlength="500" size="60" /></td>
-        </tr>
-        <tr>
-        <td class="td1 right backlightyellow">RegExp Word Characters:</td>
-        <td class="td1">
-            <input type="text" class="notempty checkoutsidebmp" data_info="RegExp Word Characters" name="LgRegexpWordCharacters" value="a-zA-ZÀ-ÖØ-öø-ȳ" maxlength="500" size="60" /> <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /></td>
-        </tr>
-        <tr>
-        <td class="td1 right backlightyellow">Make each character a word:</td>
-        <td class="td1"><select name="LgSplitEachChar">
-            <?php echo get_yesno_selectoptions(0); ?></select>
-            (e.g. for Chinese, Japanese, etc.)</td>
-        </tr>
-        <tr>
-        <td class="td1 right backlightyellow">Remove spaces:</td>
-        <td class="td1">
-            <select name="LgRemoveSpaces">
-                <?php echo get_yesno_selectoptions(0); ?>
-            </select>
-            (e.g. for Chinese, Japanese, etc.)</td>
-        </tr>
-        <tr>
-        <td class="td1 right backlightyellow">Right-To-Left Script:</td>
-        <td class="td1">
-            <select name="LgRightToLeft">
-                <?php echo get_yesno_selectoptions(0); ?>
-            </select>
-            (e.g. for Arabic, Hebrew, Farsi, Urdu, etc.)</td>
-        </tr>
-        <tr>
-        <td class="td1 right">
-            Export Template 
-            <img class="click" src="icn/question-frame.png" title="Help" alt="Help" onclick="oewin('export_template.html');" /> :
-        </td>
-        <td class="td1">
-            <input type="text" class="checkoutsidebmp" data_info="Export Template" name="LgExportTemplate" value="$y\t$t\n" maxlength="1000" size="60" />
-        </td>
-        </tr>
-        <tr>
-        <td class="td1 right" colspan="2">
-            <input type="button" value="Cancel" onclick="{resetDirty(); location.href='edit_languages.php';}" /> 
-        <input type="submit" name="op" value="Save" /></td>
-        </tr>
-        </table>
-        <p class="smallgray">
-            <b>Important:</b>
-            <br />
-            The placeholders "••" for the from/sl and dest/tl language codes in the 
-            URIs must be <b>replaced</b> by the actual source and target language 
-            codes!<br />
-            <a href="docs/info.html#howtolang" target="_blank">Please read the documentation</a>. 
-            Languages with a <b>non-Latin alphabet need special attention</b>, 
-            <a href="docs/info.html#langsetup" target="_blank">see also here</a>.
-        </p>    
-    </form>
-    
+
+        const LANGDEFS = <?php echo json_encode($langDefs); ?>;
+        const l1 = $('#l1').val();
+        const l2 = $('#l2').val();
+        const trans_query = {
+            source: LANGDEFS[l2][1],
+            dest: LANGDEFS[l1][1]
+        };
+
+        /// Execute the wizard
+        function wizard_go() {
+            GGTRANSLATE = '*http://translate.google.com/?' + $.param({
+                ie: "UTF-8",
+                sl: trans_query.source,
+                tl: trans_query.dest,
+                text: "###"
+            });
+            LIBRETRANSLATE = "http://localhost:5000/?" + $.param({
+                source: trans_query.source,
+                target: trans_query.dest,
+                q: "###"
+            });
+            if (l1 == '') {
+                alert ('Please choose your native language (L1)!');
+                return;
+            }
+            if (l2 == '') {
+                alert ('Please choose your language you want to read/study (L2)!');
+                return;
+            }
+            if (l2 == l1) {
+                alert ('L1 L2 Languages must not be equal!');
+                return;
+            }
+            $('input[name="LgName"]').val(l2).change();
+            // There may be a cleaner way to trigger the event
+            checkLanguageChanged(l2);
+            $('input[name="LgDict1URI"]').val(
+                '*https://de.glosbe.com/' + LANGDEFS[l2][0] + '/' + 
+                LANGDEFS[l1][0] + '/###'
+                );
+
+            $('input[name="LgGoogleTranslateURI"]').val(GGTRANSLATE);
+            $('input[name="LgTextSize"]')
+            .val(LANGDEFS[l2][2] ? 200 : 150)
+            .change();
+            $('input[name="LgRegexpSplitSentences"]').val(LANGDEFS[l2][4]);
+            $('input[name="LgRegexpWordCharacters"]').val(LANGDEFS[l2][3]);
+            $('select[name="LgSplitEachChar"]').val(LANGDEFS[l2][5] ? 1 : 0);
+            $('select[name="LgRemoveSpaces"]').val(LANGDEFS[l2][6] ? 1 : 0);
+            $('select[name="LgRightToLeft"]').val(LANGDEFS[l2][7] ? 1 : 0);
+        }
+
+        $(document).ready(ask_before_exiting);
+        $(function () { $('#wizard_zone').hide(); })
+    </script>
+    <div class="td1 center">
+        <div class="center" style="border: 1px solid black;">
+            <h3 class="clickedit" onclick="$('#wizard_zone').toggle(400);" >
+                Language Settings Wizard
+            </h3>
+            <div id="wizard_zone">
+                <img src="icn/wizard.png" title="Language Settings Wizard" alt="Language Settings Wizard" />
+
+                <div class="flex-spaced">
+                    <div>
+                        <b>My Native language is:</b>
+                        <div>
+                            L1: 
+                            <select name="l1" id="l1" onchange="{do_ajax_save_setting('currentnativelanguage',($('#l1').val()));}">
+                                <?php echo get_wizard_selectoptions($currentnativelanguage); ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <b>I want to study:</b>
+                        <div>
+                            L2: 
+                            <select name="l2" id="l2">
+                                <?php echo get_wizard_selectoptions(''); ?>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <input type="button" style="margin: 5px;" value="Set Language Settings" onclick="wizard_go();" />
+                <p class="smallgray">
+                    Select your native (L1) and study (L2) languages, and let the 
+                    wizard set all language settings marked in yellow!<br />
+                    (You can adjust the settings afterwards.)
+                </p>
+            </div>
+        </div>
+    </div>
+    <?php
+    $language = load_language(0);
+    edit_language_form($language);
+    ?>
+    <p class="smallgray">
+        <b>Important:</b>
+        <br />
+        The placeholders "••" for the from/sl and dest/tl language codes in the 
+        URIs must be <b>replaced</b> by the actual source and target language 
+        codes!<br />
+        <a href="docs/info.html#howtolang" target="_blank">Please read the documentation</a>. 
+        Languages with a <b>non-Latin alphabet need special attention</b>, 
+        <a href="docs/info.html#langsetup" target="_blank">see also here</a>.
+    </p>    
     <?php
 }
 
@@ -454,112 +809,26 @@ function edit_languages_change($lid)
     global $tbpref;
     $sql = 'select * from ' . $tbpref . 'languages where LgID = ' . $lid;
     $res = do_mysqli_query($sql);
-    if ($record = mysqli_fetch_assoc($res)) {
-    
-        ?>
-    
-     <h4>Edit Language 
-         <a target="_blank" href="docs/info.html#howtolang">
-             <img src="icn/question-frame.png" title="Help" alt="Help" /></a>
-    </h4>
-     <script type="text/javascript" charset="utf-8">
-         $(document).ready(ask_before_exiting);
-     </script>
-     <form class="validate" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" onsubmit="return check_dupl_lang(<?php echo $lid; ?>);">
-     <input type="hidden" name="LgID" value="<?php echo $lid; ?>" />
-     <table class="tab1" cellspacing="0" cellpadding="5">
-     <tr>
-     <td class="td1 right">Study Language "L2":</td>
-     <td class="td1">
-         <input type="text" class="notempty setfocus checkoutsidebmp" data_info="Study Language" name="LgName" id="LgName" value="<?php echo tohtml($record['LgName']); ?>" maxlength="40" size="40" /> <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /></td>
-     </tr>
-     <tr>
-     <td class="td1 right">Dictionary 1 URI:</td>
-     <td class="td1">
-         <input type="text" class="notempty checkdicturl checkoutsidebmp" name="LgDict1URI" value="<?php echo tohtml($record['LgDict1URI']); ?>"  maxlength="200" size="60" data_info="Dictionary 1 URI" /> <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /></td>
-     </tr>
-     <tr>
-     <td class="td1 right">Dictionary 2 URI:</td>
-     <td class="td1">
-         <input type="text" class="checkdicturl checkoutsidebmp" name="LgDict2URI" value="<?php echo tohtml($record['LgDict2URI']); ?>" maxlength="200" size="60" data_info="Dictionary 2 URI" /></td>
-     </tr>
-     <tr>
-     <td class="td1 right">GoogleTranslate URI:</td>
-     <td class="td1">
-         <input type="text" class="checkdicturl checkoutsidebmp" name="LgGoogleTranslateURI" value="<?php echo tohtml($record['LgGoogleTranslateURI']); ?>" maxlength="200" size="60" data_info="GoogleTranslate URI" /></td>
-     </tr>
-     <tr>
-     <td class="td1 right">Text Size:</td>
-     <td class="td1">
-         <select name="LgTextSize"><?php echo get_languagessize_selectoptions($record['LgTextSize']); ?></select></td>
-     </tr>
-     <tr>
-     <td class="td1 right">Character Substitutions:</td>
-     <td class="td1">
-         <input type="text" class="checkoutsidebmp" data_info="Character Substitutions" name="LgCharacterSubstitutions" value="<?php echo tohtml($record['LgCharacterSubstitutions']); ?>" maxlength="500" size="60" /></td>
-     </tr>
-     <tr>
-     <td class="td1 right">RegExp Split Sentences:</td>
-     <td class="td1">
-         <input type="text" class="notempty checkoutsidebmp" name="LgRegexpSplitSentences" value="<?php echo tohtml($record['LgRegexpSplitSentences']); ?>" maxlength="500" size="60" data_info="RegExp Split Sentences" /> <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /></td>
-     </tr>
-     <tr>
-     <td class="td1 right">Exceptions Split Sentences:</td>
-     <td class="td1">
-         <input type="text" class="checkoutsidebmp" data_info="Exceptions Split Sentences" name="LgExceptionsSplitSentences" value="<?php echo tohtml($record['LgExceptionsSplitSentences']); ?>" maxlength="500" size="60" /></td>
-     </tr>
-     <tr>
-     <td class="td1 right">RegExp Word Characters:</td>
-     <td class="td1">
-         <input type="text" class="notempty checkoutsidebmp" data_info="RegExp Word Characters" name="LgRegexpWordCharacters" value="<?php echo tohtml($record['LgRegexpWordCharacters']); ?>" maxlength="500" size="60" /> <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /></td>
-     </tr>
-     <tr>
-     <td class="td1 right">Make each character a word:</td>
-     <td class="td1">
-         <select name="LgSplitEachChar">
-             <?php echo get_yesno_selectoptions($record['LgSplitEachChar']); ?>
-            </select>
-         (e.g. for Chinese, Japanese, etc.)</td>
-     </tr>
-     <tr>
-     <td class="td1 right">Remove spaces:</td>
-     <td class="td1">
-         <select name="LgRemoveSpaces">
-             <?php echo get_yesno_selectoptions($record['LgRemoveSpaces']); ?>
-            </select>
-         (e.g. for Chinese, Japanese, etc.)</td>
-     </tr>
-     <tr>
-     <td class="td1 right">Right-To-Left Script:</td>
-     <td class="td1">
-         <select name="LgRightToLeft">
-             <?php echo get_yesno_selectoptions($record['LgRightToLeft']); ?>
-            </select>
-         (e.g. for Arabic, Hebrew, Farsi, Urdu,  etc.)</td>
-     </tr>
-     <tr>
-     <td class="td1 right">
-         Export Template 
-         <img class="click" src="icn/question-frame.png" title="Help" alt="Help" onclick="oewin('export_template.html');" /> :
-        </td>
-     <td class="td1">
-         <input type="text" class="checkoutsidebmp" data_info="Export Template" name="LgExportTemplate" value="<?php echo tohtml($record['LgExportTemplate']); ?>" maxlength="1000" size="60" />
-        </td>
-     </tr>
-     <tr>
-     <td class="td1 right" colspan="2">
-         <input type="button" value="Cancel" onclick="{resetDirty(); location.href='edit_languages.php';}" /> 
-     <input type="submit" name="op" value="Change" /></td>
-     </tr>
-     </table>
-     <p class="smallgray">
-         <b>Warning:</b> Changing certain language settings 
-         (e.g. RegExp Word Characters, etc.)<br />may cause partial or complete loss 
-         of improved annotated texts!
-    </p>
-     </form>
+    if (mysqli_fetch_assoc($res)) {
+    ?>
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(ask_before_exiting);
+    </script>
+    <h2>Edit Language 
+        <a target="_blank" href="docs/info.html#howtolang">
+            <img src="icn/question-frame.png" title="Help" alt="Help" />
+        </a>
+    </h2>
         <?php
-
+        $language = load_language($lid);
+        edit_language_form($language);
+        ?>
+    <p class="smallgray">
+        <b>Warning:</b> Changing certain language settings 
+        (e.g. RegExp Word Characters, etc.)<br />
+        may cause partial or complete loss of improved annotated texts!
+    </p>
+    <?php
     }
     mysqli_free_result($res);
 }
@@ -605,7 +874,7 @@ function edit_languages_display($message)
     }
     ?>
 
-<table class="sortable tab1" cellspacing="0" cellpadding="5">
+<table class="sortable tab2" cellspacing="0" cellpadding="5">
     <tr>
         <th class="th1 sorttable_nosort">Curr.<br />Lang.</th>
         <th class="th1 sorttable_nosort">Test<br />↓↓↓</th>

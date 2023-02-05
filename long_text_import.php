@@ -119,9 +119,9 @@ function long_text_check($max_input_vars): void
 <tr>
     <td class="td1 right" colspan="2">
         <input type="button" value="Cancel" onclick="{resetDirty(); location.href='index.php';}" /> 
-        &nbsp; | &nbsp; 
+        <span class="nowrap"></span>
         <input type="button" value="Go Back" onclick="{resetDirty(); history.back();}" /> 
-        &nbsp; | &nbsp; 
+        <span class="nowrap"></span>
         <input type="submit" name="op" value="Create <?php echo $textcount; ?> text<?php echo $plural; ?>" />
     </td>
 </tr>
@@ -336,7 +336,7 @@ function long_text_display($max_input_vars)
         <tr>
             <td class="td1 right" colspan="2">
                 <input type="button" value="Cancel" onclick="{resetDirty(); location.href='index.php';}" />
-                &nbsp; | &nbsp; 
+                <span class="nowrap"></span>
                 <input type="submit" name="op" value="NEXT STEP: Check the Texts" />
             </td>
         </tr>

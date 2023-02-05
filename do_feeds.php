@@ -407,7 +407,7 @@ if (
     </div>
 </div>
 <form name="form1" action="#" onsubmit="document.form1.querybutton.click(); return false;">
-<table class="tab1" cellspacing="0" cellpadding="5"><tr>
+<table class="tab2" cellspacing="0" cellpadding="5"><tr>
     <th class="th1" colspan="4">
         Filter <img src="icn/funnel.png" title="Filter" alt="Filter" />&nbsp;
         <input type="button" value="Reset All" onclick="resetAll('do_feeds.php');" />
@@ -522,7 +522,7 @@ if(mysqli_data_seek($result, 0)) {
   </tr>
   </table></form>
   <form name="form2" action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post">
-  <table class="tab1" cellspacing="0" cellpadding="5">
+  <table class="tab2" cellspacing="0" cellpadding="5">
   <tr><th class="th1" colspan="2">Multi Actions <img src="icn/lightning.png" title="Multi Actions" alt="Multi Actions" /></th></tr>
   <tr><td class="td1 center" style="width:30%;">
   <input type="button" value="Mark All" onclick="selectToggle(true,'form2');" />
@@ -531,7 +531,7 @@ if(mysqli_data_seek($result, 0)) {
   Marked Texts:&nbsp; 
   <input id="markaction" type="submit" value="Get Marked Texts" />&nbsp;&nbsp;
   </td></tr></table>
-  <table  class="tab1 sortable" cellspacing="0" cellpadding="5">    
+  <table  class="tab2 sortable" cellspacing="0" cellpadding="5">    
   <tr>
   <th class="th1 sorttable_nosort">Mark</th>
   <th class="th1 clickable">Articles</th>
@@ -570,7 +570,7 @@ if(mysqli_data_seek($result, 0)) {
         echo '</table>';
         echo '</form>';
         if($pages > 1) {
-            echo '<form name="form3" method="get" action =""><table class="tab1" cellspacing="0" cellpadding="5"><tr><th class="th1" style="width:30%;">';
+            echo '<form name="form3" method="get" action =""><table class="tab2" cellspacing="0" cellpadding="5"><tr><th class="th1" style="width:30%;">';
             echo $total;
             echo '</th><th class="th1">';
             makePager($currentpage, $pages, 'do_feeds.php', 'form3');

@@ -1,3 +1,13 @@
+/**
+ * \file
+ * \brief Standard JS interface to get translations
+ * 
+ * @package Lwt
+ * @author  andreask7 <andreasks7@users.noreply.github.com>
+ * @license Unlicense <http://unlicense.org/>
+ * @since   1.6.16-fork
+ */
+
 function deleteTranslation (){
 	var w = window.parent.frames['ro'];
 	if (typeof w == 'undefined') w = window.opener;
@@ -23,13 +33,11 @@ function addTranslation (s) {
 	if (oldValue.trim() == '') {
 		c.value = s;
 		w.makeDirty();
-	}
-	else {
+	} else {
 		if (oldValue.indexOf(s) == -1) {
 			c.value = oldValue + ' / ' + s;
 			w.makeDirty();
-		}
-		else {
+		} else {
 			if (confirm(
 				'"' + s + '" seems already to exist as a translation.\nInsert anyway?'
 				)) { 
@@ -40,7 +48,7 @@ function addTranslation (s) {
 	}
 }
 
-function getGlosbeTranslation(text,lang,dest){
+function getGlosbeTranslation(text, lang, dest) {
 	$.ajax({
 		url:'http://glosbe.com/gapi/translate?from=' + lang + '&dest=' + dest + 
 		'&format=json&phrase=' + text + '&callback=?',
@@ -52,7 +60,7 @@ function getGlosbeTranslation(text,lang,dest){
 	});
 }
 
-function getTranslationFromGlosbeApi(data){
+function getTranslationFromGlosbeApi(data) {
 	try {
 		$.each(data.tuc,function(i,rows){
 			if(rows.phrase){
@@ -99,6 +107,56 @@ function getTranslationFromGlosbeApi(data){
 			);
 	}
 	catch(err) {
-		$('#translations').text('Retrieval error. Possible reason: There is a limit of Glosbe API calls that may be done from one IP address in a fixed period of time, to prevent from abuse.').after('<hr />');
+		$('#translations')
+		.text('Retrieval error. Possible reason: There is a limit of Glosbe API calls that may be done from one IP address in a fixed period of time, to prevent from abuse.').after('<hr />');
 	}
+}
+
+/**
+ * Base function to get a translation from LibreTranslate.
+ * 
+ * @param {string}           text Text to translate
+ * @param {string}           lang Source language (language of the text, two letters or "auto")
+ * @param {string}           dest Destination language (two language)
+ * @param {string|undefined} key  Optional API key
+ * @param {string}           url  API URL
+ * @returns {string} Translation
+ */
+async function getLibreTranslateTranslationBase(text, lang, dest, key="", url="http://localhost:5000/translate") {
+	const res = await fetch(
+		url, 
+		{
+			method: "POST",
+			body: JSON.stringify({
+				q: text,
+				source: lang,
+				target: dest,
+				format: "text",
+				api_key: key
+			}),
+			headers: { "Content-Type": "application/json" }
+		}
+	);
+
+	const data = await res.json();
+	return data.translatedText;
+}
+
+/**
+ * Main wrapper for LibreTranslate translation.
+ * 
+ * @param {string} api_parts API parts separated by spaces. Normally "libretranslate url key".
+ * @param {string} text      Text to translate
+ * @param {string} lang      Source language (language of the text, two letters or "auto")
+ * @param {string} dest      Destination language (two language)
+ * @returns {string} Translation
+ */
+async function getLibreTranslateTranslation(api_parts, text, lang, dest) {
+	const parts = api_parts.split(' ');
+	if (parts[0] != "libretranslate") {
+		throw 'Translation API not supported: ' + parts[0] + "!";
+	} 
+	return getLibreTranslateTranslationBase(
+		text, lang, dest, key=parts[2], parts[1] + "/translate"
+	);
 }

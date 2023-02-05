@@ -115,29 +115,34 @@ function do_diplay_impr_text_header_js()
 function do_diplay_impr_text_header_content($title, $textid, $audio, $sourceURI)
 {
     ?>
-<h2 class="center" style="margin:5px;margin-top:-10px;">
-    <img id="hidet" style="margin-bottom:-5px;" class="click" src="icn/light-bulb-T.png" title="Toggle Text Display (Now ON)" alt="Toggle Text Display (Now ON)" onclick="do_hide_t();" />
-    <img id="showt" style="display:none; margin-bottom:-5px;" class="click" src="icn/light-bulb-off-T.png" title="Toggle Text Display (Now OFF)" alt="Toggle Text Display (Now OFF)" onclick="do_show_t();" />
-    <img id="hide" style="margin-bottom:-5px;" class="click" src="icn/light-bulb-A.png" title="Toggle Annotation Display (Now ON)" alt="Toggle Annotation Display (Now ON)" onclick="do_hide_a();" />
-    <img id="show" style="display:none; margin-bottom:-5px;" class="click" src="icn/light-bulb-off-A.png" title="Toggle Annotation Display (Now OFF)" alt="Toggle Annotation Display (Now OFF)" onclick="do_show_a();" />
-     &nbsp; &nbsp; 
-     <?php
-        echo tohtml($title);
-        if (isset($sourceURI)) {
-            echo ' <a href="' . $sourceURI . '" target="_blank">
-            <img src="'.get_file_path('icn/chain.png').'" title="Text Source" alt="Text Source" />
-            </a>';
-        }
-        echo getPreviousAndNextTextLinks($textid, 'display_impr_text.php?text=', true, ' &nbsp; &nbsp; ');
+    <h1><?php echo tohtml($title); ?></h1>
+<div class="flex-spaced">
+    <div>
+        <img id="hidet" class="click" src="icn/light-bulb-T.png" 
+        title="Toggle Text Display (Now ON)" alt="Toggle Text Display (Now ON)" onclick="do_hide_t();" />
+        <img id="showt" style="display:none;" class="click" src="icn/light-bulb-off-T.png" 
+        title="Toggle Text Display (Now OFF)" alt="Toggle Text Display (Now OFF)" onclick="do_show_t();" />
+        <img id="hide" class="click" src="icn/light-bulb-A.png" 
+        title="Toggle Annotation Display (Now ON)" alt="Toggle Annotation Display (Now ON)" onclick="do_hide_a();" />
+        <img id="show" style="display:none;" class="click" src="icn/light-bulb-off-A.png" 
+        title="Toggle Annotation Display (Now OFF)" alt="Toggle Annotation Display (Now OFF)" onclick="do_show_a();" /> 
+    </div>
+    <div>
+        <?php
+            if (isset($sourceURI)) {
+                echo ' <a href="' . $sourceURI . '" target="_blank">
+                <img src="'.get_file_path('icn/chain.png').'" title="Text Source" alt="Text Source" />
+                </a>';
+            }
+            echo getPreviousAndNextTextLinks($textid, 'display_impr_text.php?text=', true, ' &nbsp; &nbsp; ');
         ?>
-     <img class="click" src="icn/cross.png" title="Close Window" alt="Close Window" onclick="top.close();" />
-</h2>
+    </div>
+    <div>
+        <img class="click" src="icn/cross.png" title="Close Window" alt="Close Window" onclick="top.close();" />
+    </div>
+</div>
     <?php
     makeMediaPlayer($audio);
-
-    echo '</table>';
-
-    //pageend();
 }
 
 /**

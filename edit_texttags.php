@@ -64,20 +64,14 @@ if (isset($_REQUEST['allaction'])) {
         runsql("DELETE " . $tbpref . "archtexttags FROM (" . $tbpref . "archtexttags LEFT JOIN " . $tbpref . "tags2 on AgT2ID = T2ID) WHERE T2ID IS NULL", '');
         adjust_autoincr('tags2', 'T2ID');
     }
-}
-
-// DEL
-
-elseif (isset($_REQUEST['del'])) {
+} elseif (isset($_REQUEST['del'])) {
+    // DEL
     $message = runsql('delete from ' . $tbpref . 'tags2 where T2ID = ' . $_REQUEST['del'], "Deleted");
     runsql("DELETE " . $tbpref . "texttags FROM (" . $tbpref . "texttags LEFT JOIN " . $tbpref . "tags2 on TtT2ID = T2ID) WHERE T2ID IS NULL", '');
     runsql("DELETE " . $tbpref . "archtexttags FROM (" . $tbpref . "archtexttags LEFT JOIN " . $tbpref . "tags2 on AgT2ID = T2ID) WHERE T2ID IS NULL", '');
     adjust_autoincr('tags2', 'T2ID');
-}
-
-// INS/UPD
-
-elseif (isset($_REQUEST['op'])) {
+} elseif (isset($_REQUEST['op'])) {
+    // INS/UPD
 
     // INSERT
     
@@ -89,11 +83,8 @@ elseif (isset($_REQUEST['op'])) {
             convert_string_to_sqlsyntax_nonull($_REQUEST["T2Comment"]) . ')', "Saved", $sqlerrdie = false
         );
 
-    }    
-    
-    // UPDATE
-    
-    elseif ($_REQUEST['op'] == 'Change') {
+    } elseif ($_REQUEST['op'] == 'Change') {
+        // UPDATE
 
         $message = runsql(
             'update ' . $tbpref . 'tags2 set T2Text = ' . 
@@ -111,7 +102,7 @@ if (isset($_REQUEST['new'])) {
     
     ?>
 
-    <h4>New Tag</h4>
+    <h2>New Tag</h2>
     <script type="text/javascript" charset="utf-8">
         $(document).ready(ask_before_exiting);
     </script>
@@ -135,17 +126,14 @@ if (isset($_REQUEST['new'])) {
     
     <?php
     
-}
-
-// CHG
-
-elseif (isset($_REQUEST['chg'])) {
+} elseif (isset($_REQUEST['chg'])) {
+    // CHG
     
     $sql = 'select * from ' . $tbpref . 'tags2 where T2ID = ' . $_REQUEST['chg'];
     $res = do_mysqli_query($sql);
     if ($record = mysqli_fetch_assoc($res)) {
         ?>
-     <h4>Edit Tag</h4>
+     <h2>Edit Tag</h2>
      <script type="text/javascript" charset="utf-8">
          $(document).ready(ask_before_exiting);
      </script>
@@ -170,11 +158,8 @@ elseif (isset($_REQUEST['chg'])) {
         <?php
     }
     mysqli_free_result($res);
-}
-
-// DISPLAY
-
-else {
+} else {
+    // DISPLAY
     if (substr($message, 0, 24) == "Error: Duplicate entry '"  
         && substr($message, -18) == "' for key 'T2Text'"
     ) {
@@ -196,9 +181,11 @@ else {
 
     $pages = $recno == 0 ? 0 : (intval(($recno-1) / $maxperpage) + 1);
     
-    if ($currentpage < 1) { $currentpage = 1; 
+    if ($currentpage < 1) { 
+        $currentpage = 1; 
     }
-    if ($currentpage > $pages) { $currentpage = $pages; 
+    if ($currentpage > $pages) { 
+        $currentpage = $pages; 
     }
     $limit = 'LIMIT ' . (($currentpage-1) * $maxperpage) . ',' . $maxperpage;
 
@@ -206,14 +193,15 @@ else {
     $lsorts = count($sorts);
     if ($currentsort < 1) { $currentsort = 1; 
     }
-    if ($currentsort > $lsorts) { $currentsort = $lsorts; 
+    if ($currentsort > $lsorts) { 
+        $currentsort = $lsorts; 
     }
     
     ?>
 <p><a href="<?php echo $_SERVER['PHP_SELF']; ?>?new=1"><img src="icn/plus-button.png" title="New" alt="New" /> New Text Tag ...</a></p>
 
 <form name="form1" action="#" onsubmit="document.form1.querybutton.click(); return false;">
-<table class="tab1" cellspacing="0" cellpadding="5">
+<table class="tab2" cellspacing="0" cellpadding="5">
 <tr>
 <th class="th1" colspan="4">Filter <img src="icn/funnel.png" title="Filter" alt="Filter" />&nbsp;
 <input type="button" value="Reset All" onclick="{location.href='edit_texttags.php?page=1&amp;query=';}" /></th>
@@ -250,7 +238,7 @@ Sort Order:
         ?>
 <form name="form2" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 <input type="hidden" name="data" value="" />
-<table class="tab1" cellspacing="0" cellpadding="5">
+<table class="tab2" cellspacing="0" cellpadding="5">
 <tr><th class="th1 center" colspan="2">
 Multi Actions <img src="icn/lightning.png" title="Multi Actions" alt="Multi Actions" />
 </th></tr>
@@ -266,7 +254,7 @@ Multi Actions <img src="icn/lightning.png" title="Multi Actions" alt="Multi Acti
 <select name="markaction" id="markaction" disabled="disabled" onchange="multiActionGo(document.form2, document.form2.markaction);"><?php echo get_multipletagsactions_selectoptions(); ?></select>
 </td></tr></table>
 
-<table class="sortable tab1"  cellspacing="0" cellpadding="5">
+<table class="sortable tab2"  cellspacing="0" cellpadding="5">
 <tr>
 <th class="th1 sorttable_nosort">Mark</th>
 <th class="th1 sorttable_nosort">Actions</th>
@@ -302,7 +290,7 @@ Multi Actions <img src="icn/lightning.png" title="Multi Actions" alt="Multi Acti
 
 
         <?php if($pages > 1) { ?>
-<table class="tab1" cellspacing="0" cellpadding="5">
+<table class="tab2" cellspacing="0" cellpadding="5">
 <tr>
 <th class="th1" nowrap="nowrap">
             <?php echo $recno; ?> Tag<?php echo ($recno==1?'':'s'); ?>

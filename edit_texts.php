@@ -560,10 +560,10 @@ function edit_texts_new($lid)
 {
     ?>
 
-<h4>
+<h1>
     New Text <a target="_blank" href="docs/info.html#howtotext">
     <img src="icn/question-frame.png" title="Help" alt="Help" /></a> 
-</h4>
+</h1>
 <script type="text/javascript" charset="utf-8">
     $(document).ready(ask_before_exiting);
 </script>
@@ -657,14 +657,12 @@ function edit_texts_change($txid)
     WHERE TxID = {$txid}";
     $res = do_mysqli_query($sql);
     if ($record = mysqli_fetch_assoc($res)) {
-
         ?>
-
-<h4>
+<h1>
     Edit Text <a target="_blank" href="docs/info.html#howtotext">
     <img src="icn/question-frame.png" title="Help" alt="Help" />
     </a>
-</h4>
+</h1>
 <script type="text/javascript" charset="utf-8">
     $(document).ready(ask_before_exiting);
 </script>
@@ -770,7 +768,7 @@ function edit_texts_filters_form($currentlang, $recno, $currentpage, $pages)
     $currenttag12 = processSessParam("tag12", "currenttexttag12", '', 0);
     ?>
 <form name="form1" action="#" onsubmit="document.form1.querybutton.click(); return false;">
-    <table class="tab1" cellspacing="0" cellpadding="5">
+    <table class="tab2" cellspacing="0" cellpadding="5">
         <tr>
             <th class="th1" colspan="4">Filter <img src="icn/funnel.png" title="Filter" alt="Filter" />&nbsp;
             <input type="button" value="Reset All" onclick="resetAll('edit_texts.php');" /></th>
@@ -879,7 +877,7 @@ function edit_texts_other_pages($recno)
         $currentpage = $pages; 
     }
     ?>
-<table class="tab1" cellspacing="0" cellpadding="5">
+<table class="tab2" cellspacing="0" cellpadding="5">
     <tr>
         <th class="th1" nowrap="nowrap">
             <?php echo $recno; ?> Text<?php echo ($recno==1?'':'s'); ?>
@@ -1024,7 +1022,7 @@ function edit_texts_texts_form($currentlang, $showCounts, $sql, $recno)
     ?>
 <form name="form2" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 <input type="hidden" name="data" value="" />
-<table class="tab1" cellspacing="0" cellpadding="5">
+<table class="tab2" cellspacing="0" cellpadding="5">
     <tr>
         <th class="th1" colspan="2">
             Multi Actions 
@@ -1044,7 +1042,7 @@ function edit_texts_texts_form($currentlang, $showCounts, $sql, $recno)
         </td>
     </tr>
 </table>
-<table class="sortable tab1" cellspacing="0" cellpadding="5">
+<table class="sortable tab2" cellspacing="0" cellpadding="5">
 <thead class="test_class_to_delete">
     <tr>
         <th class="th1 sorttable_nosort">Mark</th>
@@ -1220,76 +1218,42 @@ function edit_texts_display($message)
     <?php
     edit_texts_filters_form($currentlang, $recno, $currentpage, $pages);
 
-    if ($recno==0) {
+    if ($recno == 0) {
         ?>
-    <p>No texts found.</p>
+    <p>No text found.</p>
         <?php
-    } else {
-        $showCounts = getSettingWithDefault('set-show-text-word-counts');
-        if(strlen($showCounts)!=5) { 
-            $showCounts = "11111"; 
-        }
-        $sql = "SELECT TxID, TxTitle, LgName, TxAudioURI, TxSourceURI, 
-        LENGTH(TxAnnotatedText) AS annotlen,
-        IF(
-            COUNT(T2Text)=0, 
-            '', 
-            CONCAT(
-                '[',group_concat(DISTINCT T2Text ORDER BY T2Text separator ', '),']'
-            )
-        ) AS taglist
-        FROM (
-            ({$tbpref}texts LEFT JOIN {$tbpref}texttags ON TxID = TtTxID) 
-            LEFT JOIN {$tbpref}tags2 ON T2ID = TtT2ID
-        ), {$tbpref}languages
-        WHERE LgID=TxLgID {$wh_lang}{$wh_query} 
-        GROUP BY TxID $wh_tag
-        ORDER BY {$sorts[$currentsort-1]} 
-        {$limit}";
-        edit_texts_texts_form($currentlang, $showCounts, $sql, $recno);
-        ?>
+        return;
+    }
+    $showCounts = getSettingWithDefault('set-show-text-word-counts');
+    if(strlen($showCounts)!=5) { 
+        $showCounts = "11111"; 
+    }
+    $sql = "SELECT TxID, TxTitle, LgName, TxAudioURI, TxSourceURI, 
+    LENGTH(TxAnnotatedText) AS annotlen,
+    IF(
+        COUNT(T2Text)=0, 
+        '', 
+        CONCAT(
+            '[',group_concat(DISTINCT T2Text ORDER BY T2Text separator ', '),']'
+        )
+    ) AS taglist
+    FROM (
+        ({$tbpref}texts LEFT JOIN {$tbpref}texttags ON TxID = TtTxID) 
+        LEFT JOIN {$tbpref}tags2 ON T2ID = TtT2ID
+    ), {$tbpref}languages
+    WHERE LgID=TxLgID {$wh_lang}{$wh_query} 
+    GROUP BY TxID $wh_tag
+    ORDER BY {$sorts[$currentsort-1]} 
+    {$limit}";
+    edit_texts_texts_form($currentlang, $showCounts, $sql, $recno);
+    ?>
 <script type="text/javascript">
     var WORDCOUNTS = '', SUW = SHOWUNIQUE = <?php echo intval($showCounts, 2); ?>;
 
-    /**
-     * Prepare the action so that a click switches between 
-     * unique word count and total word count.
-     * 
-     * @returns {undefined}
-     */
-    function prepare_word_count_click() {
-        $('#total,#saved,#unknown,#chart,#unknownpercent')
-        .on('click', function( event ) {
-            $(this).attr('data_wo_cnt',parseInt($(this).attr('data_wo_cnt'))^1);
-            word_count_click();
-            event.stopImmediatePropagation();
-        }).attr('title',"u: Unique Word Counts\nt: Total  Word  Counts");
-        do_ajax_word_counts();
-    }
-
-    /**
-     * Save the settings about unique/total words count.
-     * 
-     * @returns {undefined}
-     */
-    function save_text_word_count_settings() {
-        if (SUW == SHOWUNIQUE) {
-            return;
-        }
-        const a = $('#total').attr('data_wo_cnt') + 
-        $('#saved').attr('data_wo_cnt') + 
-        $('#unknown').attr('data_wo_cnt') + 
-        $('#unknownpercent').attr('data_wo_cnt') + 
-        $('#chart').attr('data_wo_cnt');
-        do_ajax_save_setting('set-show-text-word-counts', a);
-    }
-
-    $(document).ready(prepare_word_count_click);
-    $(window).on('beforeunload', save_text_word_count_settings);
+    $(document).ready(lwt.prepare_word_count_click);
+    $(window).on('beforeunload', lwt.save_text_word_count_settings);
 </script>
         <?php
-
-    }
 }
 
 /**

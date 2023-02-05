@@ -1,6 +1,7 @@
 # New feature not available in the official LWT
 
 ## User Interface
+
 * Real mobile support for reading and testing
 * Support for different themes
 * Display translations of terms with status in the reading frame
@@ -20,7 +21,8 @@
   * You can use LWT on small screens.
 
 ## More than LWT
-* Automatically import texts from RSS feeds (for more info see: [Newsfeed Import](#feed_imp))
+
+* Automatically import texts from RSS feeds (for more info see: [Newsfeed Import](info.html#feed_imp))
 * Longer (> 9 characters) expressions can now be saved (up to 250 characters)
 * Text to speech
 * Improved Search/Query for Words/Texts
@@ -29,6 +31,7 @@
 * Two database backup modes (new or old structure)
 
 ## Server load  
+
 * Database improvements: the database takes much less space on the server
 * Better caching due to an improved file management
 * Support for Docker

@@ -674,7 +674,7 @@ if (isset($_REQUEST['new']) && isset($_REQUEST['lang'])) {
     
     ?>
 
-    <h4>New Term</h4>
+    <h2>New Term</h2>
     <script type="text/javascript" charset="utf-8">
         $(document).ready(ask_before_exiting);
     </script>  
@@ -735,13 +735,14 @@ if (isset($_REQUEST['new']) && isset($_REQUEST['lang'])) {
         
         $wordlc = $record['WoTextLC'];
         $transl = repl_tab_nl($record['WoTranslation']);
-        if($transl == '*') { $transl=''; 
+        if ($transl == '*') { 
+            $transl=''; 
         }
         $scrdir = ($record['LgRightToLeft'] ? ' dir="rtl" ' : '');
     
         ?>
     
-     <h4>Edit Term</h4>
+     <h2>Edit Term</h2>
      <script type="text/javascript" charset="utf-8">
          $(document).ready(ask_before_exiting);
      </script>
@@ -853,7 +854,7 @@ if (isset($_REQUEST['new']) && isset($_REQUEST['lang'])) {
 ?>
 
 <form name="form1" action="#" onsubmit="document.form1.querybutton.click(); return false;">
-<table class="tab1" cellspacing="0" cellpadding="5">
+<table class="tab2" cellspacing="0" cellpadding="5">
 <tr>
 <th class="th1" colspan="4">Filter <img src="icn/funnel.png" title="Filter" alt="Filter" />&nbsp;
 <input type="button" value="Reset All" onclick="resetAll('edit_words.php');" /></th>
@@ -943,7 +944,7 @@ if ($recno==0) {
 ?>
 <form name="form2" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 <input type="hidden" name="data" value="" />
-<table class="tab1" cellspacing="0" cellpadding="5">
+<table class="tab2" cellspacing="0" cellpadding="5">
 <tr><th class="th1 center" colspan="2">
 Multi Actions <img src="icn/lightning.png" title="Multi Actions" alt="Multi Actions" />
 </th></tr>
@@ -959,7 +960,7 @@ Multi Actions <img src="icn/lightning.png" title="Multi Actions" alt="Multi Acti
 <select name="markaction" id="markaction" disabled="disabled" onchange="multiActionGo(document.form2, document.form2.markaction);"><?php echo get_multiplewordsactions_selectoptions(); ?></select>
 </td></tr></table>
 
-<table class="sortable tab1"  cellspacing="0" cellpadding="5">
+<table class="sortable tab2"  cellspacing="0" cellpadding="5">
 <tr>
 <th class="th1 sorttable_nosort">Mark</th>
 <th class="th1 sorttable_nosort">Act.</th>
@@ -1053,7 +1054,7 @@ mysqli_free_result($res);
 </script>
 
 <?php if($pages > 1) { ?>
-<table class="tab1" cellspacing="0" cellpadding="5">
+<table class="tab2" cellspacing="0" cellpadding="5">
     <tr>
         <th class="th1" nowrap="nowrap">
             <?php echo $recno; ?> Term<?php echo ($recno==1?'':'s'); ?>

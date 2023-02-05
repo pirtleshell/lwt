@@ -209,20 +209,23 @@ function check () {
       }
     }
   });
+  // Check that the Google Translate field is of good type
   $('input.checkdicturl').each(function (_n) {
-    if ($(this).val().trim().length > 0) {
+    const translate_input = $(this).val().trim();
+    if (translate_input.length > 0) {
       if (
-        ($(this).val().trim().indexOf('http://') != 0) && 
-        ($(this).val().trim().indexOf('https://') != 0) && 
-        ($(this).val().trim().indexOf('*http://') != 0) && 
-        ($(this).val().trim().indexOf('*https://') != 0) && 
-        ($(this).val().trim().indexOf('glosbe_api.php') != 0) && 
-        ($(this).val().trim().indexOf('ggl.php') != 0)
+        (translate_input.indexOf('http://') != 0) && 
+        (translate_input.indexOf('https://') != 0) && 
+        (translate_input.indexOf('*http://') != 0) && 
+        (translate_input.indexOf('*https://') != 0) && 
+        (translate_input.indexOf('glosbe_api.php') != 0) && 
+        (translate_input.indexOf('ggl.php') != 0) &&
+        !translate_input.startsWith('libretranslate ') 
       ) {
         alert(
           'ERROR\n\nField "' + $(this).attr('data_info') + 
-          '" must start with "http://" or "https://" or "*http://" or "*https://" ' +
-          'or "glosbe_api.php" or "ggl.php" if not empty.'
+          '" must start with "http://", "https://", "*http://", "*https://", ' +
+          '"glosbe_api.php", "ggl.php", "libretranslate " if not empty.'
         );
         count++;
       }
@@ -1335,6 +1338,42 @@ function failureSound() {
   document.getElementById('success_sound').pause();
   document.getElementById('failure_sound').pause();
   return document.getElementById('failure_sound').play();
+}
+
+const lwt = {
+
+  /**
+   * Prepare the action so that a click switches between 
+   * unique word count and total word count.
+   * 
+   * @returns {undefined}
+   */
+  prepare_word_count_click: function () {
+    $('#total,#saved,#unknown,#chart,#unknownpercent')
+    .on('click', function( event ) {
+        $(this).attr('data_wo_cnt',parseInt($(this).attr('data_wo_cnt'))^1);
+        word_count_click();
+        event.stopImmediatePropagation();
+    }).attr('title',"u: Unique Word Counts\nt: Total  Word  Counts");
+    do_ajax_word_counts();
+  },
+
+  /**
+   * Save the settings about unique/total words count.
+   * 
+   * @returns {undefined}
+   */
+  save_text_word_count_settings: function () {
+      if (SUW == SHOWUNIQUE) {
+          return;
+      }
+      const a = $('#total').attr('data_wo_cnt') + 
+      $('#saved').attr('data_wo_cnt') + 
+      $('#unknown').attr('data_wo_cnt') + 
+      $('#unknownpercent').attr('data_wo_cnt') + 
+      $('#chart').attr('data_wo_cnt');
+      do_ajax_save_setting('set-show-text-word-counts', a);
+  }
 }
 
 // Present data in a handy way, for instance in a form

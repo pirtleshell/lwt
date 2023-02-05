@@ -132,7 +132,7 @@ function make_form($textid, $wordlc): array
     $rr = "";
     $r = 
     '<form action="" method="post">
-        <table class="tab1" cellspacing="0" cellpadding="5">
+        <table class="tab2" cellspacing="0" cellpadding="5">
             <tr>
                 <th class="th1 center">Text</th>
                 <th class="th1 center">Dict.</th>

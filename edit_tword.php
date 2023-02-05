@@ -42,7 +42,7 @@ if (isset($_REQUEST['op'])) {
             
             $titletext = "Edit Term: " . tohtml(prepare_textdata($_REQUEST["WoTextLC"]));
             pagestart_nobody($titletext);
-            echo '<h4><span class="bigger">' . $titletext . '</span></h4>';
+            echo '<h1>' . $titletext . '</h1>';
             
             $oldstatus = $_REQUEST["WoOldStatus"];
             $newstatus = $_REQUEST["WoStatus"];
@@ -71,7 +71,7 @@ if (isset($_REQUEST['op'])) {
         // (mb_strtolower($text, 'UTF-8') != $textlc)
         $titletext = "New/Edit Term: " . tohtml(prepare_textdata($_REQUEST["WoTextLC"]));
         pagestart_nobody($titletext);
-        echo '<h4><span class="bigger">' . $titletext . '</span></h4>';        
+        echo '<h1>' . $titletext . '</h1>';        
         $message = 'Error: Term in lowercase must be exactly = "' . $textlc . '", please go back and correct this!'; 
         echo error_message_with_hide($message, 0);
         pageend();

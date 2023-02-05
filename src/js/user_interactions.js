@@ -193,6 +193,21 @@ function getPhoneticText(text, lang) {
     return phoneticText;
 }
 
+/**
+ * Get the phonetic version of a text, asynchronous.
+ * 
+ * @param {string} text Text to convert to phonetics.
+ * @param {string} lang Language, either two letters code or four letters (BCP 47)
+ */
+async function getPhoneticTextAsync(text, lang) {
+    return $.get(
+        'inc/ajax_get_phonetic.php',
+        data={
+            text: text, 
+            lang: lang 
+        },
+    );
+}
 
 /**
  * Read a text aloud, only work with a phonetic version.

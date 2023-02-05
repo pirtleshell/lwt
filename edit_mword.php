@@ -19,74 +19,26 @@
 
 require_once 'inc/session_utility.php';
 require_once 'inc/simterms.php';
+require_once 'inc/classes/Term.php';
 
 /**
- * A term (word or mutli-word) represented as an object.
+ * Export term data as a JSON dictionnary.
  * 
- * This structure is experimental and subject to change.
+ * @return string JSON dictionnary. 
  */
-class Term
+function export_term_js_dict($term) 
 {
-    /**
-     * @var int Term ID.
-     */
-    public $id;
-    /**
-     * @var int Language ID.
-     */
-    public $lgid;
-    /**
-     * @var string Associated text.
-     */
-    public $text;
-    /**
-     * @var string Associated text in lower case.
-     */
-    public $textlc;
-    /**
-     * @var int Term status.
-     */
-    public $status;
-    /**
-     * @var string Term translation.
-     */
-    public $translation;
-    /**
-     * @var string Sentence containing the term. 
-     */
-    public $sentence;
-    /**
-     * @var string Romanization.
-     */
-    public $roman;
-    /**
-     * @var int Number of words in the term.
-     */
-    public $wordcount;
-    /**
-     * @var int Last status change date.
-     */
-    public $statuschanged;
-
-    /**
-     * Export word data as a JSON dictionnary.
-     * 
-     * @return string JSON disctionnary. 
-     */
-    public function export_js_dict()
-    {
-        return json_encode(
-            array(
-            "woid" => $this->id,
-            "text" =>  $this->text,
-            "romanization" => $this->roman,
+    return json_encode(
+        array(
+            "woid" => $term->id,
+            "text" =>  $term->text,
+            "romanization" => $term->roman,
             "translation" => prepare_textdata_js(
-                $this->translation . getWordTagList($this->id, ' ', 1, 0)
+                $term->translation . getWordTagList($term->id, ' ', 1, 0)
             ),
-            "status" => $this->status
-            )
-        );
-    }
+            "status" => $term->status
+        )
+    );
 }
 
 /**
@@ -105,7 +57,7 @@ function edit_mword_prepare_term()
     if (mb_strtolower(trim(getreq("WoText")), 'UTF-8') != $textlc) {
         $titletext = "New/Edit Term: " . tohtml($textlc);
         pagestart_nobody($titletext);
-        echo '<h4><span class="bigger">' . $titletext . '</span></h4>';
+        echo '<h1>' . $titletext . '</h1>';
         $message = 'Error: Term in lowercase must be exactly = "' . $textlc . 
         '", please go back and correct this!';
         echo error_message_with_hide($message, 0);
@@ -179,7 +131,7 @@ function edit_mword_do_insert($term)
     global $tbpref;
     $titletext = "New Term: " . tohtml($term->textlc);
     pagestart_nobody($titletext);
-    echo '<h4><span class="bigger">' . $titletext . '</span></h4>';
+    echo '<h1>' . $titletext . '</h1>';
 
     $message = runsql(
         "INSERT INTO {$tbpref}words (
@@ -224,7 +176,7 @@ function edit_mword_do_update($term, $newstatus)
     global $tbpref;
     $titletext = "Edit Term: " . tohtml($term->textlc);
     pagestart_nobody($titletext);
-    echo '<h4><span class="bigger">' . $titletext . '</span></h4>';
+    echo '<h1>' . $titletext . '</h1>';
 
     $oldstatus = $term->status;
     $status_change = '';
@@ -269,7 +221,7 @@ function edit_mword_do_update($term, $newstatus)
         }
 
         update_mword(
-            <?= $term->export_js_dict(); ?>, <?= (int) $_REQUEST['WoOldStatus']; ?>
+            <?= export_term_js_dict($term); ?>, <?= (int) $_REQUEST['WoOldStatus']; ?>
         );
     //]]>
     </script>
