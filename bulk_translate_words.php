@@ -21,7 +21,7 @@
 require_once 'inc/session_utility.php';
 
 
-function bulk_save_terms($terms, $tid, $pos)
+function bulk_save_terms($terms, $tid, $cleanUp)
 {
     global $tbpref;
     $sqlarr = array();
@@ -105,11 +105,9 @@ function bulk_save_terms($terms, $tid, $pos)
     $('#learnstatus', context)
     .html('<?php echo addslashes(texttodocount2($tid)); ?>');
     $('#displ_message').remove();
-    <?php 
-    if (!isset($pos)) {
-        echo "cleanupRightFrames();";
-    } 
-    ?>
+    if (<?php echo json_encode($cleanUp); ?>) {
+        cleanupRightFrames();
+    }
 </script>
     <?php
     mysqli_free_result($res);
@@ -123,14 +121,15 @@ function bulk_do_content($tid, $sl, $tl, $pos)
     $cnt = 0;
     $offset = '';
     $limit = (int)getSettingWithDefault('set-ggl-translation-per-page') + 1;
-    $sql = 'select LgName, LgDict1URI, LgDict2URI, LgGoogleTranslateURI 
-    from ' . $tbpref . 'languages, ' . $tbpref . 'texts 
-    where LgID = TxLgID and TxID = ' . $tid;
+    $sql = "SELECT LgName, LgDict1URI, LgDict2URI, LgGoogleTranslateURI 
+    FROM {$tbpref}languages, {$tbpref}texts 
+    WHERE LgID = TxLgID AND TxID = $tid";
     $res = do_mysqli_query($sql);
     $record = mysqli_fetch_assoc($res);
     $wb1 = isset($record['LgDict1URI']) ? $record['LgDict1URI'] : "";
     $wb2 = isset($record['LgDict2URI']) ? $record['LgDict2URI'] : "";
-    $wb3 = isset($record['LgGoogleTranslateURI']) ? $record['LgGoogleTranslateURI'] : "";
+    $wb3 = isset($record['LgGoogleTranslateURI']) ? 
+    $record['LgGoogleTranslateURI'] : "";
     ?>
 <style>
     .dict {
@@ -165,109 +164,113 @@ function bulk_do_content($tid, $sl, $tl, $pos)
     WBLINK2 = '<?php echo $wb2; ?>';
     WBLINK3 = '<?php echo $wb3; ?>';
     $('h3,h4,title').addClass('notranslate');
-$(window).load(function() {
-    $('[name="form1"]').submit(function() {
-        $('[name="WoTranslation"]').attr('name',$('[name="WoTranslation"]')
-        .attr('data_name'));
-        window.parent.frames['ru'].location.href = 'empty.html';
-        return true;
-    });
 
-    $('td').on(
-        'click',
-        'span.dict1, span.dict2, span.dict3',
-        function(){
-            if($(this).hasClass( "dict1" )) 
-                WBLINK=WBLINK1;
-            if($(this).hasClass( "dict2" ))
-                WBLINK=WBLINK2;
-            if($(this).hasClass( "dict3" ))
-                WBLINK=WBLINK3;
-            if ((WBLINK.substr(0,8) == '*http://') || (WBLINK.substr(0,9) == '*https://')) {
-                owin(createTheDictUrl(
-                    WBLINK.replace('*',''), $(this).parent().prev().text()
-                    ));
-            } else {
-                window.parent.frames['ru'].location.href = createTheDictUrl(
-                    WBLINK, $(this).parent().prev().text()
-                );
-            }
-            $('[name="WoTranslation"]')
-            .attr('name',$('[name="WoTranslation"]')
+    const bulk_interactions = function() {
+        $('[name="form1"]').submit(function() {
+            $('[name="WoTranslation"]').attr('name',$('[name="WoTranslation"]')
             .attr('data_name'));
-            el=$(this).parent().parent().next().children();
-            el.attr('data_name',el.attr('name'));
-            el.attr('name','WoTranslation');
-        }
-    ).on(
-        'click',
-        '.del_trans',
-        function(){$(this).prev().val('').focus();});
+            window.parent.frames['ru'].location.href = 'empty.html';
+            return true;
+        });
 
-    var myVar = setInterval(function(){
-        if ($( ".trans>font" ).length == $( ".trans" ).length) {
-            $('.trans').each(function() {
-                var txt=$(this).text();
-                var cnt= $(this).attr('id').replace('Trans_', '');
-                $(this).addClass('notranslate')
-                .html(
-                    '<input type="text" name="term[' + cnt + '][trans]" value="' 
-                    + txt + '" maxlength="100" size="35"></input>' + 
-                    '<div class="del_trans"></div>'
-                );
-            });
-            $('.term').each(function(){
-                txt = $(this).text();
-                $(this).parent().css('position', 'relative');
-                $(this).after(
-                    '<div class="dict">' +
-                     (WBLINK1 ? '<span class="dict1">D1</span>' : '') +
-                     (WBLINK2 ? '<span class="dict2">D2</span>' : '') +
-                     (WBLINK3 ? '<span class="dict3">GTr</span>' : '') +
-                    '</div>'
-                );
-            });
-            $('iframe,#google_translate_element').remove();
-            selectToggle(true, 'form1');
-            $('[name^=term]').prop('disabled', false);
-            clearInterval(myVar);
-        }
-    }, 300);
-});
+        $('td').on(
+            'click',
+            'span.dict1, span.dict2, span.dict3',
+            function() {
+                if ($(this).hasClass( "dict1" )) 
+                    WBLINK=WBLINK1;
+                if ($(this).hasClass( "dict2" ))
+                    WBLINK=WBLINK2;
+                if ($(this).hasClass( "dict3" ))
+                    WBLINK=WBLINK3;
+                if ((WBLINK.substr(0,8) == '*http://') || (WBLINK.substr(0,9) == '*https://')) {
+                    owin(createTheDictUrl(
+                        WBLINK.replace('*',''), $(this).parent().prev().text()
+                        ));
+                } else {
+                    window.parent.frames['ru'].location.href = createTheDictUrl(
+                        WBLINK, $(this).parent().prev().text()
+                    );
+                }
+                $('[name="WoTranslation"]')
+                .attr('name',$('[name="WoTranslation"]')
+                .attr('data_name'));
+                el = $(this).parent().parent().next().children();
+                el.attr('data_name', el.attr('name'));
+                el.attr('name','WoTranslation');
+            }
+        ).on(
+            'click',
+            '.del_trans',
+            function() { $(this).prev().val('').focus(); }
+        );
 
-$(document).ready( function() {
-    window.parent.frames['ru'].location.href = 'empty.html';
-    $('input[type="checkbox"]').change(function(){
-        var v = parseInt($(this).val());
-        var e = '[name=term\\[' + v + '\\]\\[text\\]],[name=term\\[' + v + 
-        '\\]\\[lg\\]],[name=term\\[' + v + '\\]\\[status\\]]';
-        if(this.checked){
-            $(e).prop('disabled', false);
-            $('#Trans_'+v+' input').prop('disabled', false);
-            if($('input[type="checkbox"]:checked').length) {
-                $('input[type="submit"]').val('Save');
+        const myVar = setInterval(function() {
+            if ($( ".trans>font" ).length == $( ".trans" ).length) {
+                $('.trans').each(function() {
+                    var txt = $(this).text();
+                    var cnt = $(this).attr('id').replace('Trans_', '');
+                    $(this).addClass('notranslate')
+                    .html(
+                        '<input type="text" name="term[' + cnt + '][trans]" value="' 
+                        + txt + '" maxlength="100" size="35"></input>' + 
+                        '<div class="del_trans"></div>'
+                    );
+                });
+                $('.term').each(function(){
+                    txt = $(this).text();
+                    $(this).parent().css('position', 'relative');
+                    $(this).after(
+                        '<div class="dict">' +
+                        (WBLINK1 ? '<span class="dict1">D1</span>' : '') +
+                        (WBLINK2 ? '<span class="dict2">D2</span>' : '') +
+                        (WBLINK3 ? '<span class="dict3">GTr</span>' : '') +
+                        '</div>'
+                    );
+                });
+                $('iframe,#google_translate_element').remove();
+                selectToggle(true, 'form1');
+                $('[name^=term]').prop('disabled', false);
+                clearInterval(myVar);
             }
-        } else{
-            $(e).prop('disabled', true);
-            $('#Trans_'+v+' input').prop('disabled', true);
-            if(!$('input[type="checkbox"]:checked').length) {
-                if(!$('input[name="offset"]').length) 
-                    v='End';
-                else 
-                    v='Next';
-                $('input[type="submit"]').val(v);
+        }, 300);
+    }
+
+    const bulk_checkbox = function() {
+        window.parent.frames['ru'].location.href = 'empty.html';
+        $('input[type="checkbox"]').change(function(){
+            var v = parseInt($(this).val());
+            var e = '[name=term\\[' + v + '\\]\\[text\\]],[name=term\\[' + v + 
+            '\\]\\[lg\\]],[name=term\\[' + v + '\\]\\[status\\]]';
+            if (this.checked) {
+                $(e).prop('disabled', false);
+                $('#Trans_'+v+' input').prop('disabled', false);
+                if ($('input[type="checkbox"]:checked').length) {
+                    $('input[type="submit"]').val('Save');
+                }
+            } else {
+                $(e).prop('disabled', true);
+                $('#Trans_'+v+' input').prop('disabled', true);
+                if (!$('input[type="checkbox"]:checked').length) {
+                    v = (!$('input[name="offset"]').length) ? 'End' : 'Next';
+                    $('input[type="submit"]').val(v);
+                }
             }
-        }
-    });
-});
-function googleTranslateElementInit() {
-  new google.translate.TranslateElement({
-      pageLanguage: '<?php echo $sl; ?>', 
-      layout: google.translate.TranslateElement.InlineLayout.SIMPLE, 
-      includedLanguages: '<?php echo $tl; ?>', 
-      autoDisplay: false
-    }, 'google_translate_element');
-}
+        });
+    }
+
+    $(window).load(bulk_interactions);
+
+    $(document).ready(bulk_checkbox);
+
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({
+            pageLanguage: '<?php echo $sl; ?>', 
+            layout: google.translate.TranslateElement.InlineLayout.SIMPLE, 
+            includedLanguages: '<?php echo $tl; ?>', 
+            autoDisplay: false
+            }, 'google_translate_element');
+    }
 </script>
 <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 <script type="text/javascript">
@@ -278,18 +281,13 @@ function googleTranslateElementInit() {
     }
 
     function markNone() {
-        let v;
-        if(!$('input[name^=offset]').length) {
-            v = 'End'; 
-        } else {
-            v = 'Next';
-        } 
+        const v = (!$('input[name^=offset]').length) ? 'End' : 'Next';
         $('input[type^=submit]').val(v);
         selectToggle(false,'form1');
         $('[name^=term]').prop('disabled', true);
     }
 
-    function changeTermToggles(elem) {
+    function changeTermToggles (elem) {
         const v = elem.val();
         if (v==6) {
             $('.markcheck:checked').each(function() {
@@ -300,7 +298,7 @@ function googleTranslateElementInit() {
             elem.prop('selectedIndex',0);
             return false;
         } 
-        if(v==7){
+        if (v==7) {
             $('.markcheck:checked').each(function() {
                 $('#Trans_' + elem.val() + ' input').val('*');
             });
@@ -356,16 +354,16 @@ function googleTranslateElementInit() {
         </tr>
     <?php
     $res = do_mysqli_query(
-        'select Ti2Text as word,Ti2LgID,min(Ti2Order) as pos 
-        from ' . $tbpref . 'textitems2 
-        where Ti2WoID = 0 and Ti2TxID = ' . $tid . ' AND Ti2WordCount =1 
-        group by LOWER(Ti2Text) 
-        order by pos 
-        limit ' . $pos . ',' . $limit
+        "SELECT Ti2Text AS word, Ti2LgID, MIN(Ti2Order) AS pos 
+        FROM {$tbpref}textitems2 
+        WHERE Ti2WoID = 0 AND Ti2TxID = $tid AND Ti2WordCount = 1 
+        GROUP BY LOWER(Ti2Text) 
+        ORDER BY pos 
+        LIMIT $pos, $limit"
     );
     while ($record = mysqli_fetch_assoc($res)) {
-        if (++$cnt<$limit) {
-            $value=tohtml($record['word']);
+        if (++$cnt < $limit) {
+            $value = tohtml($record['word']);
             echo '<tr>
             <td class="td1 center notranslate">
                 <input name="marked[', $cnt ,']" type="checkbox" class="markcheck" checked="checked" value="', $cnt , '" />
@@ -389,7 +387,8 @@ function googleTranslateElementInit() {
             </td>
             </tr>',"\n";
         } else { 
-            $offset = '<input type="hidden" name="offset" value="' . ($pos + $limit - 1) . '" />
+            $offset = '<input type="hidden" name="offset" value="' . 
+            ($pos + $limit - 1) . '" />
             <input type="hidden" name="sl" value="' . $sl . '" />
             <input type="hidden" name="tl" value="' . $tl . '" />'; 
         }
@@ -414,7 +413,7 @@ if (isset($_REQUEST['term'])) {
         $pos -= $cnt;
     }
     pagestart($cnt . ' New Word' . ($cnt == 1 ? '' : 's') . ' Saved', false);
-    bulk_save_terms($_REQUEST['term'], $tid, $pos);
+    bulk_save_terms($_REQUEST['term'], $tid, !isset($pos));
 } else {
     pagestart_nobody('Translate New Words');
 }
@@ -424,7 +423,6 @@ if (isset($pos)) {
     if (isset($_REQUEST["sl"])) {
         $sl = $_REQUEST["sl"];
         $tl = $_REQUEST["tl"];
-        //setcookie("googtrans", "/$sl/$tl", time() + 60, "/");
     }
     bulk_do_content($tid, $sl, $tl, $pos);
 }
