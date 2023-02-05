@@ -25,10 +25,12 @@ var searchData=
   ['show_5fpage_5finsert_5fword_5fwellknown_22',['show_page_insert_word_wellknown',['../insert__word__wellknown_8php.html#a7f8fc5732049367a37f4abff14af9d0f',1,'insert_word_wellknown.php']]],
   ['showrequest_23',['showRequest',['../kernel__utility_8php.html#aa7336cb943505ebaa4f39dc594bc3f1a',1,'kernel_utility.php']]],
   ['splitchecktext_24',['splitCheckText',['../database__connect_8php.html#a46e8e1270bdf2caa528fee2b393c919c',1,'database_connect.php']]],
-  ['start_5fsession_25',['start_session',['../start__session_8php.html#acf0f5d08f3cc33c287c14498462302c9',1,'start_session.php']]],
-  ['start_5fsession_5fmain_26',['start_session_main',['../start__session_8php.html#abd147a469e272316906d551d4fed610a',1,'start_session.php']]],
-  ['start_5fset_5ftext_5fstatus_27',['start_set_text_status',['../set__test__status_8php.html#abbeb7b6d77d8ca3a8e50b7d179aaf402',1,'set_test_status.php']]],
-  ['start_5ftest_5fheader_5fpage_28',['start_test_header_page',['../do__test__header_8php.html#ac69d7eb61f0593f0aa42e8545dc5e5b4',1,'do_test_header.php']]],
-  ['str_5freplace_5ffirst_29',['str_replace_first',['../kernel__utility_8php.html#a663921c08c6e251b51ca06a34a796bb3',1,'kernel_utility.php']]],
-  ['strtoclassname_30',['strToClassName',['../session__utility_8php.html#aa498a802f08f5e077602878bf95ea1ea',1,'session_utility.php']]]
+  ['start_5fdo_5fpage_25',['start_do_page',['../start_8php.html#acbc8b13f266379cb5a8d8031f1c81858',1,'start.php']]],
+  ['start_5fsave_5fprefix_26',['start_save_prefix',['../start_8php.html#a751060e925476bf004136b5477ac46e9',1,'start.php']]],
+  ['start_5fsession_27',['start_session',['../start__session_8php.html#acf0f5d08f3cc33c287c14498462302c9',1,'start_session.php']]],
+  ['start_5fsession_5fmain_28',['start_session_main',['../start__session_8php.html#abd147a469e272316906d551d4fed610a',1,'start_session.php']]],
+  ['start_5fset_5ftext_5fstatus_29',['start_set_text_status',['../set__test__status_8php.html#abbeb7b6d77d8ca3a8e50b7d179aaf402',1,'set_test_status.php']]],
+  ['start_5ftest_5fheader_5fpage_30',['start_test_header_page',['../do__test__header_8php.html#ac69d7eb61f0593f0aa42e8545dc5e5b4',1,'do_test_header.php']]],
+  ['str_5freplace_5ffirst_31',['str_replace_first',['../kernel__utility_8php.html#a663921c08c6e251b51ca06a34a796bb3',1,'kernel_utility.php']]],
+  ['strtoclassname_32',['strToClassName',['../session__utility_8php.html#aa498a802f08f5e077602878bf95ea1ea',1,'session_utility.php']]]
 ];

@@ -130,27 +130,21 @@ if($ann_exists) if( $textid==0) if($delmode)&#160;</td><td class="memItemRight" 
 <tr class="memitem:a55aa997bd2236d086fcf325908b0b680"><td class="memItemLeft" align="right" valign="top"><a id="a55aa997bd2236d086fcf325908b0b680" name="a55aa997bd2236d086fcf325908b0b680"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>$rtlScript</b> = $record['LgRightToLeft']</td></tr>
 <tr class="separator:a55aa997bd2236d086fcf325908b0b680"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7b29a38052bcf4f35ce990fc9d59bc17"><td class="memItemLeft" align="right" valign="top">if(!empty($record['LgGoogleTranslateURI']))&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="print__impr__text_8php.html#a7b29a38052bcf4f35ce990fc9d59bc17">else</a></td></tr>
-<tr class="separator:a7b29a38052bcf4f35ce990fc9d59bc17"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a737abdef83dabb219182c1e88887c6c3"><td class="memItemLeft" align="right" valign="top"><a id="a737abdef83dabb219182c1e88887c6c3" name="a737abdef83dabb219182c1e88887c6c3"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>$items</b> = preg_split('/[\n]/u', $ann)</td></tr>
-<tr class="separator:a737abdef83dabb219182c1e88887c6c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa1cb99dc43747766302095d3495f8135"><td class="memItemLeft" align="right" valign="top"><a id="aa1cb99dc43747766302095d3495f8135" name="aa1cb99dc43747766302095d3495f8135"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>foreach</b> ( $items as $item)</td></tr>
-<tr class="separator:aa1cb99dc43747766302095d3495f8135"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a90e3228bfd4c7e23f6bffc6735d8338d"><td class="memItemLeft" align="right" valign="top">if(!empty($record['LgGoogleTranslateURI']))&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="print__impr__text_8php.html#a90e3228bfd4c7e23f6bffc6735d8338d">else</a></td></tr>
+<tr class="separator:a90e3228bfd4c7e23f6bffc6735d8338d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Print/Edit an improved annotated text. </p>
 <p>Call: <a class="el" href="print__impr__text_8php.html" title="Print/Edit an improved annotated text.">print_impr_text.php</a>?text=[textid]&amp;... ... edit=1 ... edit own annotation ... del=1 ... delete own annotation </p>
 </div><h2 class="groupheader">Variable Documentation</h2>
-<a id="a7b29a38052bcf4f35ce990fc9d59bc17" name="a7b29a38052bcf4f35ce990fc9d59bc17"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7b29a38052bcf4f35ce990fc9d59bc17">&#9670;&#160;</a></span>else</h2>
+<a id="a90e3228bfd4c7e23f6bffc6735d8338d" name="a90e3228bfd4c7e23f6bffc6735d8338d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a90e3228bfd4c7e23f6bffc6735d8338d">&#9670;&#160;</a></span>else</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">if ( $editmode) else</td>
+          <td class="memname">if (!empty( $record[ 'LgGoogleTranslateURI'])) else</td>
         </tr>
       </table>
 </div><div class="memdoc">

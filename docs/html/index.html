@@ -74,11 +74,11 @@ $(function() {
   <div class="headertitle"><div class="title">Learning with Texts </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="md_README"></a><a href="https://packagist.org/packages/hugofara/lwt"><img src="https://poser.pugx.org/hugofara/lwt/v" alt="Latest Stable Version" class="inline"/></a> <a href="https://packagist.org/packages/hugofara/lwt"><img src="https://poser.pugx.org/hugofara/lwt/license" alt="License" class="inline"/></a> <a href="https://packagist.org/packages/hugofara/lwt"><img src="https://poser.pugx.org/hugofara/lwt/require/php" alt="PHP Version Require" class="inline"/></a> <img src="https://github.com/hugofara/lwt/actions/workflows/php.yml/badge.svg" alt="Composer Continuous Integration" style="pointer-events: none;" class="inline"/> <a href="https://github.com/HugoFara/lwt/actions/workflows/docker-image.yml"><img src="https://github.com/HugoFara/lwt/actions/workflows/docker-image.yml/badge.svg" alt="Docker Image" style="pointer-events: none;" class="inline"/></a> <a href="https://discord.gg/zAE8GXMKFa"><img src="https://badgen.net/discord/members/zAE8GXMKFa?icon=discord" alt="Discord Server" class="inline"/></a></p>
+<div class="textblock"><p><a class="anchor" id="md_README"></a> <a href="https://packagist.org/packages/hugofara/lwt"><img src="https://poser.pugx.org/hugofara/lwt/v" alt="Latest Stable Version" class="inline"/></a> <a href="https://packagist.org/packages/hugofara/lwt"><img src="https://poser.pugx.org/hugofara/lwt/license" alt="License" class="inline"/></a> <a href="https://packagist.org/packages/hugofara/lwt"><img src="https://poser.pugx.org/hugofara/lwt/require/php" alt="PHP Version Require" class="inline"/></a> <img src="https://github.com/hugofara/lwt/actions/workflows/php.yml/badge.svg" alt="Composer Continuous Integration" style="pointer-events: none;" class="inline"/> <a href="https://github.com/HugoFara/lwt/actions/workflows/docker-image.yml"><img src="https://github.com/HugoFara/lwt/actions/workflows/docker-image.yml/badge.svg" alt="Docker Image" style="pointer-events: none;" class="inline"/></a> <a href="https://discord.gg/zAE8GXMKFa"><img src="https://badgen.net/discord/members/zAE8GXMKFa?icon=discord" alt="Discord Server" class="inline"/></a></p>
 <p><b>Learning with Texts</b> (LWT) is a tool for language learning by reading. It is a self-hosted web application.</p>
 <div style="text-align: center;"> <img src="https://github.com/HugoFara/lwt/raw/master/img/lwt_icon_big.jpg" alt="" class="inline"/> </div><p>You feel that you won't learn much by translating dumb sentences or using grammar books? Learning With Texts offers you the possibility to learn by reading texts in your target language. Concept: when you don't know a word in a text, just click it. We show you the translation, and you will have regular tests to remember it. Ready to go?</p>
 <p><b>THIS IS A THIRD PARTY VERSION</b>. This version is not the official one, and brings many improvements and new features. It is quicker, has smaller database size, and is open for contributions. The official version is on <a href="https://sourceforge.net/projects/learning-with-texts">source forge</a></p>
-<h1><a class="anchor" id="autotoc_md421"></a>
+<h1><a class="anchor" id="autotoc_md429"></a>
 Installation</h1>
 <p>As it is self-hosted, you will need a server, which can be your computer.</p>
 <ul>
@@ -86,12 +86,19 @@ Installation</h1>
 <li>You can also try to download the <a href="https://github.com/HugoFara/lwt/archive/refs/heads/master.zip">latest stable version</a> if you want the cutting-edge updates (that may include some bugs).</li>
 </ul>
 </li>
+</ul>
+<h2><a class="anchor" id="autotoc_md430"></a>
+Linux</h2>
+<p>Start a shell in the downloaded folder an run: <code>./INSTALL.sh</code>. You may need to run <code>chmod +x ./INSTALL.sh</code> first.</p>
+<h2><a class="anchor" id="autotoc_md431"></a>
+Other Systems</h2>
+<ul>
 <li><b>Please see</b>: <a class="el" href="md_docs_install.html">docs/install.md</a> for detailed instructions.</li>
 <li>Create <code><a class="el" href="connect_8inc_8php.html" title="Your own DB variables.">connect.inc.php</a></code> with an existing database user. Everything is explained at <a href="https://hugofara.github.io/lwt/docs/info.html#install">docs/info.html</a>.</li>
 </ul>
 <p>And you are ready to go!</p>
 <p>Please note that a composer repo is available, as well as an installation using Docker.</p>
-<h1><a class="anchor" id="autotoc_md422"></a>
+<h1><a class="anchor" id="autotoc_md432"></a>
 Description</h1>
 <p>LWT is a language learning web application. To learn a language, you need to practice, and we guide you in reading exercises.</p>
 <p>First copy/paste any text you want to read. It can be raw text or an RSS feed.</p>
@@ -102,12 +109,13 @@ Description</h1>
 <p>To make sure you memorize new words, you can take review exercises.</p>
 <p><img src="https://github.com/HugoFara/lwt/raw/master/img/07.jpg" alt="Reviewing French word" class="inline"/></p>
 <p>The difference with popular remembering software like <a href="https://apps.ankiweb.net/">Anki</a> is that we keep track of the context to help you. By the way, we also ship an Anki exporter.</p>
-<h1><a class="anchor" id="autotoc_md423"></a>
+<h1><a class="anchor" id="autotoc_md433"></a>
 Features</h1>
 <ul>
 <li><b>Full list</b>: <a class="el" href="md_docs_features.html">docs/features.md</a></li>
 </ul>
-<p>Features included from the official LWT software:</p><ul>
+<p>Features included from the official LWT software:</p>
+<ul>
 <li>Support for almost 40 languages.</li>
 <li>Text parsing for roman languages, right-to-left, and East-Asian ideogram systems</li>
 <li>Translate words on-the-fly</li>
@@ -115,12 +123,13 @@ Features</h1>
 <li>Practice words you don't remember</li>
 <li>Statistics to record your progress</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md424"></a>
+<h2><a class="anchor" id="autotoc_md434"></a>
 Features not in the official LWT</h2>
 <ul>
 <li><b>Full list</b>: <a class="el" href="md_docs_newfeatures.html">docs/newfeatures.md</a></li>
 </ul>
-<p>Features that were added by the community:</p><ul>
+<p>Features that were added by the community:</p>
+<ul>
 <li>Support for mobile</li>
 <li>Automatically import texts from RSS feeds</li>
 <li>Support for different themes</li>
@@ -133,12 +142,13 @@ Features not in the official LWT</h2>
 <li>Selecting terms according to a text tag</li>
 <li>Two database backup modes (new or old structure)</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md425"></a>
+<h2><a class="anchor" id="autotoc_md435"></a>
 Improvements compared to the official LWT</h2>
 <ul>
 <li>Database improvements (db size is much smaller now)</li>
 <li>Longer (&gt;9) expressions can now be saved (up to 250 characters)</li>
-<li>Save text/audio position in the reading frame* Google api (use 'ggl.php' instead of '*http://translate.google.com' for Google Translate)</li>
+<li>Save text/audio position in the reading frame</li>
+<li>Google api (use 'ggl.php' instead of '*<a href="http://translate.google.com">http://translate.google.com</a>' for Google Translate)</li>
 <li>Improved Search/Query for Words/Texts</li>
 <li><a class="el" href="class_term.html">Term</a> import with more options (i.e.: combine translations, multiple tag import)</li>
 <li>Support for MeCab for Japanese word-by-word automatic translation.</li>
@@ -146,7 +156,7 @@ Improvements compared to the official LWT</h2>
 <li>Code documentation.</li>
 <li>Code is well organised, making debugging and contribution easier.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md426"></a>
+<h1><a class="anchor" id="autotoc_md436"></a>
 Contribute</h1>
 <ul>
 <li><b>Complete explanation</b>: <a class="el" href="md_docs_contribute.html">docs/contribute.md</a></li>
@@ -154,31 +164,32 @@ Contribute</h1>
 <p>To contribute, you need to clone or fork this repository, and <a href="https://getcomposer.org/download/">Composer</a>. The composer package is at <a href="https://packagist.org/packages/hugofara/lwt">hugofara/lwt</a>.</p>
 <p>Run <code>git clone <a href="https://github.com/HugoFara/lwt">https://github.com/HugoFara/lwt</a></code></p>
 <p>Next, got to the lwt folder and use <code>composer install --dev</code>.</p>
-<p>In short: </p><div class="fragment"><div class="line">git clone https://github.com/HugoFara/lwt</div>
+<p>In short:</p>
+<div class="fragment"><div class="line">git clone https://github.com/HugoFara/lwt</div>
 <div class="line">cd lwt</div>
 <div class="line">composer install --dev</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md427"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md437"></a>
 Branches</h1>
 <ul>
 <li>The stable branch is <em>master</em>. Last commit on this branch is considered to be bug-free.</li>
 <li>The <em>dev</em> branch is for unstable versions.</li>
 <li>The <em>official</em> branch is for the official LWT Releases. Any other branch if considered under development.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md428"></a>
+<h1><a class="anchor" id="autotoc_md438"></a>
 Useful links</h1>
 <ul>
 <li>General documentation at <a href="https://hugofara.github.io/lwt/docs/info.html">docs/info.html</a>.</li>
 <li>Please find more help at <a href="https://hugofara.github.io/lwt/docs/index.html">docs/index.html</a>.</li>
 <li>You can also contact the community using <a href="https://github.com/hugofara/lwt">GitHub</a> or <a href="https://discord.gg/zAE8GXMKFa">Discord</a>.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md429"></a>
+<h1><a class="anchor" id="autotoc_md439"></a>
 Alternatives</h1>
 <ul>
 <li><em>See also</em>: <a class="el" href="md_docs_links.html">docs/links.md</a> LWT is written for web, but you have many choices if you want a standalone installation:</li>
 <li><a href="https://github.com/gustavklopp/LingL">LingL</a> is a wonderful alternative written in Python, by <a href="https://github.com/gustavklopp">gustavklopp</a>.</li>
 <li><a href="https://sourceforge.net/projects/foreign-language-text-reader/">FLTR ◆ Foreign Language Text Reader</a>, a Java clone, by the same author as LWT (<a href="https://sourceforge.net/u/lang-learn-guy/profile/">lang-learn-guy</a>)</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md430"></a>
+<h1><a class="anchor" id="autotoc_md440"></a>
 Unlicense</h1>
 <p>Under unlicense, view <a class="el" href="md__u_n_l_i_c_e_n_s_e.html">UNLICENSE.md</a>, please look at [<a href="http://unlicense.org/">http://unlicense.org/</a>].</p>
 <p><b>Let's learn new languages!</b> </p>

@@ -98,8 +98,11 @@ Functions</h2></td></tr>
 <tr class="separator:a6adfcf595b943cd3e132050c10d56a6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a22c1fc4b70e7a59656440f4ad4ed168b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="edit__languages_8php.html#a22c1fc4b70e7a59656440f4ad4ed168b">edit_languages_op_change</a> ($lid)</td></tr>
 <tr class="separator:a22c1fc4b70e7a59656440f4ad4ed168b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a819e713660722e60c44c16407a1c6227"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="edit__languages_8php.html#a819e713660722e60c44c16407a1c6227">edit_languages_new</a> ()</td></tr>
-<tr class="separator:a819e713660722e60c44c16407a1c6227"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2f709d8f0ae540267a6c520c8df76072"><td class="memItemLeft" align="right" valign="top"><a id="a2f709d8f0ae540267a6c520c8df76072" name="a2f709d8f0ae540267a6c520c8df76072"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>load_language</b> ($lgid)</td></tr>
+<tr class="separator:a2f709d8f0ae540267a6c520c8df76072"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc9231b5292c57447af032a2cd7691f9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="edit__languages_8php.html#acc9231b5292c57447af032a2cd7691f9">edit_language_form</a> ($language)</td></tr>
+<tr class="separator:acc9231b5292c57447af032a2cd7691f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a23364ba7692e17d72c053823a9029987"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="edit__languages_8php.html#a23364ba7692e17d72c053823a9029987">edit_languages_change</a> ($lid)</td></tr>
 <tr class="separator:a23364ba7692e17d72c053823a9029987"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a441df3001626dcbae071cb1f845146dd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="edit__languages_8php.html#a441df3001626dcbae071cb1f845146dd">edit_languages_display</a> ($message)</td></tr>
@@ -111,6 +114,29 @@ Functions</h2></td></tr>
 <div class="textblock"><p>Manage languages. </p>
 <p>Call: <a class="el" href="edit__languages_8php.html" title="Manage languages.">edit_languages.php</a>?.... ... refresh=[langid] ... reparse all texts in lang ... del=[langid] ... do delete ... op=Save ... do insert new ... op=Change ... do update ... new=1 ... display new lang. screen ... chg=[langid] ... display edit screen </p>
 </div><h2 class="groupheader">Function Documentation</h2>
+<a id="acc9231b5292c57447af032a2cd7691f9" name="acc9231b5292c57447af032a2cd7691f9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acc9231b5292c57447af032a2cd7691f9">&#9670;&#160;</a></span>edit_language_form()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">edit_language_form </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$language</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Handles any change on multi-words translate mode.</p>
+<p>Check status of the requested translation API.</p>
+<p>Check LibreTranslate translator status.</p>
+<p>Handle changes to the words split method.</p>
+<p>Execute the wizard</p>
+
+</div>
+</div>
 <a id="a96bb941f35593dc63d9f3f9781dc9584" name="a96bb941f35593dc63d9f3f9781dc9584"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a96bb941f35593dc63d9f3f9781dc9584">&#9670;&#160;</a></span>edit_languages_alert_duplicate()</h2>
 
@@ -149,7 +175,7 @@ Functions</h2></td></tr>
 <p>Display a form to edit an existing language.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">{int}</td><td>$lid Language ID</td></tr>
+    <tr><td class="paramname">{int}</td><td>$lid <a class="el" href="class_language.html">Language</a> ID</td></tr>
   </table>
   </dd>
 </dl>
@@ -175,7 +201,7 @@ Functions</h2></td></tr>
 <p>Delete a language.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramtype">int</td><td class="paramname">$lid</td><td>Language ID</td></tr>
+    <tr><td class="paramtype">int</td><td class="paramname">$lid</td><td><a class="el" href="class_language.html">Language</a> ID</td></tr>
   </table>
   </dd>
 </dl>
@@ -230,25 +256,6 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a819e713660722e60c44c16407a1c6227" name="a819e713660722e60c44c16407a1c6227"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a819e713660722e60c44c16407a1c6227">&#9670;&#160;</a></span>edit_languages_new()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">edit_languages_new </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Display a form to createa new language.</p>
-<dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
-
-</div>
-</div>
 <a id="a22c1fc4b70e7a59656440f4ad4ed168b" name="a22c1fc4b70e7a59656440f4ad4ed168b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a22c1fc4b70e7a59656440f4ad4ed168b">&#9670;&#160;</a></span>edit_languages_op_change()</h2>
 
@@ -267,7 +274,7 @@ Functions</h2></td></tr>
 <p>Edit an existing text in the database.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramtype">int</td><td class="paramname">$lid</td><td>Language ID</td></tr>
+    <tr><td class="paramtype">int</td><td class="paramname">$lid</td><td><a class="el" href="class_language.html">Language</a> ID</td></tr>
   </table>
   </dd>
 </dl>
@@ -314,7 +321,7 @@ Functions</h2></td></tr>
 <p>Refresh sentence and text items from a specific language.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramtype">int</td><td class="paramname">$lid</td><td>Language ID</td></tr>
+    <tr><td class="paramtype">int</td><td class="paramname">$lid</td><td><a class="el" href="class_language.html">Language</a> ID</td></tr>
   </table>
   </dd>
 </dl>

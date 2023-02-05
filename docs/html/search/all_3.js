@@ -19,5 +19,7 @@ var searchData=
   ['convert_5fstring_5fto_5fsqlsyntax_16',['convert_string_to_sqlsyntax',['../database__connect_8php.html#a8644cebbae39e02a6dfed79816201271',1,'database_connect.php']]],
   ['convert_5fstring_5fto_5fsqlsyntax_5fnonull_17',['convert_string_to_sqlsyntax_nonull',['../database__connect_8php.html#a5964c3b4acf8986010b4b45d63a3332d',1,'database_connect.php']]],
   ['convert_5fstring_5fto_5fsqlsyntax_5fnotrim_5fnonull_18',['convert_string_to_sqlsyntax_notrim_nonull',['../database__connect_8php.html#ac54484db51d3b72c0fc8e44511ac7698',1,'database_connect.php']]],
-  ['createthedictlink_19',['createTheDictLink',['../session__utility_8php.html#adbd4355000bfd2a29b85befad555348a',1,'session_utility.php']]]
+  ['createdictlinksineditwin_19',['createDictLinksInEditWin',['../session__utility_8php.html#a49ba063be3caa6a1f528bd41239bcca0',1,'session_utility.php']]],
+  ['createdictlinksineditwin2_20',['createDictLinksInEditWin2',['../session__utility_8php.html#ad3b5cd18e2b774bd43be4e87ab172c11',1,'session_utility.php']]],
+  ['createthedictlink_21',['createTheDictLink',['../session__utility_8php.html#adbd4355000bfd2a29b85befad555348a',1,'session_utility.php']]]
 ];
