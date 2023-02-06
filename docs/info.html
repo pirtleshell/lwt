@@ -1986,10 +1986,15 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 </ul>
 <h4>Changed</h4>
 <ul>
-<li>Graphic review: headers reviewed. Most h4 headers became div.bigger, and h3 became h1 level headers.</li>
+<li>Graphic review:
+<ul>
+<li>Headers reviewed. Most h4 headers became div.bigger, and h3 became h1 level headers.</li>
 <li>We now use responsive design instead of fixed-size.</li>
+<li>All themes updated accordingly, so themes were modified.</li>
 <li>
 <code>do_text_page</code> (<code>do_text.php</code>) and <code>do_test_page</code> (<code>do_test.php</code>) now enlarge the body.</li>
+</ul>
+</li>
 <li>
 <code>echo_lwt_logo</code> in <code>inc/session_utility.php</code> echoes a logo, without information on the table set used
 because it was useless. This information is now displayed on the welcome page.</li>
@@ -2011,6 +2016,7 @@ from 1.8.0 to 1.10.2. This brings some bug fixes.</li>
 at the right if text field.</li>
 </ul>
 </li>
+<li>Main page (<code>index.php</code>) was not rendered properly on non-default theme.</li>
 </ul>
 <h3>2.6.0-fork (January 01 2023)</h3>
 <h4>Added</h4>
