@@ -1,36 +1,7 @@
-/**************************************************************
-"Learning with Texts" (LWT) is free and unencumbered software 
-released into the PUBLIC DOMAIN.
+/**
+ * Stylesheet Night mode v.2012-12-24 (modified from LWT original one)
+ */
 
-Anyone is free to copy, modify, publish, use, compile, sell, or
-distribute this software, either in source code form or as a
-compiled binary, for any purpose, commercial or non-commercial,
-and by any means.
-
-In jurisdictions that recognize copyright laws, the author or
-authors of this software dedicate any and all copyright
-interest in the software to the public domain. We make this
-dedication for the benefit of the public at large and to the 
-detriment of our heirs and successors. We intend this 
-dedication to be an overt act of relinquishment in perpetuity
-of all present and future rights to this software under
-copyright law.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE 
-WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE
-AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS BE LIABLE 
-FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
-THE SOFTWARE.
-
-For more information, please refer to [http://unlicense.org/].
-***************************************************************/
-
-/**************************************************************
-Stylesheet Night mode v.2012-12-24 (modified from LWT original one)
-***************************************************************/
 html{
 	background-color: #000000;
 }
@@ -44,6 +15,9 @@ body {
 	margin: 20px;
 	padding: 0px;
 	cursor: default;
+	max-width: 900px;
+	margin-left: auto;
+	margin-right: auto;
 }
 input[type=text] {
     font: 85% "Lucida Grande",Arial,sans-serif,STHeiti,"Arial Unicode MS",MingLiu;
@@ -608,7 +582,26 @@ img {
     border: 1pt solid #8f8f8f;
 }
 
-/* Separate a footer section from the document */
+/**
+* General footer style.
+*/
+footer 
+{
+  position: fixed;
+  width: 100%;
+  left: 0; 
+  bottom: 0;
+  background: #222222;
+  text-align: center;
+  height: 45px;
+  line-height: 30px;
+  border-top: 1px solid #404040;
+  font-size: 14px;
+}
+
+/** 
+* Separate a footer section from the document 
+*/
 .graydotted {
     margin-top: 30px;
     padding-top: 5px;
@@ -692,20 +685,7 @@ img {
 	height: 30px;
 	display:inline-block;
 }
-#footer {
-    left: 0;
-    bottom: 0;
-    position: absolute;
-    width: 100%;
-    height: 45px;
-    line-height:30px;
-    /*background: #DDDDDD;*/
-    background: #222222;
-    font-size: 14px;
-    text-align: center;
-    /*border-top: 1px solid #000000;*/
-    border-top: 1px solid #404040;
-}
+
 .borderl {
     border-left: 1px solid #000000;
     border-top: 1px solid #000000;
@@ -810,6 +790,58 @@ th.sorttable,th.sorttable_nosort,th.sorttable_numeric,th.clickable {
 	border-bottom-right-radius:0px !important;
 	border-bottom-left-radius:0px !important;
 	
+}
+
+
+
+/**
+* Dropdown to navigate between pages.
+*/
+#quickmenu 
+{
+  float: right;
+}
+
+/**
+* Formats a header with flexbox.
+*/
+.flex-header 
+{
+  display: flex; 
+  justify-content: space-between;
+  align-items: center;
+}
+
+/**
+* Space evenly article content.
+*/
+.flex-spaced
+{
+  display: flex; 
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+/**
+* Main page (index.php) navigation menu style
+*/
+.menu {
+  display: flex; 
+  flex-direction: column; 
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+/**
+* Main page (index.php) navigation menu style elements
+*/
+.menu > * {
+  width: 400px;
+  height: 30px;
+  margin: 5px;
+  text-align: center;
+  background-color: #8883;
+  padding-top: 15px;
 }
 
 /**************************************************************
