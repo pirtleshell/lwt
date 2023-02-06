@@ -25,9 +25,11 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 
 ### Changed
 
-* Graphic review: headers reviewed. Most h4 headers became div.bigger, and h3 became h1 level headers.
-* We now use responsive design instead of fixed-size.
-* ``do_text_page`` (``do_text.php``) and ``do_test_page`` (``do_test.php``) now enlarge the body.
+* Graphic review:
+  * Headers reviewed. Most h4 headers became div.bigger, and h3 became h1 level headers.
+  * We now use responsive design instead of fixed-size.
+  * All themes updated accordingly, so themes were modified.
+  * ``do_text_page`` (``do_text.php``) and ``do_test_page`` (``do_test.php``) now enlarge the body.
 * ``echo_lwt_logo`` in ``inc/session_utility.php`` echoes a logo, without information on the table set used
 because it was useless. This information is now displayed on the welcome page.
 * Access to the database prefix edition at ``start.php`` was reviewed and simplified. It is still considered a legacy feature.
@@ -43,8 +45,9 @@ from 1.8.0 to 1.10.2. This brings some bug fixes.
 * The default date for new words was note accepted depending on the SQL configuration, causing issues with Docker installation. See [#78](https://github.com/HugoFara/lwt/issues/78).
 * Bulk translate words:
   * Translating with bulk translate was not updating word rendering.
-  * All broom icons icon were display in the screen top-right corner, and not 
+  * All broom icons icon were display in the screen top-right corner, and not
   at the right if text field.
+* Main page (``index.php``) was not rendered properly on non-default theme.
 
 ## 2.6.0-fork (January 01 2023)
 
