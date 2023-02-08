@@ -987,7 +987,7 @@ function edit_texts_show_text_row($txrecord, $currentlang, $statuses)
     </td>
     <!-- chart -->
     <td class="td1 center">
-        <ul class="barchart">';
+        <ul class="barchart">
 
     <?php    
     $i = array(0,1,2,3,4,5,99,98);
