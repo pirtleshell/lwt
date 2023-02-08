@@ -2974,8 +2974,14 @@ function createDictLinksInEditWin3($lang,$sentctljs,$wordctljs): string
     return $r;
 }
 
-// -------------------------------------------------------------
-
+/**
+ * Return checked attribute if $val is in array $_REQUEST[$name]
+ * 
+ * @param mixed  $val Value to look for, needle
+ * @param string $name Key of request haystack.
+ * 
+ * @return string ' ' of ' checked="checked" ' if the qttribute should be checked.
+ */
 function checkTest($val, $name): string 
 {
     if (!isset($_REQUEST[$name])) { 
