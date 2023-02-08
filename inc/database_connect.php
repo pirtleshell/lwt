@@ -120,8 +120,7 @@ function prepare_textdata_js($s): string
  *
  * @param string $data Input string
  *
- * @return string Properly escaped and trimmed string. "NULL" if the input string is 
- *                empty.
+ * @return string Properly escaped and trimmed string. "NULL" if the input string is empty.
  */
 function convert_string_to_sqlsyntax($data): string 
 {

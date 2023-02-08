@@ -40,12 +40,12 @@ $currenttext = validateText(processSessParam("text", "currentwordtext", '', 0));
 $currenttexttag = processSessParam("texttag", "currentwordtexttag", '', 0);
 $currenttextmode = processSessParam("text_mode", "currentwordtextmode", 0, 0);
 $currenttag1 = validateTag(
-    processSessParam("tag1", "currentwordtag1", '', 0), $currentlang
+    processSessParam("tag1", "currentwordtag1", '', false), $currentlang
 );
 $currenttag2 = validateTag(
-    processSessParam("tag2", "currentwordtag2", '', 0), $currentlang
+    processSessParam("tag2", "currentwordtag2", '', false), $currentlang
 );
-$currenttag12 = processSessParam("tag12", "currentwordtag12", '', 0);
+$currenttag12 = processSessParam("tag12", "currentwordtag12", '', false);
 
 $wh_lang = ($currentlang != '') ? (' and WoLgID=' . $currentlang ) : '';
 $wh_stat = '';

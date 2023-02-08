@@ -180,7 +180,8 @@ function browser_tts($text, $languageName): void
      */
     $languageCode = $langDefs[$languageName][1];
     /**
-    * @var string $phoneticText Phonetic reading for this text 
+    * @var string $phoneticText 
+    * Phonetic reading for this text 
     */
     $phoneticText = phonetic_reading($text, $languageCode);
     ?>

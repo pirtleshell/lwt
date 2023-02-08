@@ -922,7 +922,7 @@ function get_nf_option($str,$option)
  *
  * @psalm-return array<'feed_text'|'feed_title'|int, array{title: null|string, desc: null|string, link: string, encoded?: false|string, description?: false|string, content?: false|string, text?: mixed}|null|string>|false
  */
-function get_links_from_new_feed($NfSourceURI)
+function get_links_from_new_feed($NfSourceURI): array|false
 {
     $rss = new DOMDocument('1.0', 'utf-8');
     if (!$rss->load($NfSourceURI, LIBXML_NOCDATA | ENT_NOQUOTES)) { 
@@ -1066,7 +1066,7 @@ function get_links_from_new_feed($NfSourceURI)
  *
  * @psalm-return false|list<array{title: null|string, desc: null|string, link: string, date: string, text?: false|string, audio: string}>
  */
-function get_links_from_rss($NfSourceURI,$NfArticleSection)
+function get_links_from_rss($NfSourceURI,$NfArticleSection): array|false
 {
     $rss = new DOMDocument('1.0', 'utf-8');
     if(!$rss->load($NfSourceURI, LIBXML_NOCDATA | ENT_NOQUOTES)) { 
@@ -1154,7 +1154,7 @@ function get_links_from_rss($NfSourceURI,$NfArticleSection)
  *
  * @psalm-return array<array{TxTitle: mixed, TxAudioURI?: mixed|null, TxText?: string, TxSourceURI?: mixed|string, message?: string, link?: non-empty-list<mixed>}>|null|string
  */
-function get_text_from_rsslink($feed_data, $NfArticleSection, $NfFilterTags, $NfCharset=null)
+function get_text_from_rsslink($feed_data, $NfArticleSection, $NfFilterTags, $NfCharset=null): array|string|null
 {
     global $tbpref;
     $data = null;
@@ -1593,10 +1593,10 @@ function echo_lwt_logo(): void
 
 /**
  * Return all different database prefixes that are in use.
- * 
- * @return (false|string)[] A list of prefixes.
  *
- * @psalm-return list<false|string>
+ * @return string[] A list of prefixes.
+ *
+ * @psalm-return list<string>
  */
 function getprefixes(): array 
 {
@@ -2976,11 +2976,13 @@ function createDictLinksInEditWin3($lang,$sentctljs,$wordctljs): string
 
 /**
  * Return checked attribute if $val is in array $_REQUEST[$name]
- * 
+ *
  * @param mixed  $val Value to look for, needle
  * @param string $name Key of request haystack.
- * 
+ *
  * @return string ' ' of ' checked="checked" ' if the qttribute should be checked.
+ *
+ * @psalm-return ' '|' checked="checked" '
  */
 function checkTest($val, $name): string 
 {
@@ -3558,8 +3560,7 @@ function getSentence($seid, $wordlc, $mode): array
  *                            * Above 1: return previous and current sentence 
  *                            * Above 2: return previous, current and next sentence
  *
- * @return string HTML-formatted string of which elements are candidate santences to 
- *                use.
+ * @return string HTML-formatted string of which elements are candidate sentences to use.
  *
  * @global string $tbpref Database table prefix
  */
@@ -3752,8 +3753,7 @@ function getScriptDirectionTag($lid): string
  * @param string $wid    Word ID
  * @param int    $mode   If equal to 0, add data in the output
  *
- * @return array{0: string[], 1: string[]} Append text and values to insert to 
- *                                         the database
+ * @return string[][] Append text and values to insert to the database
  *
  * @since 2.5.0-fork Function added.
  *
@@ -3861,14 +3861,14 @@ function insertExpressionFromMeCab($textlc, $lid, $wid, $len, $mode): array
  * @param string $wid    Word ID
  * @param mixed  $mode   Unnused
  *
- * @return array{string[], empty[], string[]} Append text, empty and sentence id
+ * @return (null|string)[][] Append text, empty and sentence id
  *
  * @since 2.5.0-fork Mode is unnused and data are always added to the output.
  * @since 2.5.2-fork Fixed multi-words insertion for languages using no space
  *
  * @global string $tbpref Table name prefix
  *
- * @psalm-return array{0: array<int, mixed|string>, 1: array<empty, empty>, 2: list<string>}
+ * @psalm-return array{0: array<int, null|string>, 1: array<empty, empty>, 2: list<string>}
  */
 function insert_standard_expression($textlc, $lid, $wid, $len, $mode): array
 {
@@ -4058,7 +4058,7 @@ function new_expression_interactable2($hex, $appendtext, $wid, $len): void
  *
  * @global string $tbpref Table name prefix
  */
-function insertExpressions($textlc, $lid, $wid, $len, $mode): ?string 
+function insertExpressions($textlc, $lid, $wid, $len, $mode): string|null 
 {
     global $tbpref;
     $sql = "SELECT * FROM {$tbpref}languages WHERE LgID=$lid";
@@ -4110,16 +4110,16 @@ function insertExpressions($textlc, $lid, $wid, $len, $mode): ?string
 
 /**
  * Restore the database from a file.
- * 
+ *
  * @param resource $handle Backup file handle
  * @param string   $title  File title
- * 
+ *
  * @return string Human-readable status message
- * 
+ *
  * @global string $trbpref Database table prefix
  * @global int    $debug   Debug status
  * @global string $dbname  Database name
- * 
+ *
  * @since 2.0.3-fork Function was broken
  * @since 2.5.3-fork Function repaired
  */
@@ -4547,7 +4547,8 @@ function makeMediaPlayer($path, $offset=0)
         return;
     }
     /**
-    * @var string $extension File extension (if exists) 
+    * @var string $extension 
+    * File extension (if exists) 
     */
     $extension = substr($path, -4);
     if ($extension == '.mp3' || $extension == '.wav' || $extension == '.ogg') {
