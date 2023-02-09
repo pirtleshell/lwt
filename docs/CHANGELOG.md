@@ -3,7 +3,6 @@
 This project's changelog. Versions marked with "-fork" come from the community, other versions come from the canonical LWT ("official" branch on Git).
 For git tags, official releases are marked like "v1.0.0", while unofficial ones are marked like "v1.0.0-fork".
 
-* Fixed an issue were speech dispatcher was not available when the name of the language was changed. 
 ## [Unreleased]
 
 ### Added
@@ -49,6 +48,7 @@ from 1.8.0 to 1.10.2. This brings some bug fixes.
   * All broom icons icon were display in the screen top-right corner, and not
   at the right if text field.
 * Main page (``index.php``) was not rendered properly on non-default theme.
+* Full-text speech dispatcher was not available when the name of the language name was changed. Issue signalled [with issue #80](https://github.com/HugoFara/lwt/issues/80#issuecomment-1368180304). 
 
 ## 2.6.0-fork (January 01 2023)
 
