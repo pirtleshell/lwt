@@ -656,14 +656,22 @@ function edit_language_form($language)
 
 }
 
-/// Returns a dropdown menu of the different languages
-function get_wizard_selectoptions($v): string 
+/** 
+ * Returns a dropdown menu of the different languages.
+ * 
+ * @param string $currentnativelanguage Default language
+ * 
+ * @global mixed $langDefs
+ */
+function get_wizard_selectoptions($currentnativelanguage): string 
 {
     global $langDefs;
-    $r = "<option value=\"\"" . get_selected($v, "") . ">[Choose...]</option>";
+    $r = "<option value=\"\"" . get_selected($currentnativelanguage, "") . 
+    ">[Choose...]</option>";
     $keys = array_keys($langDefs);
     foreach ($keys as $item) {
-        $r .= "<option value=\"" . $item . "\"" . get_selected($v, $item) . ">" . $item . "</option>";
+        $r .= "<option value=\"" . $item . "\"" . 
+        get_selected($currentnativelanguage, $item) . ">" . $item . "</option>";
     }
     return $r;
 }
@@ -689,56 +697,62 @@ function edit_languages_new()
     <script type="text/javascript" charset="utf-8">
 
         const LANGDEFS = <?php echo json_encode($langDefs); ?>;
-        const l1 = $('#l1').val();
-        const l2 = $('#l2').val();
-        const trans_query = {
-            source: LANGDEFS[l2][1],
-            dest: LANGDEFS[l1][1]
+
+        const language_wizard = {
+
+            go: function () {
+                this.apply($('#l1').val(), $('#l2').val());
+            },
+
+            /// Execute the wizard
+            apply: function (l1, l2) {
+                const trans_query = {
+                    source: LANGDEFS[l2][1],
+                    dest: LANGDEFS[l1][1]
+                };
+
+                GGTRANSLATE = '*http://translate.google.com/?' + $.param({
+                    ie: "UTF-8",
+                    sl: trans_query.source,
+                    tl: trans_query.dest,
+                    text: "###"
+                });
+                LIBRETRANSLATE = "http://localhost:5000/?" + $.param({
+                    source: trans_query.source,
+                    target: trans_query.dest,
+                    q: "###"
+                });
+                if (l1 == '') {
+                    alert ('Please choose your native language (L1)!');
+                    return;
+                }
+                if (l2 == '') {
+                    alert ('Please choose your language you want to read/study (L2)!');
+                    return;
+                }
+                if (l2 == l1) {
+                    alert ('L1 L2 Languages must not be equal!');
+                    return;
+                }
+                $('input[name="LgName"]').val(l2).change();
+                // There may be a cleaner way to trigger the event
+                checkLanguageChanged(l2);
+                $('input[name="LgDict1URI"]').val(
+                    '*https://de.glosbe.com/' + LANGDEFS[l2][0] + '/' + 
+                    LANGDEFS[l1][0] + '/###'
+                    );
+
+                $('input[name="LgGoogleTranslateURI"]').val(GGTRANSLATE);
+                $('input[name="LgTextSize"]')
+                .val(LANGDEFS[l2][2] ? 200 : 150)
+                .change();
+                $('input[name="LgRegexpSplitSentences"]').val(LANGDEFS[l2][4]);
+                $('input[name="LgRegexpWordCharacters"]').val(LANGDEFS[l2][3]);
+                $('select[name="LgSplitEachChar"]').val(LANGDEFS[l2][5] ? 1 : 0);
+                $('select[name="LgRemoveSpaces"]').val(LANGDEFS[l2][6] ? 1 : 0);
+                $('select[name="LgRightToLeft"]').val(LANGDEFS[l2][7] ? 1 : 0);
+            },
         };
-
-        /// Execute the wizard
-        function wizard_go() {
-            GGTRANSLATE = '*http://translate.google.com/?' + $.param({
-                ie: "UTF-8",
-                sl: trans_query.source,
-                tl: trans_query.dest,
-                text: "###"
-            });
-            LIBRETRANSLATE = "http://localhost:5000/?" + $.param({
-                source: trans_query.source,
-                target: trans_query.dest,
-                q: "###"
-            });
-            if (l1 == '') {
-                alert ('Please choose your native language (L1)!');
-                return;
-            }
-            if (l2 == '') {
-                alert ('Please choose your language you want to read/study (L2)!');
-                return;
-            }
-            if (l2 == l1) {
-                alert ('L1 L2 Languages must not be equal!');
-                return;
-            }
-            $('input[name="LgName"]').val(l2).change();
-            // There may be a cleaner way to trigger the event
-            checkLanguageChanged(l2);
-            $('input[name="LgDict1URI"]').val(
-                '*https://de.glosbe.com/' + LANGDEFS[l2][0] + '/' + 
-                LANGDEFS[l1][0] + '/###'
-                );
-
-            $('input[name="LgGoogleTranslateURI"]').val(GGTRANSLATE);
-            $('input[name="LgTextSize"]')
-            .val(LANGDEFS[l2][2] ? 200 : 150)
-            .change();
-            $('input[name="LgRegexpSplitSentences"]').val(LANGDEFS[l2][4]);
-            $('input[name="LgRegexpWordCharacters"]').val(LANGDEFS[l2][3]);
-            $('select[name="LgSplitEachChar"]').val(LANGDEFS[l2][5] ? 1 : 0);
-            $('select[name="LgRemoveSpaces"]').val(LANGDEFS[l2][6] ? 1 : 0);
-            $('select[name="LgRightToLeft"]').val(LANGDEFS[l2][7] ? 1 : 0);
-        }
 
         $(document).ready(ask_before_exiting);
         $(function () { $('#wizard_zone').hide(); })
