@@ -912,34 +912,37 @@ function edit_texts_show_text_row($txrecord, $currentlang, $statuses)
     } else {
         $audio = ''; 
     }
-    echo '<tr>
+    
+    ?>
+    <tr>
         <td class="td1 center">
-            <a name="rec' . $txid . '">
-                <input name="marked[]" class="markcheck" type="checkbox" value="' . $txid . '" ' . checkTest($txid, 'marked') . ' />
+            <a name="rec<?php echo $txid; ?>">
+                <input name="marked[]" class="markcheck" type="checkbox" value="<?php echo $txid; ?>" <?php echo checkTest($txid, 'marked'); ?> />
             </a>
         </td>
         <td nowrap="nowrap" class="td1 center">&nbsp;
-            <a href="do_text.php?start=' . $txid . '">
+            <a href="do_text.php?start=<?php echo $txid; ?>">
                 <img src="icn/book-open-bookmark.png" title="Read" alt="Read" />
             </a>&nbsp; 
-            <a href="do_test.php?text=' . $txid . '">
+            <a href="do_test.php?text=<?php echo $txid; ?>">
                 <img src="icn/question-balloon.png" title="Test" alt="Test" />
             </a>&nbsp;
         </td>
         <td nowrap="nowrap" class="td1 center">&nbsp;
-            <a href="print_text.php?text=' . $txid . '">
+            <a href="print_text.php?text=<?php echo $txid; ?>">
                 <img src="icn/printer.png" title="Print" alt="Print" />
             </a>&nbsp; 
-            <a href="' . $_SERVER['PHP_SELF'] . '?arch=' . $txid . '">
+            <a href="<?php echo $_SERVER['PHP_SELF']; ?>?arch=<?php echo $txid; ?>">
                 <img src="icn/inbox-download.png" title="Archive" alt="Archive" />
             </a>&nbsp; 
-            <a href="' . $_SERVER['PHP_SELF'] . '?chg=' . $txid . '">
+            <a href="<?php echo $_SERVER['PHP_SELF']; ?>?chg=<?php echo $txid; ?>">
                 <img src="icn/document--pencil.png" title="Edit" alt="Edit" />
             </a>&nbsp; 
-            <span class="click" onclick="if (confirmDelete()) location.href=\'' . $_SERVER['PHP_SELF'] . '?del=' . $txid . '\';">
+            <span class="click" onclick="if (confirmDelete()) location.href=\'<?php echo $_SERVER['PHP_SELF']; ?>?del=<?php echo $txid; ?>\';">
                 <img src="icn/minus-button.png" title="Delete" alt="Delete" />
             </span>&nbsp;
-        </td>';
+        </td>
+    <?php
     if ($currentlang == '') { 
         echo '<td class="td1 center">' . tohtml($txrecord['LgName']) . '</td>'; 
     }
@@ -962,29 +965,31 @@ function edit_texts_show_text_row($txrecord, $currentlang, $statuses)
     }
     echo '</td>';
 
-    echo '<!-- total + composition -->
+    ?>
+    <!-- total + composition -->
     <td class="td1 center">
-        <span title="Total" id="total_' . $txid . '"></span>
+        <span title="Total" id="total_<?php echo $txid; ?>"></span>
     </td>
     <td class="td1 center">
-        <span title="Saved" data_id="' . $txid . '">
-            <a class="status4" id="saved_' . $txid . '" 
-            href="edit_words.php?page=1&amp;query=&amp;status=&amp;tag12=0&amp;tag2=&amp;tag1=&amp;text_mode=0&amp;text=' . $txid . '">
+        <span title="Saved" data_id="<?php echo $txid; ?>">
+            <a class="status4" id="saved_<?php echo $txid; ?>" 
+            href="edit_words.php?page=1&amp;query=&amp;status=&amp;tag12=0&amp;tag2=&amp;tag1=&amp;text_mode=0&amp;text=<?php echo $txid; ?>">
             </a>
         </span>
     </td>
     <!-- unknown count -->
     <td class="td1 center">
-        <span title="Unknown" class="status0" id="todo_' . $txid . '"></span>
+        <span title="Unknown" class="status0" id="todo_<?php echo $txid; ?>"></span>
     </td>
     <!-- unknown percent (added) -->
     <td class="td1 center">
-        <span title="Unknown (%)" id="unknownpercent_' . $txid . '"></span>
+        <span title="Unknown (%)" id="unknownpercent_<?php echo $txid; ?>"></span>
     </td>
     <!-- chart -->
     <td class="td1 center">
-        <ul class="barchart">';
+        <ul class="barchart">
 
+    <?php    
     $i = array(0,1,2,3,4,5,99,98);
     foreach ($i as $cnt) {
         echo '<li class="bc' . $cnt . 
@@ -993,9 +998,11 @@ function edit_texts_show_text_row($txrecord, $currentlang, $statuses)
             <span id="stat_' . $cnt . '_' . $txid .'">0</span>
         </li>';
     }
-    echo '      </ul>
+    ?>
+            </ul>
         </td>
-    </tr>';
+    </tr>
+    <?php
 }
 
 /**

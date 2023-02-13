@@ -17,7 +17,7 @@ jobs:
         config:
           - os: ubuntu-latest
           - os: windows-latest
-        php-version: [ '8.1' ]
+        php-version: 'latest'
 
     steps:
     - uses: actions/checkout@v2

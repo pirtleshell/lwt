@@ -48,6 +48,8 @@ from 1.8.0 to 1.10.2. This brings some bug fixes.
   * All broom icons icon were display in the screen top-right corner, and not
   at the right if text field.
 * Main page (``index.php``) was not rendered properly on non-default theme.
+* Full-text speech dispatcher was not available when the name of the language name was changed. Issue signalled [with issue #80](https://github.com/HugoFara/lwt/issues/80#issuecomment-1368180304).
+* Support for PHP 7.4 restored, wrapper for ``str_starts_with``.
 
 ## 2.6.0-fork (January 01 2023)
 

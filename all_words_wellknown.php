@@ -46,9 +46,9 @@ function all_words_wellknown_get_words($txid)
  * @param string $term   Word to mark
  * @param string $termlc Same as $term, but in lowercase.
  * @param int    $langid Language ID
- * 
- * @return array{0: int, 1: string} Number of rows edited and a javascript query.
- * 
+ *
+ * @return (int|string)[] Number of rows edited and a javascript query.
+ *
  * @since 2.5.3-fork Do not crash when echoing an error
  * @since 2.5.3-fork Do not crash when a word is already registred to the database
  *
@@ -108,10 +108,9 @@ function all_words_wellknown_process_word($status, $term, $termlc, $langid): arr
  *
  * @param int $txid   Text ID
  * @param int $status New status to apply to all words.
- * 
- * @return array{0: int, 1: string} Number of edited words, 
- *                                  and JavaScript query to change their display
- * 
+ *
+ * @return (int|string)[] Number of edited words, and JavaScript query to change their display
+ *
  * @since 2.5.3-fork Use 'let' instead of 'var' in returned JS
  *
  * @psalm-return array{0: int, 1: string}

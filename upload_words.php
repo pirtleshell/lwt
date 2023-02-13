@@ -35,7 +35,7 @@ function my_str_getcsv($input)
  * @param array    $fields   Fields indexes
  * @param string   $tabs     Columns separator
  * @param bool     $file_upl If the input text is an uploaded file
- * @param string[] $col      Columns names
+ * @param array<int, string> $col      Columns names
  * @param int      $lang     Language ID
  * 
  * @return void
@@ -470,15 +470,12 @@ function upload_words_import_terms($fields, $tabs, $file_upl, $col, $lang): void
         $sql = "SELECT TxID, TxText FROM {$tbpref}texts 
         WHERE TxLgID = $lang ORDER BY TxID";
         $res = do_mysqli_query($sql);
-        $cntrp = 0;
         while ($record = mysqli_fetch_assoc($res)) {
             $txtid = (int) $record["TxID"];
             $txttxt = $record["TxText"];
             splitCheckText($txttxt, $lang, $txtid);
-            $cntrp++;
         }
         mysqli_free_result($res);
-        //$message .= " / Reparsed texts: " . $cntrp;
     } else if ($mwords!=0) {
         $sqlarr = array();
         $res = do_mysqli_query(

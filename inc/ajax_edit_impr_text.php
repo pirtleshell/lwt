@@ -100,7 +100,7 @@ function make_trans($i, $wid, $trans, $word, $lang): string
  * @param int    $textid Text ID
  * @param string $wordlc Lowercase word
  *
- * @return string[] $r and $rr.
+ * @return string[] HTML output and JS output 
  *
  * @global string $tbpref Database table prefix.
  *
@@ -259,11 +259,11 @@ function do_ajax_edit_impr_text($textid, $wordlc)
 {
     chdir('..');
 
-    list($r, $rr) = make_form($textid, $wordlc);
+    list($html_content, $js_content) = make_form($textid, $wordlc);
     if ($wordlc == '') {
-        echo "$('#editimprtextdata').html(" . prepare_textdata_js($r) . ");"; 
+        echo "$('#editimprtextdata').html(" . prepare_textdata_js($html_content) . ");"; 
     } else {
-        echo $rr; 
+        echo $js_content; 
     }
 }
 

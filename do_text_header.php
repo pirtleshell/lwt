@@ -180,19 +180,20 @@ function browser_tts($text, $languageName): void
      */
     $languageCode = $langDefs[$languageName][1];
     /**
-    * @var string $phoneticText Phonetic reading for this text 
+    * @var string $phoneticText 
+    * Phonetic reading for this text 
     */
     $phoneticText = phonetic_reading($text, $languageCode);
     ?>
 <script type="text/javascript">
 
     /// Main object for text-to-speech interaction with SpeechSynthesisUtterance
-    var text_reader = {
+    const text_reader = {
         /// The text to read
         text: <?php echo json_encode($phoneticText); ?>,
 
         /// {string} ISO code for the language
-        lang: <?php echo json_encode($languageCode); ?>,
+        lang: getLangFromDict(WBLINK3) || <?php echo json_encode($languageCode); ?>,
 
         /// {string} Rate at wich the speech is done
         rate: 0.8,
@@ -203,7 +204,7 @@ function browser_tts($text, $languageName): void
          * @deprecated Since 2.3.0-fork, use of window.readTextAloud is recommended instead. 
          */
         readTextAloud: function () {
-            var msg = new SpeechSynthesisUtterance(this.text);
+            const msg = new SpeechSynthesisUtterance(this.text);
             console.log('This function is deprecated, do not use it!')
             msg.text = this.text;
             msg.lang = this.lang;
@@ -219,7 +220,9 @@ function browser_tts($text, $languageName): void
         if (!('speechSynthesis' in window)) {
             alert('Your browser does not support speechSynthesis!');
         } else {
-            readRawTextAloud(text_reader.text, text_reader.lang);
+            readRawTextAloud(
+                text_reader.text, getLangFromDict(WBLINK3) || text_reader.lang 
+            );
         }
     }
 

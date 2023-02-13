@@ -114,11 +114,13 @@ function do_ajax_add_term_transl($wid, $data)
     $success = "";
     if ($wid == 0) {
         /**
-         * @var string $text Text, only for only wid=0 (new)
+         * @var string $text 
+         * Text, only for only wid=0 (new)
          */
         $text = trim($_POST['text']);
         /**
-         * @var int $lang Language ID only wid=0 (lang-id)
+         * @var int $lang 
+         * Language ID only wid=0 (lang-id)
          */
         $lang = (int)$_POST['lang'];
         $success = add_new_term_transl($text, $lang, $data);

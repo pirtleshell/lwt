@@ -13,7 +13,7 @@
         "source": "https://github.com/HugoFara/lwt"
     },
     "require": {
-        "php": "^7.4 | ^8.0 | ^8.1",
+        "php": "^8",
         "ext-mbstring": "*",
         "ext-mysqli": "*"
     },
