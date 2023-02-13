@@ -38,6 +38,7 @@ because it was useless. This information is now displayed on the welcome page.
 from 1.8.0 to 1.10.2. This brings some bug fixes.
 * "TO DO" changed to a more explicit "Unknown words" in text header.
 * Refactored ``bulk_translate_word.php``. It has a better visual aspect and works better.
+* Updated composer dependencies.
 
 ### Fixed
 
