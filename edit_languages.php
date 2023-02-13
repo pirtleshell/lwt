@@ -656,14 +656,22 @@ function edit_language_form($language)
 
 }
 
-/// Returns a dropdown menu of the different languages
-function get_wizard_selectoptions($v): string 
+/** 
+ * Returns a dropdown menu of the different languages.
+ * 
+ * @param string $currentnativelanguage Default language
+ * 
+ * @global mixed $langDefs
+ */
+function get_wizard_selectoptions($currentnativelanguage): string 
 {
     global $langDefs;
-    $r = "<option value=\"\"" . get_selected($v, "") . ">[Choose...]</option>";
+    $r = "<option value=\"\"" . get_selected($currentnativelanguage, "") . 
+    ">[Choose...]</option>";
     $keys = array_keys($langDefs);
     foreach ($keys as $item) {
-        $r .= "<option value=\"" . $item . "\"" . get_selected($v, $item) . ">" . $item . "</option>";
+        $r .= "<option value=\"" . $item . "\"" . 
+        get_selected($currentnativelanguage, $item) . ">" . $item . "</option>";
     }
     return $r;
 }
@@ -689,56 +697,74 @@ function edit_languages_new()
     <script type="text/javascript" charset="utf-8">
 
         const LANGDEFS = <?php echo json_encode($langDefs); ?>;
-        const l1 = $('#l1').val();
-        const l2 = $('#l2').val();
-        const trans_query = {
-            source: LANGDEFS[l2][1],
-            dest: LANGDEFS[l1][1]
+
+        /**
+         * Main variable for the language selection wizard. 
+         */
+        const language_wizard = {
+
+            /**
+             * Fetches langauge data and launches wizard. 
+             */
+            go: function () {
+                const l1 = $('#l1').val();
+                const l2 = $('#l2').val();
+                if (l1 == '') {
+                    alert ('Please choose your native language (L1)!');
+                    return;
+                }
+                if (l2 == '') {
+                    alert ('Please choose your language you want to read/study (L2)!');
+                    return;
+                }
+                if (l2 == l1) {
+                    alert ('L1 L2 Languages must not be equal!');
+                    return;
+                }
+                this.apply(LANGDEFS[l2], LANGDEFS[l1], l2);
+            },
+
+            /** 
+             * Apply wizard based on entered data.
+             */
+            apply: function (learning_lg, known_lg, learning_lg_name) {
+                GGTRANSLATE = '*http://translate.google.com/?' + $.param({
+                    ie: "UTF-8",
+                    sl: learning_lg[1],
+                    tl: known_lg[1],
+                    text: "###"
+                });
+                LIBRETRANSLATE = "http://localhost:5000/?" + $.param({
+                    source: learning_lg[1],
+                    target: known_lg[1],
+                    q: "###"
+                });
+                $('input[name="LgName"]').val(learning_lg_name).change();
+                // There may be a cleaner way to trigger the event
+                checkLanguageChanged(learning_lg_name);
+                $('input[name="LgDict1URI"]').val(
+                    '*https://de.glosbe.com/' + learning_lg[0] + '/' + 
+                    known_lg[0] + '/###'
+                    );
+
+                $('input[name="LgGoogleTranslateURI"]').val(GGTRANSLATE);
+                $('input[name="LgTextSize"]')
+                .val(learning_lg[2] ? 200 : 150)
+                .change();
+                $('input[name="LgRegexpSplitSentences"]').val(learning_lg[4]);
+                $('input[name="LgRegexpWordCharacters"]').val(learning_lg[3]);
+                $('select[name="LgSplitEachChar"]').val(learning_lg[5] ? 1 : 0);
+                $('select[name="LgRemoveSpaces"]').val(learning_lg[6] ? 1 : 0);
+                $('select[name="LgRightToLeft"]').val(learning_lg[7] ? 1 : 0);
+            },
+
+            /**
+             * Changed the "current native language".
+             */
+            change_native: function (value) {
+                do_ajax_save_setting('currentnativelanguage', value);
+            }
         };
-
-        /// Execute the wizard
-        function wizard_go() {
-            GGTRANSLATE = '*http://translate.google.com/?' + $.param({
-                ie: "UTF-8",
-                sl: trans_query.source,
-                tl: trans_query.dest,
-                text: "###"
-            });
-            LIBRETRANSLATE = "http://localhost:5000/?" + $.param({
-                source: trans_query.source,
-                target: trans_query.dest,
-                q: "###"
-            });
-            if (l1 == '') {
-                alert ('Please choose your native language (L1)!');
-                return;
-            }
-            if (l2 == '') {
-                alert ('Please choose your language you want to read/study (L2)!');
-                return;
-            }
-            if (l2 == l1) {
-                alert ('L1 L2 Languages must not be equal!');
-                return;
-            }
-            $('input[name="LgName"]').val(l2).change();
-            // There may be a cleaner way to trigger the event
-            checkLanguageChanged(l2);
-            $('input[name="LgDict1URI"]').val(
-                '*https://de.glosbe.com/' + LANGDEFS[l2][0] + '/' + 
-                LANGDEFS[l1][0] + '/###'
-                );
-
-            $('input[name="LgGoogleTranslateURI"]').val(GGTRANSLATE);
-            $('input[name="LgTextSize"]')
-            .val(LANGDEFS[l2][2] ? 200 : 150)
-            .change();
-            $('input[name="LgRegexpSplitSentences"]').val(LANGDEFS[l2][4]);
-            $('input[name="LgRegexpWordCharacters"]').val(LANGDEFS[l2][3]);
-            $('select[name="LgSplitEachChar"]').val(LANGDEFS[l2][5] ? 1 : 0);
-            $('select[name="LgRemoveSpaces"]').val(LANGDEFS[l2][6] ? 1 : 0);
-            $('select[name="LgRightToLeft"]').val(LANGDEFS[l2][7] ? 1 : 0);
-        }
 
         $(document).ready(ask_before_exiting);
         $(function () { $('#wizard_zone').hide(); })
@@ -753,10 +779,10 @@ function edit_languages_new()
 
                 <div class="flex-spaced">
                     <div>
-                        <b>My Native language is:</b>
+                        <b>My native language is:</b>
                         <div>
-                            L1: 
-                            <select name="l1" id="l1" onchange="{do_ajax_save_setting('currentnativelanguage',($('#l1').val()));}">
+                            <label for="l1">L1</label>
+                            <select name="l1" id="l1" onchange="language_wizard.change_native(this.value);">
                                 <?php echo get_wizard_selectoptions($currentnativelanguage); ?>
                             </select>
                         </div>
@@ -764,14 +790,14 @@ function edit_languages_new()
                     <div>
                         <b>I want to study:</b>
                         <div>
-                            L2: 
+                        <label for="l2">L2</label>
                             <select name="l2" id="l2">
                                 <?php echo get_wizard_selectoptions(''); ?>
                             </select>
                         </div>
                     </div>
                 </div>
-                <input type="button" style="margin: 5px;" value="Set Language Settings" onclick="wizard_go();" />
+                <input type="button" style="margin: 5px;" value="Set Language Settings" onclick="language_wizard.go();" />
                 <p class="smallgray">
                     Select your native (L1) and study (L2) languages, and let the 
                     wizard set all language settings marked in yellow!<br />
