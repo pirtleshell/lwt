@@ -5,7 +5,7 @@
  * \brief Get a translation from Web Dictionary
  * 
  * Call 1: trans.php?x=1&t=[textid]&i=[textpos]
- *         GTr translates sentence in Text t, Pos i
+ *         Display translator for sentence in Text t, Pos i
  * Call 2: trans.php?x=2&t=[text]&i=[dictURI]
  *         translates text t with dict via dict-url i
  * 
@@ -16,16 +16,17 @@
  * @since   1.0.3
  */
 
+namespace trans;
+
 require_once 'inc/session_utility.php';
 
-$x = $_REQUEST["x"];
-$i = $_REQUEST["i"];
-$t = $_REQUEST["t"];
 
-if ($x == 1) {
+function translator_url($term, $order)
+{
+    global $tbpref;
     $sql = "SELECT SeText, LgGoogleTranslateURI 
     FROM {$tbpref}languages, {$tbpref}sentences, {$tbpref}textitems2 
-    WHERE Ti2SeID = SeID AND Ti2LgID = LgID AND Ti2TxID = $t AND Ti2Order = $i";
+    WHERE Ti2SeID = SeID AND Ti2LgID = LgID AND Ti2TxID = $term AND Ti2Order = $order";
     $res = do_mysqli_query($sql);
     $record = mysqli_fetch_assoc($res);
     if ($record) {
@@ -46,14 +47,29 @@ if ($x == 1) {
         if (substr($trans, 0, 7) == 'ggl.php') {
             $trans = str_replace('?', '?sent=1&', $trans);
         }
-        header("Location: " . createTheDictLink($trans, $satz));
+        return createTheDictLink($trans, $satz);
     }
-    exit();
 }
 
-if ($x == 2) {
-    header("Location: " . createTheDictLink($i, $t));
-    exit();
-}    
+
+function display_page($x, $i, $t)
+{
+    if ($x == 1) {
+        $url = translator_url($t, $i);
+        if ($url != '') {
+            header("Location: " . $url);
+        }
+        exit();
+    }
+
+    if ($x == 2) {
+        header("Location: " . createTheDictLink($i, $t));
+        exit();
+    }
+}
+
+if (isset($_REQUEST["x"]) && is_numeric($_REQUEST["x"])) {
+    display_page($_REQUEST["x"], $_REQUEST["i"], $_REQUEST["t"]);
+}
 
 ?>
