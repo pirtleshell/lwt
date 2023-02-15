@@ -7,8 +7,8 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 
 ### Added
 
-* The translation and romanization of new can now be automatic.
-  * Supported automatic translation is achieved using [LibreTranslate](https://libretranslate.com/), to English only.
+* The translation and romanization of new words can now be automatic.
+  * Supported automatic translation is achieved using [LibreTranslate](https://libretranslate.com/).
   * Romanization using [MeCab](https://taku910.github.io/mecab/) (Japanese only) toward katakana only. 
 * LWT becomes easier to install and maintain for users:
   * An intaller for Linux users at ``INSTALL.sh`` helps installing requirements and configuration.
@@ -16,10 +16,10 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
   * A server data page at ``server_data.php`` showing all relevant information.
 * In ``index.php``:
   * ``get_server_data_table`` replaces ``get_server_data`` as a better designed function.
-  * ``index_do_main_page`` now renders the page to avoud global variables.
+  * ``index_do_main_page`` now renders the page to avoid global variables.
   * You get warnings if the PHP version is too low, or if a newer version of LWT is released.
-* ``pagestart_kernel_nobody`` in ``inc/kernel.php`` that display the minimal HTML formatting.
-* ``inc/classes/`` folder for a better imcorporation of OOP.
+* ``pagestart_kernel_nobody`` in ``inc/kernel.php`` that displays the minimal HTML formatting.
+* ``inc/classes/`` folder for a better incorporation of OOP.
   * ``inc/classes/Term`` defines the ``Term`` class representing a word or multi-word.
   * ``inc/classes/Language`` defines the ``Language`` class representing a language.
 
@@ -33,7 +33,9 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 * ``echo_lwt_logo`` in ``inc/session_utility.php`` echoes a logo, without information on the table set used
 because it was useless. This information is now displayed on the welcome page.
 * Access to the database prefix edition at ``start.php`` was reviewed and simplified. It is still considered a legacy feature.
-* When creating a new language, the language wizard do no longer display in a pop-up but in the main window.
+* Language creation reviewed:
+  * When creating a new language, the language wizard do no longer display in a pop-up but in the main window.
+  * Select option boxes replaced by checkboxes (better accessibility).
 * Updated [hoverIntent jQuery Plug-in](http://briancherne.github.io/jquery-hoverIntent/)
 from 1.8.0 to 1.10.2. This brings some bug fixes.
 * "TO DO" changed to a more explicit "Unknown words" in text header.

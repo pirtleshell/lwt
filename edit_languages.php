@@ -169,19 +169,17 @@ function edit_languages_op_save(): string
 {
     global $tbpref;
     $val = get_first_value(
-        'select min(LgID) as value 
-        from ' . $tbpref . 'languages 
-        where LgName=""'
+        "SELECT MIN(LgID) AS value FROM {$tbpref}languages WHERE LgName=''"
     );
     if (!isset($val)) {
         $message = runsql(
-            'insert into ' . $tbpref . 'languages (
+            "INSERT INTO {$tbpref}languages (
                 LgName, LgDict1URI, LgDict2URI, LgGoogleTranslateURI, 
                 LgExportTemplate, LgTextSize, LgCharacterSubstitutions, 
                 LgRegexpSplitSentences, LgExceptionsSplitSentences, 
                 LgRegexpWordCharacters, LgRemoveSpaces, LgSplitEachChar, 
                 LgRightToLeft
-            ) values(' . 
+            ) VALUES(" . 
                 convert_string_to_sqlsyntax($_REQUEST["LgName"]) . ', ' .
                 convert_string_to_sqlsyntax($_REQUEST["LgDict1URI"]) . ', '. 
                 convert_string_to_sqlsyntax($_REQUEST["LgDict2URI"]) . ', '.
@@ -192,15 +190,15 @@ function edit_languages_op_save(): string
                 convert_string_to_sqlsyntax($_REQUEST["LgRegexpSplitSentences"]) . ', '.
                 convert_string_to_sqlsyntax_notrim_nonull($_REQUEST["LgExceptionsSplitSentences"]) . ', '.
                 convert_string_to_sqlsyntax($_REQUEST["LgRegexpWordCharacters"]) . ', '.
-                $_REQUEST["LgRemoveSpaces"] . ', '.
-                $_REQUEST["LgSplitEachChar"] . ', '.
-                $_REQUEST["LgRightToLeft"] . 
+                ((int)$_REQUEST["LgRemoveSpaces"]) . ', '.
+                ((int)$_REQUEST["LgSplitEachChar"]) . ', '.
+                ((int)$_REQUEST["LgRightToLeft"]) . 
             ')', 
             'Saved'
         );
     } else {
         $message = runsql(
-            'update ' . $tbpref . 'languages set ' . 
+            "UPDATE {$tbpref}languages SET " . 
             'LgName = ' . convert_string_to_sqlsyntax($_REQUEST["LgName"]) . ', ' . 
             'LgDict1URI = ' . convert_string_to_sqlsyntax($_REQUEST["LgDict1URI"]) . ', ' .
             'LgDict2URI = ' . convert_string_to_sqlsyntax($_REQUEST["LgDict2URI"]) . ', ' .
@@ -211,10 +209,10 @@ function edit_languages_op_save(): string
             'LgRegexpSplitSentences = ' . convert_string_to_sqlsyntax($_REQUEST["LgRegexpSplitSentences"]) . ', ' .
             'LgExceptionsSplitSentences = ' . convert_string_to_sqlsyntax_notrim_nonull($_REQUEST["LgExceptionsSplitSentences"]) . ', ' .
             'LgRegexpWordCharacters = ' . convert_string_to_sqlsyntax($_REQUEST["LgRegexpWordCharacters"]) . ', ' .
-            'LgRemoveSpaces = ' . $_REQUEST["LgRemoveSpaces"] . ', ' .
-            'LgSplitEachChar = ' . $_REQUEST["LgSplitEachChar"] . ', ' . 
-            'LgRightToLeft = ' . $_REQUEST["LgRightToLeft"] . 
-            ' where LgID = ' . $val, 
+            'LgRemoveSpaces = ' . ((int)$_REQUEST["LgRemoveSpaces"]) . ', ' .
+            'LgSplitEachChar = ' . ((int)$_REQUEST["LgSplitEachChar"]) . ', ' . 
+            'LgRightToLeft = ' . ((int)$_REQUEST["LgRightToLeft"]) . 
+            " WHERE LgID = $val", 
             'Saved'
         );
     }
@@ -234,7 +232,7 @@ function edit_languages_op_change($lid): string
 {
     global $tbpref;
     // Get old values
-    $sql = "select * from " . $tbpref . "languages where LgID=" . $lid;
+    $sql = "SELECT * FROM {$tbpref}languages where LgID = $lid";
     $res = do_mysqli_query($sql);
     $record = mysqli_fetch_assoc($res);
     if ($record == false) { 
@@ -265,7 +263,7 @@ function edit_languages_op_change($lid): string
     
 
     $message = runsql(
-        'update ' . $tbpref . 'languages set ' . 
+        "UPDATE {$tbpref}languages SET " . 
         'LgName = ' . convert_string_to_sqlsyntax($_REQUEST["LgName"]) . ', ' . 
         'LgDict1URI = ' . convert_string_to_sqlsyntax($_REQUEST["LgDict1URI"]) . ', ' .
         'LgDict2URI = ' . convert_string_to_sqlsyntax($_REQUEST["LgDict2URI"]) . ', ' .
@@ -276,10 +274,10 @@ function edit_languages_op_change($lid): string
         'LgRegexpSplitSentences = ' . convert_string_to_sqlsyntax($_REQUEST["LgRegexpSplitSentences"]) . ', ' .
         'LgExceptionsSplitSentences = ' . convert_string_to_sqlsyntax_notrim_nonull($_REQUEST["LgExceptionsSplitSentences"]) . ', ' .
         'LgRegexpWordCharacters = ' . convert_string_to_sqlsyntax($_REQUEST["LgRegexpWordCharacters"]) . ', ' .
-        'LgRemoveSpaces = ' . $_REQUEST["LgRemoveSpaces"] . ', ' .
-        'LgSplitEachChar = ' . $_REQUEST["LgSplitEachChar"] . ', ' . 
-        'LgRightToLeft = ' . $_REQUEST["LgRightToLeft"] . 
-        ' where LgID = ' . $lid, 
+        'LgRemoveSpaces = ' . ((int)$_REQUEST["LgRemoveSpaces"]) . ', ' .
+        'LgSplitEachChar = ' . ((int)$_REQUEST["LgSplitEachChar"]) . ', ' . 
+        'LgRightToLeft = ' . ((int)$_REQUEST["LgRightToLeft"]) . 
+        " WHERE LgID = $lid", 
         'Updated'
     );
     
@@ -587,7 +585,8 @@ function edit_language_form($language)
     <tr>
         <td class="td1 right">RegExp Word Characters:</td>
         <td class="td1">
-            <select onchange="wordsSplitChange(this.value);" style="display: none;" name="LgRegexpAlt">
+            <select onchange="wordsSplitChange(this.value);" style="display: none;" 
+            name="LgRegexpAlt">
                 <option value="regexp">Regular Expressions (demo)</option>
                 <option value="mecab">MeCab (recommended)</option>
             </select>
@@ -605,49 +604,55 @@ function edit_language_form($language)
         </td>
     </tr>
     <tr>
-    <td class="td1 right">Make each character a word:</td>
-    <td class="td1">
-        <select name="LgSplitEachChar">
-            <?php echo get_yesno_selectoptions($language->spliteachchar); ?>
-        </select>
-        (e.g. for Chinese, Japanese, etc.)</td>
+        <td class="td1 right">Make each character a word:</td>
+        <td class="td1">
+            <input type="checkbox" name="LgSplitEachChar" id="LgSplitEachChar" 
+            value="1" <?php echo $language->spliteachchar ? "checked" : ""; ?> />
+            <label for="LgSplitEachChar">(e.g. for Chinese, Japanese, etc.)</label>
+        </td>
     </tr>
     <tr>
-    <td class="td1 right">Remove spaces:</td>
-    <td class="td1">
-        <select name="LgRemoveSpaces">
-            <?php echo get_yesno_selectoptions($language->removespaces); ?>
-        </select>
-        (e.g. for Chinese, Japanese, etc.)</td>
+        <td class="td1 right">Remove spaces:</td>
+        <td class="td1">
+            <input type="checkbox" name="LgRemoveSpaces" id="LgRemoveSpaces" 
+            value="1" <?php echo $language->removespaces ? "checked" : ""; ?> />
+            <label for="LgRemoveSpaces">(e.g. for Chinese, Japanese, etc.)</label>
+        </td>
     </tr>
     <tr>
-    <td class="td1 right">Right-To-Left Script:</td>
-    <td class="td1">
-        <select name="LgRightToLeft">
-            <?php echo get_yesno_selectoptions($language->rightoleft); ?>
-        </select>
-        (e.g. for Arabic, Hebrew, Farsi, Urdu,  etc.)</td>
+        <td class="td1 right">Right-To-Left Script:</td>
+        <td class="td1">
+            <input type="checkbox" name="LgRightToLeft" id="LgRightToLeft" 
+            value="1" <?php echo $language->rightoleft ? "checked" : ""; ?> />
+            <label for="LgRightToLeft">
+                (e.g. for Arabic, Hebrew, Farsi, Urdu,  etc.)
+            </label>
+        </td>
     </tr>
     <tr>
-    <td class="td1 right">
-        Export Template 
-        <img class="click" src="icn/question-frame.png" title="Help" alt="Help" onclick="oewin('export_template.html');" /> :
-    </td>
-    <td class="td1">
-        <input type="text" class="checkoutsidebmp" data_info="Export Template" name="LgExportTemplate" 
-        value="<?php echo tohtml($language->exporttemplate); ?>" maxlength="1000" size="60" />
-    </td>
+        <td class="td1 right">
+            Export Template 
+            <img class="click" src="icn/question-frame.png" title="Help" alt="Help" 
+            onclick="oewin('export_template.html');" /> :
+        </td>
+        <td class="td1">
+            <input type="text" class="checkoutsidebmp" data_info="Export Template" 
+            name="LgExportTemplate" 
+            value="<?php echo tohtml($language->exporttemplate); ?>" 
+            maxlength="1000" size="60" />
+        </td>
     </tr>
     <tr>
-    <td class="td1 right" colspan="2">
-        <input type="button" value="Cancel" onclick="{resetDirty(); location.href='edit_languages.php';}" /> 
-        <?php 
-        if ($language->id == 0) {
-            echo '<input type="submit" name="op" value="Save" />';
-        } else {
-            echo '<input type="submit" name="op" value="Change" />';
-        }
-        ?>
+        <td class="td1 right" colspan="2">
+            <input type="button" value="Cancel" 
+            onclick="{resetDirty(); location.href='edit_languages.php';}" /> 
+            <?php 
+    if ($language->id == 0) {
+        echo '<input type="submit" name="op" value="Save" />';
+    } else {
+        echo '<input type="submit" name="op" value="Change" />';
+    }
+            ?>
         </td>
     </tr>
     </table>

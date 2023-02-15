@@ -1950,9 +1950,9 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 <h3>[Unreleased]</h3>
 <h4>Added</h4>
 <ul>
-<li>The translation and romanization of new can now be automatic.
+<li>The translation and romanization of new words can now be automatic.
 <ul>
-<li>Supported automatic translation is achieved using <a href="https://libretranslate.com/">LibreTranslate</a>, to English only.</li>
+<li>Supported automatic translation is achieved using <a href="https://libretranslate.com/">LibreTranslate</a>.</li>
 <li>Romanization using <a href="https://taku910.github.io/mecab/">MeCab</a> (Japanese only) toward katakana only.</li>
 </ul>
 </li>
@@ -1968,14 +1968,14 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 <li>
 <code>get_server_data_table</code> replaces <code>get_server_data</code> as a better designed function.</li>
 <li>
-<code>index_do_main_page</code> now renders the page to avoud global variables.</li>
+<code>index_do_main_page</code> now renders the page to avoid global variables.</li>
 <li>You get warnings if the PHP version is too low, or if a newer version of LWT is released.</li>
 </ul>
 </li>
 <li>
-<code>pagestart_kernel_nobody</code> in <code>inc/kernel.php</code> that display the minimal HTML formatting.</li>
+<code>pagestart_kernel_nobody</code> in <code>inc/kernel.php</code> that displays the minimal HTML formatting.</li>
 <li>
-<code>inc/classes/</code> folder for a better imcorporation of OOP.
+<code>inc/classes/</code> folder for a better incorporation of OOP.
 <ul>
 <li>
 <code>inc/classes/Term</code> defines the <code>Term</code> class representing a word or multi-word.</li>
@@ -1999,7 +1999,12 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 <code>echo_lwt_logo</code> in <code>inc/session_utility.php</code> echoes a logo, without information on the table set used
 because it was useless. This information is now displayed on the welcome page.</li>
 <li>Access to the database prefix edition at <code>start.php</code> was reviewed and simplified. It is still considered a legacy feature.</li>
+<li>Language creation reviewed:
+<ul>
 <li>When creating a new language, the language wizard do no longer display in a pop-up but in the main window.</li>
+<li>Select option boxes replaced by checkboxes (better accessibility).</li>
+</ul>
+</li>
 <li>Updated <a href="http://briancherne.github.io/jquery-hoverIntent/">hoverIntent jQuery Plug-in</a>
 from 1.8.0 to 1.10.2. This brings some bug fixes.</li>
 <li>"TO DO" changed to a more explicit "Unknown words" in text header.</li>
