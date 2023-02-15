@@ -318,7 +318,15 @@ function edit_languages_op_change($lid): string
     return $message;
 }
 
-
+/**
+ * Load a language object based in language ID.
+ * 
+ * @param int $lgid Language ID, if 0 load empty data.
+ * 
+ * @return Language Created object
+ * 
+ * @global string $tbpref
+ */
 function load_language($lgid)
 {
     global $tbpref;
@@ -362,6 +370,11 @@ function load_language($lgid)
     return $language;
 }
 
+/**
+ * Create the form for a language.
+ * 
+ * @param Language $language Language object
+ */
 function edit_language_form($language) 
 {
     ?>
@@ -758,9 +771,9 @@ function edit_languages_new()
                 .change();
                 $('input[name="LgRegexpSplitSentences"]').val(learning_lg[4]);
                 $('input[name="LgRegexpWordCharacters"]').val(learning_lg[3]);
-                $('select[name="LgSplitEachChar"]').val(learning_lg[5] ? 1 : 0);
-                $('select[name="LgRemoveSpaces"]').val(learning_lg[6] ? 1 : 0);
-                $('select[name="LgRightToLeft"]').val(learning_lg[7] ? 1 : 0);
+                $('input[name="LgSplitEachChar"]').attr("checked", learning_lg[5]);
+                $('input[name="LgRemoveSpaces"]').attr("checked", learning_lg[6]);
+                $('input[name="LgRightToLeft"]').attr("checked", learning_lg[7]);
             },
 
             /**
