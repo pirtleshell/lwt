@@ -2299,7 +2299,7 @@ function get_tagsort_selectoptions($v): string
 
 function get_textssort_selectoptions($v): string 
 { 
-    if (! isset($v) ) { 
+    if (!isset($v)) { 
         $v = 1; 
     }
     $r  = "<option value=\"1\"" . get_selected($v, 1);
@@ -2312,28 +2312,12 @@ function get_textssort_selectoptions($v): string
 }
 
 
-/*
- * Create options for a select box. Use INPUT[type=checkbox] instead
- * 
- * @deprecated 
- */
-function get_yesno_selectoptions($v): string 
-{
-    if (!isset($v)) { 
-        $v = 0; 
-    }
-    $r  = "<option value=\"0\"" . get_selected($v, 0);
-    $r .= ">No</option>";
-    $r .= "<option value=\"1\"" . get_selected($v, 1);
-    $r .= ">Yes</option>";
-    return $r;
-}
-
 // -------------------------------------------------------------
 
 function get_andor_selectoptions($v): string 
 {
-    if (! isset($v) ) { $v = 0; 
+    if (!isset($v)) { 
+        $v = 0; 
     }
     $r  = "<option value=\"0\"" . get_selected($v, 0);
     $r .= ">... OR ...</option>";

@@ -1,24 +1,23 @@
 <?php
 
 /**************************************************************
-Call: settings.php?....
-      ... op=Save ... do save 
-      ... op=Reset ... do reset to defaults 
-Preferences / Settings 
+ * Preferences / Settings 
+ * 
+ * Call: settings.php?....
+ *      ... op=Save ... do save 
+ *      ... op=Reset ... do reset to defaults 
  ***************************************************************/
 
 require_once 'inc/session_utility.php';
+
 if (isset($_REQUEST['op'])) {
-
     if ($_REQUEST['op'] == 'Save') {
-
         saveSetting(
             'set-theme-dir',
             $_REQUEST['set-theme-dir']
         );
-    }
-    else {    
-        runsql("delete from " . $tbpref . "settings where StKey like 'set-%'", '');
+    } else {    
+        runsql("DELETE FROM {$tbpref}settings WHERE StKey LIKE 'set-%'", '');
     }
 }
 pagestart('Settings/Preferences', true);
@@ -100,7 +99,7 @@ if (isset($_REQUEST['op'])) {
     
         saveSetting(
             'set-tts',
-            $_REQUEST['set-tts']
+            (int)$_REQUEST['set-tts']
         );
     
         saveSetting(
@@ -186,9 +185,7 @@ if (isset($_REQUEST['op'])) {
         $message = 'Settings saved';
     
     } else {
-        
         $message = 'All Settings reset to default values';
-    
     }
 
 }
@@ -451,7 +448,10 @@ echo get_sentence_count_selectoptions(
     <!-- ******************************************************* -->
     <tr>
         <th class="th1 center">Term<br />Translations</th>
-        <td class="td1 center">List of characters that<br />delimit different translations<br />(used in annotation selection)</td>
+        <td class="td1 center">
+            List of characters that<br />delimit different translations<br />
+            (used in annotation selection)
+        </td>
         <td class="td1 center">
         <input class="notempty center" type="text" 
         name="set-term-translation-delimiters" 
@@ -463,15 +463,13 @@ echo get_sentence_count_selectoptions(
         <th class="th1 center">Text to Speech</th>
         <td class="td1 center">Save Audio Files to Disk</td>
         <td class="td1 center">
-        <select name="set-tts" class="notempty">
-        <?php
-echo get_yesno_selectoptions(
-    getSettingWithDefault('set-tts')
-);
-        ?>
-        </select>
+            <input type="checkbox" name="set-tts" value="1" 
+            <?php echo ((int)getSettingWithDefault('set-tts') ? "checked" : ""); ?>  />
         </td>
-        <td class="td1 center"><img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /></td>
+        <td class="td1 center">
+            <img src="icn/status-busy.png" title="Field must not be empty" 
+            alt="Field must not be empty" />
+        </td>
     </tr>
     <!-- ******************************************************* -->
     <tr>
