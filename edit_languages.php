@@ -389,6 +389,9 @@ function edit_language_form($language)
         q: "lwt_term"
     });
 
+    /**
+     * Check for specific language option based on language name 
+     */
     function checkLanguageChanged(value) {
         if (value == "Japanese") {
             $(document.forms.lg_form.LgRegexpAlt).css("display", "block");
@@ -472,6 +475,9 @@ function edit_language_form($language)
         );
     }
 
+    /**
+     * Change the size of demo text.
+     */
     function changeLanguageTextSize(value) {
         $('#LgTextSizeExample').css("font-size", value + "%");
     }
@@ -495,7 +501,6 @@ function edit_language_form($language)
         }
         if (result) {
             document.forms.lg_form.LgRegexpWordCharacters.value = result;
-            //document.forms.lg_form.LgRegexpWordCharacters.disabled = fixed;
         }
     }
 
@@ -521,6 +526,9 @@ function edit_language_form($language)
         return built_url.href;
     }
 
+    /**
+     * Change the Pop-Up URL of dictionary.
+     */
     function changePopUpState(elem) {
         const l_form = document.forms.lg_form;
         let target;
@@ -538,8 +546,37 @@ function edit_language_form($language)
         target.value = addPopUpOption(target.value, elem.checked);
     }
 
+    /**
+     * Change Pop-Up checkboxes based on input box value. 
+     */
+    function checkDictionaryChanged(input_box) {
+        const l_form = document.forms.lg_form;
+        switch (input_box.name) {
+            case "LgDict1URI":
+                target = l_form.LgDict1PopUp;
+                break;
+            case "LgDict2URI":
+                target = l_form.LgDict2PopUp;
+                break;
+            case "LgGoogleTranslateURI":
+                target = l_form.LgGoogleTranslatePopUp;
+                break;
+        }
+        let popup = false;
+        if (input_box.value.startsWith('*')) {
+            input_box.value = input_box.value.substring(1);
+            popup = true;
+        }
+        popup |= (new URL(input_box.value)).searchParams.has("lwt_popup");
+        target.checked = popup;
+    }
+
     $(function () { 
-        checkLanguageChanged(document.forms.lg_form.LgName.value); 
+        const l_form = document.forms.lg_form;
+        checkLanguageChanged(l_form.LgName.value);
+        checkDictionaryChanged(l_form.LgDict1URI);
+        checkDictionaryChanged(l_form.LgDict2URI);
+        checkDictionaryChanged(l_form.LgGoogleTranslateURI);
     })
 </script>
 <form class="validate" action="<?php echo $_SERVER['PHP_SELF']; ?>" 
@@ -564,7 +601,8 @@ function edit_language_form($language)
             <input type="url" class="notempty checkdicturl checkoutsidebmp" 
             name="LgDict1URI" 
             value="<?php echo tohtml($language->dict1uri); ?>"  
-            maxlength="200" size="60" data_info="Dictionary 1 URI" />
+            maxlength="200" size="60" data_info="Dictionary 1 URI" 
+            oninput="checkDictionaryChanged(this);" />
             
             <input type="checkbox" name="LgDict1PopUp" id="LgDict1PopUp" 
             onchange="changePopUpState(this);" />
@@ -583,7 +621,8 @@ function edit_language_form($language)
             <input type="url" class="checkdicturl checkoutsidebmp" 
             name="LgDict2URI" 
             value="<?php echo tohtml($language->dict2uri); ?>" maxlength="200"
-            size="60" data_info="Dictionary 2 URI" />
+            size="60" data_info="Dictionary 2 URI"
+            oninput="checkDictionaryChanged(this);" />
             
             <input type="checkbox" name="LgDict2PopUp" id="LgDict2PopUp" 
             onchange="changePopUpState(this);" />
@@ -614,11 +653,14 @@ function edit_language_form($language)
             name="LgGoogleTranslateURI" 
             value="<?php echo tohtml($language->translator); ?>" 
             maxlength="200" size="60" data_info="GoogleTranslate URI" 
-            oninput="checkTranslatorStatus(this.value);"/>
+            oninput="checkTranslatorStatus(this.value);checkDictionaryChanged(this);"
+             />
+
             <div id="LgTranslatorKeyWrapper" style="display: none;">
                 <label for="LgTranslatorKey">Key :</label>
                 <input type="text" id="LgTranslatorKey" name="LgTranslatorKey"/>
             </div>
+
             <input type="checkbox" name="LgGoogleTranslatePopUp" 
             id="LgGoogleTranslatePopUp" onchange="changePopUpState(this);"/>
             <label for="LgGoogleTranslatePopUp"
