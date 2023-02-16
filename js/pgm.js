@@ -269,14 +269,14 @@ function make_overlib_link_ignore_word(txid,torder){return' <a href="insert_word
 function make_overlib_audio(txt,lang){let img=document.createElement("img");img.title="Click to read!";img.src="icn/speaker-volume.png";img.style.cursor="pointer";img.setAttribute("onclick","readTextAloud('"+escape_html_chars(txt)+"', '"+(lang||"")+"')");return img.outerHTML}
 function getStatusName(status){return STATUSES[status]?STATUSES[status].name:'Unknown'}
 function getStatusAbbr(status){return STATUSES[status]?STATUSES[status].abbr:'?'}
-function translateSentence(url,sentctl){if(typeof sentctl!=='undefined'&&url!=''){const text=sentctl.value;if(typeof text==='string'){showRightFrames(undefined,createTheDictUrl(url,text.replace(/[{}]/g,'')))}}}
+function translateSentence(url,sentctl){if(sentctl!==undefined&&url!=''){const text=sentctl.value;if(typeof text==='string'){showRightFrames(undefined,createTheDictUrl(url,text.replace(/[{}]/g,'')))}}}
 function translateSentence2(url,sentctl){if(typeof sentctl!=='undefined'&&url!=''){const text=sentctl.value;if(typeof text==='string'){const finalurl=createTheDictUrl(url,text.replace(/[{}]/g,''));owin(finalurl)}}}
-function translateWord(url,wordctl){if(typeof wordctl!=='undefined'&&url!=''){const text=wordctl.value;if(typeof text==='string'){showRightFrames(undefined,createTheDictUrl(url,text))}}}
-function translateWord2(url,wordctl){if(typeof wordctl!=='undefined'&&url!=''){const text=wordctl.value;if(typeof text==='string'){owin(createTheDictUrl(url,text))}}}
+function translateWord(url,wordctl){if(wordctl!==undefined&&url!=''){const text=wordctl.value;if(typeof text==='string'){showRightFrames(undefined,createTheDictUrl(url,text))}}}
+function translateWord2(url,wordctl){if(wordctl!==undefined&&url!=''){const text=wordctl.value;if(typeof text==='string'){owin(createTheDictUrl(url,text))}}}
 function translateWord3(url,word){owin(createTheDictUrl(url,word))}
-function getLangFromDict(wblink3){let dictUrl,urlParams;let libretranslate=!1;if(wblink3.trim()==''){return''}
+function getLangFromDict(wblink3){let dictUrl,urlParams;if(wblink3.trim()==''){return''}
 if(wblink3.startsWith('*')){wblink3=wblink3.substring(1)}
-if(wblink3.startsWith("trans.php")){wblink3='http://'+wblink3}
+if(wblink3.startsWith("trans.php")||wblink3.startsWith("ggl.php")){wblink3='http://'+wblink3}
 dictUrl=new URL(wblink3);urlParams=dictUrl.searchParams;if(urlParams.get("lwt_translator")=="libretranslate"){return urlParams.get("source")||""}
 return urlParams.get("sl")||""}
 function make_tooltip(word,trans,roman,status){const nl='\x0d';let title=word;if(roman!=''){if(title!='')title+=nl;title+='▶ '+roman}
@@ -286,7 +286,7 @@ function escape_html_chars_2(title,ann){if(ann!=''){const ann2=escape_html_chars
 return escape_html_chars(title)}
 function owin(url){window.open(url,'dictwin','width=800, height=400, scrollbars=yes, menubar=no, resizable=yes, status=no')}
 function oewin(url){window.open(url,'editwin','width=800, height=600, scrollbars=yes, menubar=no, resizable=yes, status=no')}
-function createTheDictUrl(u,w){const url=u.trim();const trm=w.trim();const term_elem=url.match(/lwt_term|###/);const pos=term_elem===null?-1:url.indexOf(term_elem[0]);if(pos==-1){return url+encodeURIComponent(trm)}
+function createTheDictUrl(u,w){const url=u.trim();const trm=w.trim();const term_elem=url.match(/lwt_term|###/);const pos=(term_elem===null)?-1:url.indexOf(term_elem[0]);if(pos==-1){return url+encodeURIComponent(trm)}
 const pos2=url.indexOf('###',pos+1);if(pos2===-1){return url.replace(term_elem,trm==''?'+':encodeURIComponent(trm))}
 const enc=url.substring(pos+term_elem[0].length,pos2-pos-term_elem[0].length).trim();console.warn("Trying to use encoding '"+enc+"'. This feature is abandonned since "+"2.6.0-fork. Using default UTF-8.");let output=url.substring(0,pos)+encodeURIComponent(trm);if(pos2+3<url.length){output+=url.substring(pos2+3)}
 return output}

@@ -695,7 +695,7 @@ function getStatusAbbr (status) {
  * @returns {void}
  */
 function translateSentence (url, sentctl) {
-  if (typeof sentctl !== 'undefined' && url != '') {
+  if (sentctl !== undefined && url != '') {
     const text = sentctl.value;
     if (typeof text === 'string') {
       showRightFrames(undefined, createTheDictUrl(url, text.replace(/[{}]/g, '')));
@@ -727,8 +727,8 @@ function translateSentence2 (url, sentctl) {
  * @param {object} wordctl Textarea containing word to translate.
  * @returns {void}
  */
-function translateWord (url, wordctl) {
-  if (typeof wordctl !== 'undefined' && url != '') {
+function translateWord(url, wordctl) {
+  if (wordctl !== undefined && url != '') {
     const text = wordctl.value;
     if (typeof text === 'string') {
       showRightFrames(undefined, createTheDictUrl(url, text));
@@ -743,8 +743,8 @@ function translateWord (url, wordctl) {
  * @param {object} wordctl Textarea containing word to translate.
  * @returns {void}
  */
-function translateWord2 (url, wordctl) {
-  if (typeof wordctl !== 'undefined' && url != '') {
+function translateWord2(url, wordctl) {
+  if (wordctl !== undefined && url != '') {
     const text = wordctl.value;
     if (typeof text === 'string') {
       owin(createTheDictUrl(url, text));
@@ -759,7 +759,7 @@ function translateWord2 (url, wordctl) {
  * @param {string} word Word to translate.
  * @returns {void}
  */
-function translateWord3 (url, word) {
+function translateWord3(url, word) {
   owin(createTheDictUrl(url, word));
 }
 
@@ -773,7 +773,6 @@ function translateWord3 (url, word) {
  */
 function getLangFromDict(wblink3) {
   let dictUrl, urlParams;
-  let libretranslate = false;
   if (wblink3.trim() == '') {
     return '';
   }
@@ -781,7 +780,7 @@ function getLangFromDict(wblink3) {
   if (wblink3.startsWith('*')) {
     wblink3 = wblink3.substring(1);
   }
-  if (wblink3.startsWith("trans.php")) {
+  if (wblink3.startsWith("trans.php") || wblink3.startsWith("ggl.php")) {
     wblink3 = 'http://' + wblink3;
   }
   dictUrl = new URL(wblink3);
@@ -883,7 +882,7 @@ function createTheDictUrl (u, w) {
   const url = u.trim();
   const trm = w.trim();
   const term_elem = url.match(/lwt_term|###/);
-  const pos = term_elem === null ? -1 : url.indexOf(term_elem[0]);
+  const pos = (term_elem === null) ? -1 : url.indexOf(term_elem[0]);
   // No ###/lwt_term found
   if (pos == -1) {
       return url + encodeURIComponent(trm);

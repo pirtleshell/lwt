@@ -2782,10 +2782,15 @@ function makeOpenDictStrJS($url): string
 {
     $r = '';
     if ($url != '') {
-        if(substr($url, 0, 1) == '*') {
-            $r = "owin(" . prepare_textdata_js(substr($url, 1)) . ");\n";
-        } 
-        else {
+        $popup = false;
+        if (str_starts_with($url, "*")) {
+            $url = substr($url, 1);
+            $popup = true;
+        }
+        $popup |= str_contains(parse_url($url, PHP_URL_QUERY), 'lwt_popup=');
+        if ($popup) {
+            $r = "owin(" . prepare_textdata_js($url) . ");\n";
+        } else {
             $r = "top.frames['ru'].location.href=" . prepare_textdata_js($url) . ";\n";
         } 
     }
@@ -2815,9 +2820,7 @@ function makeOpenDictStrDynSent($url, $sentctljs, $txt): string
         $url = substr($url, 1);
         $popup = true;
     }
-    if (str_contains(parse_url($url, PHP_URL_QUERY), 'lwt_popup=')) {
-        $popup = true;
-    }
+    $popup |= str_contains(parse_url($url, PHP_URL_QUERY), 'lwt_popup=');
     if (str_starts_with($url, "ggl.php")) {
         $url = str_replace('?', '?sent=1&', $url);
     }
@@ -2923,35 +2926,51 @@ function makeDictLinks($lang, $wordctljs): string
 
 // -------------------------------------------------------------
 
-function createDictLinksInEditWin3($lang,$sentctljs,$wordctljs): string 
+function createDictLinksInEditWin3($lang, $sentctljs, $wordctljs): string 
 {
     global $tbpref;
-    $sql = 'SELECT LgDict1URI, LgDict2URI, LgGoogleTranslateURI 
-    FROM ' . $tbpref . 'languages WHERE LgID = ' . $lang;
+    $sql = "SELECT LgDict1URI, LgDict2URI, LgGoogleTranslateURI 
+    FROM {$tbpref}languages WHERE LgID = $lang";
     $res = do_mysqli_query($sql);
     $record = mysqli_fetch_assoc($res);
     
     $wb1 = isset($record['LgDict1URI']) ? $record['LgDict1URI'] : "";
-    if(substr($wb1, 0, 1) == '*') { 
-        $f1 = 'translateWord2(' . prepare_textdata_js(substr($wb1, 1)); 
+    $popup = false;
+    if (substr($wb1, 0, 1) == '*') {
+        $wb1 = substr($wb1, 0, 1);
+        $popup = true;
     }
-    else { 
+    $popup |= str_contains($wb1, "lwt_popup=");
+    if ($popup) {
+        $f1 = 'translateWord2(' . prepare_textdata_js($wb1); 
+    } else { 
         $f1 = 'translateWord(' . prepare_textdata_js($wb1); 
     }
         
     $wb2 = isset($record['LgDict2URI']) ? $record['LgDict2URI'] : "";
-    if(substr($wb2, 0, 1) == '*') { 
-        $f2 = 'translateWord2(' . prepare_textdata_js(substr($wb2, 1)); 
+    $popup = false;
+    if (substr($wb2, 0, 1) == '*') {
+        $wb2 = substr($wb2, 0, 1);
+        $popup = true;
     }
-    else { 
+    $popup |= str_contains($wb2, "lwt_popup=");
+    if ($popup) {
+        $f2 = 'translateWord2(' . prepare_textdata_js($wb2); 
+    } else { 
         $f2 = 'translateWord(' . prepare_textdata_js($wb2); 
     }
 
     $wb3 = isset($record['LgGoogleTranslateURI']) ? 
     $record['LgGoogleTranslateURI'] : "";
-    if(substr($wb3, 0, 1) == '*') {
-        $f3 = 'translateWord2(' . prepare_textdata_js(substr($wb3, 1));
-        $f4 = 'translateSentence2(' . prepare_textdata_js(substr($wb3, 1));
+    $popup = false;
+    if (substr($wb3, 0, 1) == '*') {
+        $wb3 = substr($wb3, 0, 1);
+        $popup = true;
+    }
+    $popup |= str_contains($wb3, "lwt_popup=");
+    if ($popup) {
+        $f3 = 'translateWord2(' . prepare_textdata_js($wb3);
+        $f4 = 'translateSentence2(' . prepare_textdata_js($wb3);
     } else {
         $f3 = 'translateWord(' . prepare_textdata_js($wb3);
         $f4 = 'translateSentence(' . prepare_textdata_js(

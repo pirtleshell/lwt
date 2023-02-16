@@ -872,8 +872,7 @@ function edit_languages_new()
                     text: "lwt_term"
                 });
                 const url = new URL(window.location.href);
-                const base_url = url.protocol + "//" + url.hostname + 
-                (url.port ? ":" + url.port : "");
+                const base_url = url.protocol + "//" + url.hostname;
                 let path = url.pathname;
                 const exploded_path = path.split('/');
                 exploded_path.pop();
