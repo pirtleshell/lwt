@@ -49,19 +49,19 @@ function translator_url($term, $order)
 }
 
 
-function display_page($x, $i, $t)
+function display_page($type, $term, $order)
 {
     // Translate sentence
-    if ($x == 1) {
-        $url = translator_url($t, $i);
+    if ($type == 1) {
+        $url = translator_url($order, $term);
         if ($url != '') {
             header("Location: " . $url);
         }
         exit();
     }
     // Translate text
-    if ($x == 2) {
-        header("Location: " . createTheDictLink($i, $t));
+    if ($type == 2) {
+        header("Location: " . createTheDictLink($term, $order));
         exit();
     }
 }

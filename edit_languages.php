@@ -386,7 +386,7 @@ function edit_language_form($language)
         lwt_translator: 'libretranslate',
         source: 'auto',
         target: <?php echo json_encode(getSetting('currentnativelanguage')); ?>,
-        q: ""
+        q: "lwt_term"
     });
 
     function checkLanguageChanged(value) {
@@ -403,6 +403,8 @@ function edit_language_form($language)
     function multiWordsTranslateChange(value) {
         let result;
         let uses_key = false;
+        let base_url = window.location.href;
+        base_url = base_url.replace('/edit_languages.php', '');
         switch (value) {
             case "google_translate":
                 result = GGTRANSLATE;
@@ -412,10 +414,10 @@ function edit_language_form($language)
                 uses_key = true;
                 break;
             case "ggl":
-                result = "ggl.php?text=";
+                result = base_url + "ggl.php?text=";
                 break;
             case "glosbe":
-                result = "glosbe.php";
+                result = base_url + "glosbe.php";
                 break;
         }
         if (result) {
@@ -429,16 +431,14 @@ function edit_language_form($language)
      * Check status of the requested translation API.
      */
     function checkTranslatorStatus(url) {
-        let add_popup_param;
         if (url.startsWith('*')) {
-            add_popup_param = true;
             url = url.substring(1);
         }
         const url_obj = new URL(url);
         const params = url_obj.searchParams;
         if (params.get('lwt_translator') == 'libretranslate') {
             try {
-                checkLibreTranslateStatus(params.url, key=params.key);
+                checkLibreTranslateStatus(url_obj, key=params.key);
             } catch (error) {
                 $('#translator_status')
                 .html('<a href="https://libretranslate.com/">LibreTranslate</a> server seems to be unreachable.' + 
@@ -452,7 +452,9 @@ function edit_language_form($language)
      * Check LibreTranslate translator status.
      */
     function checkLibreTranslateStatus(url, key="") {
-        getLibreTranslateTranslation('ping', 'en', 'es', key, url=url)
+        const trans_url = new URL(url);
+        trans_url.searchParams.append('lwt_key', key);
+        getLibreTranslateTranslation(trans_url, 'ping', 'en', 'es')
         .then(
             function (translation) {
                 if (typeof translation === "string") {
@@ -497,6 +499,45 @@ function edit_language_form($language)
         }
     }
 
+    /**
+     * Build a dictionary/translator URL with the pop-up option
+     */
+    function addPopUpOption(url, checked) {
+        if (url.startsWith('*')) {
+            url = url.substring(1);
+        }
+        const built_url = new URL(url);
+        // Remove trivial cases
+        if (checked && built_url.searchParams.has('lwt_popup'))
+            return built_url.href;
+        if (!checked && !built_url.searchParams.has('lwt_popup'))
+            return built_url.href;
+        // Now we should change status
+        if (checked) {
+            built_url.searchParams.append('lwt_popup', 'true');
+            return built_url.href;
+        }
+        built_url.searchParams.delete('lwt_popup');
+        return built_url.href;
+    }
+
+    function changePopUpState(elem) {
+        const l_form = document.forms.lg_form;
+        let target;
+        switch (elem.name) {
+            case "LgDict1PopUp":
+                target = l_form.LgDict1URI;
+                break;
+            case "LgDict2PopUp":
+                target = l_form.LgDict2URI;
+                break;
+            case "LgGoogleTranslatePopUp":
+                target = l_form.LgGoogleTranslateURI;
+                break;
+        }
+        target.value = addPopUpOption(target.value, elem.checked);
+    }
+
     $(function () { 
         checkLanguageChanged(document.forms.lg_form.LgName.value); 
     })
@@ -520,10 +561,18 @@ function edit_language_form($language)
     <tr>
         <td class="td1 right">Dictionary 1 URI:</td>
         <td class="td1">
-            <input type="text" class="notempty checkdicturl checkoutsidebmp" 
+            <input type="url" class="notempty checkdicturl checkoutsidebmp" 
             name="LgDict1URI" 
             value="<?php echo tohtml($language->dict1uri); ?>"  
             maxlength="200" size="60" data_info="Dictionary 1 URI" />
+            
+            <input type="checkbox" name="LgDict1PopUp" id="LgDict1PopUp" 
+            onchange="changePopUpState(this);" />
+            
+            <label for="LgDict1PopUp" 
+            title="Open in a new window. Some dictionaries cannot be displayed in iframes">
+                Open in Pop-Up
+            </label>
             <img src="icn/status-busy.png" title="Field must not be empty" 
             alt="Field must not be empty" />
         </td>
@@ -531,10 +580,18 @@ function edit_language_form($language)
     <tr>
         <td class="td1 right">Dictionary 2 URI:</td>
         <td class="td1">
-            <input type="text" class="checkdicturl checkoutsidebmp" 
+            <input type="url" class="checkdicturl checkoutsidebmp" 
             name="LgDict2URI" 
             value="<?php echo tohtml($language->dict2uri); ?>" maxlength="200"
             size="60" data_info="Dictionary 2 URI" />
+            
+            <input type="checkbox" name="LgDict2PopUp" id="LgDict2PopUp" 
+            onchange="changePopUpState(this);" />
+            
+            <label for="LgDict2PopUp"
+            title="Open in a new window. Some dictionaries cannot be displayed in iframes">
+                Open in Pop-Up
+            </label>
         </td>
     </tr>
     <tr>
@@ -553,7 +610,7 @@ function edit_language_form($language)
                     Glosbe API
                 </option>
             </select>
-            <input type="text" class="checkdicturl checkoutsidebmp" 
+            <input type="url" class="checkdicturl checkoutsidebmp" 
             name="LgGoogleTranslateURI" 
             value="<?php echo tohtml($language->translator); ?>" 
             maxlength="200" size="60" data_info="GoogleTranslate URI" 
@@ -562,6 +619,12 @@ function edit_language_form($language)
                 <label for="LgTranslatorKey">Key :</label>
                 <input type="text" id="LgTranslatorKey" name="LgTranslatorKey"/>
             </div>
+            <input type="checkbox" name="LgGoogleTranslatePopUp" 
+            id="LgGoogleTranslatePopUp" onchange="changePopUpState(this);"/>
+            <label for="LgGoogleTranslatePopUp"
+            title="Open in a new window. Some translators cannot be displayed in iframes">
+                Open in Pop-Up
+            </label>
             <div id="translator_error" class="red" ></div>
         </td>
     </tr>
@@ -764,7 +827,7 @@ function edit_languages_new()
                     ie: "UTF-8",
                     sl: learning_lg[1],
                     tl: known_lg[1],
-                    text: ""
+                    text: "lwt_term"
                 });
                 const url = new URL(window.location.href);
                 const base_url = url.protocol + "//" + url.hostname + 
@@ -779,16 +842,16 @@ function edit_languages_new()
                     lwt_translator_ajax: encodeURIComponent(base_url + ":5000/translate/?"),
                     source: learning_lg[1],
                     target: known_lg[1],
-                    q: ""
+                    q: "lwt_term"
                 });
                 $('input[name="LgName"]').val(learning_lg_name).change();
                 // There may be a cleaner way to trigger the event
                 checkLanguageChanged(learning_lg_name);
                 $('input[name="LgDict1URI"]').val(
-                    '*https://de.glosbe.com/' + learning_lg[0] + '/' + 
-                    known_lg[0] + '/###'
-                    );
-
+                    'https://de.glosbe.com/' + learning_lg[0] + '/' + 
+                    known_lg[0] + '/lwt_term'
+                );
+                $('input[name="LgDict1PopUp"]').attr('checked', true);
                 $('input[name="LgGoogleTranslateURI"]').val(GGTRANSLATE);
                 $('input[name="LgTextSize"]')
                 .val(learning_lg[2] ? 200 : 150)

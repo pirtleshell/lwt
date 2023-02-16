@@ -183,13 +183,23 @@ function bulk_do_content($tid, $sl, $tl, $pos)
                     WBLINK=WBLINK2;
                 if ($(this).hasClass( "dict3" ))
                     WBLINK=WBLINK3;
-                if ((WBLINK.substr(0,8) == '*http://') || (WBLINK.substr(0,9) == '*https://')) {
+                let dict_link = WBLINK;
+                let popup = dict_link.startsWith('*');
+                try {
+                    let final_url = new URL(dict_link);
+                    popup |= final_url.searchParams.has("lwt_popup");
+                } catch (err) {
+                    if (!(err instanceof TypeError)) {
+                        throw err;
+                    }
+                }
+                if (popup) {
                     owin(createTheDictUrl(
-                        WBLINK.replace('*',''), $(this).parent().prev().text()
+                        dict_link, $(this).parent().prev().text()
                         ));
                 } else {
                     window.parent.frames['ru'].location.href = createTheDictUrl(
-                        WBLINK, $(this).parent().prev().text()
+                        dict_link, $(this).parent().prev().text()
                     );
                 }
                 $('[name="WoTranslation"]')

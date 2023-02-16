@@ -9,7 +9,10 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 
 * The translation and romanization of new words can now be automatic.
   * Supported automatic translation is achieved using [LibreTranslate](https://libretranslate.com/).
-  * Romanization using [MeCab](https://taku910.github.io/mecab/) (Japanese only) toward katakana only. 
+  * Romanization using [MeCab](https://taku910.github.io/mecab/) (Japanese only) toward katakana only.
+* A lot of improvements for language creation/edition: 
+  * More intuitive fields, better interactions with the user, etc...
+  * A "Pop-Up" checkbox helps you choose if the website should be displayed in a pop-up.
 * LWT becomes easier to install and maintain for users:
   * An intaller for Linux users at ``INSTALL.sh`` helps installing requirements and configuration.
   * Database creation wizard (``database_wizard.php``) to help setting the connection with the database.
@@ -46,6 +49,7 @@ from 1.8.0 to 1.10.2. This brings some bug fixes.
 * It is recommended to use proper URL for all dictionaries and translators.
   * '*' before a dictionary URL should be replaced by an argument 'lwt_popup=true'
   * 'ggl.php' and 'glosbe_api.php' should be updated (e. g. "{YOUR_LWT_CURRENT_ADDRESS}/ggl.php")
+  * Marking the location of a term to translate with '###' is deprecated in favor of 'lwt_term'.
 
 ### Fixed
 

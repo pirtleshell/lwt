@@ -1018,9 +1018,28 @@ function keydown_event_do_text_text (e) {
     return false;
   }
   if (e.which == 84) { // T : translate sentence
-    if ((WBLINK3.substr(0, 8) == '*http://') || (WBLINK3.substr(0, 9) == '*https://')) {
+    let popup = false;
+    let dict_link = WBLINK3;
+    if (WBLINK3.startsWith('*')) {
+      popup = true;
+      dict_link = substring(dict_link, 1);
+    }
+    if (dict_link.startsWith('ggl.php')) {
+      dict_link = "http://" + dict_link;
+    }
+    let open_url = true;
+    let final_url;
+    try {
+      final_url = new URL(dict_link);
+      popup |= final_url.searchParams.has("lwt_popup");
+    } catch (err) {
+      if (err instanceof TypeError) {
+        open_url = false;
+      }
+    }
+    if (popup) {
       owin('trans.php?x=1&i=' + ord + '&t=' + TID);
-    } else if ((WBLINK3.substr(0, 7) == 'http://') || (WBLINK3.substr(0, 8) == 'https://') || (WBLINK3.substr(0, 7) == 'ggl.php')) {
+    } else if (open_url) {
       showRightFrames(undefined, 'trans.php?x=1&i=' + ord + '&t=' + TID);
     }
     return false;
@@ -1041,10 +1060,21 @@ function keydown_event_do_text_text (e) {
   if (e.which == 71) { //  G : edit term and open GTr
     dict = '&nodict';
     setTimeout(function () {
-      if ((WBLINK3.substr(0, 8) == '*http://') || (WBLINK3.substr(0, 9) == '*https://')) { 
-        owin(createTheDictUrl(WBLINK3.replace('*', ''), txt)); 
+      let target_url = WBLINK3;
+      let popup = false;
+      popup = target_url.startsWith('*');
+      try {
+        const final_url = new URL(target_url);
+        popup |= final_url.searchParams.has('lwt_popup');
+      } catch (err) {
+        if (!(err instanceof TypeError)) {
+          throw err;
+        }
+      }
+      if (popup) { 
+        owin(createTheDictUrl(target_url, txt)); 
       } else {
-          showRightFrames(undefined, createTheDictUrl(WBLINK3, txt));
+          showRightFrames(undefined, createTheDictUrl(target_url, txt));
       }
     }, 10);
   }

@@ -114,7 +114,7 @@ if (isset($_REQUEST['restore'])) {
             $result = do_mysqli_query(
                 'SELECT LgID, LgName, LgDict1URI, LgDict2URI, 
                 REPLACE(
-                    LgGoogleTranslateURI, "ggl.php", "*http://translate.google.com"
+                    LgGoogleTranslateURI, "ggl.php", "http://translate.google.com"
                 ) AS LgGoogleTranslateURI, 
                 LgExportTemplate, LgTextSize, LgCharacterSubstitutions, 
                 LgRegexpSplitSentences, LgExceptionsSplitSentences, 

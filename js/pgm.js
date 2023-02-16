@@ -146,11 +146,15 @@ if(e.which==73){if(stat=='0'){showRightFrames('set_word_on_hover.php?text='+txt+
 if(e.which==87){if(stat=='0'){showRightFrames('set_word_on_hover.php?text='+txt+'&tid='+TID+'&status=99')}else{showRightFrames('set_word_status.php?wid='+wid+'&tid='+TID+'&ord='+ord+'&status=99')}
 return!1}
 if(e.which==80){const lg=getLangFromDict(WBLINK3);readTextAloud(txt,lg);return!1}
-if(e.which==84){if((WBLINK3.substr(0,8)=='*http://')||(WBLINK3.substr(0,9)=='*https://')){owin('trans.php?x=1&i='+ord+'&t='+TID)}else if((WBLINK3.substr(0,7)=='http://')||(WBLINK3.substr(0,8)=='https://')||(WBLINK3.substr(0,7)=='ggl.php')){showRightFrames(undefined,'trans.php?x=1&i='+ord+'&t='+TID)}
+if(e.which==84){let popup=!1;let dict_link=WBLINK3;if(WBLINK3.startsWith('*')){popup=!0;dict_link=substring(dict_link,1)}
+if(dict_link.startsWith('ggl.php')){dict_link="http://"+dict_link}
+let open_url=!0;let final_url;try{final_url=new URL(dict_link);popup|=final_url.searchParams.has("lwt_popup")}catch(err){if(err instanceof TypeError){open_url=!1}}
+if(popup){owin('trans.php?x=1&i='+ord+'&t='+TID)}else if(open_url){showRightFrames(undefined,'trans.php?x=1&i='+ord+'&t='+TID)}
 return!1}
 if(e.which==65){let p=curr.attr('data_pos');const t=parseInt($('#totalcharcount').text(),10);if(t==0)return!0;p=100*(p-5)/t;if(p<0)p=0;if(typeof(window.parent.frames.h.new_pos)==='function'){window.parent.frames.h.new_pos(p)}else{return!0}
 return!1}
-if(e.which==71){dict='&nodict';setTimeout(function(){if((WBLINK3.substr(0,8)=='*http://')||(WBLINK3.substr(0,9)=='*https://')){owin(createTheDictUrl(WBLINK3.replace('*',''),txt))}else{showRightFrames(undefined,createTheDictUrl(WBLINK3,txt))}},10)}
+if(e.which==71){dict='&nodict';setTimeout(function(){let target_url=WBLINK3;let popup=!1;popup=target_url.startsWith('*');try{const final_url=new URL(target_url);popup|=final_url.searchParams.has('lwt_popup')}catch(err){if(!(err instanceof TypeError)){throw err}}
+if(popup){owin(createTheDictUrl(target_url,txt))}else{showRightFrames(undefined,createTheDictUrl(target_url,txt))}},10)}
 if(e.which==69||e.which==71){let url='';if(curr.hasClass('mword')){url='edit_mword.php?wid='+wid+'&len='+curr.attr('data_code')+'&tid='+TID+'&ord='+ord+dict}else if(stat=='0'){url='edit_word.php?wid=&tid='+TID+'&ord='+ord+dict}else{url='edit_word.php?wid='+wid+'&tid='+TID+'&ord='+ord+dict}
 showRightFrames(url);return!1}
 return!0}
@@ -282,17 +286,18 @@ function escape_html_chars_2(title,ann){if(ann!=''){const ann2=escape_html_chars
 return escape_html_chars(title)}
 function owin(url){window.open(url,'dictwin','width=800, height=400, scrollbars=yes, menubar=no, resizable=yes, status=no')}
 function oewin(url){window.open(url,'editwin','width=800, height=600, scrollbars=yes, menubar=no, resizable=yes, status=no')}
-function createTheDictUrl(u,w){const url=u.trim();const trm=w.trim();const pos=url.indexOf('###');if(pos==-1){return url+encodeURIComponent(trm)}
-const pos2=url.indexOf('###',pos+1);if(pos2===-1){return url.replace("###",trm==''?'+':encodeURIComponent(trm))}
-const enc=url.substring(pos+3,pos2-pos-3).trim();console.warn("Trying to use encoding '"+enc+"'. This feature is abandonned since "+"2.6.0-fork. Using default UTF-8.");let output=url.substring(0,pos)+encodeURIComponent(trm);if(pos2+3<url.length){output+=url.substring(pos2+3)}
+function createTheDictUrl(u,w){const url=u.trim();const trm=w.trim();const term_elem=url.match(/lwt_term|###/);const pos=term_elem===null?-1:url.indexOf(term_elem[0]);if(pos==-1){return url+encodeURIComponent(trm)}
+const pos2=url.indexOf('###',pos+1);if(pos2===-1){return url.replace(term_elem,trm==''?'+':encodeURIComponent(trm))}
+const enc=url.substring(pos+term_elem[0].length,pos2-pos-term_elem[0].length).trim();console.warn("Trying to use encoding '"+enc+"'. This feature is abandonned since "+"2.6.0-fork. Using default UTF-8.");let output=url.substring(0,pos)+encodeURIComponent(trm);if(pos2+3<url.length){output+=url.substring(pos2+3)}
 return output}
 function createTheDictLink(u,w,t,b){let url=u.trim();let popup=!1;const trm=w.trim();const txt=t.trim();const txtbefore=b.trim();let r='';if(url==''||txt==''){return r}
 if(url.startsWith('*')){url=url.substring(1);popup=!0}
+try{let final_url=new URL(url);popup|=final_url.searchParams.has('lwt_popup')}catch(err){if(!(err instanceof TypeError)){throw err}}
 if(popup){r=' '+txtbefore+' <span class="click" onclick="owin(\''+createTheDictUrl(url,escape_apostrophes(trm))+'\');">'+txt+'</span> '}else{r=' '+txtbefore+' <a href="'+createTheDictUrl(url,trm)+'" target="ru" onclick="showRightFrames();">'+txt+'</a> '}
 return r}
 function createSentLookupLink(torder,txid,url,txt){url=url.trim();txt=txt.trim();let r='';let popup=!1;let external=!1;const target_url='trans.php?x=1&i='+torder+'&t='+txid;if(url==''||txt==''){return r}
 if(url.startsWith('*')){url=url.substring(1);popup=!0}
-if(/^https?:\/\//.test(url)){external=!0}
+try{let final_url=new URL(url);popup|=final_url.searchParams.has('lwt_popup');external=!0}catch(err){if(!(err instanceof TypeError)){throw err}}
 if(popup){return' <span class="click" onclick="owin(\''+target_url+'\');">'+txt+'</span> '}
 if(external){return' <a href="'+target_url+'" target="ru" onclick="showRightFrames();">'+txt+'</a> '}
 return r}
@@ -335,8 +340,8 @@ var oldValue=c.value;if(oldValue.trim()==''){c.value=s;w.makeDirty()}else{if(old
 function getGlosbeTranslation(text,lang,dest){$.ajax({url:'http://glosbe.com/gapi/translate?from='+lang+'&dest='+dest+'&format=json&phrase='+text+'&callback=?',type:"GET",dataType:'jsonp',jsonp:'getTranslationFromGlosbeApi',jsonpCallback:'getTranslationFromGlosbeApi',async:'true'})}
 function getTranslationFromGlosbeApi(data){try{$.each(data.tuc,function(i,rows){if(rows.phrase){$('#translations').append('<span class="click" onclick="addTranslation(\''+rows.phrase.text+'\');">'+'<img src="icn/tick-button.png" title="Copy" alt="Copy" />'+' &nbsp; '+rows.phrase.text+'</span><br />')}else if(rows.meanings){$('#translations').append('<span class="click" onclick="addTranslation('+"'("+rows.meanings[0].text+")'"+');">'+'<img src="icn/tick-button.png" title="Copy" alt="Copy" />'+' &nbsp; '+"("+rows.meanings[0].text+")"+'</span><br />')}});if(!data.tuc.length){$('#translations').before('<p>No translations found ('+data.from+'-'+data.dest+').</p>');if(data.dest!='en'&&data.from!='en'){$('#translations').attr('id','no_trans').after('<hr /><p>&nbsp;</p><h3><a href="http://glosbe.com/'+data.from+'/en/'+data.phrase+'">Glosbe Dictionary ('+data.from+'-en):  &nbsp; <span class="red2">'+data.phrase+'</span></a></h3>&nbsp;<p id="translations"></p>');getGlosbeTranslation(data.phrase,data.from,'en')}else $('#translations').after('<hr />')}else $('#translations').after('<p>&nbsp;<br/>'+data.tuc.length+' translation'+(data.tuc.length==1?'':'s')+' retrieved via <a href="http://glosbe.com/a-api" target="_blank">'+'Glosbe API</a>.</p><hr />')}catch(err){$('#translations').text('Retrieval error. Possible reason: There is a limit of Glosbe API calls that may be done from one IP address in a fixed period of time, to prevent from abuse.').after('<hr />')}}
 async function getLibreTranslateTranslationBase(text,lang,dest,key="",url="http://localhost:5000/translate"){const res=await fetch(url,{method:"POST",body:JSON.stringify({q:text,source:lang,target:dest,format:"text",api_key:key}),headers:{"Content-Type":"application/json"}});const data=await res.json();return data.translatedText}
-async function getLibreTranslateTranslation(api_parts,text,lang,dest){const search_params=(new URL(api_parts)).searchParams;if(search_params.get("lwt_translator")!="libretranslate"){throw 'Translation API not supported: '+search_params.get("lwt_translator")+"!"}
-let translator_ajax;if(search_params.get("lwt_translator_ajax")){translator_ajax=decodeURIComponent(search_params.get("lwt_translator_ajax"))}else{translator_ajax=api_parts.toString().replace(api_parts.search,'')+"translate"}
+async function getLibreTranslateTranslation(libre_url,text,lang,dest){const search_params=libre_url.searchParams;if(search_params.get("lwt_translator")!="libretranslate"){throw 'Translation API not supported: '+search_params.get("lwt_translator")+"!"}
+let translator_ajax;if(search_params.get("lwt_translator_ajax")){translator_ajax=decodeURIComponent(search_params.get("lwt_translator_ajax"))}else{translator_ajax=libre_url.toString().replace(libre_url.search,'')+"translate"}
 return getLibreTranslateTranslationBase(text,lang,dest,key=search_params.get("lwt_key"),translator_ajax)};/**
  * \file
  * \brief Check for unsaved changes when unloading window.

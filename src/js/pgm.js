@@ -867,8 +867,8 @@ function oewin (url) {
  * 
  * JS alter ego of the createTheDictLink PHP function.
  * 
- * Case 1: url without any ###: append UTF-8-term
- * Case 2: url with one ###: substitute UTF-8-term
+ * Case 1: url without any ### or "lwt_term": append term
+ * Case 2: url with one ### or "lwt_term": substitute term
  * 
  * @param {string} u Dictionary URL
  * @param {string} w Term to be inserted in the URL
@@ -877,24 +877,28 @@ function oewin (url) {
  * @since 2.6.0-fork Internals rewrote, do no longer use PHP code. 
  *                   The option putting encoding between ###enc### does no 
  *                   longer work. It is deprecated and will be removed.
+ * @since 2.7.0-fork Using "###" is deprecated, "lwt_term" recommended instead
  */
 function createTheDictUrl (u, w) {
   const url = u.trim();
   const trm = w.trim();
-  const pos = url.indexOf('###');
-  // no ### found
+  const term_elem = url.match(/lwt_term|###/);
+  const pos = term_elem === null ? -1 : url.indexOf(term_elem[0]);
+  // No ###/lwt_term found
   if (pos == -1) {
       return url + encodeURIComponent(trm);
   }
-  // ### found
+  // ###/lwt_term found
   const pos2 = url.indexOf('###', pos + 1);
   if (pos2 === -1) {
-      // 1 ### found
-      return url.replace("###", trm == '' ? '+' : encodeURIComponent(trm));
+      // 1 ###/lwt_term found
+      return url.replace(term_elem, trm == '' ? '+' : encodeURIComponent(trm));
   }
   // 2 ### found
   // Get encoding
-  const enc = url.substring(pos + 3, pos2 - pos - 3).trim();
+  const enc = url.substring(
+    pos + term_elem[0].length, pos2 - pos - term_elem[0].length
+  ).trim();
   console.warn(
    "Trying to use encoding '" + enc + "'. This feature is abandonned since " + 
    "2.6.0-fork. Using default UTF-8." 
@@ -928,6 +932,14 @@ function createTheDictLink (u, w, t, b) {
   if (url.startsWith('*')) {
     url = url.substring(1);
     popup = true;
+  }
+  try {
+    let final_url = new URL(url);
+    popup |= final_url.searchParams.has('lwt_popup');
+  } catch (err) {
+    if (!(err instanceof TypeError)) {
+      throw err;
+    }
   }
   if (popup) {
     r = ' ' + txtbefore +
@@ -965,8 +977,14 @@ function createSentLookupLink (torder, txid, url, txt) {
     url = url.substring(1);
     popup = true;
   }
-  if (/^https?:\/\//.test(url)) {
+  try {
+    let final_url = new URL(url);
+    popup |= final_url.searchParams.has('lwt_popup');
     external = true;
+  } catch (err) {
+    if (!(err instanceof TypeError)) {
+      throw err;
+    }
   }
   if (popup) {
     return ' <span class="click" onclick="owin(\'' + target_url + '\');">' + 

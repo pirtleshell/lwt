@@ -2650,36 +2650,40 @@ function makeStatusClassFilterHelper($status, &$array): void
 /**
  * Create and verify a dictionary URL link
  *
- * Case 1: url without any ###: append UTF-8-term
- * Case 2: url with one ###: substitute UTF-8-term
- * Case 3: url with two ###enc###: unsupported encoding changed, 
+ * Case 1: url without any ### or lwt_term: append UTF-8-term
+ * Case 2: url with one ### or lwt_term: substitute UTF-8-term
+ * Case 3: url with two (###|lwt_term)enc###: unsupported encoding changed, 
  *         abandonned since 2.6.0-fork
  * 
  * @param string $u Dictionary URL. It may contain ### that will get parsed
  * @param string $t Text that substite the ###
  * 
  * @return string Dictionary link formatted
+ * 
+ * @since 2.7.0-fork It is recommended to use "lwt_term" instead of "###"
  */
 
 function createTheDictLink($u, $t) 
 {
     $url = trim($u);
     $trm = trim($t);
-    $pos = stripos($url, '###');
-    // no ### found
-    if ($pos === false) {
+    // No ###|lwt_term found
+    if (preg_match("/lwt_term|###/", $url, $matches) === false) {
         $r = $url . urlencode($trm);
         return $r;
     }
-    // ### found
+    $pos = stripos($url, $matches[0]);
+    // ###|lwt_term found
     $pos2 = stripos($url, '###', $pos + 1);
     if ($pos2 === false) {
-        // 1 ### found
-        return str_replace("###", ($trm == '' ? '+' : urlencode($trm)), $url);
+        // 1 ###|lwt_term found
+        return str_replace($matches[0], ($trm == '' ? '+' : urlencode($trm)), $url);
     }
     // 2 ### found
     // Get encoding
-    $enc = trim(substr($url, $pos + 3, $pos2 - $pos - 3));
+    $enc = trim(substr(
+        $url, $pos + mb_strlen($matches[0]), $pos2 - $pos - mb_strlen($matches[0])
+    ));
     $r = substr($url, 0, $pos);
     $r .= urlencode(mb_convert_encoding($trm, $enc, 'UTF-8'));
     if ($pos2+3 < strlen($url)) { 
@@ -2792,8 +2796,8 @@ function makeOpenDictStrJS($url): string
  * Create a dictionnary open URL from an pseudo-URL
  * 
  * @param string $url       A string containing at least a URL
- *                          * Starts with a '*': open in pop-up window
- *                          * Starts with a 'libretranslate': open with libretranslate
+ *                          * If it contains the query "lwt_popup", open in Popup
+ *                          * Starts with a '*': open in pop-up window (deprecated)
  *                          * Otherwise open in iframe
  * @param string $sentctljs Clickable text to display
  * @param string $txt       Clickable text to display
@@ -2814,8 +2818,7 @@ function makeOpenDictStrDynSent($url, $sentctljs, $txt): string
     if (str_contains(parse_url($url, PHP_URL_QUERY), 'lwt_popup=')) {
         $popup = true;
     }
-    $parsed = parse_url($url);
-    if ($parsed['host'] == 'ggl.php') {
+    if (str_starts_with($url, "ggl.php")) {
         $url = str_replace('?', '?sent=1&', $url);
     }
     if ($popup) {
