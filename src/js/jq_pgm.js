@@ -213,21 +213,23 @@ function check () {
   $('input.checkdicturl').each(function (_n) {
     const translate_input = $(this).val().trim();
     if (translate_input.length > 0) {
-      if (
-        (translate_input.indexOf('http://') != 0) && 
-        (translate_input.indexOf('https://') != 0) && 
-        (translate_input.indexOf('*http://') != 0) && 
-        (translate_input.indexOf('*https://') != 0) && 
-        (translate_input.indexOf('glosbe_api.php') != 0) && 
-        (translate_input.indexOf('ggl.php') != 0) &&
-        !translate_input.startsWith('libretranslate ') 
-      ) {
-        alert(
-          'ERROR\n\nField "' + $(this).attr('data_info') + 
-          '" must start with "http://", "https://", "*http://", "*https://", ' +
-          '"glosbe_api.php", "ggl.php", "libretranslate " if not empty.'
-        );
-        count++;
+      let refinned = translate_input;
+      if (translate_input.startsWith('*')) {
+        refinned = translate_input.substring(1);
+      }
+      if (!/^https?:\/\//.test(refinned)) {
+        refinned = 'http://' + refinned;
+      }
+      try {
+        new URL(refinned);
+      } catch (err) {
+        if (err instanceof TypeError) {
+          alert(
+            'ERROR\n\nField "' + $(this).attr('data_info') + 
+            '" should be an URL if not empty.'
+          );
+          count++;
+        }
       }
     }
   });

@@ -16,7 +16,7 @@
  * @since   1.0.3
  */
 
-namespace trans;
+namespace Lwt;
 
 require_once 'inc/session_utility.php';
 
@@ -33,9 +33,6 @@ function translator_url($term, $order)
         $satz = $record['SeText'];
         $trans = isset($record['LgGoogleTranslateURI']) ? 
         $record['LgGoogleTranslateURI'] : "";
-        if (str_starts_with($trans, "libretranslate ")) {
-            $trans = substr($trans, strlen("libretranslate "));
-        }
         if (substr($trans, 0, 1) == '*') { 
             $trans = substr($trans, 1); 
         }
@@ -54,6 +51,7 @@ function translator_url($term, $order)
 
 function display_page($x, $i, $t)
 {
+    // Translate sentence
     if ($x == 1) {
         $url = translator_url($t, $i);
         if ($url != '') {
@@ -61,7 +59,7 @@ function display_page($x, $i, $t)
         }
         exit();
     }
-
+    // Translate text
     if ($x == 2) {
         header("Location: " . createTheDictLink($i, $t));
         exit();

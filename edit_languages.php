@@ -382,6 +382,13 @@ function edit_language_form($language)
 
     GGTRANSLATE = <?php echo json_encode($language->translator); ?>;
 
+    LIBRETRANSLATE = 'http://localhost:5000/?' + $.param({
+        lwt_translator: 'libretranslate',
+        source: 'auto',
+        target: <?php echo json_encode(getSetting('currentnativelanguage')); ?>,
+        q: ""
+    });
+
     function checkLanguageChanged(value) {
         if (value == "Japanese") {
             $(document.forms.lg_form.LgRegexpAlt).css("display", "block");
@@ -422,10 +429,16 @@ function edit_language_form($language)
      * Check status of the requested translation API.
      */
     function checkTranslatorStatus(url) {
-        if (url.startsWith("libretranslate ")) {
+        let add_popup_param;
+        if (url.startsWith('*')) {
+            add_popup_param = true;
+            url = url.substring(1);
+        }
+        const url_obj = new URL(url);
+        const params = url_obj.searchParams;
+        if (params.get('lwt_translator') == 'libretranslate') {
             try {
-                const url_parts = url.split(' ');
-                checkLibreTranslateStatus(url_parts[1], key=url_parts[2]);
+                checkLibreTranslateStatus(params.url, key=params.key);
             } catch (error) {
                 $('#translator_status')
                 .html('<a href="https://libretranslate.com/">LibreTranslate</a> server seems to be unreachable.' + 
@@ -510,7 +523,7 @@ function edit_language_form($language)
             <input type="text" class="notempty checkdicturl checkoutsidebmp" 
             name="LgDict1URI" 
             value="<?php echo tohtml($language->dict1uri); ?>"  
-            maxlength="200" size="60" data_info="Dictionary 1 URI" /> 
+            maxlength="200" size="60" data_info="Dictionary 1 URI" />
             <img src="icn/status-busy.png" title="Field must not be empty" 
             alt="Field must not be empty" />
         </td>
@@ -746,16 +759,27 @@ function edit_languages_new()
              * Apply wizard based on entered data.
              */
             apply: function (learning_lg, known_lg, learning_lg_name) {
-                GGTRANSLATE = '*http://translate.google.com/?' + $.param({
+                GGTRANSLATE = 'https://translate.google.com/?' + $.param({
+                    lwt_popup: true,
                     ie: "UTF-8",
                     sl: learning_lg[1],
                     tl: known_lg[1],
-                    text: "###"
+                    text: ""
                 });
-                LIBRETRANSLATE = "http://localhost:5000/?" + $.param({
+                const url = new URL(window.location.href);
+                const base_url = url.protocol + "//" + url.hostname + 
+                (url.port ? ":" + url.port : "");
+                let path = url.pathname;
+                const exploded_path = path.split('/');
+                exploded_path.pop();
+                //path = exploded_path.join('/') + '/trans.php';
+                path = path.substring(0, path.lastIndexOf('edit_languages.php'));
+                LIBRETRANSLATE = base_url + ':5000/?' + $.param({
+                    lwt_translator: "libretranslate",
+                    lwt_translator_ajax: encodeURIComponent(base_url + ":5000/translate/?"),
                     source: learning_lg[1],
                     target: known_lg[1],
-                    q: "###"
+                    q: ""
                 });
                 $('input[name="LgName"]').val(learning_lg_name).change();
                 // There may be a cleaner way to trigger the event

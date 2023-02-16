@@ -43,6 +43,9 @@ from 1.8.0 to 1.10.2. This brings some bug fixes.
 * Updated composer dependencies.
   * vimeo/psalm updated from ^4.12 to ^5.6.
   * phpunit/phpunit updated from ^9.5 to ^10.0.
+* It is recommended to use proper URL for all dictionaries and translators.
+  * '*' before a dictionary URL should be replaced by an argument 'lwt_popup=true'
+  * 'ggl.php' and 'glosbe_api.php' should be updated (e. g. "{YOUR_LWT_CURRENT_ADDRESS}/ggl.php")
 
 ### Fixed
 

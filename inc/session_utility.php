@@ -2738,9 +2738,8 @@ function createDictLinksInEditWin($lang, $word, $sentctljs, $openfirst): string
 /**
  * Create a dictionnary open URL from an pseudo-URL
  * 
- * @param string $url A string containing at least a URL
- *                    * Starts with a '*': open in pop-up window
- *                    * Starts with a 'libretranslate': open with libretranslate
+ * @param string $url An URL, starting with a "*" is deprecated.
+ *                    * If it contains a "popup" query, open in new window 
  *                    * Otherwise open in iframe
  * @param string $txt Clickable text to display
  * 
@@ -2752,12 +2751,17 @@ function makeOpenDictStr($url, $txt): string
     if ($url == '' || $txt == '') {
         return $r;
     }
-    if (str_starts_with($url, 'libretranslate ')) {
-        $url = str_replace('libretranslate ', '', $url);
+    $popup = false;
+    if (str_starts_with($url, '*')) {
+        $url = substr($url, 1);
+        $popup = true;
     }
-    if (substr($url, 0, 1) == '*') {
+    if (str_contains(parse_url($url, PHP_URL_QUERY), 'lwt_popup=')) {
+        $popup = true;
+    }
+    if ($popup) {
         $r = ' <span class="click" onclick="owin(' . 
-        prepare_textdata_js(substr($url, 1)) . ');">' . 
+        prepare_textdata_js($url) . ');">' . 
         tohtml($txt) . 
         '</span> ';
     } else {
@@ -2799,22 +2803,30 @@ function makeOpenDictStrJS($url): string
 function makeOpenDictStrDynSent($url, $sentctljs, $txt): string 
 {
     $r = '';
-    if ($url != '') {
-        if (substr($url, 0, 7) == 'ggl.php') {
-            $url = str_replace('?', '?sent=1&', $url);
-        } else if (str_starts_with($url, 'libretranslate ')) {
-            $url = str_replace('libretranslate ', '', $url);
-        }
-        if (substr($url, 0, 1) == '*') {
-            $r = '<span class="click" onclick="translateSentence2(' . 
-            prepare_textdata_js(substr($url, 1)) . ',' . $sentctljs . ');">' . 
-            tohtml($txt) . '</span>';
-        } else {
-            $r = '<span class="click" onclick="translateSentence(' . 
-            prepare_textdata_js($url) . ',' . $sentctljs . ');">' . 
-            tohtml($txt) . '</span>';
-        } 
+    if ($url == '') {
+        return $r;
     }
+    $popup = false;
+    if (str_starts_with($url, "*")) {
+        $url = substr($url, 1);
+        $popup = true;
+    }
+    if (str_contains(parse_url($url, PHP_URL_QUERY), 'lwt_popup=')) {
+        $popup = true;
+    }
+    $parsed = parse_url($url);
+    if ($parsed['host'] == 'ggl.php') {
+        $url = str_replace('?', '?sent=1&', $url);
+    }
+    if ($popup) {
+        $r = '<span class="click" onclick="translateSentence2(' . 
+        prepare_textdata_js($url) . ',' . $sentctljs . ');">' . 
+        tohtml($txt) . '</span>';
+    } else {
+        $r = '<span class="click" onclick="translateSentence(' . 
+        prepare_textdata_js($url) . ',' . $sentctljs . ');">' . 
+        tohtml($txt) . '</span>';
+    } 
     return $r;
 }
 

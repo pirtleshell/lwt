@@ -386,12 +386,12 @@ if (isset($_REQUEST['op'])) {
          * Sets the translation of a term.
          */
         const autoTranslate = function () {
-            if (TRANS_URI.startsWith("libretranslate ")) {
+            if ((new URL(TRANS_URI)).searchParams.get("lwt_translator") == "libretranslate") {
                 const term = $('#wordfield').val();
-                const uri_trimmed = new URL(TRANS_URI.substring("libretranslate ".length));
-                const urlParams = new URLSearchParams(uri_trimmed.search);
+                const uri_trimmed = new URL(TRANS_URI);
+                const urlParams = uri_trimmed.searchParams;
                 getLibreTranslateTranslation(
-                    "libretranslate " + uri_trimmed.origin, term, 
+                    uri_trimmed, term, 
                     (urlParams.has("source") ? 
                     urlParams.get("source") : LANG_SHORT), 
                     urlParams.get("target")

@@ -777,18 +777,16 @@ function getLangFromDict(wblink3) {
   if (wblink3.trim() == '') {
     return '';
   }
-  if (wblink3.startsWith("libretranslate ")) {
-    // Use LibreTranslate
-    wblink3 = wblink3.substring("libretranslate ".length).trim();
-    libretranslate = true;
-  }
   // Replace pop-up marker '*'
   if (wblink3.startsWith('*')) {
     wblink3 = wblink3.substring(1);
   }
+  if (wblink3.startsWith("trans.php")) {
+    wblink3 = 'http://' + wblink3;
+  }
   dictUrl = new URL(wblink3);
-  urlParams = new URLSearchParams(dictUrl.search);
-  if (libretranslate) {
+  urlParams = dictUrl.searchParams;
+  if (urlParams.get("lwt_translator") == "libretranslate") {
     return urlParams.get("source") || "";
   }
   // Fallback to Google Translate
@@ -919,6 +917,7 @@ function createTheDictUrl (u, w) {
  */
 function createTheDictLink (u, w, t, b) {
   let url = u.trim();
+  let popup  = false;
   const trm = w.trim();
   const txt = t.trim();
   const txtbefore = b.trim();
@@ -926,13 +925,14 @@ function createTheDictLink (u, w, t, b) {
   if (url == '' || txt == '') {
     return r;
   }
-  if (url.startsWith("libretranslate ")) {
-    url = url.substring("libretranslate ".length);
+  if (url.startsWith('*')) {
+    url = url.substring(1);
+    popup = true;
   }
-  if (url.substring(0, 1) == '*') {
+  if (popup) {
     r = ' ' + txtbefore +
     ' <span class="click" onclick="owin(\'' 
-    + createTheDictUrl(url.substring(1), escape_apostrophes(trm)) 
+    + createTheDictUrl(url, escape_apostrophes(trm)) 
     + '\');">' + txt + '</span> ';
   } else {
     r = ' ' + txtbefore +
@@ -955,19 +955,26 @@ function createSentLookupLink (torder, txid, url, txt) {
   url = url.trim();
   txt = txt.trim();
   let r = '';
+  let popup = false;
+  let external = false;
   const target_url = 'trans.php?x=1&i=' + torder + '&t=' + txid;
   if (url == '' || txt == '') {
     return r;
   }
-  if (url.startsWith("libretranslate ")) {
-    url = url.substring("libretranslate ".length);
+  if (url.startsWith('*')) {
+    url = url.substring(1);
+    popup = true;
   }
-  if (url.startsWith('*http://') || url.startsWith('*https://')) {
-    r = ' <span class="click" onclick="owin(\'' + target_url + '\');">' + 
+  if (/^https?:\/\//.test(url)) {
+    external = true;
+  }
+  if (popup) {
+    return ' <span class="click" onclick="owin(\'' + target_url + '\');">' + 
     txt + '</span> ';
-  } else if (url.startsWith('http://') || url.startsWith('https://')) {
-    r = ' <a href="' + target_url + 
-    '" target="ru" onclick="showRightFrames();">' + txt + '</a> ';
+  } 
+  if (external) {
+    return ' <a href="' + target_url + '" target="ru" onclick="showRightFrames();">'
+    + txt + '</a> ';
   }
   return r;
 }
