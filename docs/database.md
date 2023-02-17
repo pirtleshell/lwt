@@ -1,10 +1,10 @@
 # Database Information
 
-* The following seventeen tables are one "LWT table set". The default table set has no table name prefix, so the tables are named just as written below: "settings", "languages", etc.  
+The following seventeen tables are one "LWT table set". The default table set has no table name prefix, so the tables are named just as written below: "settings", "languages", etc.  
 
-    Additional table sets have its "table set name" plus an underscore "\_" as a table name prefix: "setname\_settings", "setname\_languages", etc. The "table set name" is max. 20 characters long. Allowed characters are only: a-z, A-Z, 0-9, and the underscore "\_".  
+Additional table sets have its "table set name" plus an underscore "\_" as a table name prefix: "setname\_settings", "setname\_languages", etc. The "table set name" is max. 20 characters long. Allowed characters are only: a-z, A-Z, 0-9, and the underscore "\_".
 
-    Only if the table set is not set in "connect.inc.php", the currently used table set is saved in a global table "\_lwtgeneral", in column LWTValue of row with LWTKey = "current\_table\_prefix". If such a row does not exist, the default table set will be used, or will be automatically created and used.  
+Only if the table set is not set in "connect.inc.php", the currently used table set is saved in a global table "\_lwtgeneral", in column LWTValue of row with LWTKey = "current\_table\_prefix". If such a row does not exist, the default table set will be used, or will be automatically created and used.
 
 * **Table "settings" (Settings as Key-Value Pairs):**  
     StKey varchar(40) NOT NULL,  

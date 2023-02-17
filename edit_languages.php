@@ -1028,7 +1028,7 @@ function edit_languages_change($lid)
         ?>
     <p class="smallgray">
         <b>Warning:</b> Changing certain language settings 
-        (e.g. RegExp Word Characters, etc.)<br />
+        (e.g. RegExp Word Characters, etc.)<wbr />
         may cause partial or complete loss of improved annotated texts!
     </p>
     <?php

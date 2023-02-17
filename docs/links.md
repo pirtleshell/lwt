@@ -1,7 +1,10 @@
 # Important Links
 
-* [**Project Page** @ Sourceforge](http://sourceforge.net/projects/learning-with-texts/)
-* [**Download Page** @ Sourceforge](http://sourceforge.net/projects/learning-with-texts/files/)
+* [**Original Project Page** @ Sourceforge](http://sourceforge.net/projects/learning-with-texts/)
+* **Download Page**: 
+  * [Lastest release @ GitHub](https://github.com/HugoFara/lwt/releases/latest)
+  * [Lastest pushed @ GitHub](https://github.com/HugoFara/lwt/archive/refs/heads/master.zip)
+  * [Official version @ Sourceforge](http://sourceforge.net/projects/learning-with-texts/files/)
 * [**Community Maintained Version** @ GitHub](https://github.com/HugoFara/lwt)
 * **Documentation**: try either the [local link](index.html) or the [absolute link](https://hugofara.github.io/lwt/index.html).
 
@@ -37,15 +40,18 @@
 
 ## Additional Resources
 
-* Similar software or services
-  * [FLTR - Foreign Language Text Reader](https://sourceforge.net/projects/foreign-language-text-reader/) (Open Source Java Desktop Application).
-  * [LingQ.com](http://lingq.com) (Web based service with tutoring. An account costs US$ 10 per month).
-  * [lingro.com](http://lingro.com/) (An on-line environment that allows anyone learning a language to quickly look up and learn the vocabulary).
-  * [readlang.com](http://readlang.com/) (An on-line service where you can import articles, read and translate them, and learn new words. Price: US$ 5 per month or US$ 48 per year).
-* Resources for various languages
-  * [GoogleDocs Spreadsheet](http://tinyurl.com/cbpndlt) with recommendations for LWT Language Settings ("Templates")  
+Similar software or services:
+
+* [FLTR - Foreign Language Text Reader](https://sourceforge.net/projects/foreign-language-text-reader/) (Open Source Java Desktop Application).
+* [LingQ.com](http://lingq.com) (Web based service with tutoring. An account costs US$ 10 per month).
+* [lingro.com](http://lingro.com/) (An on-line environment that allows anyone learning a language to quickly look up and learn the vocabulary).
+* [readlang.com](http://readlang.com/) (An on-line service where you can import articles, read and translate them, and learn new words. Price: US$ 5 per month or US$ 48 per year).
+
+Resources for various languages
+
+* [GoogleDocs Spreadsheet](http://tinyurl.com/cbpndlt) with recommendations for LWT Language Settings ("Templates")  
         **Important:** Please be careful when making additions or corrections!
-* For learners of Japanese
-  * [MeCab - Yet Another Part-of-Speech and Morphological Analyzer](http://taku910.github.io/mecab/)
-* For learners of Chinese
-  * ["Jieba" Chinese text segmentation](https://github.com/fxsjy/jieba) ([Python](https://www.python.org/) needed). Usage: Download, unzip, run: *python -m jieba -d ' ' input.txt >output.txt*
+* Japanese: [MeCab - Yet Another Part-of-Speech and Morphological Analyzer](http://taku910.github.io/mecab/)
+
+* Chinese: ["Jieba" Chinese text segmentation](https://github.com/fxsjy/jieba) ([Python](https://www.python.org/) needed). Usage: Download, unzip, run: *python -m jieba -d ' ' input.txt >output.txt*
+
