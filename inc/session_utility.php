@@ -3365,6 +3365,8 @@ function texttodocount($text): string
  * @return string HTML result
  *
  * @global string $tbpref Database table prefix
+ * 
+ * @since 2.7.0-fork Adapted to use LibreTranslate dictionary as well.
  */
 function texttodocount2($textid): string
 {
@@ -3390,11 +3392,26 @@ function texttodocount2($textid): string
         WHERE LgID = TxLgID and TxID = $textid"
     );
     if ($dict) {
-        $tl = preg_replace('/.*[?&]tl=([a-zA-Z\-]*)(&.*)*$/', '$1', $dict);
-        $sl = preg_replace('/.*[?&]sl=([a-zA-Z\-]*)(&.*)*$/', '$1', $dict);
+        if (str_starts_with($dict, '*')) {
+            $dict = substr($dict, 1);
+        }
+        if (str_starts_with($dict, 'ggl.php')) {
+            // We just need to form a valid URL
+            $dict = "http://" + $dict;
+        }
+        parse_str(parse_url($dict, PHP_URL_QUERY), $url_query);
+        if (array_key_exists('lwt_translator', $url_query) && 
+        $url_query['lwt_translator'] == "libretranslate") {
+            $tl = $url_query['target'];
+            $sl = $url_query['source'];
+        } else {
+            // Defaulting to Google Translate query style
+            $tl = $url_query['tl'];
+            $sl = $url_query['sl'];
+        }
     } else {
-        // (2.5.2-fork) For future version of LWT: do not use google uri to 
-        // find language code
+        // (2.5.2-fork) For future version of LWT: do not use translator uri 
+        // to find language code
         $tl = $sl = "";
     }
     
