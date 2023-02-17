@@ -783,20 +783,21 @@ The official repository is at <a href="https://packagist.org/packages/hugofara/l
 
 			<h2 id="howto" name="howto">▶ How to Use - <a href="#">[↑]</a></h2>
 <h3>Home Screen</h3>
-<p><strong>LWT home screen after installation</strong></p>
-<p>This is home screen of LWT if the database is empty. Please install the demo database or start with the definition of a language you want to learn.</p>
+<p>LWT home screen after installation:</p>
 <p><img src="../img/23.jpg" alt="Image"></p>
-<p><strong>LWT home screen</strong></p>
-<p>This is normal home screen of LWT. You may choose a language here, but you can do this also later. If you you choose a language, the language filter is pre-set to that language in some other screens. The last text you've read or tested is shown, and you may jump directly into reading, testing or printing of this last text.</p>
+<p>This is home screen of LWT if the database is empty. Please install the demo database or start with the definition of a language you want to learn.</p>
+<p>LWT home screen</p>
 <p><img src="../img/01.jpg" alt="Image"></p>
+<p>This is normal home screen of LWT. You may choose a language here, but you can do this also later. If you you choose a language, the language filter is pre-set to that language in some other screens. The last text you've read or tested is shown, and you may jump directly into reading, testing or printing of this last text.</p>
 <h3>Languages</h3>
-<p><strong>My Languages</strong></p>
 <p>The list of languages. Here you can add a new or edit an existent language. If no texts and no saved terms in a language exist, you can delete a language. If you change a language, all texts may be automatically reparsed to refresh (and correct) the cache of sentences and text items (depends on what language settings you have changed). You can do this also manually by clicking on the yellow flash icon. You can also test all (due) terms of a language or set a language as "current" language.</p>
 <p><img src="../img/02.jpg" alt="Image"></p>
-<p><strong>New/Edit Language</strong></p>
+<h4>New/Edit Language</h4>
 <p>This is the place to define or edit a language you want to study.</p>
-<p><strong>If you are new to the system, use the "Language Settings Wizard" first.</strong> You only select your native (L1) and study (L2) languages, and let the wizard set all language settings that are marked in yellow. You can always adjust the settings afterwards.</p>
-<p><strong>Explainations of the input fields</strong> - please read also <a href="info.html#langsetup">this section</a>:</p>
+<p>It is recommended to use the "Language Settings Wizard" first. You only select your
+native (L1) and study (L2) languages, and let the wizard set all language settings
+that are marked in yellow. You can always adjust the settings afterwards.</p>
+<p><strong>Explanations of the input fields</strong> - please read also <a href="info.html#langsetup">this section</a>:</p>
 <p>The three <a href="https://en.wikipedia.org/wiki/URL">URLs</a> are URLs to three web dictionaries (the second and third is optional). Use <code>lwt_term</code> as a placeholder for the search word in the URIs. If <code>lwt_term</code> is missing, the search word will be appended to the end. If the URI to query "travailler" in WordReference is "http://www.wordreference.com/fren/travailler", you may enter: "http://www.wordreference.com/fren/lwt_term" or "http://www.wordreference.com/fren/". Another example: The URI to query "travailler" in sensagent is "http://dictionary.sensagent.com/travailler/fr-en/", so you enter in LWT "http://dictionary.sensagent.com/lwt_term/fr-en/".</p>
 <p>As URI No. 3 ("Translator") is also used to translate whole sentences. It is recommended to use either <a href="https://translate.google.com">Google Translate</a> or <a href="https://libretranslate.com/">LibreTranslate</a>.</p>
 <ul>
@@ -810,11 +811,11 @@ The official repository is at <a href="https://packagist.org/packages/hugofara/l
 </ul>
 <p>A different third web dictionary is of course possible, but sentence translations may not work.</p>
 <p><strong>IMPORTANT:</strong> Some dictionaries (including "Google Translate") don't allow to be opened within a frame set. Put an asterisk * in front of the URI (Examples: *<a href="http://mywebdict.com?q=###">http://mywebdict.com?q=###</a> or *<a href="http://translate.google.com/?ie=UTF-8&amp;sl=..&amp;tl=..&amp;text=###)">http://translate.google.com/?ie=UTF-8&amp;sl=..&amp;tl=..&amp;text=###)</a> to open such a dictionary not within the frame set but in a popup window (please don't forget to deactivate popup window blocking in your browser!).</p>
-<h4>Deprecated Features</h4>
-<h5>Specify Encoding</h5>
+<h5>Deprecated Features</h5>
+<h6>Specify Encoding</h6>
 <p><strong>This feature has been abandonned, do not use it</strong>!</p>
 <p>If the searchword in the three URIs needs to be converted into a different encoding (standard is UTF-8), you could use ###encoding### as a placeholder. Normally you see this right away if terms show up wrongly in the web dictionary. Example: Linguee expects the searchword in ISO-8859-15, not in UTF-8, so you define it this way: "http://www.linguee.de/search?direction=auto&amp;query=###ISO-8859-15###". A list of encodings can be found <a href="http://php.net/manual/en/mbstring.supported-encodings.php">here</a>.</p>
-<h5>Glosbe API</h5>
+<h6>Glosbe API</h6>
 <p>Glosbe closed there API, this feature does no longer work.</p>
 <p>One dictionary (<a href="http://glosbe.com/">Glosbe</a>) has been closely integrated into LWT via the Glosbe API. To use this dictionary, input the "special" dictionary link "http://localhost/lwt/glosbe_api.php?from=...&amp;dest=...&amp;phrase=lwt_term_" with <em>from</em>: "L2 language code" (the language of your texts) and <em>dest</em>: "L1 language code" (e.g. mother tongue). To find the language codes, open <a href="http://glosbe.com/all-languages">this page</a> to select the "from" (L2) language. On the next page, select the "L2 - L1" language pair. The URL of the next page shows the two language codes, here as an example "French - English": <a href="http://glosbe.com/**fr**/**en**/">http://glosbe.com/**fr**/**en**/</a>. The "from" code is "fr", the "dest" code is "en". Using this dictionary makes the transfer of translation(s) from the Glosbe to LWT very easy: just click on the icon next to the translations to copy them into the LWT edit screen. I recommend to use the LWT-integrated Glosbe dictionary as the "Dictionary 1 URI". Note: I cannot guarantee that the Glosbe API and this special integration will work in the future! glosbe_api.php is just an example how one can integrate a dictionary into LWT.</p>
 <p>You don't know how and where to find a good web dictionary? Try these dictionary directories:</p>
@@ -848,16 +849,15 @@ The official repository is at <a href="https://packagist.org/packages/hugofara/l
 <p>To understand all these options, please study also <a href="info.html#langsetup">this</a>, look at the examples and play around with different settings and different texts.</p>
 <p><img src="../img/03.jpg" alt="Image"></p>
 <h3>Texts</h3>
-<h4>My Texts</h4>
 <p>The list of texts. You can filter this list according to language, title (wildcard = *) or text tag(s) (see also below). The most important links for each text are "Read" and "Test" - that's the place to read, to listen, to save terms and to review and test your terms in sentence context. To see all terms of a text that you have saved, click on the numbers in column "Saved Wo+Ex". To print, archive, edit (and reparse), or to delete a text, click on the icons in column "Actions". There are more actions available, see "Multi Actions".</p>
 <p><img src="../img/04.jpg" alt="Image"></p>
 <h4>Multi Actions for marked texts</h4>
 <p>You can test the terms of the marked texts, delete or archive the marked texts. "Reparse Texts" rebuilds the sentence and the text item cache for all marked texts. "Set Term Sentences" sets a valid sentence (with the term in {..}) for all those saved or imported terms that occur in the text and that do not have a sentence at all or none with {term}. This makes it easy to "create" sentence examples for imported terms.</p>
 <p><img src="../img/14.jpg" alt="Image"></p>
-<h4>Text Tags</h4>
+<h3>Text Tags</h3>
 <p>The list of your text tags. You can manage your text tags here. With text tags, it will be easier to categorize and organize your texts. The tags are case sensitive, have 1 to 20 characters, and must not contain any spaces or commas.</p>
 <p><img src="../img/25.jpg" alt="Image"></p>
-<h4>New/Edit Text (with Check)</h4>
+<h4>New/Edit Text</h4>
 <p>This is the screen to input, check or edit a single text. Try to store not too long texts (the maximum length is 65,000 Bytes). If texts are very long (&gt; 1000 words), certain operations (e.g. loading a text for reading, calculation of known/unknown words) may be quite slow. An audio URI and a link to the text source can also be defined. The best place to store your audios is the "media" subdirectory below the installation directory "lwt" (you have to create it yourself, and you have to copy the audio files into this directory; click Refresh if you don't see just copied media). But a cloud webspace service like DropBox is also possible. In the moment there is no possibility to import/upload an audio file within the LWT application. By the way, you can use MP3, WAV, or OGG media files, but be aware that not all browsers and/or operating systems support all media types!</p>
 <p>If you click "Check", the text will be parsed and split into sentences and words according to your language settings. Nothing will be stored if you check a text. You can see whether your text needs some editing, or whether your language settings (especially the ones that influence parsing/splitting) need an adjustment. Words (not expressions) that are already in your word list are displayed in red, and the translation is displayed. The Non-Word List shows all stuff between words. The "Check a Text" function can also be started directly from the main menu. If you click on "Change" or "Save", the text will be only saved. If you click on "Change and Open" or "Save and Open", the text will be saved and opened right away.</p>
 <p><img src="../img/05.jpg" alt="Image"></p>
@@ -872,47 +872,46 @@ The official repository is at <a href="https://packagist.org/packages/hugofara/l
 Actions: You can edit, update, delete a feed or follow the link to the newsfeed.</p>
 <p><img src="../img/38.jpg" alt="Image"></p>
 <h4>New/Edit Feeds</h4>
-<p><strong>Explainations of the input fields:</strong></p>
+<p>Explanations of the input fields</p>
+<ul>
+<li>Language: select your language, it can be changed later.</li>
+<li>Name: the name is limited to 40 characters, this field must not be empty.</li>
+<li>Newsfeed url: URL of your RSS/Atom-Feed, this field must not be empty.</li>
+<li>Article Section: <a href="http://www.w3.org/TR/xpath20/">xpath expression</a> (i.e.: //div[@id="content-to-read"]/p), the <a href="info.html#feed_wizard">feed wizard</a> can be used to get the right sections, this field must not be empty.</li>
+<li>Filter Tags: <a href="http://www.w3.org/TR/xpath20/">xpath expression</a>, the <a href="info.html#feed_wizard">feed wizard</a> can be used to get the right sections.</li>
+<li>Options:
 <ul>
 <li>
-<p>Language: select your language, it can be changed later.</p>
+<p>Edit Text: if this is checked, you can edit your articles before saving.</p>
 </li>
 <li>
-<p>Name: the name is limited to 40 characters, this field must not be empty.</p>
+<p>Auto Update Interval: your feed will be updated automatically, when you enter MY FEEDS from the main menu.</p>
 </li>
 <li>
-<p>Newsfeed url: URL of your RSS/Atom-Feed, this field must not be empty.</p>
+<p>Max. Links: number of shown in MY FEEDS, if this is empty, the value in the settings will be used.</p>
 </li>
 <li>
-<p>Article Section: <a href="http://www.w3.org/TR/xpath20/">xpath expression</a> (i.e.: //div[@id="content-to-read"]/p), the <a href="info.html#feed_wizard">feed wizard</a> can be used to get the right sections, this field must not be empty.</p>
+<p>Charset: this should be empty, charset sould be detected automatically.</p>
 </li>
 <li>
-<p>Filter Tags: <a href="http://www.w3.org/TR/xpath20/">xpath expression</a>, the <a href="info.html#feed_wizard">feed wizard</a> can be used to get the right sections.</p>
+<p>Max. Texts: max. number of active texts, if this is empty, the value in the settings will be used. Older texts will be moved into ARCHIVE.</p>
 </li>
 <li>
-<p>Options:</p>
-<ul>
-<li>Edit Text: if this is checked, you can edit your articles before saving.</li>
-<li>Auto Update Interval: your feed will be updated automatically, when you enter MY FEEDS from the main menu.</li>
-<li>Max. Links: number of shown in MY FEEDS, if this is empty, the value in the settings will be used.</li>
-<li>Charset: this should be empty, charset sould be detected automatically.</li>
-<li>Max. Texts: max. number of active texts, if this is empty, the value in the settings will be used. Older texts will be moved into ARCHIVE.</li>
-<li>Tag: you can give the texts a tag, if this is empty, the first 20 characters of the feed name will be used. The tag will be used to move the older texts into ARCHIVE. Each feed should have its own tag.</li>
-<li>Article Source: some feeds have its texts integrated in the description. The articles can be cached in the database, which results in a faster download and a bigger database. Feeds with cached articles should have less Max. Links. The feed wizard can be used to detect the Article Source. If this is unchecked, each article will be downloaded from the internet.</li>
-</ul>
+<p>Tag: you can give the texts a tag, if this is empty, the first 20 characters of the feed name will be used. The tag will be used to move the older texts into ARCHIVE. Each feed should have its own tag.</p>
+</li>
+<li>
+<p>Article Source: some feeds have its texts integrated in the description. The articles can be cached in the database, which results in a faster download and a bigger database. Feeds with cached articles should have less Max. Links. The feed wizard can be used to detect the Article Source. If this is unchecked, each article will be downloaded from the internet.</p>
 <p><img src="../img/41.jpg" alt="Image"></p>
 </li>
-<li>
-<p><strong>Feed Wizard</strong></p>
-<p>Here you can edit or set up a new newsfeed in 4 steps.</p>
-<ul>
-<li>
-<p><strong>Step 1</strong></p>
-<pre><code>Insert your newsfeed url. This step is skipped, when you edit a newsfeed.
-</code></pre>
+</ul>
 </li>
-<li>
-<p><strong>Step 2</strong></p>
+</ul>
+<h4>Feed Wizard</h4>
+<p>Here you can edit or set up a new newsfeed in 4 steps.</p>
+<ol>
+<li>Insert your newsfeed url. This step is skipped, when you edit a newsfeed.</li>
+<li>Step 2</li>
+</ol>
 <ul>
 <li>
 <p>Name: the name is limited to 40 characters, this can be changed later in step 4 and must not be empty.</p>
@@ -927,22 +926,15 @@ Actions: You can edit, update, delete a feed or follow the link to the newsfeed.
 <p><img src="../img/39.jpg" alt="Image"></p>
 </li>
 </ul>
+<ol start="3">
+<li>
+<p>This works like step 2. Only the selected sections from step 2 are clickable. Marked text will appear grey, filtered texts will have a red font.</p>
+<p><img src="../img/40.jpg" alt="Image"></p>
 </li>
 <li>
-<p><strong>Step 3</strong></p>
-<pre><code>This works like step 2. Only the selected sections from step 2 are clickable. Marked text will appear grey, filtered texts will have a red font.  
-
-![Image](../img/40.jpg)  
-</code></pre>
+<p>The settings are explained in <a href="#new_feed">New/Edit Feeds</a>.</p>
 </li>
-<li>
-<p><strong>Step 4</strong></p>
-<pre><code>The settings are explained in [New/Edit Feeds](#new_feed).  
-</code></pre>
-</li>
-</ul>
-</li>
-</ul>
+</ol>
 <h3>Read a Text</h3>
 <p>This is your "working area": Reading (and listening to) a text, saving/editing words and expressions, looking up words, expressions, sentences in external dictionaries or Google Translate. To create an expression, click on the first word. You see "Exp: 2..xx 3..yy 4..zz ...". Just click on the number of words (2..9) of the desired expression you want to save. The dictionary links for multi word expressions are always in the edit frame! You can also use the Keyboard in the text frame, see <a href="info.html#keybind">Key Bindings</a>. Double clicking on a word sets the audio position approximately to the text position, if an audio was defined. The other audio controls are self-explanatory: automatic repeat, rewind and move forward n seconds, etc.).</p>
 <p><img src="../img/06.jpg" alt="Image"></p>
@@ -957,28 +949,18 @@ Actions: You can edit, update, delete a feed or follow the link to the newsfeed.
 <p>Tests are only possible if a term has a translation. Terms with status "Ignored" and "Well Known" are never tested, and terms with a positive or zero score are not tested today. In summary, the term score must fall below zero to trigger the test. See also <a href="info.html#termscores">Term scores</a>. Terms that are due today are marked with a red bullet in the term table. Terms that are due tomorrow are marked with a yellow bullet in the term table.</p>
 <p>During a test, a status display (at the bottom of the test frame) shows you the elapsed time "mm:ss", a small bar graph, and the total, not yet tested, wrong and correct terms in this test.</p>
 <p>In the following, L1 denotes you mother tongue (= translations), and L2 the language you want to learn (= the terms (words and expressions).</p>
-<ul>
-<li>
 <p><strong>Test terms in a text (L2 -&gt; L1)</strong></p>
 <p>This is Test #1 or #4: L2 -&gt; L1 (recognition) - to train your ability to recognize a L2 term. You may test within sentence context (Button "..[L2].."), or just the term (Button "[L2]"). You can also use the Keyboard in the test frame, see <a href="info.html#keybind">Key Bindings</a>.</p>
 <p><img src="../img/07.jpg" alt="Image"></p>
-</li>
-<li>
 <p><strong>Test terms in a text (L1 -&gt; L2)</strong></p>
 <p>This is Test #2 or #5: L1 -&gt; L2 (recall) - to train your ability to produce a term from L1. You may test within sentence context (Button "..[L1].."), or just the term (Button "[L1]"). You can also use the Keyboard in the test frame, see <a href="info.html#keybind">Key Bindings</a>.</p>
 <p><img src="../img/11.jpg" alt="Image"></p>
-</li>
-<li>
 <p><strong>Test terms in a text (••• -&gt; L2)</strong></p>
 <p>This is test #3: ••• -&gt; L2 (recall) - to train your ability to produce a term only from the sentence context (Button "..[••].."). If you hover over "[•••]", a tooltip displays the translation of the term. You can also use the Keyboard in the test frame, see <a href="info.html#keybind">Key Bindings</a>.</p>
 <p><img src="../img/12.jpg" alt="Image"></p>
-</li>
-<li>
 <p><strong>Test yourself in a table / word list format (Button "Table")</strong></p>
 <p>This is test #6: The selected terms and expressions are presented as a table. You can make invisible either the columns "Term" or "Translation", and you can hide or show the columns "Sentence", "Romanization", "Status" and "Ed" (Edit). To reveal the invisible solution ("Term" or "Translation"), you just click into the empty table cell. You can review or test yourself with or without changing the status by clicking "+" or "-" in the "Status" column. A status in red signifies that the term is due for testing. You can also edit the term by clicking the yellow "Edit" icon. Columns 2 to 6 may also my sorted by clicking on the header row. The initial sort order is according to term score.</p>
 <p><img src="../img/32.jpg" alt="Image"></p>
-</li>
-</ul>
 <h3>Print a text</h3>
 <p>Here you print a text. Optional: an inline annotation (translation and/or romanization) of terms that are of specified status(es). This screen is also great to just read or study a text.</p>
 <p>Chinese Text with annotation (Romanization/Pinyin and translation):</p>
@@ -1033,11 +1015,7 @@ Actions: You can edit, update, delete a feed or follow the link to the newsfeed.
 <li>Testing of a stored term, that occurs in the text, is possible, but a term will be tested ONLY within the context of the sentence(s) that has/have been stored with the term in the sentence field, if the term does not occur in any active text.</li>
 </ul>
 <p><img src="../img/13.jpg" alt="Image"></p>
-<ul>
-<li>
-<strong>Multi Actions for marked archived texts</strong>
-</li>
-</ul>
+<p>Multi Actions for marked archived texts</p>
 <p><img src="../img/15.jpg" alt="Image"></p>
 <h3>Statistics</h3>
 <p>It's self-explanatory and shows your performance. The numbers in the first table are links, by clicking on them you jump to the table of all terms in that status and language.</p>
@@ -1597,198 +1575,198 @@ The LWT home page has such a link. If you only log out via the links on the Word
 <p>The following seventeen tables are one "LWT table set". The default table set has no table name prefix, so the tables are named just as written below: "settings", "languages", etc.</p>
 <p>Additional table sets have its "table set name" plus an underscore "_" as a table name prefix: "setname_settings", "setname_languages", etc. The "table set name" is max. 20 characters long. Allowed characters are only: a-z, A-Z, 0-9, and the underscore "_".</p>
 <p>Only if the table set is not set in "connect.inc.php", the currently used table set is saved in a global table "_lwtgeneral", in column LWTValue of row with LWTKey = "current_table_prefix". If such a row does not exist, the default table set will be used, or will be automatically created and used.</p>
-<ul>
-<li>
-<p><strong>Table "settings" (Settings as Key-Value Pairs):</strong><br>
-StKey varchar(40) NOT NULL,<br>
-StValue varchar(40) DEFAULT NULL,<br>
-PRIMARY KEY (StKey)</p>
-</li>
-<li>
-<p><strong>Table "languages" (Defined languages):</strong><br>
-LgID tinyint(3) unsigned NOT NULL AUTO_INCREMENT,<br>
-LgName varchar(40) NOT NULL,<br>
-LgDict1URI varchar(200) NOT NULL,<br>
-LgDict2URI varchar(200) DEFAULT NULL,<br>
-LgGoogleTranslateURI varchar(200) DEFAULT NULL,<br>
-LgExportTemplate varchar(1000) DEFAULT NULL,<br>
-LgTextSize smallint(5) unsigned NOT NULL DEFAULT '100',<br>
-LgCharacterSubstitutions varchar(500) NOT NULL,<br>
-LgRegexpSplitSentences varchar(500) NOT NULL,<br>
-LgExceptionsSplitSentences varchar(500) NOT NULL,<br>
-LgRegexpWordCharacters varchar(500) NOT NULL,<br>
-LgRemoveSpaces tinyint(1) unsigned NOT NULL DEFAULT '0',<br>
-LgSplitEachChar tinyint(1) unsigned NOT NULL DEFAULT '0',<br>
-LgRightToLeft tinyint(1) UNSIGNED NOT NULL DEFAULT '0',<br>
-PRIMARY KEY (LgID),<br>
-UNIQUE KEY LgName (LgName)</p>
-</li>
-<li>
-<p><strong>Table "texts" (Active texts, parsed and cached in sentences and textitems):</strong><br>
-TxID smallint(5) unsigned NOT NULL AUTO_INCREMENT,<br>
-TxLgID tinyint(3) unsigned NOT NULL, -- LANGUAGE FOREIGN KEY --<br>
-TxTitle varchar(200) NOT NULL,<br>
-TxText text NOT NULL,<br>
-TxAnnotatedText longtext NOT NULL,<br>
-TxAudioURI varchar(200) DEFAULT NULL,<br>
-TxSourceURI varchar(1000) DEFAULT NULL,<br>
-TxPosition smallint(5) NOT NULL DEFAULT '0',<br>
-TxAudioPosition float NOT NULL DEFAULT '0',<br>
-PRIMARY KEY (TxID),<br>
-KEY TxLgID (TxLgID)</p>
-</li>
-<li>
-<p><strong>Table "archivedtexts" (Text Archive, not parsed and cached):</strong><br>
-AtID smallint(5) unsigned NOT NULL AUTO_INCREMENT,<br>
-AtLgID tinyint(3) unsigned NOT NULL, -- LANGUAGE FOREIGN KEY --<br>
-AtTitle varchar(200) NOT NULL,<br>
-AtText text NOT NULL,<br>
-AtAnnotatedText longtext NOT NULL,<br>
-AtAudioURI varchar(200) DEFAULT NULL,<br>
-AtSourceURI varchar(1000) DEFAULT NULL,<br>
-PRIMARY KEY (AtID),<br>
-KEY AtLgID (AtLgID)</p>
-</li>
-<li>
-<p><strong>Table "tags2" (Text tags and comments):</strong><br>
-T2ID smallint(5) unsigned NOT NULL AUTO_INCREMENT,<br>
-T2Text varchar(20) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,<br>
-T2Comment varchar(200) NOT NULL DEFAULT '',<br>
-PRIMARY KEY (T2ID),<br>
-UNIQUE KEY T2Text (T2Text)</p>
-</li>
-<li>
-<p><strong>Table "texttags" (Text tags relations):</strong><br>
-TtTxID smallint(5) unsigned NOT NULL, -- TEXT FOREIGN KEY --<br>
-TtT2ID smallint(5) unsigned NOT NULL, -- TEXT TAG FOREIGN KEY --<br>
-PRIMARY KEY (TtTxID,TtT2ID),<br>
-KEY TtT2ID (TtT2ID)</p>
-</li>
-<li>
-<p><strong>Table "archtexttags" (Archived text tags relations):</strong><br>
-AgAtID smallint(5) unsigned NOT NULL, -- ARCHIVED TEXT FOREIGN KEY --<br>
-AgT2ID smallint(5) unsigned NOT NULL, -- TEXT TAG FOREIGN KEY --<br>
-PRIMARY KEY (AgAtID,AgT2ID),<br>
-KEY AgT2ID (AgT2ID)</p>
-</li>
-<li>
-<p><strong>Table "words" (the words and expressions you have saved):</strong><br>
-WoID mediumint(8) unsigned NOT NULL AUTO_INCREMENT,<br>
-WoLgID tinyint(3) unsigned NOT NULL, -- LANGUAGE FOREIGN KEY --<br>
-WoText varchar(250) NOT NULL,<br>
-WoTextLC varchar(250) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,<br>
-WoStatus tinyint(4) NOT NULL,<br>
-WoTranslation varchar(500) NOT NULL DEFAULT '*',<br>
-WoRomanization varchar(100) DEFAULT NULL,<br>
-WoSentence varchar(1000) DEFAULT NULL,<br>
-WoWordCount tinyint(3) unsigned NOT NULL DEFAULT '0',<br>
-WoCreated timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,<br>
-WoStatusChanged timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',<br>
-WoTodayScore double NOT NULL DEFAULT '0',<br>
-WoTomorrowScore double NOT NULL DEFAULT '0',<br>
-WoRandom double NOT NULL DEFAULT '0',<br>
-PRIMARY KEY (WoID),<br>
-UNIQUE KEY WoLgIDTextLC (WoLgID,WoTextLC),<br>
-KEY WoLgID (WoLgID),<br>
-KEY WoStatus (WoStatus),<br>
-KEY WoTextLC (WoTextLC),<br>
-KEY WoTranslation (WoTranslation),<br>
-KEY WoCreated (WoCreated),<br>
-KEY WoStatusChanged (WoStatusChanged),<br>
-KEY WoWordCount (WoWordCount),<br>
-KEY WoTodayScore (WoTodayScore),<br>
-KEY WoTomorrowScore (WoTomorrowScore),<br>
-KEY WoRandom (WoRandom)</p>
-</li>
-<li>
-<p><strong>Table "tags" (Term tags and comments):</strong><br>
-TgID smallint(5) unsigned NOT NULL AUTO_INCREMENT,<br>
-TgText varchar(20) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,<br>
-TgComment varchar(200) NOT NULL DEFAULT '',<br>
-PRIMARY KEY (TgID),<br>
-UNIQUE KEY TgText (TgText)</p>
-</li>
-<li>
-<p><strong>Table "wordtags" (Term tags relations):</strong><br>
-WtWoID int(11) unsigned NOT NULL, -- TERM FOREIGN KEY --<br>
-WtTgID smallint(5) unsigned NOT NULL, -- TERM TAG FOREIGN KEY --<br>
-PRIMARY KEY (WtWoID,WtTgID),<br>
-KEY WtTgID (WtTgID)</p>
-</li>
-<li>
-<p><strong>Table "sentences" (Sentences cache, no backup needed):</strong><br>
-SeID mediumint(8) unsigned NOT NULL AUTO_INCREMENT,<br>
-SeLgID tinyint(3) unsigned NOT NULL, -- LANGUAGE FOREIGN KEY --<br>
-SeTxID smallint(5) unsigned NOT NULL, -- TEXT FOREIGN KEY --<br>
-SeOrder smallint(5) unsigned NOT NULL,<br>
-SeText text,<br>
-SeFirstPos smallint(5) unsigned NOT NULL,<br>
-PRIMARY KEY (SeID),<br>
-KEY SeLgID (SeLgID),<br>
-KEY SeTxID (SeTxID),<br>
-KEY SeOrder (SeOrder)</p>
-</li>
-<li>
-<p><strong>Table "textitems2" (Text items cache, no backup needed):</strong><br>
-Ti2WoID mediumint(8) unsigned NOT NULL,<br>
-Ti2LgID tinyint(3) unsigned NOT NULL, -- LANGUAGE FOREIGN KEY --<br>
-Ti2TxID smallint(5) unsigned NOT NULL, -- TEXT FOREIGN KEY --<br>
-Ti2SeID mediumint(8) unsigned NOT NULL, -- SENTENCE FOREIGN KEY --<br>
-Ti2Order smallint(5) unsigned NOT NULL,<br>
-Ti2WordCount tinyint(3) unsigned NOT NULL,<br>
-Ti2Text varchar(250) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,<br>
-PRIMARY KEY (Ti2TxID,Ti2Order,Ti2WordCount),<br>
-KEY Ti2WoID (Ti2WoID)</p>
-</li>
-<li>
-<p><strong>Table "temptextitems" (memory table only used when creating texts, otherwise empty):</strong><br>
-TiCount smallint(5) unsigned NOT NULL,<br>
-TiSeID mediumint(8) unsigned NOT NULL,<br>
-TiOrder smallint(5) unsigned NOT NULL,<br>
-TiWordCount tinyint(3) unsigned NOT NULL,<br>
-TiText varchar(250) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL</p>
-</li>
-<li>
-<p><strong>Table "tempwords" (memory table only used when importing words, otherwise empty):</strong><br>
-WoText varchar(250) DEFAULT NULL,<br>
-WoTextLC varchar(250) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,<br>
-WoTranslation varchar(500) NOT NULL DEFAULT '*',<br>
-WoRomanization varchar(100) DEFAULT NULL,<br>
-WoSentence varchar(1000) DEFAULT NULL,<br>
-WoTaglist varchar(255) DEFAULT NULL,<br>
-PRIMARY KEY (WoTextLC)</p>
-</li>
-<li>
-<p><strong>Table "feedlinks" (Newsfeed articles):</strong><br>
-FlID smallint(5) unsigned NOT NULL AUTO_INCREMENT,<br>
-FlTitle varchar(200) NOT NULL,<br>
-FlLink varchar(400) NOT NULL,<br>
-FlDescription text NOT NULL,<br>
-FlDate datetime NOT NULL,<br>
-FlAudio varchar(200) NOT NULL,<br>
-FlText longtext NOT NULL,<br>
-FlNfID tinyint(3) unsigned NOT NULL,<br>
-PRIMARY KEY (FlID),<br>
-UNIQUE KEY FlTitle (FlTitle),<br>
-KEY FlLink (FlLink),<br>
-KEY FlDate (FlDate),<br>
-KEY FlNfID (FlNfID)</p>
-</li>
-<li>
-<p><strong>Table "newsfeeds" (Newsfeed settings):</strong><br>
-NfID tinyint(3) unsigned NOT NULL AUTO_INCREMENT,<br>
-NfLgID tinyint(3) unsigned NOT NULL,<br>
-NfName varchar(40) NOT NULL,<br>
-NfSourceURI varchar(200) NOT NULL,<br>
-NfArticleSectionTags text NOT NULL,<br>
-NfFilterTags text NOT NULL,<br>
-NfUpdate int(12) unsigned NOT NULL,<br>
-NfOptions varchar(200) NOT NULL,<br>
-PRIMARY KEY (NfID),<br>
-KEY NfLgID (NfLgID),<br>
-KEY NfUpdate (NfUpdate)</p>
-</li>
-</ul>
+<h3>Table "settings"</h3>
+<p>Settings as Key-Value Pairs</p>
+<pre><code class="language-sql">StKey varchar(40) NOT NULL,  
+StValue varchar(40) DEFAULT NULL,  
+PRIMARY KEY (StKey)
+</code></pre>
+<h3>Table "languages"</h3>
+<p>Defined languages</p>
+<pre><code class="language-sql">LgID tinyint(3) unsigned NOT NULL AUTO\_INCREMENT,  
+LgName varchar(40) NOT NULL,  
+LgDict1URI varchar(200) NOT NULL,  
+LgDict2URI varchar(200) DEFAULT NULL,  
+LgGoogleTranslateURI varchar(200) DEFAULT NULL,  
+LgExportTemplate varchar(1000) DEFAULT NULL,  
+LgTextSize smallint(5) unsigned NOT NULL DEFAULT '100',  
+LgCharacterSubstitutions varchar(500) NOT NULL,  
+LgRegexpSplitSentences varchar(500) NOT NULL,  
+LgExceptionsSplitSentences varchar(500) NOT NULL,  
+LgRegexpWordCharacters varchar(500) NOT NULL,  
+LgRemoveSpaces tinyint(1) unsigned NOT NULL DEFAULT '0',  
+LgSplitEachChar tinyint(1) unsigned NOT NULL DEFAULT '0',  
+LgRightToLeft tinyint(1) UNSIGNED NOT NULL DEFAULT '0',  
+PRIMARY KEY (LgID),  
+UNIQUE KEY LgName (LgName)
+</code></pre>
+<h3>Table "texts"</h3>
+<p>(Active texts, parsed and cached in sentences and textitems)</p>
+<pre><code class="language-sql">TxID smallint(5) unsigned NOT NULL AUTO\_INCREMENT,  
+TxLgID tinyint(3) unsigned NOT NULL, -- LANGUAGE FOREIGN KEY --  
+TxTitle varchar(200) NOT NULL,  
+TxText text NOT NULL,  
+TxAnnotatedText longtext NOT NULL,  
+TxAudioURI varchar(200) DEFAULT NULL,  
+TxSourceURI varchar(1000) DEFAULT NULL,  
+TxPosition smallint(5) NOT NULL DEFAULT '0',  
+TxAudioPosition float NOT NULL DEFAULT '0',  
+PRIMARY KEY
+
+\1,
+KEY TxLgID (TxLgID)
+</code></pre>
+<h3>Table "archivedtexts"</h3>
+<p>Text Archive, not parsed and cached</p>
+<pre><code class="language-sql">AtID smallint(5) unsigned NOT NULL AUTO\_INCREMENT,  
+AtLgID tinyint(3) unsigned NOT NULL, -- LANGUAGE FOREIGN KEY --  
+AtTitle varchar(200) NOT NULL,  
+AtText text NOT NULL,  
+AtAnnotatedText longtext NOT NULL,  
+AtAudioURI varchar(200) DEFAULT NULL,  
+AtSourceURI varchar(1000) DEFAULT NULL,  
+PRIMARY KEY (AtID),  
+KEY AtLgID (AtLgID)
+</code></pre>
+<h3>Table "tags2"</h3>
+<p>Text tags and comments</p>
+<pre><code class="language-sql">T2ID smallint(5) unsigned NOT NULL AUTO\_INCREMENT,  
+T2Text varchar(20) CHARACTER SET utf8 COLLATE utf8\_bin NOT NULL,  
+T2Comment varchar(200) NOT NULL DEFAULT '',  
+PRIMARY KEY (T2ID),  
+UNIQUE KEY T2Text (T2Text)
+</code></pre>
+<h3>Table "texttags"</h3>
+<p>Text tags relations</p>
+<pre><code class="language-sql">TtTxID smallint(5) unsigned NOT NULL, -- TEXT FOREIGN KEY --  
+TtT2ID smallint(5) unsigned NOT NULL, -- TEXT TAG FOREIGN KEY --  
+PRIMARY KEY (TtTxID,TtT2ID),  
+KEY TtT2ID (TtT2ID)
+</code></pre>
+<h3>Table "archtexttags"</h3>
+<p>Archived text tags relations</p>
+<pre><code class="language-sql">AgAtID smallint(5) unsigned NOT NULL, -- ARCHIVED TEXT FOREIGN KEY --  
+AgT2ID smallint(5) unsigned NOT NULL, -- TEXT TAG FOREIGN KEY --  
+PRIMARY KEY (AgAtID,AgT2ID),  
+KEY AgT2ID (AgT2ID)
+</code></pre>
+<h3>Table "words"</h3>
+<p>the words and expressions you have saved</p>
+<pre><code class="language-sql">WoID mediumint(8) unsigned NOT NULL AUTO\_INCREMENT,  
+WoLgID tinyint(3) unsigned NOT NULL, -- LANGUAGE FOREIGN KEY --  
+WoText varchar(250) NOT NULL,  
+WoTextLC varchar(250) CHARACTER SET utf8 COLLATE utf8\_bin NOT NULL,  
+WoStatus tinyint(4) NOT NULL,  
+WoTranslation varchar(500) NOT NULL DEFAULT '\*',  
+WoRomanization varchar(100) DEFAULT NULL,  
+WoSentence varchar(1000) DEFAULT NULL,  
+WoWordCount tinyint(3) unsigned NOT NULL DEFAULT '0',  
+WoCreated timestamp NOT NULL DEFAULT CURRENT\_TIMESTAMP,  
+WoStatusChanged timestamp NOT NULL DEFAULT '1970-01-01 12:00:00',  
+WoTodayScore double NOT NULL DEFAULT '0',  
+WoTomorrowScore double NOT NULL DEFAULT '0',  
+WoRandom double NOT NULL DEFAULT '0',  
+PRIMARY KEY (WoID),  
+UNIQUE KEY WoLgIDTextLC (WoLgID,WoTextLC),  
+KEY WoLgID (WoLgID),  
+KEY WoStatus (WoStatus),  
+KEY WoTextLC (WoTextLC),  
+KEY WoTranslation (WoTranslation),  
+KEY WoCreated (WoCreated),  
+KEY WoStatusChanged (WoStatusChanged),  
+KEY WoWordCount (WoWordCount),  
+KEY WoTodayScore (WoTodayScore),  
+KEY WoTomorrowScore (WoTomorrowScore),  
+KEY WoRandom (WoRandom)
+</code></pre>
+<h3>Table "tags"</h3>
+<p>Term tags and comments</p>
+<pre><code class="language-sql">TgID smallint(5) unsigned NOT NULL AUTO\_INCREMENT,  
+TgText varchar(20) CHARACTER SET utf8 COLLATE utf8\_bin NOT NULL,  
+TgComment varchar(200) NOT NULL DEFAULT '',  
+PRIMARY KEY (TgID),  
+UNIQUE KEY TgText (TgText)
+</code></pre>
+<h3>Table "wordtags"</h3>
+<p>Term tags relations</p>
+<pre><code class="language-sql">WtWoID int(11) unsigned NOT NULL, -- TERM FOREIGN KEY --  
+WtTgID smallint(5) unsigned NOT NULL, -- TERM TAG FOREIGN KEY --  
+PRIMARY KEY (WtWoID,WtTgID),  
+KEY WtTgID (WtTgID)
+</code></pre>
+<h3>Table "sentences"</h3>
+<p>Sentences cache, no backup needed</p>
+<pre><code class="language-sql">SeID mediumint(8) unsigned NOT NULL AUTO\_INCREMENT,  
+SeLgID tinyint(3) unsigned NOT NULL, -- LANGUAGE FOREIGN KEY --  
+SeTxID smallint(5) unsigned NOT NULL, -- TEXT FOREIGN KEY --  
+SeOrder smallint(5) unsigned NOT NULL,  
+SeText text,  
+SeFirstPos smallint(5) unsigned NOT NULL,  
+PRIMARY KEY (SeID),  
+KEY SeLgID (SeLgID),  
+KEY SeTxID (SeTxID),  
+KEY SeOrder (SeOrder)
+</code></pre>
+<h3>Table "textitems2"</h3>
+<p>Text items cache, no backup needed</p>
+<pre><code class="language-sql">Ti2WoID mediumint(8) unsigned NOT NULL,  
+Ti2LgID tinyint(3) unsigned NOT NULL, -- LANGUAGE FOREIGN KEY --  
+Ti2TxID smallint(5) unsigned NOT NULL, -- TEXT FOREIGN KEY --  
+Ti2SeID mediumint(8) unsigned NOT NULL, -- SENTENCE FOREIGN KEY --  
+Ti2Order smallint(5) unsigned NOT NULL,  
+Ti2WordCount tinyint(3) unsigned NOT NULL,  
+Ti2Text varchar(250) CHARACTER SET utf8 COLLATE utf8\_bin NOT NULL,  
+PRIMARY KEY (Ti2TxID,Ti2Order,Ti2WordCount),  
+KEY Ti2WoID (Ti2WoID)
+</code></pre>
+<h3>Table "temptextitems"</h3>
+<p>memory table only used when creating texts, otherwise empty</p>
+<pre><code class="language-sql">TiCount smallint(5) unsigned NOT NULL,  
+TiSeID mediumint(8) unsigned NOT NULL,  
+TiOrder smallint(5) unsigned NOT NULL,  
+TiWordCount tinyint(3) unsigned NOT NULL,  
+TiText varchar(250) CHARACTER SET utf8 COLLATE utf8\_bin NOT NULL
+</code></pre>
+<h3>Table "tempwords"</h3>
+<p>memory table only used when importing words, otherwise empty</p>
+<pre><code class="language-sql">WoText varchar(250) DEFAULT NULL,  
+WoTextLC varchar(250) CHARACTER SET utf8 COLLATE utf8\_bin NOT NULL,  
+WoTranslation varchar(500) NOT NULL DEFAULT '\*',  
+WoRomanization varchar(100) DEFAULT NULL,  
+WoSentence varchar(1000) DEFAULT NULL,  
+WoTaglist varchar(255) DEFAULT NULL,  
+PRIMARY KEY (WoTextLC)
+</code></pre>
+<h3>Table "feedlinks"</h3>
+<p>Newsfeed articles</p>
+<pre><code class="language-sql">FlID smallint(5) unsigned NOT NULL AUTO\_INCREMENT,  
+FlTitle varchar(200) NOT NULL,  
+FlLink varchar(400) NOT NULL,  
+FlDescription text NOT NULL,  
+FlDate datetime NOT NULL,  
+FlAudio varchar(200) NOT NULL,  
+FlText longtext NOT NULL,  
+FlNfID tinyint(3) unsigned NOT NULL,  
+PRIMARY KEY (FlID),  
+UNIQUE KEY FlTitle (FlTitle),  
+KEY FlLink (FlLink),  
+KEY FlDate (FlDate),  
+KEY FlNfID (FlNfID)
+</code></pre>
+<h3>Table "newsfeeds"</h3>
+<p>Newsfeed settings</p>
+<pre><code class="language-sql">NfID tinyint(3) unsigned NOT NULL AUTO\_INCREMENT,  
+NfLgID tinyint(3) unsigned NOT NULL,  
+NfName varchar(40) NOT NULL,  
+NfSourceURI varchar(200) NOT NULL,  
+NfArticleSectionTags text NOT NULL,  
+NfFilterTags text NOT NULL,  
+NfUpdate int(12) unsigned NOT NULL,  
+NfOptions varchar(200) NOT NULL,  
+PRIMARY KEY (NfID),  
+KEY NfLgID (NfLgID),  
+KEY NfUpdate (NfUpdate)
+</code></pre>
 			
 			<h2 id="CHANGELOG" name="CHANGELOG">▶ Changelog - <a href="#">[↑]</a></h2>
 <p>This project's changelog. Versions marked with "-fork" come from the community, other versions come from the canonical LWT ("official" branch on Git).

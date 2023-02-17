@@ -2,33 +2,34 @@
 
 ## Home Screen
 
-**LWT home screen after installation**  
-
-This is home screen of LWT if the database is empty. Please install the demo database or start with the definition of a language you want to learn.  
+LWT home screen after installation:  
 
 ![Image](../img/23.jpg)  
 
-**LWT home screen**  
+This is home screen of LWT if the database is empty. Please install the demo database or start with the definition of a language you want to learn.  
 
-This is normal home screen of LWT. You may choose a language here, but you can do this also later. If you you choose a language, the language filter is pre-set to that language in some other screens. The last text you've read or tested is shown, and you may jump directly into reading, testing or printing of this last text.  
+LWT home screen
 
 ![Image](../img/01.jpg)  
 
-## Languages
+This is normal home screen of LWT. You may choose a language here, but you can do this also later. If you you choose a language, the language filter is pre-set to that language in some other screens. The last text you've read or tested is shown, and you may jump directly into reading, testing or printing of this last text.  
 
-**My Languages**  
+
+## Languages
 
 The list of languages. Here you can add a new or edit an existent language. If no texts and no saved terms in a language exist, you can delete a language. If you change a language, all texts may be automatically reparsed to refresh (and correct) the cache of sentences and text items (depends on what language settings you have changed). You can do this also manually by clicking on the yellow flash icon. You can also test all (due) terms of a language or set a language as "current" language.  
 
 ![Image](../img/02.jpg)  
 
-**New/Edit Language**
+### New/Edit Language
 
-This is the place to define or edit a language you want to study.  
+This is the place to define or edit a language you want to study.
 
-**If you are new to the system, use the "Language Settings Wizard" first.** You only select your native (L1) and study (L2) languages, and let the wizard set all language settings that are marked in yellow. You can always adjust the settings afterwards.  
+It is recommended to use the "Language Settings Wizard" first. You only select your 
+native (L1) and study (L2) languages, and let the wizard set all language settings 
+that are marked in yellow. You can always adjust the settings afterwards.  
 
-**Explainations of the input fields** - please read also [this section](info.html#langsetup):  
+**Explanations of the input fields** - please read also [this section](info.html#langsetup):  
 
 The three [URLs](https://en.wikipedia.org/wiki/URL) are URLs to three web dictionaries (the second and third is optional). Use ``lwt_term`` as a placeholder for the search word in the URIs. If ``lwt_term`` is missing, the search word will be appended to the end. If the URI to query "travailler" in WordReference is "http://www.wordreference.com/fren/travailler", you may enter: "http://www.wordreference.com/fren/lwt_term" or "http://www.wordreference.com/fren/". Another example: The URI to query "travailler" in sensagent is "http://dictionary.sensagent.com/travailler/fr-en/", so you enter in LWT "http://dictionary.sensagent.com/lwt_term/fr-en/".  
 
@@ -43,15 +44,15 @@ A different third web dictionary is of course possible, but sentence translation
 
 **IMPORTANT:** Some dictionaries (including "Google Translate") don't allow to be opened within a frame set. Put an asterisk \* in front of the URI (Examples: \*<http://mywebdict.com?q=###> or \*<http://translate.google.com/?ie=UTF-8&sl=..&tl=..&text=###)> to open such a dictionary not within the frame set but in a popup window (please don't forget to deactivate popup window blocking in your browser!).  
 
-### Deprecated Features
+#### Deprecated Features
 
-#### Specify Encoding
+##### Specify Encoding
 
 **This feature has been abandonned, do not use it**!
 
 If the searchword in the three URIs needs to be converted into a different encoding (standard is UTF-8), you could use ###encoding### as a placeholder. Normally you see this right away if terms show up wrongly in the web dictionary. Example: Linguee expects the searchword in ISO-8859-15, not in UTF-8, so you define it this way: "http://www.linguee.de/search?direction=auto&query=###ISO-8859-15###". A list of encodings can be found [here](http://php.net/manual/en/mbstring.supported-encodings.php). 
 
-#### Glosbe API
+##### Glosbe API
 
 Glosbe closed there API, this feature does no longer work.
 
@@ -93,25 +94,23 @@ To understand all these options, please study also [this](info.html#langsetup), 
 
 ## Texts
 
-### **My Texts**  
-
 The list of texts. You can filter this list according to language, title (wildcard = \*) or text tag(s) (see also below). The most important links for each text are "Read" and "Test" - that's the place to read, to listen, to save terms and to review and test your terms in sentence context. To see all terms of a text that you have saved, click on the numbers in column "Saved Wo+Ex". To print, archive, edit (and reparse), or to delete a text, click on the icons in column "Actions". There are more actions available, see "Multi Actions".  
 
 ![Image](../img/04.jpg)  
 
-### **Multi Actions for marked texts**  
+### Multi Actions for marked texts
 
 You can test the terms of the marked texts, delete or archive the marked texts. "Reparse Texts" rebuilds the sentence and the text item cache for all marked texts. "Set Term Sentences" sets a valid sentence (with the term in {..}) for all those saved or imported terms that occur in the text and that do not have a sentence at all or none with {term}. This makes it easy to "create" sentence examples for imported terms.  
 
 ![Image](../img/14.jpg)  
 
-### **Text Tags**  
+## Text Tags
 
 The list of your text tags. You can manage your text tags here. With text tags, it will be easier to categorize and organize your texts. The tags are case sensitive, have 1 to 20 characters, and must not contain any spaces or commas.  
 
 ![Image](../img/25.jpg)  
 
-### **New/Edit Text (with Check)**  
+### New/Edit Text
 
 This is the screen to input, check or edit a single text. Try to store not too long texts (the maximum length is 65,000 Bytes). If texts are very long (> 1000 words), certain operations (e.g. loading a text for reading, calculation of known/unknown words) may be quite slow. An audio URI and a link to the text source can also be defined. The best place to store your audios is the "media" subdirectory below the installation directory "lwt" (you have to create it yourself, and you have to copy the audio files into this directory; click Refresh if you don't see just copied media). But a cloud webspace service like DropBox is also possible. In the moment there is no possibility to import/upload an audio file within the LWT application. By the way, you can use MP3, WAV, or OGG media files, but be aware that not all browsers and/or operating systems support all media types! 
 
@@ -125,70 +124,62 @@ You can also import a longer text into LWT with the possibility to split it up i
 
 ## Newsfeed
 
-### **Newsfeed Import**  
+### Newsfeed Import
 
 Here you can download the articles of your newsfeeds (HowTo add a new newsfeed see [here](info.html#new_feed)). If you've set up multiple newsfeeds for your selected language, the link "update multiple feeds" will appear. By clicking that link you can update one or more feeds at once. If you've selected a newsfeed, a blue circle-arrow will appear as well as the date of your last update. A click on the circle-arrow will update your selected newsfeed. All downloaded articles will be marked by a bookmark-icon instead of the checkbox, so you can access them immediately. If a downloaded article is archived, a red mark will appear. An error may occur, when you try to download an article and the link or the text-section of the article is not found. Then a yellow warning sign appears, which can be removed temporarily by clicking on it or permanently in [Manage Feeds](info.html#man_feed). If you hover over an article title, a description of the article will be shown. You can open the article and, if available, the audio in a new window.  
 
 ![Image](../img/37.jpg)  
 
-### **Manage Feeds**  
+### Manage Feeds
 
 Multi Actions for marked newsfeeds: You can update feeds, unset unloadable articles (see [my newsfeeds](info.html#feed_imp)), delete all articles or delete feeds.  
 Actions: You can edit, update, delete a feed or follow the link to the newsfeed.  
 
 ![Image](../img/38.jpg)  
 
-### **New/Edit Feeds**  
+### New/Edit Feeds
 
-**Explainations of the input fields:**  
+Explanations of the input fields
 
-  * Language: select your language, it can be changed later.
-  * Name: the name is limited to 40 characters, this field must not be empty.
-  * Newsfeed url: URL of your RSS/Atom-Feed, this field must not be empty.
-  * Article Section: [xpath expression](http://www.w3.org/TR/xpath20/) (i.e.: //div\[@id="content-to-read"\]/p), the [feed wizard](info.html#feed_wizard) can be used to get the right sections, this field must not be empty.
-  * Filter Tags: [xpath expression](http://www.w3.org/TR/xpath20/), the [feed wizard](info.html#feed_wizard) can be used to get the right sections.
-  * Options:
-    * Edit Text: if this is checked, you can edit your articles before saving.
-    * Auto Update Interval: your feed will be updated automatically, when you enter MY FEEDS from the main menu.
-    * Max. Links: number of shown in MY FEEDS, if this is empty, the value in the settings will be used.
-    * Charset: this should be empty, charset sould be detected automatically.
-    * Max. Texts: max. number of active texts, if this is empty, the value in the settings will be used. Older texts will be moved into ARCHIVE.
-    * Tag: you can give the texts a tag, if this is empty, the first 20 characters of the feed name will be used. The tag will be used to move the older texts into ARCHIVE. Each feed should have its own tag.
-    * Article Source: some feeds have its texts integrated in the description. The articles can be cached in the database, which results in a faster download and a bigger database. Feeds with cached articles should have less Max. Links. The feed wizard can be used to detect the Article Source. If this is unchecked, each article will be downloaded from the internet.
+* Language: select your language, it can be changed later.
+* Name: the name is limited to 40 characters, this field must not be empty.
+* Newsfeed url: URL of your RSS/Atom-Feed, this field must not be empty.
+* Article Section: [xpath expression](http://www.w3.org/TR/xpath20/) (i.e.: //div\[@id="content-to-read"\]/p), the [feed wizard](info.html#feed_wizard) can be used to get the right sections, this field must not be empty.
+* Filter Tags: [xpath expression](http://www.w3.org/TR/xpath20/), the [feed wizard](info.html#feed_wizard) can be used to get the right sections.
+* Options:
+  * Edit Text: if this is checked, you can edit your articles before saving.
+  * Auto Update Interval: your feed will be updated automatically, when you enter MY FEEDS from the main menu.
+  * Max. Links: number of shown in MY FEEDS, if this is empty, the value in the settings will be used.
+  * Charset: this should be empty, charset sould be detected automatically.
+  * Max. Texts: max. number of active texts, if this is empty, the value in the settings will be used. Older texts will be moved into ARCHIVE.
+  * Tag: you can give the texts a tag, if this is empty, the first 20 characters of the feed name will be used. The tag will be used to move the older texts into ARCHIVE. Each feed should have its own tag.
+  * Article Source: some feeds have its texts integrated in the description. The articles can be cached in the database, which results in a faster download and a bigger database. Feeds with cached articles should have less Max. Links. The feed wizard can be used to detect the Article Source. If this is unchecked, each article will be downloaded from the internet.
 
     ![Image](../img/41.jpg)  
 
-* **Feed Wizard**  
+### Feed Wizard  
 
-    Here you can edit or set up a new newsfeed in 4 steps.  
+Here you can edit or set up a new newsfeed in 4 steps.  
 
-  * **Step 1**  
+1. Insert your newsfeed url. This step is skipped, when you edit a newsfeed.
+2. Step 2
+  * Name: the name is limited to 40 characters, this can be changed later in step 4 and must not be empty.
+  * Newsfeed url: URL of your RSS/Atom-Feed, this can only be changed in step 1 and must not be empty.
+  * Article Source: Webpage Link means, that the article will downloaded from the link, all other values mean, that the texts are cached in the database, when you update your feed. You must set the value, before you set the article section. This can only be changed here.
 
-        Insert your newsfeed url. This step is skipped, when you edit a newsfeed.
+    **How to select the article section:**  
 
-  * **Step 2**  
+    When you click on the text, it will be marked yellow and a value in the right selectbox will appear. You can change the marked section by selecting a value. If you click on the yellow marked text, the text will be unmarked. To select a text click the "get"-button. The xpath expression of the selected text will then appear on the top and the text will be marked green. You can unselect the selected text by clicking on the red cross. If you click on the xpath expression or on the selected text, a border around the selected text will appear. This can be used to verify the connection between text and xpath exp. in the articles. In order to change an article/webpage use the selectbox on the left. All visited articles start with an arrow "▶". Articles from different hosts probably contain different article sections. Therefore a selectbox can be used to mark the hosts, that are "done", with a star. By clicking on the setting icon, you can choose between three selection modes. "Smart Selection" looks for ids and classes in the element node and parent node. "Get All Attributes" will compare all attributes of the element node/parent node with the text. This mode is not recommended. "Advanced Selection" lets you customize the [xpath expression](http://www.w3.org/TR/xpath20/).  
 
-    * Name: the name is limited to 40 characters, this can be changed later in step 4 and must not be empty.
-    * Newsfeed url: URL of your RSS/Atom-Feed, this can only be changed in step 1 and must not be empty.
-    * Article Source: Webpage Link means, that the article will downloaded from the link, all other values mean, that the texts are cached in the database, when you update your feed. You must set the value, before you set the article section. This can only be changed here.
+    ![Image](../img/39.jpg)
 
-        **How to select the article section:**  
+3. This works like step 2. Only the selected sections from step 2 are clickable. Marked text will appear grey, filtered texts will have a red font.  
 
-        When you click on the text, it will be marked yellow and a value in the right selectbox will appear. You can change the marked section by selecting a value. If you click on the yellow marked text, the text will be unmarked. To select a text click the "get"-button. The xpath expression of the selected text will then appear on the top and the text will be marked green. You can unselect the selected text by clicking on the red cross. If you click on the xpath expression or on the selected text, a border around the selected text will appear. This can be used to verify the connection between text and xpath exp. in the articles. In order to change an article/webpage use the selectbox on the left. All visited articles start with an arrow "▶". Articles from different hosts probably contain different article sections. Therefore a selectbox can be used to mark the hosts, that are "done", with a star. By clicking on the setting icon, you can choose between three selection modes. "Smart Selection" looks for ids and classes in the element node and parent node. "Get All Attributes" will compare all attributes of the element node/parent node with the text. This mode is not recommended. "Advanced Selection" lets you customize the [xpath expression](http://www.w3.org/TR/xpath20/).  
+    ![Image](../img/40.jpg)  
 
-        ![Image](../img/39.jpg)  
+4. The settings are explained in [New/Edit Feeds](#new_feed).  
 
-  * **Step 3**  
-
-        This works like step 2. Only the selected sections from step 2 are clickable. Marked text will appear grey, filtered texts will have a red font.  
-
-        ![Image](../img/40.jpg)  
-
-  * **Step 4**  
-
-        The settings are explained in [New/Edit Feeds](#new_feed).  
-
-## **Read a Text**  
+## Read a Text
 
 This is your "working area": Reading (and listening to) a text, saving/editing words and expressions, looking up words, expressions, sentences in external dictionaries or Google Translate. To create an expression, click on the first word. You see "Exp: 2..xx 3..yy 4..zz ...". Just click on the number of words (2..9) of the desired expression you want to save. The dictionary links for multi word expressions are always in the edit frame! You can also use the Keyboard in the text frame, see [Key Bindings](info.html#keybind). Double clicking on a word sets the audio position approximately to the text position, if an audio was defined. The other audio controls are self-explanatory: automatic repeat, rewind and move forward n seconds, etc.).  
 
@@ -208,7 +199,7 @@ With the checkbox \[Show All\] you can switch the display of text:
 
 ![Image](../img/30.jpg)  
 
-## **Test terms**  
+## Test terms
 
 Tests are only possible if a term has a translation. Terms with status "Ignored" and "Well Known" are never tested, and terms with a positive or zero score are not tested today. In summary, the term score must fall below zero to trigger the test. See also [Term scores](info.html#termscores). Terms that are due today are marked with a red bullet in the term table. Terms that are due tomorrow are marked with a yellow bullet in the term table.  
 
@@ -216,29 +207,29 @@ During a test, a status display (at the bottom of the test frame) shows you the 
 
 In the following, L1 denotes you mother tongue (= translations), and L2 the language you want to learn (= the terms (words and expressions).
 
-* **Test terms in a text (L2 -> L1)**  
+**Test terms in a text (L2 -> L1)**  
 
-    This is Test #1 or #4: L2 -> L1 (recognition) - to train your ability to recognize a L2 term. You may test within sentence context (Button "..\[L2\].."), or just the term (Button "\[L2\]"). You can also use the Keyboard in the test frame, see [Key Bindings](info.html#keybind).  
+This is Test #1 or #4: L2 -> L1 (recognition) - to train your ability to recognize a L2 term. You may test within sentence context (Button "..\[L2\].."), or just the term (Button "\[L2\]"). You can also use the Keyboard in the test frame, see [Key Bindings](info.html#keybind).  
 
-    ![Image](../img/07.jpg)  
+![Image](../img/07.jpg)  
 
-* **Test terms in a text (L1 -> L2)**  
+**Test terms in a text (L1 -> L2)**  
 
-    This is Test #2 or #5: L1 -> L2 (recall) - to train your ability to produce a term from L1. You may test within sentence context (Button "..\[L1\].."), or just the term (Button "\[L1\]"). You can also use the Keyboard in the test frame, see [Key Bindings](info.html#keybind).  
+This is Test #2 or #5: L1 -> L2 (recall) - to train your ability to produce a term from L1. You may test within sentence context (Button "..\[L1\].."), or just the term (Button "\[L1\]"). You can also use the Keyboard in the test frame, see [Key Bindings](info.html#keybind).  
 
-    ![Image](../img/11.jpg)  
+![Image](../img/11.jpg)  
 
-* **Test terms in a text (••• -> L2)**  
+**Test terms in a text (••• -> L2)**  
 
-    This is test #3: ••• -> L2 (recall) - to train your ability to produce a term only from the sentence context (Button "..\[••\].."). If you hover over "\[•••\]", a tooltip displays the translation of the term. You can also use the Keyboard in the test frame, see [Key Bindings](info.html#keybind).  
+This is test #3: ••• -> L2 (recall) - to train your ability to produce a term only from the sentence context (Button "..\[••\].."). If you hover over "\[•••\]", a tooltip displays the translation of the term. You can also use the Keyboard in the test frame, see [Key Bindings](info.html#keybind).  
 
-    ![Image](../img/12.jpg)  
+![Image](../img/12.jpg)  
 
-* **Test yourself in a table / word list format (Button "Table")**  
+**Test yourself in a table / word list format (Button "Table")**  
 
-    This is test #6: The selected terms and expressions are presented as a table. You can make invisible either the columns "Term" or "Translation", and you can hide or show the columns "Sentence", "Romanization", "Status" and "Ed" (Edit). To reveal the invisible solution ("Term" or "Translation"), you just click into the empty table cell. You can review or test yourself with or without changing the status by clicking "+" or "-" in the "Status" column. A status in red signifies that the term is due for testing. You can also edit the term by clicking the yellow "Edit" icon. Columns 2 to 6 may also my sorted by clicking on the header row. The initial sort order is according to term score.  
+This is test #6: The selected terms and expressions are presented as a table. You can make invisible either the columns "Term" or "Translation", and you can hide or show the columns "Sentence", "Romanization", "Status" and "Ed" (Edit). To reveal the invisible solution ("Term" or "Translation"), you just click into the empty table cell. You can review or test yourself with or without changing the status by clicking "+" or "-" in the "Status" column. A status in red signifies that the term is due for testing. You can also edit the term by clicking the yellow "Edit" icon. Columns 2 to 6 may also my sorted by clicking on the header row. The initial sort order is according to term score.  
 
-    ![Image](../img/32.jpg)  
+![Image](../img/32.jpg)  
 
 ## Print a text
 
@@ -325,6 +316,7 @@ What is the difference between (active) texts and archived texts?
 * Testing of a stored term that occurs in the text, is possible. A terms will be tested within the context of any sentence(s) in all active texts (the number of sentences may be set (1, 2, or 3) as a preference).
 
 **Archived texts**
+
 * They are not parsed and tokenized, only the text is stored.
 * Compared with active texts, they don't use much space in the database, because no sentences and no text items are stored.
 * Reading with term creation/editing and dictionary lookup is not possible.
@@ -332,7 +324,7 @@ What is the difference between (active) texts and archived texts?
 
 ![Image](../img/13.jpg)  
 
-* **Multi Actions for marked archived texts**  
+Multi Actions for marked archived texts
 
 ![Image](../img/15.jpg)  
 
