@@ -571,13 +571,44 @@ function edit_language_form($language)
         target.checked = popup;
     }
 
-    $(function () { 
-        const l_form = document.forms.lg_form;
+    /**
+     * Modify the value of the translator select box if not coherent with the URL.
+     */
+    function checkTranslatorType(url, type_select) {
+        const parsed_url = new URL(url);
+        let final_value;
+        switch (parsed_url.searchParams.get("lwt_translator")) {
+            case "libretranslate":
+                // Using LibreTranslate
+                final_value = "libretranslate";
+                break;
+            default:
+                // Defaulting to Google
+                final_value = "google_translate";
+                break;
+        }
+        type_select.value = final_value;
+    }
+
+    /**
+     * Check if all fields are coherent with translator URL.
+     */
+    function checkTranslatorChanged(translator_input) {
+        checkTranslatorStatus(translator_input.value);
+        checkDictionaryChanged(translator_input);
+        checkTranslatorType(
+            translator_input.value, document.forms.lg_form.LgTranslatorName
+        );
+    }
+
+    function checkLanguageForm(l_form) {
         checkLanguageChanged(l_form.LgName.value);
         checkDictionaryChanged(l_form.LgDict1URI);
         checkDictionaryChanged(l_form.LgDict2URI);
-        checkDictionaryChanged(l_form.LgGoogleTranslateURI);
-    })
+        checkTranslatorChanged(l_form.LgGoogleTranslateURI);
+    }
+
+    $(function () { checkLanguageForm(document.forms.lg_form); });
 </script>
 <form class="validate" action="<?php echo $_SERVER['PHP_SELF']; ?>" 
     method="post" onsubmit="return check_dupl_lang(<?php echo $language->id; ?>);" 
@@ -653,7 +684,7 @@ function edit_language_form($language)
             name="LgGoogleTranslateURI" 
             value="<?php echo tohtml($language->translator); ?>" 
             maxlength="200" size="60" data_info="GoogleTranslate URI" 
-            oninput="checkTranslatorStatus(this.value);checkDictionaryChanged(this);"
+            oninput="checkTranslatorChanged(this);"
              />
 
             <div id="LgTranslatorKeyWrapper" style="display: none;">
