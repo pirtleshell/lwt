@@ -695,7 +695,7 @@ function getStatusAbbr (status) {
  * @returns {void}
  */
 function translateSentence (url, sentctl) {
-  if (typeof sentctl !== 'undefined' && url != '') {
+  if (sentctl !== undefined && url != '') {
     const text = sentctl.value;
     if (typeof text === 'string') {
       showRightFrames(undefined, createTheDictUrl(url, text.replace(/[{}]/g, '')));
@@ -727,8 +727,8 @@ function translateSentence2 (url, sentctl) {
  * @param {object} wordctl Textarea containing word to translate.
  * @returns {void}
  */
-function translateWord (url, wordctl) {
-  if (typeof wordctl !== 'undefined' && url != '') {
+function translateWord(url, wordctl) {
+  if (wordctl !== undefined && url != '') {
     const text = wordctl.value;
     if (typeof text === 'string') {
       showRightFrames(undefined, createTheDictUrl(url, text));
@@ -743,8 +743,8 @@ function translateWord (url, wordctl) {
  * @param {object} wordctl Textarea containing word to translate.
  * @returns {void}
  */
-function translateWord2 (url, wordctl) {
-  if (typeof wordctl !== 'undefined' && url != '') {
+function translateWord2(url, wordctl) {
+  if (wordctl !== undefined && url != '') {
     const text = wordctl.value;
     if (typeof text === 'string') {
       owin(createTheDictUrl(url, text));
@@ -759,7 +759,7 @@ function translateWord2 (url, wordctl) {
  * @param {string} word Word to translate.
  * @returns {void}
  */
-function translateWord3 (url, word) {
+function translateWord3(url, word) {
   owin(createTheDictUrl(url, word));
 }
 
@@ -773,22 +773,19 @@ function translateWord3 (url, word) {
  */
 function getLangFromDict(wblink3) {
   let dictUrl, urlParams;
-  let libretranslate = false;
   if (wblink3.trim() == '') {
     return '';
-  }
-  if (wblink3.startsWith("libretranslate ")) {
-    // Use LibreTranslate
-    wblink3 = wblink3.substring("libretranslate ".length).trim();
-    libretranslate = true;
   }
   // Replace pop-up marker '*'
   if (wblink3.startsWith('*')) {
     wblink3 = wblink3.substring(1);
   }
+  if (wblink3.startsWith("trans.php") || wblink3.startsWith("ggl.php")) {
+    wblink3 = 'http://' + wblink3;
+  }
   dictUrl = new URL(wblink3);
-  urlParams = new URLSearchParams(dictUrl.search);
-  if (libretranslate) {
+  urlParams = dictUrl.searchParams;
+  if (urlParams.get("lwt_translator") == "libretranslate") {
     return urlParams.get("source") || "";
   }
   // Fallback to Google Translate
@@ -869,8 +866,8 @@ function oewin (url) {
  * 
  * JS alter ego of the createTheDictLink PHP function.
  * 
- * Case 1: url without any ###: append UTF-8-term
- * Case 2: url with one ###: substitute UTF-8-term
+ * Case 1: url without any ### or "lwt_term": append term
+ * Case 2: url with one ### or "lwt_term": substitute term
  * 
  * @param {string} u Dictionary URL
  * @param {string} w Term to be inserted in the URL
@@ -879,24 +876,28 @@ function oewin (url) {
  * @since 2.6.0-fork Internals rewrote, do no longer use PHP code. 
  *                   The option putting encoding between ###enc### does no 
  *                   longer work. It is deprecated and will be removed.
+ * @since 2.7.0-fork Using "###" is deprecated, "lwt_term" recommended instead
  */
 function createTheDictUrl (u, w) {
   const url = u.trim();
   const trm = w.trim();
-  const pos = url.indexOf('###');
-  // no ### found
+  const term_elem = url.match(/lwt_term|###/);
+  const pos = (term_elem === null) ? -1 : url.indexOf(term_elem[0]);
+  // No ###/lwt_term found
   if (pos == -1) {
       return url + encodeURIComponent(trm);
   }
-  // ### found
+  // ###/lwt_term found
   const pos2 = url.indexOf('###', pos + 1);
   if (pos2 === -1) {
-      // 1 ### found
-      return url.replace("###", trm == '' ? '+' : encodeURIComponent(trm));
+      // 1 ###/lwt_term found
+      return url.replace(term_elem, trm == '' ? '+' : encodeURIComponent(trm));
   }
   // 2 ### found
   // Get encoding
-  const enc = url.substring(pos + 3, pos2 - pos - 3).trim();
+  const enc = url.substring(
+    pos + term_elem[0].length, pos2 - pos - term_elem[0].length
+  ).trim();
   console.warn(
    "Trying to use encoding '" + enc + "'. This feature is abandonned since " + 
    "2.6.0-fork. Using default UTF-8." 
@@ -919,6 +920,7 @@ function createTheDictUrl (u, w) {
  */
 function createTheDictLink (u, w, t, b) {
   let url = u.trim();
+  let popup  = false;
   const trm = w.trim();
   const txt = t.trim();
   const txtbefore = b.trim();
@@ -926,13 +928,22 @@ function createTheDictLink (u, w, t, b) {
   if (url == '' || txt == '') {
     return r;
   }
-  if (url.startsWith("libretranslate ")) {
-    url = url.substring("libretranslate ".length);
+  if (url.startsWith('*')) {
+    url = url.substring(1);
+    popup = true;
   }
-  if (url.substring(0, 1) == '*') {
+  try {
+    let final_url = new URL(url);
+    popup |= final_url.searchParams.has('lwt_popup');
+  } catch (err) {
+    if (!(err instanceof TypeError)) {
+      throw err;
+    }
+  }
+  if (popup) {
     r = ' ' + txtbefore +
     ' <span class="click" onclick="owin(\'' 
-    + createTheDictUrl(url.substring(1), escape_apostrophes(trm)) 
+    + createTheDictUrl(url, escape_apostrophes(trm)) 
     + '\');">' + txt + '</span> ';
   } else {
     r = ' ' + txtbefore +
@@ -955,19 +966,32 @@ function createSentLookupLink (torder, txid, url, txt) {
   url = url.trim();
   txt = txt.trim();
   let r = '';
+  let popup = false;
+  let external = false;
   const target_url = 'trans.php?x=1&i=' + torder + '&t=' + txid;
   if (url == '' || txt == '') {
     return r;
   }
-  if (url.startsWith("libretranslate ")) {
-    url = url.substring("libretranslate ".length);
+  if (url.startsWith('*')) {
+    url = url.substring(1);
+    popup = true;
   }
-  if (url.startsWith('*http://') || url.startsWith('*https://')) {
-    r = ' <span class="click" onclick="owin(\'' + target_url + '\');">' + 
+  try {
+    let final_url = new URL(url);
+    popup |= final_url.searchParams.has('lwt_popup');
+    external = true;
+  } catch (err) {
+    if (!(err instanceof TypeError)) {
+      throw err;
+    }
+  }
+  if (popup) {
+    return ' <span class="click" onclick="owin(\'' + target_url + '\');">' + 
     txt + '</span> ';
-  } else if (url.startsWith('http://') || url.startsWith('https://')) {
-    r = ' <a href="' + target_url + 
-    '" target="ru" onclick="showRightFrames();">' + txt + '</a> ';
+  } 
+  if (external) {
+    return ' <a href="' + target_url + '" target="ru" onclick="showRightFrames();">'
+    + txt + '</a> ';
   }
   return r;
 }

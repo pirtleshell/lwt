@@ -2299,7 +2299,7 @@ function get_tagsort_selectoptions($v): string
 
 function get_textssort_selectoptions($v): string 
 { 
-    if (! isset($v) ) { 
+    if (!isset($v)) { 
         $v = 1; 
     }
     $r  = "<option value=\"1\"" . get_selected($v, 1);
@@ -2311,24 +2311,13 @@ function get_textssort_selectoptions($v): string
     return $r;
 }
 
-// -------------------------------------------------------------
-
-function get_yesno_selectoptions($v): string 
-{
-    if (! isset($v) ) { $v = 0; 
-    }
-    $r  = "<option value=\"0\"" . get_selected($v, 0);
-    $r .= ">No</option>";
-    $r .= "<option value=\"1\"" . get_selected($v, 1);
-    $r .= ">Yes</option>";
-    return $r;
-}
 
 // -------------------------------------------------------------
 
 function get_andor_selectoptions($v): string 
 {
-    if (! isset($v) ) { $v = 0; 
+    if (!isset($v)) { 
+        $v = 0; 
     }
     $r  = "<option value=\"0\"" . get_selected($v, 0);
     $r .= ">... OR ...</option>";
@@ -2661,36 +2650,40 @@ function makeStatusClassFilterHelper($status, &$array): void
 /**
  * Create and verify a dictionary URL link
  *
- * Case 1: url without any ###: append UTF-8-term
- * Case 2: url with one ###: substitute UTF-8-term
- * Case 3: url with two ###enc###: unsupported encoding changed, 
+ * Case 1: url without any ### or lwt_term: append UTF-8-term
+ * Case 2: url with one ### or lwt_term: substitute UTF-8-term
+ * Case 3: url with two (###|lwt_term)enc###: unsupported encoding changed, 
  *         abandonned since 2.6.0-fork
  * 
  * @param string $u Dictionary URL. It may contain ### that will get parsed
  * @param string $t Text that substite the ###
  * 
  * @return string Dictionary link formatted
+ * 
+ * @since 2.7.0-fork It is recommended to use "lwt_term" instead of "###"
  */
 
 function createTheDictLink($u, $t) 
 {
     $url = trim($u);
     $trm = trim($t);
-    $pos = stripos($url, '###');
-    // no ### found
-    if ($pos === false) {
+    // No ###|lwt_term found
+    if (preg_match("/lwt_term|###/", $url, $matches) === false) {
         $r = $url . urlencode($trm);
         return $r;
     }
-    // ### found
+    $pos = stripos($url, $matches[0]);
+    // ###|lwt_term found
     $pos2 = stripos($url, '###', $pos + 1);
     if ($pos2 === false) {
-        // 1 ### found
-        return str_replace("###", ($trm == '' ? '+' : urlencode($trm)), $url);
+        // 1 ###|lwt_term found
+        return str_replace($matches[0], ($trm == '' ? '+' : urlencode($trm)), $url);
     }
     // 2 ### found
     // Get encoding
-    $enc = trim(substr($url, $pos + 3, $pos2 - $pos - 3));
+    $enc = trim(substr(
+        $url, $pos + mb_strlen($matches[0]), $pos2 - $pos - mb_strlen($matches[0])
+    ));
     $r = substr($url, 0, $pos);
     $r .= urlencode(mb_convert_encoding($trm, $enc, 'UTF-8'));
     if ($pos2+3 < strlen($url)) { 
@@ -2749,9 +2742,8 @@ function createDictLinksInEditWin($lang, $word, $sentctljs, $openfirst): string
 /**
  * Create a dictionnary open URL from an pseudo-URL
  * 
- * @param string $url A string containing at least a URL
- *                    * Starts with a '*': open in pop-up window
- *                    * Starts with a 'libretranslate': open with libretranslate
+ * @param string $url An URL, starting with a "*" is deprecated.
+ *                    * If it contains a "popup" query, open in new window 
  *                    * Otherwise open in iframe
  * @param string $txt Clickable text to display
  * 
@@ -2763,12 +2755,17 @@ function makeOpenDictStr($url, $txt): string
     if ($url == '' || $txt == '') {
         return $r;
     }
-    if (str_starts_with($url, 'libretranslate ')) {
-        $url = str_replace('libretranslate ', '', $url);
+    $popup = false;
+    if (str_starts_with($url, '*')) {
+        $url = substr($url, 1);
+        $popup = true;
     }
-    if (substr($url, 0, 1) == '*') {
+    if (str_contains(parse_url($url, PHP_URL_QUERY), 'lwt_popup=')) {
+        $popup = true;
+    }
+    if ($popup) {
         $r = ' <span class="click" onclick="owin(' . 
-        prepare_textdata_js(substr($url, 1)) . ');">' . 
+        prepare_textdata_js($url) . ');">' . 
         tohtml($txt) . 
         '</span> ';
     } else {
@@ -2785,10 +2782,15 @@ function makeOpenDictStrJS($url): string
 {
     $r = '';
     if ($url != '') {
-        if(substr($url, 0, 1) == '*') {
-            $r = "owin(" . prepare_textdata_js(substr($url, 1)) . ");\n";
-        } 
-        else {
+        $popup = false;
+        if (str_starts_with($url, "*")) {
+            $url = substr($url, 1);
+            $popup = true;
+        }
+        $popup |= str_contains(parse_url($url, PHP_URL_QUERY), 'lwt_popup=');
+        if ($popup) {
+            $r = "owin(" . prepare_textdata_js($url) . ");\n";
+        } else {
             $r = "top.frames['ru'].location.href=" . prepare_textdata_js($url) . ";\n";
         } 
     }
@@ -2799,8 +2801,8 @@ function makeOpenDictStrJS($url): string
  * Create a dictionnary open URL from an pseudo-URL
  * 
  * @param string $url       A string containing at least a URL
- *                          * Starts with a '*': open in pop-up window
- *                          * Starts with a 'libretranslate': open with libretranslate
+ *                          * If it contains the query "lwt_popup", open in Popup
+ *                          * Starts with a '*': open in pop-up window (deprecated)
  *                          * Otherwise open in iframe
  * @param string $sentctljs Clickable text to display
  * @param string $txt       Clickable text to display
@@ -2810,22 +2812,27 @@ function makeOpenDictStrJS($url): string
 function makeOpenDictStrDynSent($url, $sentctljs, $txt): string 
 {
     $r = '';
-    if ($url != '') {
-        if (substr($url, 0, 7) == 'ggl.php') {
-            $url = str_replace('?', '?sent=1&', $url);
-        } else if (str_starts_with($url, 'libretranslate ')) {
-            $url = str_replace('libretranslate ', '', $url);
-        }
-        if (substr($url, 0, 1) == '*') {
-            $r = '<span class="click" onclick="translateSentence2(' . 
-            prepare_textdata_js(substr($url, 1)) . ',' . $sentctljs . ');">' . 
-            tohtml($txt) . '</span>';
-        } else {
-            $r = '<span class="click" onclick="translateSentence(' . 
-            prepare_textdata_js($url) . ',' . $sentctljs . ');">' . 
-            tohtml($txt) . '</span>';
-        } 
+    if ($url == '') {
+        return $r;
     }
+    $popup = false;
+    if (str_starts_with($url, "*")) {
+        $url = substr($url, 1);
+        $popup = true;
+    }
+    $popup |= str_contains(parse_url($url, PHP_URL_QUERY), 'lwt_popup=');
+    if (str_starts_with($url, "ggl.php")) {
+        $url = str_replace('?', '?sent=1&', $url);
+    }
+    if ($popup) {
+        $r = '<span class="click" onclick="translateSentence2(' . 
+        prepare_textdata_js($url) . ',' . $sentctljs . ');">' . 
+        tohtml($txt) . '</span>';
+    } else {
+        $r = '<span class="click" onclick="translateSentence(' . 
+        prepare_textdata_js($url) . ',' . $sentctljs . ');">' . 
+        tohtml($txt) . '</span>';
+    } 
     return $r;
 }
 
@@ -2919,35 +2926,51 @@ function makeDictLinks($lang, $wordctljs): string
 
 // -------------------------------------------------------------
 
-function createDictLinksInEditWin3($lang,$sentctljs,$wordctljs): string 
+function createDictLinksInEditWin3($lang, $sentctljs, $wordctljs): string 
 {
     global $tbpref;
-    $sql = 'SELECT LgDict1URI, LgDict2URI, LgGoogleTranslateURI 
-    FROM ' . $tbpref . 'languages WHERE LgID = ' . $lang;
+    $sql = "SELECT LgDict1URI, LgDict2URI, LgGoogleTranslateURI 
+    FROM {$tbpref}languages WHERE LgID = $lang";
     $res = do_mysqli_query($sql);
     $record = mysqli_fetch_assoc($res);
     
     $wb1 = isset($record['LgDict1URI']) ? $record['LgDict1URI'] : "";
-    if(substr($wb1, 0, 1) == '*') { 
-        $f1 = 'translateWord2(' . prepare_textdata_js(substr($wb1, 1)); 
+    $popup = false;
+    if (substr($wb1, 0, 1) == '*') {
+        $wb1 = substr($wb1, 0, 1);
+        $popup = true;
     }
-    else { 
+    $popup |= str_contains($wb1, "lwt_popup=");
+    if ($popup) {
+        $f1 = 'translateWord2(' . prepare_textdata_js($wb1); 
+    } else { 
         $f1 = 'translateWord(' . prepare_textdata_js($wb1); 
     }
         
     $wb2 = isset($record['LgDict2URI']) ? $record['LgDict2URI'] : "";
-    if(substr($wb2, 0, 1) == '*') { 
-        $f2 = 'translateWord2(' . prepare_textdata_js(substr($wb2, 1)); 
+    $popup = false;
+    if (substr($wb2, 0, 1) == '*') {
+        $wb2 = substr($wb2, 0, 1);
+        $popup = true;
     }
-    else { 
+    $popup |= str_contains($wb2, "lwt_popup=");
+    if ($popup) {
+        $f2 = 'translateWord2(' . prepare_textdata_js($wb2); 
+    } else { 
         $f2 = 'translateWord(' . prepare_textdata_js($wb2); 
     }
 
     $wb3 = isset($record['LgGoogleTranslateURI']) ? 
     $record['LgGoogleTranslateURI'] : "";
-    if(substr($wb3, 0, 1) == '*') {
-        $f3 = 'translateWord2(' . prepare_textdata_js(substr($wb3, 1));
-        $f4 = 'translateSentence2(' . prepare_textdata_js(substr($wb3, 1));
+    $popup = false;
+    if (substr($wb3, 0, 1) == '*') {
+        $wb3 = substr($wb3, 0, 1);
+        $popup = true;
+    }
+    $popup |= str_contains($wb3, "lwt_popup=");
+    if ($popup) {
+        $f3 = 'translateWord2(' . prepare_textdata_js($wb3);
+        $f4 = 'translateSentence2(' . prepare_textdata_js($wb3);
     } else {
         $f3 = 'translateWord(' . prepare_textdata_js($wb3);
         $f4 = 'translateSentence(' . prepare_textdata_js(
@@ -3342,6 +3365,8 @@ function texttodocount($text): string
  * @return string HTML result
  *
  * @global string $tbpref Database table prefix
+ * 
+ * @since 2.7.0-fork Adapted to use LibreTranslate dictionary as well.
  */
 function texttodocount2($textid): string
 {
@@ -3367,11 +3392,26 @@ function texttodocount2($textid): string
         WHERE LgID = TxLgID and TxID = $textid"
     );
     if ($dict) {
-        $tl = preg_replace('/.*[?&]tl=([a-zA-Z\-]*)(&.*)*$/', '$1', $dict);
-        $sl = preg_replace('/.*[?&]sl=([a-zA-Z\-]*)(&.*)*$/', '$1', $dict);
+        if (str_starts_with($dict, '*')) {
+            $dict = substr($dict, 1);
+        }
+        if (str_starts_with($dict, 'ggl.php')) {
+            // We just need to form a valid URL
+            $dict = "http://" + $dict;
+        }
+        parse_str(parse_url($dict, PHP_URL_QUERY), $url_query);
+        if (array_key_exists('lwt_translator', $url_query) && 
+        $url_query['lwt_translator'] == "libretranslate") {
+            $tl = $url_query['target'];
+            $sl = $url_query['source'];
+        } else {
+            // Defaulting to Google Translate query style
+            $tl = $url_query['tl'];
+            $sl = $url_query['sl'];
+        }
     } else {
-        // (2.5.2-fork) For future version of LWT: do not use google uri to 
-        // find language code
+        // (2.5.2-fork) For future version of LWT: do not use translator uri 
+        // to find language code
         $tl = $sl = "";
     }
     

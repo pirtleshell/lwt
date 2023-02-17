@@ -24,7 +24,7 @@ function markdown_converter($file_path)
 {
     $converter = new GithubFlavoredMarkdownConverter();
     $markdown = file_get_contents($file_path);
-    return (string)$converter->convert($markdown);
+    return $converter->convert($markdown)->getContent();
 }
 
 /**
@@ -38,8 +38,9 @@ function markdown_integration($file_path): void
 {
     $id = basename($file_path, ".md");
     $html = markdown_converter($file_path);
+    $html = mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8');
     $dom = new DOMDocument();
-    @$dom->loadHTML($html);
+    $dom->loadHTML($html);
     for ($i = 7; $i > 0; $i--) {
         $headers = $dom->getElementsByTagName('h' . $i);
         for ($j = $headers->length; --$j >= 0;) {

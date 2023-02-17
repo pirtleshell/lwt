@@ -60,13 +60,15 @@ $currentnativelanguage = getSetting('currentnativelanguage');
         var context = w.document;
         $('input[name="LgName"]',context).val(l2);    
         $('input[name="LgDict1URI"]',context).val(
-            '*https://de.glosbe.com/' + LANGDEFS[l2][0] + '/' + 
-            LANGDEFS[l1][0] + '/###'
-            );    
+            'https://de.glosbe.com/' + LANGDEFS[l2][0] + '/' + 
+            LANGDEFS[l1][0] + '/lwt_term'
+        );
+        $('input[name="LgDict1PopUp"]', context).attr('checked', true);
         $('input[name="LgGoogleTranslateURI"]',context).val(
-            '*http://translate.google.com/?ie=UTF-8&sl=' + 
-            LANGDEFS[l2][1] + '&tl=' + LANGDEFS[l1][1] + '&text=###'
-            );    
+            'http://translate.google.com/?ie=UTF-8&sl=' + 
+            LANGDEFS[l2][1] + '&tl=' + LANGDEFS[l1][1] + '&text=lwt_term'
+        );
+        $('input[name="LgGoogleTranslatePopUp"]', context).attr('checked', true);
         $('input[name="LgTextSize"]',context).val(LANGDEFS[l2][2] ? 200 : 150);    
         $('input[name="LgRegexpSplitSentences"]',context).val(LANGDEFS[l2][4]);    
         $('input[name="LgRegexpWordCharacters"]',context).val(LANGDEFS[l2][3]);    

@@ -213,21 +213,23 @@ function check () {
   $('input.checkdicturl').each(function (_n) {
     const translate_input = $(this).val().trim();
     if (translate_input.length > 0) {
-      if (
-        (translate_input.indexOf('http://') != 0) && 
-        (translate_input.indexOf('https://') != 0) && 
-        (translate_input.indexOf('*http://') != 0) && 
-        (translate_input.indexOf('*https://') != 0) && 
-        (translate_input.indexOf('glosbe_api.php') != 0) && 
-        (translate_input.indexOf('ggl.php') != 0) &&
-        !translate_input.startsWith('libretranslate ') 
-      ) {
-        alert(
-          'ERROR\n\nField "' + $(this).attr('data_info') + 
-          '" must start with "http://", "https://", "*http://", "*https://", ' +
-          '"glosbe_api.php", "ggl.php", "libretranslate " if not empty.'
-        );
-        count++;
+      let refinned = translate_input;
+      if (translate_input.startsWith('*')) {
+        refinned = translate_input.substring(1);
+      }
+      if (!/^https?:\/\//.test(refinned)) {
+        refinned = 'http://' + refinned;
+      }
+      try {
+        new URL(refinned);
+      } catch (err) {
+        if (err instanceof TypeError) {
+          alert(
+            'ERROR\n\nField "' + $(this).attr('data_info') + 
+            '" should be an URL if not empty.'
+          );
+          count++;
+        }
       }
     }
   });
@@ -1016,9 +1018,28 @@ function keydown_event_do_text_text (e) {
     return false;
   }
   if (e.which == 84) { // T : translate sentence
-    if ((WBLINK3.substr(0, 8) == '*http://') || (WBLINK3.substr(0, 9) == '*https://')) {
+    let popup = false;
+    let dict_link = WBLINK3;
+    if (WBLINK3.startsWith('*')) {
+      popup = true;
+      dict_link = substring(dict_link, 1);
+    }
+    if (dict_link.startsWith('ggl.php')) {
+      dict_link = "http://" + dict_link;
+    }
+    let open_url = true;
+    let final_url;
+    try {
+      final_url = new URL(dict_link);
+      popup |= final_url.searchParams.has("lwt_popup");
+    } catch (err) {
+      if (err instanceof TypeError) {
+        open_url = false;
+      }
+    }
+    if (popup) {
       owin('trans.php?x=1&i=' + ord + '&t=' + TID);
-    } else if ((WBLINK3.substr(0, 7) == 'http://') || (WBLINK3.substr(0, 8) == 'https://') || (WBLINK3.substr(0, 7) == 'ggl.php')) {
+    } else if (open_url) {
       showRightFrames(undefined, 'trans.php?x=1&i=' + ord + '&t=' + TID);
     }
     return false;
@@ -1039,10 +1060,21 @@ function keydown_event_do_text_text (e) {
   if (e.which == 71) { //  G : edit term and open GTr
     dict = '&nodict';
     setTimeout(function () {
-      if ((WBLINK3.substr(0, 8) == '*http://') || (WBLINK3.substr(0, 9) == '*https://')) { 
-        owin(createTheDictUrl(WBLINK3.replace('*', ''), txt)); 
+      let target_url = WBLINK3;
+      let popup = false;
+      popup = target_url.startsWith('*');
+      try {
+        const final_url = new URL(target_url);
+        popup |= final_url.searchParams.has('lwt_popup');
+      } catch (err) {
+        if (!(err instanceof TypeError)) {
+          throw err;
+        }
+      }
+      if (popup) { 
+        owin(createTheDictUrl(target_url, txt)); 
       } else {
-          showRightFrames(undefined, createTheDictUrl(WBLINK3, txt));
+          showRightFrames(undefined, createTheDictUrl(target_url, txt));
       }
     }, 10);
   }

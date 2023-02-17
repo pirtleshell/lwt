@@ -169,19 +169,17 @@ function edit_languages_op_save(): string
 {
     global $tbpref;
     $val = get_first_value(
-        'select min(LgID) as value 
-        from ' . $tbpref . 'languages 
-        where LgName=""'
+        "SELECT MIN(LgID) AS value FROM {$tbpref}languages WHERE LgName=''"
     );
     if (!isset($val)) {
         $message = runsql(
-            'insert into ' . $tbpref . 'languages (
+            "INSERT INTO {$tbpref}languages (
                 LgName, LgDict1URI, LgDict2URI, LgGoogleTranslateURI, 
                 LgExportTemplate, LgTextSize, LgCharacterSubstitutions, 
                 LgRegexpSplitSentences, LgExceptionsSplitSentences, 
                 LgRegexpWordCharacters, LgRemoveSpaces, LgSplitEachChar, 
                 LgRightToLeft
-            ) values(' . 
+            ) VALUES(" . 
                 convert_string_to_sqlsyntax($_REQUEST["LgName"]) . ', ' .
                 convert_string_to_sqlsyntax($_REQUEST["LgDict1URI"]) . ', '. 
                 convert_string_to_sqlsyntax($_REQUEST["LgDict2URI"]) . ', '.
@@ -192,15 +190,15 @@ function edit_languages_op_save(): string
                 convert_string_to_sqlsyntax($_REQUEST["LgRegexpSplitSentences"]) . ', '.
                 convert_string_to_sqlsyntax_notrim_nonull($_REQUEST["LgExceptionsSplitSentences"]) . ', '.
                 convert_string_to_sqlsyntax($_REQUEST["LgRegexpWordCharacters"]) . ', '.
-                $_REQUEST["LgRemoveSpaces"] . ', '.
-                $_REQUEST["LgSplitEachChar"] . ', '.
-                $_REQUEST["LgRightToLeft"] . 
+                ((int)$_REQUEST["LgRemoveSpaces"]) . ', '.
+                ((int)$_REQUEST["LgSplitEachChar"]) . ', '.
+                ((int)$_REQUEST["LgRightToLeft"]) . 
             ')', 
             'Saved'
         );
     } else {
         $message = runsql(
-            'update ' . $tbpref . 'languages set ' . 
+            "UPDATE {$tbpref}languages SET " . 
             'LgName = ' . convert_string_to_sqlsyntax($_REQUEST["LgName"]) . ', ' . 
             'LgDict1URI = ' . convert_string_to_sqlsyntax($_REQUEST["LgDict1URI"]) . ', ' .
             'LgDict2URI = ' . convert_string_to_sqlsyntax($_REQUEST["LgDict2URI"]) . ', ' .
@@ -211,10 +209,10 @@ function edit_languages_op_save(): string
             'LgRegexpSplitSentences = ' . convert_string_to_sqlsyntax($_REQUEST["LgRegexpSplitSentences"]) . ', ' .
             'LgExceptionsSplitSentences = ' . convert_string_to_sqlsyntax_notrim_nonull($_REQUEST["LgExceptionsSplitSentences"]) . ', ' .
             'LgRegexpWordCharacters = ' . convert_string_to_sqlsyntax($_REQUEST["LgRegexpWordCharacters"]) . ', ' .
-            'LgRemoveSpaces = ' . $_REQUEST["LgRemoveSpaces"] . ', ' .
-            'LgSplitEachChar = ' . $_REQUEST["LgSplitEachChar"] . ', ' . 
-            'LgRightToLeft = ' . $_REQUEST["LgRightToLeft"] . 
-            ' where LgID = ' . $val, 
+            'LgRemoveSpaces = ' . ((int)$_REQUEST["LgRemoveSpaces"]) . ', ' .
+            'LgSplitEachChar = ' . ((int)$_REQUEST["LgSplitEachChar"]) . ', ' . 
+            'LgRightToLeft = ' . ((int)$_REQUEST["LgRightToLeft"]) . 
+            " WHERE LgID = $val", 
             'Saved'
         );
     }
@@ -234,7 +232,7 @@ function edit_languages_op_change($lid): string
 {
     global $tbpref;
     // Get old values
-    $sql = "select * from " . $tbpref . "languages where LgID=" . $lid;
+    $sql = "SELECT * FROM {$tbpref}languages where LgID = $lid";
     $res = do_mysqli_query($sql);
     $record = mysqli_fetch_assoc($res);
     if ($record == false) { 
@@ -265,7 +263,7 @@ function edit_languages_op_change($lid): string
     
 
     $message = runsql(
-        'update ' . $tbpref . 'languages set ' . 
+        "UPDATE {$tbpref}languages SET " . 
         'LgName = ' . convert_string_to_sqlsyntax($_REQUEST["LgName"]) . ', ' . 
         'LgDict1URI = ' . convert_string_to_sqlsyntax($_REQUEST["LgDict1URI"]) . ', ' .
         'LgDict2URI = ' . convert_string_to_sqlsyntax($_REQUEST["LgDict2URI"]) . ', ' .
@@ -276,10 +274,10 @@ function edit_languages_op_change($lid): string
         'LgRegexpSplitSentences = ' . convert_string_to_sqlsyntax($_REQUEST["LgRegexpSplitSentences"]) . ', ' .
         'LgExceptionsSplitSentences = ' . convert_string_to_sqlsyntax_notrim_nonull($_REQUEST["LgExceptionsSplitSentences"]) . ', ' .
         'LgRegexpWordCharacters = ' . convert_string_to_sqlsyntax($_REQUEST["LgRegexpWordCharacters"]) . ', ' .
-        'LgRemoveSpaces = ' . $_REQUEST["LgRemoveSpaces"] . ', ' .
-        'LgSplitEachChar = ' . $_REQUEST["LgSplitEachChar"] . ', ' . 
-        'LgRightToLeft = ' . $_REQUEST["LgRightToLeft"] . 
-        ' where LgID = ' . $lid, 
+        'LgRemoveSpaces = ' . ((int)$_REQUEST["LgRemoveSpaces"]) . ', ' .
+        'LgSplitEachChar = ' . ((int)$_REQUEST["LgSplitEachChar"]) . ', ' . 
+        'LgRightToLeft = ' . ((int)$_REQUEST["LgRightToLeft"]) . 
+        " WHERE LgID = $lid", 
         'Updated'
     );
     
@@ -320,7 +318,15 @@ function edit_languages_op_change($lid): string
     return $message;
 }
 
-
+/**
+ * Load a language object based in language ID.
+ * 
+ * @param int $lgid Language ID, if 0 load empty data.
+ * 
+ * @return Language Created object
+ * 
+ * @global string $tbpref
+ */
 function load_language($lgid)
 {
     global $tbpref;
@@ -364,6 +370,11 @@ function load_language($lgid)
     return $language;
 }
 
+/**
+ * Create the form for a language.
+ * 
+ * @param Language $language Language object
+ */
 function edit_language_form($language) 
 {
     ?>
@@ -371,6 +382,16 @@ function edit_language_form($language)
 
     GGTRANSLATE = <?php echo json_encode($language->translator); ?>;
 
+    LIBRETRANSLATE = 'http://localhost:5000/?' + $.param({
+        lwt_translator: 'libretranslate',
+        source: 'auto',
+        target: <?php echo json_encode(getSetting('currentnativelanguage')); ?>,
+        q: "lwt_term"
+    });
+
+    /**
+     * Check for specific language option based on language name 
+     */
     function checkLanguageChanged(value) {
         if (value == "Japanese") {
             $(document.forms.lg_form.LgRegexpAlt).css("display", "block");
@@ -385,6 +406,8 @@ function edit_language_form($language)
     function multiWordsTranslateChange(value) {
         let result;
         let uses_key = false;
+        let base_url = window.location.href;
+        base_url = base_url.replace('/edit_languages.php', '');
         switch (value) {
             case "google_translate":
                 result = GGTRANSLATE;
@@ -394,10 +417,10 @@ function edit_language_form($language)
                 uses_key = true;
                 break;
             case "ggl":
-                result = "ggl.php?text=";
+                result = base_url + "ggl.php?text=";
                 break;
             case "glosbe":
-                result = "glosbe.php";
+                result = base_url + "glosbe.php";
                 break;
         }
         if (result) {
@@ -411,10 +434,14 @@ function edit_language_form($language)
      * Check status of the requested translation API.
      */
     function checkTranslatorStatus(url) {
-        if (url.startsWith("libretranslate ")) {
+        if (url.startsWith('*')) {
+            url = url.substring(1);
+        }
+        const url_obj = new URL(url);
+        const params = url_obj.searchParams;
+        if (params.get('lwt_translator') == 'libretranslate') {
             try {
-                const url_parts = url.split(' ');
-                checkLibreTranslateStatus(url_parts[1], key=url_parts[2]);
+                checkLibreTranslateStatus(url_obj, key=params.key);
             } catch (error) {
                 $('#translator_status')
                 .html('<a href="https://libretranslate.com/">LibreTranslate</a> server seems to be unreachable.' + 
@@ -428,7 +455,9 @@ function edit_language_form($language)
      * Check LibreTranslate translator status.
      */
     function checkLibreTranslateStatus(url, key="") {
-        getLibreTranslateTranslation('ping', 'en', 'es', key, url=url)
+        const trans_url = new URL(url);
+        trans_url.searchParams.append('lwt_key', key);
+        getLibreTranslateTranslation(trans_url, 'ping', 'en', 'es')
         .then(
             function (translation) {
                 if (typeof translation === "string") {
@@ -446,6 +475,9 @@ function edit_language_form($language)
         );
     }
 
+    /**
+     * Change the size of demo text.
+     */
     function changeLanguageTextSize(value) {
         $('#LgTextSizeExample').css("font-size", value + "%");
     }
@@ -469,13 +501,114 @@ function edit_language_form($language)
         }
         if (result) {
             document.forms.lg_form.LgRegexpWordCharacters.value = result;
-            //document.forms.lg_form.LgRegexpWordCharacters.disabled = fixed;
         }
     }
 
-    $(function () { 
-        checkLanguageChanged(document.forms.lg_form.LgName.value); 
-    })
+    /**
+     * Build a dictionary/translator URL with the pop-up option
+     */
+    function addPopUpOption(url, checked) {
+        if (url.startsWith('*')) {
+            url = url.substring(1);
+        }
+        const built_url = new URL(url);
+        // Remove trivial cases
+        if (checked && built_url.searchParams.has('lwt_popup'))
+            return built_url.href;
+        if (!checked && !built_url.searchParams.has('lwt_popup'))
+            return built_url.href;
+        // Now we should change status
+        if (checked) {
+            built_url.searchParams.append('lwt_popup', 'true');
+            return built_url.href;
+        }
+        built_url.searchParams.delete('lwt_popup');
+        return built_url.href;
+    }
+
+    /**
+     * Change the Pop-Up URL of dictionary.
+     */
+    function changePopUpState(elem) {
+        const l_form = document.forms.lg_form;
+        let target;
+        switch (elem.name) {
+            case "LgDict1PopUp":
+                target = l_form.LgDict1URI;
+                break;
+            case "LgDict2PopUp":
+                target = l_form.LgDict2URI;
+                break;
+            case "LgGoogleTranslatePopUp":
+                target = l_form.LgGoogleTranslateURI;
+                break;
+        }
+        target.value = addPopUpOption(target.value, elem.checked);
+    }
+
+    /**
+     * Change Pop-Up checkboxes based on input box value. 
+     */
+    function checkDictionaryChanged(input_box) {
+        const l_form = document.forms.lg_form;
+        switch (input_box.name) {
+            case "LgDict1URI":
+                target = l_form.LgDict1PopUp;
+                break;
+            case "LgDict2URI":
+                target = l_form.LgDict2PopUp;
+                break;
+            case "LgGoogleTranslateURI":
+                target = l_form.LgGoogleTranslatePopUp;
+                break;
+        }
+        let popup = false;
+        if (input_box.value.startsWith('*')) {
+            input_box.value = input_box.value.substring(1);
+            popup = true;
+        }
+        popup |= (new URL(input_box.value)).searchParams.has("lwt_popup");
+        target.checked = popup;
+    }
+
+    /**
+     * Modify the value of the translator select box if not coherent with the URL.
+     */
+    function checkTranslatorType(url, type_select) {
+        const parsed_url = new URL(url);
+        let final_value;
+        switch (parsed_url.searchParams.get("lwt_translator")) {
+            case "libretranslate":
+                // Using LibreTranslate
+                final_value = "libretranslate";
+                break;
+            default:
+                // Defaulting to Google
+                final_value = "google_translate";
+                break;
+        }
+        type_select.value = final_value;
+    }
+
+    /**
+     * Check if all fields are coherent with translator URL.
+     */
+    function checkTranslatorChanged(translator_input) {
+        checkTranslatorStatus(translator_input.value);
+        checkDictionaryChanged(translator_input);
+        checkTranslatorType(
+            translator_input.value, document.forms.lg_form.LgTranslatorName
+        );
+    }
+
+    function checkLanguageForm(l_form) {
+        checkLanguageChanged(l_form.LgName.value);
+        checkDictionaryChanged(l_form.LgDict1URI);
+        checkDictionaryChanged(l_form.LgDict2URI);
+        checkTranslatorChanged(l_form.LgGoogleTranslateURI);
+    }
+
+    $(function () { checkLanguageForm(document.forms.lg_form); });
 </script>
 <form class="validate" action="<?php echo $_SERVER['PHP_SELF']; ?>" 
     method="post" onsubmit="return check_dupl_lang(<?php echo $language->id; ?>);" 
@@ -496,10 +629,19 @@ function edit_language_form($language)
     <tr>
         <td class="td1 right">Dictionary 1 URI:</td>
         <td class="td1">
-            <input type="text" class="notempty checkdicturl checkoutsidebmp" 
+            <input type="url" class="notempty checkdicturl checkoutsidebmp" 
             name="LgDict1URI" 
             value="<?php echo tohtml($language->dict1uri); ?>"  
-            maxlength="200" size="60" data_info="Dictionary 1 URI" /> 
+            maxlength="200" size="60" data_info="Dictionary 1 URI" 
+            oninput="checkDictionaryChanged(this);" />
+            
+            <input type="checkbox" name="LgDict1PopUp" id="LgDict1PopUp" 
+            onchange="changePopUpState(this);" />
+            
+            <label for="LgDict1PopUp" 
+            title="Open in a new window. Some dictionaries cannot be displayed in iframes">
+                Open in Pop-Up
+            </label>
             <img src="icn/status-busy.png" title="Field must not be empty" 
             alt="Field must not be empty" />
         </td>
@@ -507,10 +649,19 @@ function edit_language_form($language)
     <tr>
         <td class="td1 right">Dictionary 2 URI:</td>
         <td class="td1">
-            <input type="text" class="checkdicturl checkoutsidebmp" 
+            <input type="url" class="checkdicturl checkoutsidebmp" 
             name="LgDict2URI" 
             value="<?php echo tohtml($language->dict2uri); ?>" maxlength="200"
-            size="60" data_info="Dictionary 2 URI" />
+            size="60" data_info="Dictionary 2 URI"
+            oninput="checkDictionaryChanged(this);" />
+            
+            <input type="checkbox" name="LgDict2PopUp" id="LgDict2PopUp" 
+            onchange="changePopUpState(this);" />
+            
+            <label for="LgDict2PopUp"
+            title="Open in a new window. Some dictionaries cannot be displayed in iframes">
+                Open in Pop-Up
+            </label>
         </td>
     </tr>
     <tr>
@@ -529,15 +680,24 @@ function edit_language_form($language)
                     Glosbe API
                 </option>
             </select>
-            <input type="text" class="checkdicturl checkoutsidebmp" 
+            <input type="url" class="checkdicturl checkoutsidebmp" 
             name="LgGoogleTranslateURI" 
             value="<?php echo tohtml($language->translator); ?>" 
             maxlength="200" size="60" data_info="GoogleTranslate URI" 
-            oninput="checkTranslatorStatus(this.value);"/>
+            oninput="checkTranslatorChanged(this);"
+             />
+
             <div id="LgTranslatorKeyWrapper" style="display: none;">
                 <label for="LgTranslatorKey">Key :</label>
                 <input type="text" id="LgTranslatorKey" name="LgTranslatorKey"/>
             </div>
+
+            <input type="checkbox" name="LgGoogleTranslatePopUp" 
+            id="LgGoogleTranslatePopUp" onchange="changePopUpState(this);"/>
+            <label for="LgGoogleTranslatePopUp"
+            title="Open in a new window. Some translators cannot be displayed in iframes">
+                Open in Pop-Up
+            </label>
             <div id="translator_error" class="red" ></div>
         </td>
     </tr>
@@ -587,7 +747,8 @@ function edit_language_form($language)
     <tr>
         <td class="td1 right">RegExp Word Characters:</td>
         <td class="td1">
-            <select onchange="wordsSplitChange(this.value);" style="display: none;" name="LgRegexpAlt">
+            <select onchange="wordsSplitChange(this.value);" style="display: none;" 
+            name="LgRegexpAlt">
                 <option value="regexp">Regular Expressions (demo)</option>
                 <option value="mecab">MeCab (recommended)</option>
             </select>
@@ -605,49 +766,55 @@ function edit_language_form($language)
         </td>
     </tr>
     <tr>
-    <td class="td1 right">Make each character a word:</td>
-    <td class="td1">
-        <select name="LgSplitEachChar">
-            <?php echo get_yesno_selectoptions($language->spliteachchar); ?>
-        </select>
-        (e.g. for Chinese, Japanese, etc.)</td>
+        <td class="td1 right">Make each character a word:</td>
+        <td class="td1">
+            <input type="checkbox" name="LgSplitEachChar" id="LgSplitEachChar" 
+            value="1" <?php echo $language->spliteachchar ? "checked" : ""; ?> />
+            <label for="LgSplitEachChar">(e.g. for Chinese, Japanese, etc.)</label>
+        </td>
     </tr>
     <tr>
-    <td class="td1 right">Remove spaces:</td>
-    <td class="td1">
-        <select name="LgRemoveSpaces">
-            <?php echo get_yesno_selectoptions($language->removespaces); ?>
-        </select>
-        (e.g. for Chinese, Japanese, etc.)</td>
+        <td class="td1 right">Remove spaces:</td>
+        <td class="td1">
+            <input type="checkbox" name="LgRemoveSpaces" id="LgRemoveSpaces" 
+            value="1" <?php echo $language->removespaces ? "checked" : ""; ?> />
+            <label for="LgRemoveSpaces">(e.g. for Chinese, Japanese, etc.)</label>
+        </td>
     </tr>
     <tr>
-    <td class="td1 right">Right-To-Left Script:</td>
-    <td class="td1">
-        <select name="LgRightToLeft">
-            <?php echo get_yesno_selectoptions($language->rightoleft); ?>
-        </select>
-        (e.g. for Arabic, Hebrew, Farsi, Urdu,  etc.)</td>
+        <td class="td1 right">Right-To-Left Script:</td>
+        <td class="td1">
+            <input type="checkbox" name="LgRightToLeft" id="LgRightToLeft" 
+            value="1" <?php echo $language->rightoleft ? "checked" : ""; ?> />
+            <label for="LgRightToLeft">
+                (e.g. for Arabic, Hebrew, Farsi, Urdu,  etc.)
+            </label>
+        </td>
     </tr>
     <tr>
-    <td class="td1 right">
-        Export Template 
-        <img class="click" src="icn/question-frame.png" title="Help" alt="Help" onclick="oewin('export_template.html');" /> :
-    </td>
-    <td class="td1">
-        <input type="text" class="checkoutsidebmp" data_info="Export Template" name="LgExportTemplate" 
-        value="<?php echo tohtml($language->exporttemplate); ?>" maxlength="1000" size="60" />
-    </td>
+        <td class="td1 right">
+            Export Template 
+            <img class="click" src="icn/question-frame.png" title="Help" alt="Help" 
+            onclick="oewin('export_template.html');" /> :
+        </td>
+        <td class="td1">
+            <input type="text" class="checkoutsidebmp" data_info="Export Template" 
+            name="LgExportTemplate" 
+            value="<?php echo tohtml($language->exporttemplate); ?>" 
+            maxlength="1000" size="60" />
+        </td>
     </tr>
     <tr>
-    <td class="td1 right" colspan="2">
-        <input type="button" value="Cancel" onclick="{resetDirty(); location.href='edit_languages.php';}" /> 
-        <?php 
-        if ($language->id == 0) {
-            echo '<input type="submit" name="op" value="Save" />';
-        } else {
-            echo '<input type="submit" name="op" value="Change" />';
-        }
-        ?>
+        <td class="td1 right" colspan="2">
+            <input type="button" value="Cancel" 
+            onclick="{resetDirty(); location.href='edit_languages.php';}" /> 
+            <?php 
+    if ($language->id == 0) {
+        echo '<input type="submit" name="op" value="Save" />';
+    } else {
+        echo '<input type="submit" name="op" value="Change" />';
+    }
+            ?>
         </td>
     </tr>
     </table>
@@ -728,34 +895,44 @@ function edit_languages_new()
              * Apply wizard based on entered data.
              */
             apply: function (learning_lg, known_lg, learning_lg_name) {
-                GGTRANSLATE = '*http://translate.google.com/?' + $.param({
+                GGTRANSLATE = 'https://translate.google.com/?' + $.param({
+                    lwt_popup: true,
                     ie: "UTF-8",
                     sl: learning_lg[1],
                     tl: known_lg[1],
-                    text: "###"
+                    text: "lwt_term"
                 });
-                LIBRETRANSLATE = "http://localhost:5000/?" + $.param({
+                const url = new URL(window.location.href);
+                const base_url = url.protocol + "//" + url.hostname;
+                let path = url.pathname;
+                const exploded_path = path.split('/');
+                exploded_path.pop();
+                //path = exploded_path.join('/') + '/trans.php';
+                path = path.substring(0, path.lastIndexOf('edit_languages.php'));
+                LIBRETRANSLATE = base_url + ':5000/?' + $.param({
+                    lwt_translator: "libretranslate",
+                    lwt_translator_ajax: encodeURIComponent(base_url + ":5000/translate/?"),
                     source: learning_lg[1],
                     target: known_lg[1],
-                    q: "###"
+                    q: "lwt_term"
                 });
                 $('input[name="LgName"]').val(learning_lg_name).change();
                 // There may be a cleaner way to trigger the event
                 checkLanguageChanged(learning_lg_name);
                 $('input[name="LgDict1URI"]').val(
-                    '*https://de.glosbe.com/' + learning_lg[0] + '/' + 
-                    known_lg[0] + '/###'
-                    );
-
+                    'https://de.glosbe.com/' + learning_lg[0] + '/' + 
+                    known_lg[0] + '/lwt_term'
+                );
+                $('input[name="LgDict1PopUp"]').attr('checked', true);
                 $('input[name="LgGoogleTranslateURI"]').val(GGTRANSLATE);
                 $('input[name="LgTextSize"]')
                 .val(learning_lg[2] ? 200 : 150)
                 .change();
                 $('input[name="LgRegexpSplitSentences"]').val(learning_lg[4]);
                 $('input[name="LgRegexpWordCharacters"]').val(learning_lg[3]);
-                $('select[name="LgSplitEachChar"]').val(learning_lg[5] ? 1 : 0);
-                $('select[name="LgRemoveSpaces"]').val(learning_lg[6] ? 1 : 0);
-                $('select[name="LgRightToLeft"]').val(learning_lg[7] ? 1 : 0);
+                $('input[name="LgSplitEachChar"]').attr("checked", learning_lg[5]);
+                $('input[name="LgRemoveSpaces"]').attr("checked", learning_lg[6]);
+                $('input[name="LgRightToLeft"]').attr("checked", learning_lg[7]);
             },
 
             /**
@@ -851,7 +1028,7 @@ function edit_languages_change($lid)
         ?>
     <p class="smallgray">
         <b>Warning:</b> Changing certain language settings 
-        (e.g. RegExp Word Characters, etc.)<br />
+        (e.g. RegExp Word Characters, etc.)<wbr />
         may cause partial or complete loss of improved annotated texts!
     </p>
     <?php

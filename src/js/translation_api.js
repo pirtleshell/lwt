@@ -145,18 +145,25 @@ async function getLibreTranslateTranslationBase(text, lang, dest, key="", url="h
 /**
  * Main wrapper for LibreTranslate translation.
  * 
- * @param {string} api_parts API parts separated by spaces. Normally "libretranslate url key".
+ * @param {URL}    libre_url URL of LibreTranslate.
  * @param {string} text      Text to translate
  * @param {string} lang      Source language (language of the text, two letters or "auto")
  * @param {string} dest      Destination language (two language)
  * @returns {string} Translation
  */
-async function getLibreTranslateTranslation(api_parts, text, lang, dest) {
-	const parts = api_parts.split(' ');
-	if (parts[0] != "libretranslate") {
-		throw 'Translation API not supported: ' + parts[0] + "!";
-	} 
+async function getLibreTranslateTranslation(libre_url, text, lang, dest) {
+	const search_params = libre_url.searchParams;
+	if (search_params.get("lwt_translator") != "libretranslate") {
+		throw 'Translation API not supported: ' + 
+		search_params.get("lwt_translator") + "!";
+	}
+	let translator_ajax;
+	if (search_params.get("lwt_translator_ajax")) {
+		translator_ajax = decodeURIComponent(search_params.get("lwt_translator_ajax"));
+	} else {
+		translator_ajax = libre_url.toString().replace(libre_url.search, '') + "translate";
+	}
 	return getLibreTranslateTranslationBase(
-		text, lang, dest, key=parts[2], parts[1] + "/translate"
+		text, lang, dest, key=search_params.get("lwt_key"), translator_ajax
 	);
 }

@@ -14,7 +14,7 @@ header('Expires: 0');
 if(trim($text)!='') {
     $file = GoogleTranslate::staticTranslate($text, $sl, $tl, getGoogleTimeToken());
 
-    $gglink = makeOpenDictStr(createTheDictLink('*http://translate.google.com/#' . $sl . '/' . $tl . '/', $text), " more...");
+    $gglink = makeOpenDictStr(createTheDictLink('http://translate.google.com/#' . $sl . '/' . $tl . '/?lwt_popup=true', $text), " more...");
 
     pagestart_nobody('');
     if (!isset($_GET['sent'])) {

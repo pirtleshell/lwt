@@ -7,19 +7,22 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 
 ### Added
 
-* The translation and romanization of new can now be automatic.
-  * Supported automatic translation is achieved using [LibreTranslate](https://libretranslate.com/), to English only.
-  * Romanization using [MeCab](https://taku910.github.io/mecab/) (Japanese only) toward katakana only. 
+* The translation and romanization of new words can now be automatic.
+  * Supported automatic translation is achieved using [LibreTranslate](https://libretranslate.com/).
+  * Romanization using [MeCab](https://taku910.github.io/mecab/) (Japanese only) toward katakana only.
+* A lot of improvements for language creation/edition: 
+  * More intuitive fields, better interactions with the user, etc...
+  * A "Pop-Up" checkbox helps you choose if the website should be displayed in a pop-up.
 * LWT becomes easier to install and maintain for users:
   * An intaller for Linux users at ``INSTALL.sh`` helps installing requirements and configuration.
   * Database creation wizard (``database_wizard.php``) to help setting the connection with the database.
   * A server data page at ``server_data.php`` showing all relevant information.
 * In ``index.php``:
   * ``get_server_data_table`` replaces ``get_server_data`` as a better designed function.
-  * ``index_do_main_page`` now renders the page to avoud global variables.
+  * ``index_do_main_page`` now renders the page to avoid global variables.
   * You get warnings if the PHP version is too low, or if a newer version of LWT is released.
-* ``pagestart_kernel_nobody`` in ``inc/kernel.php`` that display the minimal HTML formatting.
-* ``inc/classes/`` folder for a better imcorporation of OOP.
+* ``pagestart_kernel_nobody`` in ``inc/kernel.php`` that displays the minimal HTML formatting.
+* ``inc/classes/`` folder for a better incorporation of OOP.
   * ``inc/classes/Term`` defines the ``Term`` class representing a word or multi-word.
   * ``inc/classes/Language`` defines the ``Language`` class representing a language.
 
@@ -33,7 +36,9 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 * ``echo_lwt_logo`` in ``inc/session_utility.php`` echoes a logo, without information on the table set used
 because it was useless. This information is now displayed on the welcome page.
 * Access to the database prefix edition at ``start.php`` was reviewed and simplified. It is still considered a legacy feature.
-* When creating a new language, the language wizard do no longer display in a pop-up but in the main window.
+* Language creation reviewed:
+  * When creating a new language, the language wizard do no longer display in a pop-up but in the main window.
+  * Select option boxes replaced by checkboxes (better accessibility).
 * Updated [hoverIntent jQuery Plug-in](http://briancherne.github.io/jquery-hoverIntent/)
 from 1.8.0 to 1.10.2. This brings some bug fixes.
 * "TO DO" changed to a more explicit "Unknown words" in text header.
@@ -41,6 +46,10 @@ from 1.8.0 to 1.10.2. This brings some bug fixes.
 * Updated composer dependencies.
   * vimeo/psalm updated from ^4.12 to ^5.6.
   * phpunit/phpunit updated from ^9.5 to ^10.0.
+* It is recommended to use proper URL for all dictionaries and translators.
+  * '*' before a dictionary URL should be replaced by an argument 'lwt_popup=true'
+  * 'ggl.php' and 'glosbe_api.php' should be updated (e. g. "{YOUR_LWT_CURRENT_ADDRESS}/ggl.php")
+  * Marking the location of a term to translate with '###' is deprecated in favor of 'lwt_term'.
 
 ### Fixed
 
@@ -53,6 +62,7 @@ from 1.8.0 to 1.10.2. This brings some bug fixes.
 * Main page (``index.php``) was not rendered properly on non-default theme.
 * Full-text speech dispatcher was not available when the name of the language name was changed. Issue signalled [with issue #80](https://github.com/HugoFara/lwt/issues/80#issuecomment-1368180304).
 * Support for PHP 7.4 restored, wrapper for ``str_starts_with``.
+* The encoding of ``docs/info.html`` is finally fixed!
 
 ## 2.6.0-fork (January 01 2023)
 

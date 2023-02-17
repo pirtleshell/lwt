@@ -11,7 +11,7 @@
  * @license Unlicense <http://unlicense.org/>
  * @link    https://hugofara.github.io/lwt/docs/html/ajax__save__setting_8php.html
  * @since   1.2.1
- * @since   2.2.2-fork Refactored, use will GET methods
+ * @since   2.2.2-fork Refactored, will use GET methods
  * @since   2.6.0-fork Use POST method in priority 
  */
 
@@ -33,7 +33,7 @@ function do_ajax_save_setting($key, $value)
 }
 
 if (isset($_POST['k']) && isset($_POST['v'])) {
-    do_ajax_save_setting(getreq('k'), getreq('v'));
+    do_ajax_save_setting($_POST['k'], $_POST['v']);
 }
 
 ?>
