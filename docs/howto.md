@@ -240,7 +240,7 @@ In the following, L1 denotes you mother tongue (= translations), and L2 the lang
 
     ![Image](../img/32.jpg)  
 
-## **Print a text**  
+## Print a text
 
 Here you print a text. Optional: an inline annotation (translation and/or romanization) of terms that are of specified status(es). This screen is also great to just read or study a text.  
 
@@ -252,7 +252,7 @@ Chinese Text with annotation (only Romanization/Pinyin):
 
 ![Image](../img/21.jpg)  
 
-**How to create, edit, and use an _Improved Annotated Text_:**  
+## Create, edit, and use an _Improved Annotated Text_
 
 **Motivation:** Annotated texts (as [interlinear text](http://en.wikipedia.org/wiki/Interlinear_gloss)) have been used for language learning for a long time. One example are the word-by-word translations in [Assimil](http://en.assimil.com/) courses. The German [V. F. Birkenbihl](http://web.archive.org/web/20070223080453/http://195.149.74.241/BIRKENBIHL/PDF/MethodEnglish.pdf) proposes the creation of interlinear word-by-word or [hyperliteral](http://learnanylanguage.wikia.com/wiki/Hyperliteral_translations) translations (calling this creation "decoding") in foreign language learning. Learning Latin or Ancient Greek via interlinear texts is quite old as you can see in [this YouTube video](http://www.youtube.com/watch?v=XnEKnezLXJg).  
 
@@ -262,186 +262,79 @@ LWT's old "Print Screen" offers annotations, but it displays ALL translations of
 
 On the Print Screen, click on "Create" an Improved Annotated Text. The system creates a default annotated text.  
 
-**Edit Mode:**  
+### Edit Mode
 
 ![Image](../img/28.jpg)  
 
 Within the "Improved Annotated Text - Edit Mode", you can select the best term translation by clicking on one of the radio buttons. To be able to do this, multiple translations must be delimited by one of the delimiters specified in the LWT Settings (currently: /;|). You can also type in a new translation into the text box at the end (this does not change your saved term translation), or you may change your term by clicking on the yellow icon or add a translation by clicking on the green "+" icon (this does change your saved term translation), and select it afterwards. The "Star" icon indicated that you want the term itself as annotation. **Important:** It's not possible to create new terms here - please do this in the "Read text" screen. Changing the language settings (e.g. the word characters) may have the effect that you have to start from scratch. The best time for the creation of an improved annotated text is after you have read the text completely and created all terms and expressions in the "Read text" screen.  
 
-**Warning:** If you change the text, you will lose the saved improved annotated text!  
+**Warning:** If you change the text, you will lose the saved improved annotated text! All changes in the Edit screen are saved automatically in the background!
 
-The list of texts. You can filter this list according to language, title (wildcard = \*) or text tag(s) (see also below). The most important links for each text are "Read" and "Test" - that's the place to read, to listen, to save terms and to review and test your terms in sentence context. To see all terms of a text that you have saved, click on the numbers in column "Saved Wo+Ex". To print, archive, edit (and reparse), or to delete a text, click on the icons in column "Actions". There are more actions available, see "Multi Actions".  
+To leave the Edit mode, click on "Display/Print Mode". You may then print or display (with audio) the text, and work with the text online or offline.  
 
-![Image](../img/04.jpg)  
+### Print Mode
 
-**Multi Actions for marked texts**  
+![Image](../img/27.jpg)  
 
-You can test the terms of the marked texts, delete or archive the marked texts. "Reparse Texts" rebuilds the sentence and the text item cache for all marked texts. "Set Term Sentences" sets a valid sentence (with the term in {..}) for all those saved or imported terms that occur in the text and that do not have a sentence at all or none with {term}. This makes it easy to "create" sentence examples for imported terms.  
+### Display Mode
 
-![Image](../img/14.jpg)  
+With audio player in a separate window. Clicking the "T" or "A" lightbulb icons hides/shows the text or the blue annotations. You may also click on a single term or a single annotation to show or to hide it. This enables you to test yourself or to concentrate on one text only. Romanizations, if available, appear while hovering over a term.  
 
-## **My Text Tags**  
+![Image](../img/29.jpg)  
 
-    The list of your text tags. You can manage your text tags here. With text tags, it will be easier to categorize and organize your texts. The tags are case sensitive, have 1 to 20 characters, and must not contain any spaces or commas.  
+## Terms
 
-    ![Image](../img/25.jpg)  
+The list of your saved words or expressions (= terms). You may filter the list of terms by language, text, status, term/romanization/translation (wildcard \* possible) or term tag(s). Different sort orders are possible. You can do "multi actions" only on the marked or on all terms (on all pages!). "Se?" displays a green dot if a valid sentences with {term} exists. "Stat/Days" displays the status and the number of days since the last status change. The score of a term is a rough measure (in percent) how well you know a term. Read more about term scores [here](info.html#termscores). Terms with zero score are displayed red and should be tested today.  
 
-* **New/Edit Text (with Check)**  
+![Image](../img/08.jpg)  
 
-    This is the screen to input, check or edit a single text. Try to store not too long texts (the maximum length is 65,000 Bytes). If texts are very long (> 1000 words), certain operations (e.g. loading a text for reading, calculation of known/unknown words) may be quite slow. An audio URI and a link to the text source can also be defined. The best place to store your audios is the "media" subdirectory below the installation directory "lwt" (you have to create it yourself, and you have to copy the audio files into this directory; click Refresh if you don't see just copied media). But a cloud webspace service like DropBox is also possible. In the moment there is no possibility to import/upload an audio file within the LWT application. By the way, you can use MP3, WAV, or OGG media files, but be aware that not all browsers and/or operating systems support all media types! If you click "Check", the text will be parsed and split into sentences and words according to your language settings. Nothing will be stored if you check a text. You can see whether your text needs some editing, or whether your language settings (especially the ones that influence parsing/splitting) need an adjustment. Words (not expressions) that are already in your word list are displayed in red, and the translation is displayed. The Non-Word List shows all stuff between words. The "Check a Text" function can also be started directly from the main menu. If you click on "Change" or "Save", the text will be only saved. If you click on "Change and Open" or "Save and Open", the text will be saved and opened right away.  
+**Multi Actions for marked terms**  
 
-    ![Image](../img/05.jpg)  
+Most actions are self-explanatory. "Test Marked Terms" starts a test with all marked terms. You may delete marked terms and change the status of marked terms. "Set Status Date to Today" is some kind of "trick" for vacations, illnesses, etc.  
 
-    You can also import a longer text into LWT with the possibility to split it up into several smaller texts. Click on "Long Text Import". You must specify the maximum number of sentences per text, and the handling of newlines for paragraph detection. It is not possible to specify audio files or URIs.  
+"Export Marked Texts (Anki)" exports all terms that have been marked AND have a valid sentence with {term} for Anki. Terms that do not have a sentence with {term} will NOT be exported. Cloze testing of terms within sentence context can so be easily done in Anki. The export is tab-delimited: (1) term, (2) translation, (3) romanization, (4) Sentence without term (question of cloze test), (5) Sentence with term (answer of cloze test), (6) Language, (7) ID Number, (8) Tag list. Anki template decks (for Anki Version 1 and 2) are provided: "LWT.anki" and "LWT.apkg" in directory "anki".  
 
-    ![Image](../img/33.jpg)  
+"Export Marked Texts (TSV)" exports all terms that have been marked. The export is tab-delimited: (1) term, (2) translation, (3) sentence, (4) romanization, (5) status, (6) language, (7) ID Number, (8) tag list.  
 
-* **Read a Text**  
+![Image](../img/16.jpg)  
 
-    This is your "working area": Reading (and listening to) a text, saving/editing words and expressions, looking up words, expressions, sentences in external dictionaries or Google Translate. To create an expression, click on the first word. You see "Exp: 2..xx 3..yy 4..zz ...". Just click on the number of words (2..9) of the desired expression you want to save. The dictionary links for multi word expressions are always in the edit frame! You can also use the Keyboard in the text frame, see [Key Bindings](info.html#keybind). Double clicking on a word sets the audio position approximately to the text position, if an audio was defined. The other audio controls are self-explanatory: automatic repeat, rewind and move forward n seconds, etc.).  
+**Multi Actions for all terms on all pages of the current query**  
 
-    ![Image](../img/06.jpg)  
+Explanations see above.  
 
-    Reading a Right-To-Left Script (Hebrew):  
+![Image](../img/17.jpg)  
 
-    ![Image](../img/26.jpg)  
+## Term Tags  
 
-    With the checkbox \[Show All\] you can switch the display of text:  
+The list of your term tags. You can manage your term tags here. With term tags, it will be easier to categorize and organize your terms. The tags are case sensitive, have 1 to 20 characters, and must not contain any spaces or commas.  
 
-    \[Show All\] = ON (see below): All terms are shown, and all multi-word terms are shown as superscripts before the first word. The superscript indicates the number of words in the multi-word term.  
+![Image](../img/24.jpg)
 
-    ![Image](../img/22.jpg)  
+## Text Archive  
 
-    \[Show All\] = OFF (see below): Multi-word terms now hide single words and shorter or overlapping multi-word terms. This makes it easier to concentrate on multi-word terms while displaying them without superscripts, but creation and deletion of multi-word terms can be a bit slow in long texts.  
+The list of archived texts. To unarchive, to edit or to delete a text, click on the icon under "Actions". There are also "Multi Actions" available.  
 
-    ![Image](../img/30.jpg)  
+What is the difference between (active) texts and archived texts?  
 
-* **Test terms**  
+**(Active) texts**
 
-    Tests are only possible if a term has a translation. Terms with status "Ignored" and "Well Known" are never tested, and terms with a positive or zero score are not tested today. In summary, the term score must fall below zero to trigger the test. See also [Term scores](info.html#termscores). Terms that are due today are marked with a red bullet in the term table. Terms that are due tomorrow are marked with a yellow bullet in the term table.  
+* They have been parsed and tokenized according to the rules defined for the language.
+* The result is stored in a cache of sentences and text items.
+* They use a lot of space in the database.
+* Reading with term creation/editing and dictionary lookup is possible.
+* Testing of a stored term that occurs in the text, is possible. A terms will be tested within the context of any sentence(s) in all active texts (the number of sentences may be set (1, 2, or 3) as a preference).
 
-    During a test, a status display (at the bottom of the test frame) shows you the elapsed time "mm:ss", a small bar graph, and the total, not yet tested, wrong and correct terms in this test.  
+**Archived texts**
+* They are not parsed and tokenized, only the text is stored.
+* Compared with active texts, they don't use much space in the database, because no sentences and no text items are stored.
+* Reading with term creation/editing and dictionary lookup is not possible.
+* Testing of a stored term, that occurs in the text, is possible, but a term will be tested ONLY within the context of the sentence(s) that has/have been stored with the term in the sentence field, if the term does not occur in any active text.
 
-    In the following, L1 denotes you mother tongue (= translations), and L2 the language you want to learn (= the terms (words and expressions).  
+![Image](../img/13.jpg)  
 
-* **Test terms in a text (L2 -> L1)**  
+* **Multi Actions for marked archived texts**  
 
-    This is Test #1 or #4: L2 -> L1 (recognition) - to train your ability to recognize a L2 term. You may test within sentence context (Button "..\[L2\].."), or just the term (Button "\[L2\]"). You can also use the Keyboard in the test frame, see [Key Bindings](info.html#keybind).  
-
-    ![Image](../img/07.jpg)  
-
-* **Test terms in a text (L1 -> L2)**  
-
-    This is Test #2 or #5: L1 -> L2 (recall) - to train your ability to produce a term from L1. You may test within sentence context (Button "..\[L1\].."), or just the term (Button "\[L1\]"). You can also use the Keyboard in the test frame, see [Key Bindings](info.html#keybind).  
-
-    ![Image](../img/11.jpg)  
-
-* **Test terms in a text (••• -> L2)**  
-
-    This is test #3: ••• -> L2 (recall) - to train your ability to produce a term only from the sentence context (Button "..\[••\].."). If you hover over "\[•••\]", a tooltip displays the translation of the term. You can also use the Keyboard in the test frame, see [Key Bindings](info.html#keybind).  
-
-    ![Image](../img/12.jpg)  
-
-* **Test yourself in a table / word list format (Button "Table")**  
-
-    This is test #6: The selected terms and expressions are presented as a table. You can make invisible either the columns "Term" or "Translation", and you can hide or show the columns "Sentence", "Romanization", "Status" and "Ed" (Edit). To reveal the invisible solution ("Term" or "Translation"), you just click into the empty table cell. You can review or test yourself with or without changing the status by clicking "+" or "-" in the "Status" column. A status in red signifies that the term is due for testing. You can also edit the term by clicking the yellow "Edit" icon. Columns 2 to 6 may also my sorted by clicking on the header row. The initial sort order is according to term score.  
-
-    ![Image](../img/32.jpg)  
-
-* **Print a text**  
-
-    Here you print a text. Optional: an inline annotation (translation and/or romanization) of terms that are of specified status(es). This screen is also great to just read or study a text.  
-
-    Chinese Text with annotation (Romanization/Pinyin and translation):  
-
-    ![Image](../img/20.jpg)  
-
-    Chinese Text with annotation (only Romanization/Pinyin):  
-
-    ![Image](../img/21.jpg)  
-
-    **How to create, edit, and use an _Improved Annotated Text_:**  
-
-    **Motivation:** Annotated texts (as [interlinear text](http://en.wikipedia.org/wiki/Interlinear_gloss)) have been used for language learning for a long time. One example are the word-by-word translations in [Assimil](http://en.assimil.com/) courses. The German [V. F. Birkenbihl](http://web.archive.org/web/20070223080453/http://195.149.74.241/BIRKENBIHL/PDF/MethodEnglish.pdf) proposes the creation of interlinear word-by-word or [hyperliteral](http://learnanylanguage.wikia.com/wiki/Hyperliteral_translations) translations (calling this creation "decoding") in foreign language learning. Learning Latin or Ancient Greek via interlinear texts is quite old as you can see in [this YouTube video](http://www.youtube.com/watch?v=XnEKnezLXJg).  
-
-    LWT's old "Print Screen" offers annotations, but it displays ALL translations of a term. The _Improved Annotated Text_ feature enables you to select the best translation for every word in the text. As a result, you create an L1 word-by-word translation that is displayed above the L2 text. This interlinear text is better suited for language study, especially for beginners.  
-
-    **Method:** While listening to the audio, first follow the blue annotations in your native language while listening and understanding. Later, after understanding the text fully, you read the foreign language text alone. Repeat this often. After these steps, you listen to the text passively or do shadowing.  
-
-    On the Print Screen, click on "Create" an Improved Annotated Text. The system creates a default annotated text.  
-
-    **Edit Mode:**  
-
-    ![Image](../img/28.jpg)  
-
-    Within the "Improved Annotated Text - Edit Mode", you can select the best term translation by clicking on one of the radio buttons. To be able to do this, multiple translations must be delimited by one of the delimiters specified in the LWT Settings (currently: /;|). You can also type in a new translation into the text box at the end (this does not change your saved term translation), or you may change your term by clicking on the yellow icon or add a translation by clicking on the green "+" icon (this does change your saved term translation), and select it afterwards. The "Star" icon indicated that you want the term itself as annotation. **Important:** It's not possible to create new terms here - please do this in the "Read text" screen. Changing the language settings (e.g. the word characters) may have the effect that you have to start from scratch. The best time for the creation of an improved annotated text is after you have read the text completely and created all terms and expressions in the "Read text" screen.  
-
-    **Warning:** If you change the text, you will lose the saved improved annotated text!  
-    All changes in the Edit screen are saved automatically in the background!  
-
-    To leave the Edit mode, click on "Display/Print Mode". You may then print or display (with audio) the text, and work with the text online or offline.  
-
-    **Print Mode:**  
-
-    ![Image](../img/27.jpg)  
-
-    **Display Mode** (with audio player) in a separate window. Clicking the "T" or "A" lightbulb icons hides/shows the text or the blue annotations. You may also click on a single term or a single annotation to show or to hide it. This enables you to test yourself or to concentrate on one text only. Romanizations, if available, appear while hovering over a term.  
-
-    ![Image](../img/29.jpg)  
-
-* **My Terms**  
-
-    The list of your saved words or expressions (= terms). You may filter the list of terms by language, text, status, term/romanization/translation (wildcard \* possible) or term tag(s). Different sort orders are possible. You can do "multi actions" only on the marked or on all terms (on all pages!). "Se?" displays a green dot if a valid sentences with {term} exists. "Stat/Days" displays the status and the number of days since the last status change. The score of a term is a rough measure (in percent) how well you know a term. Read more about term scores [here](info.html#termscores). Terms with zero score are displayed red and should be tested today.  
-
-    ![Image](../img/08.jpg)  
-
-    **Multi Actions for marked terms**  
-
-    Most actions are self-explanatory. "Test Marked Terms" starts a test with all marked terms. You may delete marked terms and change the status of marked terms. "Set Status Date to Today" is some kind of "trick" for vacations, illnesses, etc.  
-
-    "Export Marked Texts (Anki)" exports all terms that have been marked AND have a valid sentence with {term} for Anki. Terms that do not have a sentence with {term} will NOT be exported. Cloze testing of terms within sentence context can so be easily done in Anki. The export is tab-delimited: (1) term, (2) translation, (3) romanization, (4) Sentence without term (question of cloze test), (5) Sentence with term (answer of cloze test), (6) Language, (7) ID Number, (8) Tag list. Anki template decks (for Anki Version 1 and 2) are provided: "LWT.anki" and "LWT.apkg" in directory "anki".  
-
-    "Export Marked Texts (TSV)" exports all terms that have been marked. The export is tab-delimited: (1) term, (2) translation, (3) sentence, (4) romanization, (5) status, (6) language, (7) ID Number, (8) tag list.  
-
-    ![Image](../img/16.jpg)  
-
-    **Multi Actions for all terms on all pages of the current query**  
-
-    Explanations see above.  
-
-    ![Image](../img/17.jpg)  
-
-* **My Term Tags**  
-
-    The list of your term tags. You can manage your term tags here. With term tags, it will be easier to categorize and organize your terms. The tags are case sensitive, have 1 to 20 characters, and must not contain any spaces or commas.  
-
-    ![Image](../img/24.jpg)  
-
-* **My Text Archive**  
-
-    The list of archived texts. To unarchive, to edit or to delete a text, click on the icon under "Actions". There are also "Multi Actions" available.  
-
-    What is the difference between (active) texts and archived texts?  
-
-  * **(Active) texts**
-
-    * They have been parsed and tokenized according to the rules defined for the language.
-    * The result is stored in a cache of sentences and text items.
-    * They use a lot of space in the database.
-    * Reading with term creation/editing and dictionary lookup is possible.
-    * Testing of a stored term that occurs in the text, is possible. A terms will be tested within the context of any sentence(s) in all active texts (the number of sentences may be set (1, 2, or 3) as a preference).
-
-  * **Archived texts**
-    * They are not parsed and tokenized, only the text is stored.
-    * Compared with active texts, they don't use much space in the database, because no sentences and no text items are stored.
-    * Reading with term creation/editing and dictionary lookup is not possible.
-    * Testing of a stored term, that occurs in the text, is possible, but a term will be tested ONLY within the context of the sentence(s) that has/have been stored with the term in the sentence field, if the term does not occur in any active text.
-
-    ![Image](../img/13.jpg)  
-
-  * **Multi Actions for marked archived texts**  
-
-    ![Image](../img/15.jpg)  
+![Image](../img/15.jpg)  
 
 ## Statistics  
 
@@ -457,21 +350,29 @@ Important: You must import a term. The translation can be omitted if the status 
 
 ![Image](../img/10.jpg)  
 
-## **Backup/Restore/Empty Database**  
+## Database
 
 This screen offers a possibility to save, restore or empty the LWT database (ONLY the current table set!). This makes it easy to try out new things or just to make regular backups. "Restore" only accepts files that have been created with the "Backup" function above. "Empty Database" deletes the data of all tables (except the settings) of the current table set, and you can start from scratch afterwards. Be careful: you may lose valuable data!  
 
 ![Image](../img/18.jpg)  
 
-## **Settings/Preferences**  
+## Settings
 
-In this screen you can adjust the program according to your needs. The geometric properties of the _Read Text_ and _Test_ screens can be changed. This is important because different browsers and font sizes may result in an unpleasant viewing experience. The waiting time to display the next test and to hide the old message after a test assessment can also be changed. The number of sentences displayed during testing and generated during term creation can be set to 1 (default), 2 or 3; if set to 2 or 3 you are able to do "MCD" (Massive-Context Cloze Deletion) testing, proposed by Khatzumoto @ AJATT. The number of items per page on different screens can be set, and you can decide whether you want to see the word counts on the textpage immediately (page may load slow) or later (faster initial loading).  
+In this screen you can adjust the program according to your needs. The geometric properties of the _Read Text_ and _Test_ screens can be changed. This is important because different browsers and font sizes may result in an unpleasant viewing experience. 
+
+The waiting time to display the next test and to hide the old message after a test assessment can be changed. 
+
+The number of sentences displayed during testing and generated during term creation can be set to 1 (default), 2 or 3; if set to 2 or 3 you are able to do "MCD" (Massive-Context Cloze Deletion) testing, proposed by Khatzumoto @ AJATT. 
+
+The number of items per page on different screens can be set, and you can decide whether you want to see the word counts on the textpage immediately (page may load slow) or later (faster initial loading).  
 
 ![Image](../img/19.jpg)  
 
-## **Multiple LWT table sets**  
+## Multiple LWT table sets
 
-**WARNING:** The use of the "Multiple LWT table sets" feature on an external web server may cause a **monstrous database size** if some users import many or large texts. Without further improvements (e. g. user quotas, etc.), LWT with activated "Multiple LWT table sets" is in its current version **not suitable** to be run in a public environment on an external web server!  
+**WARNINGS** 
+* The use of the "Multiple LWT table sets" feature on an external web server may cause a **monstrous database size** if some users import many or large texts. LWT with activated "Multiple LWT table sets" is in its current version **not suitable** to be run in a public environment on an external web server!
+* Another better system may be implemented, use this feature at your own risks!  
 
 When you start using LWT, you store all your data in the "Default Table Set" within the database you have defined in the file "connect.inc.php" during the LWT installation.  
 
@@ -484,12 +385,12 @@ Just click on the link at the bottom of the LWT home screen where the current ta
 If you want "switch off" this feature, and use just one table set, you may define the name in the file "connect.inc.php":  
 
 ```php
-$tbpref = "";                // only the default table set  
-$tbpref = "setname";**       // only the table set "setname"  
+$tbpref = "";          // only the default table set  
+$tbpref = "setname";   // only the table set "setname"  
 ```
 
-After adding such a line in the file "connect.inc.php", you are not able to select, create or delete table sets anymore. Only the one you have defined in "connect.inc.php" will be used. Please observe the rules for table set names (see above)!!  
+After adding such a line in the file "connect.inc.php", you are not able to select, create or delete table sets anymore. Only the one you have defined in "connect.inc.php" will be used. Please observe the rules for table set names (see above)!
 
-If more than one table set exists, and $tbpref was NOT set to a fixed value in "connect.inc.php", you can select the desired table set via "start.php" (use this as start page if several people use their own table set), or by clicking on the LWT icon or title in the LWT menu screen "index.php".  
+If more than one table set exists, and $tbpref was NOT set to a fixed value in "connect.inc.php", you can select the desired table set via "start.php" (use this as start page if several people use their own table set), or by clicking on the LWT icon or title in the LWT menu screen "index.php".
 
 By hovering over the LWT icon in the top left corner of every screen, you can display the current table set in a yellow tooltip.
