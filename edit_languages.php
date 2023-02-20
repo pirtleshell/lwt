@@ -380,12 +380,17 @@ function edit_language_form($language)
     ?>
 <script type="text/javascript">
 
-    GGTRANSLATE = <?php echo json_encode($language->translator); ?>;
+    GGTRANSLATE = 'https://translate.google.com/?' + $.param({
+            ie: "UTF-8",
+            <?php if ($language->name) echo 'sl: LANGDEFS[' . json_encode($language->name) . '][1]'; ?>,
+            tl: LANGDEFS[<?php echo json_encode(getSetting('currentnativelanguage')); ?>][1],
+            text: 'lwt_term'
+        });
 
     LIBRETRANSLATE = 'http://localhost:5000/?' + $.param({
         lwt_translator: 'libretranslate',
-        source: 'auto',
-        target: <?php echo json_encode(getSetting('currentnativelanguage')); ?>,
+        source: <?php echo ($language->name ? 'LANGDEFS[' . json_encode($language->name) . '][1]' : 'auto') ?>,
+        target: LANGDEFS[<?php echo json_encode(getSetting('currentnativelanguage')); ?>][1],
         q: "lwt_term"
     });
 
@@ -485,18 +490,17 @@ function edit_language_form($language)
     /**
      * Handle changes to the words split method.
      */
-    function wordsSplitChange(value) {
-        const regex = <?php echo json_encode($language->regexpwordchar); ?>;
+    function wordCharChange(value) {
+        const regex = LANGDEFS[<?php echo json_encode($language->name); ?>][3];
         const mecab = "mecab";
 
-        let result, fixed = false;
+        let result;
         switch (value) {
             case "regexp":
                 result = regex;
                 break;
             case "mecab":
                 result = mecab;
-                fixed = true;
                 break;
         }
         if (result) {
@@ -601,11 +605,24 @@ function edit_language_form($language)
         );
     }
 
+    /**
+     * Check the word splitting method.
+     */
+    function checkWordChar(method) {
+        document.forms.lg_form.LgRegexpAlt.value = (method == "mecab") ? "mecab" : "regex";
+    }
+
+    /**
+     * Check if the help field are coherent with the input fields.
+     * 
+     * param {element} l_form Language form.
+     */
     function checkLanguageForm(l_form) {
         checkLanguageChanged(l_form.LgName.value);
         checkDictionaryChanged(l_form.LgDict1URI);
         checkDictionaryChanged(l_form.LgDict2URI);
         checkTranslatorChanged(l_form.LgGoogleTranslateURI);
+        checkWordChar(l_form.LgRegexpWordCharacters.value);
     }
 
     $(function () { checkLanguageForm(document.forms.lg_form); });
@@ -747,7 +764,7 @@ function edit_language_form($language)
     <tr>
         <td class="td1 right">RegExp Word Characters:</td>
         <td class="td1">
-            <select onchange="wordsSplitChange(this.value);" style="display: none;" 
+            <select onchange="wordCharChange(this.value);" style="display: none;" 
             name="LgRegexpAlt">
                 <option value="regexp">Regular Expressions (demo)</option>
                 <option value="mecab">MeCab (recommended)</option>
@@ -1003,18 +1020,23 @@ function edit_languages_new()
 /**
  * Display a form to edit an existing language.
  * 
- * @param {int} $lid Language ID
+ * @param int $lid Language ID
  * 
  * @return void
+ * 
+ * @global string $tbpref
+ * @global array $langDefs 
  */
 function edit_languages_change($lid)
 {
-    global $tbpref;
+    global $tbpref, $langDefs;
     $sql = 'select * from ' . $tbpref . 'languages where LgID = ' . $lid;
     $res = do_mysqli_query($sql);
     if (mysqli_fetch_assoc($res)) {
     ?>
     <script type="text/javascript" charset="utf-8">
+        const LANGDEFS = <?php echo json_encode($langDefs); ?>;
+
         $(document).ready(ask_before_exiting);
     </script>
     <h2>Edit Language 
