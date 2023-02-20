@@ -1,7 +1,7 @@
 License
 =======
 
-"Learning with Texts" (LWT) is free and unencumbered software 
+This is free and unencumbered software 
 released into the PUBLIC DOMAIN.
 
 Anyone is free to copy, modify, publish, use, compile, sell, or
