@@ -8,11 +8,12 @@ var searchData=
   ['check_5ftext_5fvalid_5',['check_text_valid',['../database__connect_8php.html#ad99b49a4dbf10bb27e0009c10b033706',1,'database_connect.php']]],
   ['check_5ftext_5fwith_5fexpressions_6',['check_text_with_expressions',['../database__connect_8php.html#a46d04d108e75a5647dbaf056c3b70758',1,'database_connect.php']]],
   ['check_5fupdate_5fdb_7',['check_update_db',['../database__connect_8php.html#a960bf3f2e9821f403140330ac38c27de',1,'database_connect.php']]],
-  ['connect_5fto_5fdatabase_8',['connect_to_database',['../database__connect_8php.html#a6e362f15877268f0dcff6be0c499f493',1,'database_connect.php']]],
-  ['convert_5fstring_5fto_5fsqlsyntax_9',['convert_string_to_sqlsyntax',['../database__connect_8php.html#a8644cebbae39e02a6dfed79816201271',1,'database_connect.php']]],
-  ['convert_5fstring_5fto_5fsqlsyntax_5fnonull_10',['convert_string_to_sqlsyntax_nonull',['../database__connect_8php.html#a5964c3b4acf8986010b4b45d63a3332d',1,'database_connect.php']]],
-  ['convert_5fstring_5fto_5fsqlsyntax_5fnotrim_5fnonull_11',['convert_string_to_sqlsyntax_notrim_nonull',['../database__connect_8php.html#ac54484db51d3b72c0fc8e44511ac7698',1,'database_connect.php']]],
-  ['createdictlinksineditwin_12',['createDictLinksInEditWin',['../session__utility_8php.html#a49ba063be3caa6a1f528bd41239bcca0',1,'session_utility.php']]],
-  ['createdictlinksineditwin2_13',['createDictLinksInEditWin2',['../session__utility_8php.html#ad3b5cd18e2b774bd43be4e87ab172c11',1,'session_utility.php']]],
-  ['createthedictlink_14',['createTheDictLink',['../session__utility_8php.html#adbd4355000bfd2a29b85befad555348a',1,'session_utility.php']]]
+  ['checktest_8',['checkTest',['../session__utility_8php.html#a62ca3c85d5d405b2bb8b52cc69f6fa8c',1,'session_utility.php']]],
+  ['connect_5fto_5fdatabase_9',['connect_to_database',['../database__connect_8php.html#a6e362f15877268f0dcff6be0c499f493',1,'database_connect.php']]],
+  ['convert_5fstring_5fto_5fsqlsyntax_10',['convert_string_to_sqlsyntax',['../database__connect_8php.html#a8644cebbae39e02a6dfed79816201271',1,'database_connect.php']]],
+  ['convert_5fstring_5fto_5fsqlsyntax_5fnonull_11',['convert_string_to_sqlsyntax_nonull',['../database__connect_8php.html#a5964c3b4acf8986010b4b45d63a3332d',1,'database_connect.php']]],
+  ['convert_5fstring_5fto_5fsqlsyntax_5fnotrim_5fnonull_12',['convert_string_to_sqlsyntax_notrim_nonull',['../database__connect_8php.html#ac54484db51d3b72c0fc8e44511ac7698',1,'database_connect.php']]],
+  ['createdictlinksineditwin_13',['createDictLinksInEditWin',['../session__utility_8php.html#a49ba063be3caa6a1f528bd41239bcca0',1,'session_utility.php']]],
+  ['createdictlinksineditwin2_14',['createDictLinksInEditWin2',['../session__utility_8php.html#ad3b5cd18e2b774bd43be4e87ab172c11',1,'session_utility.php']]],
+  ['createthedictlink_15',['createTheDictLink',['../session__utility_8php.html#adbd4355000bfd2a29b85befad555348a',1,'session_utility.php']]]
 ];

@@ -74,45 +74,39 @@ $(function() {
   <div class="headertitle"><div class="title">Questions and Answers </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><ul>
-<li><p class="startli">I want to use LWT, and I see something like this: <br  />
+<div class="textblock"><h1><a class="anchor" id="autotoc_md408"></a>
+Site Unreachable</h1>
+<p>If you see "The webpage is not available", "We have trouble finding that site".</p>
+<p><img src="../img/prob1.png" alt="Image" class="inline"/> <br  />
 </p>
-<p class="startli"><img src="../img/prob1.png" alt="Image" class="inline"/> <br  />
+<p>Answer: Your local webserver (Apache) is not running. Please start it via EasyPHP or MAMP control program/panel. <br  />
 </p>
-<p class="startli">Answer: Your local webserver (Apache) is not running. Please start it via EasyPHP or MAMP control program/panel. <br  />
+<h1><a class="anchor" id="autotoc_md409"></a>
+URL not found (404)</h1>
+<p><img src="../img/prob2.png" alt="Image" class="inline"/> <br  />
 </p>
-</li>
-<li><p class="startli">I want to use LWT, and I see something like this: <br  />
+<p>Answer: The server is running, but the application is not found. Maybe the Uniform Resource Identifier (URI) is wrong or misspelled. Please check/correct it. Or the URI is correct, and the application is installed, but not in the correct directory <em>lwt</em> below <em>htdocs</em>. Please install/copy/move it into the correct directory. <br  />
 </p>
-<p class="startli"><img src="../img/prob2.png" alt="Image" class="inline"/> <br  />
+<h1><a class="anchor" id="autotoc_md410"></a>
+Database connection error</h1>
+<p><img src="../img/prob3.png" alt="Image" class="inline"/> <br  />
 </p>
-<p class="startli">Answer: The server is running, but the application is not found. Maybe the Uniform Resource Identifier (URI) is wrong or misspelled. Please check/correct it. Or the URI is correct, and the application is installed, but not in the correct directory <em>lwt</em> below <em>htdocs</em>. Please install/copy/move it into the correct directory. <br  />
+<p>Answer: Either the database (MySQL) is not running, or the database connection parameters in _../htlwt/connect.inc.php_ are wrong. Please check/correct the database connection parameters and/or start MySQL via the MAMP or EasyPHP control program/panel. <br  />
 </p>
-</li>
-<li><p class="startli">I want to use LWT, and I see this: <br  />
+<h1><a class="anchor" id="autotoc_md411"></a>
+Cannot find connect.inc.php</h1>
+<p><img src="../img/prob4.png" alt="Image" class="inline"/> <br  />
 </p>
-<p class="startli"><img src="../img/prob3.png" alt="Image" class="inline"/> <br  />
+<p>Answer: The Webserver and the database is running, but the database connection parameter file _../htlwt/connect.inc.php_ is not found. Please rename one of the connection files (according to your server) to _../htlwt/connect.inc.php_. <br  />
 </p>
-<p class="startli">Answer: Either the database (MySQL) is not running, or the database connection parameters in _../htlwt/connect.inc.php_ are wrong. Please check/correct the database connection parameters and/or start MySQL via the MAMP or EasyPHP control program/panel. <br  />
-</p>
-</li>
-<li><p class="startli">I want to use LWT, and I see this: <br  />
-</p>
-<p class="startli"><img src="../img/prob4.png" alt="Image" class="inline"/> <br  />
-</p>
-<p class="startli">Answer: The Webserver and the database is running, but the database connection parameter file _../htlwt/connect.inc.php_ is not found. Please rename one of the connection files (according to your server) to _../htlwt/connect.inc.php_. <br  />
-</p>
-</li>
-<li><p class="startli">I have installed or updated LWT on Linux, but the application does not run as expected: <br  />
-</p>
-<p class="startli">Answer 1: The Webserver does not have full access to all LWT files (insufficient rights). Open a terminal window, go to the directory where the directory "lwt" has been created with all LWT files, e. g. <br  />
+<h1><a class="anchor" id="autotoc_md412"></a>
+Do not run on Linux after installation/update</h1>
+<p>If LWT installed or updated LWT on Linux, but the application does not run as expected.</p>
+<p>Answer 1: The Webserver does not have full access to all LWT files (insufficient rights). Open a terminal window, go to the directory where the directory "lwt" has been created with all LWT files, e. g. <br  />
  <b>cd /var/www/html</b> <br  />
- Now execute: <br  />
- <b>sudo chmod -R 755 lwt</b>. <br  />
+ Now execute: <b>sudo chmod -R 755 lwt</b>. <br  />
 </p>
-<p class="startli">Answer 2: The PHP "mbstring" extension is not installed. Please install it; <a href="https://askubuntu.com/questions/491629/how-to-install-php-mbstring-extension-in-ubuntu">see this article</a>. </p>
-</li>
-</ul>
+<p>Answer 2: The PHP "mbstring" extension is not installed. Please install it: <a href="https://askubuntu.com/questions/491629/how-to-install-php-mbstring-extension-in-ubuntu">see this article</a>. </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 <!-- start footer part -->

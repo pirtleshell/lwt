@@ -380,7 +380,8 @@ Functions</h2></td></tr>
 <p>Return LWT version for humans</p>
 <p>Version is hardcoded in this function. For instance 1.6.31 (October 03 2016)</p>
 <p>@global bool $debug If true adds a red "DEBUG"</p>
-<dl class="section return"><dt>Returns</dt><dd>string Version number HTML-formatted </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>string Version number HTML-formatted</dd></dl>
+<p>@psalm-return '2.5.3-fork (November 06 2022) <span class="red">DEBUG</span>'|'2.5.3-fork (November 06 2022)' </p>
 
 </div>
 </div>
@@ -477,7 +478,8 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>string SQL score computation string </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>string SQL score computation string</dd></dl>
+<p>@psalm-return ' GREATEST(-125, CASE WHEN WoStatus &gt; 5 THEN 100 WHEN WoStatus = 1 THEN ROUND(-7 * DATEDIFF(NOW(),WoStatusChanged)) WHEN WoStatus = 2 THEN ROUND(6.9 - 3.5 * DATEDIFF(NOW(),WoStatusChanged)) WHEN WoStatus = 3 THEN ROUND(20 - 2.3 * DATEDIFF(NOW(),WoStatusChanged)) WHEN WoStatus = 4 THEN ROUND(46.4 - 1.75 * DATEDIFF(NOW(),WoStatusChanged)) WHEN WoStatus = 5 THEN ROUND(100 - 1.4 * DATEDIFF(NOW(),WoStatusChanged)) END)'|' GREATEST(-125, CASE WHEN WoStatus &gt; 5 THEN 100 WHEN WoStatus = 1 THEN ROUND(-7 -7 * DATEDIFF(NOW(),WoStatusChanged)) WHEN WoStatus = 2 THEN ROUND(3.4 - 3.5 * DATEDIFF(NOW(),WoStatusChanged)) WHEN WoStatus = 3 THEN ROUND(17.7 - 2.3 * DATEDIFF(NOW(),WoStatusChanged)) WHEN WoStatus = 4 THEN ROUND(44.65 - 1.75 * DATEDIFF(NOW(),WoStatusChanged)) WHEN WoStatus = 5 THEN ROUND(98.6 - 1.4 * DATEDIFF(NOW(),WoStatusChanged)) END)'|'0' </p>
 
 </div>
 </div>

@@ -80,9 +80,14 @@ $(function() {
 <h2><a class="anchor" id="autotoc_md3"></a>
 Added</h2>
 <ul>
-<li>The translation and romanization of new can now be automatic.<ul>
-<li>Supported automatic translation is achieved using <a href="https://libretranslate.com/">LibreTranslate</a>, to English only.</li>
+<li>The translation and romanization of new words can now be automatic.<ul>
+<li>Supported automatic translation is achieved using <a href="https://libretranslate.com/">LibreTranslate</a>.</li>
 <li>Romanization using <a href="https://taku910.github.io/mecab/">MeCab</a> (Japanese only) toward katakana only.</li>
+</ul>
+</li>
+<li>A lot of improvements for language creation/edition:<ul>
+<li>More intuitive fields, better interactions with the user, etc...</li>
+<li>A "Pop-Up" checkbox helps you choose if the website should be displayed in a pop-up.</li>
 </ul>
 </li>
 <li>LWT becomes easier to install and maintain for users:<ul>
@@ -93,12 +98,12 @@ Added</h2>
 </li>
 <li>In <code><a class="el" href="index_8php.html" title="LWT Start screen and main menu.">index.php</a></code>:<ul>
 <li><code>get_server_data_table</code> replaces <code>get_server_data</code> as a better designed function.</li>
-<li><code>index_do_main_page</code> now renders the page to avoud global variables.</li>
+<li><code>index_do_main_page</code> now renders the page to avoid global variables.</li>
 <li>You get warnings if the PHP version is too low, or if a newer version of LWT is released.</li>
 </ul>
 </li>
-<li><code>pagestart_kernel_nobody</code> in <code>inc/kernel.php</code> that display the minimal HTML formatting.</li>
-<li><code>inc/classes/</code> folder for a better imcorporation of OOP.<ul>
+<li><code>pagestart_kernel_nobody</code> in <code>inc/kernel.php</code> that displays the minimal HTML formatting.</li>
+<li><code>inc/classes/</code> folder for a better incorporation of OOP.<ul>
 <li><code>inc/classes/Term</code> defines the <code><a class="el" href="class_term.html">Term</a></code> class representing a word or multi-word.</li>
 <li><code>inc/classes/Language</code> defines the <code><a class="el" href="class_language.html">Language</a></code> class representing a language.</li>
 </ul>
@@ -107,15 +112,45 @@ Added</h2>
 <h2><a class="anchor" id="autotoc_md4"></a>
 Changed</h2>
 <ul>
-<li>Graphic review: headers reviewed. Most h4 headers became div.bigger, and h3 became h1 level headers.</li>
+<li>Graphic review:<ul>
+<li>Headers reviewed. Most h4 headers became div.bigger, and h3 became h1 level headers.</li>
 <li>We now use responsive design instead of fixed-size.</li>
+<li>All themes updated accordingly, so themes were modified.</li>
 <li><code>do_text_page</code> (<code><a class="el" href="do__text_8php.html" title="Start Reading a text (frameset)">do_text.php</a></code>) and <code>do_test_page</code> (<code><a class="el" href="do__test_8php.html" title="Start a test (frameset)">do_test.php</a></code>) now enlarge the body.</li>
+</ul>
+</li>
 <li><code>echo_lwt_logo</code> in <code><a class="el" href="session__utility_8php.html" title="All the files needed for a LWT session.">inc/session_utility.php</a></code> echoes a logo, without information on the table set used because it was useless. This information is now displayed on the welcome page.</li>
 <li>Access to the database prefix edition at <code><a class="el" href="start_8php.html" title="Analyse DB tables, select Table Set, start LWT.">start.php</a></code> was reviewed and simplified. It is still considered a legacy feature.</li>
+<li><a class="el" href="class_language.html">Language</a> creation reviewed:<ul>
 <li>When creating a new language, the language wizard do no longer display in a pop-up but in the main window.</li>
+<li>Select option boxes replaced by checkboxes (better accessibility).</li>
+</ul>
+</li>
 <li>Updated <a href="http://briancherne.github.io/jquery-hoverIntent/">hoverIntent jQuery Plug-in</a> from 1.8.0 to 1.10.2. This brings some bug fixes.</li>
 <li>"TO DO" changed to a more explicit "Unknown words" in text header.</li>
 <li>Refactored <code>bulk_translate_word.php</code>. It has a better visual aspect and works better.</li>
+<li>Updated composer dependencies.<ul>
+<li>vimeo/psalm updated from ^4.12 to ^5.6.</li>
+<li>phpunit/phpunit updated from ^9.5 to ^10.0.</li>
+</ul>
+</li>
+<li>It is recommended to use proper URL for all dictionaries and translators.<ul>
+<li>'*' before a dictionary URL should be replaced by an argument 'lwt_popup=true'</li>
+<li>'ggl.php' and 'glosbe_api.php' should be updated (e. g. "{YOUR_LWT_CURRENT_ADDRESS}/ggl.php")</li>
+<li>Marking the location of a term to translate with '###' is deprecated in favor of 'lwt_term'.</li>
+</ul>
+</li>
+<li>Changed to the text from YouTube feature (<code><a class="el" href="text__from__yt_8php.html" title="From to import a file from YouTube.">text_from_yt.php</a></code>):<ul>
+<li>Refactored.</li>
+<li>Moved from root folder to <code>inc/</code>.</li>
+<li>This is still an experimental feature!</li>
+</ul>
+</li>
+<li>Moved Google API files:<ul>
+<li>Moved <code>googleTimeToken.php</code> from root folder to <code>inc/</code>.</li>
+<li>Moved <code>googleTranslateClass.php</code> from root folder to <code>inc/classes/</code>.</li>
+</ul>
+</li>
 </ul>
 <h2><a class="anchor" id="autotoc_md5"></a>
 Fixed</h2>
@@ -127,6 +162,11 @@ Fixed</h2>
 <li>All broom icons icon were display in the screen top-right corner, and not at the right if text field.</li>
 </ul>
 </li>
+<li>Main page (<code><a class="el" href="index_8php.html" title="LWT Start screen and main menu.">index.php</a></code>) was not rendered properly on non-default theme.</li>
+<li>Full-text speech dispatcher was not available when the name of the language name was changed. Issue signalled <a href="https://github.com/HugoFara/lwt/issues/80#issuecomment-1368180304">with issue #80</a>.</li>
+<li>Support for PHP 7.4 restored, wrapper for <code>str_starts_with</code>.</li>
+<li>The encoding of <code>docs/info.html</code> is finally fixed!</li>
+<li>Changing language name was breaking text header, this is fixed.</li>
 </ul>
 <h1><a class="anchor" id="autotoc_md6"></a>
 2.6.0-fork (January 01 2023)</h1>

@@ -74,189 +74,203 @@ $(function() {
   <div class="headertitle"><div class="title">Database Information </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><ul>
-<li><p class="startli">The following seventeen tables are one "LWT table set". The default table set has no table name prefix, so the tables are named just as written below: "settings", "languages", etc. <br  />
+<div class="textblock"><p>The following seventeen tables are one "LWT table set". The default table set has no table name prefix, so the tables are named just as written below: "settings", "languages", etc. <br  />
 </p>
-<p class="startli">Additional table sets have its "table set name" plus an underscore "\_" as a table name prefix: "setname\_settings", "setname\_languages", etc. The "table set name" is max. 20 characters long. Allowed characters are only: a-z, A-Z, 0-9, and the underscore "\_". <br  />
-</p>
-<p class="startli">Only if the table set is not set in "connect.inc.php", the currently used table set is saved in a global table "\_lwtgeneral", in column LWTValue of row with LWTKey = "current\_table\_prefix". If such a row does not exist, the default table set will be used, or will be automatically created and used. <br  />
-</p>
-</li>
-<li><b>Table "settings" (Settings as Key-Value Pairs):</b> <br  />
- StKey varchar(40) NOT NULL, <br  />
- StValue varchar(40) DEFAULT NULL, <br  />
- PRIMARY KEY (StKey) <br  />
-</li>
-<li><b>Table "languages" (Defined languages):</b> <br  />
- LgID tinyint(3) unsigned NOT NULL AUTO_INCREMENT, <br  />
- LgName varchar(40) NOT NULL, <br  />
- LgDict1URI varchar(200) NOT NULL, <br  />
- LgDict2URI varchar(200) DEFAULT NULL, <br  />
- LgGoogleTranslateURI varchar(200) DEFAULT NULL, <br  />
- LgExportTemplate varchar(1000) DEFAULT NULL, <br  />
- LgTextSize smallint(5) unsigned NOT NULL DEFAULT '100', <br  />
- LgCharacterSubstitutions varchar(500) NOT NULL, <br  />
- LgRegexpSplitSentences varchar(500) NOT NULL, <br  />
- LgExceptionsSplitSentences varchar(500) NOT NULL, <br  />
- LgRegexpWordCharacters varchar(500) NOT NULL, <br  />
- LgRemoveSpaces tinyint(1) unsigned NOT NULL DEFAULT '0', <br  />
- LgSplitEachChar tinyint(1) unsigned NOT NULL DEFAULT '0', <br  />
- LgRightToLeft tinyint(1) UNSIGNED NOT NULL DEFAULT '0', <br  />
- PRIMARY KEY (LgID), <br  />
- UNIQUE KEY LgName (LgName) <br  />
-</li>
-<li><b>Table "texts" (Active texts, parsed and cached in sentences and textitems):</b> <br  />
- TxID smallint(5) unsigned NOT NULL AUTO_INCREMENT, <br  />
- TxLgID tinyint(3) unsigned NOT NULL, &ndash; LANGUAGE FOREIGN KEY &ndash; <br  />
- TxTitle varchar(200) NOT NULL, <br  />
- TxText text NOT NULL, <br  />
- TxAnnotatedText longtext NOT NULL, <br  />
- TxAudioURI varchar(200) DEFAULT NULL, <br  />
- TxSourceURI varchar(1000) DEFAULT NULL, <br  />
- TxPosition smallint(5) NOT NULL DEFAULT '0', <br  />
- TxAudioPosition float NOT NULL DEFAULT '0', <br  />
- PRIMARY KEY (TxID), <br  />
- KEY TxLgID (TxLgID) <br  />
-</li>
-<li><b>Table "archivedtexts" (Text Archive, not parsed and cached):</b> <br  />
- AtID smallint(5) unsigned NOT NULL AUTO_INCREMENT, <br  />
- AtLgID tinyint(3) unsigned NOT NULL, &ndash; LANGUAGE FOREIGN KEY &ndash; <br  />
- AtTitle varchar(200) NOT NULL, <br  />
- AtText text NOT NULL, <br  />
- AtAnnotatedText longtext NOT NULL, <br  />
- AtAudioURI varchar(200) DEFAULT NULL, <br  />
- AtSourceURI varchar(1000) DEFAULT NULL, <br  />
- PRIMARY KEY (AtID), <br  />
- KEY AtLgID (AtLgID) <br  />
-</li>
-<li><b>Table "tags2" (Text tags and comments):</b> <br  />
- T2ID smallint(5) unsigned NOT NULL AUTO_INCREMENT, <br  />
- T2Text varchar(20) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL, <br  />
- T2Comment varchar(200) NOT NULL DEFAULT '', <br  />
- PRIMARY KEY (T2ID), <br  />
- UNIQUE KEY T2Text (T2Text) <br  />
-</li>
-<li><b>Table "texttags" (Text tags relations):</b> <br  />
- TtTxID smallint(5) unsigned NOT NULL, &ndash; TEXT FOREIGN KEY &ndash; <br  />
- TtT2ID smallint(5) unsigned NOT NULL, &ndash; TEXT TAG FOREIGN KEY &ndash; <br  />
- PRIMARY KEY (TtTxID,TtT2ID), <br  />
- KEY TtT2ID (TtT2ID) <br  />
-</li>
-<li><b>Table "archtexttags" (Archived text tags relations):</b> <br  />
- AgAtID smallint(5) unsigned NOT NULL, &ndash; ARCHIVED TEXT FOREIGN KEY &ndash; <br  />
- AgT2ID smallint(5) unsigned NOT NULL, &ndash; TEXT TAG FOREIGN KEY &ndash; <br  />
- PRIMARY KEY (AgAtID,AgT2ID), <br  />
- KEY AgT2ID (AgT2ID) <br  />
-</li>
-<li><b>Table "words" (the words and expressions you have saved):</b> <br  />
- WoID mediumint(8) unsigned NOT NULL AUTO_INCREMENT, <br  />
- WoLgID tinyint(3) unsigned NOT NULL, &ndash; LANGUAGE FOREIGN KEY &ndash; <br  />
- WoText varchar(250) NOT NULL, <br  />
- WoTextLC varchar(250) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL, <br  />
- WoStatus tinyint(4) NOT NULL, <br  />
- WoTranslation varchar(500) NOT NULL DEFAULT '*', <br  />
- WoRomanization varchar(100) DEFAULT NULL, <br  />
- WoSentence varchar(1000) DEFAULT NULL, <br  />
- WoWordCount tinyint(3) unsigned NOT NULL DEFAULT '0', <br  />
- WoCreated timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, <br  />
- WoStatusChanged timestamp NOT NULL DEFAULT '0000-00-00 00:00:00', <br  />
- WoTodayScore double NOT NULL DEFAULT '0', <br  />
- WoTomorrowScore double NOT NULL DEFAULT '0', <br  />
- WoRandom double NOT NULL DEFAULT '0', <br  />
- PRIMARY KEY (WoID), <br  />
- UNIQUE KEY WoLgIDTextLC (WoLgID,WoTextLC), <br  />
- KEY WoLgID (WoLgID), <br  />
- KEY WoStatus (WoStatus), <br  />
- KEY WoTextLC (WoTextLC), <br  />
- KEY WoTranslation (WoTranslation), <br  />
- KEY WoCreated (WoCreated), <br  />
- KEY WoStatusChanged (WoStatusChanged), <br  />
- KEY WoWordCount (WoWordCount), <br  />
- KEY WoTodayScore (WoTodayScore), <br  />
- KEY WoTomorrowScore (WoTomorrowScore), <br  />
- KEY WoRandom (WoRandom) <br  />
-</li>
-<li><b>Table "tags" (<a class="el" href="class_term.html">Term</a> tags and comments):</b> <br  />
- TgID smallint(5) unsigned NOT NULL AUTO_INCREMENT, <br  />
- TgText varchar(20) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL, <br  />
- TgComment varchar(200) NOT NULL DEFAULT '', <br  />
- PRIMARY KEY (TgID), <br  />
- UNIQUE KEY TgText (TgText) <br  />
-</li>
-<li><b>Table "wordtags" (<a class="el" href="class_term.html">Term</a> tags relations):</b> <br  />
- WtWoID int(11) unsigned NOT NULL, &ndash; TERM FOREIGN KEY &ndash; <br  />
- WtTgID smallint(5) unsigned NOT NULL, &ndash; TERM TAG FOREIGN KEY &ndash; <br  />
- PRIMARY KEY (WtWoID,WtTgID), <br  />
- KEY WtTgID (WtTgID) <br  />
-</li>
-<li><b>Table "sentences" (Sentences cache, no backup needed):</b> <br  />
- SeID mediumint(8) unsigned NOT NULL AUTO_INCREMENT, <br  />
- SeLgID tinyint(3) unsigned NOT NULL, &ndash; LANGUAGE FOREIGN KEY &ndash; <br  />
- SeTxID smallint(5) unsigned NOT NULL, &ndash; TEXT FOREIGN KEY &ndash; <br  />
- SeOrder smallint(5) unsigned NOT NULL, <br  />
- SeText text, <br  />
- SeFirstPos smallint(5) unsigned NOT NULL, <br  />
- PRIMARY KEY (SeID), <br  />
- KEY SeLgID (SeLgID), <br  />
- KEY SeTxID (SeTxID), <br  />
- KEY SeOrder (SeOrder) <br  />
-</li>
-<li><b>Table "textitems2" (Text items cache, no backup needed):</b> <br  />
- Ti2WoID mediumint(8) unsigned NOT NULL, <br  />
- Ti2LgID tinyint(3) unsigned NOT NULL, &ndash; LANGUAGE FOREIGN KEY &ndash; <br  />
- Ti2TxID smallint(5) unsigned NOT NULL, &ndash; TEXT FOREIGN KEY &ndash; <br  />
- Ti2SeID mediumint(8) unsigned NOT NULL, &ndash; SENTENCE FOREIGN KEY &ndash; <br  />
- Ti2Order smallint(5) unsigned NOT NULL, <br  />
- Ti2WordCount tinyint(3) unsigned NOT NULL, <br  />
- Ti2Text varchar(250) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL, <br  />
- PRIMARY KEY (Ti2TxID,Ti2Order,Ti2WordCount), <br  />
- KEY Ti2WoID (Ti2WoID) <br  />
-</li>
-<li><b>Table "temptextitems" (memory table only used when creating texts, otherwise empty):</b> <br  />
- TiCount smallint(5) unsigned NOT NULL, <br  />
- TiSeID mediumint(8) unsigned NOT NULL, <br  />
- TiOrder smallint(5) unsigned NOT NULL, <br  />
- TiWordCount tinyint(3) unsigned NOT NULL, <br  />
- TiText varchar(250) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL <br  />
-</li>
-<li><b>Table "tempwords" (memory table only used when importing words, otherwise empty):</b> <br  />
- WoText varchar(250) DEFAULT NULL, <br  />
- WoTextLC varchar(250) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL, <br  />
- WoTranslation varchar(500) NOT NULL DEFAULT '*', <br  />
- WoRomanization varchar(100) DEFAULT NULL, <br  />
- WoSentence varchar(1000) DEFAULT NULL, <br  />
- WoTaglist varchar(255) DEFAULT NULL, <br  />
- PRIMARY KEY (WoTextLC) <br  />
-</li>
-<li><b>Table "feedlinks" (Newsfeed articles):</b> <br  />
- FlID smallint(5) unsigned NOT NULL AUTO_INCREMENT, <br  />
- FlTitle varchar(200) NOT NULL, <br  />
- FlLink varchar(400) NOT NULL, <br  />
- FlDescription text NOT NULL, <br  />
- FlDate datetime NOT NULL, <br  />
- FlAudio varchar(200) NOT NULL, <br  />
- FlText longtext NOT NULL, <br  />
- FlNfID tinyint(3) unsigned NOT NULL, <br  />
- PRIMARY KEY (FlID), <br  />
- UNIQUE KEY FlTitle (FlTitle), <br  />
- KEY FlLink (FlLink), <br  />
- KEY FlDate (FlDate), <br  />
- KEY FlNfID (FlNfID) <br  />
-</li>
-<li><b>Table "newsfeeds" (Newsfeed settings):</b> <br  />
- NfID tinyint(3) unsigned NOT NULL AUTO_INCREMENT, <br  />
- NfLgID tinyint(3) unsigned NOT NULL, <br  />
- NfName varchar(40) NOT NULL, <br  />
- NfSourceURI varchar(200) NOT NULL, <br  />
- NfArticleSectionTags text NOT NULL, <br  />
- NfFilterTags text NOT NULL, <br  />
- NfUpdate int(12) unsigned NOT NULL, <br  />
- NfOptions varchar(200) NOT NULL, <br  />
- PRIMARY KEY (NfID), <br  />
- KEY NfLgID (NfLgID), <br  />
- KEY NfUpdate (NfUpdate) </li>
-</ul>
-</div></div><!-- contents -->
+<p>Additional table sets have its "table set name" plus an underscore "\_" as a table name prefix: "setname\_settings", "setname\_languages", etc. The "table set name" is max. 20 characters long. Allowed characters are only: a-z, A-Z, 0-9, and the underscore "\_".</p>
+<p>Only if the table set is not set in "connect.inc.php", the currently used table set is saved in a global table "\_lwtgeneral", in column LWTValue of row with LWTKey = "current\_table\_prefix". If such a row does not exist, the default table set will be used, or will be automatically created and used.</p>
+<h1><a class="anchor" id="autotoc_md390"></a>
+Table "settings"</h1>
+<p>Settings as Key-Value Pairs</p>
+<div class="fragment"><div class="line">StKey <span class="keywordtype">varchar</span>(<span class="stringliteral">40</span>) <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line">StValue <span class="keywordtype">varchar</span>(<span class="stringliteral">40</span>) <span class="keyword">DEFAULT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line"><span class="keyword">PRIMARY</span> KEY (StKey)</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md391"></a>
+Table "languages"</h1>
+<p>Defined languages</p>
+<div class="fragment"><div class="line">LgID tinyint(<span class="stringliteral">3</span>) unsigned <span class="keyword">NOT</span> <span class="stringliteral">NULL</span> AUTO\_INCREMENT,  </div>
+<div class="line">LgName <span class="keywordtype">varchar</span>(<span class="stringliteral">40</span>) <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line">LgDict1URI <span class="keywordtype">varchar</span>(<span class="stringliteral">200</span>) <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line">LgDict2URI <span class="keywordtype">varchar</span>(<span class="stringliteral">200</span>) <span class="keyword">DEFAULT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line">LgGoogleTranslateURI <span class="keywordtype">varchar</span>(<span class="stringliteral">200</span>) <span class="keyword">DEFAULT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line">LgExportTemplate <span class="keywordtype">varchar</span>(<span class="stringliteral">1000</span>) <span class="keyword">DEFAULT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line">LgTextSize <span class="keywordtype">smallint</span>(<span class="stringliteral">5</span>) unsigned <span class="keyword">NOT</span> <span class="stringliteral">NULL</span> <span class="keyword">DEFAULT</span> <span class="stringliteral">&#39;100&#39;</span>,  </div>
+<div class="line">LgCharacterSubstitutions <span class="keywordtype">varchar</span>(<span class="stringliteral">500</span>) <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line">LgRegexpSplitSentences <span class="keywordtype">varchar</span>(<span class="stringliteral">500</span>) <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line">LgExceptionsSplitSentences <span class="keywordtype">varchar</span>(<span class="stringliteral">500</span>) <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line">LgRegexpWordCharacters <span class="keywordtype">varchar</span>(<span class="stringliteral">500</span>) <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line">LgRemoveSpaces tinyint(<span class="stringliteral">1</span>) unsigned <span class="keyword">NOT</span> <span class="stringliteral">NULL</span> <span class="keyword">DEFAULT</span> <span class="stringliteral">&#39;0&#39;</span>,  </div>
+<div class="line">LgSplitEachChar tinyint(<span class="stringliteral">1</span>) unsigned <span class="keyword">NOT</span> <span class="stringliteral">NULL</span> <span class="keyword">DEFAULT</span> <span class="stringliteral">&#39;0&#39;</span>,  </div>
+<div class="line">LgRightToLeft tinyint(<span class="stringliteral">1</span>) UNSIGNED <span class="keyword">NOT</span> <span class="stringliteral">NULL</span> <span class="keyword">DEFAULT</span> <span class="stringliteral">&#39;0&#39;</span>,  </div>
+<div class="line"><span class="keyword">PRIMARY</span> KEY (LgID),  </div>
+<div class="line"><span class="keyword">UNIQUE</span> KEY LgName (LgName)</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md392"></a>
+Table "texts"</h1>
+<p>(Active texts, parsed and cached in sentences and textitems)</p>
+<div class="fragment"><div class="line">TxID <span class="keywordtype">smallint</span>(<span class="stringliteral">5</span>) unsigned <span class="keyword">NOT</span> <span class="stringliteral">NULL</span> AUTO\_INCREMENT,  </div>
+<div class="line">TxLgID tinyint(<span class="stringliteral">3</span>) unsigned <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>, <span class="comment">-- LANGUAGE FOREIGN KEY --  </span></div>
+<div class="line">TxTitle <span class="keywordtype">varchar</span>(<span class="stringliteral">200</span>) <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line">TxText text <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line">TxAnnotatedText longtext <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line">TxAudioURI <span class="keywordtype">varchar</span>(<span class="stringliteral">200</span>) <span class="keyword">DEFAULT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line">TxSourceURI <span class="keywordtype">varchar</span>(<span class="stringliteral">1000</span>) <span class="keyword">DEFAULT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line">TxPosition <span class="keywordtype">smallint</span>(<span class="stringliteral">5</span>) <span class="keyword">NOT</span> <span class="stringliteral">NULL</span> <span class="keyword">DEFAULT</span> <span class="stringliteral">&#39;0&#39;</span>,  </div>
+<div class="line">TxAudioPosition <span class="keywordtype">float</span> <span class="keyword">NOT</span> <span class="stringliteral">NULL</span> <span class="keyword">DEFAULT</span> <span class="stringliteral">&#39;0&#39;</span>,  </div>
+<div class="line"><span class="keyword">PRIMARY</span> KEY</div>
+<div class="line"> </div>
+<div class="line">\<span class="stringliteral">1</span>,</div>
+<div class="line">KEY TxLgID (TxLgID)</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md393"></a>
+Table "archivedtexts"</h1>
+<p>Text Archive, not parsed and cached</p>
+<div class="fragment"><div class="line">AtID <span class="keywordtype">smallint</span>(<span class="stringliteral">5</span>) unsigned <span class="keyword">NOT</span> <span class="stringliteral">NULL</span> AUTO\_INCREMENT,  </div>
+<div class="line">AtLgID tinyint(<span class="stringliteral">3</span>) unsigned <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>, <span class="comment">-- LANGUAGE FOREIGN KEY --  </span></div>
+<div class="line">AtTitle <span class="keywordtype">varchar</span>(<span class="stringliteral">200</span>) <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line">AtText text <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line">AtAnnotatedText longtext <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line">AtAudioURI <span class="keywordtype">varchar</span>(<span class="stringliteral">200</span>) <span class="keyword">DEFAULT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line">AtSourceURI <span class="keywordtype">varchar</span>(<span class="stringliteral">1000</span>) <span class="keyword">DEFAULT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line"><span class="keyword">PRIMARY</span> KEY (AtID),  </div>
+<div class="line">KEY AtLgID (AtLgID)</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md394"></a>
+Table "tags2"</h1>
+<p>Text tags and comments</p>
+<div class="fragment"><div class="line">T2ID <span class="keywordtype">smallint</span>(<span class="stringliteral">5</span>) unsigned <span class="keyword">NOT</span> <span class="stringliteral">NULL</span> AUTO\_INCREMENT,  </div>
+<div class="line">T2Text <span class="keywordtype">varchar</span>(<span class="stringliteral">20</span>) <span class="keywordtype">CHARACTER</span> <span class="keyword">SET</span> utf8 <span class="keyword">COLLATE</span> utf8\_bin <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line">T2Comment <span class="keywordtype">varchar</span>(<span class="stringliteral">200</span>) <span class="keyword">NOT</span> <span class="stringliteral">NULL</span> <span class="keyword">DEFAULT</span> <span class="stringliteral">&#39;&#39;</span>,  </div>
+<div class="line"><span class="keyword">PRIMARY</span> KEY (T2ID),  </div>
+<div class="line"><span class="keyword">UNIQUE</span> KEY T2Text (T2Text)</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md395"></a>
+Table "texttags"</h1>
+<p>Text tags relations</p>
+<div class="fragment"><div class="line">TtTxID <span class="keywordtype">smallint</span>(<span class="stringliteral">5</span>) unsigned <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>, <span class="comment">-- TEXT FOREIGN KEY --  </span></div>
+<div class="line">TtT2ID <span class="keywordtype">smallint</span>(<span class="stringliteral">5</span>) unsigned <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>, <span class="comment">-- TEXT TAG FOREIGN KEY --  </span></div>
+<div class="line"><span class="keyword">PRIMARY</span> KEY (TtTxID,TtT2ID),  </div>
+<div class="line">KEY TtT2ID (TtT2ID)</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md396"></a>
+Table "archtexttags"</h1>
+<p>Archived text tags relations</p>
+<div class="fragment"><div class="line">AgAtID <span class="keywordtype">smallint</span>(<span class="stringliteral">5</span>) unsigned <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>, <span class="comment">-- ARCHIVED TEXT FOREIGN KEY --  </span></div>
+<div class="line">AgT2ID <span class="keywordtype">smallint</span>(<span class="stringliteral">5</span>) unsigned <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>, <span class="comment">-- TEXT TAG FOREIGN KEY --  </span></div>
+<div class="line"><span class="keyword">PRIMARY</span> KEY (AgAtID,AgT2ID),  </div>
+<div class="line">KEY AgT2ID (AgT2ID)</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md397"></a>
+Table "words"</h1>
+<p>the words and expressions you have saved</p>
+<div class="fragment"><div class="line">WoID mediumint(<span class="stringliteral">8</span>) unsigned <span class="keyword">NOT</span> <span class="stringliteral">NULL</span> AUTO\_INCREMENT,  </div>
+<div class="line">WoLgID tinyint(<span class="stringliteral">3</span>) unsigned <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>, <span class="comment">-- LANGUAGE FOREIGN KEY --  </span></div>
+<div class="line">WoText <span class="keywordtype">varchar</span>(<span class="stringliteral">250</span>) <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line">WoTextLC <span class="keywordtype">varchar</span>(<span class="stringliteral">250</span>) <span class="keywordtype">CHARACTER</span> <span class="keyword">SET</span> utf8 <span class="keyword">COLLATE</span> utf8\_bin <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line">WoStatus tinyint(<span class="stringliteral">4</span>) <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line">WoTranslation <span class="keywordtype">varchar</span>(<span class="stringliteral">500</span>) <span class="keyword">NOT</span> <span class="stringliteral">NULL</span> <span class="keyword">DEFAULT</span> <span class="stringliteral">&#39;\*&#39;</span>,  </div>
+<div class="line">WoRomanization <span class="keywordtype">varchar</span>(<span class="stringliteral">100</span>) <span class="keyword">DEFAULT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line">WoSentence <span class="keywordtype">varchar</span>(<span class="stringliteral">1000</span>) <span class="keyword">DEFAULT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line">WoWordCount tinyint(<span class="stringliteral">3</span>) unsigned <span class="keyword">NOT</span> <span class="stringliteral">NULL</span> <span class="keyword">DEFAULT</span> <span class="stringliteral">&#39;0&#39;</span>,  </div>
+<div class="line">WoCreated <span class="keywordtype">timestamp</span> <span class="keyword">NOT</span> <span class="stringliteral">NULL</span> <span class="keyword">DEFAULT</span> <span class="keyword">CURRENT</span>\_TIMESTAMP,  </div>
+<div class="line">WoStatusChanged <span class="keywordtype">timestamp</span> <span class="keyword">NOT</span> <span class="stringliteral">NULL</span> <span class="keyword">DEFAULT</span> <span class="stringliteral">&#39;1970-01-01 12:00:00&#39;</span>,  </div>
+<div class="line">WoTodayScore <span class="keywordtype">double</span> <span class="keyword">NOT</span> <span class="stringliteral">NULL</span> <span class="keyword">DEFAULT</span> <span class="stringliteral">&#39;0&#39;</span>,  </div>
+<div class="line">WoTomorrowScore <span class="keywordtype">double</span> <span class="keyword">NOT</span> <span class="stringliteral">NULL</span> <span class="keyword">DEFAULT</span> <span class="stringliteral">&#39;0&#39;</span>,  </div>
+<div class="line">WoRandom <span class="keywordtype">double</span> <span class="keyword">NOT</span> <span class="stringliteral">NULL</span> <span class="keyword">DEFAULT</span> <span class="stringliteral">&#39;0&#39;</span>,  </div>
+<div class="line"><span class="keyword">PRIMARY</span> KEY (WoID),  </div>
+<div class="line"><span class="keyword">UNIQUE</span> KEY WoLgIDTextLC (WoLgID,WoTextLC),  </div>
+<div class="line">KEY WoLgID (WoLgID),  </div>
+<div class="line">KEY WoStatus (WoStatus),  </div>
+<div class="line">KEY WoTextLC (WoTextLC),  </div>
+<div class="line">KEY WoTranslation (WoTranslation),  </div>
+<div class="line">KEY WoCreated (WoCreated),  </div>
+<div class="line">KEY WoStatusChanged (WoStatusChanged),  </div>
+<div class="line">KEY WoWordCount (WoWordCount),  </div>
+<div class="line">KEY WoTodayScore (WoTodayScore),  </div>
+<div class="line">KEY WoTomorrowScore (WoTomorrowScore),  </div>
+<div class="line">KEY WoRandom (WoRandom)</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md398"></a>
+Table "tags"</h1>
+<p><a class="el" href="class_term.html">Term</a> tags and comments</p>
+<div class="fragment"><div class="line">TgID <span class="keywordtype">smallint</span>(<span class="stringliteral">5</span>) unsigned <span class="keyword">NOT</span> <span class="stringliteral">NULL</span> AUTO\_INCREMENT,  </div>
+<div class="line">TgText <span class="keywordtype">varchar</span>(<span class="stringliteral">20</span>) <span class="keywordtype">CHARACTER</span> <span class="keyword">SET</span> utf8 <span class="keyword">COLLATE</span> utf8\_bin <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line">TgComment <span class="keywordtype">varchar</span>(<span class="stringliteral">200</span>) <span class="keyword">NOT</span> <span class="stringliteral">NULL</span> <span class="keyword">DEFAULT</span> <span class="stringliteral">&#39;&#39;</span>,  </div>
+<div class="line"><span class="keyword">PRIMARY</span> KEY (TgID),  </div>
+<div class="line"><span class="keyword">UNIQUE</span> KEY TgText (TgText)</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md399"></a>
+Table "wordtags"</h1>
+<p><a class="el" href="class_term.html">Term</a> tags relations</p>
+<div class="fragment"><div class="line">WtWoID <span class="keywordtype">int</span>(<span class="stringliteral">11</span>) unsigned <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>, <span class="comment">-- TERM FOREIGN KEY --  </span></div>
+<div class="line">WtTgID <span class="keywordtype">smallint</span>(<span class="stringliteral">5</span>) unsigned <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>, <span class="comment">-- TERM TAG FOREIGN KEY --  </span></div>
+<div class="line"><span class="keyword">PRIMARY</span> KEY (WtWoID,WtTgID),  </div>
+<div class="line">KEY WtTgID (WtTgID)</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md400"></a>
+Table "sentences"</h1>
+<p>Sentences cache, no backup needed</p>
+<div class="fragment"><div class="line">SeID mediumint(<span class="stringliteral">8</span>) unsigned <span class="keyword">NOT</span> <span class="stringliteral">NULL</span> AUTO\_INCREMENT,  </div>
+<div class="line">SeLgID tinyint(<span class="stringliteral">3</span>) unsigned <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>, <span class="comment">-- LANGUAGE FOREIGN KEY --  </span></div>
+<div class="line">SeTxID <span class="keywordtype">smallint</span>(<span class="stringliteral">5</span>) unsigned <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>, <span class="comment">-- TEXT FOREIGN KEY --  </span></div>
+<div class="line">SeOrder <span class="keywordtype">smallint</span>(<span class="stringliteral">5</span>) unsigned <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line">SeText text,  </div>
+<div class="line">SeFirstPos <span class="keywordtype">smallint</span>(<span class="stringliteral">5</span>) unsigned <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line"><span class="keyword">PRIMARY</span> KEY (SeID),  </div>
+<div class="line">KEY SeLgID (SeLgID),  </div>
+<div class="line">KEY SeTxID (SeTxID),  </div>
+<div class="line">KEY SeOrder (SeOrder)</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md401"></a>
+Table "textitems2"</h1>
+<p>Text items cache, no backup needed</p>
+<div class="fragment"><div class="line">Ti2WoID mediumint(<span class="stringliteral">8</span>) unsigned <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line">Ti2LgID tinyint(<span class="stringliteral">3</span>) unsigned <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>, <span class="comment">-- LANGUAGE FOREIGN KEY --  </span></div>
+<div class="line">Ti2TxID <span class="keywordtype">smallint</span>(<span class="stringliteral">5</span>) unsigned <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>, <span class="comment">-- TEXT FOREIGN KEY --  </span></div>
+<div class="line">Ti2SeID mediumint(<span class="stringliteral">8</span>) unsigned <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>, <span class="comment">-- SENTENCE FOREIGN KEY --  </span></div>
+<div class="line">Ti2Order <span class="keywordtype">smallint</span>(<span class="stringliteral">5</span>) unsigned <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line">Ti2WordCount tinyint(<span class="stringliteral">3</span>) unsigned <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line">Ti2Text <span class="keywordtype">varchar</span>(<span class="stringliteral">250</span>) <span class="keywordtype">CHARACTER</span> <span class="keyword">SET</span> utf8 <span class="keyword">COLLATE</span> utf8\_bin <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line"><span class="keyword">PRIMARY</span> KEY (Ti2TxID,Ti2Order,Ti2WordCount),  </div>
+<div class="line">KEY Ti2WoID (Ti2WoID)</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md402"></a>
+Table "temptextitems"</h1>
+<p>memory table only used when creating texts, otherwise empty</p>
+<div class="fragment"><div class="line">TiCount <span class="keywordtype">smallint</span>(<span class="stringliteral">5</span>) unsigned <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line">TiSeID mediumint(<span class="stringliteral">8</span>) unsigned <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line">TiOrder <span class="keywordtype">smallint</span>(<span class="stringliteral">5</span>) unsigned <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line">TiWordCount tinyint(<span class="stringliteral">3</span>) unsigned <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line">TiText <span class="keywordtype">varchar</span>(<span class="stringliteral">250</span>) <span class="keywordtype">CHARACTER</span> <span class="keyword">SET</span> utf8 <span class="keyword">COLLATE</span> utf8\_bin <span class="keyword">NOT</span> <span class="stringliteral">NULL</span></div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md403"></a>
+Table "tempwords"</h1>
+<p>memory table only used when importing words, otherwise empty</p>
+<div class="fragment"><div class="line">WoText <span class="keywordtype">varchar</span>(<span class="stringliteral">250</span>) <span class="keyword">DEFAULT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line">WoTextLC <span class="keywordtype">varchar</span>(<span class="stringliteral">250</span>) <span class="keywordtype">CHARACTER</span> <span class="keyword">SET</span> utf8 <span class="keyword">COLLATE</span> utf8\_bin <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line">WoTranslation <span class="keywordtype">varchar</span>(<span class="stringliteral">500</span>) <span class="keyword">NOT</span> <span class="stringliteral">NULL</span> <span class="keyword">DEFAULT</span> <span class="stringliteral">&#39;\*&#39;</span>,  </div>
+<div class="line">WoRomanization <span class="keywordtype">varchar</span>(<span class="stringliteral">100</span>) <span class="keyword">DEFAULT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line">WoSentence <span class="keywordtype">varchar</span>(<span class="stringliteral">1000</span>) <span class="keyword">DEFAULT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line">WoTaglist <span class="keywordtype">varchar</span>(<span class="stringliteral">255</span>) <span class="keyword">DEFAULT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line"><span class="keyword">PRIMARY</span> KEY (WoTextLC)</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md404"></a>
+Table "feedlinks"</h1>
+<p>Newsfeed articles</p>
+<div class="fragment"><div class="line">FlID <span class="keywordtype">smallint</span>(<span class="stringliteral">5</span>) unsigned <span class="keyword">NOT</span> <span class="stringliteral">NULL</span> AUTO\_INCREMENT,  </div>
+<div class="line">FlTitle <span class="keywordtype">varchar</span>(<span class="stringliteral">200</span>) <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line">FlLink <span class="keywordtype">varchar</span>(<span class="stringliteral">400</span>) <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line">FlDescription text <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line">FlDate datetime <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line">FlAudio <span class="keywordtype">varchar</span>(<span class="stringliteral">200</span>) <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line">FlText longtext <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line">FlNfID tinyint(<span class="stringliteral">3</span>) unsigned <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line"><span class="keyword">PRIMARY</span> KEY (FlID),  </div>
+<div class="line"><span class="keyword">UNIQUE</span> KEY FlTitle (FlTitle),  </div>
+<div class="line">KEY FlLink (FlLink),  </div>
+<div class="line">KEY FlDate (FlDate),  </div>
+<div class="line">KEY FlNfID (FlNfID)</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md405"></a>
+Table "newsfeeds"</h1>
+<p>Newsfeed settings</p>
+<div class="fragment"><div class="line">NfID tinyint(<span class="stringliteral">3</span>) unsigned <span class="keyword">NOT</span> <span class="stringliteral">NULL</span> AUTO\_INCREMENT,  </div>
+<div class="line">NfLgID tinyint(<span class="stringliteral">3</span>) unsigned <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line">NfName <span class="keywordtype">varchar</span>(<span class="stringliteral">40</span>) <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line">NfSourceURI <span class="keywordtype">varchar</span>(<span class="stringliteral">200</span>) <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line">NfArticleSectionTags text <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line">NfFilterTags text <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line">NfUpdate <span class="keywordtype">int</span>(<span class="stringliteral">12</span>) unsigned <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line">NfOptions <span class="keywordtype">varchar</span>(<span class="stringliteral">200</span>) <span class="keyword">NOT</span> <span class="stringliteral">NULL</span>,  </div>
+<div class="line"><span class="keyword">PRIMARY</span> KEY (NfID),  </div>
+<div class="line">KEY NfLgID (NfLgID),  </div>
+<div class="line">KEY NfUpdate (NfUpdate)</div>
+</div><!-- fragment --> </div></div><!-- contents -->
 </div><!-- PageDoc -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

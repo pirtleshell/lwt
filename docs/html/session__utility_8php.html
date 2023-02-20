@@ -256,9 +256,6 @@ Functions</h2></td></tr>
 <tr class="memitem:aff2319d48266ed664870309b3e734819"><td class="memItemLeft" align="right" valign="top"><a id="aff2319d48266ed664870309b3e734819" name="aff2319d48266ed664870309b3e734819"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>get_textssort_selectoptions</b> ($v)</td></tr>
 <tr class="separator:aff2319d48266ed664870309b3e734819"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a541d5c0b4c587b13284ed769de30b1fa"><td class="memItemLeft" align="right" valign="top"><a id="a541d5c0b4c587b13284ed769de30b1fa" name="a541d5c0b4c587b13284ed769de30b1fa"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>get_yesno_selectoptions</b> ($v)</td></tr>
-<tr class="separator:a541d5c0b4c587b13284ed769de30b1fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5643281259845b5089248faf60e59b8a"><td class="memItemLeft" align="right" valign="top"><a id="a5643281259845b5089248faf60e59b8a" name="a5643281259845b5089248faf60e59b8a"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>get_andor_selectoptions</b> ($v)</td></tr>
 <tr class="separator:a5643281259845b5089248faf60e59b8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -328,8 +325,7 @@ Functions</h2></td></tr>
 <tr class="memitem:a91ca563ef63e55e65fcb90be8a0ebde1"><td class="memItemLeft" align="right" valign="top"><a id="a91ca563ef63e55e65fcb90be8a0ebde1" name="a91ca563ef63e55e65fcb90be8a0ebde1"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>createDictLinksInEditWin3</b> ($lang, $sentctljs, $wordctljs)</td></tr>
 <tr class="separator:a91ca563ef63e55e65fcb90be8a0ebde1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a62ca3c85d5d405b2bb8b52cc69f6fa8c"><td class="memItemLeft" align="right" valign="top"><a id="a62ca3c85d5d405b2bb8b52cc69f6fa8c" name="a62ca3c85d5d405b2bb8b52cc69f6fa8c"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>checkTest</b> ($val, $name)</td></tr>
+<tr class="memitem:a62ca3c85d5d405b2bb8b52cc69f6fa8c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="session__utility_8php.html#a62ca3c85d5d405b2bb8b52cc69f6fa8c">checkTest</a> ($val, $name)</td></tr>
 <tr class="separator:a62ca3c85d5d405b2bb8b52cc69f6fa8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a66c875dda2e13de897bbb5a2d84398ce"><td class="memItemLeft" align="right" valign="top"><a id="a66c875dda2e13de897bbb5a2d84398ce" name="a66c875dda2e13de897bbb5a2d84398ce"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>strToHex</b> ($string)</td></tr>
@@ -438,6 +434,44 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>never </dd></dl>
+
+</div>
+</div>
+<a id="a62ca3c85d5d405b2bb8b52cc69f6fa8c" name="a62ca3c85d5d405b2bb8b52cc69f6fa8c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a62ca3c85d5d405b2bb8b52cc69f6fa8c">&#9670;&#160;</a></span>checkTest()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">checkTest </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$val</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$name</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Return checked attribute if $val is in array $_REQUEST[$name]</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">mixed</td><td class="paramname">$val</td><td>Value to look for, needle </td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$name</td><td>Key of request haystack.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>string ' ' of ' checked="checked" ' if the qttribute should be checked.</dd></dl>
+<p>@psalm-return ' '|' checked="checked" ' </p>
 
 </div>
 </div>
@@ -566,7 +600,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Create and verify a dictionary URL link</p>
-<p>Case 1: url without any ###: append UTF-8-term Case 2: url with one ###: substitute UTF-8-term Case 3: url with two ###enc###: unsupported encoding changed, abandonned since 2.6.0-fork</p>
+<p>Case 1: url without any ### or lwt_term: append UTF-8-term Case 2: url with one ### or lwt_term: substitute UTF-8-term Case 3: url with two (###|lwt_term)enc###: unsupported encoding changed, abandonned since 2.6.0-fork</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramtype">string</td><td class="paramname">$u</td><td>Dictionary URL. It may contain ### that will get parsed </td></tr>
@@ -574,7 +608,8 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>string Dictionary link formatted </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>string Dictionary link formatted</dd></dl>
+<dl class="section since"><dt>Since</dt><dd>2.7.0-fork It is recommended to use "lwt_term" instead of "###" </dd></dl>
 
 </div>
 </div>
@@ -700,7 +735,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>string HTML-formatted string of which elements are candidate santences to use.</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>string HTML-formatted string of which elements are candidate sentences to use.</dd></dl>
 <p>@global string $tbpref Database table prefix </p>
 
 </div>
@@ -1096,8 +1131,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Return all different database prefixes that are in use.</p>
-<dl class="section return"><dt>Returns</dt><dd>(false|string)[] A list of prefixes.</dd></dl>
-<p>@psalm-return list&lt;false|string&gt; </p>
+<dl class="section return"><dt>Returns</dt><dd>string[] A list of prefixes.</dd></dl>
+<p>@psalm-return list&lt;string&gt; </p>
 
 </div>
 </div>
@@ -1275,7 +1310,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>array{0: string[], 1: string[]} Append text and values to insert to the database</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>string[][] Append text and values to insert to the database</dd></dl>
 <dl class="section since"><dt>Since</dt><dd>2.5.0-fork Function added.</dd></dl>
 <p>@global string $tbpref Table name prefix</p>
 <p>@psalm-return array{0: array&lt;int, string&gt;, 1: list&lt;string&gt;} </p>
@@ -1335,12 +1370,12 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>array{string[], empty[], string[]} Append text, empty and sentence id</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>(null|string)[][] Append text, empty and sentence id</dd></dl>
 <dl class="section since"><dt>Since</dt><dd>2.5.0-fork Mode is unnused and data are always added to the output. </dd>
 <dd>
 2.5.2-fork Fixed multi-words insertion for languages using no space</dd></dl>
 <p>@global string $tbpref Table name prefix</p>
-<p>@psalm-return array{0: array&lt;int, mixed|string&gt;, 1: array&lt;empty, empty&gt;, 2: list&lt;string&gt;} </p>
+<p>@psalm-return array{0: array&lt;int, null|string&gt;, 1: array&lt;empty, empty&gt;, 2: list&lt;string&gt;} </p>
 
 </div>
 </div>
@@ -1589,9 +1624,8 @@ Functions</h2></td></tr>
 <p>Create a dictionnary open URL from an pseudo-URL</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramtype">string</td><td class="paramname">$url</td><td>A string containing at least a URL<ul>
-<li>Starts with a '*': open in pop-up window</li>
-<li>Starts with a 'libretranslate': open with libretranslate</li>
+    <tr><td class="paramtype">string</td><td class="paramname">$url</td><td>An URL, starting with a "*" is deprecated.<ul>
+<li>If it contains a "popup" query, open in new window</li>
 <li>Otherwise open in iframe </li>
 </ul>
 </td></tr>
@@ -1638,8 +1672,8 @@ Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramtype">string</td><td class="paramname">$url</td><td>A string containing at least a URL<ul>
-<li>Starts with a '*': open in pop-up window</li>
-<li>Starts with a 'libretranslate': open with libretranslate</li>
+<li>If it contains the query "lwt_popup", open in Popup</li>
+<li>Starts with a '*': open in pop-up window (deprecated)</li>
 <li>Otherwise open in iframe </li>
 </ul>
 </td></tr>
@@ -2307,7 +2341,8 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>string HTML result</dd></dl>
-<p>@global string $tbpref Database table prefix </p>
+<p>@global string $tbpref Database table prefix</p>
+<dl class="section since"><dt>Since</dt><dd>2.7.0-fork Adapted to use LibreTranslate dictionary as well. </dd></dl>
 
 </div>
 </div>
