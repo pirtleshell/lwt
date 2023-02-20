@@ -63,6 +63,7 @@ from 1.8.0 to 1.10.2. This brings some bug fixes.
 * Full-text speech dispatcher was not available when the name of the language name was changed. Issue signalled [with issue #80](https://github.com/HugoFara/lwt/issues/80#issuecomment-1368180304).
 * Support for PHP 7.4 restored, wrapper for ``str_starts_with``.
 * The encoding of ``docs/info.html`` is finally fixed!
+* Changing language name was breaking text header, this is fixed.
 
 ## 2.6.0-fork (January 01 2023)
 
