@@ -1852,6 +1852,13 @@ from 1.8.0 to 1.10.2. This brings some bug fixes.</li>
 <li>Marking the location of a term to translate with '###' is deprecated in favor of 'lwt_term'.</li>
 </ul>
 </li>
+<li>Changed to the text from YouTube feature (<code>text_from_yt.php</code>):
+<ul>
+<li>Refactored.</li>
+<li>Moved from root folder to <code>inc/</code>.</li>
+<li>This is still an experimental feature!</li>
+</ul>
+</li>
 </ul>
 <h4>Fixed</h4>
 <ul>
@@ -1868,6 +1875,7 @@ at the right if text field.</li>
 <li>Full-text speech dispatcher was not available when the name of the language name was changed. Issue signalled <a href="https://github.com/HugoFara/lwt/issues/80#issuecomment-1368180304">with issue #80</a>.</li>
 <li>Support for PHP 7.4 restored, wrapper for <code>str_starts_with</code>.</li>
 <li>The encoding of <code>docs/info.html</code> is finally fixed!</li>
+<li>Changing language name was breaking text header, this is fixed.</li>
 </ul>
 <h3>2.6.0-fork (January 01 2023)</h3>
 <h4>Added</h4>

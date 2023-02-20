@@ -29,7 +29,7 @@
 
 require_once 'inc/session_utility.php';
 require_once 'inc/start_session.php';
-require_once 'text_from_yt.php';
+require_once 'inc/text_from_yt.php';
 
 /**
  * Get the value of $wh_query.
