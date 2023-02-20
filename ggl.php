@@ -1,8 +1,8 @@
 <?php
 
 require_once 'inc/session_utility.php';
-require_once 'inc/google_api/googleTimeToken.php' ;
-require_once 'inc/google_api/googleTranslateClass.php' ;
+require_once 'inc/googleTimeToken.php' ;
+require_once 'inc/classes/googleTranslateClass.php' ;
 
 $tl = $_GET["tl"];
 $sl = $_GET["sl"];
@@ -26,9 +26,7 @@ if (trim($text)!='') {
     if (!isset($_GET['sent'])) {
         echo '<h3>Google Translate:  &nbsp; ' . 
         '<span class="red2" id="textToSpeak" style="cursor:pointer" ' . 
-        'title="Click on expression for pronunciation" ' . 
-        'onclick="var txt = $(\'#textToSpeak\').text();var audio = new Audio();audio.src =\'tts.php?tl=' . 
-        $sl . '&q=\' + txt;audio.play();">' . tohtml($text) . '</span> ' . 
+        'title="Click on expression for pronunciation">' . tohtml($text) . '</span> ' . 
         '<img id="del_translation" src="icn/broom.png" style="cursor:pointer" ' . 
         'title="Empty Translation Field" onclick="deleteTranslation ();"></img></h3>' . 
         '<p>(Click on <img src="icn/tick-button.png" title="Choose" alt="Choose" /> ' .
@@ -38,14 +36,23 @@ if (trim($text)!='') {
         //<![CDATA[
         $(document).ready( function() {
         let w = window.parent.frames['ro'];
-            if (w === undefined) w = window.opener;
-            if (w === undefined) $('#del_translation').remove();
+        if (w === undefined) 
+            w = window.opener;
+        if (w === undefined) 
+            $('#del_translation').remove();
+
+        $('#textToSpeak').on('click', function () {
+            const txt = $('#textToSpeak').text();
+            const audio = new Audio();
+            audio.src = 'tts.php?tl=' + <?php echo json_encode($sl); ?> + '&q=' + txt;
+            audio.play();
+        });
         });
 
         //]]>
     </script>
         <?php
-        foreach($file as $word){
+        foreach ($file as $word){
             echo '<span class="click" onclick="addTranslation(' . prepare_textdata_js($word) . ');">' . 
             '<img src="icn/tick-button.png" title="Copy" alt="Copy" /> &nbsp; ' . 
             $word . '</span><br />';
