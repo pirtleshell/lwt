@@ -5,7 +5,8 @@
  * 
  * You need a personal YouTube API key. 
  */
-namespace text_from_youtube;
+
+namespace Lwt\Text_From_Youtube;
 
 require_once 'inc/settings.php';
 
@@ -35,33 +36,36 @@ function do_js()
 {
   ?>
 <script>
-const API_KEY = document.getElementById('ytApiKey').value;
 function setYtDataStatus(msg) {
-  const el = document.getElementById('ytDataStatus');
-  el.textContent = msg;
+  $('#ytDataStatus').text(msg);
 }
+
+const fetching_success = function (data) {
+  if (data.items.length == 0) {
+      setYtDataStatus('No videos found.');
+  } else {
+    setYtDataStatus('Success!');
+    const snippet = data.items[0].snippet;
+    $('[name=TxTitle]').attr('value', snippet.title);
+    $('[name=TxText]').attr('value', snippet.description);
+    $('[name=TxSourceURI]').attr('value', `https://youtube.com/watch?v=${ytVideoId}`);
+  } 
+}  
 
 function getYtTextData() {
   setYtDataStatus('Fetching YouTube data...');
   const ytVideoId = document.getElementById('ytVideoId').value;
+  const API_KEY = document.getElementById('ytApiKey').value;
   const url = `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${ytVideoId}&key=${API_KEY}`;
-  console.log('fetching', url);
-  const req = new XMLHttpRequest();
+  /*const req = new XMLHttpRequest();
   req.onload = function(e) {
     const res = JSON.parse(req.responseText);
-    if (res.items.length == 0) {
-      setYtDataStatus('No videos found.');
-    } else {
-      setYtDataStatus('Success!');
-      const snippet = res.items[0].snippet;
-      $('[name=TxTitle]')[0].value = snippet.title;
-      $('[name=TxText]')[0].value = snippet.description;
-      $('[name=TxSourceURI]')[0].value = `https://youtube.com/watch?v=${ytVideoId}`;
-    }
+    fetching_success(res);
   };
   req.open('GET', url);
-  req.send();
+  req.send();*/
 
+  $.get(url, fetching_success);
 }
 </script>
   <?php

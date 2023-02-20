@@ -619,7 +619,7 @@ function edit_texts_new($lid)
             </td>
         </tr>
         <?php if (YT_API_KEY != null) {
-            text_from_youtube\do_form_fragment();
+            Lwt\Text_From_Youtube\do_form_fragment();
         } ?>
         <tr>
             <td class="td1 right" colspan="2">
@@ -639,7 +639,7 @@ function edit_texts_new($lid)
     <input type="button" value="Long Text Import" onclick="location.href='long_text_import.php';" /> 
 </p>
     <?php
-    text_from_youtube\do_js();
+    Lwt\Text_From_Youtube\do_js();
 }
 
 /**
