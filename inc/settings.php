@@ -10,10 +10,12 @@
  * @since   2.0.3-fork
  */
 
-// Debug switch / Display PHP error settings
 
 /** 
  * @var int $debug 
+ * 
+ * Debug switch / Display PHP error settings
+ * 
  * 1 = debugging on, 0 = .. off 
  */
 $debug = 0;     
