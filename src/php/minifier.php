@@ -158,7 +158,7 @@ function minify_everything()
 }
 
 /**
- * @var array<string> All the paths of JS files to be minified
+ * @var array<string> $jsFiles All the paths of JS files to be minified
  */
 $jsFiles = array(
     'src/js/audio_controller.js', 'src/js/third_party/countuptimer.js', 
@@ -169,7 +169,7 @@ $jsFiles = array(
 );
 
 /**
- * @var array<string> All the paths of CSS files to be minified
+ * @var array<string> $cssFiles All the paths of CSS files to be minified
  */
 $cssFiles = array(
     'src/css/css_charts.css', 'src/css/feed_wizard.css', 'src/css/gallery.css', 

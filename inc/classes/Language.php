@@ -19,54 +19,64 @@
 class Language
 {
     /**
-     * @var int Language ID.
+     * @var int $id Language ID.
      */
     public $id;
     /**
-     * @var int Language name.
+     * @var int $name Language name.
      */
     public $name;
     /**
-     * @var int Language ID.
+     * @var int $dict1uri Language ID.
      */
     public $dict1uri;
     /**
-     * @var string Associated text.
+     * @var string $dict2uri Associated text.
      */
     public $dict2uri;
     /**
-     * @var string Associated text in lower case.
+     * @var string $translator Associated text in lower case.
      */
     public $translator;
     /**
-     * @var int Term status.
+     * @var int $exporttemplate Term status.
      */
     public $exporttemplate;
     /**
-     * @var string Term translation.
+     * @var string $textsize Term translation.
      */
     public $textsize;
     /**
-     * @var string Sentence containing the term. 
+     * @var string $charactersubst Character to substitue. 
      */
     public $charactersubst;
     /**
-     * @var string Romanization.
+     * @var string $regexpsplitsent Characters that should split a sentence in part.
      */
     public $regexpsplitsent;
     /**
-     * @var int Number of words in the term.
+     * @var string $exceptionsplitsent Characters taht should not split sentence.
      */
     public $exceptionsplitsent;
+
     /**
-     * @var int Last status change date.
+     * @var string $regexpwordchar Word characters.
      */
     public $regexpwordchar;
 
+    /**
+     * @var bool $removespaces If spaces should be removed.
+     */
     public $removespaces;
 
+    /**
+     * @var bool $spliteachchar If each character should be separated.
+     */
     public $spliteachchar;
 
+    /**
+     * @var bool $rightoleft If the language is right-to-left.
+     */
     public $rightoleft;
 
     /**

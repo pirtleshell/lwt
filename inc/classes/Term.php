@@ -17,43 +17,43 @@
 class Term
 {
     /**
-     * @var int Term ID.
+     * @var int $id Term ID.
      */
     public $id;
     /**
-     * @var int Language ID.
+     * @var int $lgid Language ID.
      */
     public $lgid;
     /**
-     * @var string Associated text.
+     * @var string $text Associated text.
      */
     public $text;
     /**
-     * @var string Associated text in lower case.
+     * @var string $textlc Associated text in lower case.
      */
     public $textlc;
     /**
-     * @var int Term status.
+     * @var int $status Term status.
      */
     public $status;
     /**
-     * @var string Term translation.
+     * @var string $translation Term translation.
      */
     public $translation;
     /**
-     * @var string Sentence containing the term. 
+     * @var string $sentence Sentence containing the term. 
      */
     public $sentence;
     /**
-     * @var string Romanization.
+     * @var string $roman Romanization.
      */
     public $roman;
     /**
-     * @var int Number of words in the term.
+     * @var int $wordcount Number of words in the term.
      */
     public $wordcount;
     /**
-     * @var int Last status change date.
+     * @var int $statuschanged Last status change date.
      */
     public $statuschanged;
 

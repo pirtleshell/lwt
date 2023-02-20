@@ -74,9 +74,9 @@ function unset_settings(): void
 /**
  * Save settings and go to a page.
  * 
- * @param string k Setting key
- * @param string v Setting value
- * @param string u URL to go to
+ * @param string $k Setting key
+ * @param string $v Setting value
+ * @param string $u URL to go to
  * 
  * @return void
  */
