@@ -29,6 +29,7 @@
 
 require_once 'inc/session_utility.php';
 require_once 'inc/start_session.php';
+require_once 'text_from_yt.php';
 
 /**
  * Get the value of $wh_query.
@@ -617,8 +618,8 @@ function edit_texts_new($lid)
                 </span>        
             </td>
         </tr>
-        <?php if (isset($YT_API_KEY)) {
-            include_once 'text_from_yt.php';
+        <?php if (YT_API_KEY != null) {
+            text_from_youtube\do_form_fragment();
         } ?>
         <tr>
             <td class="td1 right" colspan="2">
@@ -638,6 +639,7 @@ function edit_texts_new($lid)
     <input type="button" value="Long Text Import" onclick="location.href='long_text_import.php';" /> 
 </p>
     <?php
+    text_from_youtube\do_js();
 }
 
 /**
