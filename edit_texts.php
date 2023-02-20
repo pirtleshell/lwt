@@ -29,6 +29,7 @@
 
 require_once 'inc/session_utility.php';
 require_once 'inc/start_session.php';
+require_once 'inc/text_from_yt.php';
 
 /**
  * Get the value of $wh_query.
@@ -560,10 +561,10 @@ function edit_texts_new($lid)
 {
     ?>
 
-<h1>
+<h2>
     New Text <a target="_blank" href="docs/info.html#howtotext">
     <img src="icn/question-frame.png" title="Help" alt="Help" /></a> 
-</h1>
+</h2>
 <script type="text/javascript" charset="utf-8">
     $(document).ready(ask_before_exiting);
 </script>
@@ -617,8 +618,8 @@ function edit_texts_new($lid)
                 </span>        
             </td>
         </tr>
-        <?php if (isset($YT_API_KEY)) {
-            include_once 'text_from_yt.php';
+        <?php if (YT_API_KEY != null) {
+            Lwt\Text_From_Youtube\do_form_fragment();
         } ?>
         <tr>
             <td class="td1 right" colspan="2">
@@ -638,6 +639,7 @@ function edit_texts_new($lid)
     <input type="button" value="Long Text Import" onclick="location.href='long_text_import.php';" /> 
 </p>
     <?php
+    Lwt\Text_From_Youtube\do_js();
 }
 
 /**
@@ -658,11 +660,11 @@ function edit_texts_change($txid)
     $res = do_mysqli_query($sql);
     if ($record = mysqli_fetch_assoc($res)) {
         ?>
-<h1>
+<h2>
     Edit Text <a target="_blank" href="docs/info.html#howtotext">
     <img src="icn/question-frame.png" title="Help" alt="Help" />
     </a>
-</h1>
+</h2>
 <script type="text/javascript" charset="utf-8">
     $(document).ready(ask_before_exiting);
 </script>

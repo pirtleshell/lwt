@@ -516,7 +516,7 @@ THE SOFTWARE.</p>
 			<h2 id="install" name="install">▶ LWT Installation - <a href="#">[↑]</a></h2>
 <ul>
 <li>
-<em>Last update</em>: December 30 2022</li>
+<em>Last update</em>: February 20, 2023</li>
 </ul>
 <p>Let's install the LWT server. LWT uses a client-server architecture, which means it
 will run in your browser as a classical website. You can use any computer as the
@@ -532,7 +532,7 @@ server, here are some ways to do it.</p>
 <p>There are two main ways to install LWT: on your computer or using <a href="#run-in-a-docker-container">containers</a>. We recommend the first solution as the most straightforward. The second solution has a simpler installation method, but takes a lot of storage.</p>
 <h3>Windows 10/11</h3>
 <p>Two main softwares can be used to set up a local server on your computer: XAMPP and EasyPHP. We recommand XAMPP because it supports higher PHP version, but feel free to use any softare you like.</p>
-<h4>Possibility (a): Using XAMPP</h4>
+<h4>Using XAMPP (recommended)</h4>
 <ol>
 <li>
 <p>Install XAMPP</p>
@@ -567,7 +567,7 @@ server, here are some ways to do it.</p>
 <p>Hint: To fix a "XAMPP Control Panel" error "Xampp-control.ini Access is denied", please read and do the instructions in <a href="https://www.codermen.com/fix-xampp-server-error-xampp-control-ini-access-is-denied/">https://www.codermen.com/fix-xampp-server-error-xampp-control-ini-access-is-denied/</a></p>
 </blockquote>
 <p>Now you must only do step 4.2 to start LWT.</p>
-<h4>Possibility (b): Using EasyPHP</h4>
+<h4>Using EasyPHP</h4>
 <ol>
 <li>
 <p>Get Visual C++</p>
@@ -669,6 +669,19 @@ sudo apt-get install apache2 libapache2-mod-php php php-mbstring php-mysql mysql
 </code></pre>
 </li>
 <li>
+<p>(Optional) Check if everything is okay:</p>
+</li>
+</ol>
+<ul>
+<li>
+<code>php -v</code> should show a PHP version equal or above to 8.0.0.</li>
+<li>
+<a href="http://locahlhost">http://locahlhost</a> should display a nice web page.</li>
+<li>
+<code>mysql -V</code> should work.</li>
+</ul>
+<ol start="3">
+<li>
 <p>Enable the extensions</p>
 <ol>
 <li>Go to your PHP folder (<code>/etc/php/{{desired PHP version}}/{{PHP type}}/</code>)</li>
@@ -687,7 +700,7 @@ QUIT;
 </code></pre>
 </li>
 <li>
-<p>Check MySQL access (optionnal)</p>
+<p>(Optionnal) Check MySQL access</p>
 <pre><code class="language-bash">mysql -u root -p
 abcxyz
 </code></pre>
@@ -705,14 +718,14 @@ abcxyz
 <p>Unzip it.</p>
 </li>
 <li>
-<p>Rename the file connect_xampp.inc.php in /[... Path to downloaded LWT ...]/lwt to connect.inc.php.</p>
+<p>Rename the file <code>connect_xampp.inc.php</code> (in the unzipped folder) to <code>connect.inc.php</code>.</p>
 </li>
 <li>
-<p>Edit connect.inc.php and set the MySQL password in line
+<p>Edit <code>connect.inc.php</code> and set the MySQL password in line
 <code>$passwd = "";</code>. Change it to <code>$passwd = "abcxyz";</code>. Save the edited file connect.inc.php.</p>
 </li>
 <li>
-<p>Open a Terminal window, type and execute the following commands:</p>
+<p>Open a terminal, type and execute the following commands:</p>
 <pre><code class="language-bash">sudo rm /var/www/html/index.html
 sudo mv /[... Path to downloaded LWT ...]/lwt /var/www/html
 sudo chmod -R 755 /var/www/html/lwt
@@ -767,7 +780,7 @@ The official repository is at <a href="https://packagist.org/packages/hugofara/l
 </ol>
 <h3>Something Went Wrong</h3>
 <p>Need more help? You can contact us through  <a href="https://github.com/HugoFara/lwt/issues">GitHub</a> and <a href="https://discord.gg/xrkRZR2jtt">Discord</a>!</p>
-<p>Please note that PHP below version 8.0 is not supported.</p>
+<p>Please note that <em>PHP below version 8.0 is no longer supported</em>.</p>
 
 			<h2 id="learn" name="learn">▶ How to Learn - <a href="#">[↑]</a></h2>
 <p>First, find a text you want to study, preferably with an audio file, and load it into LWT. The <a href="http://lingq.com">LingQ Library</a> has many texts with audio, and only a free registration is needed. Or look into <a href="https://www.lingq.com/en/forum/updates-tips-and-known-issues/where-to-find-good-content-to-import/">this thread</a> in the LingQ Forum, you will find there lots of great links to resources. Or click (within the LingQ library) on "My Imports" - you will find a list of links of "Suggested resources".</p>
@@ -1852,6 +1865,19 @@ from 1.8.0 to 1.10.2. This brings some bug fixes.</li>
 <li>Marking the location of a term to translate with '###' is deprecated in favor of 'lwt_term'.</li>
 </ul>
 </li>
+<li>Changed to the text from YouTube feature (<code>text_from_yt.php</code>):
+<ul>
+<li>Refactored.</li>
+<li>Moved from root folder to <code>inc/</code>.</li>
+<li>This is still an experimental feature!</li>
+</ul>
+</li>
+<li>Moved Google API files:
+<ul>
+<li>Moved <code>googleTimeToken.php</code> from root folder to <code>inc/</code>.</li>
+<li>Moved <code>googleTranslateClass.php</code> from root folder to <code>inc/classes/</code>.</li>
+</ul>
+</li>
 </ul>
 <h4>Fixed</h4>
 <ul>
@@ -1868,6 +1894,7 @@ at the right if text field.</li>
 <li>Full-text speech dispatcher was not available when the name of the language name was changed. Issue signalled <a href="https://github.com/HugoFara/lwt/issues/80#issuecomment-1368180304">with issue #80</a>.</li>
 <li>Support for PHP 7.4 restored, wrapper for <code>str_starts_with</code>.</li>
 <li>The encoding of <code>docs/info.html</code> is finally fixed!</li>
+<li>Changing language name was breaking text header, this is fixed.</li>
 </ul>
 <h3>2.6.0-fork (January 01 2023)</h3>
 <h4>Added</h4>

@@ -50,6 +50,13 @@ from 1.8.0 to 1.10.2. This brings some bug fixes.
   * '*' before a dictionary URL should be replaced by an argument 'lwt_popup=true'
   * 'ggl.php' and 'glosbe_api.php' should be updated (e. g. "{YOUR_LWT_CURRENT_ADDRESS}/ggl.php")
   * Marking the location of a term to translate with '###' is deprecated in favor of 'lwt_term'.
+* Changed to the text from YouTube feature (``text_from_yt.php``):
+  * Refactored.
+  * Moved from root folder to ``inc/``.
+  * This is still an experimental feature!
+* Moved Google API files:
+  * Moved ``googleTimeToken.php`` from root folder to ``inc/``.
+  * Moved ``googleTranslateClass.php`` from root folder to ``inc/classes/``.
 
 ### Fixed
 

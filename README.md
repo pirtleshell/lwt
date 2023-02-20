@@ -32,14 +32,20 @@ As it is self-hosted, you will need a server, which can be your computer.
 
 Start a shell in the downloaded folder an run: ``./INSTALL.sh``. You may need to run ``chmod +x ./INSTALL.sh`` first.
 
+### Docker (any OS)
+
+If you have [Docker](https://docs.docker.com/get-docker/), download the latest release and do:
+```bash
+cd lwt
+docker compose up
+```
+
 ### Other Systems
 
 * **Please see**: [docs/install.md](docs/install.md) for detailed instructions.
 * Create ``connect.inc.php`` with an existing database user. Everything is explained at [docs/info.html](https://hugofara.github.io/lwt/docs/info.html#install).
 
 And you are ready to go!
-
-Please note that a composer repo is available, as well as an installation using Docker.
 
 ## Description
 
@@ -149,10 +155,10 @@ Any other branch if considered under development.
 ## Alternatives
 
 * *See also*: [docs/links.md](docs/links.md)
-LWT is written for web, but you have many choices if you want a standalone installation:
-* [LingL](https://github.com/gustavklopp/LingL) is a wonderful alternative written in Python, by [gustavklopp](https://github.com/gustavklopp).
+
+* [LUTE](https://github.com/jzohrab/lute) is another great project with the same philosophy. It is a rewrite of LWT with modern tools such as Symfony.
 * [FLTR ◆ Foreign Language Text Reader](https://sourceforge.net/projects/foreign-language-text-reader/), a Java clone, by the same
-author as LWT ([lang-learn-guy](https://sourceforge.net/u/lang-learn-guy/profile/))
+author as LWT ([lang-learn-guy](https://sourceforge.net/u/lang-learn-guy/profile/)), it is a standalone installation.
 
 ## Unlicense
 

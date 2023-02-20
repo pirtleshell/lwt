@@ -71,39 +71,44 @@ class GoogleTranslate
         foreach ($d as $b) {
             $c += $b;
             $b = $c << 10;
-            if($b & $x) { $b |= $y; 
-            }
-            else { $b &= $z; 
+            if ($b & $x) { 
+                $b |= $y; 
+            } else { 
+                $b &= $z; 
             }
             $c += $b;
             $b = (($c >> 6) & (0x03ffffff));
             $c ^= $b;
-            if($c & $x) { $c |= $y; 
-            }
-            else { $c &= $z; 
+            if ($c & $x) { 
+                $c |= $y; 
+            } else { 
+                $c &= $z; 
             }
         }
         $b = $c << 3;
-        if($b & $x) { $b |= $y; 
-        }
-        else { $b &= $z; 
+        if($b & $x) { 
+            $b |= $y; 
+        } else { 
+            $b &= $z; 
         }
         $c += $b;
         $b = (($c >> 11) & (0x001fffff));
         $c ^= $b;
         $b = $c << 15;
-        if($b & $x) { $b |= $y; 
-        }
-        else { $b &= $z; 
+        if($b & $x) { 
+            $b |= $y; 
+        } else { 
+            $b &= $z; 
         }
         $c += $b;
         $c ^= isset($tok)?$tok[1]:585515986;//todo create from time() / TKK ggltrns
         $c &= $z;
-        if(0 > $c) {
+        if (0 > $c) {
             $c = (($x ^ $c));
-            if(5000000 > $c) { $c += 483648; 
-            }
-            else { $c -= 516352; 
+            if(5000000 > $c) { 
+                $c += 483648; 
+            } else { 
+                $c -= 516352; 
             }
         }
         $c %= 1000000;
@@ -111,8 +116,14 @@ class GoogleTranslate
     }
     public static final function getDomain($domain) 
     {
-        $loc = array('com.ar', 'at', 'com.au', 'be', 'com.br', 'ca', 'cat', 'ch', 'cl', 'cn', 'cz', 'de', 'dk', 'es', 'fi', 'fr', 'gr', 'com.hk', 'hr', 'hu', 'co.id', 'ie', 'co.il', 'im', 'co.in', 'it', 'jm', 'co.jp', 'co.kr', 'com.mx', 'nl', 'no', 'pl', 'pt', 'ru', 'se', 'com.sg', 'co.th', 'com.tw', 'co.uk', 'com', 'za');
-        if(empty($domain) || !in_array($domain, $loc, true)) {
+        $loc = array(
+            'com.ar', 'at', 'com.au', 'be', 'com.br', 'ca', 'cat', 'ch', 'cl', 'cn', 
+            'cz', 'de', 'dk', 'es', 'fi', 'fr', 'gr', 'com.hk', 'hr', 'hu', 'co.id', 
+            'ie', 'co.il', 'im', 'co.in', 'it', 'jm', 'co.jp', 'co.kr', 'com.mx', 
+            'nl', 'no', 'pl', 'pt', 'ru', 'se', 'com.sg', 'co.th', 'com.tw', 
+            'co.uk', 'com', 'za'
+        );
+        if (empty($domain) || !in_array($domain, $loc, true)) {
             return $loc[mt_rand(0, count($loc) - 1)];
         }
         return $domain;
@@ -145,7 +156,7 @@ class GoogleTranslate
     }
     public static final function makeCurl($url, $cookieSet = false) 
     {
-        if(is_callable('curl_init')) {
+        if (is_callable('curl_init')) {
             if (!$cookieSet) {
                 $cookie = tempnam(sys_get_temp_dir(), "CURLCOOKIE");
                 $curl = curl_init($url);
@@ -159,14 +170,13 @@ class GoogleTranslate
                 return $output;
             }
             $curl = curl_init($url);
-            curl_setopt($curl, CURLOPT_COOKIEFILE, $cookie);
+            // curl_setopt($curl, CURLOPT_COOKIEFILE, $cookie); Commented in 2.7.0-fork, do not work
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($curl, CURLOPT_HTTPHEADER, self::$headers);
             curl_setopt($curl, CURLOPT_ENCODING, "gzip");
             $output = curl_exec($curl);
             unset($curl);
-        }
-        else{
+        } else {
             $ctx = stream_context_create(array("http"=>array("method"=>"GET","header"=>implode("\r\n", self::$headers) . "\r\n")));
             $output = file_get_contents($url, false, $ctx);
         }
