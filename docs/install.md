@@ -1,6 +1,6 @@
 # LWT Installation
 
-* *Last update*: December 30 2022
+* *Last update*: February 20, 2023
 
 Let's install the LWT server. LWT uses a client-server architecture, which means it
 will run in your browser as a classical website. You can use any computer as the
@@ -21,7 +21,7 @@ There are two main ways to install LWT: on your computer or using [containers](#
 
 Two main softwares can be used to set up a local server on your computer: XAMPP and EasyPHP. We recommand XAMPP because it supports higher PHP version, but feel free to use any softare you like.
 
-### Possibility (a): Using XAMPP
+### Using XAMPP (recommended)
 
 1. Install XAMPP
    1. Go to <https://www.apachefriends.org/download.html>
@@ -48,7 +48,7 @@ If you want to start "XAMPP Control Panel" every time you start Windows and to a
 
 Now you must only do step 4.2 to start LWT.
 
-### Possibility (b): Using EasyPHP
+### Using EasyPHP
 
 1. Get Visual C++
    1. Download "vcredist_x86.exe" from <https://www.microsoft.com/en-us/download/details.aspx?id=30679>
@@ -129,12 +129,17 @@ The following instruction were tested on Raspbian Stretch.
       sudo apt-get install apache2 libapache2-mod-php php php-mbstring php-mysql mysql-server
       ```
 
-   2. Enable the extensions
+   2. (Optional) Check if everything is okay:
+     * ``php -v`` should show a PHP version equal or above to 8.0.0.
+     * <http://locahlhost> should display a nice web page.
+     * ``mysql -V`` should work.
+
+   3. Enable the extensions
       1. Go to your PHP folder (``/etc/php/{{desired PHP version}}/{{PHP type}}/``)
       2. Run ``sudo nano php.ini``.
       3. Delete the ";" symbols before ``extension=mbstring`` and ``extension=mysqli``.
 
-   3. Set MySQL root Password to "abcxyz"
+   4. Set MySQL root Password to "abcxyz"
 
       ```bash
       sudo mysql
@@ -148,7 +153,7 @@ The following instruction were tested on Raspbian Stretch.
       QUIT; 
       ```
 
-   4. Check MySQL access (optionnal)
+   5. (Optionnal) Check MySQL access
 
        ```bash
        mysql -u root -p
@@ -167,12 +172,12 @@ The following instruction were tested on Raspbian Stretch.
   
 3. Unzip it.
 
-4. Rename the file connect_xampp.inc.php in /[... Path to downloaded LWT ...]/lwt to connect.inc.php.
+4. Rename the file ``connect_xampp.inc.php`` (in the unzipped folder) to ``connect.inc.php``.
 
-5. Edit connect.inc.php and set the MySQL password in line
+5. Edit ``connect.inc.php`` and set the MySQL password in line
 ``$passwd = "";``. Change it to ``$passwd = "abcxyz";``. Save the edited file connect.inc.php.
 
-6. Open a Terminal window, type and execute the following commands:
+6. Open a terminal, type and execute the following commands:
 
    ```bash
    sudo rm /var/www/html/index.html
@@ -238,4 +243,4 @@ The official repository is at <https://packagist.org/packages/hugofara/lwt>.
 
 Need more help? You can contact us through  [GitHub](https://github.com/HugoFara/lwt/issues) and [Discord](https://discord.gg/xrkRZR2jtt)!
 
-Please note that PHP below version 8.0 is not supported.
+Please note that *PHP below version 8.0 is no longer supported*.
