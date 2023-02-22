@@ -370,6 +370,32 @@ function load_language($lgid)
     return $language;
 }
 
+function langFromDict($url) {
+    if ($url == '') {
+        return '';
+    }
+    $query = parse_url($url, PHP_URL_QUERY);
+    parse_str($query, $parsed_query);
+    if ($parsed_query["lwt_translator"] == "libretranslate") {
+        return $parsed_query["source"] || "";
+    }
+    // Fallback to Google Translate
+    return $parsed_query["sl"] || "";
+}
+
+function targetLangFromDict($url) {
+    if ($url == '') {
+        return '';
+    }
+    $query = parse_url($url, PHP_URL_QUERY);
+    parse_str($query, $parsed_query);
+    if ($parsed_query["lwt_translator"] == "libretranslate") {
+        return $parsed_query["target"] || "";
+    }
+    // Fallback to Google Translate
+    return $parsed_query["tl"] || "";
+} 
+
 /**
  * Create the form for a language.
  * 
@@ -377,22 +403,55 @@ function load_language($lgid)
  */
 function edit_language_form($language) 
 {
+    global $langDefs;
+    $sourceLg = '';
+    $targetLg = '';
+    $currentnativelanguage = getSetting('currentnativelanguage'); 
+    if (array_key_exists($currentnativelanguage, $langDefs)) {
+        $targetLg = $langDefs[$currentnativelanguage][1];
+    }
+    if ($language->name) {
+        if (array_key_exists($language->name, $langDefs)) {
+            $sourceLg = $langDefs[$language->name][1];
+        }
+        $lgFromDict = langFromDict($language->translator); 
+        if ($lgFromDict != '' && $lgFromDict != $sourceLg) {
+            $sourceLg = $lgFromDict;
+        }
+
+
+        $targetFromDict = targetLangFromDict($language->translator);
+        if ($targetFromDict != '' && $targetFromDict != $targetLg) {
+            $targetLg = $targetFromDict;
+        }
+    }
     ?>
 <script type="text/javascript">
 
-    GGTRANSLATE = 'https://translate.google.com/?' + $.param({
-            ie: "UTF-8",
-            <?php if ($language->name) echo 'sl: LANGDEFS[' . json_encode($language->name) . '][1]'; ?>,
-            tl: LANGDEFS[<?php echo json_encode(getSetting('currentnativelanguage')); ?>][1],
-            text: 'lwt_term'
+    const new_language = <?php echo json_encode($language->name == null); ?>;
+
+    function reloadDictURLs(sourceLg='auto', targetLg='en') {
+
+        GGTRANSLATE = 'https://translate.google.com/?' + $.param({
+                ie: "UTF-8",
+                sl: sourceLg,
+                tl: targetLg,
+                text: 'lwt_term'
         });
 
-    LIBRETRANSLATE = 'http://localhost:5000/?' + $.param({
-        lwt_translator: 'libretranslate',
-        source: <?php echo ($language->name ? 'LANGDEFS[' . json_encode($language->name) . '][1]' : 'auto') ?>,
-        target: LANGDEFS[<?php echo json_encode(getSetting('currentnativelanguage')); ?>][1],
-        q: "lwt_term"
-    });
+        LIBRETRANSLATE = 'http://localhost:5000/?' + $.param({
+            lwt_translator: 'libretranslate',
+            source: sourceLg,
+            target: targetLg,
+            q: "lwt_term"
+        });
+
+    }
+
+    reloadDictURLs(
+        <?php echo json_encode($sourceLg); ?>, 
+        <?php echo json_encode($targetLg); ?>
+    );
 
     /**
      * Check for specific language option based on language name 
@@ -912,13 +971,7 @@ function edit_languages_new()
              * Apply wizard based on entered data.
              */
             apply: function (learning_lg, known_lg, learning_lg_name) {
-                GGTRANSLATE = 'https://translate.google.com/?' + $.param({
-                    lwt_popup: true,
-                    ie: "UTF-8",
-                    sl: learning_lg[1],
-                    tl: known_lg[1],
-                    text: "lwt_term"
-                });
+                reloadDictURLs(learning_lg[1], known_lg[1]);
                 const url = new URL(window.location.href);
                 const base_url = url.protocol + "//" + url.hostname;
                 let path = url.pathname;
