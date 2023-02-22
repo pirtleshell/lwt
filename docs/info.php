@@ -78,16 +78,16 @@ require_once __DIR__ . '/../src/php/markdown_converter.php';
 			<div>&nbsp;</div>
 			<a href="#preface">Preface</a>
 			<a href="#current">Curr. Version </a>
-			<a href="#links">Links</a>
 			<a href="#abstract">Abstract</a>
+			<a href="#install">Installation</a>
+			<a href="#postinstall">Post-<wbr>Installation</a>
 			<a href="#features">Features</a>
 			<a href="#newfeatures">New Features</a>
 			<a href="#screencasts">Screencasts</a>
+			<a href="#links">Links</a>
 			<a href="#restrictions">Restrictions</a>
 			<a href="#UNLICENSE">License</a>
 			<a href="#thirdpartylicenses">Third Party</a>
-			<a href="#install">Installation</a>
-			<a href="#postinstall">Post-<wbr>Installation</a>
 			<a href="#learn">How to learn</a>
 			<a href="#howto">How to use</a>
 			<a href="#faq">Q & A</a>
@@ -127,11 +127,14 @@ require_once __DIR__ . '/../src/php/markdown_converter.php';
 					<option value="current">
 						Current Version
 					</option>
-					<option value="links">
-						Links
-					</option>
 					<option value="abstract">
 						Abstract
+					</option>
+					<option value="install">
+						Installation
+					</option>
+					<option value="postinstall">
+						Post-Installation Steps
 					</option>
 					<option value="features">
 						Features
@@ -142,17 +145,14 @@ require_once __DIR__ . '/../src/php/markdown_converter.php';
 					<option value="screencasts">
 						Screencasts
 					</option>
+					<option value="links">
+						Links
+					</option>
 					<option value="restrictions">
 						Restrictions
 					</option>
 					<option value="UNLICENSE">
-						(Un-) License
-					</option>
-					<option value="install">
-						Installation
-					</option>
-					<option value="postinstall">
-						Post-Installation Steps
+						License
 					</option>
 					<option value="learn">
 						How to learn
@@ -206,9 +206,11 @@ require_once __DIR__ . '/../src/php/markdown_converter.php';
 			</p>
 			
 
-			<?php echo markdown_integration(__DIR__ . "/links.md"); ?>
-
 			<?php echo markdown_integration(__DIR__ . "/abstract.md"); ?>
+			
+			<?php echo markdown_integration(__DIR__ . "/install.md"); ?>
+
+			<?php echo markdown_integration(__DIR__ . "/postinstall.md"); ?>
 
 			<?php echo markdown_integration(__DIR__ . "/features.md"); ?>
 
@@ -236,15 +238,13 @@ require_once __DIR__ . '/../src/php/markdown_converter.php';
 				<a href="http://www.fluentin3months.com/learning-with-texts/" target="_blank">Fluent In 3 Months: Introducing LWT</a>, with <a target="_blank" href="http://lwtfi3m.co/">Benny's own (free) version of LWT</a>.<br />
 			</p>
 
+			<?php echo markdown_integration(__DIR__ . "/links.md"); ?>
+
 			<?php echo markdown_integration(__DIR__ . "/restrictions.md"); ?>
 
 			<?php echo markdown_integration(__DIR__ . "/../UNLICENSE.md" ) ?>
 
 			<?php echo markdown_integration(__DIR__ . "/thirdpartylicenses.md" ) ?>
-			
-			<?php echo markdown_integration(__DIR__ . "/install.md"); ?>
-
-			<?php echo markdown_integration(__DIR__ . "/postinstall.md"); ?>
 
 			<?php echo markdown_integration(__DIR__ . "/learn.md"); ?>
 
