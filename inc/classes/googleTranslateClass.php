@@ -128,7 +128,7 @@ class GoogleTranslate
         }
         return $domain;
     }
-    public function array_iunique($array) 
+    public static function array_iunique($array) 
     {
         return array_intersect_key(
             $array,
@@ -206,7 +206,7 @@ class GoogleTranslate
             }
             if (!empty($resultArray[5])) {
                 foreach ($resultArray[5] as $v) {
-                    if($v[0]==$string) {
+                    if ($v[0]==$string) {
                         foreach ($v[2] as $results) {
                             $finalResult[] = $results[0];
                         }
