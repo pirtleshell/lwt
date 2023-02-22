@@ -1,17 +1,15 @@
 <?php
 
+namespace Lwt\Ggl;
+
 require_once 'inc/session_utility.php';
 require_once 'inc/googleTimeToken.php' ;
-require_once 'inc/classes/googleTranslateClass.php' ;
+require_once 'inc/classes/googleTranslateClass.php';
 
-$tl = $_GET["tl"];
-$sl = $_GET["sl"];
-$text = $_GET["text"];
+use GoogleTranslate;
 
-header('Pragma: no-cache');
-header('Expires: 0');
-
-if (trim($text)!='') {
+function translate_term($text, $sl, $tl)
+{
     $file = GoogleTranslate::staticTranslate($text, $sl, $tl, getGoogleTimeToken());
 
     $gglink = makeOpenDictStr(
@@ -22,7 +20,6 @@ if (trim($text)!='') {
         " more..."
     );
 
-    pagestart_nobody('');
     if (!isset($_GET['sent'])) {
         echo '<h3>Google Translate:  &nbsp; ' . 
         '<span class="red2" id="textToSpeak" style="cursor:pointer" ' . 
@@ -73,10 +70,24 @@ if (trim($text)!='') {
         '<br><table class="tab2" cellspacing="0" cellpadding="0">' . 
         '<tr><td class="td1bot center" colspan="1">'. $file[0] . '</td></tr></table>'; 
     }
-} else {
-    pagestart_nobody('');
-    echo "<p class=\"msgblue\">Term is not set!</p>";
 }
-pageend();
 
+function do_content($text)
+{
+    $tl = $_GET["tl"];
+    $sl = $_GET["sl"];
+    header('Pragma: no-cache');
+    header('Expires: 0');
+    pagestart_nobody('');
+    if (trim($text)!='') {
+        translate_term($text, $sl, $tl);
+    } else {
+        echo "<p class=\"msgblue\">Term is not set!</p>";
+    }
+    pageend();
+}
+
+if (isset($_GET['text'])) {
+    do_content($_GET["text"]);
+}
 ?>
