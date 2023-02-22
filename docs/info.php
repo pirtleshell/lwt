@@ -270,16 +270,15 @@ require_once __DIR__ . '/../src/php/markdown_converter.php';
 			
 			<?php echo markdown_integration(__DIR__ . "/CHANGELOG.md"); ?>
 
-			<footer class="graydotted">
-
-				<a target="_blank" href="http://en.wikipedia.org/wiki/Public_domain_software">
-					<img class="lwtlogo" src="../img/public_domain.png" alt="Public Domain" />
-				</a>
+			<footer>
 				<p class="smallgray">
+					<a target="_blank" href="http://en.wikipedia.org/wiki/Public_domain_software">
+						<img class="lwtlogo" src="../img/public_domain.png" alt="Public Domain" />
+					</a>
 					<a href="http://sourceforge.net/projects/learning-with-texts/" target="_blank">
 						"Learning with Texts" (LWT)
 					</a> is released into the Public Domain. This applies worldwide.
-					<br />
+					<wbr />
 					In case this is not legally possible, any entity is granted the right to use this 
 					work for any purpose, without any conditions, unless such conditions are 
 					required by law.
