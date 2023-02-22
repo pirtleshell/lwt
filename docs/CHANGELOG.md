@@ -25,6 +25,10 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 * ``inc/classes/`` folder for a better incorporation of OOP.
   * ``inc/classes/Term`` defines the ``Term`` class representing a word or multi-word.
   * ``inc/classes/Language`` defines the ``Language`` class representing a language.
+* Post-Install Documentation added:
+  * MeCab without and with Docker, Thanks to [@99MengXin](https://github.com/99MengXin) for the link ([#94](https://github.com/HugoFara/lwt/issues/94#issuecomment-1437030748)).
+  * LibreTranslate integration.
+  * TTS issues, as suggested by [@asdrubalivan](https://github.com/asdrubalivan) in [#85](https://github.com/HugoFara/lwt/issues/85#issuecomment-1369751473).
 
 ### Changed
 

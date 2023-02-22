@@ -84,9 +84,10 @@ require_once __DIR__ . '/../src/php/markdown_converter.php';
 			<a href="#newfeatures">New Features</a>
 			<a href="#screencasts">Screencasts</a>
 			<a href="#restrictions">Restrictions</a>
-			<a href="#UNLICENSE">(Un-) License</a>
+			<a href="#UNLICENSE">License</a>
 			<a href="#thirdpartylicenses">Third Party</a>
 			<a href="#install">Installation</a>
+			<a href="#postinstall">Post-<wbr>Installation</a>
 			<a href="#learn">How to learn</a>
 			<a href="#howto">How to use</a>
 			<a href="#faq">Q & A</a>
@@ -149,6 +150,9 @@ require_once __DIR__ . '/../src/php/markdown_converter.php';
 					</option>
 					<option value="install">
 						Installation
+					</option>
+					<option value="postinstall">
+						Post-Installation Steps
 					</option>
 					<option value="learn">
 						How to learn
@@ -238,10 +242,9 @@ require_once __DIR__ . '/../src/php/markdown_converter.php';
 
 			<?php echo markdown_integration(__DIR__ . "/thirdpartylicenses.md" ) ?>
 			
-			<!-- 
-				Source is at http://learning-with-texts.sourceforge.io/LWT_INSTALLATION.txt
-			-->
 			<?php echo markdown_integration(__DIR__ . "/install.md"); ?>
+
+			<?php echo markdown_integration(__DIR__ . "/postinstall.md"); ?>
 
 			<?php echo markdown_integration(__DIR__ . "/learn.md"); ?>
 
