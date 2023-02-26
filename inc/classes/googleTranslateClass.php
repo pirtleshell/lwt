@@ -28,6 +28,8 @@ else
     }
  ***************************************************************/
 
+namespace Lwt\Classes;
+
 class GoogleTranslate
 {
     public $lastResult = "";
@@ -37,8 +39,11 @@ class GoogleTranslate
     private static $gglDomain;
     private static $headers;
     //&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss
-    private static $urlFormat = "http://translate.google.%s/translate_a/single?client=t&q=%s&hl=en&sl=%s&tl=%s&dt=t&dt=at&dt=bd&ie=UTF-8&oe=UTF-8&oc=1&otf=2&ssel=0&tsel=3&tk=%s";
-    private static final function setHeaders()
+    private static $urlFormat = "http://translate.google.%s/translate_a/single" . 
+    "?client=t&q=%s&hl=en&sl=%s&tl=%s&dt=t&dt=at&dt=bd&ie=UTF-8&oe=UTF-8&oc=1&" . 
+    "otf=2&ssel=0&tsel=3&tk=%s";
+
+    private static final function setHeaders(): void
     {
         self::$headers = array(
         'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -51,7 +56,7 @@ class GoogleTranslate
         'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1'
         );
     }
-    private static final function generateToken($str,$tok) 
+    private static final function generateToken($str, $tok): string
     {
         $t = $c = isset($tok)?$tok[0]:408254;//todo floor(time()/3600);
         $x = hexdec(80000000);
@@ -114,6 +119,15 @@ class GoogleTranslate
         $c %= 1000000;
         return $c . '.' . ($t ^ $c);
     }
+    /**
+     * Return the current domain.
+     * 
+     * @param string|void $domain (Optionnal) Google Translate domain to use.
+     *                            * Usually two letters (e.g "en" or "com")
+     *                            * Random if not provided.
+     * 
+     * @return string 
+     */
     public static final function getDomain($domain) 
     {
         $loc = array(
@@ -128,33 +142,33 @@ class GoogleTranslate
         }
         return $domain;
     }
-    public static function array_iunique($array) 
+    public static function array_iunique($array): array
     {
         return array_intersect_key(
             $array,
             array_unique(array_map("StrToLower", $array))
         );
     }
-    public function setLangFrom($lang) 
+    public function setLangFrom($lang): GoogleTranslate
     {
         $this->langFrom = $lang;
         return $this;
     }
-    public function setLangTo($lang) 
+    public function setLangTo($lang): GoogleTranslate
     {
         $this->langTo = $lang;
         return $this;
     }
-    public static function setDomain($domain) 
+    public static function setDomain($domain): void
     {
         self::$gglDomain = self::getDomain($domain);
         self::setHeaders();
     }
-    public function __construct($from, $to, $domain=null) 
+    public function __construct($from, $to, $domain=null)
     {
         $this->setLangFrom($from)->setLangTo($to);
     }
-    public static final function makeCurl($url, $cookieSet = false) 
+    public static final function makeCurl($url, $cookieSet = false): string|bool
     {
         if (is_callable('curl_init')) {
             if (!$cookieSet) {
@@ -182,11 +196,13 @@ class GoogleTranslate
         }
         return $output;
     }
-    public function translate($string) 
+    public function translate($string): array|false
     {
         return $this->lastResult = self::staticTranslate($string, $this->langFrom, $this->langTo);
     }
-    public static function staticTranslate($string, $from, $to, $time_token = null, $domain = self::DEFAULT_DOMAIN) 
+    public static function staticTranslate(
+        $string, $from, $to, $time_token = null, $domain = self::DEFAULT_DOMAIN
+        ): array|false 
     {
         self::setDomain($domain);
         $url = sprintf(self::$urlFormat, self::$gglDomain, rawurlencode($string), $from, $to, self::generateToken($string, $time_token));

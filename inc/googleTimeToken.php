@@ -1,5 +1,7 @@
 <?php
 
+namespace Lwt\Includes;
+
 require_once 'session_utility.php';
 
 /**

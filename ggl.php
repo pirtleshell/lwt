@@ -14,13 +14,15 @@
  * @since   1.6.0
  * @since   2.7.0 Refactored with functional paradigm
  */
-namespace Lwt\Ggl;
+namespace Lwt\Interface;
 
 require_once 'inc/session_utility.php';
 require_once 'inc/googleTimeToken.php' ;
 require_once 'inc/classes/googleTranslateClass.php';
 
-use GoogleTranslate;
+use Lwt\Classes\GoogleTranslate as GoogleTranslate;
+
+use function Lwt\Includes\getGoogleTimeToken;
 
 /*
  * Translate a single sentence using Google Translate.
@@ -134,9 +136,13 @@ function translate_text($text, $sl, $tl, $sentence_mode)
 {
     $file = GoogleTranslate::staticTranslate($text, $sl, $tl, getGoogleTimeToken());
 
+    if ($file === false) {
+        my_die("Unable to get translation from Google!");
+    }
+
     $gglink = makeOpenDictStr(
         createTheDictLink(
-            'http://translate.google.com/#' . $sl . '/' . $tl . '/?lwt_popup=true', 
+            "http://translate.google.com/#$sl/$tl/?lwt_popup=true", 
             $text
         ), 
         " more..."

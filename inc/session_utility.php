@@ -2668,7 +2668,7 @@ function createTheDictLink($u, $t)
     $url = trim($u);
     $trm = trim($t);
     // No ###|lwt_term found
-    if (preg_match("/lwt_term|###/", $url, $matches) === false) {
+    if (preg_match("/lwt_term|###/", $url, $matches) == false) {
         $r = $url . urlencode($trm);
         return $r;
     }

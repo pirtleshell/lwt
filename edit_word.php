@@ -381,7 +381,12 @@ if (isset($_REQUEST['op'])) {
         $lgname = get_first_value(
             "SELECT LgName as value from {$tbpref}languages WHERE LgID = $lang"
         );
-        echo json_encode($langDefs[$lgname][1]); ?>;
+        if (array_key_exists($lgname, $langDefs)) {
+            echo json_encode($langDefs[$lgname][1]); 
+        } else {
+            echo json_encode('');
+        }
+        ?>;
 
         /**
          * Sets the translation of a term.
