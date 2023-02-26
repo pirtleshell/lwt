@@ -79,24 +79,34 @@ h4 {
 	color: #000000;
 	border-radius: 3px;
 }
-.mwsty {
-	margin: 0px 1px;
-	font-size: 60%;
-	font-weight: bold;
-	color: #000000;
-	vertical-align: top; 
-	border-radius: 3px;
-	white-space: nowrap;
+/* Words and multi-words hints */
+.wsty, .mwsty
+{
+  color: #000000;
+  border-radius: 3px;
+}
+
+/* Multi-words hint */
+.mwsty
+{
+  margin: 0px 1px;
+  font-size: 60%;
+  font-weight: bold;
+  vertical-align: top;
+  white-space: nowrap;
 }
 .wsty {
 	margin:0px;
-	padding:0px 1px;
 	box-shadow: 0 0 0px 1px #FFF;
-	color: #000000;
-	border-radius: 3px;
 }
 .wsty:after, .wsty:before{
 	opacity:.6
+}
+/* Multi-word mark */
+.mword 
+{
+  padding-left: 4px;
+  padding-right: 4px;
 }
 .todosty {
 	background-color: #F5E1A9;

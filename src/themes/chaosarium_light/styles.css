@@ -84,18 +84,32 @@ h4 {
   border-bottom: dashed 2px #bebebe;
   color: #000;
 }
-.mwsty {
+
+
+/* Words and multi-words hints */
+.wsty, .mwsty
+{
   margin-right: 2px;
+  color: #000;
+}
+
+/* Multi-words hint */
+.mwsty
+{
   font-size: 60%;
   font-weight: bold;
-  color: #000;
   vertical-align: top;
   white-space: nowrap;
 }
+
 .wsty {
-  margin-right: 2px;
-  color: #000;
   margin-bottom: 0.4em !important;
+}
+/* Multi-word mark */
+.mword 
+{
+  padding-left: 4px;
+  padding-right: 4px;
 }
 .todosty {
   background-color: #f5e1a9;
