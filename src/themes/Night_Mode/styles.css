@@ -98,21 +98,31 @@ h4 {
 	color: #FFFFFF ! important;
 }
 
-.mwsty {
-	margin: 0px 1px;
-	font-size: 60%;
-	font-weight: bold;
-	color: #000000;
-	vertical-align: top;
-	white-space: nowrap;
+
+/* Words and multi-words hints */
+.wsty, .mwsty
+{
+  color: #000;
+  border-radius: 3px;
+}
+/* Multi-words hint */
+.mwsty
+{
+  margin: 0px 1px;
+  font-size: 60%;
+  font-weight: bold;
+  vertical-align: top;
+  white-space: nowrap;
 }
 
 .wsty {
-	border-radius: 3px;
 	margin:0px;
-	padding:0px 1px;
-	/*color: #000000;*/
-	/*color: #FFFFFF;*/
+}
+/* Multi-word mark */
+.mword 
+{
+  padding-left: 4px;
+  padding-right: 4px;
 }
 
 .wsty:after,.wsty:before {

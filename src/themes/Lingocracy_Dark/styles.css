@@ -144,22 +144,36 @@ body {
 .wsty.hword:after,.wsty.hword:before{
 	opacity:1
 }
-.mwsty {
-	margin: 0px 1px;
-	font-size: 60%;
-	font-weight: bold;
-	color: #FFF;
-	vertical-align: top; 
-	border-radius: 3px;
-	white-space: nowrap;
+
+
+/* Words and multi-words hints */
+.wsty, .mwsty
+{
+  color: #FFF;
+  border-radius: 3px;
 }
+
+/* Multi-words hint */
+.mwsty
+{
+  margin: 0px 1px;
+  font-size: 60%;
+  font-weight: bold;
+  vertical-align: top;
+  white-space: nowrap;
+}
+
 .wsty {
 	margin:0px;
-	padding:0px 1px;
 	box-shadow: 0 0 0px 1px #000;
-	color: #FFF;
-	border-radius: 3px;
 }
+/* Multi-word mark */
+.mword 
+{
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
 .todosty {
 	border-bottom: 2px solid #fbdb89;
 	text-decoration: none;

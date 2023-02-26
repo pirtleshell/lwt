@@ -2668,7 +2668,7 @@ function createTheDictLink($u, $t)
     $url = trim($u);
     $trm = trim($t);
     // No ###|lwt_term found
-    if (preg_match("/lwt_term|###/", $url, $matches) === false) {
+    if (preg_match("/lwt_term|###/", $url, $matches) == false) {
         $r = $url . urlencode($trm);
         return $r;
     }
@@ -2808,6 +2808,9 @@ function makeOpenDictStrJS($url): string
  * @param string $txt       Clickable text to display
  * 
  * @return string HTML-formatted string
+ * 
+ * @since 2.7.0-fork Supports LibreTranslate, using other string that proper URL is 
+ *                   deprecated. 
  */
 function makeOpenDictStrDynSent($url, $sentctljs, $txt): string 
 {
@@ -2820,20 +2823,23 @@ function makeOpenDictStrDynSent($url, $sentctljs, $txt): string
         $url = substr($url, 1);
         $popup = true;
     }
-    $popup |= str_contains(parse_url($url, PHP_URL_QUERY), 'lwt_popup=');
-    if (str_starts_with($url, "ggl.php")) {
+    $parsed_url = parse_url($url);
+    $prefix = '';
+    if ($parsed_url === false) {
+        $prefix = 'http://';
+        $parsed_url = parse_url($prefix . $url);
+    }
+    parse_str($parsed_url['query'], $url_query);
+    $popup |= array_key_exists('lwt_popup', $url_query);
+    if (
+        str_starts_with($url, "ggl.php") || 
+        str_ends_with($parsed_url['path'], "/ggl.php")
+        ) {
         $url = str_replace('?', '?sent=1&', $url);
     }
-    if ($popup) {
-        $r = '<span class="click" onclick="translateSentence2(' . 
-        prepare_textdata_js($url) . ',' . $sentctljs . ');">' . 
-        tohtml($txt) . '</span>';
-    } else {
-        $r = '<span class="click" onclick="translateSentence(' . 
-        prepare_textdata_js($url) . ',' . $sentctljs . ');">' . 
-        tohtml($txt) . '</span>';
-    } 
-    return $r;
+    return '<span class="click" onclick="translateSentence'.($popup ? '2' : '').'(' . 
+    prepare_textdata_js($url) . ',' . $sentctljs . ');">' . 
+    tohtml($txt) . '</span>';
 }
 
 /**
@@ -2875,11 +2881,13 @@ function createDictLinksInEditWin2($lang, $sentctljs, $wordctljs): string
         $r .= '<span class="click" onclick="translateWord2(' . 
         prepare_textdata_js($wb2) . ',' . $wordctljs . ');">Dict2</span> '; 
     }
-    if ($wb3 != "") { 
+    if ($wb3 != "") {
+        $sent_mode = substr($wb3, 0, 7) == 'ggl.php';
+        $sent_mode |= str_ends_with(parse_url($wb3, PHP_URL_PATH), '/ggl.php');
         $r .= '<span class="click" onclick="translateWord2(' . 
         prepare_textdata_js($wb3) . ',' . $wordctljs . ');">Translator</span>
          | <span class="click" onclick="translateSentence2(' . 
-         prepare_textdata_js((substr($wb3, 0, 7) == 'ggl.php') ? 
+         prepare_textdata_js($sent_mode ? 
          str_replace('?', '?sent=1&', $wb3) : $wb3) . ',' . $sentctljs . 
          ');">Translate sentence</span>'; 
     }
@@ -2967,14 +2975,21 @@ function createDictLinksInEditWin3($lang, $sentctljs, $wordctljs): string
         $wb3 = substr($wb3, 0, 1);
         $popup = true;
     }
-    $popup |= str_contains($wb3, "lwt_popup=");
+    $parsed_url = parse_url($wb3);
+    $prefix = '';
+    if ($wb3 != '' && $parsed_url === false) {
+        $prefix = 'http://';
+        $parsed_url = parse_url($prefix . $wb3);
+    }
+    parse_str($parsed_url['query'], $url_query);
+    $popup |= array_key_exists('lwt_popup', $url_query);
     if ($popup) {
         $f3 = 'translateWord2(' . prepare_textdata_js($wb3);
         $f4 = 'translateSentence2(' . prepare_textdata_js($wb3);
     } else {
         $f3 = 'translateWord(' . prepare_textdata_js($wb3);
         $f4 = 'translateSentence(' . prepare_textdata_js(
-            (substr($wb3, 0, 7) == 'ggl.php') ? 
+            (str_ends_with($parsed_url['path'], "/ggl.php")) ? 
             str_replace('?', '?sent=1&', $wb3) : $wb3
         );
     }

@@ -90,19 +90,26 @@ span.status98
   color: #000000;
 }
 
-span.mwsty
+/* Words and multi-words hints */
+span.wsty, span.mwsty
 {
   margin-right: 2px;
+  color: #000000;
+}
+
+/* Multi-words hint */
+span.mwsty
+{
   font-size: 60%;
   font-weight: bold;
-  color: #000000;
   vertical-align: top;
 }
 
-span.wsty
+/* Multi-word mark */
+.mword 
 {
-  margin-right: 2px;
-  color: #000000;
+  padding-left: 4px;
+  padding-right: 4px;
 }
 
 span.todosty

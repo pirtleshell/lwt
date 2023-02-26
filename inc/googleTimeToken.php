@@ -1,5 +1,7 @@
 <?php
 
+namespace Lwt\Includes;
+
 require_once 'session_utility.php';
 
 /**
@@ -50,10 +52,8 @@ function getGoogleTimeToken(): ?array
                 intval($ma[3][0]),
                 intval(intval($ma[1][0]) + intval($ma[2][0]))
             );
-        } else { 
-            return null; 
-        }
-    } else { 
-        return array(intval($arr[0]), intval($arr[1])); 
-    }
+        } 
+        return null; 
+    } 
+    return array(intval($arr[0]), intval($arr[1]));
 }

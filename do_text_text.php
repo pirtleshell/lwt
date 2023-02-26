@@ -110,7 +110,8 @@ function getLanguagesSettings($langid)
 /**
  * Print the output when the word is a term (word or multi-word).
  *
- * @param int                   $actcode       Action code, > 1 for multiword
+ * @param int                   $actcode       Action code, number of words forming 
+ *                                             the term (> 1 for multiword)
  * @param int                   $showAll       Show all words or not
  * @param int                   $hideuntil     Unused
  * @param string                $spanid        ID for this span element
@@ -123,7 +124,7 @@ function echo_term($actcode, $showAll, $spanid, $hidetag, $currcharcount, $recor
 {
     $actcode = (int)$record['Code'];
     if ($actcode > 1) {   
-        // A multiword
+        // A multiword, $actcode is the number of words composing it
 
         if (isset($record['WoID'])) {
             echo '<span id="' . $spanid . '" class="' . $hidetag . ' click mword ' . 
@@ -142,7 +143,7 @@ function echo_term($actcode, $showAll, $spanid, $hidetag, $currcharcount, $recor
             data_code="' . $actcode . '" 
             data_text="' . tohtml($record['TiText']) . '">'; 
             if ($showAll) {
-                echo '&nbsp;' . $actcode . '&nbsp;';
+                echo $actcode;
             } else {
                 echo tohtml($record['TiText']);
             }
