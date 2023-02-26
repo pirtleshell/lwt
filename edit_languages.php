@@ -432,6 +432,9 @@ function edit_language_form($language)
 
     function reloadDictURLs(sourceLg='auto', targetLg='en') {
 
+        let base_url = window.location.href;
+        base_url = base_url.substring(0, base_url.lastIndexOf('/'));
+
         GGTRANSLATE = 'https://translate.google.com/?' + $.param({
                 ie: "UTF-8",
                 sl: sourceLg,
@@ -446,6 +449,9 @@ function edit_language_form($language)
             q: "lwt_term"
         });
 
+        GGL = base_url + '/ggl.php/?' + $.param({
+            sl: sourceLg, tl: targetLg, text: 'lwt_term'
+        });
     }
 
     reloadDictURLs(
@@ -471,7 +477,7 @@ function edit_language_form($language)
         let result;
         let uses_key = false;
         let base_url = window.location.href;
-        base_url = base_url.replace('/edit_languages.php', '');
+        base_url = base_url.replace('/edit_languages.php', '/');
         switch (value) {
             case "google_translate":
                 result = GGTRANSLATE;
@@ -481,7 +487,7 @@ function edit_language_form($language)
                 uses_key = true;
                 break;
             case "ggl":
-                result = base_url + "ggl.php?text=";
+                result = GGL;
                 break;
             case "glosbe":
                 result = base_url + "glosbe.php";
@@ -745,10 +751,9 @@ function edit_language_form($language)
         <td class="td1">
             <select onchange="multiWordsTranslateChange(this.value);" 
             name="LgTranslatorName">
-                <option value="google_translate">Google Translate URI</option>
+                <option value="google_translate">Google Translate (webpage)</option>
                 <option value="libretranslate">LibreTranslate API</option>
-                <!-- ggl.php doesn't seem to work -->
-                <option value="ggl" style="display: none;">
+                <option value="ggl">
                     GoogleTranslate API
                 </option>
                 <!-- Glosbe has stopped the API -->

@@ -1921,13 +1921,6 @@ from 1.8.0 to 1.10.2. This brings some bug fixes.</li>
 <li>phpunit/phpunit updated from ^9.5 to ^10.0.</li>
 </ul>
 </li>
-<li>It is recommended to use proper URL for all dictionaries and translators.
-<ul>
-<li>'*' before a dictionary URL should be replaced by an argument 'lwt_popup=true'</li>
-<li>'ggl.php' and 'glosbe_api.php' should be updated (e. g. "{YOUR_LWT_CURRENT_ADDRESS}/ggl.php")</li>
-<li>Marking the location of a term to translate with '###' is deprecated in favor of 'lwt_term'.</li>
-</ul>
-</li>
 <li>Changed to the text from YouTube feature (<code>text_from_yt.php</code>):
 <ul>
 <li>Refactored.</li>
@@ -1954,10 +1947,29 @@ at the right if text field.</li>
 </ul>
 </li>
 <li>Main page (<code>index.php</code>) was not rendered properly on non-default theme.</li>
-<li>Full-text speech dispatcher was not available when the name of the language name was changed. Issue signalled <a href="https://github.com/HugoFara/lwt/issues/80#issuecomment-1368180304">with issue #80</a>.</li>
-<li>Support for PHP 7.4 restored, wrapper for <code>str_starts_with</code>.</li>
+<li>Changing language name was breaking this, this is fixed:
+<ul>
+<li>Text header was sometimes not available.</li>
+<li>It was breaking full text-to-speech dispatcher. Issue signalled <a href="https://github.com/HugoFara/lwt/issues/80#issuecomment-1368180304">with issue #80</a>
+</li>
+</ul>
+</li>
+<li>Support for PHP 7.4 restored, wrappers for <code>str_starts_with</code>, <code>str_ends_with</code>, <code>str_contains</code>.</li>
 <li>The encoding of <code>docs/info.html</code> is finally fixed!</li>
-<li>Changing language name was breaking text header, this is fixed.</li>
+<li>
+<code>ggl.php</code> feature fixed!</li>
+</ul>
+<h3>Deprecated</h3>
+<ul>
+<li>Dictionary and translator URIs changed:
+<ul>
+<li>They should <strong>always</strong> be proper URLs.</li>
+<li>Replacing <code>###</code> by <code>lwt_term</code> is strongly recommended!</li>
+<li>"*" At the beginning of an URI should be replaced by <code>lwt_popup=1</code> as an argument.</li>
+<li>
+<code>ggl.php</code> should be replaced by the file full URL, for instance "http://localhost/lwt/ggl.php".</li>
+</ul>
+</li>
 </ul>
 <h3>2.6.0-fork (January 01 2023)</h3>
 <h4>Added</h4>

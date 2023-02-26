@@ -50,10 +50,6 @@ from 1.8.0 to 1.10.2. This brings some bug fixes.
 * Updated composer dependencies.
   * vimeo/psalm updated from ^4.12 to ^5.6.
   * phpunit/phpunit updated from ^9.5 to ^10.0.
-* It is recommended to use proper URL for all dictionaries and translators.
-  * '*' before a dictionary URL should be replaced by an argument 'lwt_popup=true'
-  * 'ggl.php' and 'glosbe_api.php' should be updated (e. g. "{YOUR_LWT_CURRENT_ADDRESS}/ggl.php")
-  * Marking the location of a term to translate with '###' is deprecated in favor of 'lwt_term'.
 * Changed to the text from YouTube feature (``text_from_yt.php``):
   * Refactored.
   * Moved from root folder to ``inc/``.
@@ -71,10 +67,19 @@ from 1.8.0 to 1.10.2. This brings some bug fixes.
   * All broom icons icon were display in the screen top-right corner, and not
   at the right if text field.
 * Main page (``index.php``) was not rendered properly on non-default theme.
-* Full-text speech dispatcher was not available when the name of the language name was changed. Issue signalled [with issue #80](https://github.com/HugoFara/lwt/issues/80#issuecomment-1368180304).
-* Support for PHP 7.4 restored, wrapper for ``str_starts_with``.
+* Changing language name was breaking this, this is fixed:
+  * Text header was sometimes not available.
+  * It was breaking full text-to-speech dispatcher. Issue signalled [with issue #80](https://github.com/HugoFara/lwt/issues/80#issuecomment-1368180304)
+* Support for PHP 7.4 restored, wrappers for ``str_starts_with``, ``str_ends_with``, ``str_contains``.
 * The encoding of ``docs/info.html`` is finally fixed!
-* Changing language name was breaking text header, this is fixed.
+* ``ggl.php`` feature fixed!
+
+## Deprecated
+* Dictionary and translator URIs changed:
+  * They should **always** be proper URLs.
+  * Replacing ``###`` by ``lwt_term`` is strongly recommended!
+  * "*" At the beginning of an URI should be replaced by ``lwt_popup=1`` as an argument.
+  * ``ggl.php`` should be replaced by the file full URL, for instance "http://localhost/lwt/ggl.php". 
 
 ## 2.6.0-fork (January 01 2023)
 
