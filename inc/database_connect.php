@@ -590,7 +590,6 @@ function update_japanese_word_count($japid)
     $res = do_mysqli_query($sql);
     $fp = fopen($db_to_mecab, 'w');
     while ($record = mysqli_fetch_assoc($res)) {
-        echo $record['WoID'] . "\t" . $record['WoTextLC'] . "\n";
         fwrite($fp, $record['WoID'] . "\t" . $record['WoTextLC'] . "\n");
     }
     mysqli_free_result($res);
