@@ -56,7 +56,7 @@ from 1.8.0 to 1.10.2. This brings some bug fixes.
   * This is still an experimental feature!
 * Moved Google API files:
   * Moved ``googleTimeToken.php`` from root folder to ``inc/``.
-  * Moved ``googleTranslateClass.php`` from root folder to ``inc/classes/``.
+  * Moved ``googleTranslateClass.php`` from root folder to ``inc/classes/GoogleTranslate.php``.
 
 ### Fixed
 

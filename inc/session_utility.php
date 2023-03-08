@@ -2513,26 +2513,28 @@ function get_texts_selectoptions($lang, $v): string
 }
 
 
-// -------------------------------------------------------------
-
+/**
+ * Makes HTML content for a text of style "Page 1 of 3".
+ * 
+ * @return void
+ */
 function makePager($currentpage, $pages, $script, $formname): void 
 {
+    $marger = 'style="margin-left: 4px; margin-right: 4px;"';
     if ($currentpage > 1) { 
         ?>
-   &nbsp; &nbsp;<a href="<?php echo $script; ?>?page=1">
-   <img src="icn/control-stop-180.png" title="First Page" alt="First Page" /></a>&nbsp;
-<a href="<?php echo $script; ?>?page=<?php echo $currentpage-1; ?>"><img  src="icn/control-180.png" title="Previous Page" alt="Previous Page" /></a>&nbsp;
+<a href="<?php echo $script; ?>?page=1" <?php echo $marger; ?>>
+    <img src="icn/control-stop-180.png" title="First Page" alt="First Page" />
+</a>
+<a href="<?php echo $script; ?>?page=<?php echo $currentpage-1; ?>" <?php echo $marger; ?>>
+    <img src="icn/control-180.png" title="Previous Page" alt="Previous Page" />
+</a>
         <?php
-    } else {
-        ?>
-   &nbsp; &nbsp;<img src="<?php print_file_path('icn/placeholder.png');?>" alt="-" />&nbsp;
-<img src="<?php print_file_path('icn/placeholder.png');?>" alt="-" />&nbsp;
-        <?php
-    } 
+    }
     ?>
 Page
     <?php
-    if ($pages==1) { 
+    if ($pages == 1) { 
         echo '1'; 
     }
     else {
@@ -2542,17 +2544,16 @@ Page
 </select>
         <?php
     }
-    echo ' of ' . $pages . '&nbsp; ';
+    echo ' of ' . $pages . ' ';
     if ($currentpage < $pages) { 
         ?>
-<a href="<?php echo $script; ?>?page=<?php echo $currentpage+1; ?>"><img src="icn/control.png" title="Next Page" alt="Next Page" /></a>&nbsp;
-<a href="<?php echo $script; ?>?page=<?php echo $pages; ?>"><img src="icn/control-stop.png" title="Last Page" alt="Last Page" /></a>&nbsp; &nbsp;
+<a href="<?php echo $script; ?>?page=<?php echo $currentpage+1; ?>" <?php echo $marger; ?>>
+    <img src="icn/control.png" title="Next Page" alt="Next Page" />
+</a>
+<a href="<?php echo $script; ?>?page=<?php echo $pages; ?>" <?php echo $marger; ?>>
+    <img src="icn/control-stop.png" title="Last Page" alt="Last Page" />
+</a>
         <?php 
-    } else {
-        ?>
-<img src="<?php print_file_path('icn/placeholder.png');?>" alt="-" />&nbsp;
-<img src="<?php print_file_path('icn/placeholder.png');?>" alt="-" />&nbsp; &nbsp; 
-        <?php
     }
 }
 
