@@ -9,27 +9,29 @@
  */
 
 function deleteTranslation (){
-	var w = window.parent.frames['ro'];
-	if (typeof w == 'undefined') w = window.opener;
-	if($('[name="WoTranslation"]',w.document).val().trim().length){
-		$('[name="WoTranslation"]',w.document).val('');
+	let w = window.parent.frames['ro'];
+	if (w === undefined) 
+		w = window.opener;
+	if ($('[name="WoTranslation"]', w.document).val().trim().length) {
+		$('[name="WoTranslation"]', w.document).val('');
 		w.makeDirty();
 	}
 }
 
 function addTranslation (s) {
-	var w = window.parent.frames['ro'];
-	if (typeof w == 'undefined') w = window.opener;
-	if (typeof w == 'undefined') {
-		alert ('Translation can not be copied!');
+	let w = window.parent.frames['ro'];
+	if (w === undefined) 
+		w = window.opener;
+	if (w === undefined) {
+		alert('Translation can not be copied!');
 		return;
 	}
-	var c = w.document.forms[0].WoTranslation;
+	let c = w.document.forms[0].WoTranslation;
 	if (typeof c != 'object') {
 		alert ('Translation can not be copied!');
 		return;
 	}
-	var oldValue = c.value;
+	let oldValue = c.value;
 	if (oldValue.trim() == '') {
 		c.value = s;
 		w.makeDirty();
@@ -108,7 +110,12 @@ function getTranslationFromGlosbeApi(data) {
 	}
 	catch(err) {
 		$('#translations')
-		.text('Retrieval error. Possible reason: There is a limit of Glosbe API calls that may be done from one IP address in a fixed period of time, to prevent from abuse.').after('<hr />');
+		.text(
+			'Retrieval error. Possible reason: There is a limit of Glosbe API ' + 
+			'calls that may be done from one IP address in a fixed period of time,' + 
+			' to prevent from abuse.'
+		)
+		.after('<hr />');
 	}
 }
 
@@ -122,7 +129,9 @@ function getTranslationFromGlosbeApi(data) {
  * @param {string}           url  API URL
  * @returns {string} Translation
  */
-async function getLibreTranslateTranslationBase(text, lang, dest, key="", url="http://localhost:5000/translate") {
+async function getLibreTranslateTranslationBase(
+	text, lang, dest, key="", url="http://localhost:5000/translate"
+	) {
 	const res = await fetch(
 		url, 
 		{
