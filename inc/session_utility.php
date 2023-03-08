@@ -2655,8 +2655,8 @@ function makeStatusClassFilterHelper($status, &$array): void
  * Case 3: url with two (###|lwt_term)enc###: unsupported encoding changed, 
  *         abandonned since 2.6.0-fork
  * 
- * @param string $u Dictionary URL. It may contain ### that will get parsed
- * @param string $t Text that substite the ###
+ * @param string $u Dictionary URL. It may contain 'lwt_term' that will get parsed
+ * @param string $t Text that substite the 'lwt_term'
  * 
  * @return string Dictionary link formatted
  * 
@@ -2760,8 +2760,9 @@ function makeOpenDictStr($url, $txt): string
         $url = substr($url, 1);
         $popup = true;
     }
-    if (str_contains(parse_url($url, PHP_URL_QUERY), 'lwt_popup=')) {
-        $popup = true;
+    if (!$popup) {
+        parse_str(parse_url($url, PHP_URL_QUERY), $url_query);
+        $popup |= array_key_exists('lwt_popup', $url_query);
     }
     if ($popup) {
         $r = ' <span class="click" onclick="owin(' . 
