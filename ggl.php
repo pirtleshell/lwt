@@ -41,7 +41,6 @@ function translate_sentence($text, $gglink, $translation)
         <?php echo tohtml($translation); ?>
     </span>
     <p>Original sentence: </p><blockquote><?php echo tohtml($text); ?></blockquote>
-    <a href="<?php echo $gglink ?>">Open in Google Translate.</a>
     <?php
 }
 
@@ -59,33 +58,25 @@ function translate_sentence($text, $gglink, $translation)
 function translate_term($text, $gglink, $file, $sl, $tl)
 {
     ?>
-<h2>Google Translate:  &nbsp; 
-    <span class="red2">
-        <?php echo tohtml($text) ?>
-    </span>
-    <img id="textToSpeak" src="icn/speaker-volume.png" 
-    style="cursor:pointer" 
-    title="Click on expression for pronunciation"></img>
-    <img id="del_translation" src="icn/broom.png" style="cursor:pointer" 
-    title="Empty Translation Field" onclick="deleteTranslation ();"></img>
-</h2>
-<p>
-    (Click on <img src="icn/tick-button.png" title="Choose" alt="Choose" /> 
-    to copy word(s) into above term)<br />&nbsp;
-</p>
-    
-<script type="text/javascript">
-    $(document).ready( function() {
-        let w = window.parent.frames['ro'];
-        if (w === undefined) 
-            w = window.opener;
-        if (w === undefined) 
-            $('#del_translation').remove();
+<h2 title="Translate with Google Translate">
+    Word translation: <?php echo tohtml($text) ?> 
+    <img id="textToSpeech" style="cursor: pointer;" title="Click to read!"
+    src="<?php print_file_path('icn/speaker-volume.png'); ?>" ></img>
 
-        $('#textToSpeak').on('click', function () {
+    <img id="del_translation" style="cursor: pointer;" title="Empty Translation Field" 
+    onclick="deleteTranslation ();"
+    src="<?php print_file_path('icn/broom.png'); ?>" ></img>
+</h2>
+
+<script type="text/javascript">
+    $('#textToSpeech').on('click', function () {
             const txt = <?php echo json_encode($text); ?>;
             readTextAloud(txt, <?php echo json_encode($sl); ?>);
-        });
+    });
+
+    $(document).ready(function() {
+        if (window.parent.frames['ro'] === undefined && window.opener === undefined) 
+            $('#del_translation').remove();
     });
 </script>
     <?php
@@ -95,11 +86,11 @@ function translate_term($text, $gglink, $file, $sl, $tl)
         '<img src="icn/tick-button.png" title="Copy" alt="Copy" /> &nbsp; ' . 
         tohtml($word) . '</span><br />';
     }
-    if (!empty($file)) {
-        echo '<br />' . $gglink . "\n";
-    }
-
     ?>
+    <p>
+        (Click on <img src="icn/tick-button.png" title="Choose" alt="Choose" /> 
+        to copy word(s) into above term)<br />&nbsp;
+    </p>
     <hr />
     <form action="ggl.php" method="get">
         Unhappy?<br/>Change term: 
@@ -132,10 +123,10 @@ function translate_text($text, $sl, $tl, $sentence_mode)
 
     $gglink = makeOpenDictStr(
         createTheDictLink(
-            "http://translate.google.com/#$sl/$tl/lwt_term?lwt_popup=true", 
+            "https://translate.google.com/?sl=$sl&tl=$tl&text=lwt_term&lwt_popup=true", 
             $text
         ), 
-        " more..."
+        "View on Google Translate"
     );
 
     if ($sentence_mode) {
@@ -143,6 +134,8 @@ function translate_text($text, $sl, $tl, $sentence_mode)
     } else {
         translate_term($text, $gglink, $file, $sl, $tl);
     }
+
+    echo $gglink;
 }
 
 /*
