@@ -27,28 +27,21 @@ use function Lwt\Includes\getGoogleTimeToken;
 /*
  * Translate a single sentence using Google Translate.
  * 
- * @param string $text   Text to translate
- * @param string $gglink Google Translate link
- * @param array  $file   Array of translated terms, should contain 1 element
+ * @param string $text        Text to translate
+ * @param string $gglink      Google Translate link
+ * @param string $translation Sentence translation
  * 
  * @return void
  */
-function translate_sentence($text, $gglink, $file)
+function translate_sentence($text, $gglink, $translation)
 {
     ?>
-    <h2>Sentence:</h2>
-    <span class="red2"><?php echo tohtml($text); ?></span>
-    <br><br>
-    <h2>Google Translate:</h2>
-    <?php echo $gglink ?> 
-    <br>
-    <table class="tab2" cellspacing="0" cellpadding="0"> 
-        <tr>
-            <td class="td1bot center" colspan="1">
-                <?php echo $file[0]; ?>
-            </td>
-        </tr>
-    </table>
+    <h2>Sentence Translation</h2>
+    <span title="Translated via Google Translate">
+        <?php echo tohtml($translation); ?>
+    </span>
+    <p>Original sentence: </p><blockquote><?php echo tohtml($text); ?></blockquote>
+    <a href="<?php echo $gglink ?>">Open in Google Translate.</a>
     <?php
 }
 
@@ -67,10 +60,12 @@ function translate_term($text, $gglink, $file, $sl, $tl)
 {
     ?>
 <h2>Google Translate:  &nbsp; 
-    <span class="red2" id="textToSpeak" style="cursor:pointer" 
-    title="Click on expression for pronunciation">
+    <span class="red2">
         <?php echo tohtml($text) ?>
-    </span> 
+    </span>
+    <img id="textToSpeak" src="icn/speaker-volume.png" 
+    style="cursor:pointer" 
+    title="Click on expression for pronunciation"></img>
     <img id="del_translation" src="icn/broom.png" style="cursor:pointer" 
     title="Empty Translation Field" onclick="deleteTranslation ();"></img>
 </h2>
@@ -81,21 +76,16 @@ function translate_term($text, $gglink, $file, $sl, $tl)
     
 <script type="text/javascript">
     $(document).ready( function() {
-    let w = window.parent.frames['ro'];
-    if (w === undefined) 
-        w = window.opener;
-    if (w === undefined) 
-        $('#del_translation').remove();
+        let w = window.parent.frames['ro'];
+        if (w === undefined) 
+            w = window.opener;
+        if (w === undefined) 
+            $('#del_translation').remove();
 
-    $('#textToSpeak').on('click', function () {
-        const txt = $('#textToSpeak').text();
-        const audio = new Audio();
-        audio.src = 'tts.php?' + $.param({
-            tl: <?php echo json_encode($sl); ?>, 
-            q: txt
+        $('#textToSpeak').on('click', function () {
+            const txt = <?php echo json_encode($text); ?>;
+            readTextAloud(txt, <?php echo json_encode($sl); ?>);
         });
-        audio.play();
-    });
     });
 </script>
     <?php
@@ -110,7 +100,7 @@ function translate_term($text, $gglink, $file, $sl, $tl)
     }
 
     ?>
-    &nbsp;<hr />&nbsp;
+    <hr />
     <form action="ggl.php" method="get">
         Unhappy?<br/>Change term: 
         <input type="text" name="text" maxlength="250" size="15" 
@@ -142,14 +132,14 @@ function translate_text($text, $sl, $tl, $sentence_mode)
 
     $gglink = makeOpenDictStr(
         createTheDictLink(
-            "http://translate.google.com/#$sl/$tl/?lwt_popup=true", 
+            "http://translate.google.com/#$sl/$tl/lwt_term?lwt_popup=true", 
             $text
         ), 
         " more..."
     );
 
     if ($sentence_mode) {
-        translate_sentence($text, $gglink, $file);
+        translate_sentence($text, $gglink, $file[0]);
     } else {
         translate_term($text, $gglink, $file, $sl, $tl);
     }

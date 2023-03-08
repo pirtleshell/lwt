@@ -37,6 +37,7 @@ function regenGoogleTimeToken(): array|null
             return null;
         }
     }
+    // May be replaced by /TKK=eval\D+3d([\d-]+)\D+3d([\d-]+)\D+(\d+)\D/
     preg_match_all(
         "/TKK=eval[^0-9]+3d([0-9-]+)[^0-9]+3d([0-9-]+)[^0-9]+([0-9]+)[^0-9]/u", 
         $g, $ma
