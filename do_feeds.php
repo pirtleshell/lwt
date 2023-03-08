@@ -380,17 +380,17 @@ if (
 } else if(empty($edit_text)) {
     ?>
 
-<div style="display: flex; justify-content: space-evenly; width: 850px;">
+<div class="flex-spaced">
     <div title="Import of a single text, max. 65,000 bytes long, with optional audio">
         <a href="<?php echo $_SERVER['PHP_SELF']; ?>?new=1">
             <img src="icn/plus-button.png">
-            Standard Text Import...
+            New Text
         </a>
     </div>
     <div>
         <a href="edit_feeds.php?manage_feeds=1">
             <img src="icn/plus-button.png" title="manage feeds" alt="manage feeds" />
-            Manage Feeds ...
+            Manage Feeds
         </a>
     </div>
     <div>

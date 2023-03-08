@@ -654,7 +654,8 @@ function edit_texts_new($lid)
 function edit_texts_change($txid)
 {
     global $tbpref;
-    $sql = "SELECT TxLgID, TxTitle, TxText, TxAudioURI, TxSourceURI, LENGTH(TxAnnotatedText) AS annotlen 
+    $sql = "SELECT TxLgID, TxTitle, TxText, TxAudioURI, TxSourceURI, 
+    LENGTH(TxAnnotatedText) AS annotlen 
     FROM {$tbpref}texts 
     WHERE TxID = {$txid}";
     $res = do_mysqli_query($sql);
@@ -809,19 +810,19 @@ function edit_texts_filters_form($currentlang, $recno, $currentpage, $pages)
             </td>
         </tr>
         <tr>
-            <td class="td1 center" colspan="2" nowrap="nowrap">
+            <td class="td1 center" colspan="2">
                 Tag #1:
                 <select name="tag1" onchange="{val=document.form1.tag1.options[document.form1.tag1.selectedIndex].value; location.href='edit_texts.php?page=1&amp;tag1=' + val;}">
                     <?php echo get_texttag_selectoptions($currenttag1, $currentlang); ?>
                 </select>
             </td>
-            <td class="td1 center" nowrap="nowrap">
+            <td class="td1 center">
                 Tag #1 .. 
                 <select name="tag12" onchange="{val=document.form1.tag12.options[document.form1.tag12.selectedIndex].value; location.href='edit_texts.php?page=1&amp;tag12=' + val;}">
                     <?php echo get_andor_selectoptions($currenttag12); ?>
                 </select> .. Tag #2
             </td>
-            <td class="td1 center" nowrap="nowrap">
+            <td class="td1 center">
                 Tag #2:
                 <select name="tag2" onchange="{val=document.form1.tag2.options[document.form1.tag2.selectedIndex].value; location.href='edit_texts.php?page=1&amp;tag2=' + val;}">
                     <?php echo get_texttag_selectoptions($currenttag2, $currentlang); ?>
@@ -832,13 +833,13 @@ function edit_texts_filters_form($currentlang, $recno, $currentpage, $pages)
         if($recno > 0) {
             ?>
         <tr>
-            <th class="th1" colspan="2" nowrap="nowrap">
+            <th class="th1" colspan="2">
                 <?php echo $recno; ?> Text<?php echo ($recno==1?'':'s'); ?>
             </th>
-            <th class="th1" colspan="1" nowrap="nowrap">
+            <th class="th1" colspan="1">
                 <?php makePager($currentpage, $pages, 'edit_texts.php', 'form1'); ?>
             </th>
-            <th class="th1" colspan="1" nowrap="nowrap">
+            <th class="th1" colspan="1">
                 Sort Order:
                 <select name="sort" onchange="{val=document.form1.sort.options[document.form1.sort.selectedIndex].value; location.href='edit_texts.php?page=1&amp;sort=' + val;}">
                     <?php echo get_textssort_selectoptions($currentsort); ?>
@@ -881,10 +882,10 @@ function edit_texts_other_pages($recno)
     ?>
 <table class="tab2" cellspacing="0" cellpadding="5">
     <tr>
-        <th class="th1" nowrap="nowrap">
+        <th class="th1">
             <?php echo $recno; ?> Text<?php echo ($recno==1?'':'s'); ?>
         </th>
-        <th class="th1" nowrap="nowrap">
+        <th class="th1">
             <?php makePager($currentpage, $pages, 'edit_texts.php', 'form2'); ?>
         </th>
     </tr>
@@ -922,27 +923,27 @@ function edit_texts_show_text_row($txrecord, $currentlang, $statuses)
                 <input name="marked[]" class="markcheck" type="checkbox" value="<?php echo $txid; ?>" <?php echo checkTest($txid, 'marked'); ?> />
             </a>
         </td>
-        <td nowrap="nowrap" class="td1 center">&nbsp;
+        <td class="td1 center">
             <a href="do_text.php?start=<?php echo $txid; ?>">
                 <img src="icn/book-open-bookmark.png" title="Read" alt="Read" />
-            </a>&nbsp; 
+            </a>
             <a href="do_test.php?text=<?php echo $txid; ?>">
                 <img src="icn/question-balloon.png" title="Test" alt="Test" />
-            </a>&nbsp;
+            </a>
         </td>
-        <td nowrap="nowrap" class="td1 center">&nbsp;
+        <td class="td1 center">
             <a href="print_text.php?text=<?php echo $txid; ?>">
                 <img src="icn/printer.png" title="Print" alt="Print" />
-            </a>&nbsp; 
+            </a>
             <a href="<?php echo $_SERVER['PHP_SELF']; ?>?arch=<?php echo $txid; ?>">
                 <img src="icn/inbox-download.png" title="Archive" alt="Archive" />
-            </a>&nbsp; 
+            </a>
             <a href="<?php echo $_SERVER['PHP_SELF']; ?>?chg=<?php echo $txid; ?>">
                 <img src="icn/document--pencil.png" title="Edit" alt="Edit" />
-            </a>&nbsp; 
+            </a>
             <span class="click" onclick="if (confirmDelete()) location.href=\'<?php echo $_SERVER['PHP_SELF']; ?>?del=<?php echo $txid; ?>\';">
                 <img src="icn/minus-button.png" title="Delete" alt="Delete" />
-            </span>&nbsp;
+            </span>
         </td>
     <?php
     if ($currentlang == '') { 
@@ -1198,23 +1199,23 @@ function edit_texts_display($message)
     ?>
 
 <link rel="stylesheet" type="text/css" href="<?php print_file_path('css/css_charts.css');?>" />
-<div style="display: flex; justify-content: space-evenly; width: 850px;">
+<div class="flex-spaced">
     <div>
         <a href="<?php echo $_SERVER['PHP_SELF']; ?>?new=1">
             <img src="icn/plus-button.png">
-            New Text ...
+            New Text
         </a>
     </div>
     <div>
         <a href="long_text_import.php">
             <img src="icn/plus-button.png">
-            Long Text Import ...
+            Long Text Import
         </a>
     </div>
     <div>
         <a href="do_feeds.php?page=1&amp;check_autoupdate=1">
             <img src="icn/plus-button.png">
-            Newsfeed Import ...
+            Newsfeed Import
         </a>
     </div>
     <div>

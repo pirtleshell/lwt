@@ -435,23 +435,23 @@ if (isset($_REQUEST['chg'])) {
     ?>
 
 
-<div style="display: flex; justify-content: space-evenly; width: 850px;">
+<div class="flex-spaced">
     <div>
         <a href="<?php echo $_SERVER['PHP_SELF']; ?>?new=1">
             <img src="icn/plus-button.png">
-            New Text ...
+            New Text
         </a>
     </div>
     <div>
         <a href="long_text_import.php">
             <img src="icn/plus-button.png"> 
-            Long Text Import ...
+            Long Text Import
         </a>
     </div>
     <div>
         <a href="do_feeds.php?page=1&amp;check_autoupdate=1">
             <img src="icn/plus-button.png"> 
-            Newsfeed Import ...
+            Newsfeed Import
         </a>
     </div>
     <div>
