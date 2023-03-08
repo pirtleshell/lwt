@@ -1,35 +1,26 @@
 <?php
 
-/**************************************************************
-Parameters - GoogleTranslate::staticTranslate($text,$sl,$tl[,$time_token = NULL[,$domain = NULL]]):
-$text -> word to translate
-$sl -> source language code (i.e. en,de,fr,...)
-$tl -> target language code (i.e. en,de,fr,...)
-    all supported language codes can be found here: https://cloud.google.com/translate/v2/using_rest#language-params
-$time_token (optional) -> array() from https://translate.google.com
-    if $time_token is empty, array(408254,585515986) is used
-$domain (optional) -> connect to Google Domain (i.e. 'com' for  https://translate.google.com)
-    if $domain is empty, a random domain will be used (the default value can be altered by changing DEFAULT_DOMAIN)
-    Possible values:
-        ('com.ar', 'at', 'com.au', 'be', 'com.br', 'ca', 'cat', 'ch', 'cl', 'cn', 'cz', 'de', 'dk', 'es', 'fi', 'fr', 'gr', 'com.hk', 'hr', 'hu', 'co.id', 'ie', 'co.il', 'im', 'co.in', 'it', 'jm', 'co.jp', 'co.kr', 'com.mx', 'nl', 'no', 'pl', 'pt', 'ru', 'se', 'com.sg', 'co.th', 'com.tw', 'co.uk', 'com', 'za')
-
-Returns an array of Translations
-
- * **************************************************************
-
-Usage:
-require_once( 'googleTranslateClass.php' );
-
-$translations = GoogleTranslate::staticTranslate('Hello','en','de');
-if(!$translations) echo 'Error: No translation found!';
-else
-    foreach($translations as $transl){
-        echo $transl, '<br />';
-    }
- ***************************************************************/
+/**
+ * \file
+ * \brief Defines GoogleTranslate class for word translation
+ * 
+ * Usage:
+ * require_once( 'googleTranslateClass.php' );
+ * $translations = GoogleTranslate::staticTranslate('Hello','en','de');
+ * if(!$translations) echo 'Error: No translation found!';
+ * else
+ * foreach($translations as $transl){
+ * echo $transl, '<br />';
+ * }
+ */
 
 namespace Lwt\Classes;
 
+/**
+ * Wrapper class to get translation.
+ * 
+ * See staticTranslate for a clssical translation.
+ */
 class GoogleTranslate
 {
     public $lastResult = "";
@@ -46,14 +37,14 @@ class GoogleTranslate
     private static final function setHeaders(): void
     {
         self::$headers = array(
-        'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-        'Accept-Language: en-US,en',
-        'Connection: keep-alive',
-        'Cookie: OGPC=4061130-1:',
-        'DNT: 1',
-        'Host: translate.google.' . self::$gglDomain,
-        'Referer: https://translate.google.' . self::$gglDomain .'/',
-        'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1'
+            'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+            'Accept-Language: en-US,en',
+            'Connection: keep-alive',
+            'Cookie: OGPC=4061130-1:',
+            'DNT: 1',
+            'Host: translate.google.' . self::$gglDomain,
+            'Referer: https://translate.google.' . self::$gglDomain .'/',
+            'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1'
         );
     }
     private static final function generateToken($str, $tok): string
@@ -133,9 +124,9 @@ class GoogleTranslate
         $loc = array(
             'com.ar', 'at', 'com.au', 'be', 'com.br', 'ca', 'cat', 'ch', 'cl', 'cn', 
             'cz', 'de', 'dk', 'es', 'fi', 'fr', 'gr', 'com.hk', 'hr', 'hu', 'co.id', 
-            'ie', 'co.il', 'im', 'co.in', 'it', 'jm', 'co.jp', 'co.kr', 'com.mx', 
+            'ie', 'co.il', 'im', 'co.in', 'it', 'co.jp', 'co.kr', 'com.mx', 
             'nl', 'no', 'pl', 'pt', 'ru', 'se', 'com.sg', 'co.th', 'com.tw', 
-            'co.uk', 'com', 'za'
+            'co.uk', 'com'
         );
         if (empty($domain) || !in_array($domain, $loc, true)) {
             return $loc[mt_rand(0, count($loc) - 1)];
@@ -164,7 +155,7 @@ class GoogleTranslate
         self::$gglDomain = self::getDomain($domain);
         self::setHeaders();
     }
-    public function __construct($from, $to, $domain=null)
+    public function __construct($from, $to)
     {
         $this->setLangFrom($from)->setLangTo($to);
     }
@@ -191,21 +182,52 @@ class GoogleTranslate
             $output = curl_exec($curl);
             unset($curl);
         } else {
-            $ctx = stream_context_create(array("http"=>array("method"=>"GET","header"=>implode("\r\n", self::$headers) . "\r\n")));
+            $ctx = stream_context_create(
+                array(
+                    "http" => array(
+                        "method"=>"GET",
+                        "header"=>implode("\r\n", self::$headers) . "\r\n"
+                    )
+                )
+            );
             $output = file_get_contents($url, false, $ctx);
         }
         return $output;
     }
     public function translate($string): array|false
     {
-        return $this->lastResult = self::staticTranslate($string, $this->langFrom, $this->langTo);
+        return $this->lastResult = self::staticTranslate(
+            $string, $this->langFrom, $this->langTo
+        );
     }
+    /**
+     * Returns an array of Translations
+     * 
+     * @param string      $text -> word to translate
+     * @param string      $sl -> source language code (i.e. en,de,fr,...)
+     * @param string      $tl -> target language code (i.e. en,de,fr,...)
+     * all supported language codes can be found here: https://cloud.google.com/translate/v2/using_rest#language-params
+     * @param string|null $time_token (optional) -> array() from https://translate.google.com
+     * if $time_token is empty, array(408254,585515986) is used
+     * @param string $domain (optional) -> connect to Google Domain (i.e. 'com' for  https://translate.google.com)
+     * if $domain is empty, a random domain will be used (the default value can be altered by changing DEFAULT_DOMAIN)
+     * Possible values:
+     *  ('com.ar', 'at', 'com.au', 'be', 'com.br', 'ca', 'cat', 'ch', 'cl', 'cn', 'cz', 
+     * 'de', 'dk', 'es', 'fi', 'fr', 'gr', 'com.hk', 'hr', 'hu', 'co.id', 'ie', 
+     * 'co.il', 'im', 'co.in', 'it', 'co.jp', 'co.kr', 'com.mx', 'nl', 'no', 'pl', 
+     * 'pt', 'ru', 'se', 'com.sg', 'co.th', 'com.tw', 'co.uk', 'com')
+     * 
+     * @return string[]|false An array of translation, or false if an error occured.
+     */
     public static function staticTranslate(
         $string, $from, $to, $time_token = null, $domain = self::DEFAULT_DOMAIN
         ): array|false 
     {
         self::setDomain($domain);
-        $url = sprintf(self::$urlFormat, self::$gglDomain, rawurlencode($string), $from, $to, self::generateToken($string, $time_token));
+        $url = sprintf(
+            self::$urlFormat, self::$gglDomain, rawurlencode($string), 
+            $from, $to, self::generateToken($string, $time_token)
+        );
         $result = preg_replace('!([[,])(?=,)!', '$1[]', self::makeCurl($url));
         $resultArray = json_decode($result, true);
         $finalResult = [];
@@ -222,7 +244,7 @@ class GoogleTranslate
             }
             if (!empty($resultArray[5])) {
                 foreach ($resultArray[5] as $v) {
-                    if ($v[0]==$string) {
+                    if ($v[0] == $string) {
                         foreach ($v[2] as $results) {
                             $finalResult[] = $results[0];
                         }
