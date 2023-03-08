@@ -28,12 +28,11 @@ use function Lwt\Includes\getGoogleTimeToken;
  * Translate a single sentence using Google Translate.
  * 
  * @param string $text        Text to translate
- * @param string $gglink      Google Translate link
  * @param string $translation Sentence translation
  * 
  * @return void
  */
-function translate_sentence($text, $gglink, $translation)
+function translate_sentence($text, $translation)
 {
     ?>
     <h2>Sentence Translation</h2>
@@ -48,14 +47,13 @@ function translate_sentence($text, $gglink, $translation)
  * Translate input text using Google Translate.
  * 
  * @param string $text   Text to translate
- * @param string $gglink Google Translate link
  * @param array  $file   Array of translated terms 
  * @param string $sl     Source language (e. g. "es")
  * @param string $tl     Target language (e. g. "en")
  * 
  * @return void
  */
-function translate_term($text, $gglink, $file, $sl, $tl)
+function translate_term($text, $file, $sl, $tl)
 {
     ?>
 <h2 title="Translate with Google Translate">
@@ -130,9 +128,9 @@ function translate_text($text, $sl, $tl, $sentence_mode)
     );
 
     if ($sentence_mode) {
-        translate_sentence($text, $gglink, $file[0]);
+        translate_sentence($text, $file[0]);
     } else {
-        translate_term($text, $gglink, $file, $sl, $tl);
+        translate_term($text, $file, $sl, $tl);
     }
 
     echo $gglink;
