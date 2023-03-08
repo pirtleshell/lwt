@@ -238,28 +238,23 @@ function edit_languages_op_change($lid): string
     if ($record == false) { 
         my_die("Cannot access language data: $sql"); 
     }
-    $oldCharacterSubstitutions = $record['LgCharacterSubstitutions'];
-    $oldRegexpSplitSentences = $record['LgRegexpSplitSentences'];
-    $oldExceptionsSplitSentences = $record['LgExceptionsSplitSentences'];
-    $oldRegexpWordCharacters = $record['LgRegexpWordCharacters'];
-    $oldRemoveSpaces = $record['LgRemoveSpaces'];
-    $oldSplitEachChar = $record['LgSplitEachChar'];
-    mysqli_free_result($res);
 
     $needReParse = (
         convert_string_to_sqlsyntax_notrim_nonull($_REQUEST["LgCharacterSubstitutions"]) 
-        != convert_string_to_sqlsyntax_notrim_nonull($oldCharacterSubstitutions)
+        != convert_string_to_sqlsyntax_notrim_nonull($record['LgCharacterSubstitutions'])
     ) || (
         convert_string_to_sqlsyntax($_REQUEST["LgRegexpSplitSentences"]) != 
-        convert_string_to_sqlsyntax($oldRegexpSplitSentences)
+        convert_string_to_sqlsyntax($record['LgRegexpSplitSentences'])
     ) || (
         convert_string_to_sqlsyntax_notrim_nonull($_REQUEST["LgExceptionsSplitSentences"]) 
-        != convert_string_to_sqlsyntax_notrim_nonull($oldExceptionsSplitSentences)
+        != convert_string_to_sqlsyntax_notrim_nonull($record['LgExceptionsSplitSentences'])
     ) || (
         convert_string_to_sqlsyntax($_REQUEST["LgRegexpWordCharacters"]) != 
-        convert_string_to_sqlsyntax($oldRegexpWordCharacters)
-    ) || ((isset($_REQUEST["LgRemoveSpaces"]) ? 1 : 0) != $oldRemoveSpaces) ||
-    ((isset($_REQUEST["LgSplitEachChar"]) ? 1 : 0) != $oldSplitEachChar);
+        convert_string_to_sqlsyntax($record['LgRegexpWordCharacters'])
+    ) || ((isset($_REQUEST["LgRemoveSpaces"]) ? 1 : 0) != $record['LgRemoveSpaces']) ||
+    ((isset($_REQUEST["LgSplitEachChar"]) ? 1 : 0) != $record['LgSplitEachChar']);
+
+    mysqli_free_result($res);
     
 
     $message = runsql(

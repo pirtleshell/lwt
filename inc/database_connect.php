@@ -749,7 +749,7 @@ function parse_japanese_text($text, $id): ?array
     $text = trim($text);
     if ($id == -1) {
         echo '<div id="check_text" style="margin-right:50px;">
-        <h4>Text</h4>
+        <h2>Text</h2>
         <p>' . str_replace("\n", "<br /><br />", tohtml($text)). '</p>'; 
     } else if ($id == -2) {
         $text = preg_replace("/[\n]+/u", "\n¶", $text);
@@ -1364,7 +1364,8 @@ function splitCheckText($text, $lid, $id)
     $wl = array();
     $wl_max = 0;
     $mw_sql = '';
-    $sql = "SELECT LgRightToLeft FROM {$tbpref}languages WHERE LgID=$lid";
+    $lid = (int) $lid;
+    $sql = "SELECT LgRightToLeft FROM {$tbpref}languages WHERE LgID = $lid";
     $res = do_mysqli_query($sql);
     $record = mysqli_fetch_assoc($res);
     // Just checking if LgID exists with ID should be enough
@@ -1383,9 +1384,9 @@ function splitCheckText($text, $lid, $id)
             LWT 3.0.0. Use format_text instead.", 
             E_USER_WARNING
         );*/
-        return prepare_text_parsing($text, -2, (int)$lid);
+        return prepare_text_parsing($text, -2, $lid);
     }
-    prepare_text_parsing($text, $id, (int)$lid);
+    prepare_text_parsing($text, $id, $lid);
 
     // Check text
     if ($id == -1) {
@@ -1410,15 +1411,17 @@ function splitCheckText($text, $lid, $id)
     $sql = '';
     // Text has multi-words
     if (!empty($wl)) {
-        $sql = check_text_with_expressions($id, (int)$lid, $wl, $wl_max, $mw_sql);
+        $sql = check_text_with_expressions($id, $lid, $wl, $wl_max, $mw_sql);
     }
     if ($id > 0) {
-        update_default_values($id, (int)$lid, $sql);
+        update_default_values($id, $lid, $sql);
     }
+    
     // Check text
     if ($id == -1) {
         check_text($sql, (bool)$rtlScript, $wl);
     }
+    
     do_mysqli_query("TRUNCATE TABLE {$tbpref}temptextitems");
 }
 
