@@ -3827,7 +3827,8 @@ function insert_expression_from_mecab($text, $lid, $wid, $len): array
 
     $mecab = get_mecab_path($mecab_args);
     $sql = "SELECT SeID, SeTxID, SeFirstPos, SeText FROM {$tbpref}sentences 
-    WHERE SeText LIKE " . convert_string_to_sqlsyntax_notrim_nonull("%$text%");
+    WHERE SeLgID = $lid AND 
+    SeText LIKE " . convert_string_to_sqlsyntax_notrim_nonull("%$text%");
     $res = do_mysqli_query($sql);
 
 
@@ -3857,13 +3858,9 @@ function insert_expression_from_mecab($text, $lid, $wid, $len): array
                 $word_counter++;
                 continue;
             }
-            $seek = 0;
+            $seek = mb_strpos($sent, $text);
             // For each occurence of multi-word in sentence 
-            while (
-                $seek < mb_strlen($sent) 
-                && ($seek = mb_strpos($sent, $text, $seek)) !== false
-            ) {
-                $sent = mb_substr($sent, $seek);
+            while ($seek !== false) {
                 $pos = $word_counter * 2 + (int) $record['SeFirstPos'];
                 // Ti2WoID,Ti2LgID,Ti2TxID,Ti2SeID,Ti2Order,Ti2WordCount,Ti2Text
                 $sqlarray[] = "($wid, $lid, {$record['SeTxID']}, {$record['SeID']}, 
@@ -3873,7 +3870,7 @@ function insert_expression_from_mecab($text, $lid, $wid, $len): array
                 } else { 
                     $appendtext[$pos] = $text;
                 }
-                $seek++;
+                $seek = mb_strpos($sent, $text, $seek + 1);
             }
             $word_counter++;
         }
@@ -3934,16 +3931,18 @@ function insert_standard_expression($textlc, $lid, $wid, $len, $mode): array
     $sqlarr = array();
     $res = do_mysqli_query("SELECT * FROM {$tbpref}languages WHERE LgID=$lid");
     $record = mysqli_fetch_assoc($res);
-    $removeSpaces = $record["LgRemoveSpaces"];
-    $splitEachChar = $record['LgSplitEachChar'];
+    $removeSpaces = $record["LgRemoveSpaces"] == 1;
+    $splitEachChar = $record['LgSplitEachChar'] != 0;
     $termchar = $record['LgRegexpWordCharacters'];
     mysqli_free_result($res);
-    if ($removeSpaces == 1 && $splitEachChar == 0) {
+    if ($removeSpaces && !$splitEachChar) {
         $sql = "SELECT 
-        group_concat(Ti2Text ORDER BY Ti2Order SEPARATOR ' ') AS SeText, SeID, 
+        GROUP_CONCAT(Ti2Text ORDER BY Ti2Order SEPARATOR ' ') AS SeText, SeID, 
         SeTxID, SeFirstPos 
-        FROM {$tbpref}textitems2, {$tbpref}sentences 
-        WHERE SeID=Ti2SeID AND SeLgID = $lid AND Ti2LgID = $lid 
+        FROM {$tbpref}textitems2
+        JOIN {$tbpref}sentences 
+        ON SeID=Ti2SeID AND SeLgID = Ti2LgID
+        WHERE Ti2LgID = $lid 
         AND SeText LIKE " . convert_string_to_sqlsyntax_notrim_nonull("%$textlc%") . " 
         AND Ti2WordCount < 2 
         GROUP BY SeID";
@@ -3961,7 +3960,7 @@ function insert_standard_expression($textlc, $lid, $wid, $len, $mode): array
         $string = ' ' . $record['SeText'] . ' ';
         if ($splitEachChar) {
             $string = preg_replace('/([^\s])/u', "$1 ", $string);
-        } else if ($removeSpaces == 1 && empty($rSflag)) {
+        } else if ($removeSpaces && empty($rSflag)) {
             $rSflag = preg_match(
                 '/(?<=[ ])(' . preg_replace('/(.)/ui', "$1[ ]*", $textlc) . 
                 ')(?=[ ])/ui', 
@@ -3980,13 +3979,13 @@ function insert_standard_expression($textlc, $lid, $wid, $len, $mode): array
             ) {
                 // Number of terms before group
                 $cnt = preg_match_all(
-                    "/([$termchar]+)/u", 
-                    mb_substr($string, 0, $last_pos, 'UTF-8'), 
+                    "/([$termchar]+)/u",
+                    mb_substr($string, 0, $last_pos, 'UTF-8'),
                     $_
                 );
                 $pos = 2 * $cnt + (int) $record['SeFirstPos'];
                 $txt = '';
-                if ($matches[1] != $textlc) { 
+                if ($matches[1] != $textlc) {
                     $txt = $splitEachChar ? $wis : $matches[1]; 
                 }
                 $sqlarr[] = "($wid, $lid, {$record['SeTxID']},
@@ -3994,8 +3993,10 @@ function insert_standard_expression($textlc, $lid, $wid, $len, $mode): array
                 convert_string_to_sqlsyntax_notrim_nonull($txt) . ')';
                 if (getSettingZeroOrOne('showallwords', 1)) {
                     $appendtext[$pos] = "&nbsp;$len&nbsp";
-                } else { 
-                    $appendtext[$pos] = $splitEachChar || $removeSpaces?$wis:$matches[1]; 
+                } else if ($splitEachChar || $removeSpaces) {
+                    $appendtext[$pos] = $wis;
+                } else {
+                    $appendtext[$pos] = $matches[1];
                 }
             }
             // Cut the sentence to before the right-most term starts
