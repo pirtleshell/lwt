@@ -3840,12 +3840,11 @@ function insert_expression_from_mecab($text, $lid, $wid, $len): array
         $row = fgets($handle, 16132);
         $arr = explode("\t", $row, 4);
         // Not a word (punctuation)
-        if (empty($arr[0]) || $arr[0] == "EOP" 
-            || strpos("2 6 7", $arr[1]) === false
+        if (!empty($arr[0]) && $arr[0] != "EOP" 
+            && strpos("2 6 7", $arr[1]) !== false
         ) {
-            continue;
+            $parsed_text .= $arr[0] . ' ';
         }
-        $parsed_text .= $arr[0] . ' ';
     }
 
 
@@ -3859,24 +3858,16 @@ function insert_expression_from_mecab($text, $lid, $wid, $len): array
         fclose($fp);
 
         $handle = popen($mecab . $db_to_mecab, "r");
-        $word_counter = 0;
         $parsed_sentence = '';
         // For each word in sentence
         while (!feof($handle)) {
             $row = fgets($handle, 16132);
             $arr = explode("\t", $row, 4);
             // Not a word (punctuation)
-            if (empty($arr[0]) || $arr[0] == "EOP" 
-                || strpos("2 6 7", $arr[1]) === false
+            if (!empty($arr[0]) && $arr[0] != "EOP" 
+                && strpos("2 6 7", $arr[1]) !== false
             ) {
-                continue;
-            }
-            $parsed_sentence .= $arr[0] . ' ';
-            continue;
-            // A word in sentence but not in selected multi-word
-            if (mb_strpos($text, $arr[0]) === false) {
-                $word_counter++;
-                continue;
+                $parsed_sentence .= $arr[0] . ' ';
             }
         }
 
@@ -3884,10 +3875,9 @@ function insert_expression_from_mecab($text, $lid, $wid, $len): array
         $seek = mb_strpos($parsed_sentence, $parsed_text);
         // For each occurence of multi-word in sentence 
         while ($seek !== false) {
-            $word_counter = preg_match_all(
-                '/ /', mb_substr($parsed_sentence, 0, $seek)
-            );
-            $pos = $word_counter * 2 + (int) $record['SeFirstPos'];
+            // pos = Number of words * 2 + initial position
+            $pos = preg_match_all('/ /', mb_substr($parsed_sentence, 0, $seek)) * 2 + 
+            (int) $record['SeFirstPos'];
             // Ti2WoID,Ti2LgID,Ti2TxID,Ti2SeID,Ti2Order,Ti2WordCount,Ti2Text
             $sqlarray[] = "($wid, $lid, {$record['SeTxID']}, {$record['SeID']}, 
             $pos, $len, " . convert_string_to_sqlsyntax_notrim_nonull($text) . ")";
