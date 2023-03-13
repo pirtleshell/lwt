@@ -76,13 +76,15 @@ from 1.8.0 to 1.10.2. This brings some bug fixes.
 * Multi-words:
   * Sometimes multi-words indicator was cut, resulting in strange display ([#89](https://github.com/HugoFara/lwt/issues/89)).
   * For Japanese: multi-words indicator was before each character, this is fixed [#96](https://github.com/HugoFara/lwt/issues/96).
+* Wrong link to documentation (``docs/info.php`` instead of ``docs/info.html``) on the help button (main page). Signaled by babaeali on Discord.
 
 ## Deprecated
+
 * Dictionary and translator URIs changed:
   * They should **always** be proper URLs.
   * Replacing ``###`` by ``lwt_term`` is strongly recommended!
   * "*" At the beginning of an URI should be replaced by ``lwt_popup=1`` as an argument.
-  * ``ggl.php`` should be replaced by the file full URL, for instance "http://localhost/lwt/ggl.php". 
+  * ``ggl.php`` should be replaced by the file full URL, for instance "http://localhost/lwt/ggl.php".
 
 ## 2.6.0-fork (January 01 2023)
 

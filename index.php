@@ -393,7 +393,7 @@ function index_do_main_page()
 
     <div class="menu">
         <a href="statistics.php" title="Text statistics">Statistics</a>
-        <a href="docs/info.php">Help</a>
+        <a href="docs/info.html">Help</a>
         <a href="server_data.php" title="Various data useful for debug">Server Data</a>
     </div>
 
