@@ -57,7 +57,9 @@ from 1.8.0 to 1.10.2. This brings some bug fixes.
 * Moved Google API files:
   * Moved ``googleTimeToken.php`` from root folder to ``inc/``.
   * Moved ``googleTranslateClass.php`` from root folder to ``inc/classes/GoogleTranslate.php``.
-* ``install_demo_db_sql.gz`` uncompressed to ``install_demo_db.sql``. Functions adapted.
+* Updates in demo database:
+  * Faster to install. ``install_demo_db_sql.gz`` uncompressed to ``install_demo_db.sql``. Functions adapted.
+  * Dict links changed: ### replaced by lwt_term, * replaced by lwt_popup=1, some dict url protocol changed to https.
 
 ### Fixed
 
