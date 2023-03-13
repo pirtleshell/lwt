@@ -4202,6 +4202,7 @@ function insertExpressions($textlc, $lid, $wid, $len, $mode): string|null
  *
  * @since 2.0.3-fork Function was broken
  * @since 2.5.3-fork Function repaired
+ * @since 2.7.0-fork $handle should be for an *uncompressed* file.
  */
 function restore_file($handle, $title): string 
 {
@@ -4216,15 +4217,9 @@ function restore_file($handle, $title): string
     $inserts = 0;
     $creates = 0;
     $start = 1;
-    while (!gzeof($handle)) {
+    while (!feof($handle)) {
         $sql_line = trim(
-            str_replace(
-                "\r", "",
-                str_replace(
-                    "\n", "",
-                    gzgets($handle, 99999)
-                )
-            )
+            str_replace("\r", "", str_replace("\n", "", fgets($handle, 99999)))
         );
         if ($sql_line != "") {
             if ($start) {
@@ -4241,8 +4236,7 @@ function restore_file($handle, $title): string
             }
             if (substr($sql_line, 0, 3) !== '-- ' ) {
                 $res = mysqli_query(
-                    $GLOBALS['DBCONNECTION'], 
-                    insert_prefix_in_sql($sql_line)
+                    $GLOBALS['DBCONNECTION'], insert_prefix_in_sql($sql_line)
                 );
                 $lines++;
                 if ($res == false) { 
@@ -4260,7 +4254,7 @@ function restore_file($handle, $title): string
             }
         }
     } // while (! feof($handle))
-    gzclose($handle);
+    fclose($handle);
     if ($errors == 0) {
         runsql("DROP TABLE IF EXISTS {$tbpref}textitems", '');
         check_update_db($debug, $tbpref, $dbname);
