@@ -5,7 +5,8 @@
  * \brief Defines GoogleTranslate class for word translation
  * 
  * Usage:
- * require_once( 'googleTranslateClass.php' );
+ * use Lwt\Classes\GoogleTranslte;
+ * require_once( 'GoogleTranslate.php' );
  * $translations = GoogleTranslate::staticTranslate('Hello','en','de');
  * if(!$translations) echo 'Error: No translation found!';
  * else
@@ -34,7 +35,7 @@ class GoogleTranslate
     "?client=t&q=%s&hl=en&sl=%s&tl=%s&dt=t&dt=at&dt=bd&ie=UTF-8&oe=UTF-8&oc=1&" . 
     "otf=2&ssel=0&tsel=3&tk=%s";
 
-    private static final function setHeaders(): void
+    private static function setHeaders(): void
     {
         self::$headers = array(
             'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -47,7 +48,7 @@ class GoogleTranslate
             'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1'
         );
     }
-    private static final function generateToken($str, $tok): string
+    private static function generateToken($str, $tok): string
     {
         $t = $c = isset($tok)?$tok[0]:408254;//todo floor(time()/3600);
         $x = hexdec(80000000);
@@ -119,7 +120,7 @@ class GoogleTranslate
      * 
      * @return string 
      */
-    public static final function getDomain($domain) 
+    public static function getDomain($domain) 
     {
         $loc = array(
             'com.ar', 'at', 'com.au', 'be', 'com.br', 'ca', 'cat', 'ch', 'cl', 'cn', 
@@ -159,7 +160,7 @@ class GoogleTranslate
     {
         $this->setLangFrom($from)->setLangTo($to);
     }
-    public static final function makeCurl($url, $cookieSet = false): string|bool
+    public static function makeCurl($url, $cookieSet = false): string|bool
     {
         if (is_callable('curl_init')) {
             if (!$cookieSet) {

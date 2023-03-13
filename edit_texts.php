@@ -941,7 +941,7 @@ function edit_texts_show_text_row($txrecord, $currentlang, $statuses)
             <a href="<?php echo $_SERVER['PHP_SELF']; ?>?chg=<?php echo $txid; ?>">
                 <img src="icn/document--pencil.png" title="Edit" alt="Edit" />
             </a>
-            <span class="click" onclick="if (confirmDelete()) location.href=\'<?php echo $_SERVER['PHP_SELF']; ?>?del=<?php echo $txid; ?>\';">
+            <span class="click" onclick="if (confirmDelete()) location.href='<?php echo $_SERVER['PHP_SELF']; ?>?del=<?php echo $txid; ?>';">
                 <img src="icn/minus-button.png" title="Delete" alt="Delete" />
             </span>
         </td>

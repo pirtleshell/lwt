@@ -18,7 +18,7 @@ namespace Lwt\Interface;
 
 require_once 'inc/session_utility.php';
 require_once 'inc/googleTimeToken.php' ;
-require_once 'inc/classes/googleTranslateClass.php';
+require_once 'inc/classes/GoogleTranslate.php';
 
 use Lwt\Classes\GoogleTranslate as GoogleTranslate;
 
@@ -39,7 +39,8 @@ function translate_sentence($text, $translation)
     <span title="Translated via Google Translate">
         <?php echo tohtml($translation); ?>
     </span>
-    <p>Original sentence: </p><blockquote><?php echo tohtml($text); ?></blockquote>
+    <p>Original sentence: </p>
+    <blockquote><?php echo tohtml($text); ?></blockquote>
     <?php
 }
 
@@ -61,8 +62,8 @@ function translate_term($text, $file, $sl, $tl)
     <img id="textToSpeech" style="cursor: pointer;" title="Click to read!"
     src="<?php print_file_path('icn/speaker-volume.png'); ?>" ></img>
 
-    <img id="del_translation" style="cursor: pointer;" title="Empty Translation Field" 
-    onclick="deleteTranslation ();"
+    <img id="del_translation" style="cursor: pointer;" 
+    title="Empty Translation Field" onclick="deleteTranslation ();"
     src="<?php print_file_path('icn/broom.png'); ?>" ></img>
 </h2>
 
@@ -113,7 +114,9 @@ function translate_term($text, $file, $sl, $tl)
  */
 function translate_text($text, $sl, $tl, $sentence_mode)
 {
-    $file = GoogleTranslate::staticTranslate($text, $sl, $tl, getGoogleTimeToken());
+    $file = GoogleTranslate::staticTranslate(
+        $text, $sl, $tl, getGoogleTimeToken()
+    );
 
     if ($file === false) {
         my_die("Unable to get translation from Google!");
@@ -151,12 +154,12 @@ function do_content($text)
     if (trim($text) != '') {
         translate_text($text, $_GET["sl"], $_GET["tl"], isset($_GET['sent']));
     } else {
-        echo "<p class=\"msgblue\">Term is not set!</p>";
+        echo '<p class="msgblue">Term is not set!</p>';
     }
     pageend();
 }
 
-if (isset($_GET['text'])) {
+if (isset($_GET["text"])) {
     do_content($_GET["text"]);
 }
 ?>
