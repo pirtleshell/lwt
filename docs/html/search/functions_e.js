@@ -31,6 +31,7 @@ var searchData=
   ['start_5fsession_5fmain_28',['start_session_main',['../start__session_8php.html#abd147a469e272316906d551d4fed610a',1,'start_session.php']]],
   ['start_5fset_5ftext_5fstatus_29',['start_set_text_status',['../set__test__status_8php.html#abbeb7b6d77d8ca3a8e50b7d179aaf402',1,'set_test_status.php']]],
   ['start_5ftest_5fheader_5fpage_30',['start_test_header_page',['../do__test__header_8php.html#ac69d7eb61f0593f0aa42e8545dc5e5b4',1,'do_test_header.php']]],
-  ['str_5freplace_5ffirst_31',['str_replace_first',['../kernel__utility_8php.html#a663921c08c6e251b51ca06a34a796bb3',1,'kernel_utility.php']]],
-  ['strtoclassname_32',['strToClassName',['../session__utility_8php.html#aa498a802f08f5e077602878bf95ea1ea',1,'session_utility.php']]]
+  ['statictranslate_31',['staticTranslate',['../class_lwt_1_1_classes_1_1_google_translate.html#a03f9b1666640a7efa7291f0ad8682989',1,'Lwt::Classes::GoogleTranslate']]],
+  ['str_5freplace_5ffirst_32',['str_replace_first',['../kernel__utility_8php.html#a663921c08c6e251b51ca06a34a796bb3',1,'kernel_utility.php']]],
+  ['strtoclassname_33',['strToClassName',['../session__utility_8php.html#aa498a802f08f5e077602878bf95ea1ea',1,'session_utility.php']]]
 ];

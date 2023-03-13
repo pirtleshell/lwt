@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['restrictions_0',['Restrictions',['../md_docs_restrictions.html',1,'']]]
+  ['questions_20and_20answers_0',['Questions and Answers',['../md_docs_faq.html',1,'']]]
 ];

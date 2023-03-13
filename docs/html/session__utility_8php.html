@@ -22,7 +22,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="lwt_icon.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Learning with Texts - Fork<span id="projectnumber">&#160;2.6.0-fork</span>
+   <div id="projectname">Learning with Texts - Fork<span id="projectnumber">&#160;2.7.0-fork</span>
    </div>
    <div id="projectbrief">Learn foreign languages with texts</div>
   </td>
@@ -293,8 +293,7 @@ Functions</h2></td></tr>
 <tr class="memitem:abeefb21ea7f2ac2c90ce45abb42a19e7"><td class="memItemLeft" align="right" valign="top"><a id="abeefb21ea7f2ac2c90ce45abb42a19e7" name="abeefb21ea7f2ac2c90ce45abb42a19e7"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>get_texts_selectoptions</b> ($lang, $v)</td></tr>
 <tr class="separator:abeefb21ea7f2ac2c90ce45abb42a19e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a676b96b82c252e56b6dcf841ad8d6367"><td class="memItemLeft" align="right" valign="top"><a id="a676b96b82c252e56b6dcf841ad8d6367" name="a676b96b82c252e56b6dcf841ad8d6367"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>makePager</b> ($currentpage, $pages, $script, $formname)</td></tr>
+<tr class="memitem:a676b96b82c252e56b6dcf841ad8d6367"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="session__utility_8php.html#a676b96b82c252e56b6dcf841ad8d6367">makePager</a> ($currentpage, $pages, $script, $formname)</td></tr>
 <tr class="separator:a676b96b82c252e56b6dcf841ad8d6367"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8e44da257bdd41e4c328a7b7bbb730ea"><td class="memItemLeft" align="right" valign="top"><a id="a8e44da257bdd41e4c328a7b7bbb730ea" name="a8e44da257bdd41e4c328a7b7bbb730ea"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>makeStatusCondition</b> ($fieldname, $statusrange)</td></tr>
@@ -603,8 +602,8 @@ Functions</h2></td></tr>
 <p>Case 1: url without any ### or lwt_term: append UTF-8-term Case 2: url with one ### or lwt_term: substitute UTF-8-term Case 3: url with two (###|lwt_term)enc###: unsupported encoding changed, abandonned since 2.6.0-fork</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramtype">string</td><td class="paramname">$u</td><td>Dictionary URL. It may contain ### that will get parsed </td></tr>
-    <tr><td class="paramtype">string</td><td class="paramname">$t</td><td>Text that substite the ###</td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$u</td><td>Dictionary URL. It may contain 'lwt_term' that will get parsed </td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$t</td><td>Text that substite the 'lwt_term'</td></tr>
   </table>
   </dd>
 </dl>
@@ -1306,7 +1305,7 @@ Functions</h2></td></tr>
     <tr><td class="paramtype">string</td><td class="paramname">$text</td><td>Text to insert </td></tr>
     <tr><td class="paramtype">string</td><td class="paramname">$lid</td><td><a class="el" href="class_language.html">Language</a> ID </td></tr>
     <tr><td class="paramtype">string</td><td class="paramname">$wid</td><td>Word ID </td></tr>
-    <tr><td class="paramtype">int</td><td class="paramname">$mode</td><td>If equal to 0, add data in the output</td></tr>
+    <tr><td class="paramtype">int</td><td class="paramname">$len</td><td>Number of words in the expression</td></tr>
   </table>
   </dd>
 </dl>
@@ -1366,6 +1365,7 @@ Functions</h2></td></tr>
     <tr><td class="paramtype">string</td><td class="paramname">$textlc</td><td>Text to insert in lower case </td></tr>
     <tr><td class="paramtype">string</td><td class="paramname">$lid</td><td><a class="el" href="class_language.html">Language</a> ID </td></tr>
     <tr><td class="paramtype">string</td><td class="paramname">$wid</td><td>Word ID </td></tr>
+    <tr><td class="paramtype">int</td><td class="paramname">$len</td><td>Number of words in the expression </td></tr>
     <tr><td class="paramtype">mixed</td><td class="paramname">$mode</td><td>Unnused</td></tr>
   </table>
   </dd>
@@ -1428,6 +1428,7 @@ Functions</h2></td></tr>
     <tr><td class="paramtype">string</td><td class="paramname">$textlc</td><td>Text to insert in lower case </td></tr>
     <tr><td class="paramtype">string</td><td class="paramname">$lid</td><td><a class="el" href="class_language.html">Language</a> ID </td></tr>
     <tr><td class="paramtype">string</td><td class="paramname">$wid</td><td>Word ID </td></tr>
+    <tr><td class="paramtype">int</td><td class="paramname">$len</td><td>Number of words in the expression </td></tr>
     <tr><td class="paramtype">int</td><td class="paramname">$mode</td><td>If equal to 0, add data in the output</td></tr>
   </table>
   </dd>
@@ -1488,7 +1489,7 @@ Functions</h2></td></tr>
   <table class="params">
     <tr><td class="paramtype">string</td><td class="paramname">$textlc</td><td>Text in lower case </td></tr>
     <tr><td class="paramtype">string</td><td class="paramname">$lid</td><td><a class="el" href="class_language.html">Language</a> ID </td></tr>
-    <tr><td class="paramtype">string</td><td class="paramname">$len</td><td></td></tr>
+    <tr><td class="paramtype">int</td><td class="paramname">$len</td><td>Number of words in the expression </td></tr>
     <tr><td class="paramtype">int</td><td class="paramname">$mode</td><td>Function mode<ul>
 <li>0: Default mode, do nothing special</li>
 <li>1: Runs an expresion inserter interactable</li>
@@ -1682,7 +1683,50 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>string HTML-formatted string </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>string HTML-formatted string</dd></dl>
+<dl class="section since"><dt>Since</dt><dd>2.7.0-fork Supports LibreTranslate, using other string that proper URL is deprecated. </dd></dl>
+
+</div>
+</div>
+<a id="a676b96b82c252e56b6dcf841ad8d6367" name="a676b96b82c252e56b6dcf841ad8d6367"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a676b96b82c252e56b6dcf841ad8d6367">&#9670;&#160;</a></span>makePager()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">makePager </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$currentpage</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$pages</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$script</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$formname</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Makes HTML content for a text of style "Page 1 of 3".</p>
+<dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
 
 </div>
 </div>
@@ -2175,7 +2219,9 @@ Functions</h2></td></tr>
 <p>@global string $trbpref Database table prefix @global int $debug Debug status @global string $dbname Database name</p>
 <dl class="section since"><dt>Since</dt><dd>2.0.3-fork Function was broken </dd>
 <dd>
-2.5.3-fork Function repaired </dd></dl>
+2.5.3-fork Function repaired </dd>
+<dd>
+2.7.0-fork $handle should be for an <em>uncompressed</em> file. </dd></dl>
 
 </div>
 </div>
