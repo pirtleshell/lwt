@@ -12,8 +12,8 @@
             <directory name="vendor" />
             <!-- Ignore WordPress server configuration files-->
             <file name="wp_lwt_st*.php" />
-            <!-- Should this file be deleted? -->
-            <file name="googleTranslateClass.php" />
+            <!-- Should this really be ignored? -->
+            <file name="inc/classes/GoogleTranslate.php" />
         </ignoreFiles>
     </projectFiles>
 
