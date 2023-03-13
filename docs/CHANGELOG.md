@@ -73,7 +73,9 @@ from 1.8.0 to 1.10.2. This brings some bug fixes.
 * Support for PHP 7.4 restored, wrappers for ``str_starts_with``, ``str_ends_with``, ``str_contains``.
 * The encoding of ``docs/info.html`` is finally fixed!
 * ``ggl.php`` feature fixed!
-* Sometimes multi-words indicator was cut, resulting in strange display ([#89](https://github.com/HugoFara/lwt/issues/89)).
+* Multi-words:
+  * Sometimes multi-words indicator was cut, resulting in strange display ([#89](https://github.com/HugoFara/lwt/issues/89)).
+  * For Japanese: multi-words indicator was before each character, this is fixed [#96](https://github.com/HugoFara/lwt/issues/96).
 
 ## Deprecated
 * Dictionary and translator URIs changed:

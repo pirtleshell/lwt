@@ -3805,10 +3805,10 @@ function getScriptDirectionTag($lid): string
 /**
  * Insert an expression to the database using MeCab.
  *
- * @param string $text   Text to insert
- * @param string $lid    Language ID
- * @param string $wid    Word ID
- * @param int    $mode   If equal to 0, add data in the output
+ * @param string $text Text to insert
+ * @param string $lid  Language ID
+ * @param string $wid  Word ID
+ * @param int    $len  Number of words in the expression
  *
  * @return string[][] Append text and values to insert to the database
  *
@@ -3823,13 +3823,30 @@ function insert_expression_from_mecab($text, $lid, $wid, $len): array
     global $tbpref;
 
     $db_to_mecab = tempnam(sys_get_temp_dir(), "{$tbpref}db_to_mecab");
-    $mecab_args = " -F %m\\t%t\\t%h\\n -U %m\\t%t\\t%h\\n -E EOP\\t3\\t7\\n ";
+    $mecab_args = " -F %m\\t%t\\t\\n -U %m\\t%t\\t\\n -E \\t\\n ";
 
     $mecab = get_mecab_path($mecab_args);
     $sql = "SELECT SeID, SeTxID, SeFirstPos, SeText FROM {$tbpref}sentences 
     WHERE SeLgID = $lid AND 
     SeText LIKE " . convert_string_to_sqlsyntax_notrim_nonull("%$text%");
     $res = do_mysqli_query($sql);
+
+    $parsed_text = '';
+    $fp = fopen($db_to_mecab, 'w');
+    fwrite($fp, $text);
+    fclose($fp);
+    $handle = popen($mecab . $db_to_mecab, "r");
+    while (!feof($handle)) {
+        $row = fgets($handle, 16132);
+        $arr = explode("\t", $row, 4);
+        // Not a word (punctuation)
+        if (empty($arr[0]) || $arr[0] == "EOP" 
+            || strpos("2 6 7", $arr[1]) === false
+        ) {
+            continue;
+        }
+        $parsed_text .= $arr[0] . ' ';
+    }
 
 
     $appendtext = array();
@@ -3843,6 +3860,7 @@ function insert_expression_from_mecab($text, $lid, $wid, $len): array
 
         $handle = popen($mecab . $db_to_mecab, "r");
         $word_counter = 0;
+        $parsed_sentence = '';
         // For each word in sentence
         while (!feof($handle)) {
             $row = fgets($handle, 16132);
@@ -3853,26 +3871,32 @@ function insert_expression_from_mecab($text, $lid, $wid, $len): array
             ) {
                 continue;
             }
+            $parsed_sentence .= $arr[0] . ' ';
+            continue;
             // A word in sentence but not in selected multi-word
             if (mb_strpos($text, $arr[0]) === false) {
                 $word_counter++;
                 continue;
             }
-            $seek = mb_strpos($sent, $text);
-            // For each occurence of multi-word in sentence 
-            while ($seek !== false) {
-                $pos = $word_counter * 2 + (int) $record['SeFirstPos'];
-                // Ti2WoID,Ti2LgID,Ti2TxID,Ti2SeID,Ti2Order,Ti2WordCount,Ti2Text
-                $sqlarray[] = "($wid, $lid, {$record['SeTxID']}, {$record['SeID']}, 
-                $pos, $len, " . convert_string_to_sqlsyntax_notrim_nonull($text) . ")";
-                if (getSettingZeroOrOne('showallwords', 1)) {
-                    $appendtext[$pos] = '&nbsp;' . $len . '&nbsp';
-                } else { 
-                    $appendtext[$pos] = $text;
-                }
-                $seek = mb_strpos($sent, $text, $seek + 1);
+        }
+
+        // Finally we check if parsed text is in parsed sentence
+        $seek = mb_strpos($parsed_sentence, $parsed_text);
+        // For each occurence of multi-word in sentence 
+        while ($seek !== false) {
+            $word_counter = preg_match_all(
+                '/ /', mb_substr($parsed_sentence, 0, $seek)
+            );
+            $pos = $word_counter * 2 + (int) $record['SeFirstPos'];
+            // Ti2WoID,Ti2LgID,Ti2TxID,Ti2SeID,Ti2Order,Ti2WordCount,Ti2Text
+            $sqlarray[] = "($wid, $lid, {$record['SeTxID']}, {$record['SeID']}, 
+            $pos, $len, " . convert_string_to_sqlsyntax_notrim_nonull($text) . ")";
+            if (getSettingZeroOrOne('showallwords', 1)) {
+                $appendtext[$pos] = "&nbsp;$len&nbsp";
+            } else { 
+                $appendtext[$pos] = $text;
             }
-            $word_counter++;
+            $seek = mb_strpos($parsed_sentence, $parsed_text, $seek + 1);
         }
         pclose($handle);
     }
@@ -3888,6 +3912,7 @@ function insert_expression_from_mecab($text, $lid, $wid, $len): array
  * @param string $textlc Text to insert in lower case
  * @param string $lid    Language ID
  * @param string $wid    Word ID
+ * @param int    $len    Number of words in the expression
  * @param int    $mode   If equal to 0, add data in the output
  *
  * @return array{string[], string[]} Append text and SQL array.
@@ -3913,6 +3938,7 @@ function insertExpressionFromMeCab($textlc, $lid, $wid, $len, $mode): array
  * @param string $textlc Text to insert in lower case
  * @param string $lid    Language ID
  * @param string $wid    Word ID
+ * @param int    $len    Number of words in the expression
  * @param mixed  $mode   Unnused
  *
  * @return (null|string)[][] Append text, empty and sentence id
@@ -4106,7 +4132,7 @@ function new_expression_interactable2($hex, $appendtext, $wid, $len): void
  *
  * @param string $textlc Text in lower case
  * @param string $lid    Language ID
- * @param string $len
+ * @param int    $len    Number of words in the expression
  * @param int    $mode   Function mode
  *                       - 0: Default mode, do nothing special
  *                       - 1: Runs an expresion inserter interactable 
@@ -4129,6 +4155,12 @@ function insertExpressions($textlc, $lid, $wid, $len, $mode): string|null
         $textlc = preg_replace('/([^\s])/u', "$1 ", $textlc);
     }
 
+    /*
+    * TODO:
+    * $appendtext: text to append to the current text
+    * $sqlarr: Expression to append to the database (text independent)
+    * Should separate the two
+    */ 
     if ($mecab) {
         list($appendtext, $sqlarr) = insert_expression_from_mecab(
             $textlc, $lid, $wid, $len
