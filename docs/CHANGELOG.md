@@ -80,6 +80,7 @@ from 1.8.0 to 1.10.2. This brings some bug fixes.
   * Sometimes multi-words indicator was cut, resulting in strange display ([#89](https://github.com/HugoFara/lwt/issues/89)).
   * For Japanese: multi-words indicator was before each character, this is fixed [#96](https://github.com/HugoFara/lwt/issues/96).
 * Wrong link to documentation (``docs/info.php`` instead of ``docs/info.html``) on the help button (main page). Signaled by babaeali on Discord.
+* Depending on browser, clicking on deletion button for active texts had no effect.
 
 ## Deprecated
 
