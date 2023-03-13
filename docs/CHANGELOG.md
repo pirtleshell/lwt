@@ -55,7 +55,7 @@ from 1.8.0 to 1.10.2. This brings some bug fixes.
   * Moved from root folder to ``inc/``.
   * This is still an experimental feature!
 * Moved Google API files:
-  * Moved ``googleTimeToken.php`` from root folder to ``inc/``.
+  * Moved ``googleTimeToken.php`` from root folder to ``inc/google_time_token.php``.
   * Moved ``googleTranslateClass.php`` from root folder to ``inc/classes/GoogleTranslate.php``.
 * Updates in demo database:
   * Faster to install. ``install_demo_db_sql.gz`` uncompressed to ``install_demo_db.sql``. Functions adapted.

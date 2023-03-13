@@ -17,7 +17,7 @@
 namespace Lwt\Interface;
 
 require_once 'inc/session_utility.php';
-require_once 'inc/googleTimeToken.php' ;
+require_once 'inc/google_time_token.php' ;
 require_once 'inc/classes/GoogleTranslate.php';
 
 use Lwt\Classes\GoogleTranslate as GoogleTranslate;
