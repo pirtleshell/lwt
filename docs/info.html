@@ -1857,7 +1857,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 </li>
 <li>LWT becomes easier to install and maintain for users:
 <ul>
-<li>An intaller for Linux users at <code>INSTALL.sh</code> helps installing requirements and configuration.</li>
+<li>An installer for Linux users at <code>INSTALL.sh</code> helps installing requirements and configuration.</li>
 <li>Database creation wizard (<code>database_wizard.php</code>) to help setting the connection with the database.</li>
 <li>A server data page at <code>server_data.php</code> showing all relevant information.</li>
 </ul>
@@ -1934,10 +1934,16 @@ from 1.8.0 to 1.10.2. This brings some bug fixes.</li>
 <li>Moved <code>googleTranslateClass.php</code> from root folder to <code>inc/classes/GoogleTranslate.php</code>.</li>
 </ul>
 </li>
+<li>Updates in demo database:
+<ul>
+<li>Faster to install. <code>install_demo_db_sql.gz</code> uncompressed to <code>install_demo_db.sql</code>. Functions adapted.</li>
+<li>Dict links changed: ### replaced by lwt_term, * replaced by lwt_popup=1, some dict url protocol changed to https.</li>
+</ul>
+</li>
 </ul>
 <h4>Fixed</h4>
 <ul>
-<li>Markdown: enforced consistency with official style recomendations. The documentation display got improved.</li>
+<li>Markdown: enforced consistency with official style recommendations. The documentation display got improved.</li>
 <li>The default date for new words was note accepted depending on the SQL configuration, causing issues with Docker installation. See <a href="https://github.com/HugoFara/lwt/issues/78">#78</a>.</li>
 <li>Bulk translate words:
 <ul>
@@ -1950,7 +1956,7 @@ at the right if text field.</li>
 <li>Changing language name was breaking this, this is fixed:
 <ul>
 <li>Text header was sometimes not available.</li>
-<li>It was breaking full text-to-speech dispatcher. Issue signalled <a href="https://github.com/HugoFara/lwt/issues/80#issuecomment-1368180304">with issue #80</a>
+<li>It was breaking full text-to-speech dispatcher. Issue signaled <a href="https://github.com/HugoFara/lwt/issues/80#issuecomment-1368180304">with issue #80</a>
 </li>
 </ul>
 </li>
@@ -1958,7 +1964,13 @@ at the right if text field.</li>
 <li>The encoding of <code>docs/info.html</code> is finally fixed!</li>
 <li>
 <code>ggl.php</code> feature fixed!</li>
+<li>Multi-words:
+<ul>
 <li>Sometimes multi-words indicator was cut, resulting in strange display (<a href="https://github.com/HugoFara/lwt/issues/89">#89</a>).</li>
+<li>For Japanese: multi-words indicator was before each character, this is fixed <a href="https://github.com/HugoFara/lwt/issues/96">#96</a>.</li>
+</ul>
+</li>
+<li>Wrong link to documentation (<code>docs/info.php</code> instead of <code>docs/info.html</code>) on the help button (main page). Signaled by babaeali on Discord.</li>
 </ul>
 <h3>Deprecated</h3>
 <ul>

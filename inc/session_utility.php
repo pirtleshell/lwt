@@ -3805,10 +3805,10 @@ function getScriptDirectionTag($lid): string
 /**
  * Insert an expression to the database using MeCab.
  *
- * @param string $text   Text to insert
- * @param string $lid    Language ID
- * @param string $wid    Word ID
- * @param int    $mode   If equal to 0, add data in the output
+ * @param string $text Text to insert
+ * @param string $lid  Language ID
+ * @param string $wid  Word ID
+ * @param int    $len  Number of words in the expression
  *
  * @return string[][] Append text and values to insert to the database
  *
@@ -3823,12 +3823,29 @@ function insert_expression_from_mecab($text, $lid, $wid, $len): array
     global $tbpref;
 
     $db_to_mecab = tempnam(sys_get_temp_dir(), "{$tbpref}db_to_mecab");
-    $mecab_args = " -F %m\\t%t\\t%h\\n -U %m\\t%t\\t%h\\n -E EOP\\t3\\t7\\n ";
+    $mecab_args = " -F %m\\t%t\\t\\n -U %m\\t%t\\t\\n -E \\t\\n ";
 
     $mecab = get_mecab_path($mecab_args);
     $sql = "SELECT SeID, SeTxID, SeFirstPos, SeText FROM {$tbpref}sentences 
-    WHERE SeText LIKE " . convert_string_to_sqlsyntax_notrim_nonull("%$text%");
+    WHERE SeLgID = $lid AND 
+    SeText LIKE " . convert_string_to_sqlsyntax_notrim_nonull("%$text%");
     $res = do_mysqli_query($sql);
+
+    $parsed_text = '';
+    $fp = fopen($db_to_mecab, 'w');
+    fwrite($fp, $text);
+    fclose($fp);
+    $handle = popen($mecab . $db_to_mecab, "r");
+    while (!feof($handle)) {
+        $row = fgets($handle, 16132);
+        $arr = explode("\t", $row, 4);
+        // Not a word (punctuation)
+        if (!empty($arr[0]) && $arr[0] != "EOP" 
+            && strpos("2 6 7", $arr[1]) !== false
+        ) {
+            $parsed_text .= $arr[0] . ' ';
+        }
+    }
 
 
     $appendtext = array();
@@ -3841,41 +3858,35 @@ function insert_expression_from_mecab($text, $lid, $wid, $len): array
         fclose($fp);
 
         $handle = popen($mecab . $db_to_mecab, "r");
-        $word_counter = 0;
+        $parsed_sentence = '';
         // For each word in sentence
         while (!feof($handle)) {
             $row = fgets($handle, 16132);
             $arr = explode("\t", $row, 4);
             // Not a word (punctuation)
-            if (empty($arr[0]) || $arr[0] == "EOP" 
-                || strpos("2 6 7", $arr[1]) === false
+            if (!empty($arr[0]) && $arr[0] != "EOP" 
+                && strpos("2 6 7", $arr[1]) !== false
             ) {
-                continue;
+                $parsed_sentence .= $arr[0] . ' ';
             }
-            // A word in sentence but not in selected multi-word
-            if (mb_strpos($text, $arr[0]) === false) {
-                $word_counter++;
-                continue;
+        }
+
+        // Finally we check if parsed text is in parsed sentence
+        $seek = mb_strpos($parsed_sentence, $parsed_text);
+        // For each occurence of multi-word in sentence 
+        while ($seek !== false) {
+            // pos = Number of words * 2 + initial position
+            $pos = preg_match_all('/ /', mb_substr($parsed_sentence, 0, $seek)) * 2 + 
+            (int) $record['SeFirstPos'];
+            // Ti2WoID,Ti2LgID,Ti2TxID,Ti2SeID,Ti2Order,Ti2WordCount,Ti2Text
+            $sqlarray[] = "($wid, $lid, {$record['SeTxID']}, {$record['SeID']}, 
+            $pos, $len, " . convert_string_to_sqlsyntax_notrim_nonull($text) . ")";
+            if (getSettingZeroOrOne('showallwords', 1)) {
+                $appendtext[$pos] = "&nbsp;$len&nbsp";
+            } else { 
+                $appendtext[$pos] = $text;
             }
-            $seek = 0;
-            // For each occurence of multi-word in sentence 
-            while (
-                $seek < mb_strlen($sent) 
-                && ($seek = mb_strpos($sent, $text, $seek)) !== false
-            ) {
-                $sent = mb_substr($sent, $seek);
-                $pos = $word_counter * 2 + (int) $record['SeFirstPos'];
-                // Ti2WoID,Ti2LgID,Ti2TxID,Ti2SeID,Ti2Order,Ti2WordCount,Ti2Text
-                $sqlarray[] = "($wid, $lid, {$record['SeTxID']}, {$record['SeID']}, 
-                $pos, $len, " . convert_string_to_sqlsyntax_notrim_nonull($text) . ")";
-                if (getSettingZeroOrOne('showallwords', 1)) {
-                    $appendtext[$pos] = '&nbsp;' . $len . '&nbsp';
-                } else { 
-                    $appendtext[$pos] = $text;
-                }
-                $seek++;
-            }
-            $word_counter++;
+            $seek = mb_strpos($parsed_sentence, $parsed_text, $seek + 1);
         }
         pclose($handle);
     }
@@ -3891,6 +3902,7 @@ function insert_expression_from_mecab($text, $lid, $wid, $len): array
  * @param string $textlc Text to insert in lower case
  * @param string $lid    Language ID
  * @param string $wid    Word ID
+ * @param int    $len    Number of words in the expression
  * @param int    $mode   If equal to 0, add data in the output
  *
  * @return array{string[], string[]} Append text and SQL array.
@@ -3916,6 +3928,7 @@ function insertExpressionFromMeCab($textlc, $lid, $wid, $len, $mode): array
  * @param string $textlc Text to insert in lower case
  * @param string $lid    Language ID
  * @param string $wid    Word ID
+ * @param int    $len    Number of words in the expression
  * @param mixed  $mode   Unnused
  *
  * @return (null|string)[][] Append text, empty and sentence id
@@ -3934,16 +3947,18 @@ function insert_standard_expression($textlc, $lid, $wid, $len, $mode): array
     $sqlarr = array();
     $res = do_mysqli_query("SELECT * FROM {$tbpref}languages WHERE LgID=$lid");
     $record = mysqli_fetch_assoc($res);
-    $removeSpaces = $record["LgRemoveSpaces"];
-    $splitEachChar = $record['LgSplitEachChar'];
+    $removeSpaces = $record["LgRemoveSpaces"] == 1;
+    $splitEachChar = $record['LgSplitEachChar'] != 0;
     $termchar = $record['LgRegexpWordCharacters'];
     mysqli_free_result($res);
-    if ($removeSpaces == 1 && $splitEachChar == 0) {
+    if ($removeSpaces && !$splitEachChar) {
         $sql = "SELECT 
-        group_concat(Ti2Text ORDER BY Ti2Order SEPARATOR ' ') AS SeText, SeID, 
+        GROUP_CONCAT(Ti2Text ORDER BY Ti2Order SEPARATOR ' ') AS SeText, SeID, 
         SeTxID, SeFirstPos 
-        FROM {$tbpref}textitems2, {$tbpref}sentences 
-        WHERE SeID=Ti2SeID AND SeLgID = $lid AND Ti2LgID = $lid 
+        FROM {$tbpref}textitems2
+        JOIN {$tbpref}sentences 
+        ON SeID=Ti2SeID AND SeLgID = Ti2LgID
+        WHERE Ti2LgID = $lid 
         AND SeText LIKE " . convert_string_to_sqlsyntax_notrim_nonull("%$textlc%") . " 
         AND Ti2WordCount < 2 
         GROUP BY SeID";
@@ -3961,7 +3976,7 @@ function insert_standard_expression($textlc, $lid, $wid, $len, $mode): array
         $string = ' ' . $record['SeText'] . ' ';
         if ($splitEachChar) {
             $string = preg_replace('/([^\s])/u', "$1 ", $string);
-        } else if ($removeSpaces == 1 && empty($rSflag)) {
+        } else if ($removeSpaces && empty($rSflag)) {
             $rSflag = preg_match(
                 '/(?<=[ ])(' . preg_replace('/(.)/ui', "$1[ ]*", $textlc) . 
                 ')(?=[ ])/ui', 
@@ -3980,13 +3995,13 @@ function insert_standard_expression($textlc, $lid, $wid, $len, $mode): array
             ) {
                 // Number of terms before group
                 $cnt = preg_match_all(
-                    "/([$termchar]+)/u", 
-                    mb_substr($string, 0, $last_pos, 'UTF-8'), 
+                    "/([$termchar]+)/u",
+                    mb_substr($string, 0, $last_pos, 'UTF-8'),
                     $_
                 );
                 $pos = 2 * $cnt + (int) $record['SeFirstPos'];
                 $txt = '';
-                if ($matches[1] != $textlc) { 
+                if ($matches[1] != $textlc) {
                     $txt = $splitEachChar ? $wis : $matches[1]; 
                 }
                 $sqlarr[] = "($wid, $lid, {$record['SeTxID']},
@@ -3994,8 +4009,10 @@ function insert_standard_expression($textlc, $lid, $wid, $len, $mode): array
                 convert_string_to_sqlsyntax_notrim_nonull($txt) . ')';
                 if (getSettingZeroOrOne('showallwords', 1)) {
                     $appendtext[$pos] = "&nbsp;$len&nbsp";
-                } else { 
-                    $appendtext[$pos] = $splitEachChar || $removeSpaces?$wis:$matches[1]; 
+                } else if ($splitEachChar || $removeSpaces) {
+                    $appendtext[$pos] = $wis;
+                } else {
+                    $appendtext[$pos] = $matches[1];
                 }
             }
             // Cut the sentence to before the right-most term starts
@@ -4105,7 +4122,7 @@ function new_expression_interactable2($hex, $appendtext, $wid, $len): void
  *
  * @param string $textlc Text in lower case
  * @param string $lid    Language ID
- * @param string $len
+ * @param int    $len    Number of words in the expression
  * @param int    $mode   Function mode
  *                       - 0: Default mode, do nothing special
  *                       - 1: Runs an expresion inserter interactable 
@@ -4128,6 +4145,12 @@ function insertExpressions($textlc, $lid, $wid, $len, $mode): string|null
         $textlc = preg_replace('/([^\s])/u', "$1 ", $textlc);
     }
 
+    /*
+    * TODO:
+    * $appendtext: text to append to the current text
+    * $sqlarr: Expression to append to the database (text independent)
+    * Should separate the two
+    */ 
     if ($mecab) {
         list($appendtext, $sqlarr) = insert_expression_from_mecab(
             $textlc, $lid, $wid, $len
@@ -4179,6 +4202,7 @@ function insertExpressions($textlc, $lid, $wid, $len, $mode): string|null
  *
  * @since 2.0.3-fork Function was broken
  * @since 2.5.3-fork Function repaired
+ * @since 2.7.0-fork $handle should be for an *uncompressed* file.
  */
 function restore_file($handle, $title): string 
 {
@@ -4193,15 +4217,9 @@ function restore_file($handle, $title): string
     $inserts = 0;
     $creates = 0;
     $start = 1;
-    while (!gzeof($handle)) {
+    while (!feof($handle)) {
         $sql_line = trim(
-            str_replace(
-                "\r", "",
-                str_replace(
-                    "\n", "",
-                    gzgets($handle, 99999)
-                )
-            )
+            str_replace("\r", "", str_replace("\n", "", fgets($handle, 99999)))
         );
         if ($sql_line != "") {
             if ($start) {
@@ -4218,8 +4236,7 @@ function restore_file($handle, $title): string
             }
             if (substr($sql_line, 0, 3) !== '-- ' ) {
                 $res = mysqli_query(
-                    $GLOBALS['DBCONNECTION'], 
-                    insert_prefix_in_sql($sql_line)
+                    $GLOBALS['DBCONNECTION'], insert_prefix_in_sql($sql_line)
                 );
                 $lines++;
                 if ($res == false) { 
@@ -4237,7 +4254,7 @@ function restore_file($handle, $title): string
             }
         }
     } // while (! feof($handle))
-    gzclose($handle);
+    fclose($handle);
     if ($errors == 0) {
         runsql("DROP TABLE IF EXISTS {$tbpref}textitems", '');
         check_update_db($debug, $tbpref, $dbname);

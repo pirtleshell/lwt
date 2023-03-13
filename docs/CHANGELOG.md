@@ -14,7 +14,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
   * More intuitive fields, better interactions with the user, etc...
   * A "Pop-Up" checkbox helps you choose if the website should be displayed in a pop-up.
 * LWT becomes easier to install and maintain for users:
-  * An intaller for Linux users at ``INSTALL.sh`` helps installing requirements and configuration.
+  * An installer for Linux users at ``INSTALL.sh`` helps installing requirements and configuration.
   * Database creation wizard (``database_wizard.php``) to help setting the connection with the database.
   * A server data page at ``server_data.php`` showing all relevant information.
 * In ``index.php``:
@@ -57,10 +57,13 @@ from 1.8.0 to 1.10.2. This brings some bug fixes.
 * Moved Google API files:
   * Moved ``googleTimeToken.php`` from root folder to ``inc/``.
   * Moved ``googleTranslateClass.php`` from root folder to ``inc/classes/GoogleTranslate.php``.
+* Updates in demo database:
+  * Faster to install. ``install_demo_db_sql.gz`` uncompressed to ``install_demo_db.sql``. Functions adapted.
+  * Dict links changed: ### replaced by lwt_term, * replaced by lwt_popup=1, some dict url protocol changed to https.
 
 ### Fixed
 
-* Markdown: enforced consistency with official style recomendations. The documentation display got improved.
+* Markdown: enforced consistency with official style recommendations. The documentation display got improved.
 * The default date for new words was note accepted depending on the SQL configuration, causing issues with Docker installation. See [#78](https://github.com/HugoFara/lwt/issues/78).
 * Bulk translate words:
   * Translating with bulk translate was not updating word rendering.
@@ -69,18 +72,22 @@ from 1.8.0 to 1.10.2. This brings some bug fixes.
 * Main page (``index.php``) was not rendered properly on non-default theme.
 * Changing language name was breaking this, this is fixed:
   * Text header was sometimes not available.
-  * It was breaking full text-to-speech dispatcher. Issue signalled [with issue #80](https://github.com/HugoFara/lwt/issues/80#issuecomment-1368180304)
+  * It was breaking full text-to-speech dispatcher. Issue signaled [with issue #80](https://github.com/HugoFara/lwt/issues/80#issuecomment-1368180304)
 * Support for PHP 7.4 restored, wrappers for ``str_starts_with``, ``str_ends_with``, ``str_contains``.
 * The encoding of ``docs/info.html`` is finally fixed!
 * ``ggl.php`` feature fixed!
-* Sometimes multi-words indicator was cut, resulting in strange display ([#89](https://github.com/HugoFara/lwt/issues/89)).
+* Multi-words:
+  * Sometimes multi-words indicator was cut, resulting in strange display ([#89](https://github.com/HugoFara/lwt/issues/89)).
+  * For Japanese: multi-words indicator was before each character, this is fixed [#96](https://github.com/HugoFara/lwt/issues/96).
+* Wrong link to documentation (``docs/info.php`` instead of ``docs/info.html``) on the help button (main page). Signaled by babaeali on Discord.
 
 ## Deprecated
+
 * Dictionary and translator URIs changed:
   * They should **always** be proper URLs.
   * Replacing ``###`` by ``lwt_term`` is strongly recommended!
   * "*" At the beginning of an URI should be replaced by ``lwt_popup=1`` as an argument.
-  * ``ggl.php`` should be replaced by the file full URL, for instance "http://localhost/lwt/ggl.php". 
+  * ``ggl.php`` should be replaced by the file full URL, for instance "http://localhost/lwt/ggl.php".
 
 ## 2.6.0-fork (January 01 2023)
 
