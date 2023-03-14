@@ -3,7 +3,7 @@
 This project's changelog. Versions marked with "-fork" come from the community, other versions come from the canonical LWT ("official" branch on Git).
 For git tags, official releases are marked like "v1.0.0", while unofficial ones are marked like "v1.0.0-fork".
 
-## 2.7.0-fork (March 13 2023)
+## 2.7.0-fork (March 14 2023)
 
 ### Added
 
@@ -82,7 +82,7 @@ from 1.8.0 to 1.10.2. This brings some bug fixes.
 * Wrong link to documentation (``docs/info.php`` instead of ``docs/info.html``) on the help button (main page). Signaled by babaeali on Discord.
 * Depending on browser, clicking on deletion button for active texts had no effect.
 
-## Deprecated
+### Deprecated
 
 * Dictionary and translator URIs changed:
   * They should **always** be proper URLs.
