@@ -2762,8 +2762,11 @@ function makeOpenDictStr($url, $txt): string
         $popup = true;
     }
     if (!$popup) {
-        parse_str(parse_url($url, PHP_URL_QUERY), $url_query);
-        $popup |= array_key_exists('lwt_popup', $url_query);
+        $query = parse_url($url, PHP_URL_QUERY);
+        if ($query !== false && $query !== null) {
+            parse_str($query, $url_query);
+            $popup |= array_key_exists('lwt_popup', $url_query);
+        }
     }
     if ($popup) {
         $r = ' <span class="click" onclick="owin(' . 
@@ -2789,7 +2792,11 @@ function makeOpenDictStrJS($url): string
             $url = substr($url, 1);
             $popup = true;
         }
-        $popup |= str_contains(parse_url($url, PHP_URL_QUERY), 'lwt_popup=');
+        $query = parse_url($url, PHP_URL_QUERY);
+        if ($query !== false && $query !== null) {
+            parse_str($query, $url_query);
+            $popup |= array_key_exists('lwt_popup', $url_query);
+        }
         if ($popup) {
             $r = "owin(" . prepare_textdata_js($url) . ");\n";
         } else {
