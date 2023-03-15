@@ -437,9 +437,16 @@ $( "button" ).on('click', function() {
     <?php
 } else {
     ?>
-<a href="do_feeds.php">My Feeds</a>
-<span class="nowrap"></span>
-<a href="edit_feeds.php?new_feed=1"><img src="icn/feed--plus.png" title="new feed" alt="new feed" /> New Feed...</a>
+
+<div class="flex-spaced">
+    <div><a href="do_feeds.php">My Feeds</a></div>
+    <div>
+        <a href="edit_feeds.php?new_feed=1">
+            <img src="icn/feed--plus.png" title="new feed" alt="new feed" />
+            New Feed...
+        </a>
+    </div>
+</div>
 <form name="form1" action="#" onsubmit="document.form1.querybutton.click(); return false;">
 <table class="tab2" cellspacing="0" cellpadding="5"><tr>
 <th class="th1" colspan="4">Filter <img src="icn/funnel.png" title="Filter" alt="Filter" />&nbsp;

@@ -52,7 +52,10 @@ $edit_text=0;
 
 $doc = null;
 $text_item = null;
-if (isset($_REQUEST['marked_items']) && is_array($_REQUEST['marked_items'])) {
+
+function dummy_function_1($edit_text)
+{
+    global $tbpref;
     $marked_items = implode(',', $_REQUEST['marked_items']);
     $res = do_mysqli_query(
         "SELECT * FROM (
@@ -344,6 +347,11 @@ if (isset($_REQUEST['marked_items']) && is_array($_REQUEST['marked_items'])) {
 $(".hide_message").delay(2500).slideUp(1000);
 </script>
     <?php
+    return $message;
+}
+
+if (isset($_REQUEST['marked_items']) && is_array($_REQUEST['marked_items'])) {
+    $message = dummy_function_1($edit_text);
 }
 
 
@@ -373,18 +381,19 @@ $(".hide_message").delay(2500).slideUp(1000);
 }
 echo error_message_with_hide($message, 0);
 
-if (
-    isset($_REQUEST['load_feed']) || isset($_REQUEST['check_autoupdate']) || 
-    (isset($_REQUEST['markaction']) && $_REQUEST['markaction']=='update')) {
-    load_feeds($currentfeed);
-} else if(empty($edit_text)) {
+function dummy_function_2(
+    $currentlang, $currentpage, $wh_query, $currentquery, $currentfeed, 
+    $currentsort, $currentquerymode, $currentregexmode
+    )
+{
+    global $tbpref, $debug;
     ?>
 
 <div class="flex-spaced">
     <div title="Import of a single text, max. 65,000 bytes long, with optional audio">
-        <a href="<?php echo $_SERVER['PHP_SELF']; ?>?new=1">
-            <img src="icn/plus-button.png">
-            New Text
+        <a href="edit_feeds.php?new_feed=1">
+            <img src="icn/feed--plus.png">
+            New Feed
         </a>
     </div>
     <div>
@@ -594,6 +603,17 @@ $('img.not_found').on('click', function () {
 });
 </script>
     <?php
+}
+
+if (
+    isset($_REQUEST['load_feed']) || isset($_REQUEST['check_autoupdate']) || 
+    (isset($_REQUEST['markaction']) && $_REQUEST['markaction']=='update')) {
+    load_feeds($currentfeed);
+} else if(empty($edit_text)) {
+    dummy_function_2(
+        $currentlang, $currentpage, $wh_query, $currentquery, $currentfeed, 
+        $currentsort, $currentquerymode, $currentregexmode
+    );
 }
 
 pageend();
