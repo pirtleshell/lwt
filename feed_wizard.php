@@ -1,5 +1,7 @@
 <?php
 
+namespace Lwt\Interface\Feed_Wizard;
+
 require_once 'inc/session_utility.php';
 
 

@@ -1,5 +1,7 @@
 <?php
 
+namespace Lwt\Interface\Edit_Feeds;
+
 require_once 'inc/session_utility.php';
 
 $currentlang = validateLang(processDBParam("filterlang", 'currentlanguage', '', 0));
@@ -27,7 +29,8 @@ if (isset($_REQUEST['markaction'])) {
             'delete from ' . $tbpref . 'newsfeeds 
             where NfID in(' . $currentfeed . ')', " / Newsfeed(s) deleted"
         );
-        echo error_message_with_hide($message, 0);unset($message);
+        echo error_message_with_hide($message, 0);
+        unset($message);
     }
 
     if ($_REQUEST['markaction']=='del_art') {
@@ -36,7 +39,8 @@ if (isset($_REQUEST['markaction'])) {
             where FlNfID in(' . $currentfeed . ')', 
             "Article item(s) deleted"
         );
-        echo error_message_with_hide($message, 0);unset($message);
+        echo error_message_with_hide($message, 0);
+        unset($message);
         do_mysqli_query(
             'UPDATE ' . $tbpref . 'newsfeeds SET NfUpdate="'.time().'" 
             where NfID in(' . $currentfeed . ')'
@@ -49,10 +53,11 @@ if (isset($_REQUEST['markaction'])) {
             where FlNfID in (' . $currentfeed . ')', 
             "Article(s) reset"
         );
-        echo error_message_with_hide($message, 0);unset($message);
+        echo error_message_with_hide($message, 0);
+        unset($message);
     }
 }
-if(isset($_SESSION['feed_loaded'])) {
+if (isset($_SESSION['feed_loaded'])) {
     foreach($_SESSION['feed_loaded'] as $lf){
         echo "\n<div class=\"msgblue\"><p class=\"hide_message\">+++ ",$lf," +++</p></div>";
     }
@@ -94,10 +99,11 @@ if (isset($_REQUEST['save_feed'])) {
         ""
     );
 }
-if (isset($_REQUEST['load_feed']) || isset($_REQUEST['check_autoupdate']) || 
-(isset($_REQUEST['markaction']) && $_REQUEST['markaction']=='update')) {
-    load_feeds($currentfeed);
-} elseif(isset($_REQUEST['new_feed'])) {
+
+
+function display_new_feed($currentlang)
+{
+    global $tbpref;
     $result = do_mysqli_query(
         "SELECT LgName,LgID FROM " . $tbpref . "languages 
         where LgName<>'' ORDER BY LgName"
@@ -192,7 +198,11 @@ $('[type="submit"]').on('click', function(){
 });
 </script>
     <?php
-} elseif (isset($_REQUEST['edit_feed'])) {
+}
+
+function edit_feed($currentfeed)
+{
+    global $tbpref;
     $result = do_mysqli_query(
         "SELECT * FROM " . $tbpref . "newsfeeds WHERE NfID=$currentfeed"
     );
@@ -371,7 +381,11 @@ $('[type="submit"]').on('click', function(){
 });
 </script>
     <?php 
-} elseif (isset($_REQUEST['multi_load_feed'])) {
+}
+
+function multi_load_feed($currentlang)
+{
+    global $tbpref;
     if(!empty($currentlang)) {
         $result = do_mysqli_query(
             "SELECT NfName,NfID,NfUpdate FROM " . $tbpref . "newsfeeds 
@@ -435,7 +449,13 @@ $( "button" ).on('click', function() {
 
 </script>
     <?php
-} else {
+}
+
+function display_main_page(
+    $currentlang, $currentquery, $currentpage, $currentsort, $wh_query
+    )
+{
+    global $tbpref, $debug;
     ?>
 
 <div class="flex-spaced">
@@ -578,17 +598,32 @@ $( "button" ).on('click', function() {
             ?>
 </table>
 </form>
-            <?php
-            if ($pages > 1) {
-                echo '<form name="form3" method="get" action ="">
-                <table class="tab2" cellspacing="0" cellpadding="5">
-                <tr><th class="th1" style="width:30%;">';
-                echo $total ;
-                echo '</th><th class="th1">';
-                makePager($currentpage, $pages, 'do_feeds.php', 'form3');
-                echo '</th></tr></table></form>';
-            }
+        <?php
+        if ($pages > 1) {
+            echo '<form name="form3" method="get" action ="">
+            <table class="tab2" cellspacing="0" cellpadding="5">
+            <tr><th class="th1" style="width:30%;">';
+            echo $total ;
+            echo '</th><th class="th1">';
+            makePager($currentpage, $pages, 'do_feeds.php', 'form3');
+            echo '</th></tr></table></form>';
         }
+    }
+}
+
+if (isset($_REQUEST['load_feed']) || isset($_REQUEST['check_autoupdate']) || 
+(isset($_REQUEST['markaction']) && $_REQUEST['markaction']=='update')) {
+    load_feeds($currentfeed);
+} elseif(isset($_REQUEST['new_feed'])) {
+    display_new_feed($currentlang);
+} elseif (isset($_REQUEST['edit_feed'])) {
+    edit_feed($currentfeed);
+} elseif (isset($_REQUEST['multi_load_feed'])) {
+    multi_load_feed($currentlang);
+} else {
+    display_main_page(
+        $currentlang, $currentquery, $currentpage, $currentsort, $wh_query
+    );
 }
 pageend();
 

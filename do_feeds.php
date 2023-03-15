@@ -9,21 +9,21 @@
  * @since  1.6.0-fork
  */
 
+namespace Lwt\Interface\Do_Feeds;
+
 require_once 'inc/session_utility.php';
 
 $currentlang = validateLang(processDBParam("filterlang", 'currentlanguage', '', 0));
-$currentsort = processDBParam("sort", 'currentrsssort', '2', 1);
 $currentquery = processSessParam("query", "currentrssquery", '', 0);
 $currentquerymode = processSessParam("query_mode", "currentrssquerymode", 'title,desc,text', 0);
 $currentregexmode = getSettingWithDefault("set-regex-mode");
-$currentpage = processSessParam("page", "currentrsspage", '1', 1);
 $currentfeed = processSessParam("selected_feed", "currentrssfeed", '', 0);
 $wh_query = $currentregexmode . 'like ' .  convert_string_to_sqlsyntax(
     ($currentregexmode == '') ? 
     str_replace("*", "%", mb_strtolower($currentquery, 'UTF-8')) : 
     $currentquery
 );
-switch($currentquerymode){
+switch ($currentquerymode) {
 case 'title,desc,text':
     $wh_query=' and (FlTitle ' . $wh_query . ' or FlDescription ' . $wh_query . ' or FlText ' . $wh_query . ')';
     break;
@@ -33,13 +33,14 @@ case 'title':
 }
 pagestart('My ' . getLanguage($currentlang) . ' Feeds', true);
 
-if($currentquery!=='') {
-    if($currentregexmode!=='') {
-        if(@mysqli_query($GLOBALS["DBCONNECTION"], 'select "test" rlike ' . convert_string_to_sqlsyntax($currentquery))===false) {
+if ($currentquery!=='') {
+    if ($currentregexmode!=='') {
+        if (@mysqli_query($GLOBALS["DBCONNECTION"], 'select "test" rlike ' . convert_string_to_sqlsyntax($currentquery))===false) {
             $currentquery='';
             $wh_query = '';
             unset($_SESSION['currentwordquery']);
-            if(isset($_REQUEST['query'])) { echo '<p id="hide3" style="color:red;text-align:center;">+++ Warning: Invalid Search +++</p>'; 
+            if(isset($_REQUEST['query'])) { 
+                echo '<p id="hide3" style="color:red;text-align:center;">+++ Warning: Invalid Search +++</p>'; 
             }
         }
     }
@@ -53,7 +54,7 @@ $edit_text=0;
 $doc = null;
 $text_item = null;
 
-function dummy_function_1($edit_text)
+function dummy_function_1(&$edit_text)
 {
     global $tbpref;
     $marked_items = implode(',', $_REQUEST['marked_items']);
@@ -339,7 +340,7 @@ function dummy_function_1($edit_text)
    </script>
         <?php
     }
-    if($edit_text==1) {
+    if ($edit_text==1) {
         echo '</form>';
     }
     ?>
@@ -356,7 +357,7 @@ if (isset($_REQUEST['marked_items']) && is_array($_REQUEST['marked_items'])) {
 
 
 if (isset($_REQUEST['checked_feeds_save'])) {
-    $message=write_rss_to_db($_REQUEST['feed']);
+    $message = write_rss_to_db($_REQUEST['feed']);
     ?>
 <script type="text/javascript">
 $(".hide_message").delay(2500).slideUp(1000);
@@ -382,11 +383,13 @@ $(".hide_message").delay(2500).slideUp(1000);
 echo error_message_with_hide($message, 0);
 
 function dummy_function_2(
-    $currentlang, $currentpage, $wh_query, $currentquery, $currentfeed, 
-    $currentsort, $currentquerymode, $currentregexmode
+    $currentlang, $wh_query, $currentquery, $currentfeed, 
+    $currentquerymode, $currentregexmode
     )
 {
     global $tbpref, $debug;
+    $currentpage = processSessParam("page", "currentrsspage", '1', 1);
+    $currentsort = processDBParam("sort", 'currentrsssort', '2', 1);
     ?>
 
 <div class="flex-spaced">
@@ -611,8 +614,8 @@ if (
     load_feeds($currentfeed);
 } else if(empty($edit_text)) {
     dummy_function_2(
-        $currentlang, $currentpage, $wh_query, $currentquery, $currentfeed, 
-        $currentsort, $currentquerymode, $currentregexmode
+        $currentlang, $wh_query, $currentquery, $currentfeed, $currentquerymode,
+        $currentregexmode
     );
 }
 
