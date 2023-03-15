@@ -820,7 +820,7 @@ THE SOFTWARE.</p>
 <li>jQuery.ScrollTo - Copyright © Ariel Flesler, <a href="http://flesler.blogspot.com">http://flesler.blogspot.com</a> (../js/jquery.scrollTo.min.js)</li>
 <li>Jeditable - jQuery in-place edit plugin - Copyright © Mika Tuupola, Dylan Verheul, <a href="http://www.appelsiini.net/projects/jeditable">http://www.appelsiini.net/projects/jeditable</a> (../js/jquery.jeditable.mini.js)</li>
 <li>jQueryUI Tag-it! - Copyright © Levy Carneiro Jr., <a href="http://aehlke.github.com/tag-it/">http://aehlke.github.com/tag-it/</a> (../js/tag-it.js)</li>
-<li>оverLIB 4.22 - Copyright © Erik Bоsrup, <a href="http://www.bosrup.com/">http://www.bosrup.com/</a> (../js/overlib/...)</li>
+<li>overLIB 4.22 - Copyright © Erik Bosrup, <a href="http://www.bosrup.com/">http://www.bosrup.com/</a> (../js/overlib/...)</li>
 <li>sorttable - Copyright © Stuart Langridge, <a href="http://www.kryogenix.org/code/browser/sorttable/">http://www.kryogenix.org/code/browser/sorttable/</a> (../js/sorttable/...)</li>
 <li>CountUp - Copyright © Praveen Lobo, <a href="http://PraveenLobo.com/techblog/javascript-countup-timer/">http://PraveenLobo.com/techblog/javascript-countup-timer/</a> (../js/third_party/countuptimer.js)</li>
 <li>jPlayer - Copyright © Happyworm Ltd, <a href="http://www.jplayer.org/about/">http://www.jplayer.org/about/</a> (../js/jquery.jplayer.js, ../js/Jplayer.swf)</li>
@@ -1840,6 +1840,11 @@ KEY NfUpdate (NfUpdate)
 			<h2 id="CHANGELOG" name="CHANGELOG">▶ Changelog - <a href="#">[↑]</a></h2>
 <p>This project's changelog. Versions marked with "-fork" come from the community, other versions come from the canonical LWT ("official" branch on Git).
 For git tags, official releases are marked like "v1.0.0", while unofficial ones are marked like "v1.0.0-fork".</p>
+<h3>[Unreleased]</h3>
+<h4>Fixed</h4>
+<ul>
+<li>Step 2 of feed wizard was sometimes failing because <code>$_SESSION['wizard']['host']</code> was a string an not an array.</li>
+</ul>
 <h3>2.7.0-fork (March 14 2023)</h3>
 <h4>Added</h4>
 <ul>
