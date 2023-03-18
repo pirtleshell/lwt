@@ -3,6 +3,15 @@
 This project's changelog. Versions marked with "-fork" come from the community, other versions come from the canonical LWT ("official" branch on Git).
 For git tags, official releases are marked like "v1.0.0", while unofficial ones are marked like "v1.0.0-fork".
 
+## [Unreleased]
+
+### Fixed
+
+* Removed warnings: dictionaries url without query do no longer raise warnings.
+* Feeds:
+  * Click "New Text" on the first page of ``do_feeds.php`` had no effect. Changed to "New Feed".
+  * Step 2 of feed wizard was sometimes failing because ``$_SESSION['wizard']['host']`` was a string an not an array.
+
 ## 2.7.0-fork (March 14 2023)
 
 ### Added

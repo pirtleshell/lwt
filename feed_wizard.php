@@ -1,5 +1,7 @@
 <?php
 
+namespace Lwt\Interface\Feed_Wizard;
+
 require_once 'inc/session_utility.php';
 
 
@@ -620,7 +622,7 @@ function feed_wizard_select_text(): void
         $_SESSION['wizard']['selected_feed']=0; 
     }
     if(!isset($_SESSION['wizard']['host'])) { 
-        $_SESSION['wizard']['host']=''; 
+        $_SESSION['wizard']['host'] = array();
     }
     if(isset($_REQUEST['host_status']) && isset($_REQUEST['host_name'])) {
         $host_name=$_REQUEST['host_name'];
@@ -641,7 +643,7 @@ function feed_wizard_select_text(): void
             }
             unset($_SESSION['wizard']['feed'][$i]['html']);
         }
-        $_SESSION['wizard']['host']='';
+        $_SESSION['wizard']['host'] = array();
     }
     pagestart_nobody('Feed Wizard');
 ?>
@@ -767,9 +769,13 @@ function feed_wizard_select_text(): void
                                 <?php
     $current_host='';
     $current_status='';
-    for($i=0;$i<$feed_len;$i++){
-        $feed_host=parse_url($_SESSION['wizard']['feed'][$i]['link']);
-        $feed_host=$feed_host['host'];
+    for ($i=0;$i<$feed_len;$i++){
+        $feed_host = parse_url(
+            $_SESSION['wizard']['feed'][$i]['link'], PHP_URL_HOST
+        );
+        if (gettype($feed_host) != 'string') {
+            my_die('$feed_host is of type ' . gettype($feed_host));
+        }
         if(!isset($_SESSION['wizard']['host'][$feed_host])) { 
             $_SESSION['wizard']['host'][$feed_host]='-'; 
         }
