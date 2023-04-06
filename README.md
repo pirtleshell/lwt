@@ -34,7 +34,12 @@ Start a shell in the downloaded folder an run: ``./INSTALL.sh``. You may need to
 
 ### Docker (any OS)
 
-If you have [Docker](https://docs.docker.com/get-docker/), download the latest release and do:
+Install [Docker](https://docs.docker.com/get-docker/) (if not already done).
+
+For an light-weight installation, you may use [HugoFara/lwt-docker-installer](https://github.com/HugoFara/lwt-docker-installer).
+
+To build from source, download the latest release and do:
+
 ```bash
 cd lwt
 docker compose up

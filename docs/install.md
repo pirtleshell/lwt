@@ -122,6 +122,7 @@ We provide an installer that runs the commands described in the next section. To
 The following instruction were tested on Raspbian Stretch.
 
 1. Open a terminal, type and execute the following commands:
+
    1. Installation of LAMP:
 
       ```bash
@@ -130,9 +131,9 @@ The following instruction were tested on Raspbian Stretch.
       ```
 
    2. (Optional) Check if everything is okay:
-     * ``php -v`` should show a PHP version equal or above to 8.0.0.
-     * <http://locahlhost> should display a nice web page.
-     * ``mysql -V`` should work.
+      * ``php -v`` should show a PHP version equal or above to 8.0.0.
+      * <http://locahlhost> should display a nice web page.
+      * ``mysql -V`` should work.
 
    3. Enable the extensions
       1. Go to your PHP folder (``/etc/php/{{desired PHP version}}/{{PHP type}}/``)
@@ -198,14 +199,13 @@ If you want to use LWT again, just do step 7.
 [Docker](https://docs.docker.com/get-docker/) is the easiest way to install LWT, but it will use more or less 1 GB
 on your system.
 
-We provide on online image, you can download it using.
+### Using the installer
 
-```bash
-docker pull ghcr.io/hugofara/lwt
-```
+For an light-weight installation, you may use [HugoFara/lwt-docker-installer](https://github.com/HugoFara/lwt-docker-installer).
 
-**If you want to build the image from source**, you can use the following command.
-You can build the image by running
+### Build image from source
+
+Download the lwt, open a terminal inside it, then type
 
 ```bash
 docker compose up
@@ -216,7 +216,7 @@ By default the server can be accessed on port 8010 (<http://localhost:8010>).
 To remove the created containers run
 
 ```bash
-docker compose  down
+docker compose down
 ```
 
 ## Dependency management with Composer
