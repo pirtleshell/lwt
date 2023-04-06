@@ -1849,6 +1849,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 <li>Click "New Text" on the first page of <code>do_feeds.php</code> had no effect. Changed to "New Feed".</li>
 <li>Step 2 of feed wizard was sometimes failing because <code>$_SESSION['wizard']['host']</code> was a string an not an array.</li>
 <li>Type error in <code>get_links_from_new_feed</code> was breaking step 2 of feed wizard.</li>
+<li>Loading feeds could result in malformed SQL, see <a href="https://github.com/HugoFara/lwt/issues/100">#100</a>.</li>
 </ul>
 </li>
 </ul>

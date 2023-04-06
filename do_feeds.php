@@ -14,9 +14,11 @@ namespace Lwt\Interface\Do_Feeds;
 require_once 'inc/session_utility.php';
 
 
-function dummy_function_1(&$edit_text)
+function dummy_function_1()
 {
     global $tbpref;
+    $edit_text = 0;
+    $message = '';
     $marked_items = implode(',', $_REQUEST['marked_items']);
     $res = do_mysqli_query(
         "SELECT * FROM (
@@ -310,15 +312,11 @@ function dummy_function_1(&$edit_text)
 $(".hide_message").delay(2500).slideUp(1000);
 </script>
     <?php
-    return $message;
+    return array($edit_text, $message);
 }
 
-function check_errors(&$edit_text)
+function check_errors($message)
 {
-    $message = '';
-    if (isset($_REQUEST['marked_items']) && is_array($_REQUEST['marked_items'])) {
-        $message = dummy_function_1($edit_text);
-    }
 
     if (isset($_REQUEST['checked_feeds_save'])) {
         $message = write_rss_to_db($_REQUEST['feed']);
@@ -490,8 +488,9 @@ if(mysqli_data_seek($result, 0)) {
     echo '</select>
     </td>
     <td class="td1 center" colspan="2">';
-    if ($currentfeed == 0 || strpos($feeds_list, $currentfeed) === false /* || strpos($feeds_list, $currentfeed) == 0*/) { 
-        $currentfeed = substr($feeds_list, 1); // explode(',', $feeds_list)[0]
+    if ($currentfeed == 0 || $currentfeed == '' || strpos($feeds_list, $currentfeed) === false) { 
+        $currentfeed = substr($feeds_list, 1); 
+        // explode(',', $feeds_list)[0] may work as well (2.7.1)
     }
 
     if (strpos($currentfeed, ',')===false) {
@@ -617,20 +616,29 @@ $('img.not_found').on('click', function () {
     <?php
 }
 
-$currentlang = validateLang(processDBParam("filterlang", 'currentlanguage', '', 0));
-pagestart('My ' . getLanguage($currentlang) . ' Feeds', true);
-$currentfeed = processSessParam("selected_feed", "currentrssfeed", '', 0);
-$edit_text=0;
-check_errors($edit_text);
+function do_page()
+{
+    $currentlang = validateLang(processDBParam("filterlang", 'currentlanguage', '', 0));
+    pagestart('My ' . getLanguage($currentlang) . ' Feeds', true);
+    $currentfeed = processSessParam("selected_feed", "currentrssfeed", '', 0);
 
-if (
-    isset($_REQUEST['load_feed']) || isset($_REQUEST['check_autoupdate']) || 
-    (isset($_REQUEST['markaction']) && $_REQUEST['markaction']=='update')) {
-    load_feeds($currentfeed);
-} else if (empty($edit_text)) {
-    dummy_function_2($currentlang, $currentfeed);
+    $edit_text = 0;
+    $message = '';
+    if (isset($_REQUEST['marked_items']) && is_array($_REQUEST['marked_items'])) {
+        list($edit_text, $message) = dummy_function_1();
+    }
+    check_errors($message);
+
+    if (
+        isset($_REQUEST['load_feed']) || isset($_REQUEST['check_autoupdate']) || 
+        (isset($_REQUEST['markaction']) && $_REQUEST['markaction']=='update')) {
+        load_feeds($currentfeed);
+    } else if (empty($edit_text)) {
+        dummy_function_2($currentlang, $currentfeed);
+    }
+
+    pageend();
 }
 
-pageend();
-
+do_page();
 ?>
