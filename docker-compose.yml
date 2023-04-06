@@ -14,6 +14,8 @@ services:
       - db
     links:
       - db
+    volumes:
+      - ./media:/var/www/media
     ports:
       - "8010:80"
     restart: unless-stopped
@@ -26,6 +28,4 @@ services:
     image: mariadb:10.7
     restart: unless-stopped
     volumes:
-        - lwt_db_data:/var/lib/mysql
-volumes:
-  lwt_db_data: {}
+        - ./lwt_db_data:/var/lib/mysql

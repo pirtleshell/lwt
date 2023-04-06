@@ -13,6 +13,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
   * Step 2 of feed wizard was sometimes failing because ``$_SESSION['wizard']['host']`` was a string an not an array.
   * Type error in ``get_links_from_new_feed`` was breaking step 2 of feed wizard.
   * Loading feeds could result in malformed SQL, see [#100](https://github.com/HugoFara/lwt/issues/100). Thanks [@maanh96](https://github.com/maanh96) for the hint!
+* Docker: ``media/`` was not accessible nor saved to a container ([#106](https://github.com/HugoFara/lwt/issues/106)). Thanks to [@parradam](https://github.com/parradam) for signaling and solving the issue!
 
 ## 2.7.0-fork (March 14 2023)
 
