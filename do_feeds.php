@@ -13,40 +13,6 @@ namespace Lwt\Interface\Do_Feeds;
 
 require_once 'inc/session_utility.php';
 
-$currentlang = validateLang(processDBParam("filterlang", 'currentlanguage', '', 0));
-$currentquery = processSessParam("query", "currentrssquery", '', 0);
-$currentquerymode = processSessParam("query_mode", "currentrssquerymode", 'title,desc,text', 0);
-$currentregexmode = getSettingWithDefault("set-regex-mode");
-$currentfeed = processSessParam("selected_feed", "currentrssfeed", '', 0);
-$wh_query = $currentregexmode . 'like ' .  convert_string_to_sqlsyntax(
-    ($currentregexmode == '') ? 
-    str_replace("*", "%", mb_strtolower($currentquery, 'UTF-8')) : 
-    $currentquery
-);
-switch ($currentquerymode) {
-case 'title,desc,text':
-    $wh_query=' and (FlTitle ' . $wh_query . ' or FlDescription ' . $wh_query . ' or FlText ' . $wh_query . ')';
-    break;
-case 'title':
-    $wh_query=' and (FlTitle ' . $wh_query . ')';
-    break;
-}
-pagestart('My ' . getLanguage($currentlang) . ' Feeds', true);
-
-if ($currentquery!=='') {
-    if ($currentregexmode!=='') {
-        if (@mysqli_query($GLOBALS["DBCONNECTION"], 'select "test" rlike ' . convert_string_to_sqlsyntax($currentquery))===false) {
-            $currentquery='';
-            $wh_query = '';
-            unset($_SESSION['currentwordquery']);
-            if(isset($_REQUEST['query'])) { 
-                echo '<p id="hide3" style="color:red;text-align:center;">+++ Warning: Invalid Search +++</p>'; 
-            }
-        }
-    }
-} else { 
-    $wh_query = ''; 
-}
 
 function dummy_function_1(&$edit_text)
 {
@@ -382,12 +348,40 @@ function check_errors(&$edit_text)
     echo error_message_with_hide($message, 0);
 }
 
-function dummy_function_2(
-    $currentlang, $wh_query, $currentquery, $currentfeed, 
-    $currentquerymode, $currentregexmode
-    )
+function dummy_function_2($currentlang, $currentfeed)
 {
     global $tbpref, $debug;
+    $currentquery = processSessParam("query", "currentrssquery", '', 0);
+    $currentquerymode = processSessParam("query_mode", "currentrssquerymode", 'title,desc,text', 0);
+    $currentregexmode = getSettingWithDefault("set-regex-mode");
+    $wh_query = $currentregexmode . 'like ' .  convert_string_to_sqlsyntax(
+        ($currentregexmode == '') ? 
+        str_replace("*", "%", mb_strtolower($currentquery, 'UTF-8')) : 
+        $currentquery
+    );
+    switch ($currentquerymode) {
+    case 'title,desc,text':
+        $wh_query=' and (FlTitle ' . $wh_query . ' or FlDescription ' . $wh_query . ' or FlText ' . $wh_query . ')';
+        break;
+    case 'title':
+        $wh_query=' and (FlTitle ' . $wh_query . ')';
+        break;
+    }
+    
+    if ($currentquery!=='') {
+        if ($currentregexmode!=='') {
+            if (@mysqli_query($GLOBALS["DBCONNECTION"], 'select "test" rlike ' . convert_string_to_sqlsyntax($currentquery))===false) {
+                $currentquery='';
+                $wh_query = '';
+                unset($_SESSION['currentwordquery']);
+                if(isset($_REQUEST['query'])) { 
+                    echo '<p id="hide3" style="color:red;text-align:center;">+++ Warning: Invalid Search +++</p>'; 
+                }
+            }
+        }
+    } else { 
+        $wh_query = ''; 
+    }
     $currentpage = processSessParam("page", "currentrsspage", '1', 1);
     $currentsort = processDBParam("sort", 'currentrsssort', '2', 1);
     ?>
@@ -623,6 +617,9 @@ $('img.not_found').on('click', function () {
     <?php
 }
 
+$currentlang = validateLang(processDBParam("filterlang", 'currentlanguage', '', 0));
+pagestart('My ' . getLanguage($currentlang) . ' Feeds', true);
+$currentfeed = processSessParam("selected_feed", "currentrssfeed", '', 0);
 $edit_text=0;
 check_errors($edit_text);
 
@@ -631,10 +628,7 @@ if (
     (isset($_REQUEST['markaction']) && $_REQUEST['markaction']=='update')) {
     load_feeds($currentfeed);
 } else if (empty($edit_text)) {
-    dummy_function_2(
-        $currentlang, $wh_query, $currentquery, $currentfeed, $currentquerymode,
-        $currentregexmode
-    );
+    dummy_function_2($currentlang, $currentfeed);
 }
 
 pageend();
