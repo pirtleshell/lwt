@@ -1028,34 +1028,20 @@ function get_links_from_new_feed($NfSourceURI): array|false
         }
     }
     if ($desc_count > $desc_nocount) {
-        $source = ($feed_tags['item']=='entry') ?'content' : 'description';
-        $rss_data['feed_text']=$source;
+        $source = ($feed_tags['item']=='entry') ? 'content' : 'description';
+        $rss_data['feed_text'] = $source;
         foreach ($rss_data as $i=>$val){
-            $rss_data[$i]['text']=$rss_data[$i][$source];
+            if (is_array($val))
+                $rss_data[$i]['text'] = $val[$source];
         }
     } else if ($enc_count > $enc_nocount) {
-        $rss_data['feed_text']='encoded';
+        $rss_data['feed_text'] = 'encoded';
         foreach ($rss_data as $i=>$val){
-            $rss_data[$i]['text']=$rss_data[$i]['encoded'];
+            if (is_array($val))
+                $rss_data[$i]['text'] = $val['encoded'];
         }
     }
-    /*
-    for ($i = 0; $i < count($rss_data); $i++){
-        unset($rss_data[$i]['encoded']);
-        unset($rss_data[$i]['description']);
-        unset($rss_data[$i]['content']);
-    }*/
     $rss_data['feed_title'] = $rss->getElementsByTagName('title')->item(0)->nodeValue;
-    /*
-    Get the language, but never saved
-    if ($feed_tags['item']=='entry') {
-        print_r("Language from page entered!");
-        $rss->getElementsByTagName('feed')->item(0)->getAttribute('lang');
-        // $rss->getElementsByTagName('feed')->item(0)->attributes['lang']; is better?
-    } else {
-        $rss->getElementsByTagName('language')->item(0)->nodeValue; 
-    }
-    */
     return $rss_data;
 }
 

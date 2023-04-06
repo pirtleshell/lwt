@@ -238,28 +238,28 @@ function feed_wizard_edit_options(): void
 function feed_wizard_filter_text(): void
 {
     if(isset($_REQUEST['NfName'])) { 
-        $_SESSION['wizard']['feed']['feed_title']=$_REQUEST['NfName']; 
+        $_SESSION['wizard']['feed']['feed_title'] = $_REQUEST['NfName']; 
     }
     if(isset($_REQUEST['NfArticleSection'])) { 
-        $_SESSION['wizard']['article_section']=$_REQUEST['NfArticleSection']; 
+        $_SESSION['wizard']['article_section'] = $_REQUEST['NfArticleSection']; 
     }
     if(isset($_REQUEST['article_selector'])) { 
-        $_SESSION['wizard']['article_selector']=$_REQUEST['article_selector']; 
+        $_SESSION['wizard']['article_selector'] = $_REQUEST['article_selector']; 
     }
     if(isset($_REQUEST['selected_feed'])) { 
-        $_SESSION['wizard']['selected_feed']=$_REQUEST['selected_feed']; 
+        $_SESSION['wizard']['selected_feed'] = $_REQUEST['selected_feed']; 
     }
     if(isset($_REQUEST['article_tags'])) {
-        $_SESSION['wizard']['article_tags']=$_REQUEST['article_tags'];
+        $_SESSION['wizard']['article_tags'] = $_REQUEST['article_tags'];
     }
     if(isset($_REQUEST['html'])) { 
-        $_SESSION['wizard']['filter_tags']=$_REQUEST['html']; 
+        $_SESSION['wizard']['filter_tags'] = $_REQUEST['html'];
     }
     if(isset($_REQUEST['NfOptions'])) { 
-        $_SESSION['wizard']['options']=$_REQUEST['NfOptions']; 
+        $_SESSION['wizard']['options'] = $_REQUEST['NfOptions']; 
     }
     if(isset($_REQUEST['NfLgID'])) { 
-        $_SESSION['wizard']['lang']=$_REQUEST['NfLgID']; 
+        $_SESSION['wizard']['lang'] = $_REQUEST['NfLgID']; 
     }
     if(isset($_REQUEST['NfName'])) {
          $_SESSION['wizard']['feed']['feed_title']=$_REQUEST['NfName']; 
@@ -389,9 +389,11 @@ function feed_wizard_filter_text(): void
                     <td class="td1" style="text-align:left">Article Source: </td>
                     <td class="td1" style="text-align:left">
                         <?php 
-                        echo $_SESSION['wizard']['feed']['feed_text'];
-                        if($_SESSION['wizard']['feed']['feed_text']=='') { 
-                            echo 'Webpage Link'; 
+                        if (array_key_exists('feed_text', $_SESSION['wizard']['feed'])) {
+                            echo $_SESSION['wizard']['feed']['feed_text'];
+                        } else { 
+                            echo 'Webpage Link';
+                            $_SESSION['wizard']['feed']['feed_text'] = ''; 
                         } ?>
                     </td>
                 </tr>
@@ -404,7 +406,8 @@ function feed_wizard_filter_text(): void
                 </td>
                 <td>
                     <span>
-                        <select name="selected_feed" style="width:250px;max-width:200px;" onchange="{var html = $('#lwt_sel').html();$('input[name=\'html\']').val(html);document.lwt_form1.submit();}">
+                        <select name="selected_feed" style="width:250px;max-width:200px;" 
+                        onchange="{var html = $('#lwt_sel').html();$('input[name=\'html\']').val(html);document.lwt_form1.submit();}">
                             <?php
     $current_host='';
     $current_status='';
@@ -589,6 +592,8 @@ function feed_wizard_select_text(): void
             else { 
                 $_SESSION['wizard']['detected_feed']='Detected: «Webpage Link»'; 
             }
+        } else {
+            my_die("Something went wrong with the feed wizard!");
         }
     }
     if(isset($_REQUEST['filter_tags'])) { 
