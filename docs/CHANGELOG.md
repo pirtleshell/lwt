@@ -19,6 +19,8 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
   * Loading feeds could result in malformed SQL, see [#100](https://github.com/HugoFara/lwt/issues/100). Thanks [@maanh96](https://github.com/maanh96) for the hint!
 * Docker: ``media/`` was not accessible nor saved to a container ([#106](https://github.com/HugoFara/lwt/issues/106)). Thanks to [@parradam](https://github.com/parradam) for signaling and solving the issue!
 * On creating a language, the Glosbe dictionary comes with a "?lwt_popup=1" to open in new window by default.
+* Japanese pronounciation: works even if the language is not exactly called "Japanese", see [#103](https://github.com/HugoFara/lwt/issues/103).
+
 
 ## 2.7.0-fork (March 14 2023)
 

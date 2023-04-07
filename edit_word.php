@@ -172,19 +172,7 @@ function change_term_display($wid, $translation, $hex): void
     <?php
 }
 
-
-$translation_raw = repl_tab_nl(getreq("WoTranslation"));
-if ($translation_raw == '' ) { 
-    $translation = '*'; 
-}
-else { 
-    $translation = $translation_raw; 
-}
-
-$fromAnn = getreq("fromAnn"); // from-recno or empty
-
 // INS/UPD
-
 function edit_word_do_operation($translation, $fromAnn)
 {
     $hex = null;
@@ -240,6 +228,7 @@ function edit_word_do_operation($translation, $fromAnn)
         change_term_display($wid, $translation, $hex);
     }
 }
+
 
 function edit_word_do_form($fromAnn)
 {
@@ -370,21 +359,21 @@ function edit_word_do_form($fromAnn)
         const TRANS_URI = <?php 
         echo json_encode(
             get_first_value(
-                "SELECT LgGoogleTranslateURI as value from {$tbpref}languages 
+                "SELECT LgGoogleTranslateURI AS value FROM {$tbpref}languages 
                 WHERE LgID = $lang"
             )
         );
         ?> 
         const LANG_SHORT = <?php 
         $lgname = get_first_value(
-            "SELECT LgName as value from {$tbpref}languages WHERE LgID = $lang"
+            "SELECT LgName AS value FROM {$tbpref}languages WHERE LgID = $lang"
         );
         if (array_key_exists($lgname, $langDefs)) {
             echo json_encode($langDefs[$lgname][1]); 
         } else {
             echo json_encode('');
         }
-        ?>;
+        ?> || getLangFromDict(TRANS_URI);
 
         /**
          * Sets the translation of a term.
@@ -517,6 +506,15 @@ function edit_word_do_form($fromAnn)
     }
 }
 
+$translation_raw = repl_tab_nl(getreq("WoTranslation"));
+if ($translation_raw == '' ) { 
+    $translation = '*'; 
+}
+else { 
+    $translation = $translation_raw; 
+}
+
+$fromAnn = getreq("fromAnn"); // from-recno or empty
 if (isset($_REQUEST['op'])) {
     // if (isset($_REQUEST['op']))
     edit_word_do_operation($translation, $fromAnn);
