@@ -8,6 +8,8 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 ### Changed
 
 * The language settings wizard is now *open by default* on new language creation.
+* Potiential breaking change in the way words are displayed while reading. The target was to make the code more robust.
+
 
 ### Fixed
 

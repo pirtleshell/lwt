@@ -123,7 +123,7 @@ function getLanguagesSettings($langid)
 function echo_term($actcode, $showAll, $spanid, $hidetag, $currcharcount, $record)
 {
     $actcode = (int)$record['Code'];
-    if ($actcode > 1) {   
+    if ($actcode > 1) {
         // A multiword, $actcode is the number of words composing it
 
         if (isset($record['WoID'])) {
@@ -149,43 +149,47 @@ function echo_term($actcode, $showAll, $spanid, $hidetag, $currcharcount, $recor
             }
             echo '</span>';
         }
-    } else {  
+    } else {
         // Single word
-
-        if (isset($record['WoID'])) {  
+		$dom = new DOMDocument('1.0');
+		$span = $dom->createElement('span');
+        if (isset($record['WoID'])) {
             // Word found status 1-5|98|99
-            echo '<span 
-            id="' . $spanid . '" 
-            class="' . $hidetag .
-            ' click word wsty word'. $record['WoID'] . 
-            ' status'. $record['WoStatus'] . 
-            ' TERM' . strToClassName($record['TiTextLC']) . '" 
-            data_pos="' . $currcharcount . '" 
-            data_order="' . $record['Ti2Order'] . '" 
-            data_wid="' . $record['WoID'] . '" 
-            data_trans="' . tohtml(
-                repl_tab_nl(
-                    $record['WoTranslation']
-                ) . getWordTagList(
-                    $record['WoID'], 
-                    ' ', 1, 0
-                )
-            ) . '" 
-            data_rom="' . tohtml($record['WoRomanization']) . '" 
-            data_status="' . $record['WoStatus'] . '">' 
-            . tohtml($record['TiText']) . 
-            '</span>';
+			$attributes = array(
+				'id' => $spanid,
+				'class' => "$hidetag click word wsty word". $record['WoID'] .
+				' status'. $record['WoStatus'] . 
+				' TERM' . strToClassName($record['TiTextLC']),
+				'data_pos' => $currcharcount,
+				'data_order' => $record['Ti2Order'],
+				'data_wid' => $record['WoID'],
+				'data_trans' => repl_tab_nl($record['WoTranslation']) . 
+				getWordTagList($record['WoID'], ' ', 1, 0),
+				'data_rom' => tohtml($record['WoRomanization']),
+				'data_status' => $record['WoStatus']
+			);
         } else {
             // Not registered word (status 0)
-            echo '<span 
-            id="' . $spanid . '" 
-            class="' . $hidetag . ' click word wsty status0 TERM' . 
-            strToClassName($record['TiTextLC']) . '" 
-            data_pos="' . $currcharcount . '" 
-            data_order="' . $record['Ti2Order'] . '" 
-            data_trans="" data_rom="" data_status="0" 
-            data_wid="">' . tohtml($record['TiText']) . '</span>';
+			$attributes = array(
+				'id' => $spanid,
+				'class' => "$hidetag click word wsty status0 TERM" . 
+				strToClassName($record['TiTextLC']),
+				'data_pos' => $currcharcount,
+				'data_order' => $record['Ti2Order'],
+				'data_trans' => '',
+				'data_rom' => '',
+				'data_status' => '0',
+				'data_wid' => ''
+			);
         }
+		foreach ($attributes as $attr_name => $val) {
+            $attr = $dom->createAttribute($attr_name);
+			$attr->value = $val;
+			$span->appendChild($attr);
+		}
+		$span->nodeValue = tohtml($record['TiText']);
+		$dom->appendChild($span);
+		echo $dom->saveHTML();
     }
 }
 
