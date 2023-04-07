@@ -200,7 +200,7 @@ function echo_term(
 		}
 		$span->nodeValue = tohtml($record['TiText']);
 		$dom->appendChild($span);
-		echo $dom->saveHTML();
+		echo $dom->saveHTML($span);
 		for ($i = sizeof($exprs) - 1; $i >= 0; $i--) {
 			$exprs[$i][2]--;
 			if ($exprs[$i][2] < 1) {
