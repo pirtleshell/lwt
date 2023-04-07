@@ -546,8 +546,11 @@ function word_click_event_do_text_text () {
   } else { 
     hints = $(this).attr('title'); 
   }
+
+  // Get multi-words containing word
   const multi_words = Array(7);
-  for (let i = 0; i < 7; i++) { 
+  for (let i = 0; i < 7; i++) {
+    // Start from 2 as multi-words have at least two elements
     multi_words[i] = $(this).attr('data_mw' + (i + 2)); 
   }
   if (status < 1) {

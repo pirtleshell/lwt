@@ -117,22 +117,22 @@ function getLanguagesSettings($langid)
  * @param string                   $spanid        ID for this span element
  * @param int                      $currcharcount Current number of characters
  * @param array<string, string>    $record        Various data
- * @param array<array<int, sring>> $titext        Current expressions
+ * @param array                    $exprs         Current expressions
  * 
  * @return void
  * 
- * @since 2.8.0-fork Takes a new argument $titext
+ * @since 2.8.0-fork Takes a new argument $exprs
  */
 function echo_term(
     $actcode, $showAll, $spanid, $hidetag, $currcharcount, $record, 
-    &$titext = array()
+    &$exprs = array()
 )
 {
     $actcode = (int)$record['Code'];
     if ($actcode > 1) {
         // A multiword, $actcode is the number of words composing it
-		if (empty($titext) || $titext[sizeof($titext)-1][1]!=$record['TiText'])
-			$titext[] = array($actcode, $record['TiText']);
+		if (empty($exprs) || $exprs[sizeof($exprs)-1][1] != $record['TiText'])
+			$exprs[] = array($actcode, $record['TiText'], $actcode);
 
         if (isset($record['WoID'])) {
             echo '<span id="' . $spanid . '" class="' . $hidetag . ' click mword ' . 
@@ -190,8 +190,8 @@ function echo_term(
 				'data_wid' => ''
 			);
         }
-		for ($i = 0; $i < sizeof($titext); $i++) {
-			$attributes['data_mw' . ($i + 2)] = tohtml($titext[$i][1]);
+		foreach ($exprs as $expr) {
+			$attributes['data_mw' . $expr[0]] = tohtml($expr[1]);
 		}
 		foreach ($attributes as $attr_name => $val) {
             $attr = $dom->createAttribute($attr_name);
@@ -201,11 +201,11 @@ function echo_term(
 		$span->nodeValue = tohtml($record['TiText']);
 		$dom->appendChild($span);
 		echo $dom->saveHTML();
-		for ($i = sizeof($titext) - 1; $i >= 0; $i--) {
-			$titext[$i][0]--;
-			if ($titext[$i][0] < 1) {
-				unset($titext[$i]);
-				$titext = array_values($titext);
+		for ($i = sizeof($exprs) - 1; $i >= 0; $i--) {
+			$exprs[$i][2]--;
+			if ($exprs[$i][2] < 1) {
+				unset($exprs[$i]);
+				$exprs = array_values($exprs);
 			}
 		}
     }

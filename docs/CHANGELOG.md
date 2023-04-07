@@ -9,6 +9,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 
 * The language settings wizard is now *open by default* on new language creation.
 * Potiential breaking change in the way words are displayed while reading. The target was to make the code more robust.
+* ``item_parser`` and ``echo_term`` in ``do_text_text.php`` now both takes an optional ``$expr`` argument.
 
 ### Fixed
 
