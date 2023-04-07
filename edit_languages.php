@@ -987,7 +987,7 @@ function edit_languages_new()
                 checkLanguageChanged(learning_lg_name);
                 $('input[name="LgDict1URI"]').val(
                     'https://de.glosbe.com/' + learning_lg[0] + '/' + 
-                    known_lg[0] + '/lwt_term'
+                    known_lg[0] + '/lwt_term?lwt_popup=1'
                 );
                 $('input[name="LgDict1PopUp"]').attr('checked', true);
                 $('input[name="LgGoogleTranslateURI"]').val(GGTRANSLATE);
@@ -1010,7 +1010,6 @@ function edit_languages_new()
         };
 
         $(document).ready(ask_before_exiting);
-        $(function () { $('#wizard_zone').hide(); })
     </script>
     <div class="td1 center">
         <div class="center" style="border: 1px solid black;">

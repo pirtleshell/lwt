@@ -5,6 +5,10 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 
 ## [Unreleased]
 
+### Changed
+
+* The language settings wizard is now *open by default* on new language creation.
+
 ### Fixed
 
 * Removed warnings: dictionaries url without query do no longer raise warnings.
@@ -14,6 +18,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
   * Type error in ``get_links_from_new_feed`` was breaking step 2 of feed wizard.
   * Loading feeds could result in malformed SQL, see [#100](https://github.com/HugoFara/lwt/issues/100). Thanks [@maanh96](https://github.com/maanh96) for the hint!
 * Docker: ``media/`` was not accessible nor saved to a container ([#106](https://github.com/HugoFara/lwt/issues/106)). Thanks to [@parradam](https://github.com/parradam) for signaling and solving the issue!
+* On creating a language, the Glosbe dictionary comes with a "?lwt_popup=1" to open in new window by default.
 
 ## 2.7.0-fork (March 14 2023)
 
