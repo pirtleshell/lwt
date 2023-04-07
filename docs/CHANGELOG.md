@@ -10,7 +10,6 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 * The language settings wizard is now *open by default* on new language creation.
 * Potiential breaking change in the way words are displayed while reading. The target was to make the code more robust.
 
-
 ### Fixed
 
 * Removed warnings: dictionaries url without query do no longer raise warnings.
@@ -22,7 +21,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 * Docker: ``media/`` was not accessible nor saved to a container ([#106](https://github.com/HugoFara/lwt/issues/106)). Thanks to [@parradam](https://github.com/parradam) for signaling and solving the issue!
 * On creating a language, the Glosbe dictionary comes with a "?lwt_popup=1" to open in new window by default.
 * Japanese pronounciation: works even if the language is not exactly called "Japanese", see [#103](https://github.com/HugoFara/lwt/issues/103).
-
+* Expressions containing word feature repaired! [#90](https://github.com/HugoFara/lwt/issues/90).
 
 ## 2.7.0-fork (March 14 2023)
 

@@ -122,9 +122,12 @@ function getLanguagesSettings($langid)
  */
 function echo_term($actcode, $showAll, $spanid, $hidetag, $currcharcount, $record)
 {
+	global $titext;
     $actcode = (int)$record['Code'];
     if ($actcode > 1) {
         // A multiword, $actcode is the number of words composing it
+		if (empty($titext) || $titext[sizeof($titext)-1][1]!=$record['TiText'])
+			$titext[] = array($actcode, $record['TiText']);
 
         if (isset($record['WoID'])) {
             echo '<span id="' . $spanid . '" class="' . $hidetag . ' click mword ' . 
@@ -182,6 +185,10 @@ function echo_term($actcode, $showAll, $spanid, $hidetag, $currcharcount, $recor
 				'data_wid' => ''
 			);
         }
+		//var_dump($titext);
+		for ($i = 0; $i < sizeof($titext); $i++) {
+			$attributes['data_mw' . ($i + 2)] = tohtml($titext[$i][1]);
+		}
 		foreach ($attributes as $attr_name => $val) {
             $attr = $dom->createAttribute($attr_name);
 			$attr->value = $val;
@@ -190,6 +197,13 @@ function echo_term($actcode, $showAll, $spanid, $hidetag, $currcharcount, $recor
 		$span->nodeValue = tohtml($record['TiText']);
 		$dom->appendChild($span);
 		echo $dom->saveHTML();
+		for ($i = sizeof($titext) - 1; $i >= 0; $i--) {
+			$titext[$i][0]--;
+			if ($titext[$i][0] < 1) {
+				unset($titext[$i]);
+				$titext = array_values($titext);
+			}
+		}
     }
 }
 
@@ -228,6 +242,7 @@ function echoTerm(
  */
 function wordProcessor($record, $showAll, $currcharcount): int
 {
+	global $titext;
     $cnt = 1;
     $sid = 0;
 
@@ -639,10 +654,11 @@ function do_text_javascript($var_array): void
  * Main function for displaying sentences. It will print HTML content.
  *
  * @param string $textid    ID of the requiered text
- * @param bool   $only_body If true, only show the inner body. If false, create a complete HTML document. 
+ * @param bool   $only_body If true, only show the inner body. If false, create a complete HTML document.
  */
 function do_text_text_content($textid, $only_body=true): void
 {
+	global $titext;
     // Text settings
     $record = get_text_data($textid);
     $title = $record['TxTitle'];
@@ -657,7 +673,7 @@ function do_text_text_content($textid, $only_body=true): void
     $wb3 = isset($record['LgGoogleTranslateURI']) ? $record['LgGoogleTranslateURI'] : "";
     $textsize = $record['LgTextSize'];
     $removeSpaces = $record['LgRemoveSpaces'];
-    $rtlScript = $record['LgRightToLeft'];
+    $rtlScript = (bool)$record['LgRightToLeft'];
     
     // User settings
     $showAll = getSettingZeroOrOne('showallwords', 1);
@@ -673,6 +689,8 @@ function do_text_text_content($textid, $only_body=true): void
      * Ruby annotations
      */
     $ruby = $mode_trans==2 || $mode_trans==4;
+
+	$titext = array();
 
     if (!$only_body) {
         // Start the page with a HEAD and opens a BODY tag 

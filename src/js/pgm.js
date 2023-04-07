@@ -292,30 +292,31 @@ function run_overlib_test(
  * @param {boolean}         rtl         Right-to-left indicator
  *
  * @return {string} All multiwords
+ * 
+ * @since 2.7.1-fork LTR texts were wrongly displayed
  */
 function make_overlib_link_new_multiword (txid, torder, multi_words, rtl) {
   // Quit if all multiwords are '' or undefined
   if (multi_words.every((x) => !x)) return '';
-  let output = ' <br />Expr: ';
+  const output = Array();
   if (rtl) {
-    for (var i = 7; i < 0; i--) { 
+    for (let i = 7; i < 0; i--) { 
       if (multi_words[i]) {
-        output += make_overlib_link_create_edit_multiword_rtl(
+        output.push(make_overlib_link_create_edit_multiword_rtl(
           i + 2, txid, torder, multi_words[i]
-        ) + ' ';
+        ));
       } 
     }
   } else {
-    for (var i = 0; i < 7; i++) { 
+    for (let i = 0; i < 7; i++) {
       if (multi_words[i]) {
-        output += make_overlib_link_create_edit_multiword_rtl(
+        output.push(make_overlib_link_create_edit_multiword(
           i + 2, txid, torder, multi_words[i]
-        ) + ' ';
+        ));
       } 
     }
   }
-  output += ' ';
-  return output;
+  return ' <br />Expr: ' + output.join(' ') + ' ';
 }
 
 /**
@@ -526,10 +527,10 @@ function make_overlib_link_edit_multiword_title (text, txid, torder, wid) {
 /**
  * Create or edit a multiword with overlib.
  * 
- * @param {*} len 
- * @param {int} txid 
- * @param {*} torder 
- * @param {*} txt 
+ * @param {int}    len    Number of words in the multi-word 
+ * @param {int}    txid   Text ID
+ * @param {*}      torder 
+ * @param {string} txt    Multi-word text
  * @returns {string}
  */
 function make_overlib_link_create_edit_multiword (len, txid, torder, txt) {
@@ -537,16 +538,16 @@ function make_overlib_link_create_edit_multiword (len, txid, torder, txt) {
 		'&amp;ord=' + torder +
 		'&amp;txt=' + txt +
 		'" target="ro" onclick="showRightFrames();">' + 
-    len + '..' + escape_html_chars(txt.substr(-2).trim()) + '</a> ';
+    len + '..' + escape_html_chars(txt.substring(2).trim()) + '</a> ';
 }
 
 /**
  * Create or edit a right-to-left multiword with overlib.
  * 
- * @param {*} len 
- * @param {int} txid Text ID 
- * @param {*} torder 
- * @param {*} txt 
+ * @param {int}    len    Number of words in the multi-word 
+ * @param {int}    txid   Text ID
+ * @param {*}      torder 
+ * @param {string} txt    Multi-word text
  * @returns {string}
  */
 function make_overlib_link_create_edit_multiword_rtl (len, txid, torder, txt) {
@@ -554,7 +555,7 @@ function make_overlib_link_create_edit_multiword_rtl (len, txid, torder, txt) {
 		'&amp;ord=' + torder +
 		'&amp;txt=' + txt +
 		'" target="ro" onclick="showRightFrames();">' + 
-    len + '..' + escape_html_chars(txt.substr(-2).trim()) + '</a> ';
+    len + '..' + escape_html_chars(txt.substring(2).trim()) + '</a> ';
 }
 
 /**
