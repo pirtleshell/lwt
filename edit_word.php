@@ -185,11 +185,9 @@ $fromAnn = getreq("fromAnn"); // from-recno or empty
 
 // INS/UPD
 
-$hex = null;
-$lang = null;
-$term = null;
-if (isset($_REQUEST['op'])) {
-    
+function edit_word_do_operation($translation, $fromAnn)
+{
+    $hex = null;
     $textlc = trim(prepare_textdata($_REQUEST["WoTextLC"]));
     $text = trim(prepare_textdata($_REQUEST["WoText"]));
     
@@ -241,13 +239,13 @@ if (isset($_REQUEST['op'])) {
     } else {
         change_term_display($wid, $translation, $hex);
     }
-    // if (isset($_REQUEST['op']))
-} else {  
-    // FORM
-    // if (! isset($_REQUEST['op']))
+}
 
-    // edit_word.php?tid=..&ord=..&wid=..
-    
+function edit_word_do_form($fromAnn)
+{
+    global $tbpref, $langDefs;
+    $lang = null;
+    $term = null;
     $wid = getreq('wid');
     
     if ($wid == '') {    
@@ -517,7 +515,17 @@ if (isset($_REQUEST['op'])) {
         }
         mysqli_free_result($res);
     }
+}
 
+if (isset($_REQUEST['op'])) {
+    // if (isset($_REQUEST['op']))
+    edit_word_do_operation($translation, $fromAnn);
+} else {  
+    // FORM
+    // if (! isset($_REQUEST['op']))
+
+    // edit_word.php?tid=..&ord=..&wid=..
+    edit_word_do_form($fromAnn);
 }
 
 pageend();
