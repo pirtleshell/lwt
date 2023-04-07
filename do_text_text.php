@@ -110,19 +110,24 @@ function getLanguagesSettings($langid)
 /**
  * Print the output when the word is a term (word or multi-word).
  *
- * @param int                   $actcode       Action code, number of words forming 
- *                                             the term (> 1 for multiword)
- * @param int                   $showAll       Show all words or not
- * @param int                   $hideuntil     Unused
- * @param string                $spanid        ID for this span element
- * @param int                   $currcharcount Current number of characters
- * @param array<string, string> $record        Various data
+ * @param int                      $actcode       Action code, number of words forming 
+ *                                                the term (> 1 for multiword)
+ * @param int                      $showAll       Show all words or not
+ * @param int                      $hideuntil     Unused
+ * @param string                   $spanid        ID for this span element
+ * @param int                      $currcharcount Current number of characters
+ * @param array<string, string>    $record        Various data
+ * @param array<array<int, sring>> $titext        Current expressions
  * 
  * @return void
+ * 
+ * @since 2.8.0-fork Takes a new argument $titext
  */
-function echo_term($actcode, $showAll, $spanid, $hidetag, $currcharcount, $record)
+function echo_term(
+    $actcode, $showAll, $spanid, $hidetag, $currcharcount, $record, 
+    &$titext = array()
+)
 {
-	global $titext;
     $actcode = (int)$record['Code'];
     if ($actcode > 1) {
         // A multiword, $actcode is the number of words composing it
@@ -185,7 +190,6 @@ function echo_term($actcode, $showAll, $spanid, $hidetag, $currcharcount, $recor
 				'data_wid' => ''
 			);
         }
-		//var_dump($titext);
 		for ($i = 0; $i < sizeof($titext); $i++) {
 			$attributes['data_mw' . ($i + 2)] = tohtml($titext[$i][1]);
 		}
@@ -242,7 +246,6 @@ function echoTerm(
  */
 function wordProcessor($record, $showAll, $currcharcount): int
 {
-	global $titext;
     $cnt = 1;
     $sid = 0;
 
@@ -323,12 +326,15 @@ function sentenceParser($sid, $old_sid)
  * @param 0|1      $showAll       Show all words or not
  * @param int      $currcharcount Current number of caracters
  * @param bool     $hide          Should some item be hidden, depends on $showAll
+ * @param array    $exprs         Current expressions
  * 
  * @return void
  * 
  * @since 2.5.0-fork
+ * @since 2.8.0-fork Take a new optional arguent $exprs
  */
-function item_parser($record, $showAll, $currcharcount, $hide): void
+function item_parser(
+    $record, $showAll, $currcharcount, $hide, &$exprs = array()): void
 {
     $actcode = (int)$record['Code'];
     $spanid = 'ID-' . $record['Ti2Order'] . '-' . $actcode;
@@ -343,7 +349,8 @@ function item_parser($record, $showAll, $currcharcount, $hide): void
     } else {
         // A term (word or multi-word)
         echo_term(
-            $actcode, $showAll, $spanid, $hidetag, $currcharcount, $record
+            $actcode, $showAll, $spanid, $hidetag, $currcharcount, $record, 
+            $exprs
         );
     }
 }
@@ -446,6 +453,7 @@ function main_word_loop($textid, $showAll): void
     $res = do_mysqli_query($sql);
     $currcharcount = 0;
     $hidden_items = array();
+    $exprs = array();
     $cnt = 1;
     $sid = 0;
     $last = -1;
@@ -463,7 +471,7 @@ function main_word_loop($textid, $showAll): void
             $hide = $record['Ti2Order'] <= $last;
         }
     
-        item_parser($record, $showAll, $currcharcount, $hide);
+        item_parser($record, $showAll, $currcharcount, $hide, $exprs);
         if ((int)$record['Code'] == 1) { 
             $currcharcount += $record['TiTextLength']; 
             $cnt++;
@@ -658,7 +666,6 @@ function do_text_javascript($var_array): void
  */
 function do_text_text_content($textid, $only_body=true): void
 {
-	global $titext;
     // Text settings
     $record = get_text_data($textid);
     $title = $record['TxTitle'];
@@ -689,8 +696,6 @@ function do_text_text_content($textid, $only_body=true): void
      * Ruby annotations
      */
     $ruby = $mode_trans==2 || $mode_trans==4;
-
-	$titext = array();
 
     if (!$only_body) {
         // Start the page with a HEAD and opens a BODY tag 
