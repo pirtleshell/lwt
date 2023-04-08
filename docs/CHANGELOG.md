@@ -27,6 +27,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 * On creating a language, the Glosbe dictionary comes with a "?lwt_popup=1" to open in new window by default.
 * Japanese pronounciation: works even if the language is not exactly called "Japanese", see [#103](https://github.com/HugoFara/lwt/issues/103).
 * Expressions containing word feature repaired! [#90](https://github.com/HugoFara/lwt/issues/90).
+* On text-to-speech settings, the region was often not displayed.
 
 ## 2.7.0-fork (March 14 2023)
 
