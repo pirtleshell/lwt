@@ -735,7 +735,7 @@ function upload_words_display(): void
         <wbr />The tag list must be separated either by spaces or commas.
     </p>
     <form enctype="multipart/form-data" class="validate" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" >
-    <table class="tab3" cellspacing="0" cellpadding="5">
+    <table class="tab1" cellspacing="0" cellpadding="5">
         <tr>
             <td class="td1 center"><b>Language:</b></td>
             <td class="td1">
@@ -755,24 +755,20 @@ function upload_words_display(): void
                 Either specify a <b>File to upload</b>:<br />
                 <input name="thefile" type="file" /><br /><br />
                 <b>Or</b> type in or paste from clipboard (do <b>NOT</b> specify file):<br />
-                <textarea class="checkoutsidebmp" data_info="Upload" name="Upload" cols="60" rows="25"></textarea>
+                <textarea class="checkoutsidebmp respinput" data_info="Upload" name="Upload" rows="25"></textarea>
             </td>
         </tr>
         <tr>
-            <th class="th1 center">
-                Format per line:
-            </th>
-            <th class="th1">
-                C1 D C2 D C3 D C4 D C5
-            </th>
+            <th class="th1 center">Format per line:</th>
+            <th class="th1">C1 D C2 D C3 D C4 D C5</th>
         </tr>
         <tr>
+            <td class="td1"><b>Field Delimiter "D":</b></td>
             <td class="td1">
-                <b>Field Delimiter "D":</b>
-            </td>
-            <td class="td1">
-                <select name="Tab">
-                    <option value="c" selected="selected">Comma "," [CSV File, LingQ]</option>
+                <select name="Tab" class="respinput">
+                    <option value="c" selected="selected">
+                        Comma "," [CSV File, LingQ]
+                    </option>
                     <option value="t">TAB (ASCII 9) [TSV File]</option>
                     <option value="h">Hash "#" [Direct Input]</option>
                 </select>
@@ -781,7 +777,7 @@ function upload_words_display(): void
         <tr>
             <td class="td1"><b>Ignore first line</b>:</td> 
             <td class="td1">
-                <select name="IgnFirstLine">
+                <select name="IgnFirstLine" class="respinput">
                     <option value="0" selected="selected">No</option>
                     <option value="1">Yes</option>
                 </select>
@@ -793,7 +789,7 @@ function upload_words_display(): void
         <tr>
             <td class="td1">"C1":</td>
             <td class="td1">
-                <select name="Col1">
+                <select name="Col1" class="respinput">
                     <option value="w" selected="selected">Term</option>
                     <option value="t">Translation</option>
                     <option value="r">Romanization</option>
@@ -806,20 +802,20 @@ function upload_words_display(): void
         <tr>
             <td class="td1">"C2":</td>
             <td class="td1"> 
-                <select name="Col2">
-                <option value="w">Term</option>
-                <option value="t" selected="selected">Translation</option>
-                <option value="r">Romanization</option>
-                <option value="s">Sentence</option>
-                <option value="g">Tag List</option>
-                <option value="x">Don't import</option>
-            </select>
+                <select name="Col2" class="respinput">
+                    <option value="w">Term</option>
+                    <option value="t" selected="selected">Translation</option>
+                    <option value="r">Romanization</option>
+                    <option value="s">Sentence</option>
+                    <option value="g">Tag List</option>
+                    <option value="x">Don't import</option>
+                </select>
             </td>
         </tr>
         <tr>
             <td class="td1">"C3":</td>
             <td class="td1">
-                <select name="Col3">
+                <select name="Col3" class="respinput">
                     <option value="w">Term</option>
                     <option value="t">Translation</option>
                     <option value="r">Romanization</option>
@@ -831,20 +827,21 @@ function upload_words_display(): void
         </tr>
         <tr>
             <td class="td1">"C4":</td>
-            <td class="td1"><select name="Col4">
-                <option value="w">Term</option>
-                <option value="t">Translation</option>
-                <option value="r">Romanization</option>
-                <option value="s">Sentence</option>
-                <option value="g">Tag List</option>
-                <option value="x" selected="selected">Don't import</option>
+            <td class="td1">
+                <select name="Col4" class="respinput">
+                    <option value="w">Term</option>
+                    <option value="t">Translation</option>
+                    <option value="r">Romanization</option>
+                    <option value="s">Sentence</option>
+                    <option value="g">Tag List</option>
+                    <option value="x" selected="selected">Don't import</option>
             </select>
             </td>
         </tr>
         <tr>
             <td class="td1">"C5":</td>
             <td class="td1">
-                <select name="Col5">
+                <select name="Col5" class="respinput">
                     <option value="w">Term</option>
                     <option value="t">Translation</option>
                     <option value="r">Romanization</option>
@@ -857,24 +854,38 @@ function upload_words_display(): void
         <tr>
             <td class="td1"><b>Import Mode</b>:</td>
             <td class="td1">
-                <select name="Over" onchange="updateImportMode(this.value)">
-                    <option value="0" title="- don't overwrite existent terms&#x000A;- import new terms" selected="selected">Import only new terms</option>
-                    <option value="1" title="- overwrite existent terms&#x000A;- import new terms">Replace all fields</option>
-                    <option value="2" title="- update only empty fields&#x000A;- import new terms">Update empty fields</option>
-                    <option value="3" title="- overwrite existing terms with new not empty values&#x000A;- don't import new terms">No new terms</option>
-                    <option value="4" title="- add new translations to existing ones&#x000A;- import new terms">Merge translation fields</option>
-                    <option value="5" title="- add new translations to existing ones&#x000A;- don't import new terms">Update existing translations</option>
+                <select name="Over" onchange="updateImportMode(this.value)" class="respinput">
+                    <option value="0" title="- don't overwrite existent terms&#x000A;- import new terms" selected="selected">
+                        Import only new terms
+                    </option>
+                    <option value="1" title="- overwrite existent terms&#x000A;- import new terms">
+                        Replace all fields
+                    </option>
+                    <option value="2" title="- update only empty fields&#x000A;- import new terms">
+                        Update empty fields
+                    </option>
+                    <option value="3" title="- overwrite existing terms with new not empty values&#x000A;- don't import new terms">
+                        No new terms
+                    </option>
+                    <option value="4" title="- add new translations to existing ones&#x000A;- import new terms">
+                        Merge translation fields
+                    </option>
+                    <option value="5" title="- add new translations to existing ones&#x000A;- don't import new terms">
+                        Update existing translations
+                    </option>
                 </select>
-            <div class="hide" id="imp_transl_delim">Import Translation Delimiter:<br />
+            <div class="hide" id="imp_transl_delim">
+                Import Translation Delimiter:<br />
                 <input class="notempty" type="text" name="transl_delim" style="width:4em;" value="<?php echo getSettingWithDefault('set-term-translation-delimiters'); ?>" />
                 <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
-            </div><br />
+            </div>
             </td>
         </tr>
+        <tr><th class="th1" colspan="2">Imported words status</th></tr>
         <tr>
             <td class="td1 center"><b>Status</b> for all uploaded terms:</td>
             <td class="td1">
-                <select class="notempty" name="WoStatus">
+                <select class="notempty respinput" name="WoStatus">
                     <?php echo get_wordstatus_selectoptions(null, false, false); ?>
                 </select>
                 <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
@@ -883,7 +894,8 @@ function upload_words_display(): void
         <tr>
             <td class="td1 center" colspan="2">
                 <span class="red2">
-                    A DATABASE <input type="button" value="BACKUP" onclick="location.href='backup_restore.php';" /> MAY BE ADVISABLE!<br />
+                    A DATABASE <input type="button" value="BACKUP" onclick="location.href='backup_restore.php';" /> 
+                    MAY BE ADVISABLE!<br />
                     PLEASE DOUBLE-CHECK EVERYTHING!
                 </span>
                 <br />
