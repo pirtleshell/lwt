@@ -196,7 +196,8 @@ textarea {
 	margin-top: 10px;
 	border-top: 1px solid #A0A0A0;
 	border-left: 1px solid #A0A0A0;
-	width: 850px;
+	width: 95%;
+	max-width: 850px;
 }
 .tab2 {
 	background-color: #f8f8f8;
@@ -400,6 +401,12 @@ footer
 	width: 45%;
 }
 
+/** Scale input field with responsive design */
+.respinput {
+	width: 90%;
+	max-width: 500px;
+}
+
 .annterm {
 	font-weight: bold;
 	border-bottom: 2px solid #CCCCCC;
@@ -482,14 +489,14 @@ footer
 	border-right: 3px solid black;
 }
 #termtags {
-	width: 340px;
+	max-width: 340px;
 	margin-top: 0px;
 	margin-bottom: 0px;
 	margin-left: 2px;
 	border-radius:4px;
 }
 #texttags {
-	width: 340px;
+	max-width: 340px;
 	margin-top: 0px;
 	margin-bottom: 0px;
 	margin-left: 2px;

@@ -5,6 +5,10 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 
 ## [Unreleased]
 
+### Added
+
+* Responsive design: LWT gets easier to visualize on phone!
+
 ### Changed
 
 * The language settings wizard is now *open by default* on new language creation.

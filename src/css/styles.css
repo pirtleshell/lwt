@@ -147,7 +147,8 @@ table.tab1
   margin-top: 10px;
   border-top: 1px solid #808080;
   border-left: 1px solid #808080;
-  width: 850px;
+  width: 95%;
+  max-width: 850px;
 }
 
 table.tab2
@@ -432,6 +433,12 @@ img.lwtlogoright
   width: 45%;
 }
 
+/** Scale input field with responsive design */
+.respinput {
+  width: 90%;
+  max-width: 500px;
+}
+
 .annterm
 {
   font-weight: bold;
@@ -554,7 +561,7 @@ footer
 
 #termtags
 {
-  width: 340px;
+  max-width: 340px;
   margin-top: 0px;
   margin-bottom: 0px;
   margin-left: 2px;
@@ -562,7 +569,7 @@ footer
 
 #texttags
 {
-  width: 340px;
+  max-width: 340px;
   margin-top: 0px;
   margin-bottom: 0px;
   margin-left: 2px;
