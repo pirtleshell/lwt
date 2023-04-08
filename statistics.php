@@ -5,26 +5,29 @@ Call: statistics.php
 Display statistics
  ***************************************************************/
 
+namespace Lwt\Interface\Statistics;
+
 require_once 'inc/session_utility.php';
 
 pagestart('My Statistics', true);
 
 ?>
-<h4>Breakdown by Language and Term Status<br />(Click on numbers to see the list of terms)</h4>
-<table class="tab3" cellspacing="0" cellpadding="5">
+<h2>Learning Intensity</h2>
+<p>Breakdown by Language and Term Status <wbr />(Click on numbers to see the list of terms)</p>
+<table class="tab1" cellspacing="0" cellpadding="5">
 <tr>
-<th class="th1">Language</th>
-<th class="th1">Total<br /></th>
-<th class="th1">Active<br />(1..5)</th>
-<th class="th1">Learning<br />(1..4)</th>
-<th class="th1">Unknown<br />(1)</th>
-<th class="th1">Learning<br />(2)</th>
-<th class="th1">Learning<br />(3)</th>
-<th class="th1">Learning<br />(4)</th>
-<th class="th1">Learned<br />(5)</th>
-<th class="th1">Well<br />Known<br />(99)</th>
-<th class="th1">Known<br />(5+99)</th>
-<th class="th1">Ign.<br />(98)</th>
+    <th class="th1">Language</th>
+    <th class="th1">Total<br /></th>
+    <th class="th1">Active<br />(1..5)</th>
+    <th class="th1">Learning<br />(1..4)</th>
+    <th class="th1">Unknown<br />(1)</th>
+    <th class="th1">Learning<br />(2)</th>
+    <th class="th1">Learning<br />(3)</th>
+    <th class="th1">Learning<br />(4)</th>
+    <th class="th1">Learned<br />(5)</th>
+    <th class="th1">Well<br />Known<br />(99)</th>
+    <th class="th1">Known<br />(5+99)</th>
+    <th class="th1">Ign.<br />(98)</th>
 </tr>
 <?php
 
@@ -132,36 +135,37 @@ $sumkall = 0;
 
 ?>
 
-<h4>Breakdown by Language and Time Range<br />(Terms created (C), Terms changed status = Activity (A), Terms set to "Known" (K))</h4>
-<table class="tab3" cellspacing="0" cellpadding="5">
+<h2>Learning Frequency</h2>
+<p>Breakdown by Language and Time Range <wbr />(Terms created (C), Terms changed status = Activity (A), Terms set to "Known" (K))</p>
+<table class="tab1" cellspacing="0" cellpadding="5">
 <tr>
-<th class="th1" rowspan="2">Language</th>
-<th class="th1" colspan="3">Today</th>
-<th class="th1" colspan="3">Yesterday</th>
-<th class="th1" colspan="3">Last 7 d</th>
-<th class="th1" colspan="3">Last 30 d</th>
-<th class="th1" colspan="3">Last 365 d</th>
-<th class="th1" colspan="3">All Time</th>
+    <th class="th1" rowspan="2">Language</th>
+    <th class="th1" colspan="3">Today</th>
+    <th class="th1" colspan="3">Yesterday</th>
+    <th class="th1" colspan="3">Last 7 d</th>
+    <th class="th1" colspan="3">Last 30 d</th>
+    <th class="th1" colspan="3">Last 365 d</th>
+    <th class="th1" colspan="3">All Time</th>
 </tr>
 <tr>
-<th class="th1">C</th>
-<th class="th1">A</th>
-<th class="th1">K</th>
-<th class="th1">C</th>
-<th class="th1">A</th>
-<th class="th1">K</th>
-<th class="th1">C</th>
-<th class="th1">A</th>
-<th class="th1">K</th>
-<th class="th1">C</th>
-<th class="th1">A</th>
-<th class="th1">K</th>
-<th class="th1">C</th>
-<th class="th1">A</th>
-<th class="th1">K</th>
-<th class="th1">C</th>
-<th class="th1">A</th>
-<th class="th1">K</th>
+    <th class="th1">C</th>
+    <th class="th1">A</th>
+    <th class="th1">K</th>
+    <th class="th1">C</th>
+    <th class="th1">A</th>
+    <th class="th1">K</th>
+    <th class="th1">C</th>
+    <th class="th1">A</th>
+    <th class="th1">K</th>
+    <th class="th1">C</th>
+    <th class="th1">A</th>
+    <th class="th1">K</th>
+    <th class="th1">C</th>
+    <th class="th1">A</th>
+    <th class="th1">K</th>
+    <th class="th1">C</th>
+    <th class="th1">A</th>
+    <th class="th1">K</th>
 </tr>
 <?php
 
@@ -380,7 +384,9 @@ echo '<th class="th1 center"><span class="status5stat">&nbsp;' . $sumkall . '&nb
 echo '</tr>';
 ?>
 </table> 
-<p><input type="button" value="&lt;&lt; Back" onclick="location.href='index.php';" /></p>
+<p>
+    <input type="button" value="&lt;&lt; Back" onclick="location.href='index.php';" />
+</p>
 <?php
 
 pageend();

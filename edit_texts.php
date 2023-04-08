@@ -569,7 +569,7 @@ function edit_texts_new($lid)
     $(document).ready(ask_before_exiting);
 </script>
 <form class="validate" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-    <table class="tab3" cellspacing="0" cellpadding="5">
+    <table class="tab1" cellspacing="0" cellpadding="5">
         <tr>
             <td class="td1 right">Language:</td>
             <td class="td1">
@@ -584,21 +584,26 @@ function edit_texts_new($lid)
         <tr>
             <td class="td1 right">Title:</td>
             <td class="td1">
-                <input type="text" class="notempty checkoutsidebmp" data_info="Title" name="TxTitle" value="" maxlength="200" size="60" />
-                <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+                <input type="text" class="notempty checkoutsidebmp respinput" 
+                data_info="Title" name="TxTitle" value="" maxlength="200" />
+                <img src="icn/status-busy.png" title="Field must not be empty" 
+                alt="Field must not be empty" />
             </td>
         </tr>
         <tr>
             <td class="td1 right">Text:<br /><br />(max.<br />65,000<br />bytes)</td>
             <td class="td1">
-                <textarea name="TxText" class="notempty checkbytes checkoutsidebmp" data_maxlength="65000" data_info="Text" cols="60" rows="20"></textarea>
+                <textarea name="TxText" 
+                class="notempty checkbytes checkoutsidebmp respinput" 
+                data_maxlength="65000" data_info="Text" rows="20"></textarea>
                 <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
             </td>
         </tr>
         <tr>
             <td class="td1 right">Source URI:</td>
             <td class="td1">
-                <input type="text" class="checkurl checkoutsidebmp" data_info="Source URI" name="TxSourceURI" value="" maxlength="1000" size="60" />
+                <input type="url" class="checkurl checkoutsidebmp respinput" 
+                data_info="Source URI" name="TxSourceURI" value="" maxlength="1000" />
             </td>
         </tr>
         <tr>
@@ -612,7 +617,8 @@ function edit_texts_new($lid)
                 Media URI:
             </td>
             <td class="td1">
-                <input type="text" class="checkoutsidebmp" data_info="Audio-URI" name="TxAudioURI" value="" maxlength="200" size="60" />        
+                <input type="text" class="checkoutsidebmp respinput" 
+                data_info="Audio-URI" name="TxAudioURI" value="" maxlength="200" />        
                 <span id="mediaselect">
                     <?php echo selectmediapath('TxAudioURI'); ?>
                 </span>        
@@ -671,7 +677,7 @@ function edit_texts_change($txid)
 </script>
 <form class="validate" action="<?php echo $_SERVER['PHP_SELF']; ?>#rec<?php echo $txid; ?>" method="post">
     <input type="hidden" name="TxID" value="<?php echo $txid; ?>" />
-    <table class="tab3" cellspacing="0" cellpadding="5">
+    <table class="tab1" cellspacing="0" cellpadding="5">
         <tr>
             <td class="td1 right">Language:</td>
             <td class="td1">
@@ -686,27 +692,34 @@ function edit_texts_change($txid)
         <tr>
             <td class="td1 right">Title:</td>
             <td class="td1">
-                <input type="text" class="notempty checkoutsidebmp" data_info="Title" name="TxTitle" value="<?php echo tohtml($record['TxTitle']); ?>" maxlength="200" size="60" />
+                <input type="text" class="notempty checkoutsidebmp respinput" 
+                data_info="Title" name="TxTitle" value="<?php echo tohtml($record['TxTitle']); ?>" maxlength="200" />
                 <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /></td>
         </tr>
         <tr>
             <td class="td1 right">Text:<br /><br />(max.<br />65,000<br />bytes)</td>
             <td class="td1">
-            <textarea <?php echo getScriptDirectionTag($record['TxLgID']); ?> name="TxText" class="notempty checkbytes checkoutsidebmp" data_maxlength="65000" data_info="Text" cols="60" rows="20">
+            <textarea <?php echo getScriptDirectionTag($record['TxLgID']); ?> name="TxText" 
+            class="notempty checkbytes checkoutsidebmp respinput" data_maxlength="65000" data_info="Text" rows="20">
                 <?php echo tohtml($record['TxText']); ?>
             </textarea> 
             <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
             </td>
         </tr>
         <tr>
-            <td class="td1 right">Ann.Text:</td>
+            <td class="td1 right">Ann. Text:</td>
             <td class="td1">
                 <?php echo ($record['annotlen'] ? '<img src="icn/tick.png" title="With Improved Annotation" alt="With Improved Annotation" /> Exists - May be partially or fully lost if you change the text!<br /><input type="button" value="Print/Edit..." onclick="location.href=\'print_impr_text.php?text=' . $txid . '\';" />' : '<img src="icn/cross.png" title="No Improved Annotation" alt="No Improved Annotation" /> - None | <input type="button" value="Create/Print..." onclick="location.href=\'print_impr_text.php?edit=1&amp;text=' . $txid . '\';" />'); ?>
             </td>
         </tr>
         <tr>
             <td class="td1 right">Source URI:</td>
-            <td class="td1"><input type="text" class="checkurl checkoutsidebmp" data_info="Source URI" name="TxSourceURI" value="<?php echo tohtml($record['TxSourceURI']); ?>" maxlength="1000" size="60" /></td>
+            <td class="td1">
+                <input type="url" class="checkurl checkoutsidebmp respinput" 
+                data_info="Source URI" name="TxSourceURI" 
+                value="<?php echo tohtml($record['TxSourceURI']); ?>" 
+                maxlength="1000" />
+            </td>
         </tr>
         <tr>
             <td class="td1 right">Tags:</td>
@@ -719,7 +732,8 @@ function edit_texts_change($txid)
                 Media URI:
             </td>
             <td class="td1">
-                <input type="text" class="checkoutsidebmp" data_info="Audio-URI" name="TxAudioURI" value="<?php echo tohtml($record['TxAudioURI']); ?>" maxlength="200" size="60" /> 
+                <input type="text" class="checkoutsidebmp respinput" data_info="Audio-URI" 
+                name="TxAudioURI" value="<?php echo tohtml($record['TxAudioURI']); ?>" maxlength="200" /> 
                 <span id="mediaselect">
                     <?php echo selectmediapath('TxAudioURI'); ?>
                 </span>        

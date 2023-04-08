@@ -413,12 +413,12 @@ function getWordTags($wid): string
 function getTextTags($tid): string 
 {
     global $tbpref;
-    $r = '<ul id="texttags">';
+    $r = '<ul id="texttags" class="respinput">';
     if ($tid > 0) {
-        $sql = 'SELECT T2Text 
-        FROM ' . $tbpref . 'texttags, ' . $tbpref . 'tags2 
-        WHERE T2ID = TtT2ID AND TtTxID = ' . $tid . ' 
-        ORDER BY T2Text';
+        $sql = "SELECT T2Text 
+        FROM {$tbpref}texttags, {$tbpref}tags2 
+        WHERE T2ID = TtT2ID AND TtTxID = $tid 
+        ORDER BY T2Text";
         $res = do_mysqli_query($sql);
         while ($record = mysqli_fetch_assoc($res)) {
             $r .= '<li>' . tohtml($record["T2Text"]) . '</li>';
@@ -1627,7 +1627,8 @@ function selectmediapath($f): string
     </p> ' . $msg;
     if ($msg == '') {
         $r .= '
-        <select name="Dir" onchange="{val=this.form.Dir.options[this.form.Dir.selectedIndex].value; if (val != \'\') this.form.' . $f . '.value = val; this.form.Dir.value=\'\';}">
+        <select name="Dir" onchange="{val=this.form.Dir.options[this.form.Dir.selectedIndex].value; if (val != \'\') this.form.' 
+            . $f . '.value = val; this.form.Dir.value=\'\';}" style="width: 200px;">
             <option value="">[Choose...]</option>' . 
             selectmediapathoptions('media') . 
         '</select> ';

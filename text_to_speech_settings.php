@@ -79,7 +79,7 @@ function tts_settings_form()
 {
     ?>    
 <form class="validate" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-    <table class="tab3" cellspacing="0" cellpadding="5">
+    <table class="tab1" cellspacing="0" cellpadding="5">
         <tr>
             <th class="th1">Group</th>
             <th class="th1">Description</th>
@@ -89,29 +89,32 @@ function tts_settings_form()
             <th class="th1 center" rowspan="2">Language</th>
             <td class="td1 center">Language code</td>
             <td class="td1 center">
-            <select name="LgName" id="get-language" class="notempty" onchange="populateVoiceList();">
+            <select name="LgName" id="get-language" class="notempty respinput" 
+            onchange="populateVoiceList();">
                 <?php echo tts_language_options(); ?>
             </select>
             </td>
             <td class="td1 center">
-                <img src="<?php print_file_path("icn/status-busy.png") ?>" title="Field must not be empty" alt="Field must not be empty" />
+                <img src="<?php print_file_path("icn/status-busy.png") ?>" 
+                title="Field must not be empty" alt="Field must not be empty" />
             </td>
         </tr>
         <tr>
-            <td class="td1 center">Region (depending on your browser)</td>
+            <td class="td1 center">Region <wbr />(depends on your browser)</td>
             <td class="td1 center">
-                <select name="LgRegName" id="region-code" class="notempty">
+                <select name="LgRegName" id="region-code" class="notempty respinput">
                 </select>
             </td>
             <td class="td1 center">
-                <img src="<?php print_file_path("icn/status-busy.png") ?>" title="Field must not be empty" alt="Field must not be empty" />
+                <img src="<?php print_file_path("icn/status-busy.png") ?>" 
+                title="Field must not be empty" alt="Field must not be empty" />
             </td>
         </tr>
         <tr>
             <th class="th1 center" rowspan="2">Voice</th>
             <td class="td1 center">Reading Rate</td>
             <td class="td1 center">
-                <input type="range" name="LgTTSRate" min="0.5" max="2" value="1" step="0.1" id="rate">
+                <input type="range" name="LgTTSRate" class="respinput" min="0.5" max="2" value="1" step="0.1" id="rate">
             </td>
             <td class="td1 center">
                 <img src="<?php print_file_path("icn/status.png") ?>" />
@@ -120,7 +123,8 @@ function tts_settings_form()
         <tr>
             <td class="td1 center">Pitch</td>
             <td class="td1 center">
-                <input type="range" name="LgPitch" min="0" max="2" value="1" step="0.1" id="pitch">
+                <input type="range" name="LgPitch" class="respinput" min="0" 
+                max="2" value="1" step="0.1" id="pitch">
             </td>
             <td class="td1 center">
                 <img src="<?php print_file_path("icn/status.png") ?>" />
@@ -150,7 +154,7 @@ function tts_demo()
     ?>
 <th class="th1 center">Demo</th>
 <td class="td1 center" colspan="2">
-    <textarea id="tts-demo" title="Enter your text here" style="width: 95%;">
+    <textarea id="tts-demo" title="Enter your text here" class="respinput">
     Lorem ipsum dolor sit amet...
     </textarea>
 </td>
@@ -321,7 +325,7 @@ function tts_save_settings($form): string
 }
 
 $message = '';
-if ($_REQUEST['op'] == 'Save') {
+if (array_key_exists('op', $_REQUEST) && $_REQUEST['op'] == 'Save') {
     $message = tts_save_settings($_REQUEST);
 }
 tts_settings_full_page($message);

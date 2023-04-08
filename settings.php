@@ -8,6 +8,8 @@
  *      ... op=Reset ... do reset to defaults 
  ***************************************************************/
 
+namespace Lwt\Interface\Settings;
+
 require_once 'inc/session_utility.php';
 
 if (isset($_REQUEST['op'])) {
@@ -197,7 +199,7 @@ echo error_message_with_hide($message, 1);
     $(document).ready(ask_before_exiting);
 </script>
 <form class="validate" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-<table class="tab3" cellspacing="0" cellpadding="5">
+<table class="tab1" cellspacing="0" cellpadding="5">
     <!-- ******************************************************* -->
     <tr>
         <th class="th1">Group</th>
@@ -209,7 +211,7 @@ echo error_message_with_hide($message, 1);
         <th class="th1 center" rowspan="1">Appearance</th>
         <td class="td1 center">Theme</td>
         <td class="td1 center">
-            <select name="set-theme-dir" class="notempty">
+            <select name="set-theme-dir" class="notempty respinput">
                 <?php
 echo get_themes_selectoptions(
     getSettingWithDefault('set-theme-dir')
@@ -217,25 +219,34 @@ echo get_themes_selectoptions(
                 ?>
             </select>
         </td>
-        <td class="td1 center"><img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /></td>
+        <td class="td1 center">
+            <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+        </td>
     </tr>
     <!-- ******************************************************* -->
     <tr>
-        <th class="th1 center" rowspan="7">Read Text<br />Screen</th>
-        <td class="td1 center">Height of left top frame<br /><b>without</b> audioplayer</td>
+        <th class="th1 center" rowspan="7">Read Text Screen</th>
         <td class="td1 center">
-            <input class="notempty posintnumber right setfocus" type="text" 
+            Height of left top frame <wbr /><b>without</b> audioplayer
+        </td>
+        <td class="td1 center">
+            <input class="notempty posintnumber right setfocus respinput" type="text" 
             name="set-text-h-frameheight-no-audio" data_info="Height of left top frame without audioplayer" 
             value="<?php echo tohtml(getSettingWithDefault('set-text-h-frameheight-no-audio')); ?>" maxlength="3" 
             size="3" /><br />Pixel </td>
-        <td class="td1 center"><img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /></td>
+        <td class="td1 center">
+            <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+        </td>
     </tr>
     <!-- ******************************************************* -->
     <tr>
-        <td class="td1 center">Height of left top frame<br /><b>with</b> audioplayer</td>
         <td class="td1 center">
-            <input class="notempty posintnumber right" type="text" 
-            name="set-text-h-frameheight-with-audio" data_info="Height of left top frame with audioplayer" 
+            Height of left top frame <wbr /><b>with</b> audioplayer
+        </td>
+        <td class="td1 center">
+            <input class="notempty posintnumber right respinput" type="text" 
+            name="set-text-h-frameheight-with-audio" 
+            data_info="Height of left top frame with audioplayer" 
             value="<?php echo tohtml(getSettingWithDefault('set-text-h-frameheight-with-audio')); ?>" 
             maxlength="3" size="3" /><br />
             Pixel
@@ -248,173 +259,229 @@ echo get_themes_selectoptions(
     <tr>
         <td class="td1 center">Width of left frames</td>
         <td class="td1 center">
-        <input class="notempty posintnumber right" type="text" 
-        name="set-text-l-framewidth-percent" data_info="Width of left frames" 
-        value="<?php echo tohtml(getSettingWithDefault('set-text-l-framewidth-percent')); ?>" maxlength="2" size="2" /><br />Percent </td>
-        <td class="td1 center"><img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /></td>
+            <input class="notempty posintnumber right respinput" type="text" 
+            name="set-text-l-framewidth-percent" data_info="Width of left frames" 
+            value="<?php echo tohtml(getSettingWithDefault('set-text-l-framewidth-percent')); ?>" 
+            maxlength="2" size="2" />
+            <br />Percent 
+        </td>
+        <td class="td1 center">
+            <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+        </td>
     </tr>
     <!-- ******************************************************* -->
     <tr>
         <td class="td1 center">Height of right top frame</td>
         <td class="td1 center">
-        <input class="notempty posintnumber right" type="text" 
-        name="set-text-r-frameheight-percent"  data_info="Height of right top frame" 
-        value="<?php echo tohtml(getSettingWithDefault('set-text-r-frameheight-percent')); ?>" maxlength="2" size="2" /><br />Percent </td>
-        <td class="td1 center"><img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /></td>
+            <input class="notempty posintnumber right respinput" type="text" 
+            name="set-text-r-frameheight-percent"  data_info="Height of right top frame" 
+            value="<?php echo tohtml(getSettingWithDefault('set-text-r-frameheight-percent')); ?>" maxlength="2" size="2" />
+            <br />Percent
+        </td>
+        <td class="td1 center">
+            <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+        </td>
     </tr>
     <!-- ******************************************************* -->
     <tr>
         <td class="td1 center">Button(s) for "words to do"</td>
         <td class="td1 center">
-        <select name="set-words-to-do-buttons" class="notempty">
-        <?php 
-    echo get_words_to_do_buttons_selectoptions(
-        getSettingWithDefault('set-words-to-do-buttons')
-    );
-        ?>
-        </select>
+            <select name="set-words-to-do-buttons" class="notempty respinput">
+            <?php 
+        echo get_words_to_do_buttons_selectoptions(
+            getSettingWithDefault('set-words-to-do-buttons')
+        );
+            ?>
+            </select>
         </td>
-        <td class="td1 center"><img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /></td>
+        <td class="td1 center">
+            <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+        </td>
     </tr>
     <!-- ******************************************************* -->
     <tr>
         <td class="td1 center">Tooltips</td>
         <td class="td1 center">
-        <select name="set-tooltip-mode" class="notempty">
+            <select name="set-tooltip-mode" class="notempty respinput">
         <?php
 echo get_tooltip_selectoptions(
     getSettingWithDefault('set-tooltip-mode')
 );
         ?>
-        </select>
+            </select>
         </td>
-        <td class="td1 center"><img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /></td>
+        <td class="td1 center">
+            <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+        </td>
     </tr>
     <!-- ******************************************************* -->
     <tr>
         <td class="td1 center">New Term Translations per Page</td>
         <td class="td1 center">
-        <input class="notempty posintnumber right" type="text" 
-        name="set-ggl-translation-per-page"  data_info="New Term Translations per Page" 
-        value="<?php echo tohtml(getSettingWithDefault('set-ggl-translation-per-page')); ?>" maxlength="4" size="4" /></td>
-        <td class="td1 center"><img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /></td>
+            <input class="notempty posintnumber right respinput" type="text" 
+            name="set-ggl-translation-per-page"  data_info="New Term Translations per Page" 
+            value="<?php echo tohtml(getSettingWithDefault('set-ggl-translation-per-page')); ?>" 
+            maxlength="4" size="4" />
+        </td>
+        <td class="td1 center">
+            <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+        </td>
     </tr>
     <!-- ******************************************************* -->
     <tr>
         <th class="th1 center middle" rowspan="5">Test<br />Screen</th>
         <td class="td1 center">Height of left top frame</td>
         <td class="td1 center">
-        <input class="notempty posintnumber right" type="text" 
-        name="set-test-h-frameheight" data_info="Height of left top frame" 
-        value="<?php echo tohtml(getSettingWithDefault('set-test-h-frameheight')); ?>" maxlength="3" size="3" /><br />Pixel </td>
-        <td class="td1 center"><img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /></td>
+            <input class="notempty posintnumber right respinput" type="text" 
+            name="set-test-h-frameheight" data_info="Height of left top frame" 
+            value="<?php echo tohtml(getSettingWithDefault('set-test-h-frameheight')); ?>" 
+            maxlength="3" size="3" />
+            <br />Pixel 
+        </td>
+        <td class="td1 center">
+            <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+        </td>
     </tr>
     <!-- ******************************************************* -->
     <tr>
         <td class="td1 center">Width of left frames</td>
         <td class="td1 center">
-        <input class="notempty posintnumber right" type="text" 
-        name="set-test-l-framewidth-percent"  data_info="Width of left frames" 
-        value="<?php echo tohtml(getSettingWithDefault('set-test-l-framewidth-percent')); ?>" maxlength="2" size="2" /><br />Percent </td>
-        <td class="td1 center"><img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /></td>
+            <input class="notempty posintnumber right respinput" type="text" 
+            name="set-test-l-framewidth-percent"  data_info="Width of left frames" 
+            value="<?php echo tohtml(getSettingWithDefault('set-test-l-framewidth-percent')); ?>" 
+            maxlength="2" size="2" />
+            <br />Percent
+        </td>
+        <td class="td1 center">
+            <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+        </td>
     </tr>
     <!-- ******************************************************* -->
     <tr>
         <td class="td1 center">Height of right top frame</td>
         <td class="td1 center">
-        <input class="notempty posintnumber right" type="text" 
-        name="set-test-r-frameheight-percent"  data_info="Height of right top frame"  
-        value="<?php echo tohtml(getSettingWithDefault('set-test-r-frameheight-percent')); ?>" maxlength="2" size="2" /><br />Percent </td>
-        <td class="td1 center"><img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /></td>
+            <input class="notempty posintnumber right respinput" type="text" 
+            name="set-test-r-frameheight-percent"  data_info="Height of right top frame"  
+            value="<?php echo tohtml(getSettingWithDefault('set-test-r-frameheight-percent')); ?>" 
+            maxlength="2" size="2" /><br />
+            Percent 
+        </td>
+        <td class="td1 center">
+            <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+        </td>
     </tr>
     <!-- ******************************************************* -->
     <tr>
-        <td class="td1 center">Waiting time after assessment<br />to display next test<br /></td>
         <td class="td1 center">
-        <input class="notempty zeroposintnumber right" type="text" 
-        name="set-test-main-frame-waiting-time" data_info="Waiting time after assessment to display next test" 
-        value="<?php echo tohtml(getSettingWithDefault('set-test-main-frame-waiting-time')); ?>" maxlength="4" size="4" /><br />Milliseconds </td>
-        <td class="td1 center"><img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /></td>
+            Waiting time after assessment to display next test
+        </td>
+        <td class="td1 center">
+            <input class="notempty zeroposintnumber right respinput" type="text" 
+            name="set-test-main-frame-waiting-time" data_info="Waiting time after assessment to display next test" 
+            value="<?php echo tohtml(getSettingWithDefault('set-test-main-frame-waiting-time')); ?>" 
+            maxlength="4" size="4" /><br />
+            Milliseconds
+        </td>
+        <td class="td1 center">
+            <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+        </td>
     </tr>
     <!-- ******************************************************* -->
     <tr>
-        <td class="td1 center">Waiting Time <br />to clear the message/edit frame </td>
         <td class="td1 center">
-        <input class="notempty zeroposintnumber right" type="text" 
-        name="set-test-edit-frame-waiting-time"  data_info="Waiting Time to clear the message/edit frame" 
-        value="<?php echo tohtml(getSettingWithDefault('set-test-edit-frame-waiting-time')); ?>" maxlength="8" size="8" /><br />Milliseconds </td>
-        <td class="td1 center"><img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /></td>
+            Waiting Time to clear the message/edit frame 
+        </td>
+        <td class="td1 center">
+            <input class="notempty zeroposintnumber right respinput" type="text" 
+            name="set-test-edit-frame-waiting-time"  data_info="Waiting Time to clear the message/edit frame" 
+            value="<?php echo tohtml(getSettingWithDefault('set-test-edit-frame-waiting-time')); ?>" maxlength="8" size="8" /><br />
+            Milliseconds
+        </td>
+        <td class="td1 center">
+            <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+        </td>
     </tr>
     <!-- ******************************************************* -->
     <tr>
         <th class="th1 center">Frame Set<br />Display Mode</th>
         <td class="td1 center">Select how frame sets are<br />displayed on different devices</td>
         <td class="td1 center">
-        <select name="set-mobile-display-mode">
-        <?php
-echo get_mobile_display_mode_selectoptions(
-    getSettingWithDefault('set-mobile-display-mode') // , true, true, true what is it???
-);
-        ?>
-        </select>
+            <select name="set-mobile-display-mode" class="respinput">
+            <?php
+    echo get_mobile_display_mode_selectoptions(
+        getSettingWithDefault('set-mobile-display-mode') // , true, true, true what is it???
+    );
+            ?>
+            </select>
         </td>
-        <td class="td1 center"><img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /></td>
+        <td class="td1 center">
+            <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+        </td>
     </tr>
     <!-- ******************************************************* -->
     <tr>
         <th class="th1 center" rowspan="3">Reading</th>
-        <td class="td1 center">Visit only saved terms with status(es)...<br />(via keystrokes RIGHT, SPACE, LEFT, etc.)</td>
         <td class="td1 center">
-        <select name="set-text-visit-statuses-via-key">
-        <?php
-echo get_wordstatus_selectoptions(
-    getSettingWithDefault('set-text-visit-statuses-via-key'), true, true, true
-);
-        ?>
-        </select>
+            Visit only saved terms with status(es)...<br />
+            (via keystrokes RIGHT, SPACE, LEFT, etc.)
         </td>
-        <td class="td1 center"><img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /></td>
+        <td class="td1 center">
+            <select name="set-text-visit-statuses-via-key" class="respinput">
+            <?php
+    echo get_wordstatus_selectoptions(
+        getSettingWithDefault('set-text-visit-statuses-via-key'), true, true, true
+    );
+            ?>
+            </select>
+        </td>
+        <td class="td1 center">
+            <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+        </td>
     </tr>
     <!-- ******************************************************* -->
     <tr>
         <td class="td1 center">Display translations of terms with status(es)</td>
         <td class="td1 center">
-        <select name="set-display-text-frame-term-translation">
-        <?php
-echo get_wordstatus_selectoptions(
-    getSettingWithDefault('set-display-text-frame-term-translation'), true, true, true
-);
-        ?>
-        </select>
+            <select name="set-display-text-frame-term-translation" class="respinput">
+            <?php
+    echo get_wordstatus_selectoptions(
+        getSettingWithDefault('set-display-text-frame-term-translation'), true, true, true
+    );
+            ?>
+            </select>
         </td>
-        <td class="td1 center"><img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /></td>
+        <td class="td1 center">
+            <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+        </td>
     </tr>
     <!-- ******************************************************* -->
     <tr>
         <td class="td1 center">Position of translations</td>
         <td class="td1 center">
-        <select name="set-text-frame-annotation-position" class="notempty">
-        <?php
-echo get_annotation_position_selectoptions(
-    getSettingWithDefault('set-text-frame-annotation-position')
-);
-        ?>
-        </select>
+            <select name="set-text-frame-annotation-position" class="notempty respinput">
+            <?php
+    echo get_annotation_position_selectoptions(
+        getSettingWithDefault('set-text-frame-annotation-position')
+    );
+            ?>
+            </select>
         </td>
-        <td class="td1 center"><img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /></td>
+        <td class="td1 center">
+            <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+        </td>
     </tr>
     <!-- ******************************************************* -->
     <tr>
         <th class="th1 center">Testing</th>
         <td class="td1 center">Number of sentences <br />displayed from text, if available</td>
         <td class="td1 center">
-        <select name="set-test-sentence-count" class="notempty">
-        <?php
-echo get_sentence_count_selectoptions(
-    getSettingWithDefault('set-test-sentence-count')
-);
-        ?>
-        </select>
+            <select name="set-test-sentence-count" class="notempty respinput">
+            <?php
+    echo get_sentence_count_selectoptions(
+        getSettingWithDefault('set-test-sentence-count')
+    );
+            ?>
+            </select>
         </td>
         <td class="td1 center">
             <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
@@ -425,25 +492,32 @@ echo get_sentence_count_selectoptions(
         <th class="th1 center">Term Sentence<br />Generation</th>
         <td class="td1 center">Number of sentences <br />generated from text, if available</td>
         <td class="td1 center">
-        <select name="set-term-sentence-count" class="notempty">
-        <?php
-echo get_sentence_count_selectoptions(
-    getSettingWithDefault('set-term-sentence-count')
-);
-        ?>
-        </select>
+            <select name="set-term-sentence-count" class="notempty respinput">
+            <?php
+    echo get_sentence_count_selectoptions(
+        getSettingWithDefault('set-term-sentence-count')
+    );
+            ?>
+            </select>
         </td>
-        <td class="td1 center"><img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /></td>
+        <td class="td1 center">
+            <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+        </td>
     </tr>
     <!-- ******************************************************* -->
     <tr>
         <th class="th1 center">Similar<br />Terms</th>
-        <td class="td1 center">Similar terms to be displayed<br />while adding/editing a term</td>
         <td class="td1 center">
-        <input class="notempty zeroposintnumber right" type="text" 
-        name="set-similar-terms-count"  data_info="Similar terms to be displayed while adding/editing a term" 
-        value="<?php echo tohtml(getSettingWithDefault('set-similar-terms-count')); ?>" maxlength="1" size="1" /></td>
-        <td class="td1 center"><img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /></td>
+            Similar terms to be displayed<br />while adding/editing a term
+        </td>
+        <td class="td1 center">
+            <input class="notempty zeroposintnumber right respinput" type="text" 
+            name="set-similar-terms-count"  data_info="Similar terms to be displayed while adding/editing a term" 
+            value="<?php echo tohtml(getSettingWithDefault('set-similar-terms-count')); ?>" maxlength="1" size="1" />
+        </td>
+        <td class="td1 center">
+            <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+        </td>
     </tr>
     <!-- ******************************************************* -->
     <tr>
@@ -453,10 +527,13 @@ echo get_sentence_count_selectoptions(
             (used in annotation selection)
         </td>
         <td class="td1 center">
-        <input class="notempty center" type="text" 
-        name="set-term-translation-delimiters" 
-        value="<?php echo tohtml(getSettingWithDefault('set-term-translation-delimiters')); ?>" maxlength="8" size="8" /></td>
-        <td class="td1 center"><img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /></td>
+            <input class="notempty center respinput" type="text" 
+            name="set-term-translation-delimiters" 
+            value="<?php echo tohtml(getSettingWithDefault('set-term-translation-delimiters')); ?>" maxlength="8" size="8" />
+        </td>
+        <td class="td1 center">
+            <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+        </td>
     </tr>
     <!-- ******************************************************* -->
     <tr>
@@ -476,36 +553,46 @@ echo get_sentence_count_selectoptions(
         <th class="th1 center" rowspan="7">Text, Term,<br />Newsfeed &amp;<br />Tag Tables</th>
         <td class="td1 center">Texts per Page</td>
         <td class="td1 center">
-        <input class="notempty posintnumber right" type="text" 
-        name="set-texts-per-page"  data_info="Texts per Page" 
-        value="<?php echo tohtml(getSettingWithDefault('set-texts-per-page')); ?>" maxlength="4" size="4" /> </td>
-        <td class="td1 center"><img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /></td>
+            <input class="notempty posintnumber right respinput" type="text" 
+            name="set-texts-per-page"  data_info="Texts per Page" 
+            value="<?php echo tohtml(getSettingWithDefault('set-texts-per-page')); ?>" maxlength="4" size="4" />
+        </td>
+        <td class="td1 center">
+            <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+        </td>
     </tr>
     <!-- ******************************************************* -->
     <tr>
         <td class="td1 center">Archived Texts per Page</td>
         <td class="td1 center">
-        <input class="notempty posintnumber right" type="text" 
-        name="set-archivedtexts-per-page"  data_info="Archived Texts per Page" 
-        value="<?php echo tohtml(getSettingWithDefault('set-archivedtexts-per-page')); ?>" maxlength="4" size="4" /></td>
-        <td class="td1 center"><img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /></td>
+            <input class="notempty posintnumber right respinput" type="text" 
+            name="set-archivedtexts-per-page"  data_info="Archived Texts per Page" 
+            value="<?php echo tohtml(getSettingWithDefault('set-archivedtexts-per-page')); ?>" maxlength="4" size="4" />
+        </td>
+        <td class="td1 center">
+            <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+        </td>
     </tr>
     <!-- ******************************************************* -->
     <tr>
         <td class="td1 center">Terms per Page</td>
         <td class="td1 center">
-        <input class="notempty posintnumber right" type="text" 
-        name="set-terms-per-page" data_info="Terms per Page" 
-        value="<?php echo tohtml(getSettingWithDefault('set-terms-per-page')); ?>" maxlength="4" size="4" /></td>
-        <td class="td1 center"><img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /></td>
+            <input class="notempty posintnumber right respinput" type="text" 
+            name="set-terms-per-page" data_info="Terms per Page" 
+            value="<?php echo tohtml(getSettingWithDefault('set-terms-per-page')); ?>" maxlength="4" size="4" />
+        </td>
+        <td class="td1 center">
+            <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+        </td>
     </tr>
     <!-- ******************************************************* -->
     <tr>
         <td class="td1 center">Tags per Page</td>
         <td class="td1 center">
-        <input class="notempty posintnumber right" type="text" 
-        name="set-tags-per-page"  data_info="Tags per Page" 
-        value="<?php echo tohtml(getSettingWithDefault('set-tags-per-page')); ?>" maxlength="4" size="4" /></td>
+            <input class="notempty posintnumber right respinput" type="text" 
+            name="set-tags-per-page"  data_info="Tags per Page" 
+            value="<?php echo tohtml(getSettingWithDefault('set-tags-per-page')); ?>" maxlength="4" size="4" />
+        </td>
         <td class="td1 center">
             <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
         </td>
@@ -514,9 +601,10 @@ echo get_sentence_count_selectoptions(
     <tr>
         <td class="td1 center">Feed Articles per Page</td>
         <td class="td1 center">
-        <input class="notempty posintnumber right" type="text" 
-        name="set-articles-per-page" data_info="Feed Articles per Page" 
-        value="<?php echo tohtml(getSettingWithDefault('set-articles-per-page')); ?>" maxlength="4" size="4" /></td>
+            <input class="notempty posintnumber right respinput" type="text" 
+            name="set-articles-per-page" data_info="Feed Articles per Page" 
+            value="<?php echo tohtml(getSettingWithDefault('set-articles-per-page')); ?>" maxlength="4" size="4" />
+        </td>
         <td class="td1 center">
             <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
         </td>
@@ -525,51 +613,66 @@ echo get_sentence_count_selectoptions(
     <tr>
         <td class="td1 center">Feeds per Page</td>
         <td class="td1 center">
-        <input class="notempty posintnumber right" type="text" 
-        name="set-feeds-per-page" data_info="Feeds per Page" 
-        value="<?php echo tohtml(getSettingWithDefault('set-feeds-per-page')); ?>" maxlength="4" size="4" /></td>
-        <td class="td1 center"><img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /></td>
+            <input class="notempty posintnumber right respinput" type="text" 
+            name="set-feeds-per-page" data_info="Feeds per Page" 
+            value="<?php echo tohtml(getSettingWithDefault('set-feeds-per-page')); ?>" maxlength="4" size="4" />
+        </td>
+        <td class="td1 center">
+            <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+        </td>
     </tr>
     <!-- ******************************************************* -->
     <tr>
         <td class="td1 center">Query Mode</td>
         <td class="td1 center">
-        <select name="set-regex-mode">
-        <?php
-echo get_regex_selectoptions(
-    getSettingWithDefault('set-regex-mode')
-);
-        ?>
-        </select></td>
-        <td class="td1 center"><img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /></td>
+            <select name="set-regex-mode" class="respinput">
+            <?php
+    echo get_regex_selectoptions(
+        getSettingWithDefault('set-regex-mode')
+    );
+            ?>
+            </select>
+        </td>
+        <td class="td1 center">
+            <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+        </td>
     </tr>
     <!-- ******************************************************* -->
     <tr>
         <th class="th1 center" rowspan="3">Newsfeeds</th>
         <td class="td1 center">Max Articles per Feed <b>with</b> cached text</td>
         <td class="td1 center">
-        <input class="notempty posintnumber right" type="text" 
-        name="set-max-articles-with-text" data_info="Max Articles per Feed with cached text" 
-        value="<?php echo tohtml(getSettingWithDefault('set-max-articles-with-text')); ?>" maxlength="4" size="4" /></td>
-        <td class="td1 center"><img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /></td>
+            <input class="notempty posintnumber right respinput" type="text" 
+            name="set-max-articles-with-text" data_info="Max Articles per Feed with cached text" 
+            value="<?php echo tohtml(getSettingWithDefault('set-max-articles-with-text')); ?>" maxlength="4" size="4" />
+        </td>
+        <td class="td1 center">
+            <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+        </td>
     </tr>
     <!-- ******************************************************* -->
     <tr>
         <td class="td1 center">Max Articles per Feed <b>without</b> cached text</td>
         <td class="td1 center">
-        <input class="notempty posintnumber right" type="text" 
-        name="set-max-articles-without-text" data_info="Max Articles per Feed without cached text" 
-        value="<?php echo tohtml(getSettingWithDefault('set-max-articles-without-text')); ?>" maxlength="4" size="4" /></td>
-        <td class="td1 center"><img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /></td>
+            <input class="notempty posintnumber right respinput" type="text" 
+            name="set-max-articles-without-text" data_info="Max Articles per Feed without cached text" 
+            value="<?php echo tohtml(getSettingWithDefault('set-max-articles-without-text')); ?>" maxlength="4" size="4" />
+        </td>
+        <td class="td1 center">
+            <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+        </td>
     </tr>
     <!-- ******************************************************* -->
     <tr>
         <td class="td1 center">Max Texts per Feed<br />(older Texts are moved into "Text Archive")</td>
         <td class="td1 center">
-        <input class="notempty posintnumber right" type="text" 
-        name="set-max-texts-per-feed" data_info="Max Texts per Feed" 
-        value="<?php echo tohtml(getSettingWithDefault('set-max-texts-per-feed')); ?>" maxlength="4" size="4" /></td>
-        <td class="td1 center"><img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /></td>
+            <input class="notempty posintnumber right respinput" type="text" 
+            name="set-max-texts-per-feed" data_info="Max Texts per Feed" 
+            value="<?php echo tohtml(getSettingWithDefault('set-max-texts-per-feed')); ?>" maxlength="4" size="4" />
+        </td>
+        <td class="td1 center">
+            <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+        </td>
     </tr>
     <!-- ******************************************************* -->
     <tr>

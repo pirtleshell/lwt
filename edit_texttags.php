@@ -107,19 +107,26 @@ if (isset($_REQUEST['new'])) {
         $(document).ready(ask_before_exiting);
     </script>
     <form name="newtag" class="validate" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-    <table class="tab3" cellspacing="0" cellpadding="5">
+    <table class="tab1" cellspacing="0" cellpadding="5">
     <tr>
-    <td class="td1 right">Tag:</td>
-    <td class="td1"><input class="notempty setfocus noblanksnocomma checkoutsidebmp" type="text" name="T2Text" data_info="Tag" value="" maxlength="20" size="20" /> <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /></td>
+        <td class="td1 right">Tag:</td>
+        <td class="td1">
+            <input class="notempty setfocus noblanksnocomma checkoutsidebmp respinput" 
+            type="text" name="T2Text" data_info="Tag" value="" maxlength="20" />
+            <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+        </td>
     </tr>
     <tr>
     <td class="td1 right">Comment:</td>
-    <td class="td1"><textarea class="textarea-noreturn checklength checkoutsidebmp" data_maxlength="200" data_info="Comment" name="T2Comment" cols="40" rows="3"></textarea></td>
+    <td class="td1">
+        <textarea class="textarea-noreturn checklength checkoutsidebmp respinput" 
+        data_maxlength="200" data_info="Comment" name="T2Comment" rows="3"></textarea>
+    </td>
     </tr>
     <tr>
-    <td class="td1 right" colspan="2">
-    <input type="button" value="Cancel" onclick="{resetDirty(); location.href='edit_texttags.php';}" /> 
-    <input type="submit" name="op" value="Save" /></td>
+        <td class="td1 right" colspan="2">
+        <input type="button" value="Cancel" onclick="{resetDirty(); location.href='edit_texttags.php';}" /> 
+        <input type="submit" name="op" value="Save" /></td>
     </tr>
     </table>
     </form>
@@ -139,14 +146,20 @@ if (isset($_REQUEST['new'])) {
      </script>
      <form name="edittag" class="validate" action="<?php echo $_SERVER['PHP_SELF']; ?>#rec<?php echo $_REQUEST['chg']; ?>" method="post">
         <input type="hidden" name="T2ID" value="<?php echo $record['T2ID']; ?>" />
-        <table class="tab3" cellspacing="0" cellpadding="5">
+        <table class="tab1" cellspacing="0" cellpadding="5">
         <tr>
         <td class="td1 right">Tag:</td>
-        <td class="td1"><input data_info="Tag" class="notempty setfocus noblanksnocomma checkoutsidebmp" type="text" name="T2Text" value="<?php echo tohtml($record['T2Text']); ?>" maxlength="20" size="20" /> <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /></td>
+        <td class="td1">
+            <input data_info="Tag" class="notempty setfocus noblanksnocomma checkoutsidebmp respinput" 
+            type="text" name="T2Text" value="<?php echo tohtml($record['T2Text']); ?>" maxlength="20" /> 
+            <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /></td>
         </tr>
         <tr>
-        <td class="td1 right">Comment:</td>
-        <td class="td1"><textarea class="textarea-noreturn checklength checkoutsidebmp" data_maxlength="200" data_info="Comment" name="T2Comment" cols="40" rows="3"><?php echo tohtml($record['T2Comment']); ?></textarea></td>
+            <td class="td1 right">Comment:</td>
+            <td class="td1">
+                <textarea class="textarea-noreturn checklength checkoutsidebmp respinput" 
+                data_maxlength="200" data_info="Comment" name="T2Comment" rows="3"><?php echo tohtml($record['T2Comment']); ?></textarea>
+            </td>
         </tr>
         <tr>
         <td class="td1 right" colspan="2">
@@ -201,17 +214,18 @@ if (isset($_REQUEST['new'])) {
 <p><a href="<?php echo $_SERVER['PHP_SELF']; ?>?new=1"><img src="icn/plus-button.png" title="New" alt="New" /> New Text Tag ...</a></p>
 
 <form name="form1" action="#" onsubmit="document.form1.querybutton.click(); return false;">
-<table class="tab2" cellspacing="0" cellpadding="5">
+<table class="tab1" cellspacing="0" cellpadding="5">
 <tr>
-<th class="th1" colspan="4">Filter <img src="icn/funnel.png" title="Filter" alt="Filter" />&nbsp;
-<input type="button" value="Reset All" onclick="{location.href='edit_texttags.php?page=1&amp;query=';}" /></th>
+    <th class="th1" colspan="4">
+        Filter <img src="icn/funnel.png" title="Filter" alt="Filter" />&nbsp;
+    <input type="button" value="Reset All" onclick="{location.href='edit_texttags.php?page=1&amp;query=';}" /></th>
 </tr>
 <tr>
 <td class="td1 center" colspan="4">
-Tag Text or Comment:
-<input type="text" name="query" value="<?php echo tohtml($currentquery); ?>" maxlength="50" size="15" />&nbsp;
-<input type="button" name="querybutton" value="Filter" onclick="{val=document.form1.query.value; location.href='edit_texttags.php?page=1&amp;query=' + val;}" />&nbsp;
-<input type="button" value="Clear" onclick="{location.href='edit_texttags.php?page=1&amp;query=';}" />
+    Tag Text or Comment:
+    <input type="text" name="query" value="<?php echo tohtml($currentquery); ?>" maxlength="50" size="15" />&nbsp;
+    <input type="button" name="querybutton" value="Filter" onclick="{val=document.form1.query.value; location.href='edit_texttags.php?page=1&amp;query=' + val;}" />&nbsp;
+    <input type="button" value="Clear" onclick="{location.href='edit_texttags.php?page=1&amp;query=';}" />
 </td>
 </tr>
     <?php if($recno > 0) { ?>

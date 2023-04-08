@@ -367,7 +367,8 @@ function langFromDict($url) {
     }
     $query = parse_url($url, PHP_URL_QUERY);
     parse_str($query, $parsed_query);
-    if ($parsed_query["lwt_translator"] == "libretranslate") {
+    if (array_key_exists("lwt_translator", $parsed_query) && 
+    $parsed_query["lwt_translator"] == "libretranslate") {
         return $parsed_query["source"] || "";
     }
     // Fallback to Google Translate
@@ -380,7 +381,8 @@ function targetLangFromDict($url) {
     }
     $query = parse_url($url, PHP_URL_QUERY);
     parse_str($query, $parsed_query);
-    if ($parsed_query["lwt_translator"] == "libretranslate") {
+    if (array_key_exists("lwt_translator", $parsed_query) && 
+    $parsed_query["lwt_translator"] == "libretranslate") {
         return $parsed_query["target"] || "";
     }
     // Fallback to Google Translate
@@ -687,14 +689,14 @@ function edit_language_form($language)
     method="post" onsubmit="return check_dupl_lang(<?php echo $language->id; ?>);" 
     name="lg_form">
     <input type="hidden" name="LgID" value="<?php echo $language->id; ?>" />
-    <table class="tab2" cellspacing="0" cellpadding="5">
+    <table class="tab1" cellspacing="0" cellpadding="5">
     <tr>
         <td class="td1 right">Study Language "L2":</td>
         <td class="td1">
-            <input type="text" class="notempty setfocus checkoutsidebmp" 
+            <input type="text" class="notempty setfocus checkoutsidebmp respinput" 
             data_info="Study Language" name="LgName" id="LgName" 
             value="<?php echo tohtml($language->name); ?>" maxlength="40" 
-            size="40" oninput="checkLanguageChanged(this.value);" /> 
+            oninput="checkLanguageChanged(this.value);" /> 
             <img src="icn/status-busy.png" title="Field must not be empty" 
             alt="Field must not be empty" />
         </td>
@@ -702,12 +704,13 @@ function edit_language_form($language)
     <tr>
         <td class="td1 right">Dictionary 1 URI:</td>
         <td class="td1">
-            <input type="url" class="notempty checkdicturl checkoutsidebmp" 
+            <input type="url" class="notempty checkdicturl checkoutsidebmp respinput" 
             name="LgDict1URI" 
             value="<?php echo tohtml($language->dict1uri); ?>"  
-            maxlength="200" size="60" data_info="Dictionary 1 URI" 
+            maxlength="200" data_info="Dictionary 1 URI" 
             oninput="checkDictionaryChanged(this);" />
             
+            <br />
             <input type="checkbox" name="LgDict1PopUp" id="LgDict1PopUp" 
             onchange="changePopUpState(this);" />
             
@@ -722,12 +725,13 @@ function edit_language_form($language)
     <tr>
         <td class="td1 right">Dictionary 2 URI:</td>
         <td class="td1">
-            <input type="url" class="checkdicturl checkoutsidebmp" 
+            <input type="url" class="checkdicturl checkoutsidebmp respinput" 
             name="LgDict2URI" 
             value="<?php echo tohtml($language->dict2uri); ?>" maxlength="200"
-            size="60" data_info="Dictionary 2 URI"
+            data_info="Dictionary 2 URI"
             oninput="checkDictionaryChanged(this);" />
             
+            <br />
             <input type="checkbox" name="LgDict2PopUp" id="LgDict2PopUp" 
             onchange="changePopUpState(this);" />
             
@@ -752,18 +756,18 @@ function edit_language_form($language)
                     Glosbe API
                 </option>
             </select>
-            <input type="url" class="checkdicturl checkoutsidebmp" 
+            <input type="url" class="checkdicturl checkoutsidebmp respinput" 
             name="LgGoogleTranslateURI" 
             value="<?php echo tohtml($language->translator); ?>" 
-            maxlength="200" size="60" data_info="GoogleTranslate URI" 
-            oninput="checkTranslatorChanged(this);"
+            maxlength="200" data_info="GoogleTranslate URI" 
+            oninput="checkTranslatorChanged(this);" class="respinput"
              />
 
             <div id="LgTranslatorKeyWrapper" style="display: none;">
                 <label for="LgTranslatorKey">Key :</label>
                 <input type="text" id="LgTranslatorKey" name="LgTranslatorKey"/>
             </div>
-
+            <br />
             <input type="checkbox" name="LgGoogleTranslatePopUp" 
             id="LgGoogleTranslatePopUp" onchange="changePopUpState(this);"/>
             <label for="LgGoogleTranslatePopUp"
@@ -778,8 +782,8 @@ function edit_language_form($language)
         <td class="td1">
             <input name="LgTextSize" type="number" min="100" max="250" 
             value="<?php echo $language->textsize; ?>" step="50" 
-            onchange="changeLanguageTextSize(this.value);"/>
-            <input type="text" 
+            onchange="changeLanguageTextSize(this.value);" class="respinput" />
+            <input type="text" class="respinput"
             style="font-size: <?php echo $language->textsize ?>%;" 
             id="LgTextSizeExample" 
             value="Text will be this size" />
@@ -788,19 +792,19 @@ function edit_language_form($language)
     <tr>
         <td class="td1 right">Character Substitutions:</td>
         <td class="td1">
-            <input type="text" class="checkoutsidebmp" 
+            <input type="text" class="checkoutsidebmp respinput" 
             data_info="Character Substitutions" name="LgCharacterSubstitutions" 
             value="<?php echo tohtml($language->charactersubst); ?>" 
-            maxlength="500" size="60" />
+            maxlength="500" />
         </td>
     </tr>
     <tr>
         <td class="td1 right">RegExp Split Sentences:</td>
         <td class="td1">
-            <input type="text" class="notempty checkoutsidebmp" 
+            <input type="text" class="notempty checkoutsidebmp respinput" 
             name="LgRegexpSplitSentences" 
             value="<?php echo tohtml($language->regexpsplitsent); ?>" 
-            maxlength="500" size="60" 
+            maxlength="500"
             data_info="RegExp Split Sentences" /> 
             <img src="icn/status-busy.png" title="Field must not be empty" 
             alt="Field must not be empty" />
@@ -809,11 +813,11 @@ function edit_language_form($language)
     <tr>
     <td class="td1 right">Exceptions Split Sentences:</td>
     <td class="td1">
-        <input type="text" class="checkoutsidebmp" 
+        <input type="text" class="checkoutsidebmp respinput" 
         data_info="Exceptions Split Sentences" 
-        name="LgExceptionsSplitSentences" 
+        name="LgExceptionsSplitSentences"
         value="<?php echo tohtml($language->exceptionsplitsent); ?>" 
-        maxlength="500" size="60" />
+        maxlength="500" />
     </td>
     </tr>
     <tr>
@@ -824,10 +828,10 @@ function edit_language_form($language)
                 <option value="regexp">Regular Expressions (demo)</option>
                 <option value="mecab">MeCab (recommended)</option>
             </select>
-            <input type="text" class="notempty checkoutsidebmp" 
+            <input type="text" class="notempty checkoutsidebmp respinput" 
             data_info="RegExp Word Characters" name="LgRegexpWordCharacters" 
             value="<?php echo tohtml($language->regexpwordchar); ?>" 
-            maxlength="500" size="60" /> 
+            maxlength="500" /> 
             <img src="icn/status-busy.png" title="Field must not be empty" 
             alt="Field must not be empty" />
             <div style="display: none;" class="red" id="mecab_not_installed">
@@ -871,9 +875,9 @@ function edit_language_form($language)
         </td>
         <td class="td1">
             <input type="text" class="checkoutsidebmp" data_info="Export Template" 
-            name="LgExportTemplate" 
+            name="LgExportTemplate" class="respinput"
             value="<?php echo tohtml($language->exporttemplate); ?>" 
-            maxlength="1000" size="60" />
+            maxlength="1000" />
         </td>
     </tr>
     <tr>
@@ -1149,15 +1153,15 @@ function edit_languages_display($message)
 
 <table class="sortable tab2" cellspacing="0" cellpadding="5">
     <tr>
-        <th class="th1 sorttable_nosort">Curr.<br />Lang.</th>
-        <th class="th1 sorttable_nosort">Test<br />↓↓↓</th>
+        <th class="th1 sorttable_nosort">Curr. Lang.</th>
+        <th class="th1 sorttable_nosort">Test ↓↓↓</th>
         <th class="th1 sorttable_nosort">Actions</th>
         <th class="th1 clickable">Language</th>
-        <th class="th1 sorttable_numeric clickable">Texts,<br />Reparse</th>
-        <th class="th1 sorttable_numeric clickable">Arch.<br />Texts</th>
-        <th class="th1 sorttable_numeric clickable">Newsfeeds<br />(Articles)</th>
+        <th class="th1 sorttable_numeric clickable">Texts, Reparse</th>
+        <th class="th1 sorttable_numeric clickable">Arch. Texts</th>
+        <th class="th1 sorttable_numeric clickable">News feeds<wbr />(Articles)</th>
         <th class="th1 sorttable_numeric clickable">Terms</th>
-        <th class="th1 sorttable_nosort">Export<br />Template?</th>
+        <th class="th1 sorttable_nosort">Export Template?</th>
     </tr>
 
     <?php
@@ -1226,53 +1230,59 @@ function edit_languages_display($message)
         }
         echo '<tr>';
         if ($current == $lid) {
-            $tdth = 'th';
-            echo '<th class="th1" style="border-top-left-radius:0;">
+            $tdth = 'td';
+            $style = ' style="background-color: #8884; font-weight: bold;"';
+            echo '<td ' . $style . ' class="td1 center">
                 <img src="icn/exclamation-red.png" title="Current Language" alt="Current Language" />
-                </th>';
+                </td>';
         } else {
             $tdth = 'td';
+            $style = '';
             echo '<td class="td1 center">
                 <a href="inc/save_setting_redirect.php?k=currentlanguage&amp;v=' . $lid . '&amp;u=edit_languages.php">
                 <img src="icn/tick-button.png" title="Set as Current Language" alt="Set as Current Language" />
                 </a>
                 </td>';
         }
-        echo '<' . $tdth . ' class="' . $tdth . '1 center"><a href="do_test.php?lang=' . $lid . '">
-            <img src="icn/question-balloon.png" title="Test" alt="Test" /></a></' . $tdth . '>';
-        echo '<' . $tdth . ' class="' . $tdth . '1 center" nowrap="nowrap">&nbsp;<a href="' . $_SERVER['PHP_SELF'] . '?chg=' . $lid . '">
-            <img src="icn/document--pencil.png" title="Edit" alt="Edit" /></a>';
+
+        echo '<td' . $style . ' class="td1 center"><a href="do_test.php?lang=' . $lid . '">
+            <img src="icn/question-balloon.png" title="Test" alt="Test" /></a>
+        </' . $tdth . '>
+        <td' . $style. ' class="td1 center">
+            <a href="' . $_SERVER['PHP_SELF'] . '?chg=' . $lid . '">
+                <img src="icn/document--pencil.png" title="Edit" alt="Edit" />
+            </a>';
         if ($textcount == 0 && $archtextcount == 0 && $wordcount == 0 && $nfcount == 0) { 
             echo '&nbsp; <span class="click" onclick="if (confirmDelete()) location.href=\'' . $_SERVER['PHP_SELF'] . '?del=' . $lid . '\';">
                 <img src="icn/minus-button.png" title="Delete" alt="Delete" /></span>'; 
         } else { 
             echo '&nbsp; <img src="icn/placeholder.png" title="Delete not possible" alt="Delete not possible" />'; 
         }
-        echo '&nbsp;</' . $tdth . '>';
-        echo '<' . $tdth . ' class="' . $tdth . '1 center">' . tohtml((string)$record['LgName']) . '</' . $tdth . '>';
+        echo '</td>
+        <td ' . $style . ' class="td1 center">' . tohtml((string)$record['LgName']) . '</td>';
         if ($textcount > 0) { 
-            echo '<' . $tdth . ' class="' . $tdth . '1 center">
+            echo '<td ' . $style . ' class="td1 center">
                 <a href="edit_texts.php?page=1&amp;query=&amp;filterlang=' . $lid . '">' . 
-            $textcount . '</a> &nbsp;&nbsp; <a href="' . $_SERVER['PHP_SELF'] . '?refresh=' . $lid . '">
+            $textcount . '</a> <a href="' . $_SERVER['PHP_SELF'] . '?refresh=' . $lid . '">
                 <img src="icn/lightning.png" title="Reparse Texts" alt="Reparse Texts" /></a>'; 
         } else {
-            echo '<' . $tdth . ' class="' . $tdth . '1 center">0 &nbsp;&nbsp; <img src="';
+            echo '<td ' . $style . ' class="td1 center">0 <img src="';
             print_file_path('icn/placeholder.png');
             echo'" title="No texts to reparse" alt="No texts to reparse" />';
         }
-        echo '</' . $tdth . '>';
-        echo '<' . $tdth . ' class="' . $tdth . '1 center">' . 
+        echo '</td>';
+        echo '<td ' . $style . ' class="td1 center">' . 
         ($archtextcount > 0 ? '<a href="edit_archivedtexts.php?page=1&amp;query=&amp;filterlang=' . $lid . '">' . 
-        $archtextcount . '</a>' : '0' ) . '</' . $tdth . '>';
-        echo '<' . $tdth . ' class="' . $tdth . '1 center">' . 
+        $archtextcount . '</a>' : '0' ) . '</td>';
+        echo '<td ' . $style . ' class="td1 center">' . 
         ($nfcount > 0 ? '<a href="do_feeds.php?query=&amp;selected_feed=&amp;check_autoupdate=1&amp;filterlang=' . $lid . '">' . 
-        $nfcount . ' (' . $fartcount . ')</a>' : '0' ) . '</' . $tdth . '>';
-        echo '<' . $tdth . ' class="' . $tdth . '1 center">' . 
+        $nfcount . ' (' . $fartcount . ')</a>' : '0' ) . '</td>';
+        echo '<td ' . $style . ' class="td1 center">' . 
         ($wordcount > 0 ? '<a href="edit_words.php?page=1&amp;query=&amp;text=&amp;status=&amp;filterlang=' . 
-        $lid . '&amp;status=&amp;tag12=0&amp;tag2=&amp;tag1=">' . $wordcount . '</a>' : '0' ) . '</' . $tdth . '>';
-        echo '<' . $tdth . ' class="' . $tdth . '1 center" style="border-top-right-radius:0;">' . 
+        $lid . '&amp;status=&amp;tag12=0&amp;tag2=&amp;tag1=">' . $wordcount . '</a>' : '0' ) . '</td>';
+        echo '<td ' . $style . ' class="td1 center" style="border-top-right-radius:0;">' . 
         (isset($record['LgExportTemplate']) ? '<img src="icn/status.png" title="Yes" alt="Yes" />' : 
-        '<img src="icn/status-busy.png" title="No" alt="No" />' ) . '</' . $tdth . '>';
+        '<img src="icn/status-busy.png" title="No" alt="No" />' ) . '</td>';
         echo '</tr>';
     }
     mysqli_free_result($res);

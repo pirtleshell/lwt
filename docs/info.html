@@ -1838,12 +1838,18 @@ KEY NfUpdate (NfUpdate)
 <p>This project's changelog. Versions marked with "-fork" come from the community, other versions come from the canonical LWT ("official" branch on Git).
 For git tags, official releases are marked like "v1.0.0", while unofficial ones are marked like "v1.0.0-fork".</p>
 <h3>[Unreleased]</h3>
+<h4>Added</h4>
+<ul>
+<li>Responsive design: LWT gets easier to visualize on phone!</li>
+</ul>
 <h4>Changed</h4>
 <ul>
 <li>The language settings wizard is now <em>open by default</em> on new language creation.</li>
 <li>Potiential breaking change in the way words are displayed while reading. The target was to make the code more robust.</li>
 <li>
 <code>item_parser</code> and <code>echo_term</code> in <code>do_text_text.php</code> now both takes an optional <code>$expr</code> argument.</li>
+<li>Terms import form changed for a simpler presentation. It becomes easier to use to use on your phone.</li>
+<li>Many tables are now displayed larger (when your screen has the available space).</li>
 </ul>
 <h4>Fixed</h4>
 <ul>
@@ -1860,6 +1866,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 <li>On creating a language, the Glosbe dictionary comes with a "?lwt_popup=1" to open in new window by default.</li>
 <li>Japanese pronounciation: works even if the language is not exactly called "Japanese", see <a href="https://github.com/HugoFara/lwt/issues/103">#103</a>.</li>
 <li>Expressions containing word feature repaired! <a href="https://github.com/HugoFara/lwt/issues/90">#90</a>.</li>
+<li>On text-to-speech settings, the region was often not displayed.</li>
 </ul>
 <h3>2.7.0-fork (March 14 2023)</h3>
 <h4>Added</h4>

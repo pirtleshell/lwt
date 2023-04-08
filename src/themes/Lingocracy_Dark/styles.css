@@ -454,7 +454,8 @@ input[type="radio"]:checked + .wrap_radio>span {
     /*border-left: 1px solid #808080;*/
     border-top: 1px solid #404040;
     border-left: 1px solid #404040;
-    width: 850px;
+    width: 95%;
+    max-width: 850px;
 }
 .tab2 {
     /*background-color: #f8f8f8;*/
@@ -659,6 +660,11 @@ img {
 .width45pc {
     width: 45%;
 }
+/** Scale input field with responsive design */
+.respinput {
+    width: 90%;
+    max-width: 500px;
+}
 
 .annterm {
     font-weight: bold;
@@ -757,13 +763,13 @@ footer
     box-shadow:0px 0px 8px 2px #fff ! important;
 }
 #termtags {
-    width: 340px;
+    max-width: 340px;
     margin-top: 0px;
     margin-bottom: 0px;
     margin-left: 2px;
 }
 #texttags {
-    width: 340px;
+    max-width: 340px;
     margin-top: 0px;
     margin-bottom: 0px;
     margin-left: 2px;

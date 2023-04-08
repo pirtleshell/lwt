@@ -110,21 +110,21 @@ function long_text_check($max_input_vars): void
 <input type="hidden" name="TxSourceURI" value="<?php echo tohtml($source_uri); ?>" />
 <input type="hidden" name="TextTags" value="<?php echo tohtml($texttags); ?>" />
 <input type="hidden" name="TextCount" value="<?php echo $textcount; ?>" />
-<table class="tab3" cellspacing="0" cellpadding="5">
+<table class="tab1" cellspacing="0" cellpadding="5">
     <tr>
-    <td class="td1" colspan="2">
+        <td class="td1" colspan="2">
             <?php echo "This long text will be split into " . $textcount . $shorter . "text" . $plural . " - as follows:"; ?>
-    </td>
-</tr>
-<tr>
-    <td class="td1 right" colspan="2">
-        <input type="button" value="Cancel" onclick="{resetDirty(); location.href='index.php';}" /> 
-        <span class="nowrap"></span>
-        <input type="button" value="Go Back" onclick="{resetDirty(); history.back();}" /> 
-        <span class="nowrap"></span>
-        <input type="submit" name="op" value="Create <?php echo $textcount; ?> text<?php echo $plural; ?>" />
-    </td>
-</tr>
+        </td>
+    </tr>
+    <tr>
+        <td class="td1 right" colspan="2">
+            <input type="button" value="Cancel" onclick="{resetDirty(); location.href='index.php';}" /> 
+            <span class="nowrap"></span>
+            <input type="button" value="Go Back" onclick="{resetDirty(); history.back();}" /> 
+            <span class="nowrap"></span>
+            <input type="submit" name="op" value="Create <?php echo $textcount; ?> text<?php echo $plural; ?>" />
+        </td>
+    </tr>
             <?php
             $textno = -1;
             foreach ($texts as $item) {
@@ -132,18 +132,18 @@ function long_text_check($max_input_vars): void
                 $textstring = str_replace("¶", "\n", implode(" ", $item));
                 $bytes = strlen($textstring);
                 ?>            
-<tr>
-    <td class="td1 right">
-        <b>Text <?php echo $textno+1; ?>:</b>
-        <br /><br /><br />
-        Length:<br /><?php echo $bytes; ?><br />Bytes
-    </td>
-    <td class="td1">
-        <textarea readonly="readonly" <?php echo getScriptDirectionTag($langid); ?> name="text[<?php echo $textno; ?>]" cols="60" rows="10">
-                <?php echo $textstring; ?>
-        </textarea>
-    </td>
-</tr>
+    <tr>
+        <td class="td1 right">
+            <b>Text <?php echo $textno+1; ?>:</b>
+            <br /><br /><br />
+            Length:<br /><?php echo $bytes; ?><br />Bytes
+        </td>
+        <td class="td1">
+            <textarea readonly="readonly" <?php echo getScriptDirectionTag($langid); ?> name="text[<?php echo $textno; ?>]" cols="60" rows="10">
+                    <?php echo $textstring; ?>
+            </textarea>
+        </td>
+    </tr>
                 <?php
             }
             ?>
@@ -253,7 +253,7 @@ function long_text_display($max_input_vars)
     </div>
 
     <form enctype="multipart/form-data" class="validate" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-    <table class="tab3" cellspacing="0" cellpadding="5">
+    <table class="tab1" cellspacing="0" cellpadding="5">
         <tr>
             <td class="td1 right">Language:</td>
             <td class="td1">
@@ -268,7 +268,8 @@ function long_text_display($max_input_vars)
         <tr>
             <td class="td1 right">Title:</td>
             <td class="td1">
-                <input type="text" class="notempty checkoutsidebmp" data_info="Title" name="TxTitle" value="" maxlength="200" size="60" />
+                <input type="text" class="notempty checkoutsidebmp respinput"
+                data_info="Title" name="TxTitle" value="" maxlength="200" />
                 <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
             </td>
         </tr>
@@ -279,9 +280,11 @@ function long_text_display($max_input_vars)
             <td class="td1">
                 Either specify a <b>File to upload</b>:<br />
                 <input name="thefile" type="file" /><br /><br />
-                <b>Or</b> paste a text from the clipboard (and do <b>NOT</b> specify file):<br />
+                <b>Or</b> paste a text from the clipboard 
+                (and do <b>NOT</b> specify file):<br />
 
-                <textarea class="checkoutsidebmp" data_info="Upload" name="Upload" cols="60" rows="15"></textarea>
+                <textarea class="checkoutsidebmp respinput" data_info="Upload" 
+                name="Upload" rows="15"></textarea>
             
                 <p class="smallgray">
                     If the text is too long, the import may not be possible.<br />
@@ -296,7 +299,7 @@ function long_text_display($max_input_vars)
         <tr>
             <td class="td1 right">NEWLINES and<br />Paragraphs:</td>
             <td class="td1">
-                <select name="paragraph_handling">
+                <select name="paragraph_handling" class="respinput">
                     <option value="1" selected="selected">
                         ONE NEWLINE: Paragraph ends
                     </option>
@@ -308,9 +311,10 @@ function long_text_display($max_input_vars)
             </td>
         </tr>
         <tr>
-            <td class="td1 right">Maximum<br />Sentences<br />per Text:</td>
+            <td class="td1 right">Maximum<wbr>Sentences<wbr />per Text:</td>
             <td class="td1">
-                <input type="text" class="notempty posintnumber" data_info="Maximum Sentences per Text" name="maxsent" value="50" maxlength="3" size="3" />
+                <input type="text" class="notempty posintnumber" 
+                data_info="Maximum Sentences per Text" name="maxsent" value="50" maxlength="3" size="3" />
                 <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
                 <br />
                 <span class="smallgray">
@@ -324,7 +328,8 @@ function long_text_display($max_input_vars)
         <tr>
             <td class="td1 right">Source URI:</td>
             <td class="td1">
-                <input type="text" class="checkurl checkoutsidebmp" data_info="Source URI" name="TxSourceURI" value="" maxlength="1000" size="60" />
+                <input type="url" class="checkurl checkoutsidebmp respinput" 
+                data_info="Source URI" name="TxSourceURI" value="" maxlength="1000" />
             </td>
         </tr>
         <tr>
