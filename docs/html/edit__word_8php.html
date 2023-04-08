@@ -22,7 +22,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="lwt_icon.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Learning with Texts - Fork<span id="projectnumber">&#160;2.7.0-fork</span>
+   <div id="projectname">Learning with Texts - Fork<span id="projectnumber">&#160;2.8.0-fork</span>
    </div>
    <div id="projectbrief">Learn foreign languages with texts</div>
   </td>
@@ -91,44 +91,22 @@ Functions</h2></td></tr>
 <tr class="separator:a33dc93ccc75abf0d96a2f9ad51258c5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6e1ef084cac772beb79e3f618523a469"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="edit__word_8php.html#a6e1ef084cac772beb79e3f618523a469">change_term_display</a> ($wid, $translation, $hex)</td></tr>
 <tr class="separator:a6e1ef084cac772beb79e3f618523a469"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff0a37a6cc14613856844058f7f07f2c"><td class="memItemLeft" align="right" valign="top"><a id="aff0a37a6cc14613856844058f7f07f2c" name="aff0a37a6cc14613856844058f7f07f2c"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>edit_word_do_operation</b> ($translation, $fromAnn)</td></tr>
+<tr class="separator:aff0a37a6cc14613856844058f7f07f2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaad21b4cd7e6fcde4aa09a438d54605e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="edit__word_8php.html#aaad21b4cd7e6fcde4aa09a438d54605e">edit_word_do_form</a> ($fromAnn)</td></tr>
+<tr class="separator:aaad21b4cd7e6fcde4aa09a438d54605e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
 <tr class="memitem:ab532864a04ddf7f1964806d6f1755ef6"><td class="memItemLeft" align="right" valign="top"><a id="ab532864a04ddf7f1964806d6f1755ef6" name="ab532864a04ddf7f1964806d6f1755ef6"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>$translation_raw</b> = <a class="el" href="session__utility_8php.html#a90041847911a29c74820f432a2ed1663">repl_tab_nl</a>(<a class="el" href="kernel__utility_8php.html#ac115eb0ce0c99aef0bc68dc184a491d6">getreq</a>(&quot;WoTranslation&quot;))</td></tr>
 <tr class="separator:ab532864a04ddf7f1964806d6f1755ef6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9510ccc33945e2fa7127bbf0d142f2ea"><td class="memItemLeft" align="right" valign="top">if($translation_raw=='')&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="edit__word_8php.html#a9510ccc33945e2fa7127bbf0d142f2ea">else</a></td></tr>
-<tr class="separator:a9510ccc33945e2fa7127bbf0d142f2ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9af791c89a65404f1f6fa3ee4b93ec1d"><td class="memItemLeft" align="right" valign="top">if($translation_raw=='')&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="edit__word_8php.html#a9af791c89a65404f1f6fa3ee4b93ec1d">else</a></td></tr>
+<tr class="separator:a9af791c89a65404f1f6fa3ee4b93ec1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a56ffa26b39863329b79a64ef560538df"><td class="memItemLeft" align="right" valign="top"><a id="a56ffa26b39863329b79a64ef560538df" name="a56ffa26b39863329b79a64ef560538df"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>$fromAnn</b> = <a class="el" href="kernel__utility_8php.html#ac115eb0ce0c99aef0bc68dc184a491d6">getreq</a>(&quot;fromAnn&quot;)</td></tr>
 <tr class="separator:a56ffa26b39863329b79a64ef560538df"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adbb1b1494e5b9b87f60e2e0290c934f2"><td class="memItemLeft" align="right" valign="top"><a id="adbb1b1494e5b9b87f60e2e0290c934f2" name="adbb1b1494e5b9b87f60e2e0290c934f2"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>$hex</b> = null</td></tr>
-<tr class="separator:adbb1b1494e5b9b87f60e2e0290c934f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7714b111b644017933931ec69a154102"><td class="memItemLeft" align="right" valign="top"><a id="a7714b111b644017933931ec69a154102" name="a7714b111b644017933931ec69a154102"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>$lang</b> = null</td></tr>
-<tr class="separator:a7714b111b644017933931ec69a154102"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aab8e9e6e6b80da234ae2c60691f73262"><td class="memItemLeft" align="right" valign="top"><a id="aab8e9e6e6b80da234ae2c60691f73262" name="aab8e9e6e6b80da234ae2c60691f73262"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>$term</b> = null</td></tr>
-<tr class="separator:aab8e9e6e6b80da234ae2c60691f73262"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a49a8a4009b02e49717caa88b128affc5"><td class="memItemLeft" align="right" valign="top"><a id="a49a8a4009b02e49717caa88b128affc5" name="a49a8a4009b02e49717caa88b128affc5"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>$res</b> = <a class="el" href="database__connect_8php.html#af092366f1596cc99b3552185b173a53d">do_mysqli_query</a>($sql)</td></tr>
-<tr class="separator:a49a8a4009b02e49717caa88b128affc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acbcb6dcb11c8755d5ffab0b45aac7a22"><td class="memItemLeft" align="right" valign="top"><a id="acbcb6dcb11c8755d5ffab0b45aac7a22" name="acbcb6dcb11c8755d5ffab0b45aac7a22"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>$record</b> = mysqli_fetch_assoc($res)</td></tr>
-<tr class="separator:acbcb6dcb11c8755d5ffab0b45aac7a22"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac7524c552395e3edcd4ddc51fba3e1b6"><td class="memItemLeft" align="right" valign="top"><a id="ac7524c552395e3edcd4ddc51fba3e1b6" name="ac7524c552395e3edcd4ddc51fba3e1b6"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>$termlc</b> = mb_strtolower($term, 'UTF-8')</td></tr>
-<tr class="separator:ac7524c552395e3edcd4ddc51fba3e1b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1d995397cf49f53afa5eed45eb5d1b32"><td class="memItemLeft" align="right" valign="top"><a id="a1d995397cf49f53afa5eed45eb5d1b32" name="a1d995397cf49f53afa5eed45eb5d1b32"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>$new</b> = (isset($wid) == false)</td></tr>
-<tr class="separator:a1d995397cf49f53afa5eed45eb5d1b32"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a398a243174802700e7ad7ce0920233d3"><td class="memItemLeft" align="right" valign="top"><a id="a398a243174802700e7ad7ce0920233d3" name="a398a243174802700e7ad7ce0920233d3"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>$titletext</b> = ($new ? &quot;New Term&quot; : &quot;Edit Term&quot;) . &quot;: &quot; . <a class="el" href="kernel__utility_8php.html#af4362eee92858a6e12fa46716fc30dad">tohtml</a>($term)</td></tr>
-<tr class="separator:a398a243174802700e7ad7ce0920233d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa3268b69a40641565724550beb97ba4d"><td class="memItemLeft" align="right" valign="top"><a id="aa3268b69a40641565724550beb97ba4d" name="aa3268b69a40641565724550beb97ba4d"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>$scrdir</b> = getScriptDirectionTag($lang)</td></tr>
-<tr class="separator:aa3268b69a40641565724550beb97ba4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Create or edit single word. </p>
@@ -169,8 +147,6 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Echoes a JavaScript element, that will edit terms diplay </p>
-<p>Sets the translation of a term.</p>
-<p>Sets the romanization of a term.</p>
 
 </div>
 </div>
@@ -197,6 +173,26 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>array{0: string, 1: string} Word id, and then an insertion message </dd></dl>
+
+</div>
+</div>
+<a id="aaad21b4cd7e6fcde4aa09a438d54605e" name="aaad21b4cd7e6fcde4aa09a438d54605e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaad21b4cd7e6fcde4aa09a438d54605e">&#9670;&#160;</a></span>edit_word_do_form()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">edit_word_do_form </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$fromAnn</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Sets the translation of a term.</p>
+<p>Sets the romanization of a term.</p>
 
 </div>
 </div>
@@ -263,14 +259,14 @@ Variables</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Variable Documentation</h2>
-<a id="a9510ccc33945e2fa7127bbf0d142f2ea" name="a9510ccc33945e2fa7127bbf0d142f2ea"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9510ccc33945e2fa7127bbf0d142f2ea">&#9670;&#160;</a></span>else</h2>
+<a id="a9af791c89a65404f1f6fa3ee4b93ec1d" name="a9af791c89a65404f1f6fa3ee4b93ec1d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9af791c89a65404f1f6fa3ee4b93ec1d">&#9670;&#160;</a></span>else</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">if ( $new) else</td>
+          <td class="memname">if (isset( $_REQUEST[ 'op'])) else</td>
         </tr>
       </table>
 </div><div class="memdoc">

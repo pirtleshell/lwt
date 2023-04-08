@@ -1,7 +1,7 @@
 var searchData=
 [
   ['echo_5flwt_5flogo_0',['echo_lwt_logo',['../session__utility_8php.html#aa21275f64e89f8f4685536fe2111ac82',1,'session_utility.php']]],
-  ['echo_5fterm_1',['echo_term',['../do__text__text_8php.html#a831cb7883472e12cb2e80e1e04a7fa61',1,'do_text_text.php']]],
+  ['echo_5fterm_1',['echo_term',['../do__text__text_8php.html#acd05e74d70126a0d4eb163756fab8af0',1,'do_text_text.php']]],
   ['echodebug_2',['echodebug',['../kernel__utility_8php.html#a633dd2f52d8d78f57da6d46d2e45dba9',1,'kernel_utility.php']]],
   ['echoterm_3',['echoTerm',['../do__text__text_8php.html#aff0e1c7e60b2389153e1165b01fd27e1',1,'do_text_text.php']]],
   ['edit_5flanguage_5fform_4',['edit_language_form',['../edit__languages_8php.html#acc9231b5292c57447af032a2cd7691f9',1,'edit_languages.php']]],
@@ -39,7 +39,8 @@ var searchData=
   ['edit_5ftexts_5fother_5fpages_36',['edit_texts_other_pages',['../edit__texts_8php.html#ad7600c0a4f13e5d17f78cee544abaeb7',1,'edit_texts.php']]],
   ['edit_5ftexts_5fshow_5ftext_5frow_37',['edit_texts_show_text_row',['../edit__texts_8php.html#add338a36c530721a46ef5c020b1cc979',1,'edit_texts.php']]],
   ['edit_5ftexts_5ftexts_5fform_38',['edit_texts_texts_form',['../edit__texts_8php.html#ac5850389e2199335d4db3996486bad55',1,'edit_texts.php']]],
-  ['error_5fmessage_5fwith_5fhide_39',['error_message_with_hide',['../kernel__utility_8php.html#a7738d658657f565df4cac770e6c4b982',1,'kernel_utility.php']]],
-  ['export_5fjs_5fdict_40',['export_js_dict',['../class_language.html#a2b321056796c4e65f9e06991e91f5dbb',1,'Language']]],
-  ['export_5fterm_5fjs_5fdict_41',['export_term_js_dict',['../edit__mword_8php.html#a4bcd56ff2f1070de32fcb3ab8aa4e52c',1,'edit_mword.php']]]
+  ['edit_5fword_5fdo_5fform_39',['edit_word_do_form',['../edit__word_8php.html#aaad21b4cd7e6fcde4aa09a438d54605e',1,'edit_word.php']]],
+  ['error_5fmessage_5fwith_5fhide_40',['error_message_with_hide',['../kernel__utility_8php.html#a7738d658657f565df4cac770e6c4b982',1,'kernel_utility.php']]],
+  ['export_5fjs_5fdict_41',['export_js_dict',['../class_language.html#a2b321056796c4e65f9e06991e91f5dbb',1,'Language']]],
+  ['export_5fterm_5fjs_5fdict_42',['export_term_js_dict',['../edit__mword_8php.html#a4bcd56ff2f1070de32fcb3ab8aa4e52c',1,'edit_mword.php']]]
 ];

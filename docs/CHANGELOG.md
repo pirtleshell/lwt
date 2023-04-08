@@ -3,7 +3,7 @@
 This project's changelog. Versions marked with "-fork" come from the community, other versions come from the canonical LWT ("official" branch on Git).
 For git tags, official releases are marked like "v1.0.0", while unofficial ones are marked like "v1.0.0-fork".
 
-## [Unreleased]
+## 2.8.0-fork (April 08 2023)
 
 ### Added
 
@@ -12,10 +12,11 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 ### Changed
 
 * The language settings wizard is now *open by default* on new language creation.
-* Potiential breaking change in the way words are displayed while reading. The target was to make the code more robust.
+* Potential breaking change in the way words are displayed while reading. The target was to make the code more robust.
 * ``item_parser`` and ``echo_term`` in ``do_text_text.php`` now both takes an optional ``$expr`` argument.
 * Terms import form changed for a simpler presentation. It becomes easier to use to use on your phone.
 * Many tables are now displayed larger (when your screen has the available space).
+* Updated composer dependencies.
 
 ### Fixed
 
@@ -25,11 +26,15 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
   * Step 2 of feed wizard was sometimes failing because ``$_SESSION['wizard']['host']`` was a string an not an array.
   * Type error in ``get_links_from_new_feed`` was breaking step 2 of feed wizard.
   * Loading feeds could result in malformed SQL, see [#100](https://github.com/HugoFara/lwt/issues/100). Thanks [@maanh96](https://github.com/maanh96) for the hint!
-* Docker: ``media/`` was not accessible nor saved to a container ([#106](https://github.com/HugoFara/lwt/issues/106)). Thanks to [@parradam](https://github.com/parradam) for signaling and solving the issue!
+* Docker: ``media/`` was neither accessible nor saved to a container ([#106](https://github.com/HugoFara/lwt/issues/106)). Thanks to [@parradam](https://github.com/parradam) for signaling and solving the issue!
 * On creating a language, the Glosbe dictionary comes with a "?lwt_popup=1" to open in new window by default.
-* Japanese pronounciation: works even if the language is not exactly called "Japanese", see [#103](https://github.com/HugoFara/lwt/issues/103).
+* Japanese pronunciation: works even if the language is not exactly called "Japanese", see [#103](https://github.com/HugoFara/lwt/issues/103).
 * Expressions containing word feature repaired! [#90](https://github.com/HugoFara/lwt/issues/90).
 * On text-to-speech settings, the region was often not displayed.
+
+### Full Changelog
+
+* [2.7.0...2.8.0](https://github.com/HugoFara/lwt/compare/2.7.0...2.8.0)
 
 ## 2.7.0-fork (March 14 2023)
 

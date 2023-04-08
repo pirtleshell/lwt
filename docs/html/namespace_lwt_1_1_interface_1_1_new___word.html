@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.6"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Learning with Texts - Fork: connect.inc.php File Reference</title>
+<title>Learning with Texts - Fork: Lwt\Interface\New_Word Namespace Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -69,35 +69,54 @@ $(function() {
 </div>
 </div>
 
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespace_lwt.html">Lwt</a></li><li class="navelem"><b>Interface</b></li><li class="navelem"><a class="el" href="namespace_lwt_1_1_interface_1_1_new___word.html">New_Word</a></li>  </ul>
+</div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#var-members">Variables</a>  </div>
-  <div class="headertitle"><div class="title">connect.inc.php File Reference</div></div>
+  <div class="headertitle"><div class="title">Lwt\Interface\New_Word Namespace Reference</div></div>
 </div><!--header-->
 <div class="contents">
-
-<p>Your own DB variables.  
-<a href="#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:ad135cc8a47e55f0829949cf62214170f"><td class="memItemLeft" align="right" valign="top"><a id="ad135cc8a47e55f0829949cf62214170f" name="ad135cc8a47e55f0829949cf62214170f"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>$server</b> = &quot;localhost&quot;</td></tr>
-<tr class="separator:ad135cc8a47e55f0829949cf62214170f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae3f4f74a2aff9863a4767269a47aea11"><td class="memItemLeft" align="right" valign="top"><a id="ae3f4f74a2aff9863a4767269a47aea11" name="ae3f4f74a2aff9863a4767269a47aea11"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>$userid</b> = &quot;lwt&quot;</td></tr>
-<tr class="separator:ae3f4f74a2aff9863a4767269a47aea11"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a87911b6664e118fbbfa8da7bb7a04b0f"><td class="memItemLeft" align="right" valign="top"><a id="a87911b6664e118fbbfa8da7bb7a04b0f" name="a87911b6664e118fbbfa8da7bb7a04b0f"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>$passwd</b> = &quot;root&quot;</td></tr>
-<tr class="separator:a87911b6664e118fbbfa8da7bb7a04b0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac5111a571fffa2499732833bb7f0d8c1"><td class="memItemLeft" align="right" valign="top"><a id="ac5111a571fffa2499732833bb7f0d8c1" name="ac5111a571fffa2499732833bb7f0d8c1"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>$dbname</b> = &quot;lwt&quot;</td></tr>
-<tr class="separator:ac5111a571fffa2499732833bb7f0d8c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9af791c89a65404f1f6fa3ee4b93ec1d"><td class="memItemLeft" align="right" valign="top">if(isset($_REQUEST['op']))&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_lwt_1_1_interface_1_1_new___word.html#a9af791c89a65404f1f6fa3ee4b93ec1d">else</a></td></tr>
+<tr class="separator:a9af791c89a65404f1f6fa3ee4b93ec1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf95f30eaafccead90ab5e2cdb55e9b9"><td class="memItemLeft" align="right" valign="top"><a id="adf95f30eaafccead90ab5e2cdb55e9b9" name="adf95f30eaafccead90ab5e2cdb55e9b9"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>$text</b> = (int)<a class="el" href="kernel__utility_8php.html#ac115eb0ce0c99aef0bc68dc184a491d6">getreq</a>('text')</td></tr>
+<tr class="separator:adf95f30eaafccead90ab5e2cdb55e9b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3268b69a40641565724550beb97ba4d"><td class="memItemLeft" align="right" valign="top"><a id="aa3268b69a40641565724550beb97ba4d" name="aa3268b69a40641565724550beb97ba4d"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>$scrdir</b> = getScriptDirectionTag($lang)</td></tr>
+<tr class="separator:aa3268b69a40641565724550beb97ba4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Your own DB variables. </p>
-</div></div><!-- contents -->
+<div class="textblock"><p>Call: new_word.php?... ... text=[textid]&amp;lang=[langid] ... new term input <br  />
+ ... op=Save ... do the insert New word, created while reading or testing </p>
+</div><h2 class="groupheader">Variable Documentation</h2>
+<a id="a9af791c89a65404f1f6fa3ee4b93ec1d" name="a9af791c89a65404f1f6fa3ee4b93ec1d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9af791c89a65404f1f6fa3ee4b93ec1d">&#9670;&#160;</a></span>else</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">if (isset( $_REQUEST[ 'op'])) else</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">{  </div>
+<div class="line"> </div>
+<div class="line">    </div>
+<div class="line">    </div>
+<div class="line">    $lang = (int)<a class="code hl_function" href="kernel__utility_8php.html#ac115eb0ce0c99aef0bc68dc184a491d6">getreq</a>(<span class="stringliteral">&#39;lang&#39;</span>)</div>
+<div class="ttc" id="akernel__utility_8php_html_ac115eb0ce0c99aef0bc68dc184a491d6"><div class="ttname"><a href="kernel__utility_8php.html#ac115eb0ce0c99aef0bc68dc184a491d6">getreq</a></div><div class="ttdeci">getreq($s)</div><div class="ttdef"><b>Definition:</b> kernel_utility.php:539</div></div>
+</div><!-- fragment -->
+</div>
+</div>
+</div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.6
