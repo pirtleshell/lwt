@@ -491,7 +491,7 @@ function dummy_function_2($currentlang, $currentfeed)
     <td class="td1 center" colspan="2">';
                 if ($currentfeed == 0 || $currentfeed == '' || strpos($feeds_list, $currentfeed) === false) { 
                     $currentfeed = substr($feeds_list, 1); 
-                    // explode(',', $feeds_list)[0] may work as well (2.7.1)
+                    // explode(',', $feeds_list)[0] may work as well (2.8.0)
                 }
 
                 if (strpos($currentfeed, ',')===false) {

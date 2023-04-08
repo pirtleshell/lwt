@@ -1841,6 +1841,9 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 <h4>Changed</h4>
 <ul>
 <li>The language settings wizard is now <em>open by default</em> on new language creation.</li>
+<li>Potiential breaking change in the way words are displayed while reading. The target was to make the code more robust.</li>
+<li>
+<code>item_parser</code> and <code>echo_term</code> in <code>do_text_text.php</code> now both takes an optional <code>$expr</code> argument.</li>
 </ul>
 <h4>Fixed</h4>
 <ul>
@@ -1856,6 +1859,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 <li>Docker: <code>media/</code> was not accessible nor saved to a container (<a href="https://github.com/HugoFara/lwt/issues/106">#106</a>). Thanks to <a href="https://github.com/parradam">@parradam</a> for signaling and solving the issue!</li>
 <li>On creating a language, the Glosbe dictionary comes with a "?lwt_popup=1" to open in new window by default.</li>
 <li>Japanese pronounciation: works even if the language is not exactly called "Japanese", see <a href="https://github.com/HugoFara/lwt/issues/103">#103</a>.</li>
+<li>Expressions containing word feature repaired! <a href="https://github.com/HugoFara/lwt/issues/90">#90</a>.</li>
 </ul>
 <h3>2.7.0-fork (March 14 2023)</h3>
 <h4>Added</h4>
