@@ -79,7 +79,7 @@ function tts_settings_form()
 {
     ?>    
 <form class="validate" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-    <table class="tab3" cellspacing="0" cellpadding="5">
+    <table class="tab1" cellspacing="0" cellpadding="5">
         <tr>
             <th class="th1">Group</th>
             <th class="th1">Description</th>

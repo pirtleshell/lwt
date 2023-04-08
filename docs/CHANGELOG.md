@@ -15,6 +15,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 * Potiential breaking change in the way words are displayed while reading. The target was to make the code more robust.
 * ``item_parser`` and ``echo_term`` in ``do_text_text.php`` now both takes an optional ``$expr`` argument.
 * Terms import form changed for a simpler presentation. It becomes easier to use to use on your phone.
+* Many tables are now displayed larger (when your screen has the available space).
 
 ### Fixed
 

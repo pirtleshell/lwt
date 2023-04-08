@@ -16,6 +16,8 @@ Call: edit_tags.php?....
 Manage tags
  ***************************************************************/
 
+namespace Lwt\Interface\Edit_Tags;
+
 require_once 'inc/session_utility.php';
 
 $currentsort = processDBParam("sort", 'currenttagsort', '1', 1);
@@ -113,20 +115,28 @@ if (isset($_REQUEST['new'])) {
         $(document).ready(ask_before_exiting);
     </script> 
     <form name="newtag" class="validate" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-    <table class="tab3" cellspacing="0" cellpadding="5">
-    <tr>
-    <td class="td1 right">Tag:</td>
-    <td class="td1"><input class="notempty setfocus noblanksnocomma checkoutsidebmp" type="text" name="TgText" data_info="Tag" value="" maxlength="20" size="20" /> <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /></td>
-    </tr>
-    <tr>
-    <td class="td1 right">Comment:</td>
-    <td class="td1"><textarea class="textarea-noreturn checklength checkoutsidebmp" data_maxlength="200" data_info="Comment" name="TgComment" cols="40" rows="3"></textarea></td>
-    </tr>
-    <tr>
-    <td class="td1 right" colspan="2">
-    <input type="button" value="Cancel" onclick="{resetDirty(); location.href='edit_tags.php';}" /> 
-    <input type="submit" name="op" value="Save" /></td>
-    </tr>
+    <table class="tab1" cellspacing="0" cellpadding="5">
+        <tr>
+            <td class="td1 right">Tag:</td>
+            <td class="td1">
+                <input class="notempty setfocus noblanksnocomma checkoutsidebmp respinput" 
+                type="text" name="TgText" data_info="Tag" value="" maxlength="20" size="20" /> 
+                <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+            </td>
+        </tr>
+        <tr>
+            <td class="td1 right">Comment:</td>
+            <td class="td1">
+                <textarea class="textarea-noreturn checklength checkoutsidebmp respinput" 
+                data_maxlength="200" data_info="Comment" name="TgComment" cols="40" rows="3"></textarea>
+            </td>
+        </tr>
+        <tr>
+            <td class="td1 right" colspan="2">
+                <input type="button" value="Cancel" onclick="{resetDirty(); location.href='edit_tags.php';}" /> 
+                <input type="submit" name="op" value="Save" />
+            </td>
+        </tr>
     </table>
     </form>
     
@@ -143,23 +153,29 @@ if (isset($_REQUEST['new'])) {
          $(document).ready(ask_before_exiting);
      </script>  
      <form name="edittag" class="validate" action="<?php echo $_SERVER['PHP_SELF']; ?>#rec<?php echo $_REQUEST['chg']; ?>" method="post">
-        <input type="hidden" name="TgID" value="<?php echo $record['TgID']; ?>" />
-        <table class="tab3" cellspacing="0" cellpadding="5">
+     <input type="hidden" name="TgID" value="<?php echo $record['TgID']; ?>" />
+     <table class="tab1" cellspacing="0" cellpadding="5">
         <tr>
-        <td class="td1 right">Tag:</td>
-        <td class="td1"><input data_info="Tag" class="notempty setfocus noblanksnocomma checkoutsidebmp" type="text" name="TgText" value="<?php echo tohtml($record['TgText']); ?>" maxlength="20" size="20" /> <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /></td>
+            <td class="td1 right">Tag:</td>
+            <td class="td1">
+                <input data_info="Tag" class="notempty setfocus noblanksnocomma checkoutsidebmp respinput" 
+                type="text" name="TgText" value="<?php echo tohtml($record['TgText']); ?>" maxlength="20" size="20" />
+                <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /></td>
         </tr>
         <tr>
-        <td class="td1 right">Comment:</td>
-        <td class="td1"><textarea class="textarea-noreturn checklength checkoutsidebmp" data_maxlength="200" data_info="Comment" name="TgComment" cols="40" rows="3"><?php echo tohtml($record['TgComment']); ?></textarea></td>
+            <td class="td1 right">Comment:</td>
+            <td class="td1">
+                <textarea class="textarea-noreturn checklength checkoutsidebmp respinput" 
+                data_maxlength="200" data_info="Comment" name="TgComment" rows="3"><?php echo tohtml($record['TgComment']); ?></textarea>
+            </td>
         </tr>
         <tr>
         <td class="td1 right" colspan="2">
-        <input type="button" value="Cancel" onclick="{resetDirty(); location.href='edit_tags.php#rec<?php echo $_REQUEST['chg']; ?>';}" /> 
-        <input type="submit" name="op" value="Change" /></td>
+            <input type="button" value="Cancel" onclick="{resetDirty(); location.href='edit_tags.php#rec<?php echo $_REQUEST['chg']; ?>';}" /> 
+            <input type="submit" name="op" value="Change" /></td>
         </tr>
-        </table>
-        </form>
+    </table>
+    </form>
         <?php
     }
     mysqli_free_result($res);
@@ -277,13 +293,16 @@ Multi Actions <img src="icn/lightning.png" title="Multi Actions" alt="Multi Acti
         $res = do_mysqli_query($sql);
         while ($record = mysqli_fetch_assoc($res)) {
             $c = get_first_value('select count(*) as value from ' . $tbpref . 'wordtags where WtTgID=' . $record['TgID']);
-            echo '<tr>';
-            echo '<td class="td1 center"><a name="rec' . $record['TgID'] . '"><input name="marked[]" type="checkbox" class="markcheck" value="' . $record['TgID'] . '" ' . checkTest($record['TgID'], 'marked') . ' /></a></td>';
-            echo '<td class="td1 center" nowrap="nowrap">&nbsp;<a href="' . $_SERVER['PHP_SELF'] . '?chg=' . $record['TgID'] . '"><img src="icn/document--pencil.png" title="Edit" alt="Edit" /></a>&nbsp; <a class="confirmdelete" href="' . $_SERVER['PHP_SELF'] . '?del=' . $record['TgID'] . '"><img src="icn/minus-button.png" title="Delete" alt="Delete" /></a>&nbsp;</td>';
-            echo '<td class="td1 center">' . tohtml($record['TgText']) . '</td>';
-            echo '<td class="td1 center">' . tohtml($record['TgComment']) . '</td>';
-            echo '<td class="td1 center">' . ($c > 0 ? '<a href="edit_words.php?page=1&amp;query=&amp;text=&amp;status=&amp;filterlang=&amp;status=&amp;tag12=0&amp;tag2=&amp;tag1=' . $record['TgID'] . '">' . $c . '</a>' : '0' ) . '</td>';
-            echo '</tr>';
+            echo '<tr>
+                <td class="td1 center">
+                    <a name="rec' . $record['TgID'] . '">
+                    <input name="marked[]" type="checkbox" class="markcheck" value="' . $record['TgID'] . '" ' . checkTest($record['TgID'], 'marked') . ' />
+                    </a></td>
+                    <td class="td1 center" nowrap="nowrap">&nbsp;<a href="' . $_SERVER['PHP_SELF'] . '?chg=' . $record['TgID'] . '"><img src="icn/document--pencil.png" title="Edit" alt="Edit" /></a>&nbsp; <a class="confirmdelete" href="' . $_SERVER['PHP_SELF'] . '?del=' . $record['TgID'] . '"><img src="icn/minus-button.png" title="Delete" alt="Delete" /></a>&nbsp;</td>
+                    <td class="td1 center">' . tohtml($record['TgText']) . '</td>
+                    <td class="td1 center">' . tohtml($record['TgComment']) . '</td>
+                    <td class="td1 center">' . ($c > 0 ? '<a href="edit_words.php?page=1&amp;query=&amp;text=&amp;status=&amp;filterlang=&amp;status=&amp;tag12=0&amp;tag2=&amp;tag1=' . $record['TgID'] . '">' . $c . '</a>' : '0' ) . '</td>
+                </tr>';
         }
         mysqli_free_result($res);
 
@@ -293,12 +312,16 @@ Multi Actions <img src="icn/lightning.png" title="Multi Actions" alt="Multi Acti
 
         <?php if($pages > 1) { ?>
 <table class="tab2" cellspacing="0" cellpadding="5">
-<tr>
-<th class="th1" nowrap="nowrap">
+    <tr>
+        <th class="th1" nowrap="nowrap">
             <?php echo $recno; ?> Tag<?php echo ($recno==1?'':'s'); ?>
-</th><th class="th1" nowrap="nowrap">
+        </th>
+        <th class="th1" nowrap="nowrap">
             <?php makePager($currentpage, $pages, 'edit_tags.php', 'form2'); ?>
-</th></tr></table></form>
+        </th>
+    </tr>
+</table>
+</form>
             <?php 
         } ?>
 

@@ -110,21 +110,21 @@ function long_text_check($max_input_vars): void
 <input type="hidden" name="TxSourceURI" value="<?php echo tohtml($source_uri); ?>" />
 <input type="hidden" name="TextTags" value="<?php echo tohtml($texttags); ?>" />
 <input type="hidden" name="TextCount" value="<?php echo $textcount; ?>" />
-<table class="tab3" cellspacing="0" cellpadding="5">
+<table class="tab1" cellspacing="0" cellpadding="5">
     <tr>
-    <td class="td1" colspan="2">
+        <td class="td1" colspan="2">
             <?php echo "This long text will be split into " . $textcount . $shorter . "text" . $plural . " - as follows:"; ?>
-    </td>
-</tr>
-<tr>
-    <td class="td1 right" colspan="2">
-        <input type="button" value="Cancel" onclick="{resetDirty(); location.href='index.php';}" /> 
-        <span class="nowrap"></span>
-        <input type="button" value="Go Back" onclick="{resetDirty(); history.back();}" /> 
-        <span class="nowrap"></span>
-        <input type="submit" name="op" value="Create <?php echo $textcount; ?> text<?php echo $plural; ?>" />
-    </td>
-</tr>
+        </td>
+    </tr>
+    <tr>
+        <td class="td1 right" colspan="2">
+            <input type="button" value="Cancel" onclick="{resetDirty(); location.href='index.php';}" /> 
+            <span class="nowrap"></span>
+            <input type="button" value="Go Back" onclick="{resetDirty(); history.back();}" /> 
+            <span class="nowrap"></span>
+            <input type="submit" name="op" value="Create <?php echo $textcount; ?> text<?php echo $plural; ?>" />
+        </td>
+    </tr>
             <?php
             $textno = -1;
             foreach ($texts as $item) {
@@ -132,18 +132,18 @@ function long_text_check($max_input_vars): void
                 $textstring = str_replace("¶", "\n", implode(" ", $item));
                 $bytes = strlen($textstring);
                 ?>            
-<tr>
-    <td class="td1 right">
-        <b>Text <?php echo $textno+1; ?>:</b>
-        <br /><br /><br />
-        Length:<br /><?php echo $bytes; ?><br />Bytes
-    </td>
-    <td class="td1">
-        <textarea readonly="readonly" <?php echo getScriptDirectionTag($langid); ?> name="text[<?php echo $textno; ?>]" cols="60" rows="10">
-                <?php echo $textstring; ?>
-        </textarea>
-    </td>
-</tr>
+    <tr>
+        <td class="td1 right">
+            <b>Text <?php echo $textno+1; ?>:</b>
+            <br /><br /><br />
+            Length:<br /><?php echo $bytes; ?><br />Bytes
+        </td>
+        <td class="td1">
+            <textarea readonly="readonly" <?php echo getScriptDirectionTag($langid); ?> name="text[<?php echo $textno; ?>]" cols="60" rows="10">
+                    <?php echo $textstring; ?>
+            </textarea>
+        </td>
+    </tr>
                 <?php
             }
             ?>

@@ -680,19 +680,23 @@ if (isset($_REQUEST['new']) && isset($_REQUEST['lang'])) {
     </script>  
     <form name="newword" class="validate" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
     <input type="hidden" name="WoLgID" id="langfield" value="<?php echo $_REQUEST['lang']; ?>" />
-    <table class="tab3" cellspacing="0" cellpadding="5">
+    <table class="tab1" cellspacing="0" cellpadding="5">
     <tr>
     <td class="td1 right">Language:</td>
     <td class="td1"><?php echo tohtml(getLanguage($_REQUEST['lang'])); ?></td>
     </tr>
     <tr>
     <td class="td1 right">Term:</td>
-    <td class="td1"><input <?php echo $scrdir; ?> class="notempty setfocus checkoutsidebmp" data_info="Term" type="text" name="WoText" id="wordfield" value="" maxlength="250" size="40" /> <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /></td>
+    <td class="td1">
+        <input <?php echo $scrdir; ?> class="notempty setfocus checkoutsidebmp" 
+        data_info="Term" type="text" name="WoText" id="wordfield" value="" maxlength="250" />
+        <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /></td>
     </tr>
     <?php print_similar_terms_tabrow(); ?>    
     <tr>
     <td class="td1 right">Translation:</td>
-    <td class="td1"><textarea class="textarea-noreturn checklength checkoutsidebmp" data_maxlength="500" data_info="Translation" name="WoTranslation" cols="40" rows="3"></textarea></td>
+    <td class="td1">
+        <textarea class="textarea-noreturn checklength checkoutsidebmp" data_maxlength="500" data_info="Translation" name="WoTranslation" cols="40" rows="3"></textarea></td>
     </tr>
     <tr>
     <td class="td1 right">Tags:</td>
@@ -750,47 +754,53 @@ if (isset($_REQUEST['new']) && isset($_REQUEST['lang'])) {
      <input type="hidden" name="WoID" value="<?php echo $record['WoID']; ?>" />
      <input type="hidden" name="WoLgID" id="langfield" value="<?php echo $record['WoLgID']; ?>" />
      <input type="hidden" name="WoOldStatus" value="<?php echo $record['WoStatus']; ?>" />
-     <table class="tab3" cellspacing="0" cellpadding="5">
+     <table class="tab1" cellspacing="0" cellpadding="5">
      <tr>
-     <td class="td1 right">Language:</td>
-     <td class="td1"><?php echo tohtml($record['LgName']); ?></td>
+        <td class="td1 right">Language:</td>
+        <td class="td1"><?php echo tohtml($record['LgName']); ?></td>
      </tr>
      <tr title="Normally only change uppercase/lowercase here!">
-     <td class="td1 right">Term:</td>
-     <td class="td1"><input <?php echo $scrdir; ?> class="notempty setfocus checkoutsidebmp" data_info="Term" type="text" name="WoText" id="wordfield" value="<?php echo tohtml($record['WoText']); ?>" maxlength="250" size="40" /> <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
-     </td></tr>
+        <td class="td1 right">Term:</td>
+        <td class="td1"><input <?php echo $scrdir; ?> class="notempty setfocus checkoutsidebmp" data_info="Term" type="text" name="WoText" id="wordfield" value="<?php echo tohtml($record['WoText']); ?>" maxlength="250" size="40" /> <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+        </td>
+    </tr>
         <?php print_similar_terms_tabrow(); ?>
      <tr>
-     <td class="td1 right">Translation:</td>
-     <td class="td1"><textarea class="textarea-noreturn checklength checkoutsidebmp" data_maxlength="500" data_info="Translation" name="WoTranslation" cols="40" rows="3"><?php echo tohtml($transl); ?></textarea></td>
+        <td class="td1 right">Translation:</td>
+        <td class="td1">
+            <textarea class="textarea-noreturn checklength checkoutsidebmp" data_maxlength="500" data_info="Translation" name="WoTranslation" cols="40" rows="3"><?php echo tohtml($transl); ?></textarea>
+        </td>
      </tr>
      <tr>
-     <td class="td1 right">Tags:</td>
-     <td class="td1">
-        <?php echo getWordTags($record['WoID']); ?>
-     </td>
+        <td class="td1 right">Tags:</td>
+        <td class="td1">
+            <?php echo getWordTags($record['WoID']); ?>
+        </td>
      </tr>
      <tr>
-     <td class="td1 right">Romaniz.:</td>
-     <td class="td1"><input type="text" class="checkoutsidebmp" data_info="Romanization" name="WoRomanization" maxlength="100" size="40" 
-     value="<?php echo tohtml($record['WoRomanization']); ?>" /></td>
+        <td class="td1 right">Romaniz.:</td>
+        <td class="td1">
+            <input type="text" class="checkoutsidebmp" data_info="Romanization" name="WoRomanization" maxlength="100" size="40" 
+            value="<?php echo tohtml($record['WoRomanization']); ?>" />
+        </td>
      </tr>
      <tr>
-     <td class="td1 right">Sentence<br />Term in {...}:</td>
-     <td class="td1"><textarea <?php echo $scrdir; ?> class="textarea-noreturn checklength checkoutsidebmp" data_maxlength="1000" data_info="Sentence" name="WoSentence" cols="40" rows="3"><?php echo tohtml(repl_tab_nl($record['WoSentence'])); ?></textarea></td>
+        <td class="td1 right">Sentence<br />Term in {...}:</td>
+        <td class="td1"><textarea <?php echo $scrdir; ?> class="textarea-noreturn checklength checkoutsidebmp" data_maxlength="1000" data_info="Sentence" name="WoSentence" cols="40" rows="3"><?php echo tohtml(repl_tab_nl($record['WoSentence'])); ?></textarea></td>
      </tr>
      <tr>
-     <td class="td1 right">Status:</td>
-     <td class="td1">
-        <?php echo get_wordstatus_radiooptions($record['WoStatus']); ?>
-     </td>
+        <td class="td1 right">Status:</td>
+        <td class="td1">
+            <?php echo get_wordstatus_radiooptions($record['WoStatus']); ?>
+        </td>
      </tr>
      <tr>
-     <td class="td1 right" colspan="2">  &nbsp;
-        <?php echo createDictLinksInEditWin2($record['WoLgID'], 'document.forms[\'editword\'].WoSentence', 'document.forms[\'editword\'].WoText'); ?>
-     &nbsp; &nbsp;
-     <input type="button" value="Cancel" onclick="{resetDirty(); location.href='edit_words.php#rec<?php echo $_REQUEST['chg']; ?>';}" /> 
-     <input type="submit" name="op" value="Change" /></td>
+        <td class="td1 right" colspan="2">  &nbsp;
+            <?php echo createDictLinksInEditWin2($record['WoLgID'], 'document.forms[\'editword\'].WoSentence', 'document.forms[\'editword\'].WoText'); ?>
+            &nbsp; &nbsp;
+            <input type="button" value="Cancel" onclick="{resetDirty(); location.href='edit_words.php#rec<?php echo $_REQUEST['chg']; ?>';}" /> 
+            <input type="submit" name="op" value="Change" />
+        </td>
      </tr>
      </table>
      </form>
@@ -898,8 +908,7 @@ Status:
 } ?>>Rom., Transl.</option>
 </select><?php
 if($currentregexmode=='') { echo '<span style="vertical-align: middle"> (Wildc.=*): </span>'; 
-}
-elseif($currentregexmode=='r') { echo '<span style="vertical-align: middle"> RegEx Mode: </span>';
+} elseif ($currentregexmode=='r') { echo '<span style="vertical-align: middle"> RegEx Mode: </span>';
 } else { echo '<span style="vertical-align: middle"> RegEx(CS) Mode: </span>'; 
 }?>
 <input type="text" name="query" value="<?php echo tohtml($currentquery); ?>" maxlength="50" size="15" />&nbsp;
