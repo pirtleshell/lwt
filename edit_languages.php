@@ -689,14 +689,14 @@ function edit_language_form($language)
     method="post" onsubmit="return check_dupl_lang(<?php echo $language->id; ?>);" 
     name="lg_form">
     <input type="hidden" name="LgID" value="<?php echo $language->id; ?>" />
-    <table class="tab2" cellspacing="0" cellpadding="5">
+    <table class="tab1" cellspacing="0" cellpadding="5">
     <tr>
         <td class="td1 right">Study Language "L2":</td>
         <td class="td1">
-            <input type="text" class="notempty setfocus checkoutsidebmp" 
+            <input type="text" class="notempty setfocus checkoutsidebmp respinput" 
             data_info="Study Language" name="LgName" id="LgName" 
             value="<?php echo tohtml($language->name); ?>" maxlength="40" 
-            size="40" oninput="checkLanguageChanged(this.value);" /> 
+            oninput="checkLanguageChanged(this.value);" /> 
             <img src="icn/status-busy.png" title="Field must not be empty" 
             alt="Field must not be empty" />
         </td>
@@ -704,12 +704,13 @@ function edit_language_form($language)
     <tr>
         <td class="td1 right">Dictionary 1 URI:</td>
         <td class="td1">
-            <input type="url" class="notempty checkdicturl checkoutsidebmp" 
+            <input type="url" class="notempty checkdicturl checkoutsidebmp respinput" 
             name="LgDict1URI" 
             value="<?php echo tohtml($language->dict1uri); ?>"  
-            maxlength="200" size="60" data_info="Dictionary 1 URI" 
+            maxlength="200" data_info="Dictionary 1 URI" 
             oninput="checkDictionaryChanged(this);" />
             
+            <br />
             <input type="checkbox" name="LgDict1PopUp" id="LgDict1PopUp" 
             onchange="changePopUpState(this);" />
             
@@ -724,12 +725,13 @@ function edit_language_form($language)
     <tr>
         <td class="td1 right">Dictionary 2 URI:</td>
         <td class="td1">
-            <input type="url" class="checkdicturl checkoutsidebmp" 
+            <input type="url" class="checkdicturl checkoutsidebmp respinput" 
             name="LgDict2URI" 
             value="<?php echo tohtml($language->dict2uri); ?>" maxlength="200"
-            size="60" data_info="Dictionary 2 URI"
+            data_info="Dictionary 2 URI"
             oninput="checkDictionaryChanged(this);" />
             
+            <br />
             <input type="checkbox" name="LgDict2PopUp" id="LgDict2PopUp" 
             onchange="changePopUpState(this);" />
             
@@ -754,18 +756,18 @@ function edit_language_form($language)
                     Glosbe API
                 </option>
             </select>
-            <input type="url" class="checkdicturl checkoutsidebmp" 
+            <input type="url" class="checkdicturl checkoutsidebmp respinput" 
             name="LgGoogleTranslateURI" 
             value="<?php echo tohtml($language->translator); ?>" 
-            maxlength="200" size="60" data_info="GoogleTranslate URI" 
-            oninput="checkTranslatorChanged(this);"
+            maxlength="200" data_info="GoogleTranslate URI" 
+            oninput="checkTranslatorChanged(this);" class="respinput"
              />
 
             <div id="LgTranslatorKeyWrapper" style="display: none;">
                 <label for="LgTranslatorKey">Key :</label>
                 <input type="text" id="LgTranslatorKey" name="LgTranslatorKey"/>
             </div>
-
+            <br />
             <input type="checkbox" name="LgGoogleTranslatePopUp" 
             id="LgGoogleTranslatePopUp" onchange="changePopUpState(this);"/>
             <label for="LgGoogleTranslatePopUp"
@@ -780,8 +782,8 @@ function edit_language_form($language)
         <td class="td1">
             <input name="LgTextSize" type="number" min="100" max="250" 
             value="<?php echo $language->textsize; ?>" step="50" 
-            onchange="changeLanguageTextSize(this.value);"/>
-            <input type="text" 
+            onchange="changeLanguageTextSize(this.value);" class="respinput" />
+            <input type="text" class="respinput"
             style="font-size: <?php echo $language->textsize ?>%;" 
             id="LgTextSizeExample" 
             value="Text will be this size" />
@@ -790,19 +792,19 @@ function edit_language_form($language)
     <tr>
         <td class="td1 right">Character Substitutions:</td>
         <td class="td1">
-            <input type="text" class="checkoutsidebmp" 
+            <input type="text" class="checkoutsidebmp respinput" 
             data_info="Character Substitutions" name="LgCharacterSubstitutions" 
             value="<?php echo tohtml($language->charactersubst); ?>" 
-            maxlength="500" size="60" />
+            maxlength="500" />
         </td>
     </tr>
     <tr>
         <td class="td1 right">RegExp Split Sentences:</td>
         <td class="td1">
-            <input type="text" class="notempty checkoutsidebmp" 
+            <input type="text" class="notempty checkoutsidebmp respinput" 
             name="LgRegexpSplitSentences" 
             value="<?php echo tohtml($language->regexpsplitsent); ?>" 
-            maxlength="500" size="60" 
+            maxlength="500"
             data_info="RegExp Split Sentences" /> 
             <img src="icn/status-busy.png" title="Field must not be empty" 
             alt="Field must not be empty" />
@@ -811,11 +813,11 @@ function edit_language_form($language)
     <tr>
     <td class="td1 right">Exceptions Split Sentences:</td>
     <td class="td1">
-        <input type="text" class="checkoutsidebmp" 
+        <input type="text" class="checkoutsidebmp respinput" 
         data_info="Exceptions Split Sentences" 
-        name="LgExceptionsSplitSentences" 
+        name="LgExceptionsSplitSentences"
         value="<?php echo tohtml($language->exceptionsplitsent); ?>" 
-        maxlength="500" size="60" />
+        maxlength="500" />
     </td>
     </tr>
     <tr>
@@ -826,10 +828,10 @@ function edit_language_form($language)
                 <option value="regexp">Regular Expressions (demo)</option>
                 <option value="mecab">MeCab (recommended)</option>
             </select>
-            <input type="text" class="notempty checkoutsidebmp" 
+            <input type="text" class="notempty checkoutsidebmp respinput" 
             data_info="RegExp Word Characters" name="LgRegexpWordCharacters" 
             value="<?php echo tohtml($language->regexpwordchar); ?>" 
-            maxlength="500" size="60" /> 
+            maxlength="500" /> 
             <img src="icn/status-busy.png" title="Field must not be empty" 
             alt="Field must not be empty" />
             <div style="display: none;" class="red" id="mecab_not_installed">
@@ -873,9 +875,9 @@ function edit_language_form($language)
         </td>
         <td class="td1">
             <input type="text" class="checkoutsidebmp" data_info="Export Template" 
-            name="LgExportTemplate" 
+            name="LgExportTemplate" class="respinput"
             value="<?php echo tohtml($language->exporttemplate); ?>" 
-            maxlength="1000" size="60" />
+            maxlength="1000" />
         </td>
     </tr>
     <tr>
