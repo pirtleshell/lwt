@@ -293,7 +293,7 @@ function run_overlib_test(
  *
  * @return {string} All multiwords
  * 
- * @since 2.7.1-fork LTR texts were wrongly displayed
+ * @since 2.8.0-fork LTR texts were wrongly displayed
  */
 function make_overlib_link_new_multiword (txid, torder, multi_words, rtl) {
   // Quit if all multiwords are '' or undefined
