@@ -159,8 +159,6 @@ function echo_term(
         }
     } else {
         // Single word
-		$dom = new DOMDocument('1.0');
-		$span = $dom->createElement('span');
         if (isset($record['WoID'])) {
             // Word found status 1-5|98|99
 			$attributes = array(
@@ -171,8 +169,8 @@ function echo_term(
 				'data_pos' => $currcharcount,
 				'data_order' => $record['Ti2Order'],
 				'data_wid' => $record['WoID'],
-				'data_trans' => repl_tab_nl($record['WoTranslation']) . 
-				getWordTagList($record['WoID'], ' ', 1, 0),
+				'data_trans' => tohtml(repl_tab_nl($record['WoTranslation']) . 
+				getWordTagList($record['WoID'], ' ', 1, 0)),
 				'data_rom' => tohtml($record['WoRomanization']),
 				'data_status' => $record['WoStatus']
 			);
@@ -193,6 +191,18 @@ function echo_term(
 		foreach ($exprs as $expr) {
 			$attributes['data_mw' . $expr[0]] = tohtml($expr[1]);
 		}
+        $span = '<span';
+        foreach ($attributes as $attr_name => $val) {
+            $span .= ' ' . $attr_name . '="' . $val . '"';
+		}
+        $span .= '>' . tohtml($record['TiText']) . '</span>';
+        echo $span;
+		/*
+        2.8.0-fork: do not use as some PHP installations do not have ext-dom 
+        enabled
+
+        $dom = new DOMDocument('1.0');
+		$span = $dom->createElement('span');
 		foreach ($attributes as $attr_name => $val) {
             $attr = $dom->createAttribute($attr_name);
 			$attr->value = $val;
@@ -201,6 +211,7 @@ function echo_term(
 		$span->nodeValue = tohtml($record['TiText']);
 		$dom->appendChild($span);
 		echo $dom->saveHTML($span);
+        */
 		for ($i = sizeof($exprs) - 1; $i >= 0; $i--) {
 			$exprs[$i][2]--;
 			if ($exprs[$i][2] < 1) {
