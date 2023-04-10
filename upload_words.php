@@ -75,9 +75,13 @@ function upload_words_import_terms($fields, $tabs, $file_upl, $col, $lang): void
     }
     $sql = 'LOAD DATA LOCAL INFILE '. convert_string_to_sqlsyntax($file_name);
     //$sql.= ($overwrite)?' REPLACE':(' IGNORE') ;
+    $local_infile_enabled = in_array(
+        get_first_value("SELECT @@GLOBAL.local_infile as value"), 
+        array(1, '1', 'ON')
+    );
     if ($fields["tl"]==0 and $overwrite==0) {
 
-        if (get_first_value("SELECT @@GLOBAL.local_infile as value")) {
+        if ($local_infile_enabled) {
             $sql .= " IGNORE INTO TABLE {$tbpref}words 
             FIELDS TERMINATED BY '$tabs' ENCLOSED BY '\"' LINES TERMINATED BY '\\n' 
             " . ($_REQUEST["IgnFirstLine"] == '1' ? "IGNORE 1 LINES" : "") . "
@@ -155,7 +159,7 @@ function upload_words_import_terms($fields, $tabs, $file_upl, $col, $lang): void
             ('4'),('5'),('6'),('7'),('8'),('9')", 
             ''
         );
-        if (get_first_value("SELECT @@GLOBAL.local_infile as value")) {
+        if ($local_infile_enabled) {
             $sql .= " INTO TABLE {$tbpref}tempwords 
             FIELDS TERMINATED BY '$tabs' ENCLOSED BY '\"' LINES TERMINATED BY '\\n' 
             " . ($_REQUEST["IgnFirstLine"] == '1' ? "IGNORE 1 LINES" : "") . 
@@ -570,7 +574,10 @@ function upload_words_import_tags($fields, $tabs, $file_upl): void
         fseek($temp, 0);
         fclose($temp);
     }
-    if (get_first_value("SELECT @@GLOBAL.local_infile as value")) {
+    if (in_array(
+        get_first_value("SELECT @@GLOBAL.local_infile as value"), 
+        array(1, '1', 'ON')
+    )) {
         $sql = "LOAD DATA LOCAL INFILE " . convert_string_to_sqlsyntax($file_name) . 
         " IGNORE INTO TABLE {$tbpref}tempwords 
         FIELDS TERMINATED BY '$tabs' ENCLOSED BY '\"' LINES TERMINATED BY '\\n'

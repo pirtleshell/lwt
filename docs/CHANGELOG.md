@@ -8,6 +8,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 ### Fixed
 
 * Since 2.8.0-fork, PHP installations with ext-dom absent or disabled could not display text.
+* Using the import terms feature, it is better detected if local infile is enabled.
 
 ## 2.8.0-fork (April 08 2023)
 
