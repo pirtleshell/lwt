@@ -135,27 +135,37 @@ function echo_term(
 			$exprs[] = array($actcode, $record['TiText'], $actcode);
 
         if (isset($record['WoID'])) {
-            echo '<span id="' . $spanid . '" class="' . $hidetag . ' click mword ' . 
-            ($showAll ? 'mwsty' : 'wsty') . ' order' . $record['Ti2Order'] .
-            ' word' . $record['WoID'] . ' status' . $record['WoStatus'] . 
-            ' TERM' . strToClassName($record['TiTextLC']) . '" ' .
-            ' data_pos="' . $currcharcount . '" 
-            data_order="' . $record['Ti2Order'] . '" 
-            data_wid="' . $record['WoID'] . '" 
-            data_trans="' . tohtml(
-                repl_tab_nl($record['WoTranslation']) 
-                . getWordTagList($record['WoID'], ' ', 1, 0)
-            ) . '" 
-            data_rom="' . tohtml($record['WoRomanization']) . '" 
-            data_status="' . $record['WoStatus'] . '"  
-            data_code="' . $actcode . '" 
-            data_text="' . tohtml($record['TiText']) . '">'; 
-            if ($showAll) {
-                echo $actcode;
-            } else {
-                echo tohtml($record['TiText']);
+
+            $attributes = array(
+				'id' => $spanid,
+				'class' => implode(" ", [
+                    $hidetag, "click", "mword", ($showAll ? 'mwsty' : 'wsty'), 
+                    "order" . $record['Ti2Order'],
+				    'word' . $record['WoID'], 'status' . $record['WoStatus'], 
+				    'TERM' . strToClassName($record['TiTextLC'])]
+                ),
+				'data_pos' => $currcharcount,
+				'data_order' => $record['Ti2Order'],
+				'data_wid' => $record['WoID'],
+				'data_trans' => tohtml(repl_tab_nl($record['WoTranslation']) . 
+				getWordTagList($record['WoID'], ' ', 1, 0)),
+				'data_rom' => tohtml($record['WoRomanization']),
+				'data_status' => $record['WoStatus'],
+                'data_code' =>  $actcode,
+                'data_text' => tohtml($record['TiText'])
+            );
+            $span = '<span';
+            foreach ($attributes as $attr_name => $val) {
+                $span .= ' ' . $attr_name . '="' . $val . '"';
             }
-            echo '</span>';
+            $span .= '>'; 
+            if ($showAll) {
+                $span .= $actcode;
+            } else {
+                $span .= tohtml($record['TiText']);
+            }
+            $span .= '</span>';
+            echo $span;
         }
     } else {
         // Single word
@@ -163,9 +173,11 @@ function echo_term(
             // Word found status 1-5|98|99
 			$attributes = array(
 				'id' => $spanid,
-				'class' => "$hidetag click word wsty word". $record['WoID'] .
-				' status'. $record['WoStatus'] . 
-				' TERM' . strToClassName($record['TiTextLC']),
+				'class' => implode(" ", [
+                    $hidetag, "click", "word", "wsty", "word" . $record['WoID'],
+                    'status' . $record['WoStatus'], 
+                    'TERM' . strToClassName($record['TiTextLC'])
+                ]),
 				'data_pos' => $currcharcount,
 				'data_order' => $record['Ti2Order'],
 				'data_wid' => $record['WoID'],
@@ -178,8 +190,10 @@ function echo_term(
             // Not registered word (status 0)
 			$attributes = array(
 				'id' => $spanid,
-				'class' => "$hidetag click word wsty status0 TERM" . 
-				strToClassName($record['TiTextLC']),
+				'class' => implode(" ", [
+                    $hidetag, "click", "word", "wsty", "status0", 
+                    "TERM" . strToClassName($record['TiTextLC'])
+                ]),
 				'data_pos' => $currcharcount,
 				'data_order' => $record['Ti2Order'],
 				'data_trans' => '',
@@ -197,21 +211,6 @@ function echo_term(
 		}
         $span .= '>' . tohtml($record['TiText']) . '</span>';
         echo $span;
-		/*
-        2.8.0-fork: do not use as some PHP installations do not have ext-dom 
-        enabled
-
-        $dom = new DOMDocument('1.0');
-		$span = $dom->createElement('span');
-		foreach ($attributes as $attr_name => $val) {
-            $attr = $dom->createAttribute($attr_name);
-			$attr->value = $val;
-			$span->appendChild($attr);
-		}
-		$span->nodeValue = tohtml($record['TiText']);
-		$dom->appendChild($span);
-		echo $dom->saveHTML($span);
-        */
 		for ($i = sizeof($exprs) - 1; $i >= 0; $i--) {
 			$exprs[$i][2]--;
 			if ($exprs[$i][2] < 1) {
