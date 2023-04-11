@@ -9,6 +9,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 
 * Since 2.8.0-fork, PHP installations with ext-dom absent or disabled could not display text.
 * Using the import terms feature, it is better detected if local infile is enabled.
+* Since 2.2.2-fork, many multi-words were not displayed, as explained in [#70](https://github.com/HugoFara/lwt/issues/70). Issues may remain.
 
 ## 2.8.0-fork (April 08 2023)
 
