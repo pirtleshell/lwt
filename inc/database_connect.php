@@ -1141,14 +1141,14 @@ function update_default_values($id, $lid, $sql)
         ALTER Ti2TxID SET DEFAULT ' . $id
     );
     do_mysqli_query(
-        'INSERT INTO ' . $tbpref . 'textitems2 (
+        "INSERT INTO {$tbpref}textitems2 (
             Ti2WoID, Ti2SeID, Ti2Order, Ti2WordCount, Ti2Text
-        ) ' . $sql . '
-        select  WoID, TiSeID, TiOrder, TiWordCount, TiText 
-        FROM ' . $tbpref . 'temptextitems 
-        left join ' . $tbpref . 'words 
-        on lower(TiText) = WoTextLC and TiWordCount=1 and WoLgID = ' . $lid . ' 
-        order by TiOrder,TiWordCount'
+        ) $sql
+        SELECT  WoID, TiSeID, TiOrder, TiWordCount, TiText 
+        FROM {$tbpref}temptextitems 
+        LEFT JOIN {$tbpref}words 
+        ON LOWER(TiText) = WoTextLC AND TiWordCount=1 AND WoLgID = $lid 
+        ORDER BY TiOrder, TiWordCount"
     );
     do_mysqli_query(
         'ALTER TABLE ' . $tbpref . 'sentences 
@@ -1256,23 +1256,24 @@ function check_text_with_expressions($id, $lid, $wl, $wl_max, $mw_sql): string
     $set_wo_sql = $set_wo_sql_2 = $del_wo_sql = $init_var = '';
     do_mysqli_query('SET GLOBAL max_heap_table_size = 1024 * 1024 * 1024 * 2');
     do_mysqli_query('SET GLOBAL tmp_table_size = 1024 * 1024 * 1024 * 2');
+    // For all possible multi-words length,  
     for ($i=$wl_max*2 -1; $i>1; $i--) {
-        $set_wo_sql = 'WHEN (@a' . strval($i) . ':=@a' . strval($i-1) . 
-        ') IS NULL THEN NULL ';
-        $set_wo_sql_2 = 'WHEN (@a' . strval($i) . ':=@a' . strval($i-2) . 
-        ') IS NULL THEN NULL ';
-        $del_wo_sql = 'WHEN (@a' . strval($i) . ':=@a0) IS NULL THEN NULL ';
-        $init_var = '@a' . strval($i) . '=0,';
+        $set_wo_sql .= "WHEN (@a$i := @a".($i-1) . ") IS NULL THEN NULL ";
+        $set_wo_sql_2 .= "WHEN (@a$i := @a".($i-2) .") IS NULL THEN NULL ";
+        $del_wo_sql .= "WHEN (@a$i := @a0) IS NULL THEN NULL ";
+        $init_var .= "@a$i=0,";
     }
+    // 2.8.1-fork: @a0 is always 0? @f always '' but necessary to force code execution
     do_mysqli_query(
-        'set ' . $init_var . '@a1=0,@a0=0,@b=0,@c="",@d=0,@e=0,@f="",@h=0;'
+        "SET $init_var@a1=0, @a0=0, @se_id=0, @c='', @d=0, @f='', @ti_or=0;"
     );
+    // Create a table to store length of each terms
     do_mysqli_query(
         "CREATE TEMPORARY TABLE IF NOT EXISTS {$tbpref}numbers( 
             n  tinyint(3) unsigned NOT NULL
         );"
     );
-    do_mysqli_query('TRUNCATE TABLE ' . $tbpref . 'numbers');
+    do_mysqli_query("TRUNCATE TABLE {$tbpref}numbers");
     do_mysqli_query(
         "INSERT IGNORE INTO {$tbpref}numbers(n) VALUES (" . 
         implode('),(', $wl) . 
@@ -1286,35 +1287,35 @@ function check_text_with_expressions($id, $lid, $wl, $wl_max, $mw_sql): string
         lower(WoText) as word, WoTranslation';
     }
     $sql .= 
-    ' FROM (
+    " FROM (
         SELECT straight_join 
-        if(@b=TiSeID and @h=TiOrder,
-            if((@h:=TiOrder+@a0) is null,TiSeID,TiSeID),
+        if(@se_id=TiSeID and @ti_or=TiOrder,
+            if((@ti_or:=TiOrder+@a0) is null,TiSeID,TiSeID),
             if(
-                @b=TiSeID, 
+                @se_id=TiSeID, 
                 IF(
                     (@d=1) and (0<>TiWordCount), 
-                    CASE ' . $set_wo_sql_2 . ' 
+                    CASE $set_wo_sql_2  
                         WHEN (@a1:=TiCount+@a0) IS NULL THEN NULL 
-                        WHEN (@b:=TiSeID+@a0) IS NULL THEN NULL 
-                        WHEN (@h:=TiOrder+@a0) IS NULL THEN NULL 
+                        WHEN (@se_id:=TiSeID+@a0) IS NULL THEN NULL 
+                        WHEN (@ti_or:=TiOrder+@a0) IS NULL THEN NULL 
                         WHEN (@c:=concat(@c,TiText)) IS NULL THEN NULL 
                         WHEN (@d:=(0<>TiWordCount)+@a0) IS NULL THEN NULL 
                         ELSE TiSeID 
                     END, 
-                    CASE ' . $set_wo_sql . ' 
+                    CASE $set_wo_sql
                         WHEN (@a1:=TiCount+@a0) IS NULL THEN NULL 
-                        WHEN (@b:=TiSeID+@a0) IS NULL THEN NULL 
-                        WHEN (@h:=TiOrder+@a0) IS NULL THEN NULL 
+                        WHEN (@se_id:=TiSeID+@a0) IS NULL THEN NULL 
+                        WHEN (@ti_or:=TiOrder+@a0) IS NULL THEN NULL 
                         WHEN (@c:=concat(@c,TiText)) IS NULL THEN NULL 
                         WHEN (@d:=(0<>TiWordCount)+@a0) IS NULL THEN NULL 
                         ELSE TiSeID 
                     END
                 ), 
-                CASE '  . $del_wo_sql . ' 
+                CASE $del_wo_sql 
                     WHEN (@a1:=TiCount+@a0) IS NULL THEN NULL 
-                    WHEN (@b:=TiSeID+@a0) IS NULL THEN NULL 
-                    WHEN (@h:=TiOrder+@a0) IS NULL THEN NULL 
+                    WHEN (@se_id:=TiSeID+@a0) IS NULL THEN NULL 
+                    WHEN (@ti_or:=TiOrder+@a0) IS NULL THEN NULL 
                     WHEN (@c:=concat(TiText,@f)) IS NULL THEN NULL 
                     WHEN (@d:=(0<>TiWordCount)+@a0) IS NULL THEN NULL 
                     ELSE TiSeID 
@@ -1325,18 +1326,18 @@ function check_text_with_expressions($id, $lid, $wl, $wl_max, $mw_sql): string
             @d=0, 
             NULL, 
             if(
-                CRC32(@z:=substr(@c,case n' . $mw_sql . ' end))<>CRC32(lower(@z)),
+                CRC32(@z:=substr(@c,CASE n$mw_sql END))<>CRC32(LOWER(@z)),
                 @z,
-                ""
+                ''
             )
         ) word,
-        if(@d=0 or ""=@z, NULL, lower(@z)) lword, 
+        if(@d=0 or ''=@z, NULL, lower(@z)) lword, 
         TiOrder,
-        n FROM ' . $tbpref . 'numbers , ' . $tbpref . 'temptextitems
+        n FROM {$tbpref}numbers , {$tbpref}temptextitems
     ) ti, 
-    ' . $tbpref . 'words 
-    WHERE lword IS NOT NULL AND WoLgID=' . $lid . ' AND 
-    WoTextLC=lword AND WoWordCount=n';
+    {$tbpref}words 
+    WHERE lword IS NOT NULL AND WoLgID=$lid AND 
+    WoTextLC=lword AND WoWordCount=n";
     $sql .= ($id>0) ? ' UNION ALL ' : ' GROUP BY WoID ORDER BY WoTextLC';
     return $sql;
 }
