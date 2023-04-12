@@ -215,20 +215,19 @@ function bulk_do_content($tid, $sl, $tl, $pos)
             function() { $(this).prev().val('').focus(); }
         );
 
-        const myVar = setInterval(function() {
-            if ($( ".trans>font" ).length == $( ".trans" ).length) {
+        const displayTranslations = setInterval(function() {
+            if ($(".trans>font").length == $(".trans").length) {
                 $('.trans').each(function() {
-                    var txt = $(this).text();
-                    var cnt = $(this).attr('id').replace('Trans_', '');
+                    const txt = $(this).text();
+                    const cnt = $(this).attr('id').replace('Trans_', '');
                     $(this).addClass('notranslate')
                     .html(
                         '<input type="text" name="term[' + cnt + '][trans]" value="' 
-                        + txt + '" maxlength="100" size="35"></input>' + 
+                        + txt + '" maxlength="100" class="respinput"></input>' + 
                         '<div class="del_trans"></div>'
                     );
                 });
-                $('.term').each(function(){
-                    txt = $(this).text();
+                $('.term').each(function() {
                     $(this).parent().css('position', 'relative');
                     $(this).after(
                         '<div class="dict">' +
@@ -241,7 +240,7 @@ function bulk_do_content($tid, $sl, $tl, $pos)
                 $('iframe,#google_translate_element').remove();
                 selectToggle(true, 'form1');
                 $('[name^=term]').prop('disabled', false);
-                clearInterval(myVar);
+                clearInterval(displayTranslations);
             }
         }, 300);
     }
@@ -249,22 +248,18 @@ function bulk_do_content($tid, $sl, $tl, $pos)
     const bulk_checkbox = function() {
         window.parent.frames['ru'].location.href = 'empty.html';
         $('input[type="checkbox"]').change(function(){
-            var v = parseInt($(this).val());
-            var e = '[name=term\\[' + v + '\\]\\[text\\]],[name=term\\[' + v + 
+            let v = parseInt($(this).val());
+            const e = '[name=term\\[' + v + '\\]\\[text\\]],[name=term\\[' + v + 
             '\\]\\[lg\\]],[name=term\\[' + v + '\\]\\[status\\]]';
-            if (this.checked) {
-                $(e).prop('disabled', false);
-                $('#Trans_'+v+' input').prop('disabled', false);
-                if ($('input[type="checkbox"]:checked').length) {
-                    $('input[type="submit"]').val('Save');
-                }
-            } else {
-                $(e).prop('disabled', true);
-                $('#Trans_'+v+' input').prop('disabled', true);
-                if (!$('input[type="checkbox"]:checked').length) {
+            $(e).prop('disabled', !this.checked);
+            $('#Trans_'+v+' input').prop('disabled', !this.checked);
+            if ($('input[type="checkbox"]:checked').length) {
+                if (this.checked) {
+                    v = 'Save';
+                } else {
                     v = (!$('input[name="offset"]').length) ? 'End' : 'Next';
-                    $('input[type="submit"]').val(v);
                 }
+                $('input[type="submit"]').val(v);
             }
         });
     }
