@@ -178,13 +178,17 @@ function bulk_do_content($tid, $sl, $tl, $pos)
             'span.dict1, span.dict2, span.dict3',
             function() {
                 if ($(this).hasClass( "dict1" )) 
-                    WBLINK=WBLINK1;
+                    WBLINK = WBLINK1;
                 if ($(this).hasClass( "dict2" ))
-                    WBLINK=WBLINK2;
+                    WBLINK = WBLINK2;
                 if ($(this).hasClass( "dict3" ))
-                    WBLINK=WBLINK3;
+                    WBLINK = WBLINK3;
                 let dict_link = WBLINK;
-                let popup = dict_link.startsWith('*');
+                let popup;
+                if (dict_link.startsWith('*')) {
+                    popup = true;
+                    dict_link = dict_link.substring(1);
+                }
                 try {
                     let final_url = new URL(dict_link);
                     popup |= final_url.searchParams.has("lwt_popup");
@@ -233,7 +237,7 @@ function bulk_do_content($tid, $sl, $tl, $pos)
                         '<div class="dict">' +
                         (WBLINK1 ? '<span class="dict1">D1</span>' : '') +
                         (WBLINK2 ? '<span class="dict2">D2</span>' : '') +
-                        (WBLINK3 ? '<span class="dict3">GTr</span>' : '') +
+                        (WBLINK3 ? '<span class="dict3">Tr</span>' : '') +
                         '</div>'
                     );
                 });
@@ -254,12 +258,15 @@ function bulk_do_content($tid, $sl, $tl, $pos)
             $(e).prop('disabled', !this.checked);
             $('#Trans_'+v+' input').prop('disabled', !this.checked);
             if ($('input[type="checkbox"]:checked').length) {
+                let operation_option;
                 if (this.checked) {
-                    v = 'Save';
+                    operation_option = 'Save';
+                } else if ($('input[name="offset"]').length) {
+                    operation_option = 'Next';
                 } else {
-                    v = (!$('input[name="offset"]').length) ? 'End' : 'Next';
+                    operation_option = 'End';
                 }
-                $('input[type="submit"]').val(v);
+                $('input[type="submit"]').val(operation_option);
             }
         });
     }
@@ -332,14 +339,18 @@ function bulk_do_content($tid, $sl, $tl, $pos)
                 <td class="td1">Marked Terms: </td>
                 <td class="td1">
                     <select onchange="changeTermToggles($(this));">
-                        <option value="0" selected="selected">[Choose...]</option>
-                        <option value="1">Set Status To [1]</option>
-                        <option value="2">Set Status To [2]</option>
-                        <option value="3">Set Status To [3]</option>
-                        <option value="4">Set Status To [4]</option>
-                        <option value="5">Set Status To [5]</option>
-                        <option value="99">Set Status To [WKn]</option>
-                        <option value="98">Set Status To [Ign]</option>
+                        <option value="0" selected="selected">
+                            [Choose...]
+                        </option>
+                        <optgroup label="Change Status">
+                            <option value="1">Set Status To [1]</option>
+                            <option value="2">Set Status To [2]</option>
+                            <option value="3">Set Status To [3]</option>
+                            <option value="4">Set Status To [4]</option>
+                            <option value="5">Set Status To [5]</option>
+                            <option value="99">Set Status To [WKn]</option>
+                            <option value="98">Set Status To [Ign]</option>
+                        </optgroup>
                         <option value="6">Set To Lowercase</option>
                         <option value="7">Delete Translation</option>
                     </select>
@@ -369,16 +380,19 @@ function bulk_do_content($tid, $sl, $tl, $pos)
     while ($record = mysqli_fetch_assoc($res)) {
         if (++$cnt < $limit) {
             $value = tohtml($record['word']);
-            echo '<tr>
+            ?>
+            <tr>
             <td class="td1 center notranslate">
-                <input name="marked[', $cnt ,']" type="checkbox" class="markcheck" checked="checked" value="', $cnt , '" />
+                <input name="marked[<?php echo $cnt ?>]" type="checkbox" class="markcheck" checked="checked" value="<?php echo $cnt ?>" />
             </td>
-            <td id="Term_', $cnt ,'" class="td1 left notranslate">
-                <span class="term">',$value,'</span>
+            <td id="Term_<?php echo $cnt ?>" class="td1 left notranslate">
+                <span class="term"><?php echo $value ?></span>
             </td>
-            <td class="td1 right trans" id="Trans_', $cnt ,'">',mb_strtolower($value, 'UTF-8'),'</td>
+            <td class="td1 trans" id="Trans_<?php echo $cnt ?>">
+                <?php echo mb_strtolower($value, 'UTF-8') ?>
+            </td>
             <td class="td1 center notranslate">
-                <select id="Stat_', $cnt ,'" name="term[', $cnt ,'][status]">
+                <select id="Stat_<?php echo $cnt ?>" name="term[<?php echo $cnt ?>][status]">
                     <option value="1" selected="selected">[1]</option>
                     <option value="2">[2]</option>
                     <option value="3">[3]</option>
@@ -387,10 +401,11 @@ function bulk_do_content($tid, $sl, $tl, $pos)
                     <option value="99">[WKn]</option>
                     <option value="98">[Ign]</option>
                 </select>
-                <input type="hidden" id="Text_', $cnt ,'" name="term[', $cnt ,'][text]" value="',$value,'" />
-                <input type="hidden" name="term[', $cnt ,'][lg]" value="',tohtml($record['Ti2LgID']),'" />
+                <input type="hidden" id="Text_<?php echo $cnt ?>" name="term[<?php echo $cnt ?>][text]" value="<?php echo $value ?>" />
+                <input type="hidden" name="term[<?php echo $cnt ?>][lg]" value="<?php echo tohtml($record['Ti2LgID']) ?>" />
             </td>
-            </tr>',"\n";
+            </tr>
+            <?php
         } else { 
             $offset = '<input type="hidden" name="offset" value="' . 
             ($pos + $limit - 1) . '" />
