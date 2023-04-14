@@ -541,12 +541,15 @@ two main advantages:</p>
 <h4>Using Docker</h4>
 <p>Original instructions provided <a href="https://nickramkissoon.medium.com/easily-set-up-and-use-mecab-with-docker-and-nodejs-5f01ae761a61">here</a>.</p>
 <ol>
-<li>Run your LWT container in interactive mode and install MeCab.
+<li>
+<p>Run your LWT container in interactive mode and install MeCab.</p>
 <pre><code class="language-bash">docker exec -it lwt bash
 apt-get update &amp;&amp; apt-get install -y mecab libmecab-dev mecab-ipadic-utf8
 </code></pre>
 </li>
-<li>In LWT, go to "Edit Languages" → "Japanese" and change from the value for "RegExp Word Characters" to <code>mecab</code>.</li>
+<li>
+<p>In LWT, go to "Edit Languages" → "Japanese" and change from the value for "RegExp Word Characters" to <code>mecab</code>.</p>
+</li>
 </ol>
 <h3>Automatic Translation</h3>
 <h4>LibreTranslate</h4>
@@ -556,6 +559,7 @@ With it you can achieve the following:</p>
 <li>Translation of sentences without using Google Translate.</li>
 <li>Automatic translation of words (so you don't need to fill by hand!).</li>
 </ul>
+<p><img src="../img/libretranslate_demo.png" alt="LibreTranslate Demo"></p>
 <p>To use it, please read the following steps:</p>
 <ol>
 <li>
