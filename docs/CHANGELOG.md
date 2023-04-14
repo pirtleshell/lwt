@@ -7,7 +7,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 
 ### Changed
 
-* Updated some documentation screenshots such as the home screen, the language edition.
+* Updated some documentation screenshots: home screen, language edition and terms upload.
 
 ### Fixed
 
