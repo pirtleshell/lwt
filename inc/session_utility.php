@@ -3392,23 +3392,25 @@ function texttodocount2($textid): string
     );
     if ($c <= 0) {
         return '<span title="No unknown word remaining" class="status0" ' . 
-        'style="padding: 0 5px; margin: 0 5px;">' . 
-        $c . '</span>'; 
+        'style="padding: 0 5px; margin: 0 5px;">' . $c . '</span>'; 
     }
     $show_buttons = getSettingWithDefault('set-words-to-do-buttons');
     
-    $dict = get_first_value(
+    $dict = (string) get_first_value(
         "SELECT LgGoogleTranslateURI AS value 
         FROM {$tbpref}languages, {$tbpref}texts 
         WHERE LgID = TxLgID and TxID = $textid"
     );
+    $tl = $sl = "";
     if ($dict) {
+        // (2.5.2-fork) For future version of LWT: do not use translator uri 
+        // to find language code
         if (str_starts_with($dict, '*')) {
             $dict = substr($dict, 1);
         }
         if (str_starts_with($dict, 'ggl.php')) {
             // We just need to form a valid URL
-            $dict = "http://" + $dict;
+            $dict = "http://" . $dict;
         }
         parse_str(parse_url($dict, PHP_URL_QUERY), $url_query);
         if (array_key_exists('lwt_translator', $url_query) && 
@@ -3420,10 +3422,6 @@ function texttodocount2($textid): string
             $tl = $url_query['tl'];
             $sl = $url_query['sl'];
         }
-    } else {
-        // (2.5.2-fork) For future version of LWT: do not use translator uri 
-        // to find language code
-        $tl = $sl = "";
     }
     
     $res = '<span title="Number of unknown words" class="status0" ' . 

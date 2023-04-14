@@ -11,6 +11,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 * Using the import terms feature, it is better detected if local infile is enabled.
 * Since 2.2.2-fork, many multi-words were not displayed, as explained in [#70](https://github.com/HugoFara/lwt/issues/70). Issues may remain.
 * Auto-translation of all words (bulk translate) could not open dictionaries starting with '*'.
+* Since 2.7.0-fork, using a dictionary starting with "ggl.php" was creating a fatal error on opening text.
 
 ## 2.8.0-fork (April 08 2023)
 
@@ -52,7 +53,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 * The translation and romanization of new words can now be automatic.
   * Supported automatic translation is achieved using [LibreTranslate](https://libretranslate.com/).
   * Romanization using [MeCab](https://taku910.github.io/mecab/) (Japanese only) toward katakana only.
-* A lot of improvements for language creation/edition: 
+* A lot of improvements for language creation/edition:
   * More intuitive fields, better interactions with the user, etc...
   * A "Pop-Up" checkbox helps you choose if the website should be displayed in a pop-up.
 * LWT becomes easier to install and maintain for users:
