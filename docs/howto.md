@@ -90,7 +90,7 @@ The entry "Text Size" defines the relative font size of the text. This is great 
 
 To understand all these options, please study also [this](info.html#langsetup), look at the examples and play around with different settings and different texts.  
 
-![Image](../img/03.jpg)  
+![Image](../img/language_edition.jpg)  
 
 ## Texts
 
