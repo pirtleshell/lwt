@@ -10,7 +10,7 @@ This is home screen of LWT if the database is empty. Please install the demo dat
 
 LWT home screen
 
-![Image](../img/01.jpg)  
+![Image](../img/lwt_home_screen.jpg)  
 
 This is normal home screen of LWT. You may choose a language here, but you can do this also later. If you you choose a language, the language filter is pre-set to that language in some other screens. The last text you've read or tested is shown, and you may jump directly into reading, testing or printing of this last text.  
 
