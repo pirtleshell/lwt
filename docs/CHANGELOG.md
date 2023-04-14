@@ -5,6 +5,10 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 
 ## [Unreleased]
 
+### Changed
+
+* Updated some documentation screenshots such as the home screen, the language edition.
+
 ### Fixed
 
 * Since 2.8.0-fork, PHP installations with ext-dom absent or disabled could not display text.

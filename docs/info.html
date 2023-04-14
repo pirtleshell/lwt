@@ -1093,7 +1093,7 @@ Actions: You can edit, update, delete a feed or follow the link to the newsfeed.
 <h3>Import Terms</h3>
 <p>Import a list of terms for a language, and set the status for all to a specified value. You can specify a file to upload or type/paste the data directly into the textbox. Format: one term per line, fields (columns) are separated either by comma ("CSV" file, e.g. used in LingQ as export format), TAB ("TSV" file, e.g. copy and paste from a spreadsheet program, not possible if you type in data manually) or # (if you type in data manually). The field/column assignment must be specified on the left.</p>
 <p>Important: You must import a term. The translation can be omitted if the status should be set to 98 or 99 (ignore/well known). Translation, romanization and sentence are all optional, but please understand that tests are only possible if terms have a translation. If a term already exists in the database (comparison is NOT case sensitive), it will not be overwritten; the line will be ignored. You can change this by setting "Overwrite existent terms" to "Yes". Be careful using this screen, a database backup before the import and double-checking everything is always advisable!</p>
-<p><img src="../img/10.jpg" alt="Image"></p>
+<p><img src="../img/upload_terms.jpg" alt="Image"></p>
 <h3>Database</h3>
 <p>This screen offers a possibility to save, restore or empty the LWT database (ONLY the current table set!). This makes it easy to try out new things or just to make regular backups. "Restore" only accepts files that have been created with the "Backup" function above. "Empty Database" deletes the data of all tables (except the settings) of the current table set, and you can start from scratch afterwards. Be careful: you may lose valuable data!</p>
 <p><img src="../img/18.jpg" alt="Image"></p>
@@ -1842,6 +1842,10 @@ KEY NfUpdate (NfUpdate)
 <p>This project's changelog. Versions marked with "-fork" come from the community, other versions come from the canonical LWT ("official" branch on Git).
 For git tags, official releases are marked like "v1.0.0", while unofficial ones are marked like "v1.0.0-fork".</p>
 <h3>[Unreleased]</h3>
+<h4>Changed</h4>
+<ul>
+<li>Updated some documentation screenshots such as the home screen, the language edition.</li>
+</ul>
 <h4>Fixed</h4>
 <ul>
 <li>Since 2.8.0-fork, PHP installations with ext-dom absent or disabled could not display text.</li>

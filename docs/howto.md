@@ -340,7 +340,7 @@ Import a list of terms for a language, and set the status for all to a specified
 
 Important: You must import a term. The translation can be omitted if the status should be set to 98 or 99 (ignore/well known). Translation, romanization and sentence are all optional, but please understand that tests are only possible if terms have a translation. If a term already exists in the database (comparison is NOT case sensitive), it will not be overwritten; the line will be ignored. You can change this by setting "Overwrite existent terms" to "Yes". Be careful using this screen, a database backup before the import and double-checking everything is always advisable!  
 
-![Image](../img/10.jpg)  
+![Image](../img/upload_terms.jpg)  
 
 ## Database
 
