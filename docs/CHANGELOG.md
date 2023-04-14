@@ -3,7 +3,7 @@
 This project's changelog. Versions marked with "-fork" come from the community, other versions come from the canonical LWT ("official" branch on Git).
 For git tags, official releases are marked like "v1.0.0", while unofficial ones are marked like "v1.0.0-fork".
 
-## [Unreleased]
+## 2.8.1-fork (April 14 2023)
 
 ### Changed
 
@@ -16,6 +16,10 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 * Since 2.2.2-fork, many multi-words were not displayed, as explained in [#70](https://github.com/HugoFara/lwt/issues/70). Issues may remain.
 * Auto-translation of all words (bulk translate) could not open dictionaries starting with '*'.
 * Since 2.7.0-fork, using a dictionary starting with "ggl.php" was creating a fatal error on opening text.
+
+### Full Changelog
+
+* [2.8.0...2.8.1](https://github.com/HugoFara/lwt/compare/2.8.0...2.8.1)
 
 ## 2.8.0-fork (April 08 2023)
 
