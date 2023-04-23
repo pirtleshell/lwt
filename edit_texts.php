@@ -452,10 +452,9 @@ function edit_texts_do_operation($op, $message1, $no_pagestart): string
     }
 
 
-    // CHECK
-
     $id = null;
     if ($op == 'Check') {
+        // CHECK
         echo '<p>
             <input type="button" value="&lt;&lt; Back" onclick="history.back();" />
         </p>';
@@ -467,11 +466,8 @@ function edit_texts_do_operation($op, $message1, $no_pagestart): string
         </p>';
         pageend();
         exit();
-    }
-
-    // INSERT
-
-    elseif (substr($op, 0, 4) == 'Save') {
+    } elseif (substr($op, 0, 4) == 'Save') {
+        // INSERT
         runsql(
             'insert into ' . $tbpref . 'texts (
                 TxLgID, TxTitle, TxText, TxAnnotatedText, 
@@ -486,11 +482,8 @@ function edit_texts_do_operation($op, $message1, $no_pagestart): string
         );
         $id = get_last_key();
         saveTextTags($id);
-    }
-
-    // UPDATE
-
-    elseif (substr($op, 0, 6) == 'Change') {
+    } elseif (substr($op, 0, 6) == 'Change') {
+        // UPDATE
         /*
         $oldtext = get_first_value(
             'SELECT TxText AS value 
@@ -699,10 +692,11 @@ function edit_texts_change($txid)
         <tr>
             <td class="td1 right">Text:<br /><br />(max.<br />65,000<br />bytes)</td>
             <td class="td1">
-            <textarea <?php echo getScriptDirectionTag($record['TxLgID']); ?> name="TxText" 
-            class="notempty checkbytes checkoutsidebmp respinput" data_maxlength="65000" data_info="Text" rows="20">
-                <?php echo tohtml($record['TxText']); ?>
-            </textarea> 
+            <textarea <?php echo getScriptDirectionTag($record['TxLgID']); ?> 
+            name="TxText" 
+            class="notempty checkbytes checkoutsidebmp respinput" 
+            data_maxlength="65000" data_info="Text" rows="20"
+            ><?php echo tohtml($record['TxText']); ?></textarea> 
             <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
             </td>
         </tr>
