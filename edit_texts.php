@@ -549,9 +549,12 @@ function edit_texts_do_operation($op, $message1, $no_pagestart): string
  * @param int $lid Language ID
  * 
  * @return void
+ * 
+ * @global string $tbpref
  */
 function edit_texts_new($lid)
 {
+    global $tbpref;
     ?>
 
 <h2>
@@ -559,6 +562,23 @@ function edit_texts_new($lid)
     <img src="icn/question-frame.png" title="Help" alt="Help" /></a> 
 </h2>
 <script type="text/javascript" charset="utf-8">
+    function change_textbox_language(select) {
+        const lid = select.value;
+        const language_data = <?php 
+        $sql = "SELECT LgID, LgGoogleTranslateURI FROM {$tbpref}languages 
+        WHERE LgGoogleTranslateURI<>''";
+        $res = do_mysqli_query($sql);
+        $return = array();
+        while ($record = mysqli_fetch_assoc($res)) {
+            $url = $record["LgGoogleTranslateURI"];
+            $return[$record["LgID"]] = langFromDict($url);
+        }
+        echo json_encode($return);
+        ?>;
+        $('#TxTitle').attr('lang', language_data[lid]);
+        $('#TxText').attr('lang', language_data[lid]);
+    }
+
     $(document).ready(ask_before_exiting);
 </script>
 <form class="validate" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
@@ -566,7 +586,7 @@ function edit_texts_new($lid)
         <tr>
             <td class="td1 right">Language:</td>
             <td class="td1">
-                <select name="TxLgID" class="notempty setfocus">
+                <select name="TxLgID" class="notempty setfocus" onchange="change_textbox_language(this);">
                     <?php
                     echo get_languages_selectoptions($lid, '[Choose...]');
                     ?>
@@ -578,7 +598,8 @@ function edit_texts_new($lid)
             <td class="td1 right">Title:</td>
             <td class="td1">
                 <input type="text" class="notempty checkoutsidebmp respinput" 
-                data_info="Title" name="TxTitle" value="" maxlength="200" />
+                data_info="Title" name="TxTitle" id="TxTitle" value="" 
+                maxlength="200" />
                 <img src="icn/status-busy.png" title="Field must not be empty" 
                 alt="Field must not be empty" />
             </td>
@@ -586,7 +607,7 @@ function edit_texts_new($lid)
         <tr>
             <td class="td1 right">Text:<br /><br />(max.<br />65,000<br />bytes)</td>
             <td class="td1">
-                <textarea name="TxText" 
+                <textarea name="TxText" id="TxText"
                 class="notempty checkbytes checkoutsidebmp respinput" 
                 data_maxlength="65000" data_info="Text" rows="20"></textarea>
                 <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
@@ -666,6 +687,25 @@ function edit_texts_change($txid)
     </a>
 </h2>
 <script type="text/javascript" charset="utf-8">
+    function change_textbox_language(select) {
+        const lid = select.value;
+        const language_data = <?php 
+        $sql = "SELECT LgID, LgGoogleTranslateURI FROM {$tbpref}languages 
+        WHERE LgGoogleTranslateURI<>''";
+        $res = do_mysqli_query($sql);
+        $return = array();
+        while ($lg_record = mysqli_fetch_assoc($res)) {
+            $url = $lg_record["LgGoogleTranslateURI"];
+            $return[$lg_record["LgID"]] = langFromDict($url);
+        }
+        echo json_encode($return);
+        ?>;
+        $('#TxTitle').attr('lang', language_data[lid]);
+        $('#TxText').attr('lang', language_data[lid]);
+    }
+    
+    // TODO: call change_textbox_language when page loads
+
     $(document).ready(ask_before_exiting);
 </script>
 <form class="validate" action="<?php echo $_SERVER['PHP_SELF']; ?>#rec<?php echo $txid; ?>" method="post">
@@ -674,7 +714,7 @@ function edit_texts_change($txid)
         <tr>
             <td class="td1 right">Language:</td>
             <td class="td1">
-                <select name="TxLgID" class="notempty setfocus">
+                <select name="TxLgID" class="notempty setfocus" onchange="change_textbox_language(this);">
                 <?php
                 echo get_languages_selectoptions($record['TxLgID'], "[Choose...]");
                 ?>
@@ -686,14 +726,15 @@ function edit_texts_change($txid)
             <td class="td1 right">Title:</td>
             <td class="td1">
                 <input type="text" class="notempty checkoutsidebmp respinput" 
-                data_info="Title" name="TxTitle" value="<?php echo tohtml($record['TxTitle']); ?>" maxlength="200" />
+                data_info="Title" name="TxTitle" id="TxTitle" 
+                value="<?php echo tohtml($record['TxTitle']); ?>" maxlength="200" />
                 <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /></td>
         </tr>
         <tr>
             <td class="td1 right">Text:<br /><br />(max.<br />65,000<br />bytes)</td>
             <td class="td1">
             <textarea <?php echo getScriptDirectionTag($record['TxLgID']); ?> 
-            name="TxText" 
+            name="TxText" id="TxText"
             class="notempty checkbytes checkoutsidebmp respinput" 
             data_maxlength="65000" data_info="Text" rows="20"
             ><?php echo tohtml($record['TxText']); ?></textarea> 
