@@ -691,6 +691,44 @@ function error_message_with_hide($msg, $noback): string
     return '<p id="hide3" class="msgblue">+++ ' . tohtml($msg) . ' +++</p>'; 
 }
 
+/**
+ * Get a two-letter language code from dictionary source language.
+ * 
+ * @param string $url Input URL, usually Google Translate or LibreTranslate
+ */
+function langFromDict($url) {
+    if ($url == '') {
+        return '';
+    }
+    $query = parse_url($url, PHP_URL_QUERY);
+    parse_str($query, $parsed_query);
+    if (array_key_exists("lwt_translator", $parsed_query) && 
+    $parsed_query["lwt_translator"] == "libretranslate") {
+        return $parsed_query["source"] ?? "";
+    }
+    // Fallback to Google Translate
+    return $parsed_query["sl"] ?? "";
+}
+
+/**
+ * Get a two-letter language code from dictionary target language
+ * 
+ * @param string $url Input URL, usually Google Translate or LibreTranslate
+ */
+function targetLangFromDict($url) {
+    if ($url == '') {
+        return '';
+    }
+    $query = parse_url($url, PHP_URL_QUERY);
+    parse_str($query, $parsed_query);
+    if (array_key_exists("lwt_translator", $parsed_query) && 
+    $parsed_query["lwt_translator"] == "libretranslate") {
+        return $parsed_query["target"] ?? "";
+    }
+    // Fallback to Google Translate
+    return $parsed_query["tl"] ?? "";
+} 
+
 /***************** Wrappers for PHP <8.0  ********************/
 if (!function_exists('str_starts_with')) {
     function str_starts_with($haystack, $needle) 

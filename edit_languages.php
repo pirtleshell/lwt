@@ -361,33 +361,6 @@ function load_language($lgid)
     return $language;
 }
 
-function langFromDict($url) {
-    if ($url == '') {
-        return '';
-    }
-    $query = parse_url($url, PHP_URL_QUERY);
-    parse_str($query, $parsed_query);
-    if (array_key_exists("lwt_translator", $parsed_query) && 
-    $parsed_query["lwt_translator"] == "libretranslate") {
-        return $parsed_query["source"] || "";
-    }
-    // Fallback to Google Translate
-    return $parsed_query["sl"] || "";
-}
-
-function targetLangFromDict($url) {
-    if ($url == '') {
-        return '';
-    }
-    $query = parse_url($url, PHP_URL_QUERY);
-    parse_str($query, $parsed_query);
-    if (array_key_exists("lwt_translator", $parsed_query) && 
-    $parsed_query["lwt_translator"] == "libretranslate") {
-        return $parsed_query["target"] || "";
-    }
-    // Fallback to Google Translate
-    return $parsed_query["tl"] || "";
-} 
 
 /**
  * Create the form for a language.

@@ -27,4 +27,20 @@ final class KernelUtilityTest extends TestCase
         $this->assertSame(10, strlen($version));
     }
 
+    /**
+     * Test if the language from dictionary feature is properly working.
+     */
+    public function testLangFromDict(): void
+    {
+        $urls = [
+            'http://translate.google.com/lwt_term?ie=UTF-8&sl=ar&tl=en&text=&lwt_popup=true',
+            'http://localhost/lwt/ggl.php/?sl=ar&tl=hr&text=',
+            'http://localhost:5000/?lwt_translator=libretranslate&source=ar&target=en&q=lwt_term',
+            'ggl.php?sl=ar&tl=en&text=###'
+        ];
+        foreach ($urls as $url) {
+            $this->assertSame("ar", langFromDict($url));
+        }
+    }
+
 }
