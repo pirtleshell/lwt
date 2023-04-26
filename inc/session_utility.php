@@ -2074,25 +2074,30 @@ function make_status_controls_test_table($score, $status, $wordid): string
     return ($status == 98 ? '' : $minus . ' ') . $scoret . ($status == 99 ? '' : ' ' . $plus);
 }
 
-// -------------------------------------------------------------
-
-function get_languages_selectoptions($v,$dt): string 
+/**
+ * Return options as HTML code to insert in a language select.
+ * 
+ * @param string|int|null $v  Selected language ID
+ * @param string          $dt Default value to display
+ */
+function get_languages_selectoptions($v, $dt): string 
 {
     global $tbpref;
-    $sql = "select LgID, LgName from " . $tbpref . "languages 
-    where LgName<>'' order by LgName";
+    $sql = "SELECT LgID, LgName FROM {$tbpref}languages 
+    WHERE LgName<>'' ORDER BY LgName";
     $res = do_mysqli_query($sql);
-    if (! isset($v) || trim($v) == '' ) {
-        $r = "<option value=\"\" selected=\"selected\">" . $dt . "</option>";
-    } else {
-        $r = "<option value=\"\">" . $dt . "</option>";
-    }
+    $r = '<option value="" ';
+    if (!isset($v) || trim($v) == '') {
+        $r .= 'selected="selected"';
+    } 
+    $r .= ">$dt</option>";
     while ($record = mysqli_fetch_assoc($res)) {
         $d = $record["LgName"];
-        if (strlen($d) > 30 ) { $d = substr($d, 0, 30) . "..."; 
+        if (strlen($d) > 30 ) { 
+            $d = substr($d, 0, 30) . "..."; 
         }
-        $r .= "<option value=\"" . $record["LgID"] . "\" " . get_selected($v, $record["LgID"]);
-        $r .= ">" . tohtml($d) . "</option>";
+        $r .= "<option value=\"" . $record["LgID"] . "\" " . 
+        get_selected($v, $record["LgID"]) . ">" . tohtml($d) . "</option>";
     }
     mysqli_free_result($res);
     return $r;
@@ -2128,7 +2133,8 @@ function get_wordstatus_radiooptions($v): string
     foreach ($statuses as $n => $status) {
         $r .= '<span class="status' . $n . '" title="' . tohtml($status["name"]) . '">';
         $r .= '&nbsp;<input type="radio" name="WoStatus" value="' . $n . '"';
-        if ($v == $n) { $r .= ' checked="checked"'; 
+        if ($v == $n) { 
+            $r .= ' checked="checked"'; 
         }
         $r .= ' />' . tohtml($status["abbr"]) . "&nbsp;</span> ";
     }
@@ -2139,8 +2145,8 @@ function get_wordstatus_radiooptions($v): string
 
 function get_wordstatus_selectoptions($v, $all, $not9899, $off=true): string 
 {
-    if (! isset($v) ) {
-        if ($all ) { 
+    if (!isset($v)) {
+        if ($all) { 
             $v = ""; 
         } else { 
             $v = 1; 

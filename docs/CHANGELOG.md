@@ -5,9 +5,18 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 
 ## [Unreleased]
 
+### Added
+
+* ``langFromDict`` and ``targetLangFromDict`` are now officially coming to the kernel utility functions.
+* When creating or editing a new text, text and title boxes change language according to the text's language ([#111](https://github.com/HugoFara/lwt/issues/111)).
+* Refactored texts with OOP:
+  * New class: ``Text`` (in ``inc/classes/Text.php``).
+  * New function: ``edit_texts_form`` (in ``edit_texts.php``) that takes a Text object as input.
+
 ### Fixed
 
 * When editing an existing text, surrounding spaces are no longer inserted ([#92](https://github.com/HugoFara/lwt/issues/92)).
+* Language code is better detected from translator url when editing an existing language.
 
 ## 2.8.1-fork (April 14 2023)
 
