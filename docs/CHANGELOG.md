@@ -11,7 +11,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 * When creating or editing a new text, text and title boxes change language accordign to the text's language ([#111](https://github.com/HugoFara/lwt/issues/111)).
 * Refactored texts with OOP:
   * New class: ``Text`` (in ``inc/classes/Text.php``).
-  * New function: ``edit_text_form`` (in ``edit_texts.php``) that takes a Text object as input.
+  * New function: ``edit_texts_form`` (in ``edit_texts.php``) that takes a Text object as input.
 
 ### Fixed
 

@@ -549,13 +549,17 @@ function edit_texts_do_operation($op, $message1, $no_pagestart): string
  * 
  * @param Text $text Text object to edit
  * @param bool $annotated True if this text has annotations
+ * 
+ * @return void
  */
-function edit_text_form($text, $annotated) {
+function edit_texts_form($text, $annotated) {
     global $tbpref;
+    $new_text = $text->id == 0;
     ?>
     <h2>
-        Edit Text <a target="_blank" href="docs/info.html#howtotext">
-        <img src="icn/question-frame.png" title="Help" alt="Help" />
+        <?php echo ($new_text ? "New" : "Edit") ?> Text 
+        <a target="_blank" href="docs/info.html#howtotext">
+            <img src="icn/question-frame.png" title="Help" alt="Help" />
         </a>
     </h2>
     <script type="text/javascript" charset="utf-8">
@@ -580,7 +584,7 @@ function edit_text_form($text, $annotated) {
     
         $(document).ready(ask_before_exiting);
     </script>
-    <form class="validate" action="<?php echo $_SERVER['PHP_SELF']; ?>#rec<?php echo $text->id; ?>" method="post">
+    <form class="validate" action="<?php echo $_SERVER['PHP_SELF'] . ($new_text ? '' : '#rec' . $text->id); ?>" method="post">
         <input type="hidden" name="TxID" value="<?php echo $text->id; ?>" />
         <table class="tab1" cellspacing="0" cellpadding="5">
             <tr>
@@ -613,7 +617,7 @@ function edit_text_form($text, $annotated) {
                 <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
                 </td>
             </tr>
-            <tr>
+            <tr <?php echo ($new_text ? 'style="display: none;"' : ''); ?>>
                 <td class="td1 right">Ann. Text:</td>
                 <td class="td1">
                     <?php 
@@ -655,12 +659,15 @@ function edit_text_form($text, $annotated) {
                     </span>        
                 </td>
             </tr>
+            <?php if ($new_text && YT_API_KEY != null) {
+                Lwt\Text_From_Youtube\do_form_fragment();
+            } ?>
             <tr>
                 <td class="td1 right" colspan="2">
-                    <input type="button" value="Cancel" onclick="{resetDirty(); location.href='edit_texts.php#rec<?php echo $text->id; ?>';}" />
+                    <input type="button" value="Cancel" onclick="{resetDirty(); location.href='edit_texts.php<?php echo ($new_text ? '' : '#rec' . $text->id); ?>';}" />
                     <input type="submit" name="op" value="Check" />
-                    <input type="submit" name="op" value="Change" />
-                    <input type="submit" name="op" value="Change and Open" />
+                    <input type="submit" name="op" value="<?php echo ($new_text ? 'Save' : 'Change') ?>" />
+                    <input type="submit" name="op" value="<?php echo ($new_text ? 'Save' : 'Change') ?> and Open" />
                 </td>
             </tr>
         </table>
@@ -680,103 +687,11 @@ function edit_text_form($text, $annotated) {
  */
 function edit_texts_new($lid)
 {
-    global $tbpref;
+    $text = new Text();
+    $text->id = 0;
+    $text->lgid = $lid;
+    edit_texts_form($text, false);
     ?>
-
-<h2>
-    New Text <a target="_blank" href="docs/info.html#howtotext">
-    <img src="icn/question-frame.png" title="Help" alt="Help" /></a> 
-</h2>
-<script type="text/javascript" charset="utf-8">
-    function change_textbox_language(select) {
-        const lid = select.value;
-        const language_data = <?php 
-        $sql = "SELECT LgID, LgGoogleTranslateURI FROM {$tbpref}languages 
-        WHERE LgGoogleTranslateURI<>''";
-        $res = do_mysqli_query($sql);
-        $return = array();
-        while ($record = mysqli_fetch_assoc($res)) {
-            $url = $record["LgGoogleTranslateURI"];
-            $return[$record["LgID"]] = langFromDict($url);
-        }
-        echo json_encode($return);
-        ?>;
-        $('#TxTitle').attr('lang', language_data[lid]);
-        $('#TxText').attr('lang', language_data[lid]);
-    }
-
-    $(document).ready(ask_before_exiting);
-</script>
-<form class="validate" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-    <table class="tab1" cellspacing="0" cellpadding="5">
-        <tr>
-            <td class="td1 right">Language:</td>
-            <td class="td1">
-                <select name="TxLgID" class="notempty setfocus" onchange="change_textbox_language(this);">
-                    <?php
-                    echo get_languages_selectoptions($lid, '[Choose...]');
-                    ?>
-                </select>
-                <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
-            </td>
-        </tr>
-        <tr>
-            <td class="td1 right">Title:</td>
-            <td class="td1">
-                <input type="text" class="notempty checkoutsidebmp respinput" 
-                data_info="Title" name="TxTitle" id="TxTitle" value="" 
-                maxlength="200" />
-                <img src="icn/status-busy.png" title="Field must not be empty" 
-                alt="Field must not be empty" />
-            </td>
-        </tr>
-        <tr>
-            <td class="td1 right">Text:<br /><br />(max.<br />65,000<br />bytes)</td>
-            <td class="td1">
-                <textarea name="TxText" id="TxText"
-                class="notempty checkbytes checkoutsidebmp respinput" 
-                data_maxlength="65000" data_info="Text" rows="20"></textarea>
-                <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
-            </td>
-        </tr>
-        <tr>
-            <td class="td1 right">Source URI:</td>
-            <td class="td1">
-                <input type="url" class="checkurl checkoutsidebmp respinput" 
-                data_info="Source URI" name="TxSourceURI" value="" maxlength="1000" />
-            </td>
-        </tr>
-        <tr>
-            <td class="td1 right">Tags:</td>
-            <td class="td1">
-            <?php echo getTextTags(0); ?>
-            </td>
-        </tr>
-        <tr>
-            <td class="td1 right" title="A soundtrack or a video to be display while reading">
-                Media URI:
-            </td>
-            <td class="td1">
-                <input type="text" class="checkoutsidebmp respinput" 
-                data_info="Audio-URI" name="TxAudioURI" value="" maxlength="200" />        
-                <span id="mediaselect">
-                    <?php echo selectmediapath('TxAudioURI'); ?>
-                </span>        
-            </td>
-        </tr>
-        <?php if (YT_API_KEY != null) {
-            Lwt\Text_From_Youtube\do_form_fragment();
-        } ?>
-        <tr>
-            <td class="td1 right" colspan="2">
-                <input type="button" value="Cancel" onclick="{resetDirty(); location.href='edit_texts.php';}" />
-                <input type="submit" name="op" value="Check" />
-                <input type="submit" name="op" value="Save" />
-                <input type="submit" name="op" value="Save and Open" />
-            </td>
-        </tr>
-    </table>
-</form>
 
 <p class="smallgray">
     Import of a <b>long text</b>, without audio, with splitting it up into smaller texts:
@@ -808,7 +723,7 @@ function edit_texts_change($txid)
     if ($record = mysqli_fetch_assoc($res)) {
         $text = new Text();
         $text->load_from_db_record($record);
-        edit_text_form($text, (bool)$record['annot_exists']);
+        edit_texts_form($text, (bool)$record['annot_exists']);
     }
     mysqli_free_result($res);
 }
