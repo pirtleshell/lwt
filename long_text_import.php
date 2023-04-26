@@ -287,17 +287,22 @@ function long_text_display($max_input_vars)
                 name="Upload" rows="15"></textarea>
             
                 <p class="smallgray">
-                    If the text is too long, the import may not be possible.<br />
-                    Current upload limits (in bytes):<br />
-                    <b>post_max_size = <?php echo ini_get('post_max_size'); ?> / 
-                    upload_max_filesize = <?php echo ini_get('upload_max_filesize'); ?></b><br />
-                    If needed, increase in <br />"<?php echo tohtml(php_ini_loaded_file()); ?>" <br />
-                    and restart server.
+                    If the text is too long, the import may not be possible. <wbr />
+                    Current upload limits (in bytes):
+                    <br />
+                    <b>post_max_size</b>: 
+                    <?php echo ini_get('post_max_size'); ?>
+                    <br />
+                    <b>upload_max_filesize</b>: 
+                    <?php echo ini_get('upload_max_filesize'); ?>
+                    <br />
+                    If needed, increase in <wbr />"<?php echo tohtml(php_ini_loaded_file()); ?>" <wbr />
+                    and restart the server.
                 </p>
             </td>
         </tr>
         <tr>
-            <td class="td1 right">NEWLINES and<br />Paragraphs:</td>
+            <td class="td1 right">NEWLINES and paragraphs:</td>
             <td class="td1">
                 <select name="paragraph_handling" class="respinput">
                     <option value="1" selected="selected">
@@ -311,16 +316,17 @@ function long_text_display($max_input_vars)
             </td>
         </tr>
         <tr>
-            <td class="td1 right">Maximum<wbr>Sentences<wbr />per Text:</td>
+            <td class="td1 right">Maximum sentences per text:</td>
             <td class="td1">
                 <input type="text" class="notempty posintnumber" 
                 data_info="Maximum Sentences per Text" name="maxsent" value="50" maxlength="3" size="3" />
                 <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
                 <br />
                 <span class="smallgray">
-                    Values higher than 100 may slow down text display.<br />
-                    Very low values (< 5) may result in too many texts.<br />
-                    The maximum number of new texts must not exceed <?php echo ($max_input_vars-20); ?>.<br />
+                    Values higher than 100 may slow down text display. 
+                    Very low values (< 5) may result in too many texts.
+                    <br />
+                    The maximum number of new texts must not exceed <?php echo ($max_input_vars-20); ?>. 
                     A single new text will never exceed the length of 65,000 bytes.
                 </span>
             </td>
@@ -341,7 +347,6 @@ function long_text_display($max_input_vars)
         <tr>
             <td class="td1 right" colspan="2">
                 <input type="button" value="Cancel" onclick="{resetDirty(); location.href='index.php';}" />
-                <span class="nowrap"></span>
                 <input type="submit" name="op" value="NEXT STEP: Check the Texts" />
             </td>
         </tr>

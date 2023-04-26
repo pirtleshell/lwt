@@ -16,6 +16,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 ## Changed
 
 * Prettier UI to navigate between text creation/edition/archive pages.
+* The long text import page looks a bit nicer.
 
 ### Fixed
 
