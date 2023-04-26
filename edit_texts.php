@@ -589,6 +589,38 @@ function edit_texts_form($text, $annotated) {
         $(document).ready(ask_before_exiting);
         $(document).ready(change_textboxes_language);
     </script>
+    <div class="flex-spaced">
+        <div style="<?php echo ($new_text ? "display: none": ''); ?>">
+            <a href="edit_texts.php?new=1">
+                <img src="icn/plus-button.png">
+                New Text
+            </a>
+        </div>
+        <div>
+            <a href="long_text_import.php">
+                <img src="icn/plus-button.png"> 
+                Long Text Import
+            </a>
+        </div>
+        <div>
+            <a href="do_feeds.php?page=1&amp;check_autoupdate=1">
+                <img src="icn/plus-button.png"> 
+                Newsfeed Import
+            </a>
+        </div>
+        <div>
+            <a href="edit_texts.php?query=&amp;page=1">
+                <img src="icn/drawer--plus.png">
+                Active Texts
+            </a>
+        </div>
+        <div style="<?php echo ($new_text ? "": 'display: none'); ?>">
+            <a href="edit_archivedtexts.php?query=&amp;page=1">
+                <img src="icn/drawer--minus.png">
+                Archived Texts
+            </a>
+        </div>
+    </div>
     <form class="validate" method="post"
     action="<?php echo $_SERVER['PHP_SELF'] . ($new_text ? '' : '#rec' . $text->id); ?>" >
         <input type="hidden" name="TxID" value="<?php echo $text->id; ?>" />
@@ -710,15 +742,6 @@ function edit_texts_new($lid)
     $text->id = 0;
     $text->lgid = $lid;
     edit_texts_form($text, false);
-    ?>
-
-<p class="smallgray">
-    Import of a <b>long text</b>, without audio, with splitting it up into smaller texts:
-</p>
-<p>
-    <input type="button" value="Long Text Import" onclick="location.href='long_text_import.php';" /> 
-</p>
-    <?php
     Lwt\Text_From_Youtube\do_js();
 }
 

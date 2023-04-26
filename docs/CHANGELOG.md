@@ -13,6 +13,10 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
   * New class: ``Text`` (in ``inc/classes/Text.php``).
   * New function: ``edit_texts_form`` (in ``edit_texts.php``) that takes a Text object as input.
 
+## Changed
+
+* Prettier UI to navigate between text creation/edition/archive pages.
+
 ### Fixed
 
 * When editing an existing text, surrounding spaces are no longer inserted ([#92](https://github.com/HugoFara/lwt/issues/92)).
