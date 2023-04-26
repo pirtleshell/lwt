@@ -9,6 +9,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 
 * ``langFromDict`` and ``targetLangFromDict`` are now officially coming to the kernel utility functions.
 * When creating or editing a new text, text and title boxes change language accordign to the text's language ([#111](https://github.com/HugoFara/lwt/issues/111)).
+* New classe: ``Text`` (in ``inc/classes/Text.php``).
 
 ### Fixed
 
