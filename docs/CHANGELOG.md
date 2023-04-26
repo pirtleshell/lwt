@@ -17,6 +17,8 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 
 * When editing an existing text, surrounding spaces are no longer inserted ([#92](https://github.com/HugoFara/lwt/issues/92)).
 * Language code is better detected from translator url when editing an existing language.
+* The field "Short Text Import" on long text import and was not redirecting to
+the intendended page. Same goes for "New Text" on "Archived Texts" page.
 
 ## 2.8.1-fork (April 14 2023)
 

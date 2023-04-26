@@ -437,7 +437,7 @@ if (isset($_REQUEST['chg'])) {
 
 <div class="flex-spaced">
     <div>
-        <a href="<?php echo $_SERVER['PHP_SELF']; ?>?new=1">
+        <a href="edit_texts.php?new=1">
             <img src="icn/plus-button.png">
             New Text
         </a>

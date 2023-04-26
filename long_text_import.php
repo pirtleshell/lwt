@@ -227,7 +227,7 @@ function long_text_display($max_input_vars)
 
     <div class="flex-spaced">
         <div title="Import of a single text, max. 65,000 bytes long, with optional audio">
-            <a href="<?php echo $_SERVER['PHP_SELF']; ?>?new=1">
+            <a href="edit_texts.php?new=1">
                 <img src="icn/plus-button.png">
                 Short Text Import
             </a>
