@@ -563,8 +563,14 @@ function edit_texts_form($text, $annotated) {
         </a>
     </h2>
     <script type="text/javascript" charset="utf-8">
-        function change_textbox_language(select) {
-            const lid = select.value;
+        /**
+         * Change the language of inputs for text and title based on selected 
+         * language.
+         * 
+         * @returns undefined
+         */
+        function change_textboxes_language() {
+            const lid = document.getElementById("TxLgID").value;
             const language_data = <?php 
             $sql = "SELECT LgID, LgGoogleTranslateURI FROM {$tbpref}languages 
             WHERE LgGoogleTranslateURI<>''";
@@ -579,23 +585,25 @@ function edit_texts_form($text, $annotated) {
             $('#TxTitle').attr('lang', language_data[lid]);
             $('#TxText').attr('lang', language_data[lid]);
         }
-        
-        // TODO: call change_textbox_language when page loads
     
         $(document).ready(ask_before_exiting);
+        $(document).ready(change_textboxes_language);
     </script>
-    <form class="validate" action="<?php echo $_SERVER['PHP_SELF'] . ($new_text ? '' : '#rec' . $text->id); ?>" method="post">
+    <form class="validate" method="post"
+    action="<?php echo $_SERVER['PHP_SELF'] . ($new_text ? '' : '#rec' . $text->id); ?>" >
         <input type="hidden" name="TxID" value="<?php echo $text->id; ?>" />
         <table class="tab1" cellspacing="0" cellpadding="5">
             <tr>
                 <td class="td1 right">Language:</td>
                 <td class="td1">
-                    <select name="TxLgID" class="notempty setfocus" onchange="change_textbox_language(this);">
+                    <select name="TxLgID" id="TxLgID" class="notempty setfocus" 
+                    onchange="change_textboxes_language();">
                     <?php
                     echo get_languages_selectoptions($text->lgid, "[Choose...]");
                     ?>
                     </select> 
-                    <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+                    <img src="icn/status-busy.png" title="Field must not be empty" 
+                    alt="Field must not be empty" />
                 </td>
             </tr>
             <tr>
@@ -604,17 +612,22 @@ function edit_texts_form($text, $annotated) {
                     <input type="text" class="notempty checkoutsidebmp respinput" 
                     data_info="Title" name="TxTitle" id="TxTitle" 
                     value="<?php echo tohtml($text->title); ?>" maxlength="200" />
-                    <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /></td>
+                    <img src="icn/status-busy.png" title="Field must not be empty" 
+                    alt="Field must not be empty" />
+                </td>
             </tr>
             <tr>
-                <td class="td1 right">Text:<br /><br />(max.<br />65,000<br />bytes)</td>
+                <td class="td1 right">
+                    Text:<br /><br />(max.<br />65,000<br />bytes)
+                </td>
                 <td class="td1">
                 <textarea <?php echo getScriptDirectionTag($text->lgid); ?> 
                 name="TxText" id="TxText"
                 class="notempty checkbytes checkoutsidebmp respinput" 
                 data_maxlength="65000" data_info="Text" rows="20"
                 ><?php echo tohtml($text->text); ?></textarea> 
-                <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+                <img src="icn/status-busy.png" title="Field must not be empty" 
+                alt="Field must not be empty" />
                 </td>
             </tr>
             <tr <?php echo ($new_text ? 'style="display: none;"' : ''); ?>>
@@ -624,10 +637,12 @@ function edit_texts_form($text, $annotated) {
                     if ($annotated) {
                         echo '<img src="icn/tick.png" title="With Improved Annotation" alt="With Improved Annotation" /> '. 
                         'Exists - May be partially or fully lost if you change the text!<br />' . 
-                        '<input type="button" value="Print/Edit..." onclick="location.href=\'print_impr_text.php?text=' . $text->id . '\';" />';
+                        '<input type="button" value="Print/Edit..." onclick="location.href=\'print_impr_text.php?text=' . 
+                        $text->id . '\';" />';
                     } else {
                         echo '<img src="icn/cross.png" title="No Improved Annotation" alt="No Improved Annotation" /> ' .
-                        '- None | <input type="button" value="Create/Print..." onclick="location.href=\'print_impr_text.php?edit=1&amp;text=' . $text->id . '\';" />';
+                        '- None | <input type="button" value="Create/Print..." onclick="location.href=\'print_impr_text.php?edit=1&amp;text=' . 
+                        $text->id . '\';" />';
                     }
                     ?>
                 </td>
@@ -652,8 +667,9 @@ function edit_texts_form($text, $annotated) {
                     Media URI:
                 </td>
                 <td class="td1">
-                    <input type="text" class="checkoutsidebmp respinput" data_info="Audio-URI" 
-                    name="TxAudioURI" value="<?php echo tohtml($text->media_uri); ?>" maxlength="200" /> 
+                    <input type="text" class="checkoutsidebmp respinput" 
+                    data_info="Audio-URI" name="TxAudioURI" maxlength="200"
+                    value="<?php echo tohtml($text->media_uri); ?>"  /> 
                     <span id="mediaselect">
                         <?php echo selectmediapath('TxAudioURI'); ?>
                     </span>        
@@ -664,10 +680,13 @@ function edit_texts_form($text, $annotated) {
             } ?>
             <tr>
                 <td class="td1 right" colspan="2">
-                    <input type="button" value="Cancel" onclick="{resetDirty(); location.href='edit_texts.php<?php echo ($new_text ? '' : '#rec' . $text->id); ?>';}" />
+                    <input type="button" value="Cancel" 
+                    onclick="{resetDirty(); location.href='edit_texts.php<?php echo ($new_text ? '' : '#rec' . $text->id); ?>';}" />
                     <input type="submit" name="op" value="Check" />
-                    <input type="submit" name="op" value="<?php echo ($new_text ? 'Save' : 'Change') ?>" />
-                    <input type="submit" name="op" value="<?php echo ($new_text ? 'Save' : 'Change') ?> and Open" />
+                    <input type="submit" name="op" 
+                    value="<?php echo ($new_text ? 'Save' : 'Change') ?>" />
+                    <input type="submit" name="op" 
+                    value="<?php echo ($new_text ? 'Save' : 'Change') ?> and Open" />
                 </td>
             </tr>
         </table>
