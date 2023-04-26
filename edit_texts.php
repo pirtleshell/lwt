@@ -544,8 +544,13 @@ function edit_texts_do_operation($op, $message1, $no_pagestart): string
     return $message;
 }
 
-
-function edit_text_form($text, $record) {
+/**
+ * Display the main form for text creation and edition.
+ * 
+ * @param Text $text Text object to edit
+ * @param bool $annotated True if this text has annotations
+ */
+function edit_text_form($text, $annotated) {
     global $tbpref;
     ?>
     <h2>
@@ -583,7 +588,7 @@ function edit_text_form($text, $record) {
                 <td class="td1">
                     <select name="TxLgID" class="notempty setfocus" onchange="change_textbox_language(this);">
                     <?php
-                    echo get_languages_selectoptions($record['TxLgID'], "[Choose...]");
+                    echo get_languages_selectoptions($text->lgid, "[Choose...]");
                     ?>
                     </select> 
                     <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
@@ -594,24 +599,33 @@ function edit_text_form($text, $record) {
                 <td class="td1">
                     <input type="text" class="notempty checkoutsidebmp respinput" 
                     data_info="Title" name="TxTitle" id="TxTitle" 
-                    value="<?php echo tohtml($record['TxTitle']); ?>" maxlength="200" />
+                    value="<?php echo tohtml($text->title); ?>" maxlength="200" />
                     <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /></td>
             </tr>
             <tr>
                 <td class="td1 right">Text:<br /><br />(max.<br />65,000<br />bytes)</td>
                 <td class="td1">
-                <textarea <?php echo getScriptDirectionTag($record['TxLgID']); ?> 
+                <textarea <?php echo getScriptDirectionTag($text->lgid); ?> 
                 name="TxText" id="TxText"
                 class="notempty checkbytes checkoutsidebmp respinput" 
                 data_maxlength="65000" data_info="Text" rows="20"
-                ><?php echo tohtml($record['TxText']); ?></textarea> 
+                ><?php echo tohtml($text->text); ?></textarea> 
                 <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
                 </td>
             </tr>
             <tr>
                 <td class="td1 right">Ann. Text:</td>
                 <td class="td1">
-                    <?php echo ($record['annotlen'] ? '<img src="icn/tick.png" title="With Improved Annotation" alt="With Improved Annotation" /> Exists - May be partially or fully lost if you change the text!<br /><input type="button" value="Print/Edit..." onclick="location.href=\'print_impr_text.php?text=' . $text->id . '\';" />' : '<img src="icn/cross.png" title="No Improved Annotation" alt="No Improved Annotation" /> - None | <input type="button" value="Create/Print..." onclick="location.href=\'print_impr_text.php?edit=1&amp;text=' . $text->id . '\';" />'); ?>
+                    <?php 
+                    if ($annotated) {
+                        echo '<img src="icn/tick.png" title="With Improved Annotation" alt="With Improved Annotation" /> '. 
+                        'Exists - May be partially or fully lost if you change the text!<br />' . 
+                        '<input type="button" value="Print/Edit..." onclick="location.href=\'print_impr_text.php?text=' . $text->id . '\';" />';
+                    } else {
+                        echo '<img src="icn/cross.png" title="No Improved Annotation" alt="No Improved Annotation" /> ' .
+                        '- None | <input type="button" value="Create/Print..." onclick="location.href=\'print_impr_text.php?edit=1&amp;text=' . $text->id . '\';" />';
+                    }
+                    ?>
                 </td>
             </tr>
             <tr>
@@ -619,7 +633,7 @@ function edit_text_form($text, $record) {
                 <td class="td1">
                     <input type="url" class="checkurl checkoutsidebmp respinput" 
                     data_info="Source URI" name="TxSourceURI" 
-                    value="<?php echo tohtml($record['TxSourceURI']); ?>" 
+                    value="<?php echo tohtml($text->media_uri); ?>" 
                     maxlength="1000" />
                 </td>
             </tr>
@@ -635,7 +649,7 @@ function edit_text_form($text, $record) {
                 </td>
                 <td class="td1">
                     <input type="text" class="checkoutsidebmp respinput" data_info="Audio-URI" 
-                    name="TxAudioURI" value="<?php echo tohtml($record['TxAudioURI']); ?>" maxlength="200" /> 
+                    name="TxAudioURI" value="<?php echo tohtml($text->media_uri); ?>" maxlength="200" /> 
                     <span id="mediaselect">
                         <?php echo selectmediapath('TxAudioURI'); ?>
                     </span>        
@@ -786,15 +800,15 @@ function edit_texts_new($lid)
 function edit_texts_change($txid)
 {
     global $tbpref;
-    $sql = "SELECT TxLgID, TxTitle, TxText, TxAudioURI, TxSourceURI, 
-    LENGTH(TxAnnotatedText) AS annotlen 
+    $sql = "SELECT TxID, TxLgID, TxTitle, TxText, TxAudioURI, TxSourceURI, 
+    TxAnnotatedText <> '' AS annot_exists 
     FROM {$tbpref}texts 
     WHERE TxID = {$txid}";
     $res = do_mysqli_query($sql);
     if ($record = mysqli_fetch_assoc($res)) {
         $text = new Text();
-        $text->id = $txid;
-        edit_text_form($text, $record);
+        $text->load_from_db_record($record);
+        edit_text_form($text, (bool)$record['annot_exists']);
     }
     mysqli_free_result($res);
 }

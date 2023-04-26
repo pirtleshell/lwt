@@ -11,7 +11,6 @@
  * @since   2.9.0
  */
 
-require_once __DIR__ . "/Language.php";
 
 /**
  * A text represented as an object.
@@ -23,9 +22,9 @@ class Text
      */
     public $id;
     /**
-     * @var Language $lgid Language object.
+     * @var int $lgid Language id.
      */
-    public $Language;
+    public $lgid;
     /**
      * @var string $title Text title.
      */
@@ -55,4 +54,15 @@ class Text
      */
     public $audio_pos;
 
+    public function load_from_db_record($record) {
+        $this->id = $record['TxID'];
+        $this->lgid = $record['TxLgID'];
+        $this->title = $record['TxTitle'];
+        $this->text = $record['TxText'];
+        $this->annotated = $record['TxAnnotatedText'];
+        $this->media_uri = $record['TxAudioURI'];
+        $this->source = $record['TxSourceURI'];
+        $this->position = $record['TxPosition'];
+        $this->audio_pos = $record['TxAudioPosition'];
+    }
 }
