@@ -148,20 +148,23 @@ Name: </td><td class="td1">
 <tr><td class="td1">Options: </td>
 <td class="td1"><table style="width:100%">
 <tr><td style="width:35%"><input type="checkbox" name="edit_text" checked="checked" /> Edit Text </td>
-<td><input type="checkbox" name="c_autoupdate" /> Auto Update Interval: 
-<input class="posintnumber" data_info="Auto Update Interval" type="text" size="4" name="autoupdate" disabled />
-<select name="autoupdate" disabled><option value="h">Hour(s)</option>
-<option value="d">Day(s)</option><option value="w">Week(s)</option></select></td></tr>
+<td>
+    <input type="checkbox" name="c_autoupdate" /> Auto Update Interval: 
+    <input class="posintnumber" data_info="Auto Update Interval" type="number" min="0" size="4" name="autoupdate" disabled />
+    <select name="autoupdate" disabled><option value="h">Hour(s)</option>
+    <option value="d">Day(s)</option><option value="w">Week(s)</option></select>
+</td></tr>
 <tr><td>
     <input type="checkbox" name="c_max_links" /> Max. Links: 
-    <input class="posintnumber maxint_300" data_info="Max. Links" type="text" size="4" name="max_links" disabled /></td>
+    <input class="posintnumber maxint_300" data_info="Max. Links" type="number" min="0" max="300" size="4" name="max_links" disabled /></td>
     <td><input type="checkbox" name="c_charset" /> Charset: 
     <input type="text" data_info="Charset" size="20" name="charset" disabled /> </td></tr>
 <tr><td>
     <input type="checkbox" name="c_max_texts" /> Max. Texts: 
-    <input class="posintnumber maxint_30" data_info="Max. Texts" type="text" size="4" name="max_texts" disabled /></td>
+    <input class="posintnumber maxint_30" data_info="Max. Texts" ttype="number" min="0" max="30" size="4" name="max_texts" disabled /></td>
     <td>
-        <input type="checkbox" name="c_tag" /> Tag: <input type="text" data_info="Tag" size="20" name="tag" disabled />
+        <input type="checkbox" name="c_tag" /> Tag: 
+        <input type="text" data_info="Tag" size="20" name="tag" disabled />
     </td>
 </tr>
 <tr><td colspan="2">
@@ -295,7 +298,7 @@ function edit_feed($currentfeed)
 } ?> /> Auto Update Interval: 
 <input class="posintnumber<?php if(get_nf_option($row['NfOptions'], 'autoupdate')!==null) { 
     echo ' notempty'; 
-} ?>" data_info="Auto Update Interval" type="text" size="4" name="autoupdate" value="<?php echo $auto_upd_i; ?>" 
+} ?>" data_info="Auto Update Interval" type="number" min="0" size="4" name="autoupdate" value="<?php echo $auto_upd_i; ?>" 
 <?php
 if ($auto_upd_i==null) { 
     echo ' disabled'; 
@@ -316,7 +319,7 @@ if ($auto_upd_i==null) {
 } ?> /> Max. Links: <input class="<?php 
 if(get_nf_option($row['NfOptions'], 'max_links')!==null) { 
     echo 'notempty '; 
-} ?>posintnumber maxint_300" data_info="Max. Links" type="text" size="4" name="max_links" value="<?php echo get_nf_option($row['NfOptions'], 'max_links') . '"';
+} ?>posintnumber maxint_300" data_info="Max. Links" type="number" min="0" max="300" size="4" name="max_links" value="<?php echo get_nf_option($row['NfOptions'], 'max_links') . '"';
 if(get_nf_option($row['NfOptions'], 'max_links')==null) { 
     echo ' disabled'; 
 } ?> /></td><td><input type="checkbox" name="c_charset"<?php 
@@ -330,9 +333,12 @@ if(get_nf_option($row['NfOptions'], 'charset')==null) {
 } ?> /> </td></tr>
 <tr><td><input type="checkbox" name="c_max_texts"<?php if(get_nf_option($row['NfOptions'], 'max_texts')!==null) { 
     echo ' checked="checked"'; 
-} ?> /> Max. Texts: <input class="<?php if(get_nf_option($row['NfOptions'], 'max_texts')!==null) { 
+} ?> /> Max. Texts: 
+<input class="<?php if(get_nf_option($row['NfOptions'], 'max_texts')!==null) { 
     echo 'notempty '; 
-} ?>posintnumber maxint_30" data_info="Max. Texts" type="text" size="4" name="max_texts" value="<?php echo get_nf_option($row['NfOptions'], 'max_texts') . '"';if(get_nf_option($row['NfOptions'], 'max_texts')==null) { 
+} ?>posintnumber maxint_30" data_info="Max. Texts" type="number" min="0" max="30" 
+size="4" name="max_texts" 
+value="<?php echo get_nf_option($row['NfOptions'], 'max_texts') . '"';if(get_nf_option($row['NfOptions'], 'max_texts')==null) { 
     echo ' disabled'; 
 } ?> /></td><td><input type="checkbox" name="c_tag"<?php if(get_nf_option($row['NfOptions'], 'tag')!==null) { 
     echo ' checked="checked"'; 
@@ -342,7 +348,9 @@ if(get_nf_option($row['NfOptions'], 'charset')==null) {
 if(get_nf_option($row['NfOptions'], 'tag')==null) { 
     echo ' disabled'; 
 } ?> /> </td></tr>
-<tr><td colspan="2"><input type="checkbox" name="c_article_source"<?php if(get_nf_option($row['NfOptions'], 'article_source')!==null) { 
+<tr>
+    <td colspan="2">
+    <input type="checkbox" name="c_article_source"<?php if(get_nf_option($row['NfOptions'], 'article_source')!==null) { 
     echo ' checked="checked"'; 
 } ?> /> Article Source: <input class="<?php if(get_nf_option($row['NfOptions'], 'article_source')!==null) { 
     echo 'notempty ';

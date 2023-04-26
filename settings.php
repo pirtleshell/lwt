@@ -220,7 +220,8 @@ echo get_themes_selectoptions(
             </select>
         </td>
         <td class="td1 center">
-            <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+            <img src="icn/status-busy.png" title="Field must not be empty" 
+            alt="Field must not be empty" />
         </td>
     </tr>
     <!-- ******************************************************* -->
@@ -230,7 +231,8 @@ echo get_themes_selectoptions(
             Height of left top frame <wbr /><b>without</b> audioplayer
         </td>
         <td class="td1 center">
-            <input class="notempty posintnumber right setfocus respinput" type="text" 
+            <input class="notempty posintnumber right setfocus respinput" 
+            type="number" min="0"
             name="set-text-h-frameheight-no-audio" data_info="Height of left top frame without audioplayer" 
             value="<?php echo tohtml(getSettingWithDefault('set-text-h-frameheight-no-audio')); ?>" maxlength="3" 
             size="3" /><br />Pixel </td>
@@ -244,7 +246,8 @@ echo get_themes_selectoptions(
             Height of left top frame <wbr /><b>with</b> audioplayer
         </td>
         <td class="td1 center">
-            <input class="notempty posintnumber right respinput" type="text" 
+            <input class="notempty posintnumber right respinput" type="number" 
+            min="0"
             name="set-text-h-frameheight-with-audio" 
             data_info="Height of left top frame with audioplayer" 
             value="<?php echo tohtml(getSettingWithDefault('set-text-h-frameheight-with-audio')); ?>" 
@@ -259,7 +262,8 @@ echo get_themes_selectoptions(
     <tr>
         <td class="td1 center">Width of left frames</td>
         <td class="td1 center">
-            <input class="notempty posintnumber right respinput" type="text" 
+            <input class="notempty posintnumber right respinput" type="number" 
+            min="0"
             name="set-text-l-framewidth-percent" data_info="Width of left frames" 
             value="<?php echo tohtml(getSettingWithDefault('set-text-l-framewidth-percent')); ?>" 
             maxlength="2" size="2" />
@@ -273,7 +277,8 @@ echo get_themes_selectoptions(
     <tr>
         <td class="td1 center">Height of right top frame</td>
         <td class="td1 center">
-            <input class="notempty posintnumber right respinput" type="text" 
+            <input class="notempty posintnumber right respinput" type="number" 
+            min="0"
             name="set-text-r-frameheight-percent"  data_info="Height of right top frame" 
             value="<?php echo tohtml(getSettingWithDefault('set-text-r-frameheight-percent')); ?>" maxlength="2" size="2" />
             <br />Percent
@@ -311,20 +316,23 @@ echo get_tooltip_selectoptions(
             </select>
         </td>
         <td class="td1 center">
-            <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+            <img src="icn/status-busy.png" title="Field must not be empty" 
+            alt="Field must not be empty" />
         </td>
     </tr>
     <!-- ******************************************************* -->
     <tr>
         <td class="td1 center">New Term Translations per Page</td>
         <td class="td1 center">
-            <input class="notempty posintnumber right respinput" type="text" 
+            <input class="notempty posintnumber right respinput" type="number" 
+            min="0"
             name="set-ggl-translation-per-page"  data_info="New Term Translations per Page" 
             value="<?php echo tohtml(getSettingWithDefault('set-ggl-translation-per-page')); ?>" 
             maxlength="4" size="4" />
         </td>
         <td class="td1 center">
-            <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+            <img src="icn/status-busy.png" title="Field must not be empty" 
+            alt="Field must not be empty" />
         </td>
     </tr>
     <!-- ******************************************************* -->
@@ -332,7 +340,8 @@ echo get_tooltip_selectoptions(
         <th class="th1 center middle" rowspan="5">Test<br />Screen</th>
         <td class="td1 center">Height of left top frame</td>
         <td class="td1 center">
-            <input class="notempty posintnumber right respinput" type="text" 
+            <input class="notempty posintnumber right respinput" type="number" 
+            min="0"
             name="set-test-h-frameheight" data_info="Height of left top frame" 
             value="<?php echo tohtml(getSettingWithDefault('set-test-h-frameheight')); ?>" 
             maxlength="3" size="3" />
@@ -346,7 +355,8 @@ echo get_tooltip_selectoptions(
     <tr>
         <td class="td1 center">Width of left frames</td>
         <td class="td1 center">
-            <input class="notempty posintnumber right respinput" type="text" 
+            <input class="notempty posintnumber right respinput" type="number" 
+            min="0"
             name="set-test-l-framewidth-percent"  data_info="Width of left frames" 
             value="<?php echo tohtml(getSettingWithDefault('set-test-l-framewidth-percent')); ?>" 
             maxlength="2" size="2" />
@@ -360,7 +370,8 @@ echo get_tooltip_selectoptions(
     <tr>
         <td class="td1 center">Height of right top frame</td>
         <td class="td1 center">
-            <input class="notempty posintnumber right respinput" type="text" 
+            <input class="notempty posintnumber right respinput" type="number" 
+            min="0"
             name="set-test-r-frameheight-percent"  data_info="Height of right top frame"  
             value="<?php echo tohtml(getSettingWithDefault('set-test-r-frameheight-percent')); ?>" 
             maxlength="2" size="2" /><br />
@@ -376,8 +387,10 @@ echo get_tooltip_selectoptions(
             Waiting time after assessment to display next test
         </td>
         <td class="td1 center">
-            <input class="notempty zeroposintnumber right respinput" type="text" 
-            name="set-test-main-frame-waiting-time" data_info="Waiting time after assessment to display next test" 
+            <input class="notempty zeroposintnumber right respinput" 
+            type="number" min="0" 
+            name="set-test-main-frame-waiting-time" 
+            data_info="Waiting time after assessment to display next test" 
             value="<?php echo tohtml(getSettingWithDefault('set-test-main-frame-waiting-time')); ?>" 
             maxlength="4" size="4" /><br />
             Milliseconds
@@ -392,13 +405,17 @@ echo get_tooltip_selectoptions(
             Waiting Time to clear the message/edit frame 
         </td>
         <td class="td1 center">
-            <input class="notempty zeroposintnumber right respinput" type="text" 
-            name="set-test-edit-frame-waiting-time"  data_info="Waiting Time to clear the message/edit frame" 
-            value="<?php echo tohtml(getSettingWithDefault('set-test-edit-frame-waiting-time')); ?>" maxlength="8" size="8" /><br />
+            <input class="notempty zeroposintnumber right respinput" 
+            type="number" min="0"
+            name="set-test-edit-frame-waiting-time" 
+            data_info="Waiting Time to clear the message/edit frame" 
+            value="<?php echo tohtml(getSettingWithDefault('set-test-edit-frame-waiting-time')); ?>" 
+            maxlength="8" size="8" /><br />
             Milliseconds
         </td>
         <td class="td1 center">
-            <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+            <img src="icn/status-busy.png" title="Field must not be empty" 
+            alt="Field must not be empty" />
         </td>
     </tr>
     <!-- ******************************************************* -->
@@ -415,7 +432,8 @@ echo get_tooltip_selectoptions(
             </select>
         </td>
         <td class="td1 center">
-            <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+            <img src="icn/status-busy.png" title="Field must not be empty" 
+            alt="Field must not be empty" />
         </td>
     </tr>
     <!-- ******************************************************* -->
@@ -435,7 +453,8 @@ echo get_tooltip_selectoptions(
             </select>
         </td>
         <td class="td1 center">
-            <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+            <img src="icn/status-busy.png" title="Field must not be empty" 
+            alt="Field must not be empty" />
         </td>
     </tr>
     <!-- ******************************************************* -->
@@ -451,7 +470,8 @@ echo get_tooltip_selectoptions(
             </select>
         </td>
         <td class="td1 center">
-            <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+            <img src="icn/status-busy.png" title="Field must not be empty" 
+            alt="Field must not be empty" />
         </td>
     </tr>
     <!-- ******************************************************* -->
@@ -511,9 +531,12 @@ echo get_tooltip_selectoptions(
             Similar terms to be displayed<br />while adding/editing a term
         </td>
         <td class="td1 center">
-            <input class="notempty zeroposintnumber right respinput" type="text" 
-            name="set-similar-terms-count"  data_info="Similar terms to be displayed while adding/editing a term" 
-            value="<?php echo tohtml(getSettingWithDefault('set-similar-terms-count')); ?>" maxlength="1" size="1" />
+            <input class="notempty zeroposintnumber right respinput" 
+            type="number" min="0" 
+            name="set-similar-terms-count" 
+            data_info="Similar terms to be displayed while adding/editing a term" 
+            value="<?php echo tohtml(getSettingWithDefault('set-similar-terms-count')); ?>" 
+            maxlength="1" size="1" />
         </td>
         <td class="td1 center">
             <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
@@ -553,20 +576,23 @@ echo get_tooltip_selectoptions(
         <th class="th1 center" rowspan="7">Text, Term,<br />Newsfeed &amp;<br />Tag Tables</th>
         <td class="td1 center">Texts per Page</td>
         <td class="td1 center">
-            <input class="notempty posintnumber right respinput" type="text" 
-            name="set-texts-per-page"  data_info="Texts per Page" 
-            value="<?php echo tohtml(getSettingWithDefault('set-texts-per-page')); ?>" maxlength="4" size="4" />
+            <input class="notempty posintnumber right respinput" type="number" 
+            min="0" name="set-texts-per-page" data_info="Texts per Page" 
+            value="<?php echo tohtml(getSettingWithDefault('set-texts-per-page')); ?>" 
+            maxlength="4" size="4" />
         </td>
         <td class="td1 center">
-            <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+            <img src="icn/status-busy.png" title="Field must not be empty" 
+            alt="Field must not be empty" />
         </td>
     </tr>
     <!-- ******************************************************* -->
     <tr>
         <td class="td1 center">Archived Texts per Page</td>
         <td class="td1 center">
-            <input class="notempty posintnumber right respinput" type="text" 
-            name="set-archivedtexts-per-page"  data_info="Archived Texts per Page" 
+            <input class="notempty posintnumber right respinput" type="number" 
+            min="0" name="set-archivedtexts-per-page" 
+            data_info="Archived Texts per Page" 
             value="<?php echo tohtml(getSettingWithDefault('set-archivedtexts-per-page')); ?>" maxlength="4" size="4" />
         </td>
         <td class="td1 center">
@@ -577,8 +603,8 @@ echo get_tooltip_selectoptions(
     <tr>
         <td class="td1 center">Terms per Page</td>
         <td class="td1 center">
-            <input class="notempty posintnumber right respinput" type="text" 
-            name="set-terms-per-page" data_info="Terms per Page" 
+            <input class="notempty posintnumber right respinput" type="number" 
+            min="0" name="set-terms-per-page" data_info="Terms per Page" 
             value="<?php echo tohtml(getSettingWithDefault('set-terms-per-page')); ?>" maxlength="4" size="4" />
         </td>
         <td class="td1 center">
@@ -589,9 +615,10 @@ echo get_tooltip_selectoptions(
     <tr>
         <td class="td1 center">Tags per Page</td>
         <td class="td1 center">
-            <input class="notempty posintnumber right respinput" type="text" 
-            name="set-tags-per-page"  data_info="Tags per Page" 
-            value="<?php echo tohtml(getSettingWithDefault('set-tags-per-page')); ?>" maxlength="4" size="4" />
+            <input class="notempty posintnumber right respinput" type="number" 
+            min="0" name="set-tags-per-page" data_info="Tags per Page" 
+            value="<?php echo tohtml(getSettingWithDefault('set-tags-per-page')); ?>" 
+            maxlength="4" size="4" />
         </td>
         <td class="td1 center">
             <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
@@ -601,9 +628,10 @@ echo get_tooltip_selectoptions(
     <tr>
         <td class="td1 center">Feed Articles per Page</td>
         <td class="td1 center">
-            <input class="notempty posintnumber right respinput" type="text" 
-            name="set-articles-per-page" data_info="Feed Articles per Page" 
-            value="<?php echo tohtml(getSettingWithDefault('set-articles-per-page')); ?>" maxlength="4" size="4" />
+            <input class="notempty posintnumber right respinput" type="number" 
+            min="0" name="set-articles-per-page" data_info="Feed Articles per Page" 
+            value="<?php echo tohtml(getSettingWithDefault('set-articles-per-page')); ?>" 
+            maxlength="4" size="4" />
         </td>
         <td class="td1 center">
             <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
@@ -613,12 +641,14 @@ echo get_tooltip_selectoptions(
     <tr>
         <td class="td1 center">Feeds per Page</td>
         <td class="td1 center">
-            <input class="notempty posintnumber right respinput" type="text" 
-            name="set-feeds-per-page" data_info="Feeds per Page" 
-            value="<?php echo tohtml(getSettingWithDefault('set-feeds-per-page')); ?>" maxlength="4" size="4" />
+            <input class="notempty posintnumber right respinput" type="number" 
+            min="0" name="set-feeds-per-page" data_info="Feeds per Page" 
+            value="<?php echo tohtml(getSettingWithDefault('set-feeds-per-page')); ?>" 
+            maxlength="4" size="4" />
         </td>
         <td class="td1 center">
-            <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+            <img src="icn/status-busy.png" title="Field must not be empty" 
+            alt="Field must not be empty" />
         </td>
     </tr>
     <!-- ******************************************************* -->
@@ -634,7 +664,8 @@ echo get_tooltip_selectoptions(
             </select>
         </td>
         <td class="td1 center">
-            <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+            <img src="icn/status-busy.png" title="Field must not be empty" 
+            alt="Field must not be empty" />
         </td>
     </tr>
     <!-- ******************************************************* -->
@@ -642,9 +673,28 @@ echo get_tooltip_selectoptions(
         <th class="th1 center" rowspan="3">Newsfeeds</th>
         <td class="td1 center">Max Articles per Feed <b>with</b> cached text</td>
         <td class="td1 center">
-            <input class="notempty posintnumber right respinput" type="text" 
-            name="set-max-articles-with-text" data_info="Max Articles per Feed with cached text" 
-            value="<?php echo tohtml(getSettingWithDefault('set-max-articles-with-text')); ?>" maxlength="4" size="4" />
+            <input class="notempty posintnumber right respinput" type="number" 
+            min="0" name="set-max-articles-with-text" 
+            data_info="Max Articles per Feed with cached text" 
+            value="<?php echo tohtml(getSettingWithDefault('set-max-articles-with-text')); ?>" 
+            maxlength="4" size="4" />
+        </td>
+        <td class="td1 center">
+            <img src="icn/status-busy.png" title="Field must not be empty" 
+            alt="Field must not be empty" />
+        </td>
+    </tr>
+    <!-- ******************************************************* -->
+    <tr>
+        <td class="td1 center">
+            Max Articles per Feed <b>without</b> cached text
+        </td>
+        <td class="td1 center">
+            <input class="notempty posintnumber right respinput" type="number" 
+            min="0" name="set-max-articles-without-text" 
+            data_info="Max Articles per Feed without cached text" 
+            value="<?php echo tohtml(getSettingWithDefault('set-max-articles-without-text')); ?>" 
+            maxlength="4" size="4" />
         </td>
         <td class="td1 center">
             <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
@@ -652,32 +702,25 @@ echo get_tooltip_selectoptions(
     </tr>
     <!-- ******************************************************* -->
     <tr>
-        <td class="td1 center">Max Articles per Feed <b>without</b> cached text</td>
         <td class="td1 center">
-            <input class="notempty posintnumber right respinput" type="text" 
-            name="set-max-articles-without-text" data_info="Max Articles per Feed without cached text" 
-            value="<?php echo tohtml(getSettingWithDefault('set-max-articles-without-text')); ?>" maxlength="4" size="4" />
+            Max Texts per Feed<br />(older Texts are moved into "Text Archive")
         </td>
         <td class="td1 center">
-            <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
-        </td>
-    </tr>
-    <!-- ******************************************************* -->
-    <tr>
-        <td class="td1 center">Max Texts per Feed<br />(older Texts are moved into "Text Archive")</td>
-        <td class="td1 center">
-            <input class="notempty posintnumber right respinput" type="text" 
-            name="set-max-texts-per-feed" data_info="Max Texts per Feed" 
-            value="<?php echo tohtml(getSettingWithDefault('set-max-texts-per-feed')); ?>" maxlength="4" size="4" />
+            <input class="notempty posintnumber right respinput" type="number" 
+            min="0" name="set-max-texts-per-feed" data_info="Max Texts per Feed" 
+            value="<?php echo tohtml(getSettingWithDefault('set-max-texts-per-feed')); ?>" 
+            maxlength="4" size="4" />
         </td>
         <td class="td1 center">
-            <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+            <img src="icn/status-busy.png" title="Field must not be empty" 
+            alt="Field must not be empty" />
         </td>
     </tr>
     <!-- ******************************************************* -->
     <tr>
         <td class="td1 right" colspan="4">
-            <input type="button" value="&lt;&lt; Back" onclick="{resetDirty(); location.href='index.php';}" />
+            <input type="button" value="&lt;&lt; Back" 
+            onclick="{resetDirty(); location.href='index.php';}" />
             <span class="nowrap"></span>
             <input type="button" value="Reset all settings to default" 
             onclick="{resetDirty(); location.href='settings.php?op=reset';}" />

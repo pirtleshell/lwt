@@ -99,7 +99,7 @@ function feed_wizard_edit_options(): void
                             if(get_nf_option($_SESSION['wizard']['options'], 'autoupdate')!==null) { 
                                 echo ' notempty'; 
                             } 
-                            ?>" data_info="Auto Update Interval" type="text" size="4" name="autoupdate" value="<?php 
+                            ?>" data_info="Auto Update Interval" type="number" min="0" size="4" name="autoupdate" value="<?php 
                             echo $auto_upd_i; ?>" <?php
                             if($auto_upd_i==null) { 
                                 echo ' disabled'; 
@@ -125,9 +125,12 @@ function feed_wizard_edit_options(): void
                         <td>
                             <input type="checkbox" name="c_max_links"<?php if(get_nf_option($_SESSION['wizard']['options'], 'max_links')!==null) { 
                                 echo ' checked="checked"'; 
-                            } ?> /> Max. Links: <input class="<?php if(get_nf_option($_SESSION['wizard']['options'], 'max_links')!==null) { 
+                            } ?> /> Max. Links: 
+                            <input class="<?php if(get_nf_option($_SESSION['wizard']['options'], 'max_links')!==null) { 
                                 echo 'notempty '; 
-                            } ?>posintnumber maxint_300" data_info="Max. Links" type="text" size="4" name="max_links" value="<?php 
+                            } ?>posintnumber maxint_300" data_info="Max. Links" 
+                            type="number" min="0" max="300" size="4" name="max_links" 
+                            value="<?php 
                                 echo get_nf_option($_SESSION['wizard']['options'], 'max_links');
                             ?>" <?php
                             if(get_nf_option($_SESSION['wizard']['options'], 'max_links')==null) { 
@@ -149,13 +152,16 @@ function feed_wizard_edit_options(): void
                     </tr>
                     <tr>
                         <td>
-                            <input type="checkbox" name="c_max_texts"<?php if(get_nf_option($_SESSION['wizard']['options'], 'max_texts')!==null) { 
+                            <input type="checkbox" 
+                            name="c_max_texts"<?php if(get_nf_option($_SESSION['wizard']['options'], 'max_texts')!==null) { 
                                 echo ' checked="checked"'; 
                             } ?> /> 
                             Max. Texts: 
                             <input class="<?php if(get_nf_option($_SESSION['wizard']['options'], 'max_texts')!==null) { 
                             echo 'notempty '; 
-                            } ?>posintnumber maxint_30" data_info="Max. Texts" type="text" size="4" name="max_texts" value="<?php 
+                            } ?>posintnumber maxint_30" data_info="Max. Texts" 
+                            type="number" min="0" max="30" size="4" name="max_texts" 
+                            value="<?php 
                             echo get_nf_option($_SESSION['wizard']['options'], 'max_texts'); 
                             ?>" <?php 
                             if(get_nf_option($_SESSION['wizard']['options'], 'max_texts')==null) { 
@@ -163,13 +169,16 @@ function feed_wizard_edit_options(): void
                             } ?> />
                         </td>
                         <td>
-                            <input type="checkbox" name="c_tag"<?php if(get_nf_option($_SESSION['wizard']['options'], 'tag')!==null) { 
+                            <input type="checkbox" 
+                            name="c_tag"<?php if(get_nf_option($_SESSION['wizard']['options'], 'tag')!==null) { 
                                 echo ' checked="checked"'; 
                             } ?> /> 
                             Tag: 
                             <input <?php if(get_nf_option($_SESSION['wizard']['options'], 'tag')!==null) { 
                                 echo 'class="notempty" '; 
-                            } ?>type="text" data_info="Tag" size="20" name="tag" value="<?php echo get_nf_option($_SESSION['wizard']['options'], 'tag'); ?>" <?php if(get_nf_option($_SESSION['wizard']['options'], 'tag')==null) { 
+                            } ?>type="text" data_info="Tag" size="20" name="tag" 
+                            value="<?php echo get_nf_option($_SESSION['wizard']['options'], 'tag'); ?>" 
+                            <?php if(get_nf_option($_SESSION['wizard']['options'], 'tag')==null) { 
                                 echo ' disabled'; 
                             } ?> /> 
                         </td>

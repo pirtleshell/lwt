@@ -318,7 +318,7 @@ function long_text_display($max_input_vars)
         <tr>
             <td class="td1 right">Maximum sentences per text:</td>
             <td class="td1">
-                <input type="text" class="notempty posintnumber" 
+                <input type="number" min="0" max="999" class="notempty posintnumber" 
                 data_info="Maximum Sentences per Text" name="maxsent" value="50" maxlength="3" size="3" />
                 <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
                 <br />
