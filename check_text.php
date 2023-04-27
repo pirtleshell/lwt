@@ -14,24 +14,25 @@
  * @since   1.0.3
  */
 
+namespace Lwt\Interface\Check_Text;
+
 require_once 'inc/session_utility.php';
 
 pagestart('Check a Text', true);
 
-if (isset($_REQUEST['op'])) {
-
+function do_operation($text, $lgid)
+{
     echo '<p><input type="button" value="&lt;&lt; Back" onclick="history.back();" /></p>';
-    if (strlen(prepare_textdata($_REQUEST['TxText'])) > 65000) {
+    if (strlen(prepare_textdata($text)) > 65000) {
         echo "<p>Error: Text too long, must be below 65000 Bytes.</p>"; 
     } else {
-        splitCheckText(
-            (string)$_REQUEST['TxText'], (int)$_REQUEST['TxLgID'], -1
-        ); 
+        splitCheckText($text, $lgid, -1);
     }
     echo '<p><input type="button" value="&lt;&lt; Back" onclick="history.back();" /></p>';
+}
 
-} else {
-
+function display_form()
+{
     ?>
 <form class="validate" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 <table class="tab3" cellspacing="0" cellpadding="5">
@@ -62,7 +63,12 @@ if (isset($_REQUEST['op'])) {
 </table>
 </form>
     <?php
+}
 
+if (isset($_REQUEST['op'])) {
+    do_operation((string)$_REQUEST['TxText'], (int)$_REQUEST['TxLgID']);
+} else {
+    display_form();
 }
 
 pageend();
