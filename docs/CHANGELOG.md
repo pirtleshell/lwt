@@ -8,7 +8,7 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 ### Added
 
 * ``langFromDict`` and ``targetLangFromDict`` are now officially coming to the kernel utility functions.
-* Text and title boxes change language according to the text's language for short text creation/edition and long text creation ([#111](https://github.com/HugoFara/lwt/issues/111)).
+* Text and title boxes change language according to the text's language for short text creation/edition, long text creation and text check ([#111](https://github.com/HugoFara/lwt/issues/111)).
 * Refactored texts with OOP:
   * New class: ``Text`` (in ``inc/classes/Text.php``).
   * New function: ``edit_texts_form`` (in ``edit_texts.php``) that takes a Text object as input.
