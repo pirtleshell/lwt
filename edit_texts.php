@@ -555,6 +555,14 @@ function edit_texts_do_operation($op, $message1, $no_pagestart): string
 function edit_texts_form($text, $annotated) {
     global $tbpref;
     $new_text = $text->id == 0;
+    $sql = "SELECT LgID, LgGoogleTranslateURI FROM {$tbpref}languages 
+    WHERE LgGoogleTranslateURI<>''";
+    $res = do_mysqli_query($sql);
+    $return = array();
+    while ($lg_record = mysqli_fetch_assoc($res)) {
+        $url = $lg_record["LgGoogleTranslateURI"];
+        $return[$lg_record["LgID"]] = langFromDict($url);
+    }
     ?>
     <h2>
         <?php echo ($new_text ? "New" : "Edit") ?> Text 
@@ -571,17 +579,7 @@ function edit_texts_form($text, $annotated) {
          */
         function change_textboxes_language() {
             const lid = document.getElementById("TxLgID").value;
-            const language_data = <?php 
-            $sql = "SELECT LgID, LgGoogleTranslateURI FROM {$tbpref}languages 
-            WHERE LgGoogleTranslateURI<>''";
-            $res = do_mysqli_query($sql);
-            $return = array();
-            while ($lg_record = mysqli_fetch_assoc($res)) {
-                $url = $lg_record["LgGoogleTranslateURI"];
-                $return[$lg_record["LgID"]] = langFromDict($url);
-            }
-            echo json_encode($return);
-            ?>;
+            const language_data = <?php echo json_encode($return); ?>;
             $('#TxTitle').attr('lang', language_data[lid]);
             $('#TxText').attr('lang', language_data[lid]);
         }
