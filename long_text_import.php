@@ -215,14 +215,41 @@ function long_text_save(): void
  * 
  * @param int $max_input_vars Maximal number of bytes for the text.
  * 
+ * @global $tbpref
+ * 
  * @return void
  */
 function long_text_display($max_input_vars)
 {
+    global $tbpref;
     ?>
 
     <script type="text/javascript" charset="utf-8">
-         $(document).ready(ask_before_exiting);
+        /**
+         * Change the language of inputs for text and title based on selected 
+         * language.
+         * 
+         * @returns undefined
+         */
+        function change_textboxes_language() {
+            const lid = document.getElementById("TxLgID").value;
+            const language_data = <?php 
+            $sql = "SELECT LgID, LgGoogleTranslateURI FROM {$tbpref}languages 
+            WHERE LgGoogleTranslateURI<>''";
+            $res = do_mysqli_query($sql);
+            $return = array();
+            while ($lg_record = mysqli_fetch_assoc($res)) {
+                $url = $lg_record["LgGoogleTranslateURI"];
+                $return[$lg_record["LgID"]] = langFromDict($url);
+            }
+            echo json_encode($return);
+            ?>;
+            $('#TxTitle').attr('lang', language_data[lid]);
+            $('#TxText').attr('lang', language_data[lid]);
+        }
+
+        $(document).ready(ask_before_exiting);
+        $(document).ready(change_textboxes_language);
      </script>
 
     <div class="flex-spaced">
@@ -257,7 +284,7 @@ function long_text_display($max_input_vars)
         <tr>
             <td class="td1 right">Language:</td>
             <td class="td1">
-                <select name="LgID" class="notempty setfocus">
+                <select name="LgID" id="TxLgID" class="notempty setfocus" onchange="change_textboxes_language();">
                     <?php
                     echo get_languages_selectoptions(getSetting('currentlanguage'), '[Choose...]');
                     ?>
@@ -269,7 +296,7 @@ function long_text_display($max_input_vars)
             <td class="td1 right">Title:</td>
             <td class="td1">
                 <input type="text" class="notempty checkoutsidebmp respinput"
-                data_info="Title" name="TxTitle" value="" maxlength="200" />
+                data_info="Title" name="TxTitle" id="TxTitle" value="" maxlength="200" />
                 <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
             </td>
         </tr>
@@ -284,7 +311,7 @@ function long_text_display($max_input_vars)
                 (and do <b>NOT</b> specify file):<br />
 
                 <textarea class="checkoutsidebmp respinput" data_info="Upload" 
-                name="Upload" rows="15"></textarea>
+                name="Upload" id="TxText" rows="15"></textarea>
             
                 <p class="smallgray">
                     If the text is too long, the import may not be possible. <wbr />
