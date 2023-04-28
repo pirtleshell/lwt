@@ -355,28 +355,14 @@ function do_test_prepare_ajax_test_area($testsql, $count, $testtype): int
     );
     mysqli_free_result($res);
     
-    list($word, $wid, $wordlc) = do_test_get_word($testsql);
-    if (!$nosent) {
-        // $nosent == FALSE, mode 1-3
-        list($sent, $_) = do_test_test_sentence($wid, $lgid, $wordlc);
-        if ($sent === null) {
-            $sent = "{" . $word . "}";
-        }
-    }
-    list($r, $save) = print_term_test(
-        $record, $sent, $testtype, $nosent, $lang['regexword']
-    );
-    do_test_test_javascript_interaction(
-        $record, $lang['wb1'], $lang['wb2'], $lang['wb3'], $testtype, $nosent, $save
-    );
-    
-    echo '<p ' . ($lang['rtlScript'] ? 'dir="rtl"' : '') . 
+    echo '<button onclick="get_new_word();">Click Me!</button>
+    <p id="term-test"' . ($lang['rtlScript'] ? 'dir="rtl"' : '') . 
     ' style="' . ($lang['removeSpaces'] ? 'word-break:break-all;' : '') . 
     'font-size:' . $lang['textsize'] . '%;
     line-height: 1.4; text-align:center; margin-bottom:300px;">';
     
     // Show Sentence
-    echo $r;
+    // echo $r;
 
     echo '</p></div>';
 
