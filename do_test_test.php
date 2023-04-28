@@ -19,19 +19,11 @@
 require_once 'inc/session_utility.php';
 require_once 'inc/langdefs.php';
 
-
-/**
- * Set sql request for the word test.
- * 
- * @return string SQL request string
- * 
- * @global string $tbpref Table prefix
- */
-function get_test_sql()
+function do_test_get_test_sql($selection, $sess_testsql, $lang, $text)
 {
     global $tbpref;
-    if (isset($_REQUEST['selection']) && isset($_SESSION['testsql'])) { 
-        $testsql = $_SESSION['testsql'];
+    if (isset($selection) && isset($sess_testsql)) { 
+        $testsql = $sess_testsql;
         $cntlang = get_first_value(
             "SELECT COUNT(DISTINCT WoLgID) AS value 
             FROM $testsql"
@@ -41,16 +33,34 @@ function get_test_sql()
             " but tests are only possible in one language at a time.</p>";
             exit();
         }
-    } else if (isset($_REQUEST['lang'])) {
-        $testsql = " {$tbpref}words WHERE WoLgID = " . $_REQUEST['lang'] . " ";
-    } else if (isset($_REQUEST['text'])) {
+    } else if (isset($lang)) {
+        $testsql = " {$tbpref}words WHERE WoLgID = " . $lang . " ";
+    } else if (isset($text)) {
         $testsql = " {$tbpref}words, {$tbpref}textitems2 
         WHERE Ti2LgID = WoLgID AND Ti2WoID = WoID AND Ti2TxID = " . 
-        $_REQUEST['text'] . " ";
+        $text . " ";
     } else {
         my_die("do_test_test.php called with wrong parameters"); 
     }
     return $testsql;
+
+}
+
+/**
+ * Set sql request for the word test.
+ * 
+ * @return string SQL request string
+ * 
+ * @global string $tbpref 
+ * 
+ * @deprecated 2.9.0-fork Use do_test_get_sql instead
+ */
+function get_test_sql()
+{
+    return do_test_get_test_sql(
+        $_REQUEST['selection'], $_SESSION['testsql'], 
+        $_REQUEST['lang'], $_REQUEST['text']
+    );
 }
 
 /**
@@ -584,7 +594,9 @@ function do_test_test_content()
 {
     global $debug;
     
-    $testsql = get_test_sql();
+    $testsql = do_test_get_test_sql(
+        $_REQUEST['selection'], $_SESSION['testsql'], $_REQUEST['lang'], $_REQUEST['text']
+    );
     $totaltests = $_SESSION['testtotal'];
     $testtype = get_test_type();
     $count = get_first_value(
@@ -604,5 +616,40 @@ function do_test_test_content()
     prepare_test_footer($notyettested);
     do_test_test_javascript($count2);
 }
+
+/**
+ * Do the main content of a test page.
+ * 
+ * @global int $debug Show debug informations
+ * 
+ * @return void
+ */
+function do_test_test_content_ajax()
+{
+    global $debug;
+    
+    $testsql = do_test_get_test_sql(
+        $_REQUEST['selection'], $_SESSION['testsql'], $_REQUEST['lang'], $_REQUEST['text']
+    );
+    $totaltests = $_SESSION['testtotal'];
+    $testtype = get_test_type();
+    $count = get_first_value(
+        "SELECT COUNT(DISTINCT WoID) AS value 
+        FROM $testsql AND WoStatus BETWEEN 1 AND 5 
+        AND WoTranslation != '' AND WoTranslation != '*' AND WoTodayScore < 0"
+    );
+    if ($debug) { 
+        echo "DEBUG - COUNT TO TEST: $count<br />"; 
+    }
+    if (!is_numeric($count)) {
+        my_die("The number of words left to test is not an integer: \"$count\"!");
+    }
+    $notyettested = (int) $count;
+
+    $count2 = prepare_test_area($testsql, $totaltests, $notyettested, $testtype);
+    prepare_test_footer($notyettested);
+    do_test_test_javascript($count2);
+}
+
 
 ?>
