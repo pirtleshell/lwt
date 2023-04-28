@@ -46,6 +46,17 @@ function do_test_get_test_sql($selection, $sess_testsql, $lang, $text)
 
 }
 
+function do_test_get_test_type($testtype)
+{
+    if ($testtype < 1) { 
+        $testtype = 1; 
+    }
+    if ($testtype > 5) { 
+        $testtype = 5; 
+    }
+    return $testtype;
+}
+
 /**
  * Set sql request for the word test.
  * 
@@ -67,17 +78,12 @@ function get_test_sql()
  * Give the test type.
  * 
  * @return int<1, 5> Test type between 1 and 5 (included)
+ * 
+ * @deprecated 2.9.0-fork Use do_test_get_test_type instead.
  */
 function get_test_type()
 {
-    $testtype = (int)getreq('type');
-    if ($testtype < 1) { 
-        $testtype = 1; 
-    }
-    if ($testtype > 5) { 
-        $testtype = 5; 
-    }
-    return $testtype;
+    return do_test_get_test_type((int)getreq('type'));
 }
 
 /**
@@ -268,6 +274,119 @@ function print_term_test($wo_record, $sent, $testtype, $nosent, $regexword)
     } // for: go thru sent
     return array($r, $save);
 }
+
+function do_test_get_word($testsql)
+{
+    // Find the next word to test
+    
+    $pass = 0;
+    $num = 0;
+    $notvalid = null;
+    $sent = null;
+    $wid = null;
+    $word = null;
+    $wordlc = null;
+    while ($pass < 2) {
+        $pass++;
+        $sql = "SELECT DISTINCT WoID, WoText, WoTextLC, WoTranslation, 
+        WoRomanization, WoSentence, WoLgID, 
+        (IFNULL(WoSentence, '') NOT LIKE CONCAT('%{', WoText, '}%')) AS notvalid, 
+        WoStatus, 
+        DATEDIFF( NOW( ), WoStatusChanged ) AS Days, WoTodayScore AS Score 
+        FROM $testsql AND WoStatus BETWEEN 1 AND 5 
+        AND WoTranslation != '' AND WoTranslation != '*' AND WoTodayScore < 0 " . 
+        ($pass == 1 ? 'AND WoRandom > RAND()' : '') . ' 
+        ORDER BY WoTodayScore, WoRandom 
+        LIMIT 1';
+        $res = do_mysqli_query($sql);
+        $record = mysqli_fetch_assoc($res);
+        if ($record) {
+            $num = 1;
+            $wid = $record['WoID'];
+            $word = $record['WoText'];
+            $wordlc = $record['WoTextLC'];
+            $sent = repl_tab_nl($record['WoSentence']);
+            $notvalid = $record['notvalid'];
+            $pass = 2;
+        }
+        mysqli_free_result($res);
+    }
+    return array($word, $wid, $wordlc);
+}
+
+
+/**
+ * Preforms the HTML of the test area, to update through AJAX.
+ *
+ * @param string $testsql    SQL query of for the words that should be tested.
+ * @param int    $totaltests Total number of tests to do.
+ * @param int    $count      Number of tests left.
+ * @param int    $testtype   Type of test.
+ *
+ * @return int Number of tests left to do.
+ *
+ * @global string $tbpref Table prefix 
+ * @global int    $debug  Show the SQL query used if 1.
+ *
+ * @psalm-return int<0, max>
+ */
+function do_test_prepare_ajax_test_area($testsql, $count, $testtype): int
+{
+    global $tbpref, $debug;
+    $nosent = false;
+    if ($testtype > 3) {
+        $testtype -= 3;
+        $nosent = true;
+    }
+
+    echo '<div id="body">';
+
+    $lang = get_first_value("SELECT WoLgID AS value FROM $testsql LIMIT 1");
+    
+    $sql = "SELECT LgName, LgDict1URI, LgDict2URI, LgGoogleTranslateURI, LgTextSize, 
+    LgRemoveSpaces, LgRegexpWordCharacters, LgRightToLeft 
+    FROM {$tbpref}languages WHERE LgID = $lang";
+    $res = do_mysqli_query($sql);
+    $record = mysqli_fetch_assoc($res);
+    $wb1 = isset($record['LgDict1URI']) ? $record['LgDict1URI'] : "";
+    $wb2 = isset($record['LgDict2URI']) ? $record['LgDict2URI'] : "";
+    $wb3 = isset($record['LgGoogleTranslateURI'])?$record['LgGoogleTranslateURI']:"";
+    $textsize = $record['LgTextSize'];
+    $removeSpaces = $record['LgRemoveSpaces'];
+    $regexword = $record['LgRegexpWordCharacters'];
+    $rtlScript = $record['LgRightToLeft'];
+    mysqli_free_result($res);
+    
+    list($word, $wid, $wordlc) = do_test_get_word($testsql);
+    if (!$nosent) {
+        // $nosent == FALSE, mode 1-3
+        list($sent, $_) = do_test_test_sentence($wid, $lang, $wordlc);
+        if ($sent === null) {
+            $sent = "{" . $word . "}";
+        }
+    }
+    
+    echo '<p ' . ($rtlScript ? 'dir="rtl"' : '') . 
+    ' style="' . ($removeSpaces ? 'word-break:break-all;' : '') . 
+    'font-size:' . $textsize . '%;
+    line-height: 1.4; text-align:center; margin-bottom:300px;">';
+    
+    list($r, $save) = print_term_test(
+        $record, $sent, $testtype, $nosent, $regexword
+    );
+    
+    // Show Sentence
+    echo $r;
+    
+    do_test_test_javascript_interaction(
+        $record, $wb1, $wb2, $wb3, $testtype, $nosent, $save
+    );
+
+    echo '</p></div>';
+
+    return $count;
+}
+
 
 /**
  * Preforms the HTML of the test area.
@@ -598,7 +717,7 @@ function do_test_test_content()
         $_REQUEST['selection'], $_SESSION['testsql'], $_REQUEST['lang'], $_REQUEST['text']
     );
     $totaltests = $_SESSION['testtotal'];
-    $testtype = get_test_type();
+    $testtype = do_test_get_test_type((int)getreq('type'));
     $count = get_first_value(
         "SELECT COUNT(DISTINCT WoID) AS value 
         FROM $testsql AND WoStatus BETWEEN 1 AND 5 
@@ -632,7 +751,7 @@ function do_test_test_content_ajax()
         $_REQUEST['selection'], $_SESSION['testsql'], $_REQUEST['lang'], $_REQUEST['text']
     );
     $totaltests = $_SESSION['testtotal'];
-    $testtype = get_test_type();
+    $testtype = do_test_get_test_type((int)getreq('type'));
     $count = get_first_value(
         "SELECT COUNT(DISTINCT WoID) AS value 
         FROM $testsql AND WoStatus BETWEEN 1 AND 5 
