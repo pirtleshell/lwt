@@ -133,7 +133,7 @@ function do_test_mobile_page($property=null)
         if (getreq('type') == 'table') {
             do_test_table();
         } else {
-            do_test_test_content();
+            do_test_test_content_ajax();
         }
         ?>
     </div>

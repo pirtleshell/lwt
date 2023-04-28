@@ -34,11 +34,10 @@ function do_test_get_test_sql($selection, $sess_testsql, $lang, $text)
             exit();
         }
     } else if (isset($lang)) {
-        $testsql = " {$tbpref}words WHERE WoLgID = " . $lang . " ";
+        $testsql = " {$tbpref}words WHERE WoLgID = $lang ";
     } else if (isset($text)) {
         $testsql = " {$tbpref}words, {$tbpref}textitems2 
-        WHERE Ti2LgID = WoLgID AND Ti2WoID = WoID AND Ti2TxID = " . 
-        $text . " ";
+        WHERE Ti2LgID = WoLgID AND Ti2WoID = WoID AND Ti2TxID = $text ";
     } else {
         my_die("do_test_test.php called with wrong parameters"); 
     }
@@ -173,7 +172,7 @@ function do_test_test_sentence($wid, $lang, $wordlc)
       FROM {$tbpref}textitems2 t
       WHERE t.Ti2WordCount = 1 AND t.Ti2WoID = 0
       GROUP BY t.Ti2SeID
-    ) AS sUnknownCount on sUnknownCount.Ti2SeID = ti.Ti2SeID
+    ) AS sUnknownCount ON sUnknownCount.Ti2SeID = ti.Ti2SeID
     WHERE ti.Ti2WoID = $wid
     AND IFNULL(sUnknownCount.c, 0) / sWordCount.c < 0.3
     ORDER BY RAND() LIMIT 1";
@@ -239,12 +238,14 @@ function print_term_test($wo_record, $sent, $testtype, $nosent, $regexword)
             } 
             $r .= '>';
             if ($testtype == 2) {
+                // Show translation
                 if ($nosent) { 
                     $r .= tohtml($trans); 
                 } else { 
                     $r .= '<span dir="ltr">[' . tohtml($trans) . ']</span>'; 
                 }
-            } elseif ($testtype == 3) { 
+            } elseif ($testtype == 3) {
+                // Show word in original language in sentence
                 $r .= tohtml(
                     str_replace(
                         "{", '[', str_replace(
@@ -256,7 +257,8 @@ function print_term_test($wo_record, $sent, $testtype, $nosent, $regexword)
                         )
                     )
                 );
-            } else { 
+            } else {
+                // Show word in original language, alone
                 $r .= tohtml($save); 
             }
             $r .= '</span> ';
@@ -280,9 +282,6 @@ function do_test_get_word($testsql)
     // Find the next word to test
     
     $pass = 0;
-    $num = 0;
-    $notvalid = null;
-    $sent = null;
     $wid = null;
     $word = null;
     $wordlc = null;
@@ -301,12 +300,9 @@ function do_test_get_word($testsql)
         $res = do_mysqli_query($sql);
         $record = mysqli_fetch_assoc($res);
         if ($record) {
-            $num = 1;
             $wid = $record['WoID'];
             $word = $record['WoText'];
             $wordlc = $record['WoTextLC'];
-            $sent = repl_tab_nl($record['WoSentence']);
-            $notvalid = $record['notvalid'];
             $pass = 2;
         }
         mysqli_free_result($res);
@@ -332,7 +328,7 @@ function do_test_get_word($testsql)
  */
 function do_test_prepare_ajax_test_area($testsql, $count, $testtype): int
 {
-    global $tbpref, $debug;
+    global $tbpref;
     $nosent = false;
     if ($testtype > 3) {
         $testtype -= 3;
@@ -341,46 +337,46 @@ function do_test_prepare_ajax_test_area($testsql, $count, $testtype): int
 
     echo '<div id="body">';
 
-    $lang = get_first_value("SELECT WoLgID AS value FROM $testsql LIMIT 1");
+    $lgid = get_first_value("SELECT WoLgID AS value FROM $testsql LIMIT 1");
     
     $sql = "SELECT LgName, LgDict1URI, LgDict2URI, LgGoogleTranslateURI, LgTextSize, 
     LgRemoveSpaces, LgRegexpWordCharacters, LgRightToLeft 
-    FROM {$tbpref}languages WHERE LgID = $lang";
+    FROM {$tbpref}languages WHERE LgID = $lgid";
     $res = do_mysqli_query($sql);
     $record = mysqli_fetch_assoc($res);
-    $wb1 = isset($record['LgDict1URI']) ? $record['LgDict1URI'] : "";
-    $wb2 = isset($record['LgDict2URI']) ? $record['LgDict2URI'] : "";
-    $wb3 = isset($record['LgGoogleTranslateURI'])?$record['LgGoogleTranslateURI']:"";
-    $textsize = $record['LgTextSize'];
-    $removeSpaces = $record['LgRemoveSpaces'];
-    $regexword = $record['LgRegexpWordCharacters'];
-    $rtlScript = $record['LgRightToLeft'];
+    $lang = array(
+        'wb1' => isset($record['LgDict1URI']) ? $record['LgDict1URI'] : "",
+        'wb2' => isset($record['LgDict2URI']) ? $record['LgDict2URI'] : "",
+        'wb3' => isset($record['LgGoogleTranslateURI'])?$record['LgGoogleTranslateURI']:"",
+        'textsize' => $record['LgTextSize'],
+        'removeSpaces' => $record['LgRemoveSpaces'],
+        'regexword' => $record['LgRegexpWordCharacters'],
+        'rtlScript' => $record['LgRightToLeft']
+    );
     mysqli_free_result($res);
     
     list($word, $wid, $wordlc) = do_test_get_word($testsql);
     if (!$nosent) {
         // $nosent == FALSE, mode 1-3
-        list($sent, $_) = do_test_test_sentence($wid, $lang, $wordlc);
+        list($sent, $_) = do_test_test_sentence($wid, $lgid, $wordlc);
         if ($sent === null) {
             $sent = "{" . $word . "}";
         }
     }
-    
-    echo '<p ' . ($rtlScript ? 'dir="rtl"' : '') . 
-    ' style="' . ($removeSpaces ? 'word-break:break-all;' : '') . 
-    'font-size:' . $textsize . '%;
-    line-height: 1.4; text-align:center; margin-bottom:300px;">';
-    
     list($r, $save) = print_term_test(
-        $record, $sent, $testtype, $nosent, $regexword
+        $record, $sent, $testtype, $nosent, $lang['regexword']
     );
+    do_test_test_javascript_interaction(
+        $record, $lang['wb1'], $lang['wb2'], $lang['wb3'], $testtype, $nosent, $save
+    );
+    
+    echo '<p ' . ($lang['rtlScript'] ? 'dir="rtl"' : '') . 
+    ' style="' . ($lang['removeSpaces'] ? 'word-break:break-all;' : '') . 
+    'font-size:' . $lang['textsize'] . '%;
+    line-height: 1.4; text-align:center; margin-bottom:300px;">';
     
     // Show Sentence
     echo $r;
-    
-    do_test_test_javascript_interaction(
-        $record, $wb1, $wb2, $wb3, $testtype, $nosent, $save
-    );
 
     echo '</p></div>';
 
@@ -750,7 +746,6 @@ function do_test_test_content_ajax()
     $testsql = do_test_get_test_sql(
         $_REQUEST['selection'], $_SESSION['testsql'], $_REQUEST['lang'], $_REQUEST['text']
     );
-    $totaltests = $_SESSION['testtotal'];
     $testtype = do_test_get_test_type((int)getreq('type'));
     $count = get_first_value(
         "SELECT COUNT(DISTINCT WoID) AS value 
@@ -765,7 +760,7 @@ function do_test_test_content_ajax()
     }
     $notyettested = (int) $count;
 
-    $count2 = prepare_test_area($testsql, $totaltests, $notyettested, $testtype);
+    $count2 = do_test_prepare_ajax_test_area($testsql, $notyettested, $testtype);
     prepare_test_footer($notyettested);
     do_test_test_javascript($count2);
 }
