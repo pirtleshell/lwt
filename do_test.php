@@ -133,7 +133,8 @@ function do_test_mobile_page($property=null)
         if (getreq('type') == 'table') {
             do_test_table();
         } else {
-            do_test_test_content_ajax();
+            //do_test_test_content_ajax($_REQUEST['selection'], $_SESSION['testsql'], $_REQUEST['lang'], $_REQUEST['text']);
+            do_test_test_content();
         }
         ?>
     </div>
@@ -186,6 +187,7 @@ function do_test_desktop_page($property=null)
         if (getreq('type') == 'table') {
             do_test_table();
         } else {
+            // do_test_test_content_ajax($_REQUEST['selection'], $_SESSION['testsql'], $_REQUEST['lang'], $_REQUEST['text']);
             do_test_test_content();
         }
         ?>

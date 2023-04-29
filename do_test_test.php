@@ -222,58 +222,55 @@ function do_test_get_term_test($wo_record, $sent, $testtype, $nosent, $regexword
     $l = mb_strlen($sent, 'utf-8');
     $r = '';
     $save = '';
-    $on = 0;
-    for ($i=0; $i < $l; $i++) {  // go thru sent
+    $on_word = false;
+
+    $preppend = ' <span style="word-break:normal;" ' . 
+    'class="click todo todosty word wsty word' 
+    . $wid . 
+    '" data_wid="' . $wid . '" data_trans="' . tohtml($trans) . 
+    '" data_text="' . tohtml($word) . '" data_rom="' . tohtml($roman) . 
+    '" data_sent="' . tohtml($cleansent) . '" data_status="' . $status . 
+    '" data_todo="1"';
+    if ($testtype ==3) { 
+        $preppend .= ' title="' . tohtml($trans) . '"'; 
+    }
+    $preppend .= '>';
+    if ($testtype == 2) {
+        // Show translation
+        if ($nosent) { 
+            $preppend .= tohtml($trans); 
+        } else { 
+            $preppend .= '<span dir="ltr">[' . tohtml($trans) . ']</span>'; 
+        }
+    }
+
+    // Go through sentence characters
+    for ($i = 0; $i < $l; $i++) {  
         $c = mb_substr($sent, $i, 1, 'UTF-8');
         if ($c == '}') {
-            $r .= ' <span style="word-break:normal;" ' . 
-            'class="click todo todosty word wsty word' 
-            . $wid . 
-            '" data_wid="' . $wid . '" data_trans="' . tohtml($trans) . 
-            '" data_text="' . tohtml($word) . '" data_rom="' . tohtml($roman) . 
-            '" data_sent="' . tohtml($cleansent) . '" data_status="' . $status . 
-            '" data_todo="1"';
-            if ($testtype ==3) { 
-                $r .= ' title="' . tohtml($trans) . '"'; 
-            } 
-            $r .= '>';
-            if ($testtype == 2) {
-                // Show translation
-                if ($nosent) { 
-                    $r .= tohtml($trans); 
-                } else { 
-                    $r .= '<span dir="ltr">[' . tohtml($trans) . ']</span>'; 
-                }
-            } elseif ($testtype == 3) {
+            $r .= $preppend;
+            if ($testtype == 3) {
                 // Show word in original language in sentence
-                $r .= tohtml(
-                    str_replace(
-                        "{", '[', str_replace(
-                            "}", ']', 
-                            mask_term_in_sentence(
-                                '{' . $save . '}',
-                                $regexword
-                            )    
-                        )
-                    )
-                );
-            } else {
+                $sentence = mask_term_in_sentence('{' . $save . '}', $regexword);
+                $sentence = str_replace("{", '[', str_replace("}", ']', $sentence));
+                $r .= tohtml($sentence);
+            } elseif ($testtype != 2) {
                 // Show word in original language, alone
                 $r .= tohtml($save); 
             }
             $r .= '</span> ';
-            $on = 0;
+            $on_word = false;
         } elseif ($c == '{') {
-            $on = 1;
+            $on_word = true;
             $save = '';
         } else {
-            if ($on) { 
+            if ($on_word) { 
                 $save .= $c; 
             } else { 
                 $r .= tohtml($c); 
             }
         }
-    } // for: go thru sent
+    }
     return array($r, $save);
 }
 
