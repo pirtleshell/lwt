@@ -282,9 +282,6 @@ function do_test_get_word($testsql)
     // Find the next word to test
     
     $pass = 0;
-    $wid = null;
-    $word = null;
-    $wordlc = null;
     while ($pass < 2) {
         $pass++;
         $sql = "SELECT DISTINCT WoID, WoText, WoTextLC, WoTranslation, 
@@ -300,14 +297,11 @@ function do_test_get_word($testsql)
         $res = do_mysqli_query($sql);
         $record = mysqli_fetch_assoc($res);
         if ($record) {
-            $wid = $record['WoID'];
-            $word = $record['WoText'];
-            $wordlc = $record['WoTextLC'];
-            $pass = 2;
+            return $record;
         }
         mysqli_free_result($res);
     }
-    return array($word, $wid, $wordlc);
+    return array();
 }
 
 
@@ -359,9 +353,20 @@ function do_test_prepare_ajax_test_area($testsql, $count, $testtype): int
     <script type="text/javascript">
         function get_new_word()
         {
+            const options = {
+                "action": "display", 
+                "action_type": "test",
+                "test_sql": <?php echo json_encode((string)$testsql); ?>,
+                "test_nosent": <?php echo json_encode((string)$nosent); ?>,
+                "test_lgid": <?php echo json_encode((string)$lgid); ?>,
+                "test_wordregex": <?php echo json_encode((string)$lang['regexword']); ?>,
+                "test_record": <?php echo json_encode((string)$record); ?>,
+                "test_type": <?php echo json_encode((string)$testtype); ?>
+            };
             $.get(
-                'inc/ajax.php?' + $.param({"action": "display", "action_type": "test"})
+                'inc/ajax.php?' + $.param(options)
             ).done(function (data) {
+                $('#term-test').append($.param(options));
                 $('#term-test').append(data);
             });
         }
