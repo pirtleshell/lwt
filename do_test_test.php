@@ -398,8 +398,8 @@ function do_test_prepare_ajax_test_area($testsql, $count, $testtype): int
     </p></div>
     <?php
     
-    // Show Sentence
-    // echo $r;
+    //do_test_test_javascript_interaction($record, $lang['wb1'], $lang['wb2'], $lang['wb3'], $testtype, $nosent, $save);
+    do_test_test_interaction_globals($lang['wb1'], $lang['wb2'], $lang['wb3']);
 
     return $count;
 }
@@ -540,6 +540,103 @@ function prepare_test_area($testsql, $totaltests, $count, $testtype): int
     return $count;
 }
 
+
+/**
+ * Prepare JavaScript code globals so that you can click on words.
+ * 
+ * @param array  $wo_record Word record. Associative array with keys 'WoID', 
+ *                          'WoTranslation'.
+ * @param string $wb1       URL of the first dictionary.
+ * @param string $wb2       URL of the secondary dictionary.
+ * @param string $wb3       URL of the google translate dictionary.
+ * @param int    $testtype  Type of test
+ * @param int    $nosent    1 to use single word instead of sentence.
+ * @param string $save      Word or sentence to use for the test
+ * 
+ * @return void
+ * 
+ * @global string $tbpref  Database table prefix
+ * @global string $angDefs Languages definition array
+ */
+function do_test_test_interaction_globals($wb1, $wb2, $wb3) 
+{
+    ?>
+<script type="text/javascript">
+    WBLINK1 = <?php echo json_encode($wb1); ?>;
+    WBLINK2 = <?php echo json_encode($wb2); ?>;
+    WBLINK3 = <?php echo json_encode($wb3); ?>;
+    LANG = getLangFromDict(WBLINK3);
+    if (LANG && LANG != WBLINK3) {
+        $("html").attr('lang', LANG);
+    }
+    OPENED = 0;
+    $(document).on('keydown', keydown_event_do_test_test);
+    $('.word')
+    .on('click', word_click_event_do_test_test)
+    .on('click', read_word);
+</script>
+    <?php
+}
+
+
+/**
+ * Prepare JavaScript code so that you can click on words.
+ * 
+ * @param array  $wo_record Word record. Associative array with keys 'WoID', 
+ *                          'WoTranslation'.
+ * @param string $wb1       URL of the first dictionary.
+ * @param string $wb2       URL of the secondary dictionary.
+ * @param string $wb3       URL of the google translate dictionary.
+ * @param int    $testtype  Type of test
+ * @param int    $nosent    1 to use single word instead of sentence.
+ * @param string $save      Word or sentence to use for the test
+ * 
+ * @return void
+ * 
+ * @global string $tbpref  Database table prefix
+ * @global string $angDefs Languages definition array
+ */
+function do_test_test_javascript_clickable(
+    $wo_record, $testtype, $nosent, $save
+) {
+    global $tbpref, $langDefs;
+
+    $wid = $wo_record['WoID'];
+    $trans = repl_tab_nl($wo_record['WoTranslation']) . 
+    getWordTagList($wid, ' ', 1, 0);
+    $lang = get_first_value(
+        'SELECT LgName AS value FROM ' . $tbpref . 'languages
+        WHERE LgID = ' . $wo_record['WoLgID'] . '
+        LIMIT 1'        
+    );
+    $abbr = $langDefs[$lang][1];
+    $phoneticText = phonetic_reading($wo_record['WoText'], $abbr);
+    ?>
+<script type="text/javascript">
+    /** 
+     * Read the word aloud
+     */
+    function read_word() {
+        if (('speechSynthesis' in window) && 
+        document.getElementById('utterance-allowed').checked) {
+            const text = <?php echo json_encode($phoneticText); ?>;
+            const lang = <?php echo json_encode($abbr); ?>;
+            readRawTextAloud(text, lang);
+        }
+    }
+
+    SOLUTION = <?php
+    if ($testtype == 1) {
+        echo prepare_textdata_js($nosent ? $trans : (' [' . $trans . '] '));
+    } else {
+        echo prepare_textdata_js($save);
+    }
+    ?>;
+    WID = <?php echo $wid; ?>;
+</script>
+    <?php
+}
+
 /**
  * Prepare JavaScript code so that you can click on words.
  * 
@@ -560,59 +657,8 @@ function prepare_test_area($testsql, $totaltests, $count, $testtype): int
 function do_test_test_javascript_interaction(
     $wo_record, $wb1, $wb2, $wb3, $testtype, $nosent, $save
 ) {
-    global $tbpref, $langDefs;
-
-    $wid = $wo_record['WoID'];
-    $trans = repl_tab_nl($wo_record['WoTranslation']) . 
-    getWordTagList($wid, ' ', 1, 0);
-    $lang = get_first_value(
-        'SELECT LgName AS value FROM ' . $tbpref . 'languages
-        WHERE LgID = ' . $wo_record['WoLgID'] . '
-        LIMIT 1'        
-    );
-    $abbr = $langDefs[$lang][1];
-    $phoneticText = phonetic_reading($wo_record['WoText'], $abbr);
-    ?>
-<script type="text/javascript">
-    //<![CDATA[
-
-    /** 
-     * Read the word aloud
-     */
-    function read_word() {
-        if (('speechSynthesis' in window) && 
-        document.getElementById('utterance-allowed').checked) {
-            const text = <?php echo json_encode($phoneticText); ?>;
-            const lang = <?php echo json_encode($abbr); ?>;
-            readRawTextAloud(text, lang);
-        }
-    }
-
-    WBLINK1 = '<?php echo $wb1; ?>';
-    WBLINK2 = '<?php echo $wb2; ?>';
-    WBLINK3 = '<?php echo $wb3; ?>';
-    LANG = getLangFromDict(WBLINK3);
-    if (LANG && LANG != WBLINK3) {
-        $("html").attr('lang', LANG);
-    }
-    SOLUTION = <?php
-    if ($testtype == 1) {
-        echo prepare_textdata_js($nosent ? $trans : (' [' . $trans . '] '));
-    } else {
-        echo prepare_textdata_js($save);
-    }
-    ?>;
-    OPENED = 0;
-    WID = <?php echo $wid; ?>;
-    $(document).ready(function() {
-        $(document).on('keydown', keydown_event_do_test_test);
-        $('.word')
-        .on('click', word_click_event_do_test_test)
-        .on('click', read_word);
-    });
-    //]]>
-</script>
-    <?php
+    do_test_test_interaction_globals($wb1, $wb2, $wb3);
+    do_test_test_javascript_clickable($wo_record, $testtype, $nosent, $save);
 }
 
 /**
