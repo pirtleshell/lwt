@@ -354,17 +354,29 @@ function do_test_prepare_ajax_test_area($testsql, $count, $testtype): int
         'rtlScript' => $record['LgRightToLeft']
     );
     mysqli_free_result($res);
-    
-    echo '<button onclick="get_new_word();">Click Me!</button>
-    <p id="term-test"' . ($lang['rtlScript'] ? 'dir="rtl"' : '') . 
-    ' style="' . ($lang['removeSpaces'] ? 'word-break:break-all;' : '') . 
-    'font-size:' . $lang['textsize'] . '%;
-    line-height: 1.4; text-align:center; margin-bottom:300px;">';
+
+    ?>
+    <script type="text/javascript">
+        function get_new_word()
+        {
+            $.get(
+                'inc/ajax.php?' + $.param({"action": "display", "action_type": "test"})
+            ).done(function (data) {
+                $('#term-test').append(data);
+            });
+        }
+    </script>
+
+    <button onclick="get_new_word();">Click Me!</button>
+    <p id="term-test" dir="<?php echo ($lang['rtlScript'] ? 'rtl' : 'ltr'); ?>" 
+    style="<?php echo ($lang['removeSpaces'] ? 'word-break:break-all;' : ''); ?>
+    font-size: <?php echo $lang['textsize'] ?>%; line-height: 1.4; text-align:center; margin-bottom:300px;"
+    >
+    </p></div>
+    <?php
     
     // Show Sentence
     // echo $r;
-
-    echo '</p></div>';
 
     return $count;
 }
