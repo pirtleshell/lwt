@@ -324,6 +324,18 @@ function do_test_get_word($testsql)
 }
 
 
+function get_test_solution($testtype, $wo_record, $nosent, $wo_text)
+{
+    if ($testtype == 1) {
+        $trans = repl_tab_nl($wo_record['WoTranslation']) . 
+        getWordTagList($wo_record['WoID'], ' ', 1, 0);
+        return $nosent ? $trans : (' [' . $trans . '] ');
+    } else {
+        return $wo_text;
+    }
+}
+
+
 /**
  * Preforms the HTML of the test area, to update through AJAX.
  *
@@ -381,11 +393,19 @@ function do_test_prepare_ajax_test_area($testsql, $count, $testtype): int
                 "test_wordregex": <?php echo json_encode((string)$lang['regexword']); ?>,
                 "test_type": <?php echo json_encode((string)$testtype); ?>
             };
-            $.get(
+            $.getJSON(
                 'inc/ajax.php?' + $.param(options)
             ).done(function (data) {
                 // $('#term-test').append($.param(options));
-                $('#term-test').append(data);
+                $('#term-test').append(data['group']);
+
+                SOLUTION = data['solution'];
+                WID = data['word_id'];
+
+                $(document).on('keydown', keydown_event_do_test_test);
+                $('.word')
+                .on('click', word_click_event_do_test_test)
+                .on('click', read_word);
             });
         }
     </script>
@@ -398,7 +418,6 @@ function do_test_prepare_ajax_test_area($testsql, $count, $testtype): int
     </p></div>
     <?php
     
-    //do_test_test_javascript_interaction($record, $lang['wb1'], $lang['wb2'], $lang['wb3'], $testtype, $nosent, $save);
     do_test_test_interaction_globals($lang['wb1'], $lang['wb2'], $lang['wb3']);
 
     return $count;
@@ -570,10 +589,6 @@ function do_test_test_interaction_globals($wb1, $wb2, $wb3)
         $("html").attr('lang', LANG);
     }
     OPENED = 0;
-    $(document).on('keydown', keydown_event_do_test_test);
-    $('.word')
-    .on('click', word_click_event_do_test_test)
-    .on('click', read_word);
 </script>
     <?php
 }
@@ -596,14 +611,10 @@ function do_test_test_interaction_globals($wb1, $wb2, $wb3)
  * @global string $tbpref  Database table prefix
  * @global string $angDefs Languages definition array
  */
-function do_test_test_javascript_clickable(
-    $wo_record, $testtype, $nosent, $save
-) {
+function do_test_test_javascript_clickable($wo_record, $solution) {
     global $tbpref, $langDefs;
 
     $wid = $wo_record['WoID'];
-    $trans = repl_tab_nl($wo_record['WoTranslation']) . 
-    getWordTagList($wid, ' ', 1, 0);
     $lang = get_first_value(
         'SELECT LgName AS value FROM ' . $tbpref . 'languages
         WHERE LgID = ' . $wo_record['WoLgID'] . '
@@ -625,14 +636,13 @@ function do_test_test_javascript_clickable(
         }
     }
 
-    SOLUTION = <?php
-    if ($testtype == 1) {
-        echo prepare_textdata_js($nosent ? $trans : (' [' . $trans . '] '));
-    } else {
-        echo prepare_textdata_js($save);
-    }
-    ?>;
+    SOLUTION = <?php echo prepare_textdata_js($solution); ?>;
     WID = <?php echo $wid; ?>;
+
+    $(document).on('keydown', keydown_event_do_test_test);
+    $('.word')
+    .on('click', word_click_event_do_test_test)
+    .on('click', read_word);
 </script>
     <?php
 }
@@ -658,7 +668,8 @@ function do_test_test_javascript_interaction(
     $wo_record, $wb1, $wb2, $wb3, $testtype, $nosent, $save
 ) {
     do_test_test_interaction_globals($wb1, $wb2, $wb3);
-    do_test_test_javascript_clickable($wo_record, $testtype, $nosent, $save);
+    $solution = get_test_solution($testtype, $wo_record, $nosent, $save);
+    do_test_test_javascript_clickable($wo_record, $solution);
 }
 
 /**

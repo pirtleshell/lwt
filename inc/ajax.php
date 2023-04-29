@@ -22,7 +22,13 @@ function get_word_test_ajax($testsql, $nosent, $lgid, $wordregex, $testtype)
     list($r, $save) = do_test_get_term_test(
         $word_record, $sent, $testtype, $nosent, $wordregex
     );
-    return $r;
+    $output = array(
+        "word_id" => $word_record['WoID'],
+        "solution" => get_test_solution($testtype, $word_record, $nosent, $save),
+        "word_text" => $save,
+        "group" => $r 
+    );
+    return json_encode($output);
 }
 
 function word_test_ajax()
