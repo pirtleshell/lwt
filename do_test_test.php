@@ -199,7 +199,7 @@ function do_test_test_sentence($wid, $lang, $wordlc)
 }
 
 /**
- * Echo the test relative to a word.
+ * Return the test relative to a word.
  * 
  * @param array  $wo_record Query from the database regarding a word.
  * @param string $sent      Sentence containing the word.
@@ -209,7 +209,7 @@ function do_test_test_sentence($wid, $lang, $wordlc)
  * 
  * @return array{0: string, 1: string} HTML-escaped and raw text sentences (or word)
  */
-function print_term_test($wo_record, $sent, $testtype, $nosent, $regexword)
+function do_test_get_term_test($wo_record, $sent, $testtype, $nosent, $regexword)
 {
     $wid = $wo_record['WoID'];
     $word = $wo_record['WoText'];
@@ -277,10 +277,32 @@ function print_term_test($wo_record, $sent, $testtype, $nosent, $regexword)
     return array($r, $save);
 }
 
+
+
+/**
+ * Echo the test relative to a word.
+ * 
+ * @param array  $wo_record Query from the database regarding a word.
+ * @param string $sent      Sentence containing the word.
+ * @param int    $testtype  Type of test
+ * @param int    $nosent    1 if you want to hide sentences.
+ * @param string $regexword Regex to select the desired word.
+ * 
+ * @return array{0: string, 1: string} HTML-escaped and raw text sentences (or word)
+ */
+function print_term_test($wo_record, $sent, $testtype, $nosent, $regexword)
+{
+    list($word, $_) =  do_test_get_term_test(
+        $wo_record, $sent, $testtype, $nosent, $regexword
+    );
+    return $word;
+}
+
+/**
+ * Find the next word to test
+ */
 function do_test_get_word($testsql)
 {
-    // Find the next word to test
-    
     $pass = 0;
     while ($pass < 2) {
         $pass++;
@@ -360,13 +382,12 @@ function do_test_prepare_ajax_test_area($testsql, $count, $testtype): int
                 "test_nosent": <?php echo json_encode((string)$nosent); ?>,
                 "test_lgid": <?php echo json_encode((string)$lgid); ?>,
                 "test_wordregex": <?php echo json_encode((string)$lang['regexword']); ?>,
-                "test_record": <?php echo json_encode((string)$record); ?>,
                 "test_type": <?php echo json_encode((string)$testtype); ?>
             };
             $.get(
                 'inc/ajax.php?' + $.param(options)
             ).done(function (data) {
-                $('#term-test').append($.param(options));
+                // $('#term-test').append($.param(options));
                 $('#term-test').append(data);
             });
         }
@@ -506,7 +527,7 @@ function prepare_test_area($testsql, $totaltests, $count, $testtype): int
     'font-size:' . $textsize . '%;
     line-height: 1.4; text-align:center; margin-bottom:300px;">';
     
-    list($r, $save) = print_term_test(
+    list($r, $save) = do_test_get_term_test(
         $record, $sent, $testtype, $nosent, $regexword
     );
     
@@ -742,13 +763,11 @@ function do_test_test_content()
  * 
  * @return void
  */
-function do_test_test_content_ajax()
+function do_test_test_content_ajax($selection, $test_sql, $lang, $text)
 {
     global $debug;
     
-    $testsql = do_test_get_test_sql(
-        $_REQUEST['selection'], $_SESSION['testsql'], $_REQUEST['lang'], $_REQUEST['text']
-    );
+    $testsql = do_test_get_test_sql($selection, $test_sql, $lang, $text);
     $testtype = do_test_get_test_type((int)getreq('type'));
     $count = get_first_value(
         "SELECT COUNT(DISTINCT WoID) AS value 

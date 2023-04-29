@@ -6,7 +6,7 @@ require_once 'session_utility.php';
 require_once '../do_test_test.php';
 
 
-function get_word_test_ajax($testsql, $nosent, $lgid, $wordregex, $record, $testtype)
+function get_word_test_ajax($testsql, $nosent, $lgid, $wordregex, $testtype)
 {
     $word_record = do_test_get_word($testsql);
     $sent = repl_tab_nl($word_record['WoSentence']);
@@ -19,8 +19,8 @@ function get_word_test_ajax($testsql, $nosent, $lgid, $wordregex, $record, $test
             $sent = "{" . $word_record['WoText'] . "}";
         }
     }
-    list($r, $save) = print_term_test(
-        $record, $sent, $testtype, $nosent, $wordregex
+    list($r, $save) = do_test_get_term_test(
+        $word_record, $sent, $testtype, $nosent, $wordregex
     );
     return $r;
 }
@@ -29,7 +29,7 @@ function word_test_ajax()
 {
     return get_word_test_ajax(
         $_GET['test_sql'], $_GET['test_nosent'], $_GET['test_lgid'], 
-        $_GET['test_wordregex'], $_GET['test_record'], $_GET['test_type']
+        $_GET['test_wordregex'], $_GET['test_type']
     );
 }
 
