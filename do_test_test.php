@@ -382,6 +382,18 @@ function do_test_prepare_ajax_test_area($testsql, $count, $testtype): int
 
     ?>
     <script type="text/javascript">
+        function insert_new_word(word) {
+
+                SOLUTION = word['solution'];
+                WID = word['word_id'];
+
+                $('#term-test').html(word['group']);
+
+                $(document).on('keydown', keydown_event_do_test_test);
+                $('.word')
+                .on('click', word_click_event_do_test_test)
+        }
+
         function get_new_word()
         {
             const options = {
@@ -395,27 +407,19 @@ function do_test_prepare_ajax_test_area($testsql, $count, $testtype): int
             };
             $.getJSON(
                 'inc/ajax.php?' + $.param(options)
-            ).done(function (data) {
-                // $('#term-test').append($.param(options));
-                $('#term-test').append(data['group']);
-
-                SOLUTION = data['solution'];
-                WID = data['word_id'];
-
-                $(document).on('keydown', keydown_event_do_test_test);
-                $('.word')
-                .on('click', word_click_event_do_test_test)
-                .on('click', read_word);
-            });
+            ).done(insert_new_word);
         }
+
+        $(get_new_word);
     </script>
 
-    <button onclick="get_new_word();">Click Me!</button>
     <p id="term-test" dir="<?php echo ($lang['rtlScript'] ? 'rtl' : 'ltr'); ?>" 
     style="<?php echo ($lang['removeSpaces'] ? 'word-break:break-all;' : ''); ?>
     font-size: <?php echo $lang['textsize'] ?>%; line-height: 1.4; text-align:center; margin-bottom:300px;"
     >
-    </p></div>
+    </p>
+    <button onclick="get_new_word();">Pass Word</button>
+    </div>
     <?php
     
     do_test_test_interaction_globals($lang['wb1'], $lang['wb2'], $lang['wb3']);

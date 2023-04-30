@@ -187,8 +187,10 @@ function do_test_desktop_page($property=null)
         if (getreq('type') == 'table') {
             do_test_table();
         } else {
-            // do_test_test_content_ajax($_REQUEST['selection'], $_SESSION['testsql'], $_REQUEST['lang'], $_REQUEST['text']);
-            do_test_test_content();
+            do_test_test_content_ajax(
+                $_REQUEST['selection'], $_SESSION['testsql'], 
+                $_REQUEST['lang'], $_REQUEST['text']
+            );
         }
         ?>
     </div>

@@ -10,7 +10,9 @@ function get_word_test_ajax($testsql, $nosent, $lgid, $wordregex, $testtype)
 {
     $word_record = do_test_get_word($testsql);
     $sent = repl_tab_nl($word_record['WoSentence']);
-    if (!$nosent) {
+    if ($nosent) {
+        $sent = "{" . $word_record['WoText'] . "}";
+    } else {
         // $nosent == FALSE, mode 1-3
         list($sent, $_) = do_test_test_sentence(
             $word_record['WoID'], $lgid, $word_record['WoTextLC']
@@ -22,6 +24,7 @@ function get_word_test_ajax($testsql, $nosent, $lgid, $wordregex, $testtype)
     list($r, $save) = do_test_get_term_test(
         $word_record, $sent, $testtype, $nosent, $wordregex
     );
+    
     $output = array(
         "word_id" => $word_record['WoID'],
         "solution" => get_test_solution($testtype, $word_record, $nosent, $save),
