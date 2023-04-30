@@ -396,6 +396,10 @@ function do_test_prepare_ajax_test_area($testsql, $count, $testtype): int
 
         function get_new_word()
         {
+            // Close any previous tooltip
+            cClick();
+
+            // Get new word through AJAX
             const options = {
                 "action": "display", 
                 "action_type": "test",

@@ -4,8 +4,8 @@
  * \file
  * \brief Change status of term while testing
  * 
- * Call: set_test_status.php?wid=[wordid]&stchange=+1/-1
- *       set_test_status.php?wid=[wordid]&status=1..5/98/99
+ * Call: set_test_status.php?wid=[wordid]&stchange=+1/-1&[ajax=1]
+ *       set_test_status.php?wid=[wordid]&status=1..5/98/99&[ajax=1]
  * 
  * @package Lwt
  * @author  LWT Project <lwt-project@hotmail.com>
@@ -73,11 +73,10 @@ function set_test_status_change_progress($stchange)
  * 
  * @return void
  */
-function do_set_test_status_javascript($wid, $status, $stchange)
+function do_set_test_status_javascript($wid, $status, $stchange, $ajax=false)
 {
     ?>
 <script type="text/javascript">
-    //<![CDATA[
     const context = window.parent;
     $('.word<?php echo $wid; ?>', context)
     .removeClass('todo todosty')
@@ -88,12 +87,29 @@ function do_set_test_status_javascript($wid, $status, $stchange)
     const waittime = <?php 
     echo json_encode((int)getSettingWithDefault('set-test-main-frame-waiting-time')); 
     ?> + 500;
-    if (waittime <= 0) {
-        window.parent.location.reload();
-    } else {
-        setTimeout(window.location.reload.bind(window.parent.location), waittime);
+
+    function page_reloader(waittime, target) {
+        if (waittime <= 0) {
+            target.location.reload();
+        } else {
+            setTimeout(window.location.reload.bind(target.location), waittime);
+        }
     }
-    //]]>
+
+    function ajax_reloader(waittime, target) {
+        if (waittime <= 0) {
+            context.get_new_word();
+        } else {
+            setTimeout(target.get_new_word, waittime);
+        }
+    }
+
+    if (<?php echo json_encode($ajax); ?>) {
+        ajax_reloader(waittime, context);
+    } else {
+        page_reloader(waittime, context);
+    }
+
 </script>
     <?php
 }
@@ -110,12 +126,12 @@ function do_set_test_status_javascript($wid, $status, $stchange)
  * 
  * @global string $tbpref Database table prefix 
  */
-function do_set_test_status_content($wid, $status, $oldstatus, $stchange) 
+function do_set_test_status_content($wid, $status, $oldstatus, $stchange, $ajax=false)
 {
     global $tbpref;
     $word = get_first_value(
-        "SELECT WoText AS value FROM " . $tbpref . "words 
-        WHERE WoID = " . $wid
+        "SELECT WoText AS value FROM {$tbpref}words 
+        WHERE WoID = $wid"
     );
 
     $oldscore = (int)get_first_value(
@@ -130,13 +146,13 @@ function do_set_test_status_content($wid, $status, $oldstatus, $stchange)
     );
         
     $newscore = (int)get_first_value(
-        'SELECT greatest(0,round(WoTodayScore,0)) AS value 
-        FROM ' . $tbpref . 'words where WoID = ' . $wid
+        "SELECT greatest(0,round(WoTodayScore,0)) AS value 
+        FROM {$tbpref}words WHERE WoID = $wid"
     );
     pagestart("Term: " . $word, false);
     do_set_test_status_html($status, $oldstatus, $newscore, $oldscore);
     set_test_status_change_progress($stchange);
-    do_set_test_status_javascript($wid, $status, $stchange);
+    do_set_test_status_javascript($wid, $status, $stchange, $ajax);
     pageend();
 }
 
@@ -157,19 +173,11 @@ function start_set_text_status()
 
     $wid = (int)getreq('wid');
     $oldstatus = (int)get_first_value(
-        "SELECT WoStatus AS value FROM " . $tbpref . "words 
-        WHERE WoID = " . $wid
+        "SELECT WoStatus AS value FROM {$tbpref}words 
+        WHERE WoID = $wid"
     );
 
-    if (!is_numeric(getreq('stchange'))) {
-        $status = (int)getreq('status');
-        $stchange = $status - $oldstatus;
-        if ($stchange <= 0) { 
-            $stchange = -1; 
-        } else if ($stchange > 0) { 
-            $stchange = 1; 
-        }
-    } else {
+    if (is_numeric(getreq('stchange'))) {
         $stchange = (int)getreq('stchange');
         $status = $oldstatus + $stchange;
         if ($status < 1) { 
@@ -177,8 +185,17 @@ function start_set_text_status()
         } else if ($status > 5) { 
             $status = 5; 
         }
+    } else {
+        $status = (int)getreq('status');
+        $stchange = $status - $oldstatus;
+        if ($stchange <= 0) { 
+            $stchange = -1; 
+        } else if ($stchange > 0) { 
+            $stchange = 1; 
+        }
     }
-    do_set_test_status_content($wid, $status, $oldstatus, $stchange);
+    $use_ajax = array_key_exists("ajax", $_REQUEST);
+    do_set_test_status_content($wid, $status, $oldstatus, $stchange, $use_ajax);
 }
 
 start_set_text_status();

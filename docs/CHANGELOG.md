@@ -12,6 +12,10 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 * Refactored texts with OOP:
   * New class: ``Text`` (in ``inc/classes/Text.php``).
   * New function: ``edit_texts_form`` (in ``edit_texts.php``) that takes a Text object as input.
+* Tests (checking if you know words) now use AJAX, it has several advantages:
+  * Musics play fully
+  * Page do not need to reload.
+  * The timer continues instead of resetting.
 
 ## Changed
 
