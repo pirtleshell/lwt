@@ -14,7 +14,7 @@
  * @since   2.0.3-fork
  */
 
-require_once 'database_connect.php';
+require_once __DIR__ . '/database_connect.php';
 
 
 /**

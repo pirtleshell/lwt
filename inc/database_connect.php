@@ -121,13 +121,16 @@ function prepare_textdata_js($s): string
  * @param string $data Input string
  *
  * @return string Properly escaped and trimmed string. "NULL" if the input string is empty.
+ * 
+ * @global $DBDONNECTION
  */
 function convert_string_to_sqlsyntax($data): string 
 {
+    global $DBCONNECTION;
     $result = "NULL";
     $data = trim(prepare_textdata($data));
     if ($data != "") { 
-        $result = "'".mysqli_real_escape_string($GLOBALS['DBCONNECTION'], $data)."'"; 
+        $result = "'".mysqli_real_escape_string($DBCONNECTION, $data)."'"; 
     }
     return $result;
 }
@@ -2196,9 +2199,9 @@ function connect_to_database($server, $userid, $passwd, $dbname)
     // Necessary since mysqli_report default setting in PHP 8.1+ has changed
     @mysqli_report(MYSQLI_REPORT_OFF);
 
-    $DBCONNECTION = mysqli_init();
+    $dbconnection = mysqli_init();
 
-    if ($DBCONNECTION === false) {
+    if ($dbconnection === false) {
         my_die(
             'Database connection error. Is MySQL running? 
             You can refer to the documentation: 
@@ -2208,14 +2211,19 @@ function connect_to_database($server, $userid, $passwd, $dbname)
         );
     }
 
-    @mysqli_options($DBCONNECTION, MYSQLI_OPT_LOCAL_INFILE, 1);
+    @mysqli_options($dbconnection, MYSQLI_OPT_LOCAL_INFILE, 1);
 
-    $success = @mysqli_real_connect($DBCONNECTION, $server, $userid, $passwd, $dbname);
+    $success = @mysqli_real_connect(
+        $dbconnection, $server, $userid, $passwd, $dbname
+    );
 
     if (!$success && mysqli_connect_errno() == 1049) {
         // Database unknown, try with generic database
-        $success = @mysqli_real_connect($DBCONNECTION, $server, $userid, $passwd);
-        if (!$success || !$DBCONNECTION) { 
+        $success = @mysqli_real_connect(
+            $dbconnection, $server, $userid, $passwd
+        );
+
+        if (!$success || !$dbconnection) { 
             my_die(
                 'DB connect error, connection parameters may be wrong, 
                 please check file "connect.inc.php". 
@@ -2226,15 +2234,17 @@ function connect_to_database($server, $userid, $passwd, $dbname)
             );
         }
         $result = mysqli_query(
-            $DBCONNECTION, 
+            $dbconnection, 
             "CREATE DATABASE `$dbname` 
             DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci"
         );
         if (!$result) {
             my_die("Failed to create database! " . $result);
         }
-        mysqli_close($DBCONNECTION);
-        $success = @mysqli_real_connect($DBCONNECTION, $server, $userid, $passwd, $dbname);
+        mysqli_close($dbconnection);
+        $success = @mysqli_real_connect(
+            $dbconnection, $server, $userid, $passwd, $dbname
+        );
     }
 
     if (!$success) { 
@@ -2248,11 +2258,11 @@ function connect_to_database($server, $userid, $passwd, $dbname)
         ); 
     }
 
-    @mysqli_query($DBCONNECTION, "SET NAMES 'utf8'");
+    @mysqli_query($dbconnection, "SET NAMES 'utf8'");
 
     // @mysqli_query($DBCONNECTION, "SET SESSION sql_mode = 'STRICT_ALL_TABLES'");
-    @mysqli_query($DBCONNECTION, "SET SESSION sql_mode = ''");
-    return $DBCONNECTION;
+    @mysqli_query($dbconnection, "SET SESSION sql_mode = ''");
+    return $dbconnection;
 }
 
 /**
