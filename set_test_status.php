@@ -104,23 +104,51 @@ function do_set_test_status_javascript(
         }
     }
 
-    function ajax_reloader(waittime, target, tests_status) {
-        // Update status footer
-        console.log(tests_status);
+    /**
+     * Update footer status.
+     */
+    function update_tests_footer(tests_status, cont_document) {
         let width_divisor = .01;
         if (tests_status["total"] > 0) {
             width_divisor = tests_status["total"] / 100;
         }
-        $("#not-tested-box", context.document)
-        .width(tests_status["nottested"] / width_divisor);
-        $("#wrong-tests-box", context.document)
-        .width(tests_status["wrong"] / width_divisor);
-        $("#correct-tests-box", context.document)
-        .width(tests_status["correct"] / width_divisor);
 
-        $("#not-tested", context.document).text(tests_status["nottested"]);
-        $("#wrong-tests", context.document).text(tests_status["wrong"]);
-        $("#correct-tests", context.document).text(tests_status["correct"]);
+        let b_nottested = ['', 'borderl'];
+        if (tests_status["nottested"] <= 0) {
+            b_nottested.reverse();
+        }
+        let b_wrong = ['', 'borderl'];
+        if (tests_status["wrong"] <= 0) {
+            b_wrong.reverse();
+        }
+        let b_correct = ['borderr', 'borderl borderr'];
+        if (tests_status["correct"] <= 0) {
+            b_correct.reverse();
+        }
+
+        $("#not-tested-box", cont_document)
+        .width(tests_status["nottested"] / width_divisor)
+        .addClass(b_nottested[1])
+        .removeClass(b_nottested[0]);
+        $("#wrong-tests-box", cont_document)
+        .width(tests_status["wrong"] / width_divisor)
+        .addClass(b_wrong[1])
+        .removeClass(b_wrong[0]);
+        $("#correct-tests-box", cont_document)
+        .width(tests_status["correct"] / width_divisor)
+        .addClass(b_correct[1])
+        .removeClass(b_correct[0]);
+
+        $("#not-tested", cont_document).text(tests_status["nottested"]);
+        $("#wrong-tests", cont_document).text(tests_status["wrong"]);
+        $("#correct-tests", cont_document).text(tests_status["correct"]);
+    }
+
+    /**
+     * Get a new word.
+     */
+    function ajax_reloader(waittime, target, tests_status) {
+        // Update status footer
         // Get new word
         if (waittime <= 0) {
             context.get_new_word();
@@ -129,8 +157,12 @@ function do_set_test_status_javascript(
         }
     }
 
+
     if (<?php echo json_encode($ajax); ?>) {
-        ajax_reloader(waittime, context, <?php echo json_encode($tests_status); ?>);
+        update_tests_footer(
+            <?php echo json_encode($tests_status); ?>, context.document
+        );
+        ajax_reloader(waittime, context);
     } else {
         page_reloader(waittime, context);
     }
