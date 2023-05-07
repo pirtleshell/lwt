@@ -50,18 +50,24 @@ function do_set_test_status_html($status, $oldstatus, $newscore, $oldscore)
  */
 function set_test_status_change_progress($stchange)
 {
-    $totaltests = $_SESSION['testtotal'];
+    $totaltests = (int)$_SESSION['testtotal'];
     $wrong = $_SESSION['testwrong'];
     $correct = $_SESSION['testcorrect'];
     $notyettested = $totaltests - $correct - $wrong;
     if ($notyettested > 0) {
-        if ($stchange >= 0) { 
-            $_SESSION['testcorrect']++; 
-        }
-        else {
+        if ($stchange >= 0) {
+            $correct++;
+            $_SESSION['testcorrect']++;
+        } else {
+            $wrong++;
             $_SESSION['testwrong']++; 
         }
+        $notyettested--;
     }
+    return array(
+        "total" => $totaltests, "wrong" => $wrong, "correct" => $correct,
+        "nottested" => $notyettested
+    );
 }        
 
 /**
@@ -73,12 +79,14 @@ function set_test_status_change_progress($stchange)
  * 
  * @return void
  */
-function do_set_test_status_javascript($wid, $status, $stchange, $ajax=false)
+function do_set_test_status_javascript(
+    $wid, $status, $stchange, $tests_status=array(), $ajax=false
+)
 {
     ?>
 <script type="text/javascript">
     const context = window.parent;
-    $('.word<?php echo $wid; ?>', context)
+    $('.word<?php echo $wid; ?>', context.document)
     .removeClass('todo todosty')
     .addClass('done<?php echo ($stchange >= 0 ? 'ok' : 'wrong'); ?>sty')
     .attr('data_status','<?php echo $status; ?>')
@@ -96,7 +104,24 @@ function do_set_test_status_javascript($wid, $status, $stchange, $ajax=false)
         }
     }
 
-    function ajax_reloader(waittime, target) {
+    function ajax_reloader(waittime, target, tests_status) {
+        // Update status footer
+        console.log(tests_status);
+        let width_divisor = .01;
+        if (tests_status["total"] > 0) {
+            width_divisor = tests_status["total"] / 100;
+        }
+        $("#not-tested-box", context.document)
+        .width(tests_status["nottested"] / width_divisor);
+        $("#wrong-tests-box", context.document)
+        .width(tests_status["wrong"] / width_divisor);
+        $("#correct-tests-box", context.document)
+        .width(tests_status["correct"] / width_divisor);
+
+        $("#not-tested", context.document).text(tests_status["nottested"]);
+        $("#wrong-tests", context.document).text(tests_status["wrong"]);
+        $("#correct-tests", context.document).text(tests_status["correct"]);
+        // Get new word
         if (waittime <= 0) {
             context.get_new_word();
         } else {
@@ -105,7 +130,7 @@ function do_set_test_status_javascript($wid, $status, $stchange, $ajax=false)
     }
 
     if (<?php echo json_encode($ajax); ?>) {
-        ajax_reloader(waittime, context);
+        ajax_reloader(waittime, context, <?php echo json_encode($tests_status); ?>);
     } else {
         page_reloader(waittime, context);
     }
@@ -151,8 +176,8 @@ function do_set_test_status_content($wid, $status, $oldstatus, $stchange, $ajax=
     );
     pagestart("Term: " . $word, false);
     do_set_test_status_html($status, $oldstatus, $newscore, $oldscore);
-    set_test_status_change_progress($stchange);
-    do_set_test_status_javascript($wid, $status, $stchange, $ajax);
+    $tests = set_test_status_change_progress($stchange);
+    do_set_test_status_javascript($wid, $status, $stchange, $tests, $ajax);
     pageend();
 }
 
