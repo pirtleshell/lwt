@@ -113,19 +113,6 @@ function do_set_test_status_javascript(
             width_divisor = tests_status["total"] / 100;
         }
 
-        let b_nottested = ['', 'borderl'];
-        if (tests_status["nottested"] <= 0) {
-            b_nottested.reverse();
-        }
-        let b_wrong = ['', 'borderl'];
-        if (tests_status["wrong"] <= 0) {
-            b_wrong.reverse();
-        }
-        let b_correct = ['borderr', 'borderl borderr'];
-        if (tests_status["correct"] <= 0) {
-            b_correct.reverse();
-        }
-
         $("#not-tested-box", cont_document)
         .width(tests_status["nottested"] / width_divisor);
         $("#wrong-tests-box", cont_document)
