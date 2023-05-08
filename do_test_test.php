@@ -718,32 +718,32 @@ function do_test_footer($notyettested, $wrong, $correct)
     $b_correct = ($l_correct == 0) ? 'borderr' : 'borderl borderr';
     ?>
 <footer id="footer">
-    <img src="icn/clock.png" title="Elapsed Time" alt="Elapsed Time" />
-    <span id="timer" title="Elapsed Time"></span>
-    &nbsp; &nbsp; &nbsp;
-
-    <img id="not-tested-box" class="<?php echo $b_notyet; ?>" 
-    src="<?php print_file_path('icn/test_notyet.png');?>" 
-    title="Not yet tested" alt="Not yet tested" height="10" 
-    width="<?php echo $l_notyet; ?>" />
-
-    <img id="wrong-tests-box" class="<?php echo $b_wrong; ?>" 
-    src="<?php print_file_path('icn/test_wrong.png');?>" 
-    title="Wrong" alt="Wrong" height="10" width="<?php echo $l_wrong; ?>" />
-
-    <img id="correct-tests-box" class="<?php echo $b_correct; ?>" 
-    src="<?php print_file_path('icn/test_correct.png');?>" 
-    title="Correct" alt="Correct" height="10" width="<?php echo $l_correct; ?>" />
-    
-    &nbsp; &nbsp; &nbsp; 
-    <span title="Total number of tests" id="total_tests">
-        <?php echo $totaltests; ?>
-    </span> =  <span class="todosty" title="Not yet tested" id="not-tested">
-        <?php echo $notyettested; ?>
-    </span> + <span class="donewrongsty" title="Wrong" id="wrong-tests">
-        <?php echo $wrong; ?>
-    </span> + <span class="doneoksty" title="Correct" id="correct-tests">
-        <?php echo $correct; ?>
+    <span style="margin-left: 15px; margin-right: 15px;">
+        <img src="icn/clock.png" title="Elapsed Time" alt="Elapsed Time" />
+        <span id="timer" title="Elapsed Time"></span>
+    </span>
+    <span style="margin-left: 15px; margin-right: 15px;">
+        <img id="not-tested-box" class="<?php echo $b_notyet; ?>" 
+        src="<?php print_file_path('icn/test_notyet.png');?>" 
+        title="Not yet tested" alt="Not yet tested" height="10" 
+        width="<?php echo $l_notyet; ?>" 
+        /><img id="wrong-tests-box" class="<?php echo $b_wrong; ?> bordermiddle" 
+        src="<?php print_file_path('icn/test_wrong.png');?>" 
+        title="Wrong" alt="Wrong" height="10" width="<?php echo $l_wrong; ?>" 
+        /><img id="correct-tests-box" class="<?php echo $b_correct; ?>" 
+        src="<?php print_file_path('icn/test_correct.png');?>" 
+        title="Correct" alt="Correct" height="10" width="<?php echo $l_correct; ?>" />
+    </span>
+    <span style="margin-left: 15px; margin-right: 15px;">
+        <span title="Total number of tests" id="total_tests">
+            <?php echo $totaltests; ?>
+        </span> = <span class="todosty" title="Not yet tested" id="not-tested">
+            <?php echo $notyettested; ?>
+        </span> + <span class="donewrongsty" title="Wrong" id="wrong-tests">
+            <?php echo $wrong; ?>
+        </span> + <span class="doneoksty" title="Correct" id="correct-tests">
+            <?php echo $correct; ?>
+        </span>
     </span>
 </footer>
     <?php
