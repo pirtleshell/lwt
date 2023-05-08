@@ -127,17 +127,11 @@ function do_set_test_status_javascript(
         }
 
         $("#not-tested-box", cont_document)
-        .width(tests_status["nottested"] / width_divisor)
-        .addClass(b_nottested[1])
-        .removeClass(b_nottested[0]);
+        .width(tests_status["nottested"] / width_divisor);
         $("#wrong-tests-box", cont_document)
-        .width(tests_status["wrong"] / width_divisor)
-        .addClass(b_wrong[1])
-        .removeClass(b_wrong[0]);
+        .width(tests_status["wrong"] / width_divisor);
         $("#correct-tests-box", cont_document)
-        .width(tests_status["correct"] / width_divisor)
-        .addClass(b_correct[1])
-        .removeClass(b_correct[0]);
+        .width(tests_status["correct"] / width_divisor);
 
         $("#not-tested", cont_document).text(tests_status["nottested"]);
         $("#wrong-tests", cont_document).text(tests_status["wrong"]);

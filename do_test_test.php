@@ -711,11 +711,11 @@ function do_test_footer($notyettested, $wrong, $correct)
         $totaltestsdiv = 1.0/$totaltests; 
     }
     $l_notyet = round(($notyettested * $totaltestsdiv)*100, 0);
-    $b_notyet = ($l_notyet == 0) ? '' : 'borderl';
     $l_wrong = round(($wrong * $totaltestsdiv)*100, 0);
-    $b_wrong = ($l_wrong == 0) ? '' : 'borderl';
     $l_correct = round(($correct * $totaltestsdiv)*100, 0);
-    $b_correct = ($l_correct == 0) ? 'borderr' : 'borderl borderr';
+    $b_notyet = ($l_notyet == 100) ? '' : '';
+    $b_wrong = ($l_wrong == 0) ? '' : '';
+    $b_correct = ($l_correct == 0) ? '' : '';
     ?>
 <footer id="footer">
     <span style="margin-left: 15px; margin-right: 15px;">
@@ -723,14 +723,16 @@ function do_test_footer($notyettested, $wrong, $correct)
         <span id="timer" title="Elapsed Time"></span>
     </span>
     <span style="margin-left: 15px; margin-right: 15px;">
-        <img id="not-tested-box" class="<?php echo $b_notyet; ?>" 
+        <img id="not-tested-box" class="borderl <?php echo $b_notyet; ?>" 
         src="<?php print_file_path('icn/test_notyet.png');?>" 
         title="Not yet tested" alt="Not yet tested" height="10" 
         width="<?php echo $l_notyet; ?>" 
-        /><img id="wrong-tests-box" class="<?php echo $b_wrong; ?> bordermiddle" 
+        /><img 
+        id="wrong-tests-box" class="bordermiddle <?php echo $b_wrong; ?>" 
         src="<?php print_file_path('icn/test_wrong.png');?>" 
         title="Wrong" alt="Wrong" height="10" width="<?php echo $l_wrong; ?>" 
-        /><img id="correct-tests-box" class="<?php echo $b_correct; ?>" 
+        /><img 
+        id="correct-tests-box" class="borderr <?php echo $b_correct; ?>" 
         src="<?php print_file_path('icn/test_correct.png');?>" 
         title="Correct" alt="Correct" height="10" width="<?php echo $l_correct; ?>" />
     </span>
