@@ -216,10 +216,14 @@ function do_test_header_js()
 function do_test_header_content($title, $p, $totalcountdue, $totalcount, $language)
 {
     ?>
-<h1>TEST&nbsp;▶
-    <?php echo tohtml($title) 
-    . ' (Due: ' . $totalcountdue . ' of ' . $totalcount . ')'; ?>
-</h1>
+<h1>TEST ▶ <?php echo tohtml($title) ?></h1>
+<div style="margin: 5px;">
+    Word<?php echo intval($totalcount) > 1 ? 's' : ''; ?> due today: 
+    <?php echo htmlspecialchars($totalcount); ?>, 
+    <span class="todosty" id="not-tested-header"><?php 
+    echo htmlspecialchars($totalcountdue); 
+    ?></span> remaining.
+</div>
 <div class="flex-spaced">
     <div>
         <input type="button" value="..[<?php echo $language; ?>].." 

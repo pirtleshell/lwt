@@ -120,6 +120,7 @@ function do_set_test_status_javascript(
         $("#correct-tests-box", cont_document)
         .width(tests_status["correct"] / width_divisor);
 
+        $("#not-tested-header", cont_document).text(tests_status["nottested"]);
         $("#not-tested", cont_document).text(tests_status["nottested"]);
         $("#wrong-tests", cont_document).text(tests_status["wrong"]);
         $("#correct-tests", cont_document).text(tests_status["correct"]);

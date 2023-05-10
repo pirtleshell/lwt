@@ -735,15 +735,21 @@ function do_test_footer($notyettested, $wrong, $correct)
         title="Correct" alt="Correct" height="10" width="<?php echo $l_correct; ?>" />
     </span>
     <span style="margin-left: 15px; margin-right: 15px;">
-        <span title="Total number of tests" id="total_tests">
-            <?php echo $totaltests; ?>
-        </span> = <span class="todosty" title="Not yet tested" id="not-tested">
-            <?php echo $notyettested; ?>
-        </span> + <span class="donewrongsty" title="Wrong" id="wrong-tests">
-            <?php echo $wrong; ?>
-        </span> + <span class="doneoksty" title="Correct" id="correct-tests">
-            <?php echo $correct; ?>
-        </span>
+        <span title="Total number of tests" id="total_tests"><?php 
+        echo $totaltests; 
+        ?></span> 
+        =
+        <span class="todosty" title="Not yet tested" id="not-tested"><?php 
+        echo $notyettested; 
+        ?></span>
+        +
+        <span class="donewrongsty" title="Wrong" id="wrong-tests"><?php 
+        echo $wrong; 
+        ?></span>
+        +
+        <span class="doneoksty" title="Correct" id="correct-tests"><?php 
+        echo $correct; 
+        ?></span>
     </span>
 </footer>
     <?php
