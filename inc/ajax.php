@@ -9,6 +9,14 @@ require_once '../do_test_test.php';
 function get_word_test_ajax($testsql, $nosent, $lgid, $wordregex, $testtype)
 {
     $word_record = do_test_get_word($testsql);
+    if (empty($word_record)) {
+        $output = array(
+            "word_id" => 0,
+            "word_text" => '',
+            "group" => '' 
+        );
+        return json_encode($output);
+    }
     $sent = repl_tab_nl($word_record['WoSentence']);
     if ($nosent) {
         $sent = "{" . $word_record['WoText'] . "}";

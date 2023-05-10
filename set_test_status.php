@@ -105,9 +105,9 @@ function do_set_test_status_javascript(
     }
 
     /**
-     * Update footer status.
+     * Update remaining words count.
      */
-    function update_tests_footer(tests_status, cont_document) {
+    function update_tests_count(tests_status, cont_document) {
         let width_divisor = .01;
         if (tests_status["total"] > 0) {
             width_divisor = tests_status["total"] / 100;
@@ -130,8 +130,6 @@ function do_set_test_status_javascript(
      * Get a new word.
      */
     function ajax_reloader(waittime, target, tests_status) {
-        // Update status footer
-        // Get new word
         if (waittime <= 0) {
             context.get_new_word();
         } else {
@@ -141,9 +139,11 @@ function do_set_test_status_javascript(
 
 
     if (<?php echo json_encode($ajax); ?>) {
-        update_tests_footer(
+        // Update status footer
+        update_tests_count(
             <?php echo json_encode($tests_status); ?>, context.document
         );
+        // Get new word
         ajax_reloader(waittime, context);
     } else {
         page_reloader(waittime, context);

@@ -114,21 +114,21 @@ function do_test_test_css()
  * 
  * @return void
  */
-function do_test_test_finished($testsql, $totaltests)
+function do_test_test_finished($testsql, $totaltests, $ajax=false)
 {
-    $count2 = get_first_value(
+    $tomorrow_tests = get_first_value(
         "SELECT COUNT(DISTINCT WoID) AS value 
         FROM $testsql AND WoStatus BETWEEN 1 AND 5 
         AND WoTranslation != '' AND WoTranslation != '*' AND WoTomorrowScore < 0"
     );
-    echo '<p class="center">
+    echo '<p id="test-finished-area" class="center" style="display: ' . ($ajax ? 'none' : 'inherit') . ';">
             <img src="img/ok.png" alt="Done!" />
             <br /><br />
             <span class="red2">
                 Nothing ' . ($totaltests ? 'more ' : '') . 'to test here!
                 <br /><br />
-                Tomorrow you\'ll find here ' . $count2 . ' test' . 
-                ($count2 == 1 ? '' : 's') . '!
+                Tomorrow you\'ll find here ' . $tomorrow_tests . ' test' . 
+                ($tomorrow_tests == 1 ? '' : 's') . '!
             </span>
         </p>
     </div>';
@@ -394,6 +394,16 @@ function do_test_prepare_ajax_test_area($testsql, $count, $testtype): int
                 .on('click', word_click_event_do_test_test)
         }
 
+        function test_query_handler(data)
+        {
+            console.log(data);
+            if (data['word_id'] == 0) {
+                do_test_finished(<?php echo json_encode($count); ?>)
+            } else {
+                insert_new_word(data);
+            }
+        }
+
         function get_new_word()
         {
             // Close any previous tooltip
@@ -411,7 +421,7 @@ function do_test_prepare_ajax_test_area($testsql, $count, $testtype): int
             };
             $.getJSON(
                 'inc/ajax.php?' + $.param(options)
-            ).done(insert_new_word);
+            ).done(test_query_handler);
         }
 
         $(get_new_word);
@@ -422,6 +432,7 @@ function do_test_prepare_ajax_test_area($testsql, $count, $testtype): int
     font-size: <?php echo $lang['textsize'] ?>%; line-height: 1.4; text-align:center; margin-bottom:300px;"
     >
     </p>
+    <?php do_test_test_finished($testsql, $count, true); ?>
     <button onclick="get_new_word();">Pass Word</button>
     </div>
     <?php
@@ -766,12 +777,12 @@ function do_test_test_javascript($count)
 {
     ?>
 <script type="text/javascript">
-    //<![CDATA[
     const waitTime = <?php 
     echo json_encode((int)getSettingWithDefault('set-test-edit-frame-waiting-time')) 
     ?>;
 
-    $(document).ready(function() {
+    function prepare_test_frames()
+    {
         window.parent.frames['ru'].location.href='empty.html';
         if (waitTime <= 0) {
             window.parent.frames['ro'].location.href='empty.html';
@@ -782,11 +793,19 @@ function do_test_test_javascript($count)
             );
         }
         new CountUp(
-            <?php echo time() . ', ' . $_SESSION['teststart']; ?>, 
+            <?php echo time(); ?>, 
+            <?php echo $_SESSION['teststart']; ?>, 
             'timer', <?php echo ($count ? 0 : 1); ?>
         );
-    });
-//]]>
+    }
+
+    function do_test_finished(total_tests)
+    {
+        $('#term-test').css("display", "none");
+        $('#test-finished-area').css("display", "inherit");
+    }
+
+    $(document).ready(prepare_test_frames);
 </script>
     <?php
 }
