@@ -111,6 +111,7 @@ function do_test_test_css()
  * 
  * @param string $testsql    Query used to select words.
  * @param int    $totaltests Total number of tests.
+ * @param bool   $ajax       AJAX mode, content will not be displayed.
  * 
  * @return void
  */
@@ -121,14 +122,19 @@ function do_test_test_finished($testsql, $totaltests, $ajax=false)
         FROM $testsql AND WoStatus BETWEEN 1 AND 5 
         AND WoTranslation != '' AND WoTranslation != '*' AND WoTomorrowScore < 0"
     );
-    echo '<p id="test-finished-area" class="center" style="display: ' . ($ajax ? 'none' : 'inherit') . ';">
+    echo '<p id="test-finished-area" class="center" style="display: ' . 
+    ($ajax ? 'none' : 'inherit') . ';">
             <img src="img/ok.png" alt="Done!" />
             <br /><br />
             <span class="red2">
-                Nothing ' . ($totaltests ? 'more ' : '') . 'to test here!
+                <span id="tests-done-today">
+                    Nothing ' . ($totaltests ? 'more ' : '') . 'to test here!
+                </span>
                 <br /><br />
-                Tomorrow you\'ll find here ' . $tomorrow_tests . ' test' . 
-                ($tomorrow_tests == 1 ? '' : 's') . '!
+                <span id="tests-tomorrow">
+                    Tomorrow you\'ll find here ' . $tomorrow_tests . ' test' . 
+                    ($tomorrow_tests == 1 ? '' : 's') . '!
+                </span>
             </span>
         </p>
     </div>';
@@ -396,7 +402,6 @@ function do_test_prepare_ajax_test_area($testsql, $count, $testtype): int
 
         function test_query_handler(data)
         {
-            console.log(data);
             if (data['word_id'] == 0) {
                 do_test_finished(<?php echo json_encode($count); ?>)
             } else {
@@ -406,9 +411,6 @@ function do_test_prepare_ajax_test_area($testsql, $count, $testtype): int
 
         function get_new_word()
         {
-            // Close any previous tooltip
-            cClick();
-
             // Get new word through AJAX
             const options = {
                 "action": "display", 
@@ -422,6 +424,9 @@ function do_test_prepare_ajax_test_area($testsql, $count, $testtype): int
             $.getJSON(
                 'inc/ajax.php?' + $.param(options)
             ).done(test_query_handler);
+
+            // Close any previous tooltip
+            cClick();
         }
 
         $(get_new_word);
@@ -433,7 +438,6 @@ function do_test_prepare_ajax_test_area($testsql, $count, $testtype): int
     >
     </p>
     <?php do_test_test_finished($testsql, $count, true); ?>
-    <button onclick="get_new_word();">Pass Word</button>
     </div>
     <?php
     
@@ -803,6 +807,18 @@ function do_test_test_javascript($count)
     {
         $('#term-test').css("display", "none");
         $('#test-finished-area').css("display", "inherit");
+        $('#tests-done-today').text(
+            "Nothing " + (total_tests > 0 ? 'more ' : '') + "to test here!"
+        );
+
+        $('#tests-tomorrow').css("display", "none");
+        const tomorrow_tests = undefined;
+        if (tomorrow_tests) {
+            $('#tests-tomorrow').text(
+                "Tomorrow you'll find here " + tomorrow_tests + ' test' + 
+                (tomorrow_tests == 1 ? '' : 's') + "!"
+            );
+        }
     }
 
     $(document).ready(prepare_test_frames);
