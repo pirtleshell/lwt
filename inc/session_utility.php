@@ -2983,8 +2983,10 @@ function createDictLinksInEditWin3($lang, $sentctljs, $wordctljs): string
         $prefix = 'http://';
         $parsed_url = parse_url($prefix . $wb3);
     }
-    parse_str($parsed_url['query'], $url_query);
-    $popup |= array_key_exists('lwt_popup', $url_query);
+    if (array_key_exists('query', $parsed_url)) {
+        parse_str($parsed_url['query'], $url_query);
+        $popup |= array_key_exists('lwt_popup', $url_query);
+    }
     if ($popup) {
         $f3 = 'translateWord2(' . prepare_textdata_js($wb3);
         $f4 = 'translateSentence2(' . prepare_textdata_js($wb3);
