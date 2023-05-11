@@ -101,7 +101,11 @@ if (isset($_REQUEST['op'])) {
     
         saveSetting(
             'set-tts',
-            (int)$_REQUEST['set-tts']
+            (
+                array_key_exists('set-tts', $_REQUEST) && 
+                (int)$_REQUEST['set-tts'] ? 
+                1 : 0
+            )
         );
     
         saveSetting(
