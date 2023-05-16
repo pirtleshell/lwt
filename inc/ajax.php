@@ -6,6 +6,17 @@ require_once 'session_utility.php';
 require_once '../do_test_test.php';
 
 
+/**
+ * Retun the next word to test as JSON
+ * 
+ * @param string $testsql SQL projection query
+ * @param bool $nosent Test is in word mode
+ * @param int $lgid Language ID
+ * @param string $wordregex Word selection regular expression
+ * @param int $testtype Test type
+ * 
+ * @return string Next word formatted as JSON.
+ */
 function get_word_test_ajax($testsql, $nosent, $lgid, $wordregex, $testtype)
 {
     $word_record = do_test_get_word($testsql);
@@ -42,6 +53,13 @@ function get_word_test_ajax($testsql, $nosent, $lgid, $wordregex, $testtype)
     return json_encode($output);
 }
 
+/**
+ * Retur the number of tests for tomorrow.
+ * 
+ * @param string $testsql
+ * 
+ * @return string Tests for tomorrow as JSON
+ */
 function get_tomorrow_test_count($testsql) {
     $output = array(
         "test_count" => do_test_get_tomorrow_tests_count($testsql)
@@ -49,6 +67,9 @@ function get_tomorrow_test_count($testsql) {
     return json_encode($output);
 }
 
+/**
+ * Return the next word to test.
+ */
 function word_test_ajax()
 {
     return get_word_test_ajax(
@@ -57,17 +78,22 @@ function word_test_ajax()
     );
 }
 
+/**
+ * Return the number of tests for tomorrow by using the supllied query.
+ */
 function tomorrow_test_count() 
 {
     return get_tomorrow_test_count($_GET['test_sql']);
 }
 
 
-if (isset($_GET['action']) && $_GET['action'] == 'display') {
-    if ($_GET['action_type'] == 'test') {
-        echo word_test_ajax();
-    } else if ($_GET['action_type'] == 'tomorrow_test_count') {
-        echo tomorrow_test_count();
+if (isset($_GET['action'])) {
+    if ($_GET['action'] == 'query') {
+        if ($_GET['action_type'] == 'test') {
+            echo word_test_ajax();
+        } else if ($_GET['action_type'] == 'tomorrow_test_count') {
+            echo tomorrow_test_count();
+        }
     }
 }
 

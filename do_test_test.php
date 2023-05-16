@@ -19,6 +19,16 @@
 require_once 'inc/session_utility.php';
 require_once 'inc/langdefs.php';
 
+/**
+ * Get the SQL string to perform tests.
+ * 
+ * @param bool|null   $selection    Test is of type selection
+ * @param string|null $sess_testsql SQL string for test
+ * @param int|null    $lang Test is of type language, for the language $lang ID
+ * @param int|null    $text Testing text with ID $text
+ * 
+ * @return string SQL projection (selection) string 
+ */
 function do_test_get_test_sql($selection, $sess_testsql, $lang, $text)
 {
     global $tbpref;
@@ -45,6 +55,13 @@ function do_test_get_test_sql($selection, $sess_testsql, $lang, $text)
 
 }
 
+/**
+ * Get the test type clamped between 1 and 5 (included)
+ * 
+ * @param int $testype Initial test type value
+ * 
+ * @return int Clamped $testtype
+ */
 function do_test_get_test_type($testtype)
 {
     if ($testtype < 1) { 
@@ -106,6 +123,13 @@ function do_test_test_css()
     <?php
 }
 
+/**
+ * Return the number of test due for tomorrow.
+ * 
+ * @param string $testsql Test selection string
+ * 
+ * @return int tomorrow tests
+ */
 function do_test_get_tomorrow_tests_count($testsql)
 {
     return get_first_value(
@@ -307,7 +331,11 @@ function print_term_test($wo_record, $sent, $testtype, $nosent, $regexword)
 }
 
 /**
- * Find the next word to test
+ * Find the next word to test.
+ * 
+ * @param string $testsql Test selection string
+ * 
+ * @return array 
  */
 function do_test_get_word($testsql)
 {
@@ -335,6 +363,16 @@ function do_test_get_word($testsql)
 }
 
 
+/**
+ * Get the solution to a test.
+ * 
+ * @param int $testtype Test type between 1 and 5
+ * @param array $wo_record Word record element
+ * @param bool $nosent Test is in word mode
+ * @param string $wo_text Word text
+ * 
+ * @return string Solution to display.  
+ */
 function get_test_solution($testtype, $wo_record, $nosent, $wo_text)
 {
     if ($testtype == 1) {
@@ -393,6 +431,9 @@ function do_test_prepare_ajax_test_area($testsql, $count, $testtype): int
 
     ?>
     <script type="text/javascript">
+        /**
+         * Insert a new word test.
+         */
         function insert_new_word(word) {
 
                 SOLUTION = word['solution'];
@@ -405,12 +446,15 @@ function do_test_prepare_ajax_test_area($testsql, $count, $testtype): int
                 .on('click', word_click_event_do_test_test)
         }
 
+        /**
+         * Handles an ajax query for word tests.
+         */
         function test_query_handler(data)
         {
             if (data['word_id'] == 0) {
                 do_test_finished(<?php echo json_encode($count); ?>);
                 const options = {
-                    "action": "display", 
+                    "action": "query", 
                     "action_type": "tomorrow_test_count",
                     "test_sql": <?php echo json_encode((string)$testsql); ?>
                 };
@@ -430,11 +474,14 @@ function do_test_prepare_ajax_test_area($testsql, $count, $testtype): int
             }
         }
 
+        /**
+         * Get a new word test.
+         */
         function get_new_word()
         {
             // Get new word through AJAX
             const options = {
-                "action": "display", 
+                "action": "query", 
                 "action_type": "test",
                 "test_sql": <?php echo json_encode((string)$testsql); ?>,
                 "test_nosent": <?php echo json_encode((string)$nosent); ?>,
@@ -806,6 +853,9 @@ function do_test_test_javascript($count)
     echo json_encode((int)getSettingWithDefault('set-test-edit-frame-waiting-time')) 
     ?>;
 
+    /**
+     * Prepare the different frames for a test.
+     */
     function prepare_test_frames()
     {
         window.parent.frames['ru'].location.href='empty.html';
@@ -824,6 +874,9 @@ function do_test_test_javascript($count)
         );
     }
 
+    /**
+     * Make a custom display when tests are finished for today.
+     */
     function do_test_finished(total_tests)
     {
         $('#term-test').css("display", "none");
