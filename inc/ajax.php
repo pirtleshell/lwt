@@ -42,6 +42,13 @@ function get_word_test_ajax($testsql, $nosent, $lgid, $wordregex, $testtype)
     return json_encode($output);
 }
 
+function get_tomorrow_test_count($testsql) {
+    $output = array(
+        "test_count" => do_test_get_tomorrow_tests_count($testsql)
+    );
+    return json_encode($output);
+}
+
 function word_test_ajax()
 {
     return get_word_test_ajax(
@@ -50,9 +57,17 @@ function word_test_ajax()
     );
 }
 
+function tomorrow_test_count() 
+{
+    return get_tomorrow_test_count($_GET['test_sql']);
+}
+
+
 if (isset($_GET['action']) && $_GET['action'] == 'display') {
     if ($_GET['action_type'] == 'test') {
         echo word_test_ajax();
+    } else if ($_GET['action_type'] == 'tomorrow_test_count') {
+        echo tomorrow_test_count();
     }
 }
 

@@ -106,6 +106,15 @@ function do_test_test_css()
     <?php
 }
 
+function do_test_get_tomorrow_tests_count($testsql)
+{
+    return get_first_value(
+        "SELECT COUNT(DISTINCT WoID) AS value 
+        FROM $testsql AND WoStatus BETWEEN 1 AND 5 
+        AND WoTranslation != '' AND WoTranslation != '*' AND WoTomorrowScore < 0"
+    );
+}
+
 /**
  * Output a message for a finished test, with the number of tests for tomorrow.
  * 
@@ -117,11 +126,7 @@ function do_test_test_css()
  */
 function do_test_test_finished($testsql, $totaltests, $ajax=false)
 {
-    $tomorrow_tests = get_first_value(
-        "SELECT COUNT(DISTINCT WoID) AS value 
-        FROM $testsql AND WoStatus BETWEEN 1 AND 5 
-        AND WoTranslation != '' AND WoTranslation != '*' AND WoTomorrowScore < 0"
-    );
+    $tomorrow_tests = do_test_get_tomorrow_tests_count($testsql);
     echo '<p id="test-finished-area" class="center" style="display: ' . 
     ($ajax ? 'none' : 'inherit') . ';">
             <img src="img/ok.png" alt="Done!" />
@@ -131,7 +136,7 @@ function do_test_test_finished($testsql, $totaltests, $ajax=false)
                     Nothing ' . ($totaltests ? 'more ' : '') . 'to test here!
                 </span>
                 <br /><br />
-                <span id="tests-tomorrow">
+                <span id="tests-tomorrow"">
                     Tomorrow you\'ll find here ' . $tomorrow_tests . ' test' . 
                     ($tomorrow_tests == 1 ? '' : 's') . '!
                 </span>
@@ -403,7 +408,23 @@ function do_test_prepare_ajax_test_area($testsql, $count, $testtype): int
         function test_query_handler(data)
         {
             if (data['word_id'] == 0) {
-                do_test_finished(<?php echo json_encode($count); ?>)
+                do_test_finished(<?php echo json_encode($count); ?>);
+                const options = {
+                    "action": "display", 
+                    "action_type": "tomorrow_test_count",
+                    "test_sql": <?php echo json_encode((string)$testsql); ?>
+                };
+                $.getJSON(
+                    'inc/ajax.php?' + $.param(options)
+                ).done(function (data) {
+                    if (data["test_count"]) {
+                        $('#tests-tomorrow').css("display", "inherit");
+                        $('#tests-tomorrow').text(
+                            "Tomorrow you'll find here " + data["test_count"] + 
+                            ' test' + (data["test_count"] == 1 ? '' : 's') + "!"
+                        );
+                    }
+                });
             } else {
                 insert_new_word(data);
             }
@@ -812,13 +833,6 @@ function do_test_test_javascript($count)
         );
 
         $('#tests-tomorrow').css("display", "none");
-        const tomorrow_tests = undefined;
-        if (tomorrow_tests) {
-            $('#tests-tomorrow').text(
-                "Tomorrow you'll find here " + tomorrow_tests + ' test' + 
-                (tomorrow_tests == 1 ? '' : 's') + "!"
-            );
-        }
     }
 
     $(document).ready(prepare_test_frames);
