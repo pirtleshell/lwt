@@ -352,9 +352,8 @@ if (isset($_REQUEST['markaction'])) {
                             group by WoID'
                     );
                 } elseif ($markaction == 'test' ) {
-                    $_SESSION['testsql'] = ' ' . $tbpref . 'words 
-                    where WoID in ' . $list . ' ';
-                    header("Location: do_test.php?selection=1");
+                    $_SESSION['testsql'] = $list;
+                    header("Location: do_test.php?selection=2");
                     exit();
                 }
             }
@@ -586,8 +585,8 @@ if (isset($_REQUEST['allaction'])) {
         }    
         $list .= ")";
         mysqli_free_result($res);
-        $_SESSION['testsql'] = ' ' . $tbpref . 'words where WoID in ' . $list . ' ';
-        header("Location: do_test.php?selection=1");
+        $_SESSION['testsql'] = $list;
+        header("Location: do_test.php?selection=2");
         exit();
     }
 

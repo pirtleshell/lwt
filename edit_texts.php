@@ -319,9 +319,8 @@ function edit_texts_mark_action($markaction, $marked, $actiondata): array
         mysqli_free_result($res);
         $message = 'Text(s) reparsed: ' . $count;
     } elseif ($markaction == 'test' ) {
-        $_SESSION['testsql'] = ' ' . $tbpref . 'words, ' . $tbpref . 'textitems2 
-        WHERE Ti2LgID = WoLgID AND Ti2WoID = WoID AND Ti2TxID IN ' . $list . ' ';
-        header("Location: do_test.php?selection=1");
+        $_SESSION['testsql'] = $list;
+        header("Location: do_test.php?selection=3");
         exit();
     }
     return array($message, null);
