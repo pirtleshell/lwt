@@ -20,6 +20,56 @@ require_once 'inc/session_utility.php';
 require_once 'inc/langdefs.php';
 
 /**
+ * Create a projection operator do perform word test.
+ * 
+ * @param int $key Type of test. 
+ *                 * 0: text item selection
+ *                 * 1: word selection
+ *                 * 2: from language
+ *                 * 3: from text
+ * @param array|int $value Object to select.
+ * 
+ * @return string Operator
+ * 
+ * @global string $tbpref;
+ */
+function do_test_test_get_projection($key, $value)
+{
+    global $tbpref;
+    switch ($key)
+    {
+        case 0:
+            $testsql = " {$tbpref}words, {$tbpref}textitems2 
+            WHERE Ti2LgID = WoLgID AND Ti2WoID = WoID AND Ti2TxID IN $value ";
+            break;
+        case 1:
+            $testsql = " {$tbpref}words WHERE WoID IN $value ";
+            $cntlang = get_first_value(
+                "SELECT COUNT(DISTINCT WoLgID) AS value 
+                FROM $testsql"
+            );
+            if ($cntlang > 1) {
+                echo "<p>Sorry - The selected terms are in $cntlang languages," . 
+                " but tests are only possible in one language at a time.</p>";
+                exit();
+            }
+            break;
+        case 2:
+            $testsql = " {$tbpref}words WHERE WoLgID = $value ";
+            break;
+        case 3:
+            $testsql = " {$tbpref}words, {$tbpref}textitems2 
+            WHERE Ti2LgID = WoLgID AND Ti2WoID = WoID AND Ti2TxID = $value ";
+            break;
+        default:
+            my_die("do_test_test.php called with wrong parameters"); 
+            break;
+    }
+    return $testsql;
+}
+
+
+/**
  * Get the SQL string to perform tests.
  * 
  * @param bool|null   $selection    Test is of type selection
@@ -31,7 +81,6 @@ require_once 'inc/langdefs.php';
  */
 function do_test_get_test_sql($selection, $sess_testsql, $lang, $text)
 {
-    global $tbpref;
     if (isset($selection) && isset($sess_testsql)) { 
         $testsql = $sess_testsql;
         $cntlang = get_first_value(
@@ -43,11 +92,10 @@ function do_test_get_test_sql($selection, $sess_testsql, $lang, $text)
             " but tests are only possible in one language at a time.</p>";
             exit();
         }
-    } else if (isset($lang)) {
-        $testsql = " {$tbpref}words WHERE WoLgID = $lang ";
-    } else if (isset($text)) {
-        $testsql = " {$tbpref}words, {$tbpref}textitems2 
-        WHERE Ti2LgID = WoLgID AND Ti2WoID = WoID AND Ti2TxID = $text ";
+    } else if (isset($lang) && is_numeric($lang)) {
+        $testsql = do_test_test_get_projection(2, (int)$lang);
+    } else if (isset($text) && is_numeric($text)) {
+        $testsql = do_test_test_get_projection(3, (int)$text);
     } else {
         my_die("do_test_test.php called with wrong parameters"); 
     }
