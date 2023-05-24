@@ -924,15 +924,14 @@ function do_test_test_content()
  * 
  * @return void
  */
-function do_test_test_content_ajax($selection, $test_sql, $lang, $text)
+function do_test_test_content_ajax($test_sql)
 {
     global $debug;
     
-    $testsql = do_test_get_test_sql($selection, $test_sql, $lang, $text);
     $testtype = do_test_get_test_type((int)getreq('type'));
     $count = get_first_value(
         "SELECT COUNT(DISTINCT WoID) AS value 
-        FROM $testsql AND WoStatus BETWEEN 1 AND 5 
+        FROM $test_sql AND WoStatus BETWEEN 1 AND 5 
         AND WoTranslation != '' AND WoTranslation != '*' AND WoTodayScore < 0"
     );
     if ($debug) { 
@@ -943,7 +942,7 @@ function do_test_test_content_ajax($selection, $test_sql, $lang, $text)
     }
     $notyettested = (int) $count;
 
-    $count2 = do_test_prepare_ajax_test_area($testsql, $notyettested, $testtype);
+    $count2 = do_test_prepare_ajax_test_area($test_sql, $notyettested, $testtype);
     prepare_test_footer($notyettested);
     do_test_test_javascript($count2);
 }
