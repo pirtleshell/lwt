@@ -222,6 +222,14 @@ function long_text_save(): void
 function long_text_display($max_input_vars)
 {
     global $tbpref;
+    $sql = "SELECT LgID, LgGoogleTranslateURI FROM {$tbpref}languages 
+    WHERE LgGoogleTranslateURI<>''";
+    $res = do_mysqli_query($sql);
+    $return = array();
+    while ($lg_record = mysqli_fetch_assoc($res)) {
+        $url = $lg_record["LgGoogleTranslateURI"];
+        $return[$lg_record["LgID"]] = langFromDict($url);
+    }
     ?>
 
     <script type="text/javascript" charset="utf-8">
@@ -233,17 +241,7 @@ function long_text_display($max_input_vars)
          */
         function change_textboxes_language() {
             const lid = document.getElementById("TxLgID").value;
-            const language_data = <?php 
-            $sql = "SELECT LgID, LgGoogleTranslateURI FROM {$tbpref}languages 
-            WHERE LgGoogleTranslateURI<>''";
-            $res = do_mysqli_query($sql);
-            $return = array();
-            while ($lg_record = mysqli_fetch_assoc($res)) {
-                $url = $lg_record["LgGoogleTranslateURI"];
-                $return[$lg_record["LgID"]] = langFromDict($url);
-            }
-            echo json_encode($return);
-            ?>;
+            const language_data = <?php echo json_encode($return); ?>;
             $('#TxTitle').attr('lang', language_data[lid]);
             $('#TxText').attr('lang', language_data[lid]);
         }

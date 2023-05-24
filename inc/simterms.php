@@ -10,7 +10,7 @@
  * @link    https://hugofara.github.io/lwt/docs/html/simterms_8php.html
  */
 
-require_once 'session_utility.php';
+require_once __DIR__ . '/session_utility.php';
 
 
 /**

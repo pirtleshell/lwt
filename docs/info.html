@@ -1846,13 +1846,21 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 <ul>
 <li>
 <code>langFromDict</code> and <code>targetLangFromDict</code> are now officially coming to the kernel utility functions.</li>
-<li>Text and title boxes change language according to the text's language for short text creation/edition and long text creation (<a href="https://github.com/HugoFara/lwt/issues/111">#111</a>).</li>
+<li>Text and title boxes change language according to the text's language for short text creation/edition, long text creation and text check (<a href="https://github.com/HugoFara/lwt/issues/111">#111</a>).</li>
 <li>Refactored texts with OOP:
 <ul>
 <li>New class: <code>Text</code> (in <code>inc/classes/Text.php</code>).</li>
 <li>New function: <code>edit_texts_form</code> (in <code>edit_texts.php</code>) that takes a Text object as input.</li>
 </ul>
 </li>
+<li>Tests (checking if you know words) now use AJAX (<a href="https://github.com/HugoFara/lwt/issues/112">#112</a>), it has several advantages:
+<ul>
+<li>Musics play fully</li>
+<li>Page do not need to reload.</li>
+<li>The timer continues instead of resetting.</li>
+</ul>
+</li>
+<li>REST API, the new <code>inc/ajax.php</code> is intended to continue developping itself as a REST API.</li>
 </ul>
 <h3>Changed</h3>
 <ul>
@@ -1865,6 +1873,11 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 <li>Language code is better detected from translator url when editing an existing language.</li>
 <li>The field "Short Text Import" on long text import and was not redirecting to
 the intendended page. Same goes for "New Text" on "Archived Texts" page.</li>
+<li>It was impossible to archive more than one text (<a href="https://github.com/HugoFara/lwt/issues/118">#118</a>).</li>
+<li>Testing a word was not changing it's color.</li>
+<li>Test header was different when testing languages or terms since 2.1.0-fork.</li>
+<li>A warning was sent 'Undefined array key "query"' when creating a new word (<a href="https://github.com/HugoFara/lwt/issues/121">#121</a>).</li>
+<li>A warning when savings settings in <code>settings.php</code> was sometimes displayed (<a href="https://github.com/HugoFara/lwt/issues/121">#121</a>).</li>
 </ul>
 <h3>2.8.1-fork (April 14 2023)</h3>
 <h4>Changed</h4>

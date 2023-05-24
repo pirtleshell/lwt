@@ -445,7 +445,7 @@ function make_overlib_link_change_status (txid, torder, wid, oldstat, newstat) {
 }
 
 /**
- * Prepare an HTML-formated string containing the new status
+ * Prepare an HTML-formated string containing the new statuses choices
  * 
  * @param {int}    wid     ID of the word
  * @param {int}    oldstat Old status
@@ -454,7 +454,7 @@ function make_overlib_link_change_status (txid, torder, wid, oldstat, newstat) {
  */
 function make_overlib_link_change_status_test2 (wid, oldstat, newstat) {
   let output = ' <a href="set_test_status.php?wid=' + wid +
-  '&amp;status=' + newstat + '" target="ro" onclick="showRightFrames();">' + 
+  '&amp;status=' + newstat + '&amp;ajax=1" target="ro" onclick="showRightFrames();">' + 
   '<span title="' + getStatusName(newstat) + '">[';
   output += (oldstat == newstat) ? '◆' : getStatusAbbr(newstat);
   output += ']</span></a> ';
@@ -468,12 +468,12 @@ function make_overlib_link_change_status_test2 (wid, oldstat, newstat) {
  * @param {int}    plusminus Amplitude of the change (normally 1 or -1) 
  * @param {string} text      Text to be embed
  *  
- * @returns {string} A A tag contaning formatted text
+ * @returns {string} A tag containing formatted text
  */
 function make_overlib_link_change_status_test (wid, plusminus, text) {
   return ' <a href="set_test_status.php?wid=' + wid +
 		'&amp;stchange=' + plusminus + 
-    '" target="ro" onclick="showRightFrames();' + 
+    '&amp;ajax=1" target="ro" onclick="showRightFrames();' + 
       (plusminus > 0 ? 'successSound()' : 'failureSound()') + ';">' + 
     text + '</a> ';
 }

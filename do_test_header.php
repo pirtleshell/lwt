@@ -31,8 +31,10 @@ require_once 'inc/session_utility.php';
 function get_sql_test_data(&$title, &$p)
 {
     global $tbpref;
-    $p = "selection=" . $_REQUEST['selection']; 
-    $testsql = $_SESSION['testsql'];
+    $p = "selection=" . $_REQUEST['selection'];
+    $testsql = do_test_test_from_selection(
+        $_REQUEST['selection'], $_SESSION['testsql']
+    );
     $totalcount = get_first_value(
         "SELECT count(distinct WoID) AS value FROM $testsql"
     );
@@ -142,13 +144,12 @@ function do_test_header_row($_p)
     </div>
     <?php 
     // This part only works if $textid is set
-    if (!is_numeric(getreq('text'))) {
-        return;
-    }
-    $textid = (int) getreq('text');
-    echo '<div>' . getPreviousAndNextTextLinks(
-        $textid, 'do_test.php?text=', false, ''
-    ) . '</div>';
+    if (is_numeric(getreq('text'))) {
+        $textid = (int) getreq('text');
+        echo '<div>' . getPreviousAndNextTextLinks(
+            $textid, 'do_test.php?text=', false, ''
+        ) . '</div>';
+        
     ?>
     <div>
         <a href="do_text.php?start=<?php echo $textid; ?>" target="_top">
@@ -159,6 +160,9 @@ function do_test_header_row($_p)
         </a>
         <?php echo get_annotation_link($textid); ?>
     </div>
+    <?php
+    }
+    ?>
     <div>
         <?php quickMenu(); ?>
     </div>
@@ -216,10 +220,14 @@ function do_test_header_js()
 function do_test_header_content($title, $p, $totalcountdue, $totalcount, $language)
 {
     ?>
-<h1>TEST&nbsp;▶
-    <?php echo tohtml($title) 
-    . ' (Due: ' . $totalcountdue . ' of ' . $totalcount . ')'; ?>
-</h1>
+<h1>TEST ▶ <?php echo tohtml($title) ?></h1>
+<div style="margin: 5px;">
+    Word<?php echo intval($totalcount) > 1 ? 's' : ''; ?> due today: 
+    <?php echo htmlspecialchars($totalcount); ?>, 
+    <span class="todosty" id="not-tested-header"><?php 
+    echo htmlspecialchars($totalcountdue); 
+    ?></span> remaining.
+</div>
 <div class="flex-spaced">
     <div>
         <input type="button" value="..[<?php echo $language; ?>].." 

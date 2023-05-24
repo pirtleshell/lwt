@@ -168,12 +168,12 @@ if (isset($_REQUEST['markaction'])) {
     if (isset($_REQUEST['marked'])) {
         if (is_array($_REQUEST['marked'])) {
             $l = count($_REQUEST['marked']);
-            if ($l > 0 ) {
-                $list = "(" . $_REQUEST['marked'][0];
-                for ($i=1; $i<$l; $i++) { 
-                    $list .= "," . $_REQUEST['marked'][$i]; 
+            if ($l > 0) {
+                $id_list = array();
+                for ($i = 0; $i < $l; $i++) {
+                    $id_list[] = $_REQUEST['marked'][$i];
                 }
-                $list .= ")";
+                $list = "(" . implode(",", $id_list) . ")";
                 if ($markaction == 'del') {
                     $message = runsql(
                         'delete from ' . $tbpref . 'words where WoID in ' . $list, 
@@ -351,10 +351,9 @@ if (isset($_REQUEST['markaction'])) {
                             where WoLgID = LgID and WoID in ' . $list . ' 
                             group by WoID'
                     );
-                } elseif ($markaction == 'test' ) {
-                    $_SESSION['testsql'] = ' ' . $tbpref . 'words 
-                    where WoID in ' . $list . ' ';
-                    header("Location: do_test.php?selection=1");
+                } elseif ($markaction == 'test') {
+                    $_SESSION['testsql'] = $list;
+                    header("Location: do_test.php?selection=2");
                     exit();
                 }
             }
@@ -577,17 +576,14 @@ if (isset($_REQUEST['allaction'])) {
             group by WoID ' . $wh_tag;
         }
         $cnt = 0;
-        $list = '(';
+        $id_list = array();
         $res = do_mysqli_query($sql);
         while ($record = mysqli_fetch_assoc($res)) {
-            $cnt++;
-            $id = $record['WoID'];
-            $list .= ($cnt==1 ? '' : ',') . $id;
-        }    
-        $list .= ")";
+            $id_list[] = $record['WoID'];
+        }
         mysqli_free_result($res);
-        $_SESSION['testsql'] = ' ' . $tbpref . 'words where WoID in ' . $list . ' ';
-        header("Location: do_test.php?selection=1");
+        $_SESSION['testsql'] = "(" . implode(",", $id_list) . ")";
+        header("Location: do_test.php?selection=2");
         exit();
     }
 

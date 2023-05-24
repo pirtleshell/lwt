@@ -121,13 +121,16 @@ function prepare_textdata_js($s): string
  * @param string $data Input string
  *
  * @return string Properly escaped and trimmed string. "NULL" if the input string is empty.
+ * 
+ * @global $DBDONNECTION
  */
 function convert_string_to_sqlsyntax($data): string 
 {
+    global $DBCONNECTION;
     $result = "NULL";
     $data = trim(prepare_textdata($data));
     if ($data != "") { 
-        $result = "'".mysqli_real_escape_string($GLOBALS['DBCONNECTION'], $data)."'"; 
+        $result = "'".mysqli_real_escape_string($DBCONNECTION, $data)."'"; 
     }
     return $result;
 }
@@ -1495,7 +1498,7 @@ function update_database($dbname)
     
     if ($dbversion < $currversion) {
 
-        if ($debug) { 
+        if ($debug) {
             echo "<p>DEBUG: check DB collation: "; 
         }
         if ('utf8utf8_general_ci' != get_first_value(
@@ -1594,57 +1597,57 @@ function update_database($dbname)
             '', false
         );
         runsql(
-            'ALTER TABLE `' . $tbpref . 'wordtags` DROP INDEX WtWoID', '', false
+            "ALTER TABLE `{$tbpref}wordtags` DROP INDEX WtWoID", '', false
         );
         runsql(
-            'ALTER TABLE `' . $tbpref . 'texttags` DROP INDEX TtTxID', '', false
+            "ALTER TABLE `{$tbpref}texttags` DROP INDEX TtTxID", '', false
         );
         runsql(
-            'ALTER TABLE `' . $tbpref . 'archtexttags` DROP INDEX AgAtID', '', false
+            "ALTER TABLE `{$tbpref}archtexttags` DROP INDEX AgAtID", '', false
         );
 
         // Database manipulations to upgrade from the official LWT to the community 
         // fork
         runsql(
-            'ALTER TABLE `' . $tbpref . 'archivedtexts` 
+            "ALTER TABLE `{$tbpref}archivedtexts` 
             MODIFY COLUMN `AtLgID` tinyint(3) unsigned NOT NULL, 
-            MODIFY COLUMN `AtID` smallint(5) unsigned NOT NULL, 
-            ADD INDEX AtLgIDSourceURI (AtSourceURI(20),AtLgID)', 
+            MODIFY COLUMN `AtID` smallint(5) unsigned NOT NULL,
+            ADD INDEX AtLgIDSourceURI (AtSourceURI(20),AtLgID)", 
             '', false
         );
         runsql(
-            'ALTER TABLE `' . $tbpref . 'languages` 
+            "ALTER TABLE `{$tbpref}languages` 
             MODIFY COLUMN `LgID` tinyint(3) unsigned NOT NULL AUTO_INCREMENT, 
             MODIFY COLUMN `LgRemoveSpaces` tinyint(1) unsigned NOT NULL, 
             MODIFY COLUMN `LgSplitEachChar` tinyint(1) unsigned NOT NULL, 
-            MODIFY COLUMN `LgRightToLeft` tinyint(1) unsigned NOT NULL', 
+            MODIFY COLUMN `LgRightToLeft` tinyint(1) unsigned NOT NULL",
             '', false
         );
         runsql(
-            'ALTER TABLE `' . $tbpref . 'sentences` 
+            "ALTER TABLE `{$tbpref}sentences` 
             MODIFY COLUMN `SeID` mediumint(8) unsigned NOT NULL AUTO_INCREMENT, 
             MODIFY COLUMN `SeLgID` tinyint(3) unsigned NOT NULL, 
             MODIFY COLUMN `SeTxID` smallint(5) unsigned NOT NULL, 
-            MODIFY COLUMN `SeOrder` smallint(5) unsigned NOT NULL', 
+            MODIFY COLUMN `SeOrder` smallint(5) unsigned NOT NULL",
             '', false
         );
         runsql(
-            'ALTER TABLE `' . $tbpref . 'texts` 
+            "ALTER TABLE `{$tbpref}texts` 
             MODIFY COLUMN `TxID` smallint(5) unsigned NOT NULL AUTO_INCREMENT, 
             MODIFY COLUMN `TxLgID` tinyint(3) unsigned NOT NULL, 
-            ADD INDEX TxLgIDSourceURI (TxSourceURI(20),TxLgID)', 
+            ADD INDEX TxLgIDSourceURI (TxSourceURI(20),TxLgID)",
             '', false
         );
         runsql(
-            'ALTER TABLE `' . $tbpref . 'words` 
+            "ALTER TABLE `{$tbpref}words` 
             MODIFY COLUMN `WoID` mediumint(8) unsigned NOT NULL AUTO_INCREMENT, 
             MODIFY COLUMN `WoLgID` tinyint(3) unsigned NOT NULL, 
-            MODIFY COLUMN `WoStatus` tinyint(4) NOT NULL', 
+            MODIFY COLUMN `WoStatus` tinyint(4) NOT NULL", 
             '', false
         ); 
         runsql(
-            'ALTER TABLE `' . $tbpref . 'words` 
-            DROP INDEX WoTextLC', 
+            "ALTER TABLE `{$tbpref}words` 
+            DROP INDEX WoTextLC",
             '', false
         );
         runsql(
@@ -1692,31 +1695,16 @@ function update_database($dbname)
             DROP TiTxID',
             '', false
         );
-        /*
-        Commented as of 2.6.0-fork, this code do not seem to be able to serve any 
-        intended behavior.
-
-        runsql(
-            'ALTER TABLE `' . $tbpref . 'temptextitems` 
-            ADD DROP INDEX TiTextLC', 
-            '', false
-        );
-        runsql(
-            'ALTER TABLE `' . $tbpref . 'temptextitems` 
-            ADD DROP TiTextLC', 
-            '', false
-        );
-        */
         runsql(
             'ALTER TABLE `' . $tbpref . 'temptextitems` 
             ADD TiCount smallint(5) unsigned NOT NULL', 
             '', false
         );
         runsql(
-            'UPDATE ' . $tbpref . 'sentences 
-            join ' . $tbpref . 'textitems2 
-            on Ti2SeID=SeID and Ti2Order=SeFirstPos and Ti2WordCount=0 
-            SET SeFirstPos=SeFirstPos+1', 
+            "UPDATE {$tbpref}sentences 
+            JOIN {$tbpref}textitems2 
+            ON Ti2SeID = SeID AND Ti2Order=SeFirstPos AND Ti2WordCount=0 
+            SET SeFirstPos = SeFirstPos+1", 
             '', false
         );
         if ($debug) { 
@@ -1731,6 +1719,13 @@ function update_database($dbname)
                 UNIQUE KEY TtsTxtLC (TtsTxt,TtsLc)
             ) ENGINE=MyISAM DEFAULT CHARSET=utf8 PACK_KEYS=1", 
             ''
+        );
+
+        // Since 2.9.0, fixes the missing auto incrementation of texts
+        runsql(
+            "ALTER TABLE `{$tbpref}archivedtexts` 
+            MODIFY COLUMN `AtID` smallint(5) unsigned NOT NULL AUTO_INCREMENT", 
+            '', false
         );
         
         // set to current.
@@ -2204,9 +2199,9 @@ function connect_to_database($server, $userid, $passwd, $dbname)
     // Necessary since mysqli_report default setting in PHP 8.1+ has changed
     @mysqli_report(MYSQLI_REPORT_OFF);
 
-    $DBCONNECTION = mysqli_init();
+    $dbconnection = mysqli_init();
 
-    if ($DBCONNECTION === false) {
+    if ($dbconnection === false) {
         my_die(
             'Database connection error. Is MySQL running? 
             You can refer to the documentation: 
@@ -2216,14 +2211,19 @@ function connect_to_database($server, $userid, $passwd, $dbname)
         );
     }
 
-    @mysqli_options($DBCONNECTION, MYSQLI_OPT_LOCAL_INFILE, 1);
+    @mysqli_options($dbconnection, MYSQLI_OPT_LOCAL_INFILE, 1);
 
-    $success = @mysqli_real_connect($DBCONNECTION, $server, $userid, $passwd, $dbname);
+    $success = @mysqli_real_connect(
+        $dbconnection, $server, $userid, $passwd, $dbname
+    );
 
     if (!$success && mysqli_connect_errno() == 1049) {
         // Database unknown, try with generic database
-        $success = @mysqli_real_connect($DBCONNECTION, $server, $userid, $passwd);
-        if (!$success || !$DBCONNECTION) { 
+        $success = @mysqli_real_connect(
+            $dbconnection, $server, $userid, $passwd
+        );
+
+        if (!$success || !$dbconnection) { 
             my_die(
                 'DB connect error, connection parameters may be wrong, 
                 please check file "connect.inc.php". 
@@ -2234,15 +2234,17 @@ function connect_to_database($server, $userid, $passwd, $dbname)
             );
         }
         $result = mysqli_query(
-            $DBCONNECTION, 
+            $dbconnection, 
             "CREATE DATABASE `$dbname` 
             DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci"
         );
         if (!$result) {
             my_die("Failed to create database! " . $result);
         }
-        mysqli_close($DBCONNECTION);
-        $success = @mysqli_real_connect($DBCONNECTION, $server, $userid, $passwd, $dbname);
+        mysqli_close($dbconnection);
+        $success = @mysqli_real_connect(
+            $dbconnection, $server, $userid, $passwd, $dbname
+        );
     }
 
     if (!$success) { 
@@ -2256,11 +2258,11 @@ function connect_to_database($server, $userid, $passwd, $dbname)
         ); 
     }
 
-    @mysqli_query($DBCONNECTION, "SET NAMES 'utf8'");
+    @mysqli_query($dbconnection, "SET NAMES 'utf8'");
 
     // @mysqli_query($DBCONNECTION, "SET SESSION sql_mode = 'STRICT_ALL_TABLES'");
-    @mysqli_query($DBCONNECTION, "SET SESSION sql_mode = ''");
-    return $DBCONNECTION;
+    @mysqli_query($dbconnection, "SET SESSION sql_mode = ''");
+    return $dbconnection;
 }
 
 /**

@@ -8,10 +8,15 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 ### Added
 
 * ``langFromDict`` and ``targetLangFromDict`` are now officially coming to the kernel utility functions.
-* Text and title boxes change language according to the text's language for short text creation/edition and long text creation ([#111](https://github.com/HugoFara/lwt/issues/111)).
+* Text and title boxes change language according to the text's language for short text creation/edition, long text creation and text check ([#111](https://github.com/HugoFara/lwt/issues/111)).
 * Refactored texts with OOP:
   * New class: ``Text`` (in ``inc/classes/Text.php``).
   * New function: ``edit_texts_form`` (in ``edit_texts.php``) that takes a Text object as input.
+* Tests (checking if you know words) now use AJAX ([#112](https://github.com/HugoFara/lwt/issues/112)), it has several advantages:
+  * Musics play fully
+  * Page do not need to reload.
+  * The timer continues instead of resetting.
+* REST API, the new ``inc/ajax.php`` is intended to continue developping itself as a REST API.
 
 ## Changed
 
@@ -24,6 +29,11 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 * Language code is better detected from translator url when editing an existing language.
 * The field "Short Text Import" on long text import and was not redirecting to
 the intendended page. Same goes for "New Text" on "Archived Texts" page.
+* It was impossible to archive more than one text ([#118](https://github.com/HugoFara/lwt/issues/118)).
+* Testing a word was not changing it's color.
+* A warning was sent 'Undefined array key "query"' when creating a new word ([#121](https://github.com/HugoFara/lwt/issues/121)).
+* A warning when savings settings in ``settings.php`` was sometimes displayed ([#121](https://github.com/HugoFara/lwt/issues/121)).
+* Test header was different when testing languages or terms since 2.1.0-fork.
 
 ## 2.8.1-fork (April 14 2023)
 
@@ -161,7 +171,7 @@ from 1.8.0 to 1.10.2. This brings some bug fixes.
   * They should **always** be proper URLs.
   * Replacing ``###`` by ``lwt_term`` is strongly recommended!
   * "*" At the beginning of an URI should be replaced by ``lwt_popup=1`` as an argument.
-  * ``ggl.php`` should be replaced by the file full URL, for instance "http://localhost/lwt/ggl.php".
+  * ``ggl.php`` should be replaced by the file full URL, for instance "<http://localhost/lwt/ggl.php>".
 
 ### Full Changelog
 

@@ -21,46 +21,39 @@ require_once 'inc/langdefs.php';
 
 
 /**
- * Set sql request for the word test.
+ * Get the SQL string to perform tests.
  * 
- * @return string SQL request string
+ * @param bool|null   $selection    Test is of type selection
+ * @param string|null $sess_testsql SQL string for test
+ * @param int|null    $lang Test is of type language, for the language $lang ID
+ * @param int|null    $text Testing text with ID $text
  * 
- * @global string $tbpref Table prefix
+ * @return string SQL projection (selection) string
  */
-function get_test_sql()
+function do_test_get_test_sql($selection, $sess_testsql, $lang, $text)
 {
-    global $tbpref;
-    if (isset($_REQUEST['selection']) && isset($_SESSION['testsql'])) { 
-        $testsql = $_SESSION['testsql'];
-        $cntlang = get_first_value(
-            "SELECT COUNT(DISTINCT WoLgID) AS value 
-            FROM $testsql"
-        );
-        if ($cntlang > 1) {
-            echo "<p>Sorry - The selected terms are in $cntlang languages," . 
-            " but tests are only possible in one language at a time.</p>";
-            exit();
-        }
-    } else if (isset($_REQUEST['lang'])) {
-        $testsql = " {$tbpref}words WHERE WoLgID = " . $_REQUEST['lang'] . " ";
-    } else if (isset($_REQUEST['text'])) {
-        $testsql = " {$tbpref}words, {$tbpref}textitems2 
-        WHERE Ti2LgID = WoLgID AND Ti2WoID = WoID AND Ti2TxID = " . 
-        $_REQUEST['text'] . " ";
+    if (isset($selection) && isset($sess_testsql)) {
+        $testsql = do_test_test_from_selection($selection, $sess_testsql);
+    } else if (isset($lang) && is_numeric($lang)) {
+        $testsql = do_test_test_get_projection(2, (int)$lang);
+    } else if (isset($text) && is_numeric($text)) {
+        $testsql = do_test_test_get_projection(3, (int)$text);
     } else {
         my_die("do_test_test.php called with wrong parameters"); 
     }
     return $testsql;
+
 }
 
 /**
- * Give the test type.
+ * Get the test type clamped between 1 and 5 (included)
  * 
- * @return int<1, 5> Test type between 1 and 5 (included)
+ * @param int $testype Initial test type value
+ * 
+ * @return int Clamped $testtype
  */
-function get_test_type()
+function do_test_get_test_type($testtype)
 {
-    $testtype = (int)getreq('type');
     if ($testtype < 1) { 
         $testtype = 1; 
     }
@@ -68,6 +61,35 @@ function get_test_type()
         $testtype = 5; 
     }
     return $testtype;
+}
+
+/**
+ * Set sql request for the word test.
+ * 
+ * @return string SQL request string
+ * 
+ * @global string $tbpref 
+ * 
+ * @deprecated 2.9.0-fork Use do_test_get_sql instead
+ */
+function get_test_sql()
+{
+    return do_test_get_test_sql(
+        $_REQUEST['selection'], $_SESSION['testsql'], 
+        $_REQUEST['lang'], $_REQUEST['text']
+    );
+}
+
+/**
+ * Give the test type.
+ * 
+ * @return int<1, 5> Test type between 1 and 5 (included)
+ * 
+ * @deprecated 2.9.0-fork Use do_test_get_test_type instead.
+ */
+function get_test_type()
+{
+    return do_test_get_test_type((int)getreq('type'));
 }
 
 /**
@@ -92,28 +114,46 @@ function do_test_test_css()
 }
 
 /**
- * Output a message for a finished test, with the number of tests for tomorrow.
+ * Return the number of test due for tomorrow.
  * 
- * @param string $testsql    Query used to select words.
- * @param int    $totaltests Total number of tests.
+ * @param string $testsql Test selection string
  * 
- * @return void
+ * @return int tomorrow tests
  */
-function do_test_test_finished($testsql, $totaltests)
+function do_test_get_tomorrow_tests_count($testsql)
 {
-    $count2 = get_first_value(
+    return get_first_value(
         "SELECT COUNT(DISTINCT WoID) AS value 
         FROM $testsql AND WoStatus BETWEEN 1 AND 5 
         AND WoTranslation != '' AND WoTranslation != '*' AND WoTomorrowScore < 0"
     );
-    echo '<p class="center">
+}
+
+/**
+ * Output a message for a finished test, with the number of tests for tomorrow.
+ * 
+ * @param string $testsql    Query used to select words.
+ * @param int    $totaltests Total number of tests.
+ * @param bool   $ajax       AJAX mode, content will not be displayed.
+ * 
+ * @return void
+ */
+function do_test_test_finished($testsql, $totaltests, $ajax=false)
+{
+    $tomorrow_tests = do_test_get_tomorrow_tests_count($testsql);
+    echo '<p id="test-finished-area" class="center" style="display: ' . 
+    ($ajax ? 'none' : 'inherit') . ';">
             <img src="img/ok.png" alt="Done!" />
             <br /><br />
             <span class="red2">
-                Nothing ' . ($totaltests ? 'more ' : '') . 'to test here!
+                <span id="tests-done-today">
+                    Nothing ' . ($totaltests ? 'more ' : '') . 'to test here!
+                </span>
                 <br /><br />
-                Tomorrow you\'ll find here ' . $count2 . ' test' . 
-                ($count2 == 1 ? '' : 's') . '!
+                <span id="tests-tomorrow"">
+                    Tomorrow you\'ll find here ' . $tomorrow_tests . ' test' . 
+                    ($tomorrow_tests == 1 ? '' : 's') . '!
+                </span>
             </span>
         </p>
     </div>';
@@ -157,7 +197,7 @@ function do_test_test_sentence($wid, $lang, $wordlc)
       FROM {$tbpref}textitems2 t
       WHERE t.Ti2WordCount = 1 AND t.Ti2WoID = 0
       GROUP BY t.Ti2SeID
-    ) AS sUnknownCount on sUnknownCount.Ti2SeID = ti.Ti2SeID
+    ) AS sUnknownCount ON sUnknownCount.Ti2SeID = ti.Ti2SeID
     WHERE ti.Ti2WoID = $wid
     AND IFNULL(sUnknownCount.c, 0) / sWordCount.c < 0.3
     ORDER BY RAND() LIMIT 1";
@@ -184,7 +224,7 @@ function do_test_test_sentence($wid, $lang, $wordlc)
 }
 
 /**
- * Echo the test relative to a word.
+ * Return the test relative to a word.
  * 
  * @param array  $wo_record Query from the database regarding a word.
  * @param string $sent      Sentence containing the word.
@@ -194,7 +234,7 @@ function do_test_test_sentence($wid, $lang, $wordlc)
  * 
  * @return array{0: string, 1: string} HTML-escaped and raw text sentences (or word)
  */
-function print_term_test($wo_record, $sent, $testtype, $nosent, $regexword)
+function do_test_get_term_test($wo_record, $sent, $testtype, $nosent, $regexword)
 {
     $wid = $wo_record['WoID'];
     $word = $wo_record['WoText'];
@@ -207,57 +247,263 @@ function print_term_test($wo_record, $sent, $testtype, $nosent, $regexword)
     $l = mb_strlen($sent, 'utf-8');
     $r = '';
     $save = '';
-    $on = 0;
-    for ($i=0; $i < $l; $i++) {  // go thru sent
+    $on_word = false;
+
+    $preppend = ' <span style="word-break:normal;" ' . 
+    'class="click todo todosty word wsty word' 
+    . $wid . 
+    '" data_wid="' . $wid . '" data_trans="' . tohtml($trans) . 
+    '" data_text="' . tohtml($word) . '" data_rom="' . tohtml($roman) . 
+    '" data_sent="' . tohtml($cleansent) . '" data_status="' . $status . 
+    '" data_todo="1"';
+    if ($testtype ==3) { 
+        $preppend .= ' title="' . tohtml($trans) . '"'; 
+    }
+    $preppend .= '>';
+    if ($testtype == 2) {
+        // Show translation
+        if ($nosent) { 
+            $preppend .= tohtml($trans); 
+        } else { 
+            $preppend .= '<span dir="ltr">[' . tohtml($trans) . ']</span>'; 
+        }
+    }
+
+    // Go through sentence characters
+    for ($i = 0; $i < $l; $i++) {  
         $c = mb_substr($sent, $i, 1, 'UTF-8');
         if ($c == '}') {
-            $r .= ' <span style="word-break:normal;" ' . 
-            'class="click todo todosty word wsty word' 
-            . $wid . 
-            '" data_wid="' . $wid . '" data_trans="' . tohtml($trans) . 
-            '" data_text="' . tohtml($word) . '" data_rom="' . tohtml($roman) . 
-            '" data_sent="' . tohtml($cleansent) . '" data_status="' . $status . 
-            '" data_todo="1"';
-            if ($testtype ==3) { 
-                $r .= ' title="' . tohtml($trans) . '"'; 
-            } 
-            $r .= '>';
-            if ($testtype == 2) {
-                if ($nosent) { 
-                    $r .= tohtml($trans); 
-                } else { 
-                    $r .= '<span dir="ltr">[' . tohtml($trans) . ']</span>'; 
-                }
-            } elseif ($testtype == 3) { 
-                $r .= tohtml(
-                    str_replace(
-                        "{", '[', str_replace(
-                            "}", ']', 
-                            mask_term_in_sentence(
-                                '{' . $save . '}',
-                                $regexword
-                            )    
-                        )
-                    )
-                );
-            } else { 
+            $r .= $preppend;
+            if ($testtype == 3) {
+                // Show word in original language in sentence
+                $sentence = mask_term_in_sentence('{' . $save . '}', $regexword);
+                $sentence = str_replace("{", '[', str_replace("}", ']', $sentence));
+                $r .= tohtml($sentence);
+            } elseif ($testtype != 2) {
+                // Show word in original language, alone
                 $r .= tohtml($save); 
             }
             $r .= '</span> ';
-            $on = 0;
+            $on_word = false;
         } elseif ($c == '{') {
-            $on = 1;
+            $on_word = true;
             $save = '';
         } else {
-            if ($on) { 
+            if ($on_word) { 
                 $save .= $c; 
             } else { 
                 $r .= tohtml($c); 
             }
         }
-    } // for: go thru sent
+    }
     return array($r, $save);
 }
+
+
+
+/**
+ * Echo the test relative to a word.
+ * 
+ * @param array  $wo_record Query from the database regarding a word.
+ * @param string $sent      Sentence containing the word.
+ * @param int    $testtype  Type of test
+ * @param int    $nosent    1 if you want to hide sentences.
+ * @param string $regexword Regex to select the desired word.
+ * 
+ * @return array{0: string, 1: string} HTML-escaped and raw text sentences (or word)
+ */
+function print_term_test($wo_record, $sent, $testtype, $nosent, $regexword)
+{
+    list($word, $_) =  do_test_get_term_test(
+        $wo_record, $sent, $testtype, $nosent, $regexword
+    );
+    return $word;
+}
+
+/**
+ * Find the next word to test.
+ * 
+ * @param string $testsql Test selection string
+ * 
+ * @return array 
+ */
+function do_test_get_word($testsql)
+{
+    $pass = 0;
+    while ($pass < 2) {
+        $pass++;
+        $sql = "SELECT DISTINCT WoID, WoText, WoTextLC, WoTranslation, 
+        WoRomanization, WoSentence, WoLgID, 
+        (IFNULL(WoSentence, '') NOT LIKE CONCAT('%{', WoText, '}%')) AS notvalid, 
+        WoStatus, 
+        DATEDIFF( NOW( ), WoStatusChanged ) AS Days, WoTodayScore AS Score 
+        FROM $testsql AND WoStatus BETWEEN 1 AND 5 
+        AND WoTranslation != '' AND WoTranslation != '*' AND WoTodayScore < 0 " . 
+        ($pass == 1 ? 'AND WoRandom > RAND()' : '') . ' 
+        ORDER BY WoTodayScore, WoRandom 
+        LIMIT 1';
+        $res = do_mysqli_query($sql);
+        $record = mysqli_fetch_assoc($res);
+        if ($record) {
+            return $record;
+        }
+        mysqli_free_result($res);
+    }
+    return array();
+}
+
+
+/**
+ * Get the solution to a test.
+ * 
+ * @param int $testtype Test type between 1 and 5
+ * @param array $wo_record Word record element
+ * @param bool $nosent Test is in word mode
+ * @param string $wo_text Word text
+ * 
+ * @return string Solution to display.  
+ */
+function get_test_solution($testtype, $wo_record, $nosent, $wo_text)
+{
+    if ($testtype == 1) {
+        $trans = repl_tab_nl($wo_record['WoTranslation']) . 
+        getWordTagList($wo_record['WoID'], ' ', 1, 0);
+        return $nosent ? $trans : (' [' . $trans . '] ');
+    } else {
+        return $wo_text;
+    }
+}
+
+
+/**
+ * Preforms the HTML of the test area, to update through AJAX.
+ *
+ * @param string $testsql    SQL query of for the words that should be tested.
+ * @param int    $totaltests Total number of tests to do.
+ * @param int    $count      Number of tests left.
+ * @param int    $testtype   Type of test.
+ *
+ * @return int Number of tests left to do.
+ *
+ * @global string $tbpref Table prefix 
+ * @global int    $debug  Show the SQL query used if 1.
+ *
+ * @psalm-return int<0, max>
+ */
+function do_test_prepare_ajax_test_area($testsql, $count, $testtype): int
+{
+    global $tbpref;
+    $nosent = false;
+    if ($testtype > 3) {
+        $testtype -= 3;
+        $nosent = true;
+    }
+
+    echo '<div id="body">';
+
+    $lgid = get_first_value("SELECT WoLgID AS value FROM $testsql LIMIT 1");
+    
+    $sql = "SELECT LgName, LgDict1URI, LgDict2URI, LgGoogleTranslateURI, LgTextSize, 
+    LgRemoveSpaces, LgRegexpWordCharacters, LgRightToLeft 
+    FROM {$tbpref}languages WHERE LgID = $lgid";
+    $res = do_mysqli_query($sql);
+    $record = mysqli_fetch_assoc($res);
+    $lang = array(
+        'wb1' => isset($record['LgDict1URI']) ? $record['LgDict1URI'] : "",
+        'wb2' => isset($record['LgDict2URI']) ? $record['LgDict2URI'] : "",
+        'wb3' => isset($record['LgGoogleTranslateURI'])?$record['LgGoogleTranslateURI']:"",
+        'textsize' => $record['LgTextSize'],
+        'removeSpaces' => $record['LgRemoveSpaces'],
+        'regexword' => $record['LgRegexpWordCharacters'],
+        'rtlScript' => $record['LgRightToLeft']
+    );
+    mysqli_free_result($res);
+
+    ?>
+    <script type="text/javascript">
+        /**
+         * Insert a new word test.
+         */
+        function insert_new_word(word) {
+
+                SOLUTION = word['solution'];
+                WID = word['word_id'];
+
+                $('#term-test').html(word['group']);
+
+                $(document).on('keydown', keydown_event_do_test_test);
+                $('.word')
+                .on('click', word_click_event_do_test_test)
+        }
+
+        /**
+         * Handles an ajax query for word tests.
+         */
+        function test_query_handler(data)
+        {
+            if (data['word_id'] == 0) {
+                do_test_finished(<?php echo json_encode($count); ?>);
+                const options = {
+                    "action": "query", 
+                    "action_type": "tomorrow_test_count",
+                    "test_sql": <?php echo json_encode((string)$testsql); ?>
+                };
+                $.getJSON(
+                    'inc/ajax.php?' + $.param(options)
+                ).done(function (data) {
+                    if (data["test_count"]) {
+                        $('#tests-tomorrow').css("display", "inherit");
+                        $('#tests-tomorrow').text(
+                            "Tomorrow you'll find here " + data["test_count"] + 
+                            ' test' + (data["test_count"] == 1 ? '' : 's') + "!"
+                        );
+                    }
+                });
+            } else {
+                insert_new_word(data);
+            }
+        }
+
+        /**
+         * Get a new word test.
+         */
+        function get_new_word()
+        {
+            // Get new word through AJAX
+            const options = {
+                "action": "query", 
+                "action_type": "test",
+                "test_sql": <?php echo json_encode((string)$testsql); ?>,
+                "test_nosent": <?php echo json_encode((string)$nosent); ?>,
+                "test_lgid": <?php echo json_encode((string)$lgid); ?>,
+                "test_wordregex": <?php echo json_encode((string)$lang['regexword']); ?>,
+                "test_type": <?php echo json_encode((string)$testtype); ?>
+            };
+            $.getJSON(
+                'inc/ajax.php?' + $.param(options)
+            ).done(test_query_handler);
+
+            // Close any previous tooltip
+            cClick();
+        }
+
+        $(get_new_word);
+    </script>
+
+    <p id="term-test" dir="<?php echo ($lang['rtlScript'] ? 'rtl' : 'ltr'); ?>" 
+    style="<?php echo ($lang['removeSpaces'] ? 'word-break:break-all;' : ''); ?>
+    font-size: <?php echo $lang['textsize'] ?>%; line-height: 1.4; text-align:center; margin-bottom:300px;"
+    >
+    </p>
+    <?php do_test_test_finished($testsql, $count, true); ?>
+    </div>
+    <?php
+    
+    do_test_test_interaction_globals($lang['wb1'], $lang['wb2'], $lang['wb3']);
+
+    return $count;
+}
+
 
 /**
  * Preforms the HTML of the test area.
@@ -378,7 +624,7 @@ function prepare_test_area($testsql, $totaltests, $count, $testtype): int
     'font-size:' . $textsize . '%;
     line-height: 1.4; text-align:center; margin-bottom:300px;">';
     
-    list($r, $save) = print_term_test(
+    list($r, $save) = do_test_get_term_test(
         $record, $sent, $testtype, $nosent, $regexword
     );
     
@@ -392,6 +638,94 @@ function prepare_test_area($testsql, $totaltests, $count, $testtype): int
     echo '</p></div>';
 
     return $count;
+}
+
+
+/**
+ * Prepare JavaScript code globals so that you can click on words.
+ * 
+ * @param array  $wo_record Word record. Associative array with keys 'WoID', 
+ *                          'WoTranslation'.
+ * @param string $wb1       URL of the first dictionary.
+ * @param string $wb2       URL of the secondary dictionary.
+ * @param string $wb3       URL of the google translate dictionary.
+ * @param int    $testtype  Type of test
+ * @param int    $nosent    1 to use single word instead of sentence.
+ * @param string $save      Word or sentence to use for the test
+ * 
+ * @return void
+ * 
+ * @global string $tbpref  Database table prefix
+ * @global string $angDefs Languages definition array
+ */
+function do_test_test_interaction_globals($wb1, $wb2, $wb3) 
+{
+    ?>
+<script type="text/javascript">
+    WBLINK1 = <?php echo json_encode($wb1); ?>;
+    WBLINK2 = <?php echo json_encode($wb2); ?>;
+    WBLINK3 = <?php echo json_encode($wb3); ?>;
+    LANG = getLangFromDict(WBLINK3);
+    if (LANG && LANG != WBLINK3) {
+        $("html").attr('lang', LANG);
+    }
+    OPENED = 0;
+</script>
+    <?php
+}
+
+
+/**
+ * Prepare JavaScript code so that you can click on words.
+ * 
+ * @param array  $wo_record Word record. Associative array with keys 'WoID', 
+ *                          'WoTranslation'.
+ * @param string $wb1       URL of the first dictionary.
+ * @param string $wb2       URL of the secondary dictionary.
+ * @param string $wb3       URL of the google translate dictionary.
+ * @param int    $testtype  Type of test
+ * @param int    $nosent    1 to use single word instead of sentence.
+ * @param string $save      Word or sentence to use for the test
+ * 
+ * @return void
+ * 
+ * @global string $tbpref  Database table prefix
+ * @global string $angDefs Languages definition array
+ */
+function do_test_test_javascript_clickable($wo_record, $solution) {
+    global $tbpref, $langDefs;
+
+    $wid = $wo_record['WoID'];
+    $lang = get_first_value(
+        'SELECT LgName AS value FROM ' . $tbpref . 'languages
+        WHERE LgID = ' . $wo_record['WoLgID'] . '
+        LIMIT 1'        
+    );
+    $abbr = $langDefs[$lang][1];
+    $phoneticText = phonetic_reading($wo_record['WoText'], $abbr);
+    ?>
+<script type="text/javascript">
+    /** 
+     * Read the word aloud
+     */
+    function read_word() {
+        if (('speechSynthesis' in window) && 
+        document.getElementById('utterance-allowed').checked) {
+            const text = <?php echo json_encode($phoneticText); ?>;
+            const lang = <?php echo json_encode($abbr); ?>;
+            readRawTextAloud(text, lang);
+        }
+    }
+
+    SOLUTION = <?php echo prepare_textdata_js($solution); ?>;
+    WID = <?php echo $wid; ?>;
+
+    $(document).on('keydown', keydown_event_do_test_test);
+    $('.word')
+    .on('click', word_click_event_do_test_test)
+    .on('click', read_word);
+</script>
+    <?php
 }
 
 /**
@@ -414,59 +748,9 @@ function prepare_test_area($testsql, $totaltests, $count, $testtype): int
 function do_test_test_javascript_interaction(
     $wo_record, $wb1, $wb2, $wb3, $testtype, $nosent, $save
 ) {
-    global $tbpref, $langDefs;
-
-    $wid = $wo_record['WoID'];
-    $trans = repl_tab_nl($wo_record['WoTranslation']) . 
-    getWordTagList($wid, ' ', 1, 0);
-    $lang = get_first_value(
-        'SELECT LgName AS value FROM ' . $tbpref . 'languages
-        WHERE LgID = ' . $wo_record['WoLgID'] . '
-        LIMIT 1'        
-    );
-    $abbr = $langDefs[$lang][1];
-    $phoneticText = phonetic_reading($wo_record['WoText'], $abbr);
-    ?>
-<script type="text/javascript">
-    //<![CDATA[
-
-    /** 
-     * Read the word aloud
-     */
-    function read_word() {
-        if (('speechSynthesis' in window) && 
-        document.getElementById('utterance-allowed').checked) {
-            const text = <?php echo json_encode($phoneticText); ?>;
-            const lang = <?php echo json_encode($abbr); ?>;
-            readRawTextAloud(text, lang);
-        }
-    }
-
-    WBLINK1 = '<?php echo $wb1; ?>';
-    WBLINK2 = '<?php echo $wb2; ?>';
-    WBLINK3 = '<?php echo $wb3; ?>';
-    LANG = getLangFromDict(WBLINK3);
-    if (LANG && LANG != WBLINK3) {
-        $("html").attr('lang', LANG);
-    }
-    SOLUTION = <?php
-    if ($testtype == 1) {
-        echo prepare_textdata_js($nosent ? $trans : (' [' . $trans . '] '));
-    } else {
-        echo prepare_textdata_js($save);
-    }
-    ?>;
-    OPENED = 0;
-    WID = <?php echo $wid; ?>;
-    $(document).ready(function() {
-        $(document).on('keydown', keydown_event_do_test_test);
-        $('.word')
-        .on('click', word_click_event_do_test_test)
-        .on('click', read_word);
-    });
-    //]]>
-</script>
-    <?php
+    do_test_test_interaction_globals($wb1, $wb2, $wb3);
+    $solution = get_test_solution($testtype, $wo_record, $nosent, $save);
+    do_test_test_javascript_clickable($wo_record, $solution);
 }
 
 /**
@@ -497,42 +781,49 @@ function do_test_footer($notyettested, $wrong, $correct)
     $totaltests = $wrong + $correct + $notyettested;
     $totaltestsdiv = 1;
     if ($totaltests > 0) { 
-        $totaltestsdiv = 1.0/$totaltests; 
+        $totaltestsdiv = 1.0 / $totaltests; 
     }
-    $l_notyet = round(($notyettested * $totaltestsdiv)*100, 0);
-    $b_notyet = ($l_notyet == 0) ? '' : 'borderl';
-    $l_wrong = round(($wrong * $totaltestsdiv)*100, 0);
-    $b_wrong = ($l_wrong == 0) ? '' : 'borderl';
-    $l_correct = round(($correct * $totaltestsdiv)*100, 0);
-    $b_correct = ($l_correct == 0) ? 'borderr' : 'borderl borderr';
+    $totaltestsdiv *= 100;
+    $l_notyet = round($notyettested * $totaltestsdiv, 0);
+    $l_wrong = round($wrong * $totaltestsdiv, 0);
+    $l_correct = round($correct * $totaltestsdiv, 0);
     ?>
 <footer id="footer">
-    <img src="icn/clock.png" title="Elapsed Time" alt="Elapsed Time" />
-    <span id="timer" title="Elapsed Time"></span>
-    &nbsp; &nbsp; &nbsp; 
-    <img 
-    class="<?php echo $b_notyet; ?>" 
-    src="<?php print_file_path('icn/test_notyet.png');?>" 
-    title="Not yet tested" alt="Not yet tested" height="10" 
-    width="<?php echo $l_notyet; ?>" />
-
-    <img class="<?php echo $b_wrong; ?>" 
-    src="<?php print_file_path('icn/test_wrong.png');?>" 
-    title="Wrong" alt="Wrong" height="10" width="<?php echo $l_wrong; ?>" />
-
-    <img 
-    class="<?php echo $b_correct; ?>" 
-    src="<?php print_file_path('icn/test_correct.png');?>" 
-    title="Correct" alt="Correct" height="10" width="<?php echo $l_correct; ?>" />
-    
-    &nbsp; &nbsp; &nbsp; 
-    <span title="Total number of tests"><?php echo $totaltests; ?></span>
-    = 
-    <span class="todosty" title="Not yet tested"><?php echo $notyettested; ?></span>
-    + 
-    <span class="donewrongsty" title="Wrong"><?php echo $wrong; ?></span>
-    + 
-    <span class="doneoksty" title="Correct"><?php echo $correct; ?></span>
+    <span style="margin-left: 15px; margin-right: 15px;">
+        <img src="icn/clock.png" title="Elapsed Time" alt="Elapsed Time" />
+        <span id="timer" title="Elapsed Time"></span>
+    </span>
+    <span style="margin-left: 15px; margin-right: 15px;">
+        <img id="not-tested-box" class="borderl" 
+        src="<?php print_file_path('icn/test_notyet.png');?>" 
+        title="Not yet tested" alt="Not yet tested" height="10" 
+        width="<?php echo $l_notyet; ?>" 
+        /><img 
+        id="wrong-tests-box" class="bordermiddle" 
+        src="<?php print_file_path('icn/test_wrong.png');?>" 
+        title="Wrong" alt="Wrong" height="10" width="<?php echo $l_wrong; ?>" 
+        /><img 
+        id="correct-tests-box" class="borderr" 
+        src="<?php print_file_path('icn/test_correct.png');?>" 
+        title="Correct" alt="Correct" height="10" width="<?php echo $l_correct; ?>" />
+    </span>
+    <span style="margin-left: 15px; margin-right: 15px;">
+        <span title="Total number of tests" id="total_tests"><?php 
+        echo $totaltests; 
+        ?></span> 
+        =
+        <span class="todosty" title="Not yet tested" id="not-tested"><?php 
+        echo $notyettested; 
+        ?></span>
+        +
+        <span class="donewrongsty" title="Wrong" id="wrong-tests"><?php 
+        echo $wrong; 
+        ?></span>
+        +
+        <span class="doneoksty" title="Correct" id="correct-tests"><?php 
+        echo $correct; 
+        ?></span>
+    </span>
 </footer>
     <?php
 }
@@ -548,12 +839,15 @@ function do_test_test_javascript($count)
 {
     ?>
 <script type="text/javascript">
-    //<![CDATA[
     const waitTime = <?php 
     echo json_encode((int)getSettingWithDefault('set-test-edit-frame-waiting-time')) 
     ?>;
 
-    $(document).ready(function() {
+    /**
+     * Prepare the different frames for a test.
+     */
+    function prepare_test_frames()
+    {
         window.parent.frames['ru'].location.href='empty.html';
         if (waitTime <= 0) {
             window.parent.frames['ro'].location.href='empty.html';
@@ -564,11 +858,27 @@ function do_test_test_javascript($count)
             );
         }
         new CountUp(
-            <?php echo time() . ', ' . $_SESSION['teststart']; ?>, 
+            <?php echo time(); ?>, 
+            <?php echo $_SESSION['teststart']; ?>, 
             'timer', <?php echo ($count ? 0 : 1); ?>
         );
-    });
-//]]>
+    }
+
+    /**
+     * Make a custom display when tests are finished for today.
+     */
+    function do_test_finished(total_tests)
+    {
+        $('#term-test').css("display", "none");
+        $('#test-finished-area').css("display", "inherit");
+        $('#tests-done-today').text(
+            "Nothing " + (total_tests > 0 ? 'more ' : '') + "to test here!"
+        );
+
+        $('#tests-tomorrow').css("display", "none");
+    }
+
+    $(document).ready(prepare_test_frames);
 </script>
     <?php
 }
@@ -584,9 +894,11 @@ function do_test_test_content()
 {
     global $debug;
     
-    $testsql = get_test_sql();
+    $testsql = do_test_get_test_sql(
+        $_REQUEST['selection'], $_SESSION['testsql'], $_REQUEST['lang'], $_REQUEST['text']
+    );
     $totaltests = $_SESSION['testtotal'];
-    $testtype = get_test_type();
+    $testtype = do_test_get_test_type((int)getreq('type'));
     $count = get_first_value(
         "SELECT COUNT(DISTINCT WoID) AS value 
         FROM $testsql AND WoStatus BETWEEN 1 AND 5 
@@ -604,5 +916,36 @@ function do_test_test_content()
     prepare_test_footer($notyettested);
     do_test_test_javascript($count2);
 }
+
+/**
+ * Do the main content of a test page.
+ * 
+ * @global int $debug Show debug informations
+ * 
+ * @return void
+ */
+function do_test_test_content_ajax($test_sql)
+{
+    global $debug;
+    
+    $testtype = do_test_get_test_type((int)getreq('type'));
+    $count = get_first_value(
+        "SELECT COUNT(DISTINCT WoID) AS value 
+        FROM $test_sql AND WoStatus BETWEEN 1 AND 5 
+        AND WoTranslation != '' AND WoTranslation != '*' AND WoTodayScore < 0"
+    );
+    if ($debug) { 
+        echo "DEBUG - COUNT TO TEST: $count<br />"; 
+    }
+    if (!is_numeric($count)) {
+        my_die("The number of words left to test is not an integer: \"$count\"!");
+    }
+    $notyettested = (int) $count;
+
+    $count2 = do_test_prepare_ajax_test_area($test_sql, $notyettested, $testtype);
+    prepare_test_footer($notyettested);
+    do_test_test_javascript($count2);
+}
+
 
 ?>

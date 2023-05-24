@@ -159,11 +159,11 @@ function edit_texts_mark_action($markaction, $marked, $actiondata): array
     if ($l == 0) {
         return array($message, null);
     }
-    $list = "(" . $marked[0];
-    for ($i=1; $i<$l; $i++) { 
-        $list .= "," . $marked[$i]; 
+    $id_list = array();
+    for ($i = 0; $i < $l; $i++) {
+        $id_list[] = $marked[$i];
     }
-    $list .= ")";
+    $list = "(" . implode(",", $id_list) . ")";
 
     if ($markaction == 'del') {
         $message3 = runsql(
@@ -319,9 +319,8 @@ function edit_texts_mark_action($markaction, $marked, $actiondata): array
         mysqli_free_result($res);
         $message = 'Text(s) reparsed: ' . $count;
     } elseif ($markaction == 'test' ) {
-        $_SESSION['testsql'] = ' ' . $tbpref . 'words, ' . $tbpref . 'textitems2 
-        WHERE Ti2LgID = WoLgID AND Ti2WoID = WoID AND Ti2TxID IN ' . $list . ' ';
-        header("Location: do_test.php?selection=1");
+        $_SESSION['testsql'] = $list;
+        header("Location: do_test.php?selection=3");
         exit();
     }
     return array($message, null);
@@ -555,6 +554,14 @@ function edit_texts_do_operation($op, $message1, $no_pagestart): string
 function edit_texts_form($text, $annotated) {
     global $tbpref;
     $new_text = $text->id == 0;
+    $sql = "SELECT LgID, LgGoogleTranslateURI FROM {$tbpref}languages 
+    WHERE LgGoogleTranslateURI<>''";
+    $res = do_mysqli_query($sql);
+    $return = array();
+    while ($lg_record = mysqli_fetch_assoc($res)) {
+        $url = $lg_record["LgGoogleTranslateURI"];
+        $return[$lg_record["LgID"]] = langFromDict($url);
+    }
     ?>
     <h2>
         <?php echo ($new_text ? "New" : "Edit") ?> Text 
@@ -571,17 +578,7 @@ function edit_texts_form($text, $annotated) {
          */
         function change_textboxes_language() {
             const lid = document.getElementById("TxLgID").value;
-            const language_data = <?php 
-            $sql = "SELECT LgID, LgGoogleTranslateURI FROM {$tbpref}languages 
-            WHERE LgGoogleTranslateURI<>''";
-            $res = do_mysqli_query($sql);
-            $return = array();
-            while ($lg_record = mysqli_fetch_assoc($res)) {
-                $url = $lg_record["LgGoogleTranslateURI"];
-                $return[$lg_record["LgID"]] = langFromDict($url);
-            }
-            echo json_encode($return);
-            ?>;
+            const language_data = <?php echo json_encode($return); ?>;
             $('#TxTitle').attr('lang', language_data[lid]);
             $('#TxText').attr('lang', language_data[lid]);
         }
