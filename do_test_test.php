@@ -29,8 +29,6 @@ require_once 'inc/langdefs.php';
  * @param int|null    $text Testing text with ID $text
  * 
  * @return string SQL projection (selection) string
- * 
- * @deprecated Use do_test_test_get_projection, will be removed in 3.0.0
  */
 function do_test_get_test_sql($selection, $sess_testsql, $lang, $text)
 {
