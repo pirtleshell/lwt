@@ -220,8 +220,8 @@ function get_setting_data()
 /**
  * Remove all spaces from a string.
  * 
- * @param string $s      Input string
- * @param string $remove Do not do anything if empty
+ * @param string      $s      Input string
+ * @param string|bool $remove Do not do anything if empty or false
  * 
  * @return string String without spaces if requested.
  */
@@ -230,7 +230,8 @@ function remove_spaces($s, $remove)
     if (!$remove) { 
         return $s;
     }
-    return str_replace(' ', '', $s);  // '' enthält &#x200B;
+    // '' enthält &#x200B;
+    return str_replace(' ', '', $s);
 }
 
 /**

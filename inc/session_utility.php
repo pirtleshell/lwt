@@ -3572,10 +3572,10 @@ function getSentence($seid, $wordlc, $mode): array
         WHERE Ti2LgID = LgID AND Ti2WordCount < 2 AND Ti2SeID = $seid" 
     );
     $record = mysqli_fetch_assoc($res);
-    $removeSpaces = $record["LgRemoveSpaces"];
-    $splitEachChar = $record['LgSplitEachChar'];
+    $removeSpaces = (int)$record["LgRemoveSpaces"] == 1;
+    $splitEachChar = (int)$record['LgSplitEachChar'] != 0;
     $txtid = $record["SeTxID"];
-    if (($removeSpaces==1 && $splitEachChar==0) 
+    if (($removeSpaces && !$splitEachChar) 
         || 'MECAB'== strtoupper(trim($record["LgRegexpWordCharacters"]))
     ) {
         $text = $record["SeText"];
@@ -3583,18 +3583,18 @@ function getSentence($seid, $wordlc, $mode): array
         $pattern = "/(?<=[​])($wordlc)(?=[​])/ui";
     } else {
         $text = str_replace(array('​​','​','\r'), array('\r','','​'), $record["SeText"]);
-        if ($splitEachChar == 0) {
+        if ($splitEachChar) {
+            $pattern = "/($wordlc)/ui";
+        } else {
             $pattern = '/(?<![' . $record["LgRegexpWordCharacters"] . '])(' . 
             remove_spaces($wordlc, $removeSpaces) . ')(?![' . 
             $record["LgRegexpWordCharacters"] . '])/ui';
-        } else { 
-            $pattern = "/($wordlc)/ui"; 
         }
     }
     $se = str_replace('​', '', preg_replace($pattern, '<b>$0</b>', $text));
     $sejs = str_replace('​', '', preg_replace($pattern, '{$0}', $text));
     if ($mode > 1) {
-        if ($removeSpaces == 1 && $splitEachChar == 0) {
+        if ($removeSpaces && !$splitEachChar) {
             $prevseSent = get_first_value(
                 "SELECT concat(
                     '​', 
@@ -3619,37 +3619,37 @@ function getSentence($seid, $wordlc, $mode): array
             $se = preg_replace($pattern, '<b>$0</b>', $prevseSent) . $se;
             $sejs = preg_replace($pattern, '{$0}', $prevseSent) . $sejs;
         }
-        if ($mode > 2) {
-            if ($removeSpaces == 1 && $splitEachChar == 0) {
-                $nextSent = get_first_value(
-                    "SELECT concat(
-                        '​', 
-                        group_concat(Ti2Text order by Ti2Order asc SEPARATOR '​'),
-                        '​'
-                    ) as  value 
-                    from {$tbpref}sentences, {$tbpref}textitems2 
-                    where Ti2SeID = SeID and SeID > $seid
-                    and SeTxID = $txtid and trim(SeText) not in ('¶','') 
-                    group by SeID 
-                    order by SeID asc"
-                );
-            } else {
-                $nextSent = get_first_value(
-                    "SELECT SeText as value 
-                    FROM {$tbpref}sentences 
-                    where SeID > $seid AND SeTxID = $txtid 
-                    and trim(SeText) not in ('¶','') 
-                    order by SeID asc"
-                );
-            }
-            if (isset($nextSent)) {
-                $se .= preg_replace($pattern, '<b>$0</b>', $nextSent);
-                $sejs .= preg_replace($pattern, '{$0}', $nextSent);
-            }
+    }
+    if ($mode > 2) {
+        if ($removeSpaces && !$splitEachChar) {
+            $nextSent = get_first_value(
+                "SELECT concat(
+                    '​', 
+                    group_concat(Ti2Text order by Ti2Order asc SEPARATOR '​'),
+                    '​'
+                ) as value 
+                from {$tbpref}sentences, {$tbpref}textitems2 
+                where Ti2SeID = SeID and SeID > $seid
+                and SeTxID = $txtid and trim(SeText) not in ('¶','') 
+                group by SeID 
+                order by SeID asc"
+            );
+        } else {
+            $nextSent = get_first_value(
+                "SELECT SeText as value 
+                FROM {$tbpref}sentences 
+                where SeID > $seid AND SeTxID = $txtid 
+                and trim(SeText) not in ('¶','') 
+                order by SeID asc"
+            );
+        }
+        if (isset($nextSent)) {
+            $se .= preg_replace($pattern, '<b>$0</b>', $nextSent);
+            $sejs .= preg_replace($pattern, '{$0}', $nextSent);
         }
     }
     mysqli_free_result($res);
-    if ($removeSpaces == 1) {
+    if ($removeSpaces) {
         $se = str_replace('​', '', $se);
         $sejs = str_replace('​', '', $sejs);
     }
