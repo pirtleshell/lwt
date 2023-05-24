@@ -33,6 +33,7 @@ the intendended page. Same goes for "New Text" on "Archived Texts" page.
 * Testing a word was not changing it's color.
 * A warning was sent 'Undefined array key "query"' when creating a new word ([#121](https://github.com/HugoFara/lwt/issues/121)).
 * A warning when savings settings in ``settings.php`` was sometimes displayed ([#121](https://github.com/HugoFara/lwt/issues/121)).
+* Test header was different when testing languages or terms since 2.1.0-fork.
 
 ## 2.8.1-fork (April 14 2023)
 

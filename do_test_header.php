@@ -144,13 +144,12 @@ function do_test_header_row($_p)
     </div>
     <?php 
     // This part only works if $textid is set
-    if (!is_numeric(getreq('text'))) {
-        return;
-    }
-    $textid = (int) getreq('text');
-    echo '<div>' . getPreviousAndNextTextLinks(
-        $textid, 'do_test.php?text=', false, ''
-    ) . '</div>';
+    if (is_numeric(getreq('text'))) {
+        $textid = (int) getreq('text');
+        echo '<div>' . getPreviousAndNextTextLinks(
+            $textid, 'do_test.php?text=', false, ''
+        ) . '</div>';
+        
     ?>
     <div>
         <a href="do_text.php?start=<?php echo $textid; ?>" target="_top">
@@ -161,6 +160,9 @@ function do_test_header_row($_p)
         </a>
         <?php echo get_annotation_link($textid); ?>
     </div>
+    <?php
+    }
+    ?>
     <div>
         <?php quickMenu(); ?>
     </div>
