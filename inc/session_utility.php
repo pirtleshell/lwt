@@ -2044,6 +2044,100 @@ function get_selected($value, $selval)
 }
 
 
+/* Functions relative to word tests. */
+
+/**
+ * Create a projection operator do perform word test.
+ * 
+ * @param int $key Type of test. 
+ *                 * 0: word selection
+ *                 * 1: text item selection
+ *                 * 2: from language
+ *                 * 3: from text
+ * @param array|int $value Object to select.
+ * 
+ * @return string Operator
+ * 
+ * @global string $tbpref;
+ */
+function do_test_test_get_projection($key, $value)
+{
+    global $tbpref;
+    switch ($key)
+    {
+        case 0:
+            $testsql = " {$tbpref}words WHERE WoID IN $value ";
+            $cntlang = get_first_value(
+                "SELECT COUNT(DISTINCT WoLgID) AS value 
+                FROM $testsql"
+            );
+            if ($cntlang > 1) {
+                echo "<p>Sorry - The selected terms are in $cntlang languages," . 
+                " but tests are only possible in one language at a time.</p>";
+                exit();
+            }
+            break;
+        case 1:
+            $testsql = " {$tbpref}words, {$tbpref}textitems2 
+            WHERE Ti2LgID = WoLgID AND Ti2WoID = WoID AND Ti2TxID IN $value ";
+            $cntlang = get_first_value(
+                "SELECT COUNT(DISTINCT WoLgID) AS value 
+                FROM $testsql"
+            );
+            if ($cntlang > 1) {
+                echo "<p>Sorry - The selected terms are in $cntlang languages," . 
+                " but tests are only possible in one language at a time.</p>";
+                exit();
+            }
+            break;
+        case 2:
+            $testsql = " {$tbpref}words WHERE WoLgID = $value ";
+            break;
+        case 3:
+            $testsql = " {$tbpref}words, {$tbpref}textitems2 
+            WHERE Ti2LgID = WoLgID AND Ti2WoID = WoID AND Ti2TxID = $value ";
+            break;
+        default:
+            my_die("do_test_test.php called with wrong parameters"); 
+            break;
+    }
+    return $testsql;
+}
+
+/**
+ * Prepare the SQL when the text is a selection.
+ * 
+ * @param int $selection_type. 2 is words selection and 3 is terms selection.
+ * @param string $selection_data Comma separated ID of elements to test.
+ * @return string SQL formatted string suitable to projection (inserted in a "FROM ")
+ */
+function do_test_test_from_selection($selection_type, $selection_data) {
+    switch ((int)$selection_type) {
+        case 2:
+            $test_sql = do_test_test_get_projection(0, $selection_data);
+            break;
+        case 3:
+            $test_sql = do_test_test_get_projection(1, $selection_data);
+            break;
+        default:
+            // TODO: sanitize input
+            $test_sql = $selection_data;
+            // $test_sql = array();
+            
+            $cntlang = get_first_value(
+                "SELECT COUNT(DISTINCT WoLgID) AS value 
+                FROM $test_sql"
+            );
+            if ($cntlang > 1) {
+                echo "<p>Sorry - The selected terms are in $cntlang languages," . 
+                " but tests are only possible in one language at a time.</p>";
+                exit();
+            }
+    }
+    return $test_sql;
+}
+
+
 /**
  * Make the plus and minus controls in a test table for a word.
  * 

@@ -40,33 +40,34 @@ function get_l2_language_name()
     if (getreq('lang') != '') {
         $langid = (int) getreq('lang');
         $lang = (string) get_first_value(
-            'SELECT LgName AS value FROM ' . $tbpref . 'languages 
-            WHERE LgID = ' . $langid . '
-            LIMIT 1'
+            "SELECT LgName AS value FROM {$tbpref}languages 
+            WHERE LgID = $langid
+            LIMIT 1"
         ); 
     } else if (getreq('text') != '') {
         $textid = (int) getreq('text');
         $lang = (string) get_first_value(
-            'SELECT LgName AS value 
-            FROM ' . $tbpref . 'texts
-            JOIN ' . $tbpref . 'languages
+            "SELECT LgName AS value 
+            FROM {$tbpref}texts
+            JOIN {$tbpref}languages
             ON TxLgID = LgID
-            WHERE TxID = ' . $textid . '
-            LIMIT 1'
+            WHERE TxID = $textid
+            LIMIT 1"
         );
-    } else if (getreq('selection')) { 
-        $testsql = $_SESSION['testsql'];
+    } else if (getreq('selection')) {
+        $test_sql = do_test_test_from_selection(
+            (int)getreq('selection'), $_SESSION['testsql']
+        );
         $cntlang = get_first_value(
-            'SELECT count(distinct WoLgID) AS value FROM ' . $testsql
+            "SELECT count(distinct WoLgID) AS value FROM $test_sql"
         );
         if ($cntlang == 1) {
             $lang = (string) get_first_value(
-                'SELECT LgName AS value 
-                FROM ' . $tbpref . 'languages, ' . $testsql . ' AND LgID = WoLgID 
-                LIMIT 1'
+                "SELECT LgName AS value 
+                FROM {$tbpref}languages, {$test_sql} AND LgID = WoLgID 
+                LIMIT 1"
             ); 
         }
-
     }
 
     return $lang;

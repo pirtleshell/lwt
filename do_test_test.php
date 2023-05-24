@@ -19,64 +19,6 @@
 require_once 'inc/session_utility.php';
 require_once 'inc/langdefs.php';
 
-/**
- * Create a projection operator do perform word test.
- * 
- * @param int $key Type of test. 
- *                 * 0: word selection
- *                 * 1: text item selection
- *                 * 2: from language
- *                 * 3: from text
- * @param array|int $value Object to select.
- * 
- * @return string Operator
- * 
- * @global string $tbpref;
- */
-function do_test_test_get_projection($key, $value)
-{
-    global $tbpref;
-    switch ($key)
-    {
-        case 0:
-            $testsql = " {$tbpref}words WHERE WoID IN $value ";
-            $cntlang = get_first_value(
-                "SELECT COUNT(DISTINCT WoLgID) AS value 
-                FROM $testsql"
-            );
-            if ($cntlang > 1) {
-                echo "<p>Sorry - The selected terms are in $cntlang languages," . 
-                " but tests are only possible in one language at a time.</p>";
-                exit();
-            }
-            break;
-        case 1:
-            $testsql = " {$tbpref}words, {$tbpref}textitems2 
-            WHERE Ti2LgID = WoLgID AND Ti2WoID = WoID AND Ti2TxID IN $value ";
-            $cntlang = get_first_value(
-                "SELECT COUNT(DISTINCT WoLgID) AS value 
-                FROM $testsql"
-            );
-            if ($cntlang > 1) {
-                echo "<p>Sorry - The selected terms are in $cntlang languages," . 
-                " but tests are only possible in one language at a time.</p>";
-                exit();
-            }
-            break;
-        case 2:
-            $testsql = " {$tbpref}words WHERE WoLgID = $value ";
-            break;
-        case 3:
-            $testsql = " {$tbpref}words, {$tbpref}textitems2 
-            WHERE Ti2LgID = WoLgID AND Ti2WoID = WoID AND Ti2TxID = $value ";
-            break;
-        default:
-            my_die("do_test_test.php called with wrong parameters"); 
-            break;
-    }
-    return $testsql;
-}
-
 
 /**
  * Get the SQL string to perform tests.
@@ -93,25 +35,7 @@ function do_test_test_get_projection($key, $value)
 function do_test_get_test_sql($selection, $sess_testsql, $lang, $text)
 {
     if (isset($selection) && isset($sess_testsql)) {
-        switch ((int)$selection) {
-            case 2:
-                $testsql = do_test_test_get_projection(0, $sess_testsql);
-                break;
-            case 3:
-                $testsql = do_test_test_get_projection(1, $sess_testsql);
-                break;
-            default:
-                $testsql = $sess_testsql;
-                $cntlang = get_first_value(
-                    "SELECT COUNT(DISTINCT WoLgID) AS value 
-                    FROM $testsql"
-                );
-                if ($cntlang > 1) {
-                    echo "<p>Sorry - The selected terms are in $cntlang languages," . 
-                    " but tests are only possible in one language at a time.</p>";
-                    exit();
-                }
-        }
+        $testsql = do_test_test_from_selection($selection, $sess_testsql);
     } else if (isset($lang) && is_numeric($lang)) {
         $testsql = do_test_test_get_projection(2, (int)$lang);
     } else if (isset($text) && is_numeric($text)) {

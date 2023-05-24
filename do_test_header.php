@@ -31,8 +31,10 @@ require_once 'inc/session_utility.php';
 function get_sql_test_data(&$title, &$p)
 {
     global $tbpref;
-    $p = "selection=" . $_REQUEST['selection']; 
-    $testsql = $_SESSION['testsql'];
+    $p = "selection=" . $_REQUEST['selection'];
+    $testsql = do_test_test_from_selection(
+        $_REQUEST['selection'], $_SESSION['testsql']
+    );
     $totalcount = get_first_value(
         "SELECT count(distinct WoID) AS value FROM $testsql"
     );
