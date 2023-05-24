@@ -159,11 +159,11 @@ function edit_texts_mark_action($markaction, $marked, $actiondata): array
     if ($l == 0) {
         return array($message, null);
     }
-    $list = "(" . $marked[0];
-    for ($i=1; $i<$l; $i++) { 
-        $list .= "," . $marked[$i]; 
+    $id_list = array();
+    for ($i = 0; $i < $l; $i++) {
+        $id_list[] = $marked[$i];
     }
-    $list .= ")";
+    $list = "(" . implode(",", $id_list) . ")";
 
     if ($markaction == 'del') {
         $message3 = runsql(

@@ -2066,7 +2066,8 @@ function do_test_test_get_projection($key, $value)
     switch ($key)
     {
         case 0:
-            $testsql = " {$tbpref}words WHERE WoID IN $value ";
+            $id_string = implode(",", $value);
+            $testsql = " {$tbpref}words WHERE WoID IN ($id_string) ";
             $cntlang = get_first_value(
                 "SELECT COUNT(DISTINCT WoLgID) AS value 
                 FROM $testsql"
@@ -2078,8 +2079,9 @@ function do_test_test_get_projection($key, $value)
             }
             break;
         case 1:
+            $id_string = implode(",", $value);
             $testsql = " {$tbpref}words, {$tbpref}textitems2 
-            WHERE Ti2LgID = WoLgID AND Ti2WoID = WoID AND Ti2TxID IN $value ";
+            WHERE Ti2LgID = WoLgID AND Ti2WoID = WoID AND Ti2TxID IN ($id_string) ";
             $cntlang = get_first_value(
                 "SELECT COUNT(DISTINCT WoLgID) AS value 
                 FROM $testsql"
@@ -2109,21 +2111,21 @@ function do_test_test_get_projection($key, $value)
  * 
  * @param int $selection_type. 2 is words selection and 3 is terms selection.
  * @param string $selection_data Comma separated ID of elements to test.
+ * 
  * @return string SQL formatted string suitable to projection (inserted in a "FROM ")
  */
 function do_test_test_from_selection($selection_type, $selection_data) {
+    $data_string_array = explode(",", trim($selection_data, "()"));
+    $data_int_array = array_map('intval', $data_string_array);
     switch ((int)$selection_type) {
         case 2:
-            $test_sql = do_test_test_get_projection(0, $selection_data);
+            $test_sql = do_test_test_get_projection(0, $data_int_array);
             break;
         case 3:
-            $test_sql = do_test_test_get_projection(1, $selection_data);
+            $test_sql = do_test_test_get_projection(1, $data_int_array);
             break;
         default:
-            // TODO: sanitize input
             $test_sql = $selection_data;
-            // $test_sql = array();
-            
             $cntlang = get_first_value(
                 "SELECT COUNT(DISTINCT WoLgID) AS value 
                 FROM $test_sql"
