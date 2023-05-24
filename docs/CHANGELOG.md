@@ -171,7 +171,7 @@ from 1.8.0 to 1.10.2. This brings some bug fixes.
   * They should **always** be proper URLs.
   * Replacing ``###`` by ``lwt_term`` is strongly recommended!
   * "*" At the beginning of an URI should be replaced by ``lwt_popup=1`` as an argument.
-  * ``ggl.php`` should be replaced by the file full URL, for instance "http://localhost/lwt/ggl.php".
+  * ``ggl.php`` should be replaced by the file full URL, for instance "<http://localhost/lwt/ggl.php>".
 
 ### Full Changelog
 
