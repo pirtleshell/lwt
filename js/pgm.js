@@ -399,8 +399,8 @@ resolve.forEach(object,block,context)}};/**
  * @license Unlicense <http://unlicense.org/>
  * @since   2.0.3-fork
  */
-function quickMenuRedirection(value){var qm=document.getElementById('quickmenu');qm.selectedIndex=0;if(value=='')
-return;if(value=='INFO'){top.location.href='info.php'}else if(value=='rss_import'){top.location.href='do_feeds.php?check_autoupdate=1'}else{top.location.href=value+'.php'}}
+function quickMenuRedirection(value){const qm=document.getElementById('quickmenu');qm.selectedIndex=0;if(value=='')
+return;if(value=='INFO'){top.location.href='docs/info.html'}else if(value=='rss_import'){top.location.href='do_feeds.php?check_autoupdate=1'}else{top.location.href=value+'.php'}}
 function newExpressionInteractable(text,attrs,length,hex,showallwords){const context=window.parent.document;for(key in text){const words=$('span[id^="ID-'+key+'-"]',context).not(".hide");const text_refresh=(words.attr('data_code')!==undefined&&words.attr('data_code')<=length);$('#ID-'+key+'-'+length,context).remove();let i='';for(let j=length-1;j>0;j--){if(j==1)
 i='#ID-'+key+'-1';if($('#ID-'+key+'-'+j,context).length){i='#ID-'+key+'-'+j;break}}
 $(i,context).before('<span id="ID-'+key+'-'+length+'"'+attrs+'>'+text[key]+'</span>');const el=$('#ID-'+key+'-'+length,context);el.addClass('order'+key).attr('data_order',key);const txt=el.nextUntil($('#ID-'+(parseInt(key)+length*2-1)+'-1',context),'[id$="-1"]').map(function(){return $(this).text()}).get().join("");const pos=$('#ID-'+key+'-1',context).attr('data_pos');el.attr('data_text',txt).attr('data_pos',pos);if(!showallwords){if(!0||text_refresh){}else{el.addClass('hide')}}}}

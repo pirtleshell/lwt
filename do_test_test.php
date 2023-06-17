@@ -368,10 +368,9 @@ function get_test_solution($testtype, $wo_record, $nosent, $wo_text)
     if ($testtype == 1) {
         $trans = repl_tab_nl($wo_record['WoTranslation']) . 
         getWordTagList($wo_record['WoID'], ' ', 1, 0);
-        return $nosent ? $trans : (' [' . $trans . '] ');
-    } else {
-        return $wo_text;
+        return $nosent ? $trans : "[$trans]";
     }
+    return $wo_text;
 }
 
 

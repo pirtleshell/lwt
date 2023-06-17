@@ -715,7 +715,7 @@ function feed_wizard_select_text(): void
     <div id="lwt_container">
         <?php echo_lwt_logo();?>
         <h1>Feed Wizard | Step 2 - Select Article Text
-        <a href="info.php#feed_wizard" target="_blank">
+        <a href="docs/info.html#feed_wizard" target="_blank">
             <img alt="Help" title="Help" src="icn/question-frame.png"></img>
         </a>
         </h1>
