@@ -121,7 +121,7 @@ pagestart_nobody('Annotated Text', 'input[type="radio"]{display:inline;}');
 
 if ($editmode) {
     ?> (Edit Mode) 
-    <img src="icn/question-frame.png" title="Help" alt="Help" class="click" onclick="window.open('info.php#il');" />
+    <img src="icn/question-frame.png" title="Help" alt="Help" class="click" onclick="window.open('docs/info.html#il');" />
     </h2>
     <input type="button" value="Display/Print Mode" onclick="location.href='print_impr_text.php?text=<?php echo $textid; ?>';" />
     <?php
