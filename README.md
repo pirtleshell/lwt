@@ -1,66 +1,172 @@
 # Learning with Texts
 
-> [Learning with Texts](http://lwt.sf.net) (LWT) is a tool for Language Learning.
+[![Latest Stable Version](https://poser.pugx.org/hugofara/lwt/v)](https://packagist.org/packages/hugofara/lwt)
+[![License](https://poser.pugx.org/hugofara/lwt/license)](https://packagist.org/packages/hugofara/lwt)
+[![PHP Version Require](https://poser.pugx.org/hugofara/lwt/require/php)](https://packagist.org/packages/hugofara/lwt)
+![Composer Continuous Integration](https://github.com/hugofara/lwt/actions/workflows/php.yml/badge.svg)
+[![Docker Image](https://github.com/HugoFara/lwt/actions/workflows/docker-image.yml/badge.svg)](https://github.com/HugoFara/lwt/actions/workflows/docker-image.yml)
+[![Discord Server](https://badgen.net/discord/members/zAE8GXMKFa?icon=discord)](https://discord.gg/zAE8GXMKFa)
 
-This is @PirtleShell's fork of [@andreask7's fork](https://github.com/andreask7/lwt). Its altered database structure makes it quicker, and it has many features not found in the original. It also looks more likely to develop communally, whereas the original is fairly stagnant and not open for contributions.
+**Learning with Texts** (LWT) is a tool for language learning by reading. It is a self-hosted web application.
 
-**THIS IS A THIRD PARTY VERSION**
-IT DIFFERS IN MANY RESPECTS FROM THE OFFICIAL LWT-VERSION
+<div style="text-align: center;">
+<img src="https://github.com/HugoFara/lwt/raw/master/img/lwt_icon_big.jpg" />
+</div>
 
-## New in this Version (not available in the OFFICIAL LWT)
+You feel that you won't learn much by translating dumb sentences or using grammar books? Learning With Texts offers you the possibility to learn by reading texts in your target language. Concept: when you don't know a word in a text, just click it. We show you the translation, and you will have regular tests to remember it. Ready to go?
 
-* Database improvements (db size is much smaller now)
+**THIS IS A THIRD PARTY VERSION**. This version is not the
+official one, and brings many improvements and new features.
+It is quicker, has smaller database size,
+and is open for contributions. The official version is on
+[source forge](https://sourceforge.net/projects/learning-with-texts)
+
+## Installation
+
+As it is self-hosted, you will need a server, which can be your computer.
+
+* Get the [latest GitHub release](https://github.com/HugoFara/lwt/releases).
+  * You can also try to download the [latest stable version](https://github.com/HugoFara/lwt/archive/refs/heads/master.zip) if you want the cutting-edge updates (that may include some bugs).
+
+### Linux
+
+Start a shell in the downloaded folder an run: ``./INSTALL.sh``. You may need to run ``chmod +x ./INSTALL.sh`` first.
+
+### Docker (any OS)
+
+Install [Docker](https://docs.docker.com/get-docker/) (if not already done).
+
+For an light-weight installation, you may use [HugoFara/lwt-docker-installer](https://github.com/HugoFara/lwt-docker-installer).
+
+To build from source, download the latest release and do:
+
+```bash
+cd lwt
+docker compose up
+```
+
+### Other Systems
+
+* **Please see**: [docs/install.md](docs/install.md) for detailed instructions.
+* Create ``connect.inc.php`` with an existing database user. Everything is explained at [docs/info.html](https://hugofara.github.io/lwt/docs/info.html#install).
+
+And you are ready to go!
+
+## Description
+
+LWT is a language learning web application. To learn a language, you
+need to practice, and we guide you in reading exercises.
+
+First copy/paste any text you want to read. It can be raw text or an RSS feed.
+
+![Adding French text](https://github.com/HugoFara/lwt/raw/master/img/05.jpg)
+
+Then, we parse the text. Unknown words will be displayed with different colors,
+just click them to see it in a dictionary.
+
+![Learning French text](https://github.com/HugoFara/lwt/raw/master/img/06.jpg)
+
+Read as much as you want!
+
+To make sure you memorize new words, you can take review exercises.
+
+![Reviewing French word](https://github.com/HugoFara/lwt/raw/master/img/07.jpg)
+
+The difference with popular remembering software like
+[Anki](https://apps.ankiweb.net/) is that we keep track of the
+context to help you. By the way, we also ship
+an Anki exporter.
+
+## Features
+
+* **Full list**: [docs/features.md](docs/features.md)
+
+Features included from the official LWT software:
+
+* Support for almost 40 languages.
+* Text parsing for roman languages, right-to-left,
+and East-Asian ideogram systems
+* Translate words on-the-fly
+* Add an audio track and read it online
+* Practice words you don't remember
+* Statistics to record your progress
+
+### Features not in the official LWT
+
+* **Full list**: [docs/newfeatures.md](docs/newfeatures.md)
+
+Features that were added by the community:
+
+* Support for mobile
 * Automatically import texts from RSS feeds
 * Support for different themes
-* Longer (>9) expressions can now be saved (up to 250 characters)
-* Display translations of terms with status(es) in the reading frame
-* Save text/audio position in the reading frame
-* Multiwords selection (click and hold on a word -> move to another word -> release mouse button)
-* Key bindings work when you hover over a word
+* Display translations of terms with status in the reading frame
+* Multiwords selection (click and hold on a word
+→ move to another word → release mouse button)
 * Bulk translate new words in the reading frame
-* Google api (use 'ggl.php' instead of '*http://translate.google.com' for Google Translate)
-* Text to speech support (only words)
+* Text to speech
 * Optional "ignore all" button in read texts
-* New key bindings in the reading frame: T (translate sentence), P (pronounce term), G (edit term with Google Translate)
-* Ability to change audio playback speed (doesn't work when using the flash plugin)
-* Improved Search/Query for Words/Texts
+* Key bindings in the reading frame
 * Selecting terms according to a text tag
-* Term import with more options (i.e.: combine translations, multiple tag import)
 * Two database backup modes (new or old structure)
 
+### Improvements compared to the official LWT
 
+* Database improvements (db size is much smaller now)
+* Longer (>9) expressions can now be saved (up to 250 characters)
+* Save text/audio position in the reading frame
+* Google api (use 'ggl.php' instead of '*<http://translate.google.com>' for Google Translate)
+* Improved Search/Query for Words/Texts
+* Term import with more options (i.e.: combine translations, multiple tag import)
+* Support for MeCab for Japanese word-by-word automatic translation.
+* You can include video files from popular video platforms.
+* Code documentation.
+* Code is well organised, making debugging and contribution easier.
 
----
-## Original README from LWT
+## Contribute
 
-PLEASE READ MORE ...
-Either open ... info.htm (within the distribution)
-or     open ... http://lwt.sf.net (official LWT)
+* **Complete explanation**: [docs/contribute.md](docs/contribute.md)
 
-"Learning with Texts" (LWT) is free and unencumbered software
-released into the PUBLIC DOMAIN.
+To contribute, you need to clone or fork this repository, and [Composer](https://getcomposer.org/download/).
+The composer package is at [hugofara/lwt](https://packagist.org/packages/hugofara/lwt).
 
-Anyone is free to copy, modify, publish, use, compile, sell, or
-distribute this software, either in source code form or as a
-compiled binary, for any purpose, commercial or non-commercial,
-and by any means.
+Run ``git clone https://github.com/HugoFara/lwt``
 
-In jurisdictions that recognize copyright laws, the author or
-authors of this software dedicate any and all copyright
-interest in the software to the public domain. We make this
-dedication for the benefit of the public at large and to the
-detriment of our heirs and successors. We intend this
-dedication to be an overt act of relinquishment in perpetuity
-of all present and future rights to this software under
-copyright law.
+Next, got to the lwt folder and use ``composer install --dev``.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
-WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE
-AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS BE LIABLE
-FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+In short:
 
-For more information, please refer to [http://unlicense.org/].
+```bash
+git clone https://github.com/HugoFara/lwt
+cd lwt
+composer install --dev
+```
+
+## Branches
+
+* The stable branch is *master*. Last commit on this branch is
+considered to be bug-free.
+* The *dev* branch is for unstable versions.
+* The *official* branch is for the official LWT Releases.
+Any other branch if considered under development.
+
+## Useful links
+
+* General documentation at [docs/info.html](https://hugofara.github.io/lwt/docs/info.html).
+* Please find more help at [docs/index.html](https://hugofara.github.io/lwt/docs/index.html).
+* You can also contact the community using [GitHub](https://github.com/hugofara/lwt) or
+[Discord](https://discord.gg/zAE8GXMKFa).
+
+## Alternatives
+
+* *See also*: [docs/links.md](docs/links.md)
+
+* [LUTE](https://github.com/jzohrab/lute) is another great project with the same philosophy. It is a rewrite of LWT with modern tools such as Symfony.
+* [FLTR ◆ Foreign Language Text Reader](https://sourceforge.net/projects/foreign-language-text-reader/), a Java clone, by the same
+author as LWT ([lang-learn-guy](https://sourceforge.net/u/lang-learn-guy/profile/)), it is a standalone installation.
+
+## Unlicense
+
+Under unlicense, view [UNLICENSE.md](UNLICENSE.md), please look at [http://unlicense.org/].
+
+**Let's learn new languages!**

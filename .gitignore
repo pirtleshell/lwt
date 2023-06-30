@@ -1,9 +1,33 @@
+# LWT specific files
+
+# Settings file
 connect.inc.php
+# Local audio files
 media/
-thumbnail/
+# Text-to-Speech files
 tts/
-_*
-.DS_Store
+
+# Docker data
+lwt_db_data/
+
+# Dev files
+
+# PHP debugging tools
 error.log
 access.log
 plugins
+
+# Backup files (Doxygen)
+*.bak
+
+/vendor/
+.phpunit.result.cache
+
+composer.phar
+
+# Editor
+.vscode
+
+_*
+# For Mac Users
+.DS_Store

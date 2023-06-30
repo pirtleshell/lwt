@@ -1,135 +1,115 @@
 <?php
 
-/**************************************************************
-"Learning with Texts" (LWT) is free and unencumbered software 
-released into the PUBLIC DOMAIN.
+/**
+ * \file
+ * \brief Display an improved annotated text (frame set)
+ * 
+ * Call: display_impr_text.php?text=[textid]
+ * 
+ * @package Lwt
+ * @author  LWT Project <lwt-project@hotmail.com>
+ * @license Unlicense <http://unlicense.org/>
+ * @link    https://hugofara.github.io/lwt/docs/html/display__impr__text_8php.html
+ * @since   1.5.0
+ */
 
-Anyone is free to copy, modify, publish, use, compile, sell, or
-distribute this software, either in source code form or as a
-compiled binary, for any purpose, commercial or non-commercial,
-and by any means.
+require_once 'inc/session_utility.php'; 
+require_once 'inc/mobile_interactions.php';
+require_once 'display_impr_text_header.php';
+require_once 'display_impr_text_text.php';
 
-In jurisdictions that recognize copyright laws, the author or
-authors of this software dedicate any and all copyright
-interest in the software to the public domain. We make this
-dedication for the benefit of the public at large and to the 
-detriment of our heirs and successors. We intend this 
-dedication to be an overt act of relinquishment in perpetuity
-of all present and future rights to this software under
-copyright law.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE 
-WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE
-AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS BE LIABLE 
-FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
-THE SOFTWARE.
-
-For more information, please refer to [http://unlicense.org/].
-***************************************************************/
-
-/**************************************************************
-Call: display_impr_text.php?text=[textid]
-Display an improved annotated text (frame set)
-***************************************************************/
-
-require_once( 'settings.inc.php' );
-require_once( 'connect.inc.php' );
-require_once( 'dbutils.inc.php' );
-require_once( 'utilities.inc.php' ); 
-require_once( 'php-mobile-detect/Mobile_Detect.php' );
-
-$detect = new Mobile_Detect;
-$mobileDisplayMode = getSettingWithDefault('set-mobile-display-mode') + 0;
-$mobile = (($mobileDisplayMode == 0 && $detect->isMobile()) || ($mobileDisplayMode == 2));
-
-if (isset($_REQUEST['text'])) {
-	
-	$audio = get_first_value('select TxAudioURI as value from ' . $tbpref . 'texts where TxID = ' . $_REQUEST['text']);
-	
-	framesetheader('Display');
-
-	if ( $mobile ) {
-
-?>
-
-	<style type="text/css"> 
-	body {
-		background-color: #cccccc;
-		margin: 0;
-		overflow: hidden;
-	}
-	#frame-h, #frame-l {
-		position:absolute; 
-		overflow:scroll; 
-		-webkit-overflow-scrolling: touch;
-	}
-	#frame-h-2, #frame-l-2 {
-		display:inline-block;	
-	}
-	</style> 
-	
-	<script type="text/javascript" src="js/jquery.js" charset="utf-8"></script>
-	
-	<script type="text/javascript">
-//<![CDATA[
-function rsizeIframes() {
-	var h_height = <?php echo (isset($audio) ? getSettingWithDefault('set-text-h-frameheight-with-audio') : getSettingWithDefault('set-text-h-frameheight-no-audio')); ?> - 80;
-	var w = $(window).width();
-	var h = $(window).height();
-	var l_height = h - h_height;
-	$('#frame-h').width(w-5).height(h_height-5).
-		css('top',0).css('left',0);
-	$('#frame-h-2').width('100%').height('100%').
-		css('top',0).css('left',0);
-	$('#frame-l').width(w-5).height(l_height-5).
-		css('top',h_height).css('left',0);
-	$('#frame-l-2').width('100%').height('100%').
-		css('top',0).css('left',0);
+/**
+ * Make the page content to display printed texts on mobile.
+ * 
+ * @param int    $textid Text ID
+ * @param string $audio  Media URI
+ * 
+ * @return     void
+ * @deprecated 
+ * @since      2.2.0 This function should not longer be used, and should cause issues. Use
+ * do_desktop_display_impr_text instead.
+ */
+function do_mobile_display_impr_text($textid, $audio)
+{
+    do_frameset_mobile_css();
+    do_frameset_mobile_js($audio);
+    do_frameset_mobile_page_content(
+        "display_impr_text_header.php?text=" . $textid, 
+        "display_impr_text_text.php?text=" . $textid, 
+        false
+    );
 }
 
-function init() {
-	rsizeIframes();
-	$(window).resize(rsizeIframes);
-}
+/**
+ * Make the main page content to display printed texts for desktop.
+ * 
+ * @param int    $textid Text ID
+ * @param string $audio  Media URI
+ * 
+ * @return void
+ */
+function do_desktop_display_impr_text($textid, $audio)
+{
+    
+    ?>
 
-$(document).ready(init);
-//]]>
-</script>
- 
-<div id="frame-h">
-	<iframe id="frame-h-2" src="display_impr_text_header.php?text=<?php echo $_REQUEST['text']; ?>" scrolling="yes" name="header"></iframe>
-</div>
-<div id="frame-l">
-	<iframe id="frame-l-2" src="display_impr_text_text.php?text=<?php echo $_REQUEST['text']; ?>" scrolling="yes" name="text"></iframe>
-</div>
-
-<?php 
-
-	} else {
-	
-?>
-
-<frameset rows="<?php echo (isset($audio) ? getSettingWithDefault('set-text-h-frameheight-with-audio')-90 : getSettingWithDefault('set-text-h-frameheight-no-audio')-90 ); ?>,*">
-	<frame src="display_impr_text_header.php?text=<?php echo $_REQUEST['text']; ?>" scrolling="no" name="header" />			
-	<frame src="display_impr_text_text.php?text=<?php echo $_REQUEST['text']; ?>" scrolling="auto" name="text" />
+<!--
+<frameset border="3" bordercolor="" rows="<?php 
+if (isset($audio)) { 
+    echo (int)getSettingWithDefault('set-text-h-frameheight-with-audio')-90;
+} else { 
+    echo (int)getSettingWithDefault('set-text-h-frameheight-no-audio')-90;
+} ?>,*">
+    <frame src="display_impr_text_header.php?text=<?php echo $_REQUEST['text']; ?>" scrolling="no" name="header" />            
+    <frame src="display_impr_text_text.php?text=<?php echo $_REQUEST['text']; ?>" scrolling="auto" name="text" />
 </frameset>
 <noframes><body><p>Sorry - your browser does not support frames.</p></body></noframes>
 </frameset>
-</html>
-<?php
-
-	}
-
+</html>-->
+<div style="width: 95%; height: 100%;">
+    <div id="frame-h">
+        <?php do_diplay_impr_text_header_main($textid);?>
+    </div>
+    <hr />
+    <div id="frame-l">
+        <?php do_display_impr_text_text_main($textid); ?>
+    </div>
+</div>
+    <?php
 }
 
-else {
+/**
+ * Do the page to display printed text.
+ * 
+ * @param int $textid Text ID
+ * 
+ * @global string $tbpref Database table prefix
+ * 
+ * @return void
+ */
+function do_display_impr_text_page($textid)
+{
+    global $tbpref;
+    $audio = get_first_value(
+        'SELECT TxAudioURI AS value FROM ' . $tbpref . 'texts 
+        WHERE TxID = ' . $_REQUEST['text']
+    );
+    pagestart_nobody('Display');
 
-	header("Location: edit_texts.php");
-	exit();
+    if (is_mobile()) {
+        do_mobile_display_impr_text($textid, $audio);
+    } else {
+        do_desktop_display_impr_text($textid, $audio);
+    }
 
+    pageend();
+}
+
+if (isset($_REQUEST['text'])) {
+    do_display_impr_text_page((int) getreq('text'));
+} else {
+    header("Location: edit_texts.php");
+    exit();
 }
 
 ?>

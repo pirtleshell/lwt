@@ -1,36 +1,6 @@
-/**************************************************************
-"Learning with Texts" (LWT) is free and unencumbered software 
-released into the PUBLIC DOMAIN.
-
-Anyone is free to copy, modify, publish, use, compile, sell, or
-distribute this software, either in source code form or as a
-compiled binary, for any purpose, commercial or non-commercial,
-and by any means.
-
-In jurisdictions that recognize copyright laws, the author or
-authors of this software dedicate any and all copyright
-interest in the software to the public domain. We make this
-dedication for the benefit of the public at large and to the 
-detriment of our heirs and successors. We intend this 
-dedication to be an overt act of relinquishment in perpetuity
-of all present and future rights to this software under
-copyright law.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE 
-WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE
-AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS BE LIABLE 
-FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
-THE SOFTWARE.
-
-For more information, please refer to [http://unlicense.org/].
-***************************************************************/
-
-/**************************************************************
-Stylesheet Night mode v.2012-12-24 (modified from LWT original one)
-***************************************************************/
+/**
+ * Stylesheet Night mode v.2012-12-24 (modified from LWT original one)
+ */
 
 html{
 	background-color: #000000;
@@ -45,6 +15,9 @@ body { /*background-color: #FFFFFF;*/
 	margin: 20px;
 	padding: 0px;
 	cursor: default;
+	max-width: 900px;
+	margin-left: auto;
+	margin-right: auto;
 }
 input[type=text] {
 	font: 85% "Lucida Grande", Arial, sans-serif, STHeiti,
@@ -125,21 +98,31 @@ h4 {
 	color: #FFFFFF ! important;
 }
 
-.mwsty {
-	margin: 0px 1px;
-	font-size: 60%;
-	font-weight: bold;
-	color: #000000;
-	vertical-align: top;
-	white-space: nowrap;
+
+/* Words and multi-words hints */
+.wsty, .mwsty
+{
+  color: #000;
+  border-radius: 3px;
+}
+/* Multi-words hint */
+.mwsty
+{
+  margin: 0px 1px;
+  font-size: 60%;
+  font-weight: bold;
+  vertical-align: top;
+  white-space: nowrap;
 }
 
 .wsty {
-	border-radius: 3px;
 	margin:0px;
-	padding:0px 1px;
-	/*color: #000000;*/
-	/*color: #FFFFFF;*/
+}
+/* Multi-word mark */
+.mword 
+{
+  padding-left: 4px;
+  padding-right: 4px;
 }
 
 .wsty:after,.wsty:before {
@@ -249,11 +232,13 @@ top: 1px;color:#AAA;*/
 
 	select{
 		-moz-appearance: none;
+		-webkit-appearance: none;
+        appearance: none;
 		text-indent: 0.01px;
 		text-overflow: '';
 		margin: 0;
 		padding-right: 1.2em;
-		}
+	}
 	.wrap_select {
 		position:relative;
 		display: inline-block;
@@ -420,7 +405,8 @@ input[type="radio"]:checked + .wrap_radio>span {
     /*border-left: 1px solid #808080;*/
     border-top: 1px solid #404040;
     border-left: 1px solid #404040;
-    width: 850px;
+	width: 95%;
+	max-width: 850px;
 }
 
 .tab2 { /*background-color: #f8f8f8;*/
@@ -603,24 +589,57 @@ img {
 	float: right;
 }
 
+/* Floating menu in docs/info.html */
 #floatdiv {
 	background:#333333;
 	border:1px solid #222222;
 	border-radius: 4px;
+	position: fixed;
+	top: 10px;
+	right: 10px; 
+	padding: 5px;
+	z-index: 2;
+	font-size: 10pt;
+	text-align:center;
 }
+
+#floatdiv > * {
+	display: block;
+	width: 75px;
+  }
 
 .inline {
 	display: inline;
 }
 
-.grayborder { /*border: 1pt solid #808080;*/
+.grayborder { 
+	/*border: 1pt solid #808080;*/
 	border: 1pt solid #8f8f8f;
 }
 
+/**
+* General footer style.
+*/
+footer 
+{
+  position: fixed;
+  width: 100%;
+  left: 0; 
+  bottom: 0;
+  background: #222222;
+  font-size: 14px;
+  text-align: center;
+  height: 45px;
+  line-height: 30px;
+  border-top: 1px solid #404040;
+}
+
+/** 
+* Separate a footer section from the document 
+*/
 .graydotted {
 	margin-top: 30px;
 	padding-top: 5px;
-	/*border-top: 1px dotted #808080;*/
 	border-top: 1px dotted #8f8f8f;
 }
 
@@ -645,12 +664,10 @@ img {
 	width: 45%;
 }
 
-dd {
-	margin-top: 10pt;
-}
-
-dt {
-	margin-top: 10pt;
+/** Scale input field with responsive design */
+.respinput {
+	width: 90%;
+	max-width: 500px;
 }
 
 .annterm {
@@ -710,7 +727,7 @@ dt {
 	background-repeat: no-repeat;
 	background-size: contain;
 	background-position: center;
-	background-image: url('../../icn/photo-album.png');
+	background-image: url('../../../icn/photo-album.png');
 }
 #thumbnail_container{
 	margin: 3px;
@@ -718,20 +735,6 @@ dt {
 	width: 45px;
 	height: 30px;
 	display:inline-block;
-}
-
-#footer {
-    bottom: 0;
-    position: absolute;
-    width: 100%;
-    height: 45px;
-    line-height:30px;
-    /*background: #DDDDDD;*/
-    background: #222222;
-    font-size: 14px;
-    text-align: center;
-    /*border-top: 1px solid #000000;*/
-    border-top: 1px solid #404040;
 }
 
 .borderl { border-left: 1px solid #000000;
@@ -753,14 +756,14 @@ dt {
 }
 
 #termtags {
-	width: 340px;
+	max-width: 340px;
 	margin-top: 0px;
 	margin-bottom: 0px;
 	margin-left: 2px;
 }
 
 #texttags {
-	width: 340px;
+	max-width: 340px;
 	margin-top: 0px;
 	margin-bottom: 0px;
 	margin-left: 2px;
@@ -846,6 +849,57 @@ th.sorttable,th.sorttable_nosort,th.sorttable_numeric,th.clickable {
 	border-bottom-left-radius: 0px !important;
 }
 
+
+
+/**
+* Dropdown to navigate between pages.
+*/
+#quickmenu 
+{
+  float: right;
+}
+
+/**
+* Formats a header with flexbox.
+*/
+.flex-header 
+{
+  display: flex; 
+  justify-content: space-between;
+  align-items: center;
+}
+
+/**
+* Space evenly article content.
+*/
+.flex-spaced
+{
+  display: flex; 
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+/**
+* Main page (index.php) navigation menu style
+*/
+.menu {
+  display: flex; 
+  flex-direction: column; 
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+/**
+* Main page (index.php) navigation menu style elements
+*/
+.menu > * {
+  width: 400px;
+  height: 30px;
+  margin: 5px;
+  text-align: center;
+  background-color: #8883;
+  padding-top: 15px;
+}
 /**************************************************************
 Additional styles for printing
 ***************************************************************/

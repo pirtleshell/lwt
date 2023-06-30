@@ -1,98 +1,89 @@
 <?php
 
-/**************************************************************
-"Learning with Texts" (LWT) is free and unencumbered software 
-released into the PUBLIC DOMAIN.
+/**
+ * \file
+ * 
+ * \brief Analyse DB tables, select Table Set, start LWT
+ * 
+ * Call: start.php
+ * 
+ * @package Lwt
+ * @author  LWT Project <lwt-project@hotmail.com>
+ * @license Unlicense <http://unlicense.org/>
+ * @link    https://hugofara.github.io/lwt/docs/html/start_8php.html
+ * @since   1.5.4
+ */
 
-Anyone is free to copy, modify, publish, use, compile, sell, or
-distribute this software, either in source code form or as a
-compiled binary, for any purpose, commercial or non-commercial,
-and by any means.
+require_once 'inc/session_utility.php';
 
-In jurisdictions that recognize copyright laws, the author or
-authors of this software dedicate any and all copyright
-interest in the software to the public domain. We make this
-dedication for the benefit of the public at large and to the 
-detriment of our heirs and successors. We intend this 
-dedication to be an overt act of relinquishment in perpetuity
-of all present and future rights to this software under
-copyright law.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE 
-WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE
-AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS BE LIABLE 
-FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
-THE SOFTWARE.
-
-For more information, please refer to [http://unlicense.org/].
-***************************************************************/
-
-/**************************************************************
-Call: start.php
-Analyse DB tables, select Table Set, start LWT
-***************************************************************/
-
-require_once( 'settings.inc.php' );
-require_once( 'connect.inc.php' );
-require_once( 'dbutils.inc.php' );
-require_once( 'utilities.inc.php' );
-
-if ($fixed_tbpref) {
-	header("Location: index.php");
-	exit(); 
+/**
+ * Save a database prefix.
+ * 
+ * @param string $pref Database prefix to save.
+ * 
+ * @return void
+ */
+function start_save_prefix($pref) 
+{
+    $tbpref = $pref;
+    LWTTableSet("current_table_prefix", $tbpref);
 }
 
-if (isset($_REQUEST['prefix'])) {
-	if($_REQUEST['prefix'] !== '-') {
-		$tbpref = $_REQUEST['prefix'];
-		LWTTableSet ("current_table_prefix", $tbpref);
-		header("Location: index.php");
-		exit(); 
-	}
-}
+/**
+ * Do a short page to edit the database prefix.
+ * 
+ * @global string $tbpref       Database table prefix
+ * @global int    $fixed_tbpref If the table prefix is fixed and cannot be changed
+ * 
+ * @return void
+ */
+function start_do_page() 
+{
+    global $tbpref, $fixed_tbpref;
+    $prefix = getprefixes();
 
-$prefix = getprefixes();
-
-if (count($prefix) == 0) {
-	$tbpref = '';
-	LWTTableSet ("current_table_prefix", $tbpref);
-	header("Location: index.php");
-	exit(); 
-}
-
-pagestart('Select Table Set',false);
+    pagestart('Select Table Set', false);
 
 ?>
 
-<table class="tab1" style="width: auto;" cellspacing="0" cellpadding="5">
-
-<tr>
-<th class="th1">
-<form name="f1" class="inline" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-<p>Select: <select name="prefix">
-<option value="" <?php echo ($tbpref == '' ? 'selected="selected"': ''); ?>>Default Table Set</option>
-<?php
-foreach ($prefix as $value) {
-?>
-<option value="<?php echo tohtml($value); ?>" <?php echo (substr($tbpref,0,-1) == $value ? 'selected="selected"': ''); ?>><?php echo tohtml($value); ?></option>
-<?php
-}
-?>
-</select> 
-</p>
-<p class="center"><input type="submit" name="op" value="Start LWT" />
-</p>
-</form>
-</th>
-</tr>
-
+<table class="tab2" cellspacing="0" cellpadding="5">
+    <tr>
+        <th class="th1">
+            <form name="f1" class="inline" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+            <p>
+                Select: 
+                <select name="prefix" <?php 
+                if ($fixed_tbpref) {
+                    echo 'disabled title="Database prefix is fixed and cannot be changed!"';
+                }?> >
+                    <option value="" <?php echo ($tbpref == '' ? 'selected="selected"': ''); ?>>
+                        Default Table Set
+                    </option>
+                    <?php foreach ($prefix as $value) { ?>
+                    <option value="<?php echo tohtml($value); ?>" <?php echo (substr($tbpref, 0, -1) == $value ? 'selected="selected"': ''); ?>>
+                        <?php echo tohtml($value); ?>
+                    </option>
+                    <?php } ?>
+                </select> 
+            </p>
+            <p class="center">
+                <input type="submit" name="op" value="Start LWT" />
+            </p>
+            </form>
+        </th>
+    </tr>
 </table>
 
 <?php
+    pageend();
+}
 
-pageend();
+
+if (isset($_REQUEST['prefix']) && $_REQUEST['prefix'] !== '-') {
+    start_save_prefix(getreq('prefix'));
+    header("Location: index.php");
+    exit();
+}
+start_do_page();
 
 ?>
