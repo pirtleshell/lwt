@@ -135,21 +135,21 @@ function print_similar_terms($lang_id, $compared_term): string
                     $term
                 ); 
             }
-            $tra = $record["WoTranslation"];
+            $tra = (string) $record["WoTranslation"];
             if ($tra == "*") { 
                 $tra = "???"; 
             }
             if (trim($record["WoRomanization"]) !== '') {
-                $romd = " [" . $record["WoRomanization"] . "]";
-                $rom = $record["WoRomanization"];
+                $rom = (string) $record["WoRomanization"];
+                $romd = " [$rom]";
             } else {
-                $romd = "";
                 $rom = "";
+                $romd = "";
             }
+            $js_event = "setTransRoman(" . prepare_textdata_js($tra) . ',' . prepare_textdata_js($rom) . ')';
             $rarr[] = '<img class="clickedit" src="icn/tick-button-small.png" ' .
             'title="Copy → Translation &amp; Romanization Field(s)" ' .
-            'onclick="setTransRoman(' . 
-            prepare_textdata_js($tra) . ',' . prepare_textdata_js($rom) . ');" /> ' . 
+            'onclick="' . tohtml($js_event) .'" /> ' . 
             $term . tohtml($romd) . ' — ' . tohtml($tra) . 
             '<br />';
         }
