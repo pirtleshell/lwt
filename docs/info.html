@@ -1879,6 +1879,11 @@ the intendended page. Same goes for "New Text" on "Archived Texts" page.</li>
 <li>A warning when savings settings in <code>settings.php</code> was sometimes displayed (<a href="https://github.com/HugoFara/lwt/issues/121">#121</a>).</li>
 <li>Test header was different when testing languages or terms since 2.1.0-fork.</li>
 <li>Wrong link to documentation (<code>info.php</code> instead of <code>docs/info.html</code>). Signaled by Mooncake on Discord.</li>
+<li>It was impossible to copy a similar term that had apostrophes (<a href="https://github.com/HugoFara/lwt/issues/127">#127</a>).</li>
+</ul>
+<h4>Deprecated</h4>
+<ul>
+<li>Using the file <code>inc/show_similar_terms.php</code> is deprecated in favor of <code>inc/ajax.php</code> with action POST, action type simterms.</li>
 </ul>
 <h3>2.8.1-fork (April 14 2023)</h3>
 <h4>Changed in 2.8.1-fork</h4>
