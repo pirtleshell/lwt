@@ -876,6 +876,7 @@ th.sorttable,th.sorttable_nosort,th.sorttable_numeric,th.clickable {
   display: flex; 
   justify-content: space-evenly;
   align-items: center;
+  text-align: center;
 }
 
 /**

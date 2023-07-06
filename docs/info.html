@@ -1630,13 +1630,13 @@ The WordPress feature is a legacy function no longer maintained. It should be co
 <li>In subdirectory "lwt", rename the file <em>connect_wordpress.inc.php</em> into <em>connect.inc.php</em>, and enter the database parameters $server (database server), $userid (database user id), $passwd (database password), and $dbname (database name, can be the same like your wordpress database, or a different one) by editing the file with a text editor.</li>
 <li>In the WordPress General Settings, decide whether anyone can register and use LWT (Membership = "Anyone can register"), or not (an administrator must create new users). The "New User Default Role" should be "Subscriber".</li>
 <li>The link to start LWT with <strong>complete</strong> WordPress authentication is:<br>
-<em>http://...path-to-wp-blog.../lwt/wp_lwt_start.php</em>
+<em><a href="http://...path-to-wp-blog">http://...path-to-wp-blog</a>.../lwt/wp_lwt_start.php</em>
 </li>
 <li>The link to start LWT (without WordPress authentication, only by checking the session cookie that is valid until the browser is closed) is:<br>
-<em>http://...path-to-wp-blog.../lwt/</em><br>
+<em><a href="http://...path-to-wp-blog">http://...path-to-wp-blog</a>.../lwt/</em><br>
 If the session cookie does not exist, both above start methods are the same.</li>
 <li>To properly log out from both WordPress and LWT, use the link:<br>
-<em>http://...path-to-wp-blog.../lwt/wp_lwt_stop.php</em><br>
+<em><a href="http://...path-to-wp-blog">http://...path-to-wp-blog</a>.../lwt/wp_lwt_stop.php</em><br>
 The LWT home page has such a link. If you only log out via the links on the WordPress pages, you will still be able to use LWT until the browser is closed. If you want to log out from both WordPress and LWT, use the above link, or click on the link on the LWT home page!</li>
 <li>If you delete a user, you must find out its user number (table "wp_users"). After deleting the user in WordPress, you can delete all LWT tables with table names beginning with the user number plus an underscore "_". You can do this in phpMyAdmin.</li>
 </ol>
@@ -1865,6 +1865,9 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 <h4>Changed</h4>
 <ul>
 <li>Prettier UI to navigate between text creation/edition/archive pages.</li>
+<li>When reading text, you can click on "Show All" and "Translations" to click the checkbox.</li>
+<li>
+<code>flex-spaced</code> now sets the property of <code>text-align: center;</code>. This property was unherited before.</li>
 <li>The long text import page looks a bit nicer.</li>
 </ul>
 <h4>Fixed</h4>
