@@ -144,14 +144,16 @@ function do_settings($textid): void
     <div 
     title="[Show All] = ON: ALL terms are shown, and all multi-word terms are shown as superscripts before the first word. The superscript indicates the number of words in the multi-word term.
 [Show All] = OFF: Multi-word terms now hide single words and shorter or overlapping multi-word terms.">
-        Show All&nbsp;
-        <input type="checkbox" id="showallwords" <?php echo get_checked($showAll); ?> onclick="showAllwordsClick();" />
+        <label for="showallwords">Show All</label>&nbsp;
+        <input type="checkbox" id="showallwords" <?php echo get_checked($showAll); ?> 
+        onclick="showAllwordsClick();" />
 </div>
     <div 
     title="[Learning Translations] = ON: Terms with Learning Level&nbsp;1 display their translations under the term.
 [Learning Translations] = OFF: No translations are shown in the reading mode.">
-        Learning Translations&nbsp;
-        <input type="checkbox" id="showlearningtranslations" <?php echo get_checked($showLearning); ?> onclick="showAllwordsClick();" />
+        <label for="showlearningtranslations">Translations</label>&nbsp;
+        <input type="checkbox" id="showlearningtranslations" 
+        <?php echo get_checked($showLearning); ?> onclick="showAllwordsClick();" />
 </div>
     <div id="thetextid" class="hide"><?php echo $textid; ?></div>
     <div><button id="readTextButton">Read in browser</button></div>
