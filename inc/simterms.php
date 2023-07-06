@@ -104,12 +104,62 @@ function get_similar_terms(
 }
 
 /**
+ * Prepare a field with a similar term to copy.
+ * 
+ * @param int    $termid  Initial term ID
+ * @param string $compare Similar term to copy.
+ * 
+ * @return string HTNL-formatted string with the similar term displayed.
+ * 
+ * @global string $tbpref
+ */
+function format_term($termid, $compare)
+{
+    global $tbpref;
+    $sql = "SELECT WoText, WoTranslation, WoRomanization 
+    FROM {$tbpref}words WHERE WoID = $termid";
+    $res = do_mysqli_query($sql);
+    if ($record = mysqli_fetch_assoc($res)) {
+        $term = tohtml($record["WoText"]);
+        if (stripos($compare, $term) !== false) {
+            $term = '<span class="red3">' . $term . '</span>'; 
+        } else {
+            $term = str_replace(
+                $compare, 
+                '<span class="red3"><u>' . $compare . '</u></span>', 
+                $term
+            ); 
+        }
+        $tra = (string) $record["WoTranslation"];
+        if ($tra == "*") { 
+            $tra = "???"; 
+        }
+        if (trim($record["WoRomanization"]) !== '') {
+            $rom = (string) $record["WoRomanization"];
+            $romd = " [$rom]";
+        } else {
+            $rom = "";
+            $romd = "";
+        }
+        $js_event = "setTransRoman(" . prepare_textdata_js($tra) . ',' . prepare_textdata_js($rom) . ')';
+        $output = '<img class="clickedit" src="icn/tick-button-small.png" ' .
+        'title="Copy → Translation &amp; Romanization Field(s)" ' .
+        'onclick="' . tohtml($js_event) .'" /> ' . 
+        $term . tohtml($romd) . ' — ' . tohtml($tra) . 
+        '<br />';
+        mysqli_free_result($res);
+        return $output;
+    }
+    mysqli_free_result($res);
+    return "";
+}
+
+/**
  * Get Term and translation of terms in termid array (calculated 
  * in function get_similar_terms(...)) as string for echo
  */
 function print_similar_terms($lang_id, $compared_term): string 
 {
-    global $tbpref;
     $max_count = (int)getSettingWithDefault("set-similar-terms-count");
     if ($max_count <= 0) { 
         return ''; 
@@ -121,39 +171,10 @@ function print_similar_terms($lang_id, $compared_term): string
     $termarr = get_similar_terms($lang_id, $compared_term, $max_count, 0.33);
     $rarr = array();
     foreach ($termarr as $termid) {
-        $sql = "SELECT WoText, WoTranslation, WoRomanization 
-        FROM {$tbpref}words WHERE WoID = $termid";
-        $res = do_mysqli_query($sql);
-        if ($record = mysqli_fetch_assoc($res)) {
-            $term = tohtml($record["WoText"]);
-            if (stripos($compare, $term) !== false) {
-                $term = '<span class="red3">' . $term . '</span>'; 
-            } else {
-                $term = str_replace(
-                    $compare, 
-                    '<span class="red3"><u>' . $compare . '</u></span>', 
-                    $term
-                ); 
-            }
-            $tra = (string) $record["WoTranslation"];
-            if ($tra == "*") { 
-                $tra = "???"; 
-            }
-            if (trim($record["WoRomanization"]) !== '') {
-                $rom = (string) $record["WoRomanization"];
-                $romd = " [$rom]";
-            } else {
-                $rom = "";
-                $romd = "";
-            }
-            $js_event = "setTransRoman(" . prepare_textdata_js($tra) . ',' . prepare_textdata_js($rom) . ')';
-            $rarr[] = '<img class="clickedit" src="icn/tick-button-small.png" ' .
-            'title="Copy → Translation &amp; Romanization Field(s)" ' .
-            'onclick="' . tohtml($js_event) .'" /> ' . 
-            $term . tohtml($romd) . ' — ' . tohtml($tra) . 
-            '<br />';
+        $similar_term = format_term($termid, $compare);
+        if ($similar_term != "") {
+            $rarr[] = $similar_term;
         }
-        mysqli_free_result($res);
     }
     if (count($rarr) == 0) {
         return "(none)"; 
