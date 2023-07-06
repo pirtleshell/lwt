@@ -73,7 +73,7 @@ function database_wizard_do_operation($op) {
         //require_once 'inc/database_connect.php';
         $server = getreq("server"); 
         $userid = getreq("userid");
-        $passwd = getreq("passw");
+        $passwd = getreq("passwd");
         $dbname = getreq("dbname");
         $conn = mysqli_init();
         if ($conn === false) {
@@ -96,7 +96,7 @@ function database_wizard_do_operation($op) {
     } else if ($op == "Change") {
         $server = getreq("server"); 
         $userid = getreq("userid");
-        $passwd = getreq("passw");
+        $passwd = getreq("passwd");
         $dbname = getreq("dbname");
     }
     $conn = new Database_Connection($server, $userid, $passwd, $dbname);
