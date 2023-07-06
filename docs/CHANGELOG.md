@@ -36,6 +36,10 @@ the intendended page. Same goes for "New Text" on "Archived Texts" page.
 * Test header was different when testing languages or terms since 2.1.0-fork.
 * Wrong link to documentation (``info.php`` instead of ``docs/info.html``). Signaled by Mooncake on Discord.
 
+### Deprecated
+
+* Using the file ``inc/show_similar_terms.php`` is deprecated in favor of ``inc/ajax.php`` with action POST, action type simterms.
+
 ## 2.8.1-fork (April 14 2023)
 
 ### Changed in 2.8.1-fork

@@ -161,7 +161,7 @@ return!0}
 function do_ajax_save_setting(k,v){$.post('inc/ajax_save_setting.php',{k:k,v:v})}
 function do_ajax_update_media_select(){$('#mediaselect').html('&nbsp; <img src="icn/waiting2.gif" />');$.post('inc/ajax_update_media_select.php',function(data){$('#mediaselect').html(data)})}
 function do_ajax_show_sentences(lang,word,ctl,woid){$('#exsent').html('<img src="icn/waiting2.gif" />');$.post('inc/ajax_show_sentences.php',{lang:lang,word:word,ctl:ctl,woid:woid},function(data){$('#exsent').html(data)})}
-function do_ajax_show_similar_terms(){$('#simwords').html('<img src="icn/waiting2.gif" />');$.post('inc/ajax_show_similar_terms.php',{lang:$('#langfield').val(),word:$('#wordfield').val()},function(data){$('#simwords').html(data)})}
+function do_ajax_show_similar_terms(){$('#simwords').html('<img src="icn/waiting2.gif" />');$.post('inc/ajax.php',{"action":"simterms","action_type":"simterms","simterms_lgid":$('#langfield').val(),"simterms_word":$('#wordfield').val()},function(data){$('#simwords').html(data)})}
 function do_ajax_word_counts(){const t=$('.markcheck').map(function(){return $(this).val()}).get().join(',');$.post('inc/ajax_word_counts.php',{id:t},function(data){WORDCOUNTS=data;word_count_click();$('.barchart').removeClass('hide')},'json')}
 function set_barchart_item(){const id=$(this).find('span').first().attr('id').split('_')[2];let v;if(SUW&16){v=parseInt(WORDCOUNTS.expru[id]||0,10)+parseInt(WORDCOUNTS.totalu[id],10)}else{v=parseInt(WORDCOUNTS.expr[id]||0,10)+parseInt(WORDCOUNTS.total[id],10)}
 $(this).children('li').each(function(){let cat_word_count=parseInt($(this).children('span').text(),10);cat_word_count+=1;v+=1;const h=25-Math.log(cat_word_count)/Math.log(v)*25;$(this).css('border-top-width',h+'px')})}

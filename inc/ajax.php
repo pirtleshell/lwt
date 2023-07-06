@@ -3,6 +3,7 @@
 namespace Lwt\Ajax;
 
 require_once 'session_utility.php';
+require_once __DIR__ . '/simterms.php';
 require_once '../do_test_test.php';
 
 
@@ -69,30 +70,50 @@ function get_tomorrow_test_count($testsql) {
 
 /**
  * Return the next word to test.
+ * 
+ * @param array $get_req Array with the fields {test_sql, test_nosent, 
+ * test_lgid, test_wordregex, test_type}
  */
-function word_test_ajax()
+function word_test_ajax($get_req)
 {
     return get_word_test_ajax(
-        $_GET['test_sql'], $_GET['test_nosent'], $_GET['test_lgid'], 
-        $_GET['test_wordregex'], $_GET['test_type']
+        $get_req['test_sql'], $get_req['test_nosent'], $get_req['test_lgid'], 
+        $get_req['test_wordregex'], $get_req['test_type']
     );
 }
 
 /**
  * Return the number of tests for tomorrow by using the supllied query.
+ * 
+ * @param array $get_req Array with the field "test_sql"
  */
-function tomorrow_test_count() 
+function tomorrow_test_count($get_req) 
 {
-    return get_tomorrow_test_count($_GET['test_sql']);
+    return get_tomorrow_test_count($get_req['test_sql']);
+}
+
+function similar_terms($post_req) {
+    return print_similar_terms(
+        (int)$post_req["simterms_lgid"], 
+        (string) $post_req["simterms_word"]
+    );
 }
 
 
 if (isset($_GET['action'])) {
     if ($_GET['action'] == 'query') {
         if ($_GET['action_type'] == 'test') {
-            echo word_test_ajax();
+            echo word_test_ajax($_GET);
         } else if ($_GET['action_type'] == 'tomorrow_test_count') {
-            echo tomorrow_test_count();
+            echo tomorrow_test_count($_GET);
+        }
+    }
+} else if (isset($_POST['action'])) {
+    if (true || $_POST['action'] == '') {
+        switch ($_POST['action_type']) {
+            case "simterms":
+                echo similar_terms($_POST);
+                break;
         }
     }
 }
