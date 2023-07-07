@@ -221,10 +221,24 @@ function browser_tts($text, $languageName): void
     function init_reading() {
         if (!('speechSynthesis' in window)) {
             alert('Your browser does not support speechSynthesis!');
+            return;
+        } 
+        readRawTextAloud(
+            text_reader.text, getLangFromDict(WBLINK3) || text_reader.lang 
+        );
+    }
+
+    /** Start and stop the reading feature. */
+    function toggle_reading() {
+        const synth = window.speechSynthesis;
+        if (synth === undefined) {
+            alert('Your browser does not support speechSynthesis!');
+            return;
+        }
+        if (synth.speaking) {
+            synth.cancel();
         } else {
-            readRawTextAloud(
-                text_reader.text, getLangFromDict(WBLINK3) || text_reader.lang 
-            );
+            init_reading();
         }
     }
 
@@ -276,7 +290,7 @@ function save_audio_position($textid): void
 
     // We need to capture the text-to-speach event manually for Chrome
     $(document).ready(function() {
-        $('#readTextButton').on('click', init_reading)
+        $('#readTextButton').on('click', toggle_reading)
     });
 </script>
     <?php

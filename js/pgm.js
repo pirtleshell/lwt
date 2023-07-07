@@ -413,6 +413,6 @@ async function getPhoneticTextAsync(text,lang){return $.get('inc/ajax_get_phonet
 function readRawTextAloud(text,lang,rate,pitch){let msg=new SpeechSynthesisUtterance();const trimmed=lang.substring(0,2);const prefix='tts['+trimmed;msg.text=text;if(lang){msg.lang=lang}else if(getCookie(prefix+'RegName]')){msg.lang=trimmed+'-'+getCookie(prefix+'RegName]')}
 if(rate){msg.rate=rate}else if(getCookie(prefix+'Rate]')){msg.rate=parseInt(getCookie(prefix+'Rate]'),10)}
 if(pitch){msg.pitch=pitch}else if(getCookie(prefix+'Pitch]')){msg.pitch=parseInt(getCookie(prefix+'Pitch]'),10)}
-window.speechSynthesis.speak(msg)}
+window.speechSynthesis.speak(msg);return msg}
 function readTextAloud(text,lang,rate,pitch){let parsed_text;if(lang.substring(0,2)=='ja'){parsed_text=getPhoneticText(text,lang)}else{parsed_text=text}
 readRawTextAloud(parsed_text,lang,rate,pitch)}

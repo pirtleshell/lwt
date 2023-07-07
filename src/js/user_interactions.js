@@ -217,6 +217,8 @@ async function getPhoneticTextAsync(text, lang) {
  *                       (e. g. "en-US" for English with an American accent) 
  * @param {number} rate  Reading rate 
  * @param {number} pitch Pitch value 
+ * 
+ * @return {SpeechSynthesisUtterance} The spoken message object
  */
  function readRawTextAloud(text, lang, rate, pitch) {
     let msg = new SpeechSynthesisUtterance();
@@ -239,6 +241,7 @@ async function getPhoneticTextAsync(text, lang) {
         msg.pitch = parseInt(getCookie(prefix + 'Pitch]'), 10);
     }
     window.speechSynthesis.speak(msg);
+    return msg;
 }
 
 /**
