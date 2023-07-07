@@ -681,7 +681,7 @@ function edit_texts_form($text, $annotated) {
                 <td class="td1">
                     <input type="url" class="checkurl checkoutsidebmp respinput" 
                     data_info="Source URI" name="TxSourceURI" 
-                    value="<?php echo tohtml($text->media_uri); ?>" 
+                    value="<?php echo tohtml($text->source); ?>" 
                     maxlength="1000" />
                 </td>
             </tr>
