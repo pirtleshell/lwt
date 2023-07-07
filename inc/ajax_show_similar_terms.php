@@ -13,6 +13,8 @@
  * @license Unlicense <http://unlicense.org/>
  * @link    https://hugofara.github.io/lwt/docs/html/ajax__show__similar__terms_8php.html
  * @since   1.5.18
+ * 
+ * @deprecated Since 2.9.0, it is recommended to use the REST API.
  */
 
 require_once __DIR__ . '/simterms.php';

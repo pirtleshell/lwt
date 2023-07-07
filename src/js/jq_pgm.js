@@ -1129,10 +1129,15 @@ function do_ajax_show_sentences (lang, word, ctl, woid) {
 function do_ajax_show_similar_terms () {
   $('#simwords').html('<img src="icn/waiting2.gif" />');
   $.post(
-    'inc/ajax_show_similar_terms.php', 
-    { lang: $('#langfield').val(), word: $('#wordfield').val() },
+    'inc/ajax.php',
+    {
+      "action": "simterms",
+      "action_type": "simterms",
+      "simterms_lgid": $('#langfield').val(),
+      "simterms_word": $('#wordfield').val()
+    },
     function (data) { $('#simwords').html(data); }
-  );
+  )
 }
 
 /**
