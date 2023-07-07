@@ -36,6 +36,7 @@ the intendended page. Same goes for "New Text" on "Archived Texts" page.
 * Test header was different when testing languages or terms since 2.1.0-fork.
 * Wrong link to documentation (``info.php`` instead of ``docs/info.html``). Signaled by Mooncake on Discord.
 * It was impossible to copy a similar term that had apostrophes ([#127](https://github.com/HugoFara/lwt/issues/127)).
+* A deprecation warning for ``trim`` was sent in simterms when no similar term was found.
 
 ### Deprecated
 

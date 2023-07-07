@@ -138,7 +138,7 @@ function format_term($termid, $compare)
         if ($tra == "*") { 
             $tra = "???"; 
         }
-        if (trim($record["WoRomanization"]) !== '') {
+        if (trim((string) $record["WoRomanization"]) !== '') {
             $rom = (string) $record["WoRomanization"];
             $romd = " [$rom]";
         } else {
