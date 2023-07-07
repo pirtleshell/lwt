@@ -21,6 +21,8 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 ### Changed
 
 * Prettier UI to navigate between text creation/edition/archive pages.
+* When reading text, you can click on "Show All" and "Translations" to click the checkbox.
+* ``flex-spaced`` now sets the property of ``text-align: center;``. This property was unherited before.
 * The long text import page looks a bit nicer.
 
 ### Fixed
