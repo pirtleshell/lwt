@@ -1,7 +1,7 @@
 # Important Links
 
 * [**Original Project Page** @ Sourceforge](http://sourceforge.net/projects/learning-with-texts/)
-* **Download Page**: 
+* **Download Page**:
   * [Lastest release @ GitHub](https://github.com/HugoFara/lwt/releases/latest)
   * [Lastest pushed @ GitHub](https://github.com/HugoFara/lwt/archive/refs/heads/master.zip)
   * [Official version @ Sourceforge](http://sourceforge.net/projects/learning-with-texts/files/)
@@ -54,4 +54,3 @@ Resources for various languages
 * Japanese: [MeCab - Yet Another Part-of-Speech and Morphological Analyzer](http://taku910.github.io/mecab/)
 
 * Chinese: ["Jieba" Chinese text segmentation](https://github.com/fxsjy/jieba) ([Python](https://www.python.org/) needed). Usage: Download, unzip, run: *python -m jieba -d ' ' input.txt >output.txt*
-

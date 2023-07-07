@@ -868,7 +868,7 @@ THE SOFTWARE.</p>
 native (L1) and study (L2) languages, and let the wizard set all language settings
 that are marked in yellow. You can always adjust the settings afterwards.</p>
 <p><strong>Explanations of the input fields</strong> - please read also <a href="info.html#langsetup">this section</a>:</p>
-<p>The three <a href="https://en.wikipedia.org/wiki/URL">URLs</a> are URLs to three web dictionaries (the second and third is optional). Use <code>lwt_term</code> as a placeholder for the search word in the URIs. If <code>lwt_term</code> is missing, the search word will be appended to the end. If the URI to query "travailler" in WordReference is "http://www.wordreference.com/fren/travailler", you may enter: "http://www.wordreference.com/fren/lwt_term" or "http://www.wordreference.com/fren/". Another example: The URI to query "travailler" in sensagent is "http://dictionary.sensagent.com/travailler/fr-en/", so you enter in LWT "http://dictionary.sensagent.com/lwt_term/fr-en/".</p>
+<p>The three <a href="https://en.wikipedia.org/wiki/URL">URLs</a> are URLs to three web dictionaries (the second and third is optional). Use <code>lwt_term</code> as a placeholder for the search word in the URIs. If <code>lwt_term</code> is missing, the search word will be appended to the end. If the URI to query "travailler" in WordReference is "<a href="http://www.wordreference.com/fren/travailler">http://www.wordreference.com/fren/travailler</a>", you may enter: "http://www.wordreference.com/fren/lwt_term" or "<a href="http://www.wordreference.com/fren/">http://www.wordreference.com/fren/</a>". Another example: The URI to query "travailler" in sensagent is "<a href="http://dictionary.sensagent.com/travailler/fr-en/">http://dictionary.sensagent.com/travailler/fr-en/</a>", so you enter in LWT "http://dictionary.sensagent.com/lwt_term/fr-en/".</p>
 <p>As URI No. 3 ("Translator") is also used to translate whole sentences. It is recommended to use either <a href="https://translate.google.com">Google Translate</a> or <a href="https://libretranslate.com/">LibreTranslate</a>.</p>
 <ul>
 <li>Generic URL for Google Translate: "http://translate.google.com/?ie=UTF-8&amp;sl=..&amp;tl=..&amp;text=lwt_term", where the two-character codes after "sl=" and "tl=" designate the <a href="http://www.iana.org/assignments/language-subtag-registry">language codes (or "subtags")</a> for the source and the target language.</li>
@@ -887,7 +887,7 @@ that are marked in yellow. You can always adjust the settings afterwards.</p>
 <p>If the searchword in the three URIs needs to be converted into a different encoding (standard is UTF-8), you could use ###encoding### as a placeholder. Normally you see this right away if terms show up wrongly in the web dictionary. Example: Linguee expects the searchword in ISO-8859-15, not in UTF-8, so you define it this way: "http://www.linguee.de/search?direction=auto&amp;query=###ISO-8859-15###". A list of encodings can be found <a href="http://php.net/manual/en/mbstring.supported-encodings.php">here</a>.</p>
 <h6>Glosbe API</h6>
 <p>Glosbe closed there API, this feature does no longer work.</p>
-<p>One dictionary (<a href="http://glosbe.com/">Glosbe</a>) has been closely integrated into LWT via the Glosbe API. To use this dictionary, input the "special" dictionary link "http://localhost/lwt/glosbe_api.php?from=...&amp;dest=...&amp;phrase=lwt_term_" with <em>from</em>: "L2 language code" (the language of your texts) and <em>dest</em>: "L1 language code" (e.g. mother tongue). To find the language codes, open <a href="http://glosbe.com/all-languages">this page</a> to select the "from" (L2) language. On the next page, select the "L2 - L1" language pair. The URL of the next page shows the two language codes, here as an example "French - English": <a href="http://glosbe.com/**fr**/**en**/">http://glosbe.com/**fr**/**en**/</a>. The "from" code is "fr", the "dest" code is "en". Using this dictionary makes the transfer of translation(s) from the Glosbe to LWT very easy: just click on the icon next to the translations to copy them into the LWT edit screen. I recommend to use the LWT-integrated Glosbe dictionary as the "Dictionary 1 URI". Note: I cannot guarantee that the Glosbe API and this special integration will work in the future! glosbe_api.php is just an example how one can integrate a dictionary into LWT.</p>
+<p>One dictionary (<a href="http://glosbe.com/">Glosbe</a>) has been closely integrated into LWT via the Glosbe API. To use this dictionary, input the "special" dictionary link "http://localhost/lwt/glosbe_api.php?from=...&amp;dest=...&amp;phrase=lwt_term" with <em>from</em>: "L2 language code" (the language of your texts) and <em>dest</em>: "L1 language code" (e.g. mother tongue). To find the language codes, open <a href="http://glosbe.com/all-languages">this page</a> to select the "from" (L2) language. On the next page, select the "L2 - L1" language pair. The URL of the next page shows the two language codes, here as an example "French - English": http://glosbe.com/<strong>fr</strong>/<strong>en</strong>/. The "from" code is "fr", the "dest" code is "en". Using this dictionary makes the transfer of translation(s) from the Glosbe to LWT very easy: just click on the icon next to the translations to copy them into the LWT edit screen. I recommend to use the LWT-integrated Glosbe dictionary as the "Dictionary 1 URI". Note: I cannot guarantee that the Glosbe API and this special integration will work in the future! glosbe_api.php is just an example how one can integrate a dictionary into LWT.</p>
 <p>You don't know how and where to find a good web dictionary? Try these dictionary directories:</p>
 <ul>
 <li>
@@ -979,24 +979,20 @@ Actions: You can edit, update, delete a feed or follow the link to the newsfeed.
 <h4>Feed Wizard</h4>
 <p>Here you can edit or set up a new newsfeed in 4 steps.</p>
 <ol>
-<li>Insert your newsfeed url. This step is skipped, when you edit a newsfeed.</li>
-<li>Step 2</li>
-</ol>
+<li>
+<p>Insert your newsfeed url. This step is skipped, when you edit a newsfeed.</p>
+</li>
+<li>
+<p>Step 2</p>
 <ul>
-<li>
-<p>Name: the name is limited to 40 characters, this can be changed later in step 4 and must not be empty.</p>
-</li>
-<li>
-<p>Newsfeed url: URL of your RSS/Atom-Feed, this can only be changed in step 1 and must not be empty.</p>
-</li>
-<li>
-<p>Article Source: Webpage Link means, that the article will downloaded from the link, all other values mean, that the texts are cached in the database, when you update your feed. You must set the value, before you set the article section. This can only be changed here.</p>
+<li>Name: the name is limited to 40 characters, this can be changed later in step 4 and must not be empty.</li>
+<li>Newsfeed url: URL of your RSS/Atom-Feed, this can only be changed in step 1 and must not be empty.</li>
+<li>Article Source: Webpage Link means, that the article will downloaded from the link, all other values mean, that the texts are cached in the database, when you update your feed. You must set the value, before you set the article section. This can only be changed here.</li>
+</ul>
 <p><strong>How to select the article section:</strong></p>
 <p>When you click on the text, it will be marked yellow and a value in the right selectbox will appear. You can change the marked section by selecting a value. If you click on the yellow marked text, the text will be unmarked. To select a text click the "get"-button. The xpath expression of the selected text will then appear on the top and the text will be marked green. You can unselect the selected text by clicking on the red cross. If you click on the xpath expression or on the selected text, a border around the selected text will appear. This can be used to verify the connection between text and xpath exp. in the articles. In order to change an article/webpage use the selectbox on the left. All visited articles start with an arrow "▶". Articles from different hosts probably contain different article sections. Therefore a selectbox can be used to mark the hosts, that are "done", with a star. By clicking on the setting icon, you can choose between three selection modes. "Smart Selection" looks for ids and classes in the element node and parent node. "Get All Attributes" will compare all attributes of the element node/parent node with the text. This mode is not recommended. "Advanced Selection" lets you customize the <a href="http://www.w3.org/TR/xpath20/">xpath expression</a>.</p>
 <p><img src="../img/39.jpg" alt="Image"></p>
 </li>
-</ul>
-<ol start="3">
 <li>
 <p>This works like step 2. Only the selected sections from step 2 are clickable. Marked text will appear grey, filtered texts will have a red font.</p>
 <p><img src="../img/40.jpg" alt="Image"></p>
@@ -1019,16 +1015,16 @@ Actions: You can edit, update, delete a feed or follow the link to the newsfeed.
 <p>Tests are only possible if a term has a translation. Terms with status "Ignored" and "Well Known" are never tested, and terms with a positive or zero score are not tested today. In summary, the term score must fall below zero to trigger the test. See also <a href="info.html#termscores">Term scores</a>. Terms that are due today are marked with a red bullet in the term table. Terms that are due tomorrow are marked with a yellow bullet in the term table.</p>
 <p>During a test, a status display (at the bottom of the test frame) shows you the elapsed time "mm:ss", a small bar graph, and the total, not yet tested, wrong and correct terms in this test.</p>
 <p>In the following, L1 denotes you mother tongue (= translations), and L2 the language you want to learn (= the terms (words and expressions).</p>
-<p><strong>Test terms in a text (L2 -&gt; L1)</strong></p>
+<h4>Test terms in a text (L2 -&gt; L1)</h4>
 <p>This is Test #1 or #4: L2 -&gt; L1 (recognition) - to train your ability to recognize a L2 term. You may test within sentence context (Button "..[L2].."), or just the term (Button "[L2]"). You can also use the Keyboard in the test frame, see <a href="info.html#keybind">Key Bindings</a>.</p>
 <p><img src="../img/07.jpg" alt="Image"></p>
-<p><strong>Test terms in a text (L1 -&gt; L2)</strong></p>
+<h4>Test terms in a text (L1 -&gt; L2)</h4>
 <p>This is Test #2 or #5: L1 -&gt; L2 (recall) - to train your ability to produce a term from L1. You may test within sentence context (Button "..[L1].."), or just the term (Button "[L1]"). You can also use the Keyboard in the test frame, see <a href="info.html#keybind">Key Bindings</a>.</p>
 <p><img src="../img/11.jpg" alt="Image"></p>
-<p><strong>Test terms in a text (••• -&gt; L2)</strong></p>
+<h4>Test terms in a text (••• -&gt; L2)</h4>
 <p>This is test #3: ••• -&gt; L2 (recall) - to train your ability to produce a term only from the sentence context (Button "..[••].."). If you hover over "[•••]", a tooltip displays the translation of the term. You can also use the Keyboard in the test frame, see <a href="info.html#keybind">Key Bindings</a>.</p>
 <p><img src="../img/12.jpg" alt="Image"></p>
-<p><strong>Test yourself in a table / word list format (Button "Table")</strong></p>
+<h4>Test yourself in a table / word list format (Button "Table")</h4>
 <p>This is test #6: The selected terms and expressions are presented as a table. You can make invisible either the columns "Term" or "Translation", and you can hide or show the columns "Sentence", "Romanization", "Status" and "Ed" (Edit). To reveal the invisible solution ("Term" or "Translation"), you just click into the empty table cell. You can review or test yourself with or without changing the status by clicking "+" or "-" in the "Status" column. A status in red signifies that the term is due for testing. You can also edit the term by clicking the yellow "Edit" icon. Columns 2 to 6 may also my sorted by clicking on the header row. The initial sort order is according to term score.</p>
 <p><img src="../img/32.jpg" alt="Image"></p>
 <h3>Print a text</h3>
@@ -1055,12 +1051,12 @@ Actions: You can edit, update, delete a feed or follow the link to the newsfeed.
 <h3>Terms</h3>
 <p>The list of your saved words or expressions (= terms). You may filter the list of terms by language, text, status, term/romanization/translation (wildcard * possible) or term tag(s). Different sort orders are possible. You can do "multi actions" only on the marked or on all terms (on all pages!). "Se?" displays a green dot if a valid sentences with {term} exists. "Stat/Days" displays the status and the number of days since the last status change. The score of a term is a rough measure (in percent) how well you know a term. Read more about term scores <a href="info.html#termscores">here</a>. Terms with zero score are displayed red and should be tested today.</p>
 <p><img src="../img/08.jpg" alt="Image"></p>
-<p><strong>Multi Actions for marked terms</strong></p>
+<h4>Multi Actions for marked terms</h4>
 <p>Most actions are self-explanatory. "Test Marked Terms" starts a test with all marked terms. You may delete marked terms and change the status of marked terms. "Set Status Date to Today" is some kind of "trick" for vacations, illnesses, etc.</p>
 <p>"Export Marked Texts (Anki)" exports all terms that have been marked AND have a valid sentence with {term} for Anki. Terms that do not have a sentence with {term} will NOT be exported. Cloze testing of terms within sentence context can so be easily done in Anki. The export is tab-delimited: (1) term, (2) translation, (3) romanization, (4) Sentence without term (question of cloze test), (5) Sentence with term (answer of cloze test), (6) Language, (7) ID Number, (8) Tag list. Anki template decks (for Anki Version 1 and 2) are provided: "LWT.anki" and "LWT.apkg" in directory "anki".</p>
 <p>"Export Marked Texts (TSV)" exports all terms that have been marked. The export is tab-delimited: (1) term, (2) translation, (3) sentence, (4) romanization, (5) status, (6) language, (7) ID Number, (8) tag list.</p>
 <p><img src="../img/16.jpg" alt="Image"></p>
-<p><strong>Multi Actions for all terms on all pages of the current query</strong></p>
+<h4>Multi Actions for all terms on all pages of the current query</h4>
 <p>Explanations see above.</p>
 <p><img src="../img/17.jpg" alt="Image"></p>
 <h3>Term Tags</h3>
@@ -1069,7 +1065,7 @@ Actions: You can edit, update, delete a feed or follow the link to the newsfeed.
 <h3>Text Archive</h3>
 <p>The list of archived texts. To unarchive, to edit or to delete a text, click on the icon under "Actions". There are also "Multi Actions" available.</p>
 <p>What is the difference between (active) texts and archived texts?</p>
-<p><strong>(Active) texts</strong></p>
+<h4>(Active) texts</h4>
 <ul>
 <li>They have been parsed and tokenized according to the rules defined for the language.</li>
 <li>The result is stored in a cache of sentences and text items.</li>
@@ -1077,7 +1073,7 @@ Actions: You can edit, update, delete a feed or follow the link to the newsfeed.
 <li>Reading with term creation/editing and dictionary lookup is possible.</li>
 <li>Testing of a stored term that occurs in the text, is possible. A terms will be tested within the context of any sentence(s) in all active texts (the number of sentences may be set (1, 2, or 3) as a preference).</li>
 </ul>
-<p><strong>Archived texts</strong></p>
+<h4>Archived texts</h4>
 <ul>
 <li>They are not parsed and tokenized, only the text is stored.</li>
 <li>Compared with active texts, they don't use much space in the database, because no sentences and no text items are stored.</li>
@@ -1104,7 +1100,7 @@ Actions: You can edit, update, delete a feed or follow the link to the newsfeed.
 <p>The number of items per page on different screens can be set, and you can decide whether you want to see the word counts on the textpage immediately (page may load slow) or later (faster initial loading).</p>
 <p><img src="../img/19.jpg" alt="Image"></p>
 <h3>Multiple LWT table sets</h3>
-<p><strong>WARNINGS</strong></p>
+<p><strong>WARNINGS</strong>:</p>
 <ul>
 <li>The use of the "Multiple LWT table sets" feature on an external web server may cause a <strong>monstrous database size</strong> if some users import many or large texts. LWT with activated "Multiple LWT table sets" is in its current version <strong>not suitable</strong> to be run in a public environment on an external web server!</li>
 <li>Another better system may be implemented, use this feature at your own risks!</li>
@@ -1612,14 +1608,14 @@ As a consequence:</p>
 <strong>IMPORTANT: Please read this <a href="info.html#mue">THIS WARNING</a> first!</strong>
 </li>
 </ul>
+<p>lang-learn-guy:</p>
 <blockquote>
-<p>lang-learn-guy:
-I CANNOT give any support for this feature, NOR can I help you with any WordPress problems!
+<p>I CANNOT give any support for this feature, NOR can I help you with any WordPress problems!
 <strong>USE AT YOUR OWN RISK!</strong></p>
 </blockquote>
+<p>Hugo:</p>
 <blockquote>
-<p>Hugo:
-The WordPress feature is a legacy function no longer maintained. It should be considered experimental as it may break with a new release of LWT.</p>
+<p>The WordPress feature is a legacy function no longer maintained. It should be considered experimental as it may break with a new release of LWT.</p>
 </blockquote>
 <p>The following instructions are for users who have installed WordPress, and want to install LWT for multiple WordPress users in conjunction with WordPress authentication. Every WordPress user will have his/her own LWT table set.</p>
 <ol>
@@ -1864,11 +1860,19 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 </ul>
 <h4>Changed</h4>
 <ul>
+<li>User Interface Improvements:
+<ul>
 <li>Prettier UI to navigate between text creation/edition/archive pages.</li>
-<li>When reading text, you can click on "Show All" and "Translations" to click the checkbox.</li>
 <li>
 <code>flex-spaced</code> now sets the property of <code>text-align: center;</code>. This property was unherited before.</li>
 <li>The long text import page looks a bit nicer.</li>
+</ul>
+</li>
+<li>User Experience:
+<ul>
+<li>When reading text, you can click on "Show All" and "Translations" to click the checkbox.</li>
+</ul>
+</li>
 </ul>
 <h4>Fixed</h4>
 <ul>
@@ -1882,9 +1886,10 @@ the intendended page. Same goes for "New Text" on "Archived Texts" page.</li>
 <li>A warning when savings settings in <code>settings.php</code> was sometimes displayed (<a href="https://github.com/HugoFara/lwt/issues/121">#121</a>).</li>
 <li>Test header was different when testing languages or terms since 2.1.0-fork.</li>
 <li>Wrong link to documentation (<code>info.php</code> instead of <code>docs/info.html</code>). Signaled by Mooncake on Discord.</li>
-<li>Fixed: the reading button is usable at last! Clicking the button a second time stops the reading process (<a href="https://github.com/HugoFara/lwt/issues/118">#108</a>).</li>
+<li>The reading button is usable at last! Clicking the button a second time stops the reading process (<a href="https://github.com/HugoFara/lwt/issues/118">#108</a>).</li>
 <li>It was impossible to copy a similar term that had apostrophes (<a href="https://github.com/HugoFara/lwt/issues/127">#127</a>).</li>
 <li>A deprecation warning for <code>trim</code> was sent in simterms when no similar term was found.</li>
+<li>During a text creation, the <code>media_uri</code> property of <code>Text</code> was used instead of <code>source</code>. Thanks to <a href="https://github.com/hangug-eo">@hangug-eo</a> for his PR <a href="https://github.com/HugoFara/lwt/pull/133">#133</a>!</li>
 </ul>
 <h4>Deprecated</h4>
 <ul>

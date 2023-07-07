@@ -2,9 +2,10 @@
 
 [_Learning with Texts_ (LWT)](https://sourceforge.net/projects/learning-with-texts/) is a tool for Language Learning by reading texts.
 It is inspired by:
-  * [Stephen Krashen's](http://sdkrashen.com) principles in Second Language Acquisition,
-  * Steve Kaufmann's [LingQ](http://lingq.com) System and
-  * Ideas from Khatzumoto, published at ["AJATT - All Japanese All The Time"](http://www.alljapaneseallthetime.com).
+
+* [Stephen Krashen's](http://sdkrashen.com) principles in Second Language Acquisition,
+* Steve Kaufmann's [LingQ](http://lingq.com) System and
+* Ideas from Khatzumoto, published at ["AJATT - All Japanese All The Time"](http://www.alljapaneseallthetime.com).
 
 You define languages you want to learn and import texts you want to use for learning. While listening to the optional audio, you read the text, save, review and test "terms" (words or multi word expressions, 2 to 9 words).
 

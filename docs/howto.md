@@ -14,7 +14,6 @@ LWT home screen
 
 This is normal home screen of LWT. You may choose a language here, but you can do this also later. If you you choose a language, the language filter is pre-set to that language in some other screens. The last text you've read or tested is shown, and you may jump directly into reading, testing or printing of this last text.  
 
-
 ## Languages
 
 The list of languages. Here you can add a new or edit an existent language. If no texts and no saved terms in a language exist, you can delete a language. If you change a language, all texts may be automatically reparsed to refresh (and correct) the cache of sentences and text items (depends on what language settings you have changed). You can do this also manually by clicking on the yellow flash icon. You can also test all (due) terms of a language or set a language as "current" language.  
@@ -25,19 +24,19 @@ The list of languages. Here you can add a new or edit an existent language. If n
 
 This is the place to define or edit a language you want to study.
 
-It is recommended to use the "Language Settings Wizard" first. You only select your 
-native (L1) and study (L2) languages, and let the wizard set all language settings 
+It is recommended to use the "Language Settings Wizard" first. You only select your
+native (L1) and study (L2) languages, and let the wizard set all language settings
 that are marked in yellow. You can always adjust the settings afterwards.  
 
 **Explanations of the input fields** - please read also [this section](info.html#langsetup):  
 
-The three [URLs](https://en.wikipedia.org/wiki/URL) are URLs to three web dictionaries (the second and third is optional). Use ``lwt_term`` as a placeholder for the search word in the URIs. If ``lwt_term`` is missing, the search word will be appended to the end. If the URI to query "travailler" in WordReference is "http://www.wordreference.com/fren/travailler", you may enter: "http://www.wordreference.com/fren/lwt_term" or "http://www.wordreference.com/fren/". Another example: The URI to query "travailler" in sensagent is "http://dictionary.sensagent.com/travailler/fr-en/", so you enter in LWT "http://dictionary.sensagent.com/lwt_term/fr-en/".  
+The three [URLs](https://en.wikipedia.org/wiki/URL) are URLs to three web dictionaries (the second and third is optional). Use ``lwt_term`` as a placeholder for the search word in the URIs. If ``lwt_term`` is missing, the search word will be appended to the end. If the URI to query "travailler" in WordReference is "<http://www.wordreference.com/fren/travailler>", you may enter: "http&#58;&#47;&#47;www&period;wordreference&period;com&#47;fren&#47;lwt_term" or "<http://www.wordreference.com/fren/>". Another example: The URI to query "travailler" in sensagent is "<http://dictionary.sensagent.com/travailler/fr-en/>", so you enter in LWT "http&#58;&#47;&#47;dictionary&period;sensagent&period;com/lwt_term/fr-en/".  
 
-As URI No. 3 ("Translator") is also used to translate whole sentences. It is recommended to use either [Google Translate](https://translate.google.com) or [LibreTranslate](https://libretranslate.com/). 
+As URI No. 3 ("Translator") is also used to translate whole sentences. It is recommended to use either [Google Translate](https://translate.google.com) or [LibreTranslate](https://libretranslate.com/).
 
-* Generic URL for Google Translate: "http://translate.google.com/?ie=UTF-8&sl=..&tl=..&text=lwt_term", where the two-character codes after "sl=" and "tl=" designate the [language codes (or "subtags")](http://www.iana.org/assignments/language-subtag-registry) for the source and the target language. 
-* Generic URL for LibreTranslate: "http://localhost:5000/?lwt_translator=libretranslate&source=..&target=..&q=lwt_term". 
-  * Use "source=" and "target=" to set languages. 
+* Generic URL for Google Translate: "http&#58;&#47;&#47;translate.google.com/?ie=UTF-8&sl=..&tl=..&text=lwt_term", where the two-character codes after "sl=" and "tl=" designate the [language codes (or "subtags")](http://www.iana.org/assignments/language-subtag-registry) for the source and the target language.
+* Generic URL for LibreTranslate: "http&#58;&#47;&#47;localhost:5000/?lwt_translator=libretranslate&source=..&target=..&q=lwt_term".
+  * Use "source=" and "target=" to set languages.
   * It is **required** to set "lwt_translator=libretranslate" if you want to use automatic translation features.
 
 A different third web dictionary is of course possible, but sentence translations may not work.  
@@ -50,13 +49,13 @@ A different third web dictionary is of course possible, but sentence translation
 
 **This feature has been abandonned, do not use it**!
 
-If the searchword in the three URIs needs to be converted into a different encoding (standard is UTF-8), you could use ###encoding### as a placeholder. Normally you see this right away if terms show up wrongly in the web dictionary. Example: Linguee expects the searchword in ISO-8859-15, not in UTF-8, so you define it this way: "http://www.linguee.de/search?direction=auto&query=###ISO-8859-15###". A list of encodings can be found [here](http://php.net/manual/en/mbstring.supported-encodings.php). 
+If the searchword in the three URIs needs to be converted into a different encoding (standard is UTF-8), you could use ###encoding### as a placeholder. Normally you see this right away if terms show up wrongly in the web dictionary. Example: Linguee expects the searchword in ISO-8859-15, not in UTF-8, so you define it this way: "http&#58;&#47;&#47;www.linguee.de/search?direction=auto&query=###ISO-8859-15###". A list of encodings can be found [here](http://php.net/manual/en/mbstring.supported-encodings.php).
 
 ##### Glosbe API
 
 Glosbe closed there API, this feature does no longer work.
 
-One dictionary ([Glosbe](http://glosbe.com/)) has been closely integrated into LWT via the Glosbe API. To use this dictionary, input the "special" dictionary link "http://localhost/lwt/glosbe\_api.php?from=...&dest=...&phrase=lwt_term_" with _from_: "L2 language code" (the language of your texts) and _dest_: "L1 language code" (e.g. mother tongue). To find the language codes, open [this page](http://glosbe.com/all-languages) to select the "from" (L2) language. On the next page, select the "L2 - L1" language pair. The URL of the next page shows the two language codes, here as an example "French - English": <http://glosbe.com/**fr**/**en**/>. The "from" code is "fr", the "dest" code is "en". Using this dictionary makes the transfer of translation(s) from the Glosbe to LWT very easy: just click on the icon next to the translations to copy them into the LWT edit screen. I recommend to use the LWT-integrated Glosbe dictionary as the "Dictionary 1 URI". Note: I cannot guarantee that the Glosbe API and this special integration will work in the future! glosbe\_api.php is just an example how one can integrate a dictionary into LWT.  
+One dictionary ([Glosbe](http://glosbe.com/)) has been closely integrated into LWT via the Glosbe API. To use this dictionary, input the "special" dictionary link "http&#58;&#47;&#47;localhost/lwt/glosbe\_api.php?from=...&dest=...&phrase=lwt\_term" with _from_: "L2 language code" (the language of your texts) and _dest_: "L1 language code" (e.g. mother tongue). To find the language codes, open [this page](http://glosbe.com/all-languages) to select the "from" (L2) language. On the next page, select the "L2 - L1" language pair. The URL of the next page shows the two language codes, here as an example "French - English": http&#58;&#47;&#47;glosbe.com/**fr**/**en**/. The "from" code is "fr", the "dest" code is "en". Using this dictionary makes the transfer of translation(s) from the Glosbe to LWT very easy: just click on the icon next to the translations to copy them into the LWT edit screen. I recommend to use the LWT-integrated Glosbe dictionary as the "Dictionary 1 URI". Note: I cannot guarantee that the Glosbe API and this special integration will work in the future! glosbe\_api.php is just an example how one can integrate a dictionary into LWT.  
 
 You don't know how and where to find a good web dictionary? Try these dictionary directories:
 
@@ -66,7 +65,6 @@ You don't know how and where to find a good web dictionary? Try these dictionary
 * [http://www.lexicool.com/](http://www.lexicool.com/)
 
 If you have found a suitable web dictionary, try to translate some words and look whether the word is part of the web address (URI/URL). If yes, replace the word with ### and put this in one of the URI fields within LWT.  
-
 
 The entry "Text Size" defines the relative font size of the text. This is great for Chinese, etc.  
 
@@ -112,7 +110,7 @@ The list of your text tags. You can manage your text tags here. With text tags, 
 
 ### New/Edit Text
 
-This is the screen to input, check or edit a single text. Try to store not too long texts (the maximum length is 65,000 Bytes). If texts are very long (> 1000 words), certain operations (e.g. loading a text for reading, calculation of known/unknown words) may be quite slow. An audio URI and a link to the text source can also be defined. The best place to store your audios is the "media" subdirectory below the installation directory "lwt" (you have to create it yourself, and you have to copy the audio files into this directory; click Refresh if you don't see just copied media). But a cloud webspace service like DropBox is also possible. In the moment there is no possibility to import/upload an audio file within the LWT application. By the way, you can use MP3, WAV, or OGG media files, but be aware that not all browsers and/or operating systems support all media types! 
+This is the screen to input, check or edit a single text. Try to store not too long texts (the maximum length is 65,000 Bytes). If texts are very long (> 1000 words), certain operations (e.g. loading a text for reading, calculation of known/unknown words) may be quite slow. An audio URI and a link to the text source can also be defined. The best place to store your audios is the "media" subdirectory below the installation directory "lwt" (you have to create it yourself, and you have to copy the audio files into this directory; click Refresh if you don't see just copied media). But a cloud webspace service like DropBox is also possible. In the moment there is no possibility to import/upload an audio file within the LWT application. By the way, you can use MP3, WAV, or OGG media files, but be aware that not all browsers and/or operating systems support all media types!
 
 If you click "Check", the text will be parsed and split into sentences and words according to your language settings. Nothing will be stored if you check a text. You can see whether your text needs some editing, or whether your language settings (especially the ones that influence parsing/splitting) need an adjustment. Words (not expressions) that are already in your word list are displayed in red, and the translation is displayed. The Non-Word List shows all stuff between words. The "Check a Text" function can also be started directly from the main menu. If you click on "Change" or "Save", the text will be only saved. If you click on "Change and Open" or "Save and Open", the text will be saved and opened right away.  
 
@@ -163,9 +161,10 @@ Here you can edit or set up a new newsfeed in 4 steps.
 
 1. Insert your newsfeed url. This step is skipped, when you edit a newsfeed.
 2. Step 2
-  * Name: the name is limited to 40 characters, this can be changed later in step 4 and must not be empty.
-  * Newsfeed url: URL of your RSS/Atom-Feed, this can only be changed in step 1 and must not be empty.
-  * Article Source: Webpage Link means, that the article will downloaded from the link, all other values mean, that the texts are cached in the database, when you update your feed. You must set the value, before you set the article section. This can only be changed here.
+
+    * Name: the name is limited to 40 characters, this can be changed later in step 4 and must not be empty.
+    * Newsfeed url: URL of your RSS/Atom-Feed, this can only be changed in step 1 and must not be empty.
+    * Article Source: Webpage Link means, that the article will downloaded from the link, all other values mean, that the texts are cached in the database, when you update your feed. You must set the value, before you set the article section. This can only be changed here.
 
     **How to select the article section:**  
 
@@ -207,25 +206,25 @@ During a test, a status display (at the bottom of the test frame) shows you the 
 
 In the following, L1 denotes you mother tongue (= translations), and L2 the language you want to learn (= the terms (words and expressions).
 
-**Test terms in a text (L2 -> L1)**  
+### Test terms in a text (L2 -> L1)
 
 This is Test #1 or #4: L2 -> L1 (recognition) - to train your ability to recognize a L2 term. You may test within sentence context (Button "..\[L2\].."), or just the term (Button "\[L2\]"). You can also use the Keyboard in the test frame, see [Key Bindings](info.html#keybind).  
 
 ![Image](../img/07.jpg)  
 
-**Test terms in a text (L1 -> L2)**  
+### Test terms in a text (L1 -> L2)
 
 This is Test #2 or #5: L1 -> L2 (recall) - to train your ability to produce a term from L1. You may test within sentence context (Button "..\[L1\].."), or just the term (Button "\[L1\]"). You can also use the Keyboard in the test frame, see [Key Bindings](info.html#keybind).  
 
 ![Image](../img/11.jpg)  
 
-**Test terms in a text (••• -> L2)**  
+### Test terms in a text (••• -> L2)
 
 This is test #3: ••• -> L2 (recall) - to train your ability to produce a term only from the sentence context (Button "..\[••\].."). If you hover over "\[•••\]", a tooltip displays the translation of the term. You can also use the Keyboard in the test frame, see [Key Bindings](info.html#keybind).  
 
 ![Image](../img/12.jpg)  
 
-**Test yourself in a table / word list format (Button "Table")**  
+### Test yourself in a table / word list format (Button "Table")
 
 This is test #6: The selected terms and expressions are presented as a table. You can make invisible either the columns "Term" or "Translation", and you can hide or show the columns "Sentence", "Romanization", "Status" and "Ed" (Edit). To reveal the invisible solution ("Term" or "Translation"), you just click into the empty table cell. You can review or test yourself with or without changing the status by clicking "+" or "-" in the "Status" column. A status in red signifies that the term is due for testing. You can also edit the term by clicking the yellow "Edit" icon. Columns 2 to 6 may also my sorted by clicking on the header row. The initial sort order is according to term score.  
 
@@ -279,7 +278,7 @@ The list of your saved words or expressions (= terms). You may filter the list o
 
 ![Image](../img/08.jpg)  
 
-**Multi Actions for marked terms**  
+### Multi Actions for marked terms
 
 Most actions are self-explanatory. "Test Marked Terms" starts a test with all marked terms. You may delete marked terms and change the status of marked terms. "Set Status Date to Today" is some kind of "trick" for vacations, illnesses, etc.  
 
@@ -289,7 +288,7 @@ Most actions are self-explanatory. "Test Marked Terms" starts a test with all ma
 
 ![Image](../img/16.jpg)  
 
-**Multi Actions for all terms on all pages of the current query**  
+### Multi Actions for all terms on all pages of the current query
 
 Explanations see above.  
 
@@ -307,7 +306,7 @@ The list of archived texts. To unarchive, to edit or to delete a text, click on 
 
 What is the difference between (active) texts and archived texts?  
 
-**(Active) texts**
+### (Active) texts
 
 * They have been parsed and tokenized according to the rules defined for the language.
 * The result is stored in a cache of sentences and text items.
@@ -315,7 +314,7 @@ What is the difference between (active) texts and archived texts?
 * Reading with term creation/editing and dictionary lookup is possible.
 * Testing of a stored term that occurs in the text, is possible. A terms will be tested within the context of any sentence(s) in all active texts (the number of sentences may be set (1, 2, or 3) as a preference).
 
-**Archived texts**
+### Archived texts
 
 * They are not parsed and tokenized, only the text is stored.
 * Compared with active texts, they don't use much space in the database, because no sentences and no text items are stored.
@@ -336,7 +335,7 @@ It's self-explanatory and shows your performance. The numbers in the first table
 
 ## Import Terms  
 
-Import a list of terms for a language, and set the status for all to a specified value. You can specify a file to upload or type/paste the data directly into the textbox. Format: one term per line, fields (columns) are separated either by comma ("CSV" file, e.g. used in LingQ as export format), TAB ("TSV" file, e.g. copy and paste from a spreadsheet program, not possible if you type in data manually) or # (if you type in data manually). The field/column assignment must be specified on the left. 
+Import a list of terms for a language, and set the status for all to a specified value. You can specify a file to upload or type/paste the data directly into the textbox. Format: one term per line, fields (columns) are separated either by comma ("CSV" file, e.g. used in LingQ as export format), TAB ("TSV" file, e.g. copy and paste from a spreadsheet program, not possible if you type in data manually) or # (if you type in data manually). The field/column assignment must be specified on the left.
 
 Important: You must import a term. The translation can be omitted if the status should be set to 98 or 99 (ignore/well known). Translation, romanization and sentence are all optional, but please understand that tests are only possible if terms have a translation. If a term already exists in the database (comparison is NOT case sensitive), it will not be overwritten; the line will be ignored. You can change this by setting "Overwrite existent terms" to "Yes". Be careful using this screen, a database backup before the import and double-checking everything is always advisable!  
 
@@ -350,11 +349,11 @@ This screen offers a possibility to save, restore or empty the LWT database (ONL
 
 ## Settings
 
-In this screen you can adjust the program according to your needs. The geometric properties of the _Read Text_ and _Test_ screens can be changed. This is important because different browsers and font sizes may result in an unpleasant viewing experience. 
+In this screen you can adjust the program according to your needs. The geometric properties of the _Read Text_ and _Test_ screens can be changed. This is important because different browsers and font sizes may result in an unpleasant viewing experience.
 
-The waiting time to display the next test and to hide the old message after a test assessment can be changed. 
+The waiting time to display the next test and to hide the old message after a test assessment can be changed.
 
-The number of sentences displayed during testing and generated during term creation can be set to 1 (default), 2 or 3; if set to 2 or 3 you are able to do "MCD" (Massive-Context Cloze Deletion) testing, proposed by Khatzumoto @ AJATT. 
+The number of sentences displayed during testing and generated during term creation can be set to 1 (default), 2 or 3; if set to 2 or 3 you are able to do "MCD" (Massive-Context Cloze Deletion) testing, proposed by Khatzumoto @ AJATT.
 
 The number of items per page on different screens can be set, and you can decide whether you want to see the word counts on the textpage immediately (page may load slow) or later (faster initial loading).  
 
@@ -362,7 +361,8 @@ The number of items per page on different screens can be set, and you can decide
 
 ## Multiple LWT table sets
 
-**WARNINGS** 
+**WARNINGS**:
+
 * The use of the "Multiple LWT table sets" feature on an external web server may cause a **monstrous database size** if some users import many or large texts. LWT with activated "Multiple LWT table sets" is in its current version **not suitable** to be run in a public environment on an external web server!
 * Another better system may be implemented, use this feature at your own risks!  
 

@@ -6,7 +6,7 @@ Additional table sets have its "table set name" plus an underscore "\_" as a tab
 
 Only if the table set is not set in "connect.inc.php", the currently used table set is saved in a global table "\_lwtgeneral", in column LWTValue of row with LWTKey = "current\_table\_prefix". If such a row does not exist, the default table set will be used, or will be automatically created and used.
 
-## Table "settings" 
+## Table "settings"
 
 Settings as Key-Value Pairs
 
@@ -16,7 +16,7 @@ StValue varchar(40) DEFAULT NULL,
 PRIMARY KEY (StKey)
 ```  
 
-## Table "languages" 
+## Table "languages"
 
 Defined languages
 

@@ -1,6 +1,6 @@
 # Questions and Answers
 
-## Site Unreachable 
+## Site Unreachable
 
 If you see "The webpage is not available", "We have trouble finding that site".
 
@@ -15,7 +15,6 @@ Answer: Your local webserver (Apache) is not running. Please start it via EasyPH
 Answer: The server is running, but the application is not found. Maybe the Uniform Resource Identifier (URI) is wrong or misspelled. Please check/correct it. Or the URI is correct, and the application is installed, but not in the correct directory _lwt_ below _htdocs_. Please install/copy/move it into the correct directory.  
 
 ## Database connection error
-
 
 ![Image](../img/prob3.png)  
 
