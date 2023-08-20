@@ -96,6 +96,31 @@ function edit_term_transl($wid, $new_trans)
     );
 }
 
+
+/**
+ * Edit term translation if it exists.
+ * 
+ * @param int    $wid       Word ID
+ * @param string $new_trans New translation
+ * 
+ * @return string Term in lower case, or "" if term does not exist
+ * 
+ * @global string $tbpref
+ */
+function do_ajax_check_update_translation($wid, $new_trans)
+{
+    global $tbpref;
+    $cnt_words = (int)get_first_value(
+        "SELECT COUNT(WoID) AS value 
+        FROM {$tbpref}words 
+        WHERE WoID = $wid"
+    );
+    if ($cnt_words == 1) {
+        return edit_term_transl($wid, $new_trans);
+    }
+    return "";
+}
+
 /**
  * Add or edit a term translation.
  * 
@@ -104,35 +129,19 @@ function edit_term_transl($wid, $new_trans)
  * 
  * @return string Database alteration message
  * 
- * @global string $tbpref
+ * @deprecated Deprecated in 2.9.0 in favor to the REST API. 
  */
 function do_ajax_add_term_transl($wid, $data)
 {
-    global $tbpref;
     chdir('..');
-    /// Save data
+    // Save data
     $success = "";
     if ($wid == 0) {
-        /**
-         * @var string $text 
-         * Text, only for only wid=0 (new)
-         */
-        $text = trim($_POST['text']);
-        /**
-         * @var int $lang 
-         * Language ID only wid=0 (lang-id)
-         */
-        $lang = (int)$_POST['lang'];
-        $success = add_new_term_transl($text, $lang, $data);
-    } else {
-        $cnt_words = (int)get_first_value(
-            "SELECT COUNT(WoID) AS value 
-            FROM " . $tbpref . "words 
-            WHERE WoID = " . $wid
+        $success = add_new_term_transl(
+            trim($_POST['text']), (int)$_POST['lang'], $data
         );
-        if ($cnt_words == 1) {
-            $success = edit_term_transl($wid, $data);
-        }
+    } else {
+        $success = do_ajax_check_update_translation($wid, $data);
     }
     return $success;
 }
