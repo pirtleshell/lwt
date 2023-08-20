@@ -108,22 +108,44 @@ function changeImprAnnRadio () {
   );
 }
 
-function addTermTranslation (wordid, txid, word, lang) {
-  const thedata = $(txid).val().trim();
+/**
+ * Add (new word) or update (existing word) a word translation.
+ * 
+ * @param {int}    wordid Word ID, 0 for new wrod
+ * @param {string} txid   Text HTML ID or unique HTML selector
+ * @param {string} word   Word text
+ * @param {int}    lang   Language ID
+ * @returns 
+ */
+function addTermTranslation(wordid, txid, word, lang) {
+  const translation = $(txid).val().trim();
   const pagepos = $(document).scrollTop();
-  if ((thedata == '') || (thedata == '*')) {
+  if (translation == '' || translation == '*') {
     alert('Text Field is empty or = \'*\'!');
     return;
   }
+  let request = {
+        action: "",
+        translation: translation,
+  };
+  failure;
+  if (wordid === 0) {
+    request["action_type"] = "add_translation";
+    request["text"] = word;
+    request["lang"] = lang;
+    failure = "Adding translation to term failed!";
+  } else {
+    request["action_type"] = "update_translation";
+    request["wordid"] = wordid;
+    failure = "Updating translation of term failed!";
+  }
+  failure += "Please reload page and try again."
   $.post(
-    'inc/ajax_add_term_transl.php', 
-    { id: wordid, data: thedata, text: word, lang: lang }, 
+    'inc/ajax.php', 
+    request,
     function (d) {
       if (d == '') {
-        alert(
-          'Adding translation to term OR term creation failed, ' + 
-          'please reload page and try again!'
-        );
+        alert(failure);
       } else {
         do_ajax_edit_impr_text(pagepos, d);
       }

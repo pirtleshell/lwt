@@ -5,6 +5,7 @@ namespace Lwt\Ajax;
 require_once 'session_utility.php';
 require_once __DIR__ . '/simterms.php';
 require_once '../do_test_test.php';
+require_once __DIR__ . '/ajax_add_term_transl.php';
 
 
 /**
@@ -92,10 +93,46 @@ function tomorrow_test_count($get_req)
     return get_tomorrow_test_count($get_req['test_sql']);
 }
 
-function similar_terms($post_req) {
+/**
+ * Get terms similar to a given term.
+ * 
+ * @param array $post_req Input post request.
+ * 
+ * @return string Similar terms in HTML format.
+ */
+function similar_terms($post_req) 
+{
     return print_similar_terms(
         (int)$post_req["simterms_lgid"], 
         (string) $post_req["simterms_word"]
+    );
+}
+
+/**
+ * Create the translation for a new term.
+ * 
+ * @param array $post_req Input post request.
+ * 
+ * @return string Error message in case of failure, lowercase term otherwise
+ */
+function add_translation($post_req)
+{
+    return add_new_term_transl(
+        trim($post_req['text']), (int)$post_req['lang'], trim($post_req['translation'])
+    );
+}
+
+/**
+ * Edit the translation of an existing term.
+ * 
+ * @param array $post_req Input post request.
+ * 
+ * @return string Term in lower case, or "" if term does not exist
+ */
+function update_translation($post_req)
+{
+    return do_ajax_check_update_translation(
+        (int)$post_req['id'], trim($post_req['translation'])
     );
 }
 
@@ -113,6 +150,12 @@ if (isset($_GET['action'])) {
         switch ($_POST['action_type']) {
             case "simterms":
                 echo similar_terms($_POST);
+                break;
+            case "add_translation":
+                echo add_translation($_POST);
+                break;
+            case "update_translation":
+                echo update_translation($_POST);
                 break;
         }
     }

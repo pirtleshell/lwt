@@ -46,7 +46,9 @@ the intendended page. Same goes for "New Text" on "Archived Texts" page.
 
 ### Deprecated
 
-* Using the file ``inc/show_similar_terms.php`` is deprecated in favor of ``inc/ajax.php`` with action POST, action type simterms.
+* Legacy AJAX API. The following AJAX interactions are now deprecated in favor to the new REST API　(at ``inc/ajax.php``):
+  * ``inc/show_similar_terms.php``, use ``action_type=simterms``, same arguments.
+  * ``inc/ajax_add_term_transl.php``, use ``action_type=add_translation`` or ``action_type=update_translation``. The arguments were also changed.
 
 ## 2.8.1-fork (April 14 2023)
 
