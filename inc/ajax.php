@@ -7,6 +7,20 @@ require_once __DIR__ . '/simterms.php';
 require_once '../do_test_test.php';
 require_once __DIR__ . '/ajax_add_term_transl.php';
 
+/**
+ * Return the API version.
+ * 
+ * @param array $get_req GET request, unnused
+ * 
+ * @return string JSON-encoded version
+ */
+function rest_api_version($get_req)
+{
+    return (string)json_encode(array(
+        "version"      => "0.0.1",
+        "release_date" => "2023-09-01"
+    ));
+}
 
 /**
  * Retun the next word to test as JSON
@@ -139,10 +153,15 @@ function update_translation($post_req)
 
 if (isset($_GET['action'])) {
     if ($_GET['action'] == 'query') {
-        if ($_GET['action_type'] == 'test') {
-            echo word_test_ajax($_GET);
-        } else if ($_GET['action_type'] == 'tomorrow_test_count') {
-            echo tomorrow_test_count($_GET);
+        switch ($_GET['action_type']) {
+            case 'version':
+                echo rest_api_version($_GET);
+            case 'test':
+                echo word_test_ajax($_GET);
+                break;
+            case 'tomorrow_test_count':
+                echo tomorrow_test_count($_GET);
+                break;
         }
     }
 } else if (isset($_POST['action'])) {

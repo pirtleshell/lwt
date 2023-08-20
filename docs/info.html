@@ -1856,7 +1856,31 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
 <li>The timer continues instead of resetting.</li>
 </ul>
 </li>
-<li>REST API, the new <code>inc/ajax.php</code> is intended to continue developping itself as a REST API.</li>
+<li>REST API, the new <code>inc/ajax.php</code> is intended to continue developping itself as a REST API.
+It features the following interaction:
+<ul>
+<li>On GET, <code>action_type</code> can be:
+<ul>
+<li>
+<code>version</code>: the REST API version and release date.</li>
+<li>
+<code>test</code>: next word to test.</li>
+<li>
+<code>tomorrow_test_count</code>: number of tests for the next day.</li>
+</ul>
+</li>
+<li>On POST, <code>action_type</code> can be:
+<ul>
+<li>
+<code>simterms</code>: similar terms to a given term</li>
+<li>
+<code>add_translation</code>: add a translation for a new word</li>
+<li>
+<code>update_translation</code>: edit the translation of an existing word.</li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 <h4>Changed</h4>
 <ul>
