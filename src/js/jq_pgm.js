@@ -199,13 +199,18 @@ function check () {
       }
     }
   });
+  // Note: as of LWT 2.9.0, no field with "checkregexp" property is found in the code base
   $('input.checkregexp').each(function (_n) {
     const regexp = $(this).val().trim();
     if (regexp.length > 0) {
       $.ajax({
         type: 'POST',
-        url: 'inc/ajax_check_regexp.php',
-        data: { regex: regexp },
+        url: 'inc/ajax.php',
+        data: {
+          action: "regexp",
+          action_type: "regexp",
+          regex: regexp 
+        },
 			 async: false
       }
       ).always(function (data) {

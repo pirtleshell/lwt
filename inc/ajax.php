@@ -6,6 +6,10 @@ require_once 'session_utility.php';
 require_once __DIR__ . '/simterms.php';
 require_once '../do_test_test.php';
 require_once __DIR__ . '/ajax_add_term_transl.php';
+require_once __DIR__ . '/ajax_check_regexp.php';
+
+
+// -------------------------- GET REQUESTS -------------------------
 
 /**
  * Return the API version.
@@ -107,6 +111,9 @@ function tomorrow_test_count($get_req)
     return get_tomorrow_test_count($get_req['test_sql']);
 }
 
+
+// --------------------------------- POST REQUESTS ---------------------
+
 /**
  * Get terms similar to a given term.
  * 
@@ -150,6 +157,16 @@ function update_translation($post_req)
     );
 }
 
+/**
+ * Check if a regexp is correctly recognized.
+ * 
+ * @param array $post_req Array with the field "regexp"
+ */
+function check_regexp($post_req)
+{
+    return do_ajax_check_regexp(trim($post_req['regexp']));
+}
+
 
 if (isset($_GET['action'])) {
     if ($_GET['action'] == 'query') {
@@ -175,6 +192,9 @@ if (isset($_GET['action'])) {
                 break;
             case "update_translation":
                 echo update_translation($_POST);
+                break;
+            case 'regexp':
+                echo check_regexp($_POST);
                 break;
         }
     }

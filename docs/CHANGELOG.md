@@ -22,6 +22,7 @@ It features the following interaction:
     * ``version``: the REST API version and release date.
     * ``test``: next word to test.
     * ``tomorrow_test_count``: number of tests for the next day.
+    * ``regexp``: test if the regular expression is correctly recognized (no more usage in code base?).
   * On POST, ``action_type`` can be:
     * ``simterms``: similar terms to a given term
     * ``add_translation``: add a translation for a new word
@@ -58,6 +59,7 @@ the intendended page. Same goes for "New Text" on "Archived Texts" page.
 * Legacy AJAX API. The following AJAX interactions are now deprecated in favor to the new REST API　(at ``inc/ajax.php``):
   * ``inc/show_similar_terms.php``, use ``action_type=simterms``, same arguments.
   * ``inc/ajax_add_term_transl.php``, use ``action_type=add_translation`` or ``action_type=update_translation``. The arguments were also changed.
+  * ``inc/ajax_check_regexp.php`` should be accessed through ``action_type=regexp``. Argument ``regex`` is now ``regexp``, on post only.
 
 ## 2.8.1-fork (April 14 2023)
 

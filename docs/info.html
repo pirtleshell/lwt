@@ -1867,6 +1867,8 @@ It features the following interaction:
 <code>test</code>: next word to test.</li>
 <li>
 <code>tomorrow_test_count</code>: number of tests for the next day.</li>
+<li>
+<code>regexp</code>: test if the regular expression is correctly recognized (no more usage in code base?).</li>
 </ul>
 </li>
 <li>On POST, <code>action_type</code> can be:
@@ -1923,6 +1925,8 @@ the intendended page. Same goes for "New Text" on "Archived Texts" page.</li>
 <code>inc/show_similar_terms.php</code>, use <code>action_type=simterms</code>, same arguments.</li>
 <li>
 <code>inc/ajax_add_term_transl.php</code>, use <code>action_type=add_translation</code> or <code>action_type=update_translation</code>. The arguments were also changed.</li>
+<li>
+<code>inc/ajax_check_regexp.php</code> should be accessed through <code>action_type=regexp</code>. Argument <code>regex</code> is now <code>regexp</code>, on post only.</li>
 </ul>
 </li>
 </ul>
