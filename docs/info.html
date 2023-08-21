@@ -1867,8 +1867,6 @@ It features the following interaction:
 <code>test</code>: next word to test.</li>
 <li>
 <code>tomorrow_test_count</code>: number of tests for the next day.</li>
-<li>
-<code>regexp</code>: test if the regular expression is correctly recognized (no more usage in code base?).</li>
 </ul>
 </li>
 <li>On POST, <code>action_type</code> can be:
@@ -1879,6 +1877,10 @@ It features the following interaction:
 <code>add_translation</code>: add a translation for a new word</li>
 <li>
 <code>update_translation</code>: edit the translation of an existing word.</li>
+<li>
+<code>regexp</code>: test if the regular expression is correctly recognized (no more usage in code base?).</li>
+<li>
+<code>change_term_status</code>: increment or decrement the status of a term by one unit.</li>
 </ul>
 </li>
 </ul>
@@ -1927,6 +1929,8 @@ the intendended page. Same goes for "New Text" on "Archived Texts" page.</li>
 <code>inc/ajax_add_term_transl.php</code>, use <code>action_type=add_translation</code> or <code>action_type=update_translation</code>. The arguments were also changed.</li>
 <li>
 <code>inc/ajax_check_regexp.php</code> should be accessed through <code>action_type=regexp</code>. Argument <code>regex</code> is now <code>regexp</code>, on post only.</li>
+<li>
+<code>inc/ajax_chg_term_status.php</code> should be accessed through <code>action_type=change_term_status</code>. Argument <code>data</code> is now <code>status_difference</code>, on post only.</li>
 </ul>
 </li>
 </ul>

@@ -1,9 +1,11 @@
 <?php
 /**
  * \file
- * \brief Change term status (Table Test)
+ * \brief Change term status (Table Test).
  * 
- * Call: inc/ajax_chg_term_status.php?id=[wordID]&data=[translation]
+ * value-difference should be either 1 or -1.
+ * 
+ * Call: inc/ajax_chg_term_status.php?id=[wordID]&data=[value-difference]
  * 
  * @package Lwt
  * @author  LWT Project <lwt-project@hotmail.com>
@@ -58,12 +60,15 @@ function update_word_status($wid, $currstatus)
     global $tbpref;
     if (($currstatus >= 1 && $currstatus <= 5) || $currstatus == 99 || $currstatus == 98) {
         $m1 = (int)runsql(
-            'UPDATE ' . $tbpref . 'words 
-            SET WoStatus = ' . $currstatus . ', WoStatusChanged = NOW(),' . make_score_random_insert_update('u') . '
-            WHERE WoID = ' . $wid, ''
+            "UPDATE {$tbpref}words 
+            SET WoStatus = $currstatus, WoStatusChanged = NOW()," . make_score_random_insert_update('u') .
+            "WHERE WoID = $wid", 
+            ''
         );
         if ($m1 == 1) {
-            $currstatus = get_first_value('SELECT WoStatus as value FROM ' . $tbpref . 'words where WoID = ' . $wid);
+            $currstatus = get_first_value(
+                "SELECT WoStatus AS value FROM {$tbpref}words WHERE WoID = $wid"
+            );
             if (!isset($currstatus)) {
                 return null;
             }
@@ -90,9 +95,9 @@ function do_ajax_chg_term_status($wid, $up)
     chdir('..');
 
     $tempstatus = get_first_value(
-        'SELECT WoStatus as value 
-        FROM ' . $tbpref . 'words 
-        WHERE WoID = ' . $wid
+        "SELECT WoStatus as value 
+        FROM {$tbpref}words 
+        WHERE WoID = $wid"
     );
     if (!isset($tempstatus)) {
         echo '';
@@ -103,6 +108,8 @@ function do_ajax_chg_term_status($wid, $up)
 }
 
 if (getreq('id') != '' && getreq('data') != '') {
+    // Deprecated way of accessing the request since 2.9.0! 
+    // Use the REST API with "action_type=regexp".
     do_ajax_chg_term_status((int)$_REQUEST['id'], (bool)$_REQUEST['data']);
 }
 

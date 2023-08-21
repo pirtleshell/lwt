@@ -7,6 +7,7 @@ require_once __DIR__ . '/simterms.php';
 require_once '../do_test_test.php';
 require_once __DIR__ . '/ajax_add_term_transl.php';
 require_once __DIR__ . '/ajax_check_regexp.php';
+require_once __DIR__ . '/ajax_chg_term_status.php';
 
 
 // -------------------------- GET REQUESTS -------------------------
@@ -167,6 +168,16 @@ function check_regexp($post_req)
     return do_ajax_check_regexp(trim($post_req['regexp']));
 }
 
+/**
+ * Change the status of a term by one unit.
+ * 
+ * @param array $post_req Array with the fields "wid" (int) and "status_up" (1 or 0)
+ */
+function change_term_status($post_req)
+{
+    return do_ajax_chg_term_status((int)$post_req['wid'], (bool)$post_req['status_up']);
+}
+
 
 if (isset($_GET['action'])) {
     if ($_GET['action'] == 'query') {
@@ -195,6 +206,9 @@ if (isset($_GET['action'])) {
                 break;
             case 'regexp':
                 echo check_regexp($_POST);
+                break;
+            case 'change_term_status':
+                echo change_term_status($_POST);
                 break;
         }
     }
