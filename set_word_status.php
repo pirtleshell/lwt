@@ -64,7 +64,7 @@ function set_word_status_ajax($wid, $status)
             status: status 
         }, 
         function (data) {
-            if (trim(data) == '')
+            if (data.trim() == '')
                 word_update_error();
             else
                 apply_word_update(wordid, status);
