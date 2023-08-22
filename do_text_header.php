@@ -277,12 +277,14 @@ function save_audio_position($textid): void
         var pos = $("#jquery_jplayer_1").data("jPlayer").status.currentTime;
         $.ajax({
             type: "POST",
-            url:'inc/ajax_save_text_position.php', 
-            data: { 
-                id: '<?php echo $textid; ?>', 
-                audioposition: pos
+            url:'inc/ajax.php', 
+            data: {
+                action: "reading_position",
+                action_type: "audio",
+                tid: '<?php echo $textid; ?>', 
+                audio_position: pos
             }, 
-            async: false
+            async: false // Asynchronous should be safe (2.9.0)
         });
     }
 

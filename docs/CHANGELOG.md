@@ -25,6 +25,7 @@ It features the following interaction:
     * ``phonetic_reading``: phonetic reading of a text.
     * ``theme_path``: theming path for a file.
   * On POST, ``action_type`` can be:
+    * ``text`` of ``audio`` change the reading position for a text or it's audio.
     * ``simterms``: similar terms to a given term
     * ``add_translation``: add a translation for a new word
     * ``update_translation``: edit the translation of an existing word.
@@ -70,6 +71,7 @@ the intendended page. Same goes for "New Text" on "Archived Texts" page.
   * ``inc/ajax_get_phonetic.php`` should be accessed through ``action_type=phonetic_reading``, same arguments.
   * ``inc/ajax_get_theme.php`` should be accessed through ``action_type=theme_path``. Argument ``filepath`` is now ``path``.
   * ``inc/ajax_save_setting.php`` should be accessed through ``action_type=save_setting``, same arguments.
+  * ``inc/ajax_save_text_position.php`` should be accessed through ``action=reading_position``, arguments changed.
 
 ## 2.8.1-fork (April 14 2023)
 

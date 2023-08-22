@@ -2,12 +2,15 @@
 
 namespace Lwt\Ajax;
 
+use function SaveSetting\save;
+
 require_once 'session_utility.php';
 require_once __DIR__ . '/simterms.php';
 require_once '../do_test_test.php';
 require_once __DIR__ . '/ajax_add_term_transl.php';
 require_once __DIR__ . '/ajax_check_regexp.php';
 require_once __DIR__ . '/ajax_chg_term_status.php';
+require_once __DIR__ . '/ajax_save_text_position.php';
 
 
 // -------------------------- GET REQUESTS -------------------------
@@ -139,6 +142,35 @@ function get_theme_path($get_req)
 
 // --------------------------------- POST REQUESTS ---------------------
 
+
+/**
+ * Set text reading position.
+ * 
+ * @param array $post_req Array with the fields "tid" (int) and "tposition"
+ * 
+ * @return void
+ */
+function set_text_position($post_req) 
+{
+    return save_text_position(
+        (int)$post_req["tid"], (int)$post_req["tposition"]
+    );
+}
+
+/**
+ * Set audio position.
+ * 
+ * @param array $post_req Array with the fields "tid" (int) and "audio_position"
+ * 
+ * @return void
+ */
+function set_audio_position($post_req) 
+{
+    return save_audio_position(
+        (int)$post_req["tid"], (int)$post_req["audio_position"]
+    );
+}
+
 /**
  * Get terms similar to a given term.
  * 
@@ -248,30 +280,42 @@ if (isset($_GET['action'])) {
         }
     }
 } else if (isset($_POST['action'])) {
-    if (true || $_POST['action'] == '') {
-        switch ($_POST['action_type']) {
-            case "simterms":
-                echo similar_terms($_POST);
-                break;
-            case "add_translation":
-                echo add_translation($_POST);
-                break;
-            case "update_translation":
-                echo update_translation($_POST);
-                break;
-            case 'regexp':
-                echo check_regexp($_POST);
-                break;
-            case 'increase_term_status':
-                echo increase_term_status($_POST);
-                break;
-            case 'set_term_status':
-                echo set_term_status($_POST);
-                break;
-            case 'save_setting':
-                echo save_setting($_POST);
-                break;
-        }
+    switch ($_POST['action']) {
+        case "reading_position":
+            switch ($_POST['action_type']) {
+                case "text":
+                    set_text_position($_POST);
+                    break;
+                case "audio":
+                    set_audio_position($_POST);
+                    break;
+            }
+            break;
+        default:
+            switch ($_POST['action_type']) {
+                case "simterms":
+                    echo similar_terms($_POST); // really on POST?
+                    break;
+                case "add_translation":
+                    echo add_translation($_POST);
+                    break;
+                case "update_translation":
+                    echo update_translation($_POST);
+                    break;
+                case 'regexp':
+                    echo check_regexp($_POST);
+                    break;
+                case 'increase_term_status':
+                    echo increase_term_status($_POST);
+                    break;
+                case 'set_term_status':
+                    echo set_term_status($_POST);
+                    break;
+                case 'save_setting':
+                    echo save_setting($_POST);
+                    break;
+            }
+            break;
     }
 }
 

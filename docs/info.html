@@ -1880,6 +1880,8 @@ It features the following interaction:
 <li>On POST, <code>action_type</code> can be:
 <ul>
 <li>
+<code>text</code> of <code>audio</code> change the reading position for a text or it's audio.</li>
+<li>
 <code>simterms</code>: similar terms to a given term</li>
 <li>
 <code>add_translation</code>: add a translation for a new word</li>
@@ -1950,6 +1952,8 @@ the intendended page. Same goes for "New Text" on "Archived Texts" page.</li>
 <code>inc/ajax_get_theme.php</code> should be accessed through <code>action_type=theme_path</code>. Argument <code>filepath</code> is now <code>path</code>.</li>
 <li>
 <code>inc/ajax_save_setting.php</code> should be accessed through <code>action_type=save_setting</code>, same arguments.</li>
+<li>
+<code>inc/ajax_save_text_position.php</code> should be accessed through <code>action=reading_position</code>, arguments changed.</li>
 </ul>
 </li>
 </ul>

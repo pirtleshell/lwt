@@ -145,10 +145,11 @@ function goToLastPosition() {
  * @since 2.0.3-fork
  */
 function saveCurrentPosition() {
-    var pos = 0;
-    var top = $(window).scrollTop()-$('.wsty').not('.hide').eq(0).height();
+    let pos = 0;
+    // First position from the top
+    const top_pos = $(window).scrollTop() - $('.wsty').not('.hide').eq(0).height();
     $('.wsty').not('.hide').each(function() {
-        if ($(this).offset().top >= top){
+        if ($(this).offset().top >= top_pos){
             pos = $(this).attr('data_pos');
             return false;
         }
@@ -156,12 +157,14 @@ function saveCurrentPosition() {
     $.ajax(
         {
             type: "POST",
-            url:'inc/ajax_save_text_position.php', 
-            data: { 
-                id: TID, 
-                position: pos 
+            url:'inc/ajax.php',
+            data: {
+                action: "reading_position",
+                action_type: "text",
+                tid: TID,
+                tposition: pos 
             }, 
-            async: false
+            async: false // Asynchronous should be safe (2.9.0)
         }
     );
 }
@@ -176,7 +179,7 @@ function getPhoneticText(text, lang) {
     let phoneticText;
     $.ajax(
         {
-            url:'inc/ajax',
+            url:'inc/ajax.php',
             async: false,
             data: {
                 action: "query",
@@ -203,7 +206,7 @@ function getPhoneticText(text, lang) {
  */
 async function getPhoneticTextAsync(text, lang) {
     return $.get(
-        'inc/ajax',
+        'inc/ajax.php',
         data={
             action: "query",
             action_type: "phonetic_reading",
