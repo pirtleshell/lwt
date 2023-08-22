@@ -410,8 +410,8 @@ function prepareTextInteractions(){$('.word').each(word_each_do_text_text);$('.m
 function goToLastPosition(){const lookPos=POS;let pos=0;if(lookPos>0){let posObj=$(".wsty[data_pos="+lookPos+"]").not(".hide").eq(0);if(posObj.attr("data_pos")===undefined){pos=$(".wsty").not(".hide").filter(function(){return $(this).attr("data_pos")<=lookPos}).eq(-1)}}
 $(document).scrollTo(pos);focus();setTimeout(overlib,10);setTimeout(cClick,100)}
 function saveCurrentPosition(){var pos=0;var top=$(window).scrollTop()-$('.wsty').not('.hide').eq(0).height();$('.wsty').not('.hide').each(function(){if($(this).offset().top>=top){pos=$(this).attr('data_pos');return!1}});$.ajax({type:"POST",url:'inc/ajax_save_text_position.php',data:{id:TID,position:pos},async:!1})}
-function getPhoneticText(text,lang){let phoneticText;$.ajax({async:!1,data:{text:text,lang:lang},type:"GET",url:'inc/ajax_get_phonetic.php',}).done(function(data){phoneticText=data});return phoneticText}
-async function getPhoneticTextAsync(text,lang){return $.get('inc/ajax_get_phonetic.php',data={text:text,lang:lang},)}
+function getPhoneticText(text,lang){let phoneticText;$.ajax({url:'inc/ajax',async:!1,data:{action:"query",action_type:"phonetic_reading",text:text,lang:lang},type:"GET",}).done(function(data){phoneticText=data});return phoneticText}
+async function getPhoneticTextAsync(text,lang){return $.get('inc/ajax',data={action:"query",action_type:"phonetic_reading",text:text,lang:lang},)}
 function readRawTextAloud(text,lang,rate,pitch){let msg=new SpeechSynthesisUtterance();const trimmed=lang.substring(0,2);const prefix='tts['+trimmed;msg.text=text;if(lang){msg.lang=lang}else if(getCookie(prefix+'RegName]')){msg.lang=trimmed+'-'+getCookie(prefix+'RegName]')}
 if(rate){msg.rate=rate}else if(getCookie(prefix+'Rate]')){msg.rate=parseInt(getCookie(prefix+'Rate]'),10)}
 if(pitch){msg.pitch=pitch}else if(getCookie(prefix+'Pitch]')){msg.pitch=parseInt(getCookie(prefix+'Pitch]'),10)}

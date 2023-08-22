@@ -112,6 +112,16 @@ function tomorrow_test_count($get_req)
     return get_tomorrow_test_count($get_req['test_sql']);
 }
 
+/**
+ * Get the phonetic reading of a word based on it's language.
+ * 
+ * @param array $get_req Array with the fields "text" and "lang" (short language name)
+ */
+function get_phonetic_reading($get_req)
+{
+    return phonetic_reading($get_req['text'], $get_req['lang']);
+}
+
 
 // --------------------------------- POST REQUESTS ---------------------
 
@@ -199,6 +209,9 @@ if (isset($_GET['action'])) {
                 break;
             case 'tomorrow_test_count':
                 echo tomorrow_test_count($_GET);
+                break;
+            case 'phonetic_reading':
+                echo get_phonetic_reading($_GET);
                 break;
         }
     }

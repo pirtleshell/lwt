@@ -10,6 +10,8 @@
  * @license Unlicense <http://unlicense.org/>
  * @link    https://hugofara.github.io/lwt/docs/html/ajax__get__phonetic_8php.html
  * @since   2.3.0-fork
+ * 
+ * @deprecated Use ajax.php with action_type=get_phonetic instead. Deprecated in 2.9.0.
  */
 require_once 'session_utility.php';
 

@@ -1867,6 +1867,8 @@ It features the following interaction:
 <code>test</code>: next word to test.</li>
 <li>
 <code>tomorrow_test_count</code>: number of tests for the next day.</li>
+<li>
+<code>phonetic_reading</code>: phonetic reading of a text.</li>
 </ul>
 </li>
 <li>On POST, <code>action_type</code> can be:
@@ -1934,6 +1936,8 @@ the intendended page. Same goes for "New Text" on "Archived Texts" page.</li>
 <code>inc/ajax_check_regexp.php</code> should be accessed through <code>action_type=regexp</code>. Argument <code>regex</code> is now <code>regexp</code>, on post only.</li>
 <li>
 <code>inc/ajax_chg_term_status.php</code> should be accessed through <code>action_type=increase_term_status</code>. Argument <code>data</code> is now <code>status_up</code>, on post only.</li>
+<li>
+<code>inc/ajax_get_phonetic.php</code> should be accessed through <code>action_type=phonetic_reading</code>, same arguments.</li>
 </ul>
 </li>
 </ul>

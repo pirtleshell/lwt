@@ -176,13 +176,15 @@ function getPhoneticText(text, lang) {
     let phoneticText;
     $.ajax(
         {
+            url:'inc/ajax',
             async: false,
             data: {
-                text: text, 
+                action: "query",
+                action_type: "phonetic_reading",
+                text: text,
                 lang: lang 
             }, 
             type: "GET",
-            url:'inc/ajax_get_phonetic.php', 
         }
     )
     .done(
@@ -201,8 +203,10 @@ function getPhoneticText(text, lang) {
  */
 async function getPhoneticTextAsync(text, lang) {
     return $.get(
-        'inc/ajax_get_phonetic.php',
+        'inc/ajax',
         data={
+            action: "query",
+            action_type: "phonetic_reading",
             text: text, 
             lang: lang 
         },
