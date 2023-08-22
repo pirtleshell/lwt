@@ -31,6 +31,7 @@ It features the following interaction:
     * ``regexp``: test if the regular expression is correctly recognized (no more usage in code base?).
     * ``increase_term_status``: increment or decrement the status of a term by one unit.
     * ``set_term_status``: set the status of a term.
+    * ``save_setting``: save a setting.
 
 ### Changed
 
@@ -68,6 +69,7 @@ the intendended page. Same goes for "New Text" on "Archived Texts" page.
   * ``inc/ajax_chg_term_status.php`` should be accessed through ``action_type=increase_term_status``. Argument ``data`` is now ``status_up``, on post only.
   * ``inc/ajax_get_phonetic.php`` should be accessed through ``action_type=phonetic_reading``, same arguments.
   * ``inc/ajax_get_theme.php`` should be accessed through ``action_type=theme_path``. Argument ``filepath`` is now ``path``.
+  * ``inc/ajax_save_setting.php`` should be accessed through ``action_type=save_setting``, same arguments.
 
 ## 2.8.1-fork (April 14 2023)
 

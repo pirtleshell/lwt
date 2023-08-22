@@ -1129,8 +1129,17 @@ function keydown_event_do_text_text (e) {
   return true;
 }
 
+/**
+ * Save a setting to the database.
+ * 
+ * @param {string} k Setting name as a key 
+ * @param {string} v Setting value 
+ */
 function do_ajax_save_setting (k, v) {
-  $.post('inc/ajax_save_setting.php', { k: k, v: v });
+  $.post(
+    'inc/ajax.php', 
+    { action: '', action_type: 'save_setting', k: k, v: v }
+  );
 }
 
 function do_ajax_update_media_select () {

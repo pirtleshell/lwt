@@ -160,7 +160,7 @@ if(popup){owin(createTheDictUrl(target_url,txt))}else{showRightFrames(undefined,
 if(e.which==69||e.which==71){let url='';if(curr.hasClass('mword')){url='edit_mword.php?wid='+wid+'&len='+curr.attr('data_code')+'&tid='+TID+'&ord='+ord+dict}else if(stat=='0'){url='edit_word.php?wid=&tid='+TID+'&ord='+ord+dict}else{url='edit_word.php?wid='+wid+'&tid='+TID+'&ord='+ord+dict}
 showRightFrames(url);return!1}
 return!0}
-function do_ajax_save_setting(k,v){$.post('inc/ajax_save_setting.php',{k:k,v:v})}
+function do_ajax_save_setting(k,v){$.post('inc/ajax.php',{action:'',action_type:'save_setting',k:k,v:v})}
 function do_ajax_update_media_select(){$('#mediaselect').html('&nbsp; <img src="icn/waiting2.gif" />');$.post('inc/ajax_update_media_select.php',function(data){$('#mediaselect').html(data)})}
 function do_ajax_show_sentences(lang,word,ctl,woid){$('#exsent').html('<img src="icn/waiting2.gif" />');$.post('inc/ajax_show_sentences.php',{lang:lang,word:word,ctl:ctl,woid:woid},function(data){$('#exsent').html(data)})}
 function do_ajax_show_similar_terms(){$('#simwords').html('<img src="icn/waiting2.gif" />');$.post('inc/ajax.php',{"action":"simterms","action_type":"simterms","simterms_lgid":$('#langfield').val(),"simterms_word":$('#wordfield').val()},function(data){$('#simwords').html(data)})}

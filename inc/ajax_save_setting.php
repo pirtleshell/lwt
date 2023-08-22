@@ -12,7 +12,9 @@
  * @link    https://hugofara.github.io/lwt/docs/html/ajax__save__setting_8php.html
  * @since   1.2.1
  * @since   2.2.2-fork Refactored, will use GET methods
- * @since   2.6.0-fork Use POST method in priority 
+ * @since   2.6.0-fork Use POST method in priority
+ * 
+ * @deprecated 2.9.0 Use REST API in priority.
  */
 
 require_once __DIR__ . '/session_utility.php';

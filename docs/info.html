@@ -31,7 +31,7 @@
 						async: false, 
 						data: {
 							action: "query",
-							action_type: "path",
+							action_type: "theme_path",
 							path: '../css/styles.css' 
 						}, 
 						success: function (data) {
@@ -1891,6 +1891,8 @@ It features the following interaction:
 <code>increase_term_status</code>: increment or decrement the status of a term by one unit.</li>
 <li>
 <code>set_term_status</code>: set the status of a term.</li>
+<li>
+<code>save_setting</code>: save a setting.</li>
 </ul>
 </li>
 </ul>
@@ -1946,6 +1948,8 @@ the intendended page. Same goes for "New Text" on "Archived Texts" page.</li>
 <code>inc/ajax_get_phonetic.php</code> should be accessed through <code>action_type=phonetic_reading</code>, same arguments.</li>
 <li>
 <code>inc/ajax_get_theme.php</code> should be accessed through <code>action_type=theme_path</code>. Argument <code>filepath</code> is now <code>path</code>.</li>
+<li>
+<code>inc/ajax_save_setting.php</code> should be accessed through <code>action_type=save_setting</code>, same arguments.</li>
 </ul>
 </li>
 </ul>

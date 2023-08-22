@@ -213,6 +213,21 @@ function set_term_status($post_req)
 }
 
 
+/**
+ * Save a setting to the database.
+ * 
+ * @param array $post_req Array with the fields "k" (key, setting name) and "v" (value)
+ * 
+ * @return void
+ */
+function save_setting($post_req) 
+{
+    chdir('..');
+
+    saveSetting($post_req['k'], $post_req['v']);
+}
+
+
 if (isset($_GET['action'])) {
     if ($_GET['action'] == 'query') {
         switch ($_GET['action_type']) {
@@ -252,6 +267,9 @@ if (isset($_GET['action'])) {
                 break;
             case 'set_term_status':
                 echo set_term_status($_POST);
+                break;
+            case 'save_setting':
+                echo save_setting($_POST);
                 break;
         }
     }
