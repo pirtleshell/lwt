@@ -10,6 +10,8 @@
  * @license Unlicense <http://unlicense.org/>
  * @link    https://hugofara.github.io/lwt/docs/html/ajax__get__theme_8php.html
  * @since   2.2.0-fork
+ * 
+ * @deprecated 2.9.0 Use AJAX REST API instead.
  */
 require_once 'session_utility.php';
 

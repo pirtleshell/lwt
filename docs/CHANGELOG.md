@@ -23,6 +23,7 @@ It features the following interaction:
     * ``test``: next word to test.
     * ``tomorrow_test_count``: number of tests for the next day.
     * ``phonetic_reading``: phonetic reading of a text.
+    * ``theme_path``: theming path for a file.
   * On POST, ``action_type`` can be:
     * ``simterms``: similar terms to a given term
     * ``add_translation``: add a translation for a new word
@@ -66,6 +67,7 @@ the intendended page. Same goes for "New Text" on "Archived Texts" page.
   * ``inc/ajax_check_regexp.php`` should be accessed through ``action_type=regexp``. Argument ``regex`` is now ``regexp``, on post only.
   * ``inc/ajax_chg_term_status.php`` should be accessed through ``action_type=increase_term_status``. Argument ``data`` is now ``status_up``, on post only.
   * ``inc/ajax_get_phonetic.php`` should be accessed through ``action_type=phonetic_reading``, same arguments.
+  * ``inc/ajax_get_theme.php`` should be accessed through ``action_type=theme_path``. Argument ``filepath`` is now ``path``.
 
 ## 2.8.1-fork (April 14 2023)
 

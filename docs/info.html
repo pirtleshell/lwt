@@ -27,9 +27,13 @@
 				$.ajax(
 					{
 						type: 'GET',
-						url: '../inc/ajax_get_theme.php',
+						url: '../inc/ajax.php',
 						async: false, 
-						data: { file: '../css/styles.css' }, 
+						data: {
+							action: "query",
+							action_type: "path",
+							path: '../css/styles.css' 
+						}, 
 						success: function (data) {
 							if (data.match(/styles.css$/g)) 
 								$('style').text( "@import url(../" + data.trim() + ");" );
@@ -1869,6 +1873,8 @@ It features the following interaction:
 <code>tomorrow_test_count</code>: number of tests for the next day.</li>
 <li>
 <code>phonetic_reading</code>: phonetic reading of a text.</li>
+<li>
+<code>theme_path</code>: theming path for a file.</li>
 </ul>
 </li>
 <li>On POST, <code>action_type</code> can be:
@@ -1938,6 +1944,8 @@ the intendended page. Same goes for "New Text" on "Archived Texts" page.</li>
 <code>inc/ajax_chg_term_status.php</code> should be accessed through <code>action_type=increase_term_status</code>. Argument <code>data</code> is now <code>status_up</code>, on post only.</li>
 <li>
 <code>inc/ajax_get_phonetic.php</code> should be accessed through <code>action_type=phonetic_reading</code>, same arguments.</li>
+<li>
+<code>inc/ajax_get_theme.php</code> should be accessed through <code>action_type=theme_path</code>. Argument <code>filepath</code> is now <code>path</code>.</li>
 </ul>
 </li>
 </ul>

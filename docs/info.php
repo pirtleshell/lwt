@@ -43,9 +43,13 @@ require_once __DIR__ . '/../src/php/markdown_converter.php';
 				$.ajax(
 					{
 						type: 'GET',
-						url: '../inc/ajax_get_theme.php',
+						url: '../inc/ajax.php',
 						async: false, 
-						data: { file: '../css/styles.css' }, 
+						data: {
+							action: "query",
+							action_type: "theme_path",
+							path: '../css/styles.css' 
+						}, 
 						success: function (data) {
 							if (data.match(/styles.css$/g)) 
 								$('style').text( "@import url(../" + data.trim() + ");" );

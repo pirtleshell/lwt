@@ -122,6 +122,20 @@ function get_phonetic_reading($get_req)
     return phonetic_reading($get_req['text'], $get_req['lang']);
 }
 
+    
+/**
+ * Get the file path using theme.
+ * 
+ * @param string $path Standard file path.
+ * 
+ * @return string array Get request with field "path", relative filepath using theme.
+ */
+function get_theme_path($get_req)
+{
+    chdir('..');
+    return get_file_path($get_req['path']);
+}
+
 
 // --------------------------------- POST REQUESTS ---------------------
 
@@ -212,6 +226,9 @@ if (isset($_GET['action'])) {
                 break;
             case 'phonetic_reading':
                 echo get_phonetic_reading($_GET);
+                break;
+            case 'theme_path':
+                echo get_theme_path($_GET);
                 break;
         }
     }
