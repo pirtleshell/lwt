@@ -27,7 +27,8 @@ It features the following interaction:
     * ``add_translation``: add a translation for a new word
     * ``update_translation``: edit the translation of an existing word.
     * ``regexp``: test if the regular expression is correctly recognized (no more usage in code base?).
-    * ``change_term_status``: increment or decrement the status of a term by one unit.
+    * ``increase_term_status``: increment or decrement the status of a term by one unit.
+    * ``set_term_status``: set the status of a term.
 
 ### Changed
 
@@ -37,6 +38,7 @@ It features the following interaction:
   * The long text import page looks a bit nicer.
 * User Experience:
   * When reading text, you can click on "Show All" and "Translations" to click the checkbox.
+  * When changing a word status, the displayed messaged is now more informative: before database change, success message, now: waiting screen, tentative database change, result message (error or success). Under the hood, we are transitionning from pure PHP to AJAX.
 
 ### Fixed
 
@@ -61,7 +63,7 @@ the intendended page. Same goes for "New Text" on "Archived Texts" page.
   * ``inc/show_similar_terms.php``, use ``action_type=simterms``, same arguments.
   * ``inc/ajax_add_term_transl.php``, use ``action_type=add_translation`` or ``action_type=update_translation``. The arguments were also changed.
   * ``inc/ajax_check_regexp.php`` should be accessed through ``action_type=regexp``. Argument ``regex`` is now ``regexp``, on post only.
-  * ``inc/ajax_chg_term_status.php`` should be accessed through ``action_type=change_term_status``. Argument ``data`` is now ``status_difference``, on post only.
+  * ``inc/ajax_chg_term_status.php`` should be accessed through ``action_type=increase_term_status``. Argument ``data`` is now ``status_up``, on post only.
 
 ## 2.8.1-fork (April 14 2023)
 

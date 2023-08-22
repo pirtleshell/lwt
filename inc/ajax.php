@@ -173,9 +173,19 @@ function check_regexp($post_req)
  * 
  * @param array $post_req Array with the fields "wid" (int) and "status_up" (1 or 0)
  */
-function change_term_status($post_req)
+function increase_term_status($post_req)
 {
     return do_ajax_chg_term_status((int)$post_req['wid'], (bool)$post_req['status_up']);
+}
+
+/**
+ * Set the status of a term.
+ * 
+ * @param array $post_req Array with the fields "wid" (int) and "status" (0-5|98|99)
+ */
+function set_term_status($post_req)
+{
+    return set_word_status((int)$post_req['wid'], (int)$post_req['status']);
 }
 
 
@@ -207,8 +217,11 @@ if (isset($_GET['action'])) {
             case 'regexp':
                 echo check_regexp($_POST);
                 break;
-            case 'change_term_status':
-                echo change_term_status($_POST);
+            case 'increase_term_status':
+                echo increase_term_status($_POST);
+                break;
+            case 'set_term_status':
+                echo set_term_status($_POST);
                 break;
         }
     }

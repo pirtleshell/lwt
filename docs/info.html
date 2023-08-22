@@ -1880,7 +1880,9 @@ It features the following interaction:
 <li>
 <code>regexp</code>: test if the regular expression is correctly recognized (no more usage in code base?).</li>
 <li>
-<code>change_term_status</code>: increment or decrement the status of a term by one unit.</li>
+<code>increase_term_status</code>: increment or decrement the status of a term by one unit.</li>
+<li>
+<code>set_term_status</code>: set the status of a term.</li>
 </ul>
 </li>
 </ul>
@@ -1899,6 +1901,7 @@ It features the following interaction:
 <li>User Experience:
 <ul>
 <li>When reading text, you can click on "Show All" and "Translations" to click the checkbox.</li>
+<li>When changing a word status, the displayed messaged is now more informative: before database change, success message, now: waiting screen, tentative database change, result message (error or success). Under the hood, we are transitionning from pure PHP to AJAX.</li>
 </ul>
 </li>
 </ul>
@@ -1930,7 +1933,7 @@ the intendended page. Same goes for "New Text" on "Archived Texts" page.</li>
 <li>
 <code>inc/ajax_check_regexp.php</code> should be accessed through <code>action_type=regexp</code>. Argument <code>regex</code> is now <code>regexp</code>, on post only.</li>
 <li>
-<code>inc/ajax_chg_term_status.php</code> should be accessed through <code>action_type=change_term_status</code>. Argument <code>data</code> is now <code>status_difference</code>, on post only.</li>
+<code>inc/ajax_chg_term_status.php</code> should be accessed through <code>action_type=increase_term_status</code>. Argument <code>data</code> is now <code>status_up</code>, on post only.</li>
 </ul>
 </li>
 </ul>

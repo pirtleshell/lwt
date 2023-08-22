@@ -16,6 +16,29 @@
 
 require_once __DIR__ . '/session_utility.php';
 
+
+/**
+ * Force a term to get a new status.
+ * 
+ * @param string $wid    ID of the word to edit
+ * @param string $status New status to set
+ * 
+ * @return string Number of affected rows or error message
+ * 
+ * @global string $tbpref 
+ */
+function set_word_status($wid, $status)
+{
+    global $tbpref;
+    $m1 = runsql(
+        "UPDATE {$tbpref}words 
+        SET WoStatus = $status, WoStatusChanged = NOW()," . make_score_random_insert_update('u') . " 
+        WHERE WoID = $wid", 
+        ''
+    );
+    return $m1;
+}
+
 /**
  * Check the consistency of the new status.
  * 
@@ -59,12 +82,7 @@ function update_word_status($wid, $currstatus)
 {
     global $tbpref;
     if (($currstatus >= 1 && $currstatus <= 5) || $currstatus == 99 || $currstatus == 98) {
-        $m1 = (int)runsql(
-            "UPDATE {$tbpref}words 
-            SET WoStatus = $currstatus, WoStatusChanged = NOW()," . make_score_random_insert_update('u') .
-            "WHERE WoID = $wid", 
-            ''
-        );
+        $m1 = (int)set_word_status($wid, $currstatus);
         if ($m1 == 1) {
             $currstatus = get_first_value(
                 "SELECT WoStatus AS value FROM {$tbpref}words WHERE WoID = $wid"

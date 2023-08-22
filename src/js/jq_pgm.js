@@ -163,7 +163,7 @@ function changeTableTestStatus (wordid, up) {
   $.post(
     'inc/ajax.php',
     {
-      action: "change_term_status",
+      action: "increase_term_status",
       action_type: "",
       id: wordid,
       status_up: (up ? 1 : 0) 
