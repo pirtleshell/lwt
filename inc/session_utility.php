@@ -1601,10 +1601,84 @@ function getprefixes(): array
     return $prefix;
 }
 
+
+/**
+ * Return the list of media files found in folder, recursively.
+ *
+ * @param string $dir Directory to search into.
+ *
+ * @return array File path found.
+ */
+function get_media_paths_options($dir)
+{
+    $is_windows = ("WIN" == strtoupper(substr(PHP_OS, 0, 3)));
+    $mediadir = scandir($dir);
+    $formats = array('mp3', 'mp4', 'ogg', 'wav', 'webm');
+    $options = array();
+    // For each item in directory
+    foreach ($mediadir as $entry) {
+        if ($is_windows) { 
+            $entry = mb_convert_encoding($entry, 'UTF-8', 'ISO-8859-1'); 
+        }
+        if (substr($entry, 0, 1) != '.' && !is_dir($dir . '/' . $entry)) {
+            $ex = strtolower(pathinfo($entry, PATHINFO_EXTENSION));
+            if (in_array($ex, $formats)) {
+                $options[] = $dir . '/' . $entry; 
+            }
+        }
+    }
+    // For each folder, recursive function
+    foreach ($mediadir as $entry) {
+        if (substr($entry, 0, 1) != '.' && is_dir($dir . '/' . $entry)) {
+            $options = array_merge($options, get_media_paths_options($dir . '/' . $entry));
+        }
+    }
+    return $options;
+}
+
+/**
+ * Return the paths for all media files.
+ *
+ * @return string[] Paths of media files
+ */
+function get_media_paths()
+{
+    $exists = file_exists('media');
+    $answer = array(
+        "base_path" => basename(getcwd())
+    );
+    if ($exists && !is_dir('media')) {
+        $answer["error"] = "not_directory";
+    } else {
+        $answer["error"] = "do_not_exist";
+    }
+    if (!array_key_exists("error", $answer)) {
+        $answer["paths"] = get_media_paths_options('media');
+    }
+    return $answer;
+}
+
+/**
+ * Get the different options to display as acceptable media files.
+ *
+ * @param string $dir Directory containing files
+ *
+ * @return string HTML-formatted OPTION tags
+ */
+function selectmediapathoptions($dir): string 
+{
+    $r = '<option disabled="disabled">-- Directory: ' . tohtml($dir) . ' --</option>';
+    $options = get_media_paths_options($dir);
+    foreach ($options as $op) {
+        $r .= '<option value="' . tohtml($op) . '">' . tohtml($op) . '</option>';
+    }
+    return $r;
+}
+
 /**
  * Select the path for a media (audio or video).
  *
- * @param string $f Previous media file URI
+ * @param string $f HTML field name for media string in form
  *
  * @return string HTML-formatted string for media selection
  */
@@ -1638,39 +1712,6 @@ function selectmediapath($f): string
     return $r;
 }
 
-/**
- * Get the dirrent options to dsplay as acceptable media files.
- *
- * @param string $dir Directory containing files
- *
- * @return string HTML-formatted OPTION tags
- */
-function selectmediapathoptions($dir): string 
-{
-    $is_windows = ("WIN" == strtoupper(substr(PHP_OS, 0, 3)));
-    $mediadir = scandir($dir);
-    $formats = array('mp3', 'mp4', 'ogg', 'wav', 'webm');
-    $r = '<option disabled="disabled">-- Directory: ' . tohtml($dir) . ' --</option>';
-    foreach ($mediadir as $entry) {
-        if ($is_windows) { 
-            $entry = mb_convert_encoding($entry, 'UTF-8', 'ISO-8859-1'); 
-        }
-        if (substr($entry, 0, 1) != '.' && !is_dir($dir . '/' . $entry)) {
-            $ex = strtolower(pathinfo($entry, PATHINFO_EXTENSION));
-            if (in_array($ex, $formats)) {
-                $r .= '<option value="' . tohtml($dir . '/' . $entry) . '">' . 
-                tohtml($dir . '/' . $entry) . '</option>'; 
-            }
-        }
-    }
-    foreach ($mediadir as $entry) {
-        if (substr($entry, 0, 1) != '.' && is_dir($dir . '/' . $entry)) {
-            $r .= selectmediapathoptions($dir . '/' . $entry); 
-        }
-    }
-    return $r;
-}
-
 // -------------------------------------------------------------
 
 function get_seconds_selectoptions($v): string 
@@ -1690,7 +1731,8 @@ function get_seconds_selectoptions($v): string
 
 function get_playbackrate_selectoptions($v): string 
 {
-    if (! isset($v) ) { $v = '10'; 
+    if (!isset($v) ) { 
+        $v = '10'; 
     }
     $r = '';
     for ($i=5; $i <= 15; $i++) {
