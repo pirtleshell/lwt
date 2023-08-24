@@ -1142,10 +1142,67 @@ function do_ajax_save_setting (k, v) {
   );
 }
 
-function do_ajax_update_media_select () {
-  $('#mediaselect').html('&nbsp; <img src="icn/waiting2.gif" />');
-  $.post('inc/ajax_update_media_select.php',
-    function (data) { $('#mediaselect').html(data); }
+/**
+ * Assign the display value of a select element to the value element of another input. 
+ * 
+ * @param {elem} select_elem 
+ * @param {elem} input_elem 
+ */
+function quick_select_to_input(select_elem, input_elem)
+{
+  let val = select_elem.options[select_elem.selectedIndex].value; 
+  if (val != '') 
+    input_elem.value = val; 
+  select_elem.value = '';
+}
+
+function select_media_path(answer)
+{
+  let options = '';
+  for (let i = 0; i < answer["paths"].length; i++) {
+    if (false && is_dir(answer["paths"][i])) {
+      options += '<option disabled="disabled">-- Directory: ' + answer["paths"][i] + '--</option>';
+    } else {
+      options += '<option value="' + answer["paths"][i] + '">' + answer["paths"][i] + '</option>';
+    }
+  }
+  return options;
+}
+
+/**
+ * Perform an AJAX query to retrieve and display the media files path.
+ * 
+ * @param {Element} target 
+ */
+function do_ajax_update_media_select (target) {
+  $('#mediaSelectErrorMessage').css("display", "none");
+  $('#mediaselect select').css("display", "none");
+  $('#mediaSelectLoadingImg').css("display", "inherit");
+  $.get(
+    'inc/ajax.php',
+    {
+      action: "query",
+      action_type: "media_paths"
+    },
+    function (data) {
+      $('#mediaSelectLoadingImg').css("display", "none");
+      if (data["error"] !== undefined) {
+        let msg;
+        if (data["error"] == "not_a_directory") {
+          msg = '[Error: "../' + data["base_path"] + '/media" exists, but it is not a directory.]';
+        } else if (data["error"] == "does_not_exist") {
+          msg = '[Directory "../' + data["base_path"] + '/media" does not yet exist.]';
+        } else {
+          msg = "[Unknown error!]";
+        }
+        $('#mediaSelectErrorMessage').text(msg);
+        $('#mediaSelectErrorMessage').css("display", "inherit");
+      } else {
+        $('#mediaselect select').html(select_media_path(data));
+        $('#mediaselect select').css("display", "inherit");
+      }
+    },
+    "json"
   );
 }
 

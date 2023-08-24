@@ -1617,6 +1617,12 @@ function get_media_paths_options($dir)
     $options = array();
     // For each item in directory
     foreach ($mediadir as $entry) {
+        // For each folder, recursive search
+        if (substr($entry, 0, 1) != '.' && is_dir($dir . '/' . $entry)) {
+            $options = array_merge($options, get_media_paths_options($dir . '/' . $entry));
+        }
+
+        // Other files
         if ($is_windows) { 
             $entry = mb_convert_encoding($entry, 'UTF-8', 'ISO-8859-1'); 
         }
@@ -1625,12 +1631,6 @@ function get_media_paths_options($dir)
             if (in_array($ex, $formats)) {
                 $options[] = $dir . '/' . $entry; 
             }
-        }
-    }
-    // For each folder, recursive function
-    foreach ($mediadir as $entry) {
-        if (substr($entry, 0, 1) != '.' && is_dir($dir . '/' . $entry)) {
-            $options = array_merge($options, get_media_paths_options($dir . '/' . $entry));
         }
     }
     return $options;
@@ -1643,16 +1643,14 @@ function get_media_paths_options($dir)
  */
 function get_media_paths()
 {
-    $exists = file_exists('media');
     $answer = array(
         "base_path" => basename(getcwd())
     );
-    if ($exists && !is_dir('media')) {
-        $answer["error"] = "not_directory";
+    if (!file_exists('media')) {
+        $answer["error"] = "does_not_exist";
+    } else if (!is_dir('media')) {
+        $answer["error"] = "not_a_directory";
     } else {
-        $answer["error"] = "do_not_exist";
-    }
-    if (!array_key_exists("error", $answer)) {
         $answer["paths"] = get_media_paths_options('media');
     }
     return $answer;
@@ -1670,7 +1668,11 @@ function selectmediapathoptions($dir): string
     $r = '<option disabled="disabled">-- Directory: ' . tohtml($dir) . ' --</option>';
     $options = get_media_paths_options($dir);
     foreach ($options as $op) {
-        $r .= '<option value="' . tohtml($op) . '">' . tohtml($op) . '</option>';
+        if (is_dir($op)) {
+            $r .= '<option disabled="disabled">-- Directory: ' . tohtml($op) . '--</option>';
+        } else {
+            $r .= '<option value="' . tohtml($op) . '">' . tohtml($op) . '</option>';
+        }
     }
     return $r;
 }
@@ -1684,31 +1686,37 @@ function selectmediapathoptions($dir): string
  */
 function selectmediapath($f): string 
 {
-    $exists = file_exists('media');
-    if ($exists) {
-        if (is_dir('media')) { 
-            $msg = ''; 
-        } else { 
-            $msg = '<br />[Error: "../' . basename(getcwd()) . '/media" exists, but it is not a directory.]'; 
+    $media = get_media_paths();
+    if (array_key_exists("error", $media)) {
+        if ($media["error"] == "not_a_directory") {
+            $msg = '<br />[Error: "../' . $media["base_path"] . '/media" exists, but it is not a directory.]';
+        } else if ($media["error"] == "does_not_exist") {
+            $msg = '<br />[Directory "../' . $media["base_path"] . '/media" does not yet exist.]';
         }
     } else {
-        $msg = '<br />[Directory "../' . basename(getcwd()) . '/media" does not yet exist.]';
+        $msg = "";
     }
     $r = '<p>
-    YouTube, Dailymotion, Vimeo or choose a file in "../' . basename(getcwd()) . '/media"
-    <br />
-    (only mp3, mp4, ogg, wav, webm files shown):
-    </p> ' . $msg;
-    if ($msg == '') {
-        $r .= '
-        <select name="Dir" onchange="{val=this.form.Dir.options[this.form.Dir.selectedIndex].value; if (val != \'\') this.form.' 
-            . $f . '.value = val; this.form.Dir.value=\'\';}" style="width: 200px;">
-            <option value="">[Choose...]</option>' . 
-            selectmediapathoptions('media') . 
-        '</select> ';
+        YouTube, Dailymotion, Vimeo or choose a file in "../' . $media["base_path"] . '/media"
+        <br />
+        (only mp3, mp4, ogg, wav, webm files shown):
+    </p>
+    <p style="display: none;" id="mediaSelectErrorMessage">' . 
+    $msg . 
+    '</p>
+    <img style="float: right; display: none;" id="mediaSelectLoadingImg" src="icn/waiting2.gif" />
+    <select name="Dir" style="display: none; width: 200px;" 
+    onchange="{val=this.form.Dir.options[this.form.Dir.selectedIndex].value; if (val != \'\') this.form.' 
+        . $f . '.value = val; this.form.Dir.value=\'\';}">
+        <option value="">[Choose...]</option>';
+    if (!array_key_exists("error", $media)) {
+        $r .= selectmediapathoptions('media');
     }
-    $r .= '<span class="click" onclick="do_ajax_update_media_select();" style="margin-left: 16px;">
-        <img src="icn/arrow-circle-135.png" title="Refresh Media Selection" alt="Refresh Media Selection" /> Refresh</span>';
+    $r .= '</select>
+    <span class="click" onclick="do_ajax_update_media_select();" style="margin-left: 16px;">
+        <img src="icn/arrow-circle-135.png" title="Refresh Media Selection" alt="Refresh Media Selection" /> 
+        Refresh
+    </span>';
     return $r;
 }
 

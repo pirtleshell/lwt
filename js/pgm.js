@@ -161,7 +161,12 @@ if(e.which==69||e.which==71){let url='';if(curr.hasClass('mword')){url='edit_mwo
 showRightFrames(url);return!1}
 return!0}
 function do_ajax_save_setting(k,v){$.post('inc/ajax.php',{action:'',action_type:'save_setting',k:k,v:v})}
-function do_ajax_update_media_select(){$('#mediaselect').html('&nbsp; <img src="icn/waiting2.gif" />');$.post('inc/ajax_update_media_select.php',function(data){$('#mediaselect').html(data)})}
+function quick_select_to_input(select_elem,input_elem){let val=select_elem.options[select_elem.selectedIndex].value;if(val!='')
+input_elem.value=val;select_elem.value=''}
+function select_media_path(answer){let options='';for(let i=0;i<answer.paths.length;i++){if(!1&&is_dir(answer.paths[i])){options+='<option disabled="disabled">-- Directory: '+answer.paths[i]+'--</option>'}else{options+='<option value="'+answer.paths[i]+'">'+answer.paths[i]+'</option>'}}
+return options}
+function do_ajax_update_media_select(target){$('#mediaSelectErrorMessage').css("display","none");$('#mediaselect select').css("display","none");$('#mediaSelectLoadingImg').css("display","inherit");$.get('inc/ajax.php',{action:"query",action_type:"media_paths"},function(data){$('#mediaSelectLoadingImg').css("display","none");if(data.error!==undefined){let msg;if(data.error=="not_a_directory"){msg='[Error: "../'+data.base_path+'/media" exists, but it is not a directory.]'}else if(data.error=="does_not_exist"){msg='[Directory "../'+data.base_path+'/media" does not yet exist.]'}else{msg="[Unknown error!]"}
+$('#mediaSelectErrorMessage').text(msg);$('#mediaSelectErrorMessage').css("display","inherit")}else{$('#mediaselect select').html(select_media_path(data));$('#mediaselect select').css("display","inherit")}},"json")}
 function do_ajax_show_sentences(lang,word,ctl,woid){$('#exsent').html('<img src="icn/waiting2.gif" />');$.post('inc/ajax_show_sentences.php',{lang:lang,word:word,ctl:ctl,woid:woid},function(data){$('#exsent').html(data)})}
 function do_ajax_show_similar_terms(){$('#simwords').html('<img src="icn/waiting2.gif" />');$.post('inc/ajax.php',{"action":"simterms","action_type":"simterms","simterms_lgid":$('#langfield').val(),"simterms_word":$('#wordfield').val()},function(data){$('#simwords').html(data)})}
 function do_ajax_word_counts(){const t=$('.markcheck').map(function(){return $(this).val()}).get().join(',');$.get('inc/ajax.php',{action:"query",action_type:"texts_statistics",texts_id:t},function(data){WORDCOUNTS=data;word_count_click();$('.barchart').removeClass('hide')},'json')}

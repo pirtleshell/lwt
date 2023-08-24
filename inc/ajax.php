@@ -145,7 +145,18 @@ function get_texts_statistics($get_req)
     return json_encode(return_textwordcount($get_req["texts_id"]));
 }
 
+/**
+ * List the audio files in the media folder.
+ */
+function media_paths($get_req) {
+    chdir("..");
+    return json_encode(get_media_paths());
+}
 
+
+/**
+ * Error message when the provided action_type does not match anything known.
+ */
 function unknown_get_action_type($get_req)
 {
     return 'Action type of type "' . $get_req["action_type"] . '" with action "' . $get_req["action"] . '" does not exist!'; 
@@ -298,6 +309,9 @@ if (isset($_GET['action'])) {
                 break;
             case "texts_statistics":
                 echo get_texts_statistics($_GET);
+                break;
+            case "media_paths":
+                echo media_paths($_GET);
                 break;
             default:
                 echo unknown_get_action_type($_GET);
