@@ -1188,18 +1188,23 @@ function do_ajax_show_similar_terms () {
  */
 function do_ajax_word_counts () {
   const t = $('.markcheck').map(function () { 
-    return $(this).val(); })
-    .get().join(',');
-  $.post(
-    'inc/ajax_word_counts.php', 
-    { id: t },
+    return $(this).val(); 
+  })
+  .get().join(',');
+  $.get(
+    'inc/ajax.php', 
+    {
+      action: "query",
+      action_type: "texts_statistics",
+      texts_id: t 
+    },
     function (data) {
       WORDCOUNTS = data;
       word_count_click();
       $('.barchart').removeClass('hide');
-    }, 
+    },
     'json'
-    );
+  );
 }
 
 /**

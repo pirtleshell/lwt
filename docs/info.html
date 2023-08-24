@@ -1875,6 +1875,8 @@ It features the following interaction:
 <code>phonetic_reading</code>: phonetic reading of a text.</li>
 <li>
 <code>theme_path</code>: theming path for a file.</li>
+<li>
+<code>texts_statistics</code>: various words statistics for each text.</li>
 </ul>
 </li>
 <li>On POST, <code>action_type</code> can be:
@@ -1954,6 +1956,8 @@ the intendended page. Same goes for "New Text" on "Archived Texts" page.</li>
 <code>inc/ajax_save_setting.php</code> should be accessed through <code>action_type=save_setting</code>, same arguments.</li>
 <li>
 <code>inc/ajax_save_text_position.php</code> should be accessed through <code>action=reading_position</code>, arguments changed.</li>
+<li>
+<code>inc/ajax_word_counts.php</code> should be accessed through <code>action=texts_statistics</code>, on GET. Argument <code>id</code> is now <code>texts_id</code>.</li>
 </ul>
 </li>
 </ul>

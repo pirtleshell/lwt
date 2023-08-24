@@ -2,8 +2,6 @@
 
 namespace Lwt\Ajax;
 
-use function SaveSetting\save;
-
 require_once 'session_utility.php';
 require_once __DIR__ . '/simterms.php';
 require_once '../do_test_test.php';
@@ -129,9 +127,7 @@ function get_phonetic_reading($get_req)
 /**
  * Get the file path using theme.
  * 
- * @param string $path Standard file path.
- * 
- * @return string array Get request with field "path", relative filepath using theme.
+ * @param array $get_req Get request with field "path", relative filepath using theme.
  */
 function get_theme_path($get_req)
 {
@@ -139,6 +135,21 @@ function get_theme_path($get_req)
     return get_file_path($get_req['path']);
 }
 
+/**
+ * Return statistics about a group of text.
+ * 
+ * @param array $get_req Get request with field "texts_id", texts ID.
+ */
+function get_texts_statistics($get_req)
+{
+    return json_encode(return_textwordcount($get_req["texts_id"]));
+}
+
+
+function unknown_get_action_type($get_req)
+{
+    return 'Action type of type "' . $get_req["action_type"] . '" with action "' . $get_req["action"] . '" does not exist!'; 
+}
 
 // --------------------------------- POST REQUESTS ---------------------
 
@@ -259,6 +270,14 @@ function save_setting($post_req)
     saveSetting($post_req['k'], $post_req['v']);
 }
 
+/**
+ * Notify of an error on POST method.
+ */
+function unknown_post_action_type($post_req)
+{
+    return 'Action type of type "' . $post_req["action_type"] . '" with action "' . $post_req["action"] . '" does not exist!'; 
+}
+
 
 if (isset($_GET['action'])) {
     if ($_GET['action'] == 'query') {
@@ -277,6 +296,12 @@ if (isset($_GET['action'])) {
             case 'theme_path':
                 echo get_theme_path($_GET);
                 break;
+            case "texts_statistics":
+                echo get_texts_statistics($_GET);
+                break;
+            default:
+                echo unknown_get_action_type($_GET);
+                break;
         }
     }
 } else if (isset($_POST['action'])) {
@@ -284,10 +309,13 @@ if (isset($_GET['action'])) {
         case "reading_position":
             switch ($_POST['action_type']) {
                 case "text":
-                    set_text_position($_POST);
+                    echo set_text_position($_POST);
                     break;
                 case "audio":
-                    set_audio_position($_POST);
+                    echo set_audio_position($_POST);
+                    break;
+                default:
+                    echo unknown_post_action_type($_POST);
                     break;
             }
             break;
@@ -313,6 +341,9 @@ if (isset($_GET['action'])) {
                     break;
                 case 'save_setting':
                     echo save_setting($_POST);
+                    break;
+                default:
+                    echo unknown_post_action_type($_POST);
                     break;
             }
             break;

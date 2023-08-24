@@ -21,11 +21,13 @@ require_once __DIR__ . '/session_utility.php';
  * @param string $textid Text IDs seperated by comma
  * 
  * @return void
+ * 
+ * @deprecated 2.9.0 Use the REST API instead
  */
 function do_ajax_word_counts($textid)
 {
     chdir('..');
-    textwordcount($textid);
+    echo json_encode(return_textwordcount($textid));
 }
 
 if (isset($_POST["id"])) {
