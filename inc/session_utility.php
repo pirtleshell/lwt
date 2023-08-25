@@ -1694,7 +1694,7 @@ function selectmediapathoptions($dir): string
 /**
  * Select the path for a media (audio or video).
  *
- * @param string $f HTML field name for media string in form
+ * @param string $f HTML field name for media string in form. Will be used as this.form.[$f] in JS.
  *
  * @return string HTML-formatted string for media selection
  */
@@ -1706,18 +1706,9 @@ function selectmediapath($f): string
         <br />
         (only mp3, mp4, ogg, wav, webm files shown):
     </p>
-    <p style="display: none;" id="mediaSelectErrorMessage">';
-    if (array_key_exists("error", $media)) {
-        if ($media["error"] == "not_a_directory") {
-            $r .= '<br />[Error: "../' . $media["base_path"] . '/media" exists, but it is not a directory.]';
-        } else if ($media["error"] == "does_not_exist") {
-            $r .= '<br />[Directory "../' . $media["base_path"] . '/media" does not yet exist.]';
-        }
-    }
-    $errored = array_key_exists("error", $media);
-    $r .= '</p>
+    <p style="display: none;" id="mediaSelectErrorMessage"></p>
     <img style="float: right; display: none;" id="mediaSelectLoadingImg" src="icn/waiting2.gif" />
-    <select name="Dir" style="display: ' . ($errored ? 'none': 'inherit') . '; width: 200px;" 
+    <select name="Dir" style="display: none; width: 200px;" 
     onchange="{val=this.form.Dir.options[this.form.Dir.selectedIndex].value; if (val != \'\') this.form.' 
         . $f . '.value = val; this.form.Dir.value=\'\';}">
     </select>
