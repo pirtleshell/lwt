@@ -3627,6 +3627,97 @@ function texttodocount2($textid): string
     return $res;
 }
 
+
+function sentences_from_word($wid, $wordlc, $lang)
+{
+    global $tbpref;
+    $mecab_str = null;
+    if (empty($wid)) {
+        $sql = "SELECT DISTINCT SeID, SeText 
+        FROM {$tbpref}sentences, {$tbpref}textitems2 
+        WHERE LOWER(Ti2Text) = " . convert_string_to_sqlsyntax($wordlc) . " 
+        AND Ti2WoID = 0 AND SeID = Ti2SeID AND SeLgID = $lang 
+        ORDER BY CHAR_LENGTH(SeText), SeText 
+        LIMIT 0,20";
+    } else if ($wid == -1) {
+        $res = do_mysqli_query(
+            "SELECT LgRegexpWordCharacters, LgRemoveSpaces 
+            FROM {$tbpref}languages 
+            WHERE LgID = $lang"
+        );
+        $record = mysqli_fetch_assoc($res);
+        mysqli_free_result($res);
+        $removeSpaces = $record["LgRemoveSpaces"];
+        if ('MECAB'== strtoupper(trim($record["LgRegexpWordCharacters"]))) {
+            $mecab_file = sys_get_temp_dir() . "/" . $tbpref . "mecab_to_db.txt";
+            //$mecab_args = ' -F {%m%t\\t -U {%m%t\\t -E \\n ';
+            // For instance, "このラーメン" becomes "この    6    68\nラーメン    7    38"
+            $mecab_args = ' -F %m\\t%t\\t%h\\n -U %m\\t%t\\t%h\\n -E EOP\\t3\\t7\\n ';
+            if (file_exists($mecab_file)) { 
+                unlink($mecab_file); 
+            }
+            $fp = fopen($mecab_file, 'w');
+            fwrite($fp, $wordlc . "\n");
+            fclose($fp);
+            $mecab = get_mecab_path($mecab_args);
+            $handle = popen($mecab . $mecab_file, "r");
+            if (!feof($handle)) {
+                $row = fgets($handle, 256);
+                // Format string removing numbers. 
+                // MeCab tip: 2 = hiragana, 6 = kanji, 7 = katakana
+                $mecab_str = "\t" . preg_replace_callback(
+                    '([267]?)\t[0-9]+$', 
+                    function ($matches) {
+                        return isset($matches[1]) ? "\t" : "";
+                    }, 
+                    $row
+                ); 
+            }
+            pclose($handle);
+            unlink($mecab_file);
+            $sql 
+            = "SELECT SeID, SeText, 
+            concat(
+                '\\t',
+                group_concat(Ti2Text ORDER BY Ti2Order asc SEPARATOR '\\t'),
+                '\\t'
+            ) val
+             FROM {$tbpref}sentences, {$tbpref}textitems2
+             WHERE lower(SeText)
+             LIKE " . convert_string_to_sqlsyntax("%$wordlc%") . "
+             AND SeID = Ti2SeID AND SeLgID = $lang AND Ti2WordCount<2
+             GROUP BY SeID HAVING val 
+             LIKE " . convert_string_to_sqlsyntax_notrim_nonull("%$mecab_str%") . "
+             ORDER BY CHAR_LENGTH(SeText), SeText 
+             LIMIT 0,20";
+        } else {
+            if ($removeSpaces == 1) {
+                $pattern = convert_string_to_sqlsyntax($wordlc);
+            } else {
+                $pattern = convert_regexp_to_sqlsyntax(
+                    '(^|[^' . $record["LgRegexpWordCharacters"] . '])'
+                     . remove_spaces($wordlc, $removeSpaces)
+                     . '([^' . $record["LgRegexpWordCharacters"] . ']|$)'
+                );
+            }
+            $sql 
+            = "SELECT DISTINCT SeID, SeText
+             FROM {$tbpref}sentences
+             WHERE SeText RLIKE $pattern AND SeLgID = $lang
+             ORDER BY CHAR_LENGTH(SeText), SeText 
+             LIMIT 0,20";
+        }
+    } else {
+        $sql 
+        = "SELECT DISTINCT SeID, SeText
+         FROM {$tbpref}sentences, {$tbpref}textitems2
+         WHERE Ti2WoID = $wid AND SeID = Ti2SeID AND SeLgID = $lang
+         ORDER BY CHAR_LENGTH(SeText), SeText
+         LIMIT 0,20";
+    }
+    return do_mysqli_query($sql);
+}
+
 /**
  * Format the sentence(s) $seid containing $wordlc highlighting $wordlc.
  * 
@@ -3738,6 +3829,25 @@ function getSentence($seid, $wordlc, $mode): array
     return array($se, $sejs);
 }
 
+
+function get20Sentences_raw($lang, $wordlc, $wid, $mode): array 
+{
+    $r = array();
+    $res = sentences_from_word($wid, $wordlc, $lang);
+    $last = '';
+    while ($record = mysqli_fetch_assoc($res)) {
+        if ($last != $record['SeText']) {
+            $sent = getSentence($record['SeID'], $wordlc, $mode);
+            if (mb_strstr($sent[1], '}', false, 'UTF-8')) {
+                $r[] = $sent;
+            }
+        }
+        $last = $record['SeText'];
+    }
+    mysqli_free_result($res);
+    return $r;
+}
+
 /**
  * Show 20 sentences containg $wordlc.
  *
@@ -3756,95 +3866,10 @@ function getSentence($seid, $wordlc, $mode): array
  */
 function get20Sentences($lang, $wordlc, $wid, $jsctlname, $mode): string 
 {
-    global $tbpref;
     $r = '<p><b>Sentences in active texts with <i>' . tohtml($wordlc) . '</i></b></p>
     <p>(Click on <img src="icn/tick-button.png" title="Choose" alt="Choose" /> 
     to copy sentence into above term)</p>';
-    $mecab_str = null;
-    if (empty($wid)) {
-        $sql = "SELECT DISTINCT SeID, SeText 
-        FROM {$tbpref}sentences, {$tbpref}textitems2 
-        WHERE LOWER(Ti2Text) = " . convert_string_to_sqlsyntax($wordlc) . " 
-        AND Ti2WoID = 0 AND SeID = Ti2SeID AND SeLgID = $lang 
-        ORDER BY CHAR_LENGTH(SeText), SeText 
-        LIMIT 0,20";
-    } else if ($wid == -1) {
-        $res = do_mysqli_query(
-            "SELECT LgRegexpWordCharacters, LgRemoveSpaces 
-            FROM {$tbpref}languages 
-            WHERE LgID = $lang"
-        );
-        $record = mysqli_fetch_assoc($res);
-        mysqli_free_result($res);
-        $removeSpaces = $record["LgRemoveSpaces"];
-        if ('MECAB'== strtoupper(trim($record["LgRegexpWordCharacters"]))) {
-            $mecab_file = sys_get_temp_dir() . "/" . $tbpref . "mecab_to_db.txt";
-            //$mecab_args = ' -F {%m%t\\t -U {%m%t\\t -E \\n ';
-            // For instance, "このラーメン" becomes "この    6    68\nラーメン    7    38"
-            $mecab_args = ' -F %m\\t%t\\t%h\\n -U %m\\t%t\\t%h\\n -E EOP\\t3\\t7\\n ';
-            if (file_exists($mecab_file)) { 
-                unlink($mecab_file); 
-            }
-            $fp = fopen($mecab_file, 'w');
-            fwrite($fp, $wordlc . "\n");
-            fclose($fp);
-            $mecab = get_mecab_path($mecab_args);
-            $handle = popen($mecab . $mecab_file, "r");
-            if (!feof($handle)) {
-                $row = fgets($handle, 256);
-                // Format string removing numbers. 
-                // MeCab tip: 2 = hiragana, 6 = kanji, 7 = katakana
-                $mecab_str = "\t" . preg_replace_callback(
-                    '([267]?)\t[0-9]+$', 
-                    function ($matches) {
-                        return isset($matches[1]) ? "\t" : "";
-                    }, 
-                    $row
-                ); 
-            }
-            pclose($handle);
-            unlink($mecab_file);
-            $sql 
-            = "SELECT SeID, SeText, 
-            concat(
-                '\\t',
-                group_concat(Ti2Text ORDER BY Ti2Order asc SEPARATOR '\\t'),
-                '\\t'
-            ) val
-             FROM {$tbpref}sentences, {$tbpref}textitems2
-             WHERE lower(SeText)
-             LIKE " . convert_string_to_sqlsyntax("%$wordlc%") . "
-             AND SeID = Ti2SeID AND SeLgID = $lang AND Ti2WordCount<2
-             GROUP BY SeID HAVING val 
-             LIKE " . convert_string_to_sqlsyntax_notrim_nonull("%$mecab_str%") . "
-             ORDER BY CHAR_LENGTH(SeText), SeText 
-             LIMIT 0,20";
-        } else {
-            if ($removeSpaces == 1) {
-                $pattern = convert_string_to_sqlsyntax($wordlc);
-            } else {
-                $pattern = convert_regexp_to_sqlsyntax(
-                    '(^|[^' . $record["LgRegexpWordCharacters"] . '])'
-                     . remove_spaces($wordlc, $removeSpaces)
-                     . '([^' . $record["LgRegexpWordCharacters"] . ']|$)'
-                );
-            }
-            $sql 
-            = "SELECT DISTINCT SeID, SeText
-             FROM {$tbpref}sentences
-             WHERE SeText RLIKE $pattern AND SeLgID = $lang
-             ORDER BY CHAR_LENGTH(SeText), SeText 
-             LIMIT 0,20";
-        }
-    } else {
-        $sql 
-        = "SELECT DISTINCT SeID, SeText
-         FROM {$tbpref}sentences, {$tbpref}textitems2
-         WHERE Ti2WoID = $wid AND SeID = Ti2SeID AND SeLgID = $lang
-         ORDER BY CHAR_LENGTH(SeText), SeText
-         LIMIT 0,20";
-    }
-    $res = do_mysqli_query($sql);
+    $res = sentences_from_word($wid, $wordlc, $lang);
     $r .= '<p>';
     $last = '';
     while ($record = mysqli_fetch_assoc($res)) {
