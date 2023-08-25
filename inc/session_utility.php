@@ -3768,11 +3768,11 @@ function get20Sentences($lang, $wordlc, $wid, $jsctlname, $mode): string
         AND Ti2WoID = 0 AND SeID = Ti2SeID AND SeLgID = $lang 
         ORDER BY CHAR_LENGTH(SeText), SeText 
         LIMIT 0,20";
-    } else if ($wid==-1) {
+    } else if ($wid == -1) {
         $res = do_mysqli_query(
-            'SELECT LgRegexpWordCharacters, LgRemoveSpaces 
-            FROM ' . $tbpref . 'languages 
-            WHERE LgID = ' . $lang
+            "SELECT LgRegexpWordCharacters, LgRemoveSpaces 
+            FROM {$tbpref}languages 
+            WHERE LgID = $lang"
         );
         $record = mysqli_fetch_assoc($res);
         mysqli_free_result($res);
@@ -3805,29 +3805,29 @@ function get20Sentences($lang, $wordlc, $wid, $jsctlname, $mode): string
             pclose($handle);
             unlink($mecab_file);
             $sql 
-            = 'SELECT SeID, SeText, 
+            = "SELECT SeID, SeText, 
             concat(
-                "\\t",
-                group_concat(Ti2Text ORDER BY Ti2Order asc SEPARATOR "\\t"),
-                "\\t"
+                '\\t',
+                group_concat(Ti2Text ORDER BY Ti2Order asc SEPARATOR '\\t'),
+                '\\t'
             ) val
-             FROM ' . $tbpref . 'sentences, ' . $tbpref . 'textitems2
+             FROM {$tbpref}sentences, {$tbpref}textitems2
              WHERE lower(SeText)
-             LIKE ' . convert_string_to_sqlsyntax("%$wordlc%") . '
-             AND SeID = Ti2SeID AND SeLgID = ' . $lang . ' AND Ti2WordCount<2
+             LIKE " . convert_string_to_sqlsyntax("%$wordlc%") . "
+             AND SeID = Ti2SeID AND SeLgID = $lang AND Ti2WordCount<2
              GROUP BY SeID HAVING val 
-             LIKE ' . convert_string_to_sqlsyntax_notrim_nonull("%$mecab_str%") . '
+             LIKE " . convert_string_to_sqlsyntax_notrim_nonull("%$mecab_str%") . "
              ORDER BY CHAR_LENGTH(SeText), SeText 
-             LIMIT 0,20';
+             LIMIT 0,20";
         } else {
-            if (!($removeSpaces==1)) {
+            if ($removeSpaces == 1) {
+                $pattern = convert_string_to_sqlsyntax($wordlc);
+            } else {
                 $pattern = convert_regexp_to_sqlsyntax(
                     '(^|[^' . $record["LgRegexpWordCharacters"] . '])'
                      . remove_spaces($wordlc, $removeSpaces)
                      . '([^' . $record["LgRegexpWordCharacters"] . ']|$)'
                 );
-            } else {
-                $pattern = convert_string_to_sqlsyntax($wordlc);
             }
             $sql 
             = "SELECT DISTINCT SeID, SeText
