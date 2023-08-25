@@ -1877,6 +1877,8 @@ It features the following interaction:
 <code>theme_path</code>: theming path for a file.</li>
 <li>
 <code>texts_statistics</code>: various words statistics for each text.</li>
+<li>
+<code>media_paths</code>: paths of files and folders in the <code>/media</code> folder.</li>
 </ul>
 </li>
 <li>On POST, <code>action_type</code> can be:
@@ -1935,6 +1937,7 @@ the intendended page. Same goes for "New Text" on "Archived Texts" page.</li>
 <li>It was impossible to copy a similar term that had apostrophes (<a href="https://github.com/HugoFara/lwt/issues/127">#127</a>).</li>
 <li>A deprecation warning for <code>trim</code> was sent in simterms when no similar term was found.</li>
 <li>During a text creation, the <code>media_uri</code> property of <code>Text</code> was used instead of <code>source</code>. Thanks to <a href="https://github.com/hangug-eo">@hangug-eo</a> for his PR <a href="https://github.com/HugoFara/lwt/pull/133">#133</a>!</li>
+<li>When looking for an audio file on file edit/creation, the displayed path may have been wrong for characters between 0x80 and 0x9F.</li>
 </ul>
 <h4>Deprecated</h4>
 <ul>
@@ -1958,6 +1961,8 @@ the intendended page. Same goes for "New Text" on "Archived Texts" page.</li>
 <code>inc/ajax_save_text_position.php</code> should be accessed through <code>action=reading_position</code>, arguments changed.</li>
 <li>
 <code>inc/ajax_word_counts.php</code> should be accessed through <code>action=texts_statistics</code>, on GET. Argument <code>id</code> is now <code>texts_id</code>.</li>
+<li>
+<code>imc/ajax_update_media_select.php</code> should be accessed through <code>action=media_paths</code>.</li>
 </ul>
 </li>
 </ul>

@@ -1186,6 +1186,34 @@ function select_media_path(paths, folders, base_path)
 }
 
 /**
+ * Process the received data from media selection query
+ * 
+ * @param {Object} data Received data as a JSON object 
+ */
+function media_select_receive_data(data) {
+    $('#mediaSelectLoadingImg').css("display", "none");
+    if (data["error"] !== undefined) {
+      let msg;
+      if (data["error"] == "not_a_directory") {
+        msg = '[Error: "../' + data["base_path"] + '/media" exists, but it is not a directory.]';
+      } else if (data["error"] == "does_not_exist") {
+        msg = '[Directory "../' + data["base_path"] + '/media" does not yet exist.]';
+      } else {
+        msg = "[Unknown error!]";
+      }
+      $('#mediaSelectErrorMessage').text(msg);
+      $('#mediaSelectErrorMessage').css("display", "inherit");
+    } else {
+      const options = select_media_path(data["paths"], data["folders"], data["base_path"]);
+      $('#mediaselect select').empty();
+      for (let i = 0; i < options.length; i++) {
+        $('#mediaselect select').append(options[i]);
+      }
+      $('#mediaselect select').css("display", "inherit");
+    }
+}
+
+/**
  * Perform an AJAX query to retrieve and display the media files path.
  */
 function do_ajax_update_media_select () {
@@ -1198,28 +1226,7 @@ function do_ajax_update_media_select () {
       action: "query",
       action_type: "media_paths"
     },
-    function (data) {
-      $('#mediaSelectLoadingImg').css("display", "none");
-      if (data["error"] !== undefined) {
-        let msg;
-        if (data["error"] == "not_a_directory") {
-          msg = '[Error: "../' + data["base_path"] + '/media" exists, but it is not a directory.]';
-        } else if (data["error"] == "does_not_exist") {
-          msg = '[Directory "../' + data["base_path"] + '/media" does not yet exist.]';
-        } else {
-          msg = "[Unknown error!]";
-        }
-        $('#mediaSelectErrorMessage').text(msg);
-        $('#mediaSelectErrorMessage').css("display", "inherit");
-      } else {
-        const options = select_media_path(data["paths"], data["folders"], data["base_path"]);
-        $('#mediaselect select').empty();
-        for (let i = 0; i < options.length; i++) {
-          $('#mediaselect select').append(options[i]);
-        }
-        $('#mediaselect select').css("display", "inherit");
-      }
-    },
+    media_select_receive_data,
     "json"
   );
 }

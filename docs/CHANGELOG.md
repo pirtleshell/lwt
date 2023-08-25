@@ -25,6 +25,7 @@ It features the following interaction:
     * ``phonetic_reading``: phonetic reading of a text.
     * ``theme_path``: theming path for a file.
     * ``texts_statistics``: various words statistics for each text.
+    * ``media_paths``: paths of files and folders in the ``/media`` folder.
   * On POST, ``action_type`` can be:
     * ``text`` of ``audio`` change the reading position for a text or it's audio.
     * ``simterms``: similar terms to a given term
@@ -75,6 +76,7 @@ the intendended page. Same goes for "New Text" on "Archived Texts" page.
   * ``inc/ajax_save_setting.php`` should be accessed through ``action_type=save_setting``, same arguments.
   * ``inc/ajax_save_text_position.php`` should be accessed through ``action=reading_position``, arguments changed.
   * ``inc/ajax_word_counts.php`` should be accessed through ``action=texts_statistics``, on GET. Argument ``id`` is now ``texts_id``.
+  * ``imc/ajax_update_media_select.php`` should be accessed through ``action=media_paths``.
 
 ## 2.8.1-fork (April 14 2023)
 

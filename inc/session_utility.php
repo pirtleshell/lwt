@@ -1720,18 +1720,14 @@ function selectmediapath($f): string
     <select name="Dir" style="display: ' . ($errored ? 'none': 'inherit') . '; width: 200px;" 
     onchange="{val=this.form.Dir.options[this.form.Dir.selectedIndex].value; if (val != \'\') this.form.' 
         . $f . '.value = val; this.form.Dir.value=\'\';}">
-        <option value="">[Choose...]</option>';
-    if (!$errored) {
-        $r .= selectmediapathoptions('media');
-    }
-    $r .= '</select>
+    </select>
     <span class="click" onclick="do_ajax_update_media_select();" style="margin-left: 16px;">
         <img src="icn/arrow-circle-135.png" title="Refresh Media Selection" alt="Refresh Media Selection" /> 
         Refresh
     </span>
     <script type="text/javascript">
-        // Remove redundant JS call in the future
-        do_ajax_update_media_select();
+        // Populate fields with data
+        media_select_receive_data(' . json_encode($media) . ');
     </script>';
     return $r;
 }
