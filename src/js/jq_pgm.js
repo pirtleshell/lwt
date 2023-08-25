@@ -1159,29 +1159,36 @@ function quick_select_to_input(select_elem, input_elem)
 /**
  * Return an HTML group of options to add to a select field.
  * 
- * @param {Object} answer  
- * @returns {string}
+ * @param {string[]} paths     All paths (files and folders)
+ * @param {string[]} folders   Folders paths, should be a subset of paths
+ * @param {string}   base_path Base path for LWT to append
+ * 
+ * @returns {HTMLOptionElement[]} List of options to append to the select.
  */
-function select_media_path(answer)
+function select_media_path(paths, folders, base_path)
 {
-  //document.createElement('option')
-  let options = '<option value="">[Choose...]</option>';
-  for (let i = 0; i < answer["paths"].length; i++) {
-    if (answer["folders"].includes(answer["paths"][i])) {
-      options += '<option disabled="disabled">-- Directory: ' + answer["paths"][i] + '--</option>';
+  let options = [], temp_option = document.createElement('option');
+  temp_option.value = "";
+  temp_option.text = "[Choose...]";
+  options.push(temp_option);
+  for (let i = 0; i < paths.length; i++) {
+    temp_option = document.createElement('option')
+    if (folders.includes(paths[i])) {
+      temp_option.setAttribute("disabled", "disabled");
+      temp_option.text = '-- Directory: ' + paths[i] + '--';
     } else {
-      options += '<option value="' + answer["base_path"] + "/" + answer["paths"][i] + '">' + answer["paths"][i] + '</option>';
+      temp_option.value = base_path + "/" + paths[i];
+      temp_option.text = paths[i];
     }
+    options.push(temp_option);
   }
   return options;
 }
 
 /**
  * Perform an AJAX query to retrieve and display the media files path.
- * 
- * @param {Element} target 
  */
-function do_ajax_update_media_select (target) {
+function do_ajax_update_media_select () {
   $('#mediaSelectErrorMessage').css("display", "none");
   $('#mediaselect select').css("display", "none");
   $('#mediaSelectLoadingImg').css("display", "inherit");
@@ -1193,7 +1200,6 @@ function do_ajax_update_media_select (target) {
     },
     function (data) {
       $('#mediaSelectLoadingImg').css("display", "none");
-      console.log(data);
       if (data["error"] !== undefined) {
         let msg;
         if (data["error"] == "not_a_directory") {
@@ -1206,7 +1212,11 @@ function do_ajax_update_media_select (target) {
         $('#mediaSelectErrorMessage').text(msg);
         $('#mediaSelectErrorMessage').css("display", "inherit");
       } else {
-        $('#mediaselect select').html(select_media_path(data));
+        const options = select_media_path(data["paths"], data["folders"], data["base_path"]);
+        $('#mediaselect select').empty();
+        for (let i = 0; i < options.length; i++) {
+          $('#mediaselect select').append(options[i]);
+        }
         $('#mediaselect select').css("display", "inherit");
       }
     },

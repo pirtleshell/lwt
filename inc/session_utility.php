@@ -1714,13 +1714,14 @@ function selectmediapath($f): string
             $r .= '<br />[Directory "../' . $media["base_path"] . '/media" does not yet exist.]';
         }
     }
+    $errored = array_key_exists("error", $media);
     $r .= '</p>
     <img style="float: right; display: none;" id="mediaSelectLoadingImg" src="icn/waiting2.gif" />
-    <select name="Dir" style="display: none; width: 200px;" 
+    <select name="Dir" style="display: ' . ($errored ? 'none': 'inherit') . '; width: 200px;" 
     onchange="{val=this.form.Dir.options[this.form.Dir.selectedIndex].value; if (val != \'\') this.form.' 
         . $f . '.value = val; this.form.Dir.value=\'\';}">
         <option value="">[Choose...]</option>';
-    if (!array_key_exists("error", $media)) {
+    if (!$errored) {
         $r .= selectmediapathoptions('media');
     }
     $r .= '</select>
@@ -1729,6 +1730,7 @@ function selectmediapath($f): string
         Refresh
     </span>
     <script type="text/javascript">
+        // Remove redundant JS call in the future
         do_ajax_update_media_select();
     </script>';
     return $r;
