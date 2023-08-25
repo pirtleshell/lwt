@@ -1607,33 +1607,44 @@ function getprefixes(): array
  *
  * @param string $dir Directory to search into.
  *
- * @return array File path found.
+ * @return array All paths found (matching files and folders) in "paths" and folders in "folders".
  */
-function get_media_paths_options($dir)
+function media_paths_search($dir)
 {
-    $is_windows = ("WIN" == strtoupper(substr(PHP_OS, 0, 3)));
+    $is_windows = str_starts_with(strtoupper(PHP_OS), "WIN");
     $mediadir = scandir($dir);
     $formats = array('mp3', 'mp4', 'ogg', 'wav', 'webm');
-    $options = array();
+    $paths = array(
+        "paths" => array($dir),
+        "folders" => array($dir)
+    );
     // For each item in directory
-    foreach ($mediadir as $entry) {
-        // For each folder, recursive search
-        if (substr($entry, 0, 1) != '.' && is_dir($dir . '/' . $entry)) {
-            $options = array_merge($options, get_media_paths_options($dir . '/' . $entry));
+    foreach ($mediadir as $path) {
+        if (str_starts_with($path, ".") || is_dir($dir . '/' . $path)) {
+            continue;
         }
-
-        // Other files
+        // Add files to paths
         if ($is_windows) { 
-            $entry = mb_convert_encoding($entry, 'UTF-8', 'ISO-8859-1'); 
+            $encoded = mb_convert_encoding($path, 'UTF-8', 'Windows-1252'); 
+        } else {
+            $encoded = $path;
         }
-        if (substr($entry, 0, 1) != '.' && !is_dir($dir . '/' . $entry)) {
-            $ex = strtolower(pathinfo($entry, PATHINFO_EXTENSION));
-            if (in_array($ex, $formats)) {
-                $options[] = $dir . '/' . $entry; 
-            }
+        $ex = strtolower(pathinfo($encoded, PATHINFO_EXTENSION));
+        if (in_array($ex, $formats)) {
+            $paths["paths"][] = $dir . '/' . $encoded;
         }
     }
-    return $options;
+    // Do the folder in a second time to get a better ordering
+    foreach ($mediadir as $path) {
+        if (str_starts_with($path, ".") || !is_dir($dir . '/' . $path)) {
+            continue;
+        }
+        // For each folder, recursive search
+        $subfolder_paths = media_paths_search($dir . '/' . $path);
+        $paths["folders"] = array_merge($paths["folders"], $subfolder_paths["folders"]);
+        $paths["paths"] = array_merge($paths["paths"], $subfolder_paths["paths"]);
+    }
+    return $paths;
 }
 
 /**
@@ -1651,7 +1662,9 @@ function get_media_paths()
     } else if (!is_dir('media')) {
         $answer["error"] = "not_a_directory";
     } else {
-        $answer["paths"] = get_media_paths_options('media');
+        $paths = media_paths_search('media');
+        $answer["paths"] = $paths["paths"];
+        $answer["folders"] = $paths["folders"];
     }
     return $answer;
 }
@@ -1665,10 +1678,11 @@ function get_media_paths()
  */
 function selectmediapathoptions($dir): string 
 {
-    $r = '<option disabled="disabled">-- Directory: ' . tohtml($dir) . ' --</option>';
-    $options = get_media_paths_options($dir);
-    foreach ($options as $op) {
-        if (is_dir($op)) {
+    $r = "";
+    //$r = '<option disabled="disabled">-- Directory: ' . tohtml($dir) . ' --</option>';
+    $options = media_paths_search($dir);
+    foreach ($options["paths"] as $op) {
+        if (in_array($op, $options["folders"])) {
             $r .= '<option disabled="disabled">-- Directory: ' . tohtml($op) . '--</option>';
         } else {
             $r .= '<option value="' . tohtml($op) . '">' . tohtml($op) . '</option>';
@@ -1687,23 +1701,20 @@ function selectmediapathoptions($dir): string
 function selectmediapath($f): string 
 {
     $media = get_media_paths();
-    if (array_key_exists("error", $media)) {
-        if ($media["error"] == "not_a_directory") {
-            $msg = '<br />[Error: "../' . $media["base_path"] . '/media" exists, but it is not a directory.]';
-        } else if ($media["error"] == "does_not_exist") {
-            $msg = '<br />[Directory "../' . $media["base_path"] . '/media" does not yet exist.]';
-        }
-    } else {
-        $msg = "";
-    }
     $r = '<p>
         YouTube, Dailymotion, Vimeo or choose a file in "../' . $media["base_path"] . '/media"
         <br />
         (only mp3, mp4, ogg, wav, webm files shown):
     </p>
-    <p style="display: none;" id="mediaSelectErrorMessage">' . 
-    $msg . 
-    '</p>
+    <p style="display: none;" id="mediaSelectErrorMessage">';
+    if (array_key_exists("error", $media)) {
+        if ($media["error"] == "not_a_directory") {
+            $r .= '<br />[Error: "../' . $media["base_path"] . '/media" exists, but it is not a directory.]';
+        } else if ($media["error"] == "does_not_exist") {
+            $r .= '<br />[Directory "../' . $media["base_path"] . '/media" does not yet exist.]';
+        }
+    }
+    $r .= '</p>
     <img style="float: right; display: none;" id="mediaSelectLoadingImg" src="icn/waiting2.gif" />
     <select name="Dir" style="display: none; width: 200px;" 
     onchange="{val=this.form.Dir.options[this.form.Dir.selectedIndex].value; if (val != \'\') this.form.' 
@@ -1716,7 +1727,10 @@ function selectmediapath($f): string
     <span class="click" onclick="do_ajax_update_media_select();" style="margin-left: 16px;">
         <img src="icn/arrow-circle-135.png" title="Refresh Media Selection" alt="Refresh Media Selection" /> 
         Refresh
-    </span>';
+    </span>
+    <script type="text/javascript">
+        do_ajax_update_media_select();
+    </script>';
     return $r;
 }
 

@@ -61,6 +61,7 @@ the intendended page. Same goes for "New Text" on "Archived Texts" page.
 * It was impossible to copy a similar term that had apostrophes ([#127](https://github.com/HugoFara/lwt/issues/127)).
 * A deprecation warning for ``trim`` was sent in simterms when no similar term was found.
 * During a text creation, the ``media_uri`` property of ``Text`` was used instead of ``source``. Thanks to [@hangug-eo](https://github.com/hangug-eo) for his PR [#133](https://github.com/HugoFara/lwt/pull/133)!
+* When looking for an audio file on file edit/creation, the displayed path may have been wrong for characters between 0x80 and 0x9F.
 
 ### Deprecated
 

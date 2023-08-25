@@ -1156,14 +1156,21 @@ function quick_select_to_input(select_elem, input_elem)
   select_elem.value = '';
 }
 
+/**
+ * Return an HTML group of options to add to a select field.
+ * 
+ * @param {Object} answer  
+ * @returns {string}
+ */
 function select_media_path(answer)
 {
-  let options = '';
+  //document.createElement('option')
+  let options = '<option value="">[Choose...]</option>';
   for (let i = 0; i < answer["paths"].length; i++) {
-    if (false && is_dir(answer["paths"][i])) {
+    if (answer["folders"].includes(answer["paths"][i])) {
       options += '<option disabled="disabled">-- Directory: ' + answer["paths"][i] + '--</option>';
     } else {
-      options += '<option value="' + answer["paths"][i] + '">' + answer["paths"][i] + '</option>';
+      options += '<option value="' + answer["base_path"] + "/" + answer["paths"][i] + '">' + answer["paths"][i] + '</option>';
     }
   }
   return options;
@@ -1186,6 +1193,7 @@ function do_ajax_update_media_select (target) {
     },
     function (data) {
       $('#mediaSelectLoadingImg').css("display", "none");
+      console.log(data);
       if (data["error"] !== undefined) {
         let msg;
         if (data["error"] == "not_a_directory") {
