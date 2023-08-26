@@ -3627,8 +3627,17 @@ function texttodocount2($textid): string
     return $res;
 }
 
-
-function sentences_from_word($wid, $wordlc, $lang)
+/**
+ * Perform a SQL query to find sentences containing a word.
+ * 
+ * @param int|null $wid    Word ID
+ * @param string   $wordlc Word to look for in lowercase
+ * @param int      $lid    Language ID
+ * @param int      $limit  Maximum number of sentences to return
+ * 
+ * @return mysqli_result Query
+ */
+function sentences_from_word($wid, $wordlc, $lid, $limit=-1)
 {
     global $tbpref;
     $mecab_str = null;
@@ -3636,14 +3645,13 @@ function sentences_from_word($wid, $wordlc, $lang)
         $sql = "SELECT DISTINCT SeID, SeText 
         FROM {$tbpref}sentences, {$tbpref}textitems2 
         WHERE LOWER(Ti2Text) = " . convert_string_to_sqlsyntax($wordlc) . " 
-        AND Ti2WoID = 0 AND SeID = Ti2SeID AND SeLgID = $lang 
-        ORDER BY CHAR_LENGTH(SeText), SeText 
-        LIMIT 0,20";
+        AND Ti2WoID = 0 AND SeID = Ti2SeID AND SeLgID = $lid 
+        ORDER BY CHAR_LENGTH(SeText), SeText";
     } else if ($wid == -1) {
         $res = do_mysqli_query(
             "SELECT LgRegexpWordCharacters, LgRemoveSpaces 
             FROM {$tbpref}languages 
-            WHERE LgID = $lang"
+            WHERE LgID = $lid"
         );
         $record = mysqli_fetch_assoc($res);
         mysqli_free_result($res);
@@ -3685,11 +3693,10 @@ function sentences_from_word($wid, $wordlc, $lang)
              FROM {$tbpref}sentences, {$tbpref}textitems2
              WHERE lower(SeText)
              LIKE " . convert_string_to_sqlsyntax("%$wordlc%") . "
-             AND SeID = Ti2SeID AND SeLgID = $lang AND Ti2WordCount<2
+             AND SeID = Ti2SeID AND SeLgID = $lid AND Ti2WordCount<2
              GROUP BY SeID HAVING val 
              LIKE " . convert_string_to_sqlsyntax_notrim_nonull("%$mecab_str%") . "
-             ORDER BY CHAR_LENGTH(SeText), SeText 
-             LIMIT 0,20";
+             ORDER BY CHAR_LENGTH(SeText), SeText";
         } else {
             if ($removeSpaces == 1) {
                 $pattern = convert_string_to_sqlsyntax($wordlc);
@@ -3703,18 +3710,18 @@ function sentences_from_word($wid, $wordlc, $lang)
             $sql 
             = "SELECT DISTINCT SeID, SeText
              FROM {$tbpref}sentences
-             WHERE SeText RLIKE $pattern AND SeLgID = $lang
-             ORDER BY CHAR_LENGTH(SeText), SeText 
-             LIMIT 0,20";
+             WHERE SeText RLIKE $pattern AND SeLgID = $lid
+             ORDER BY CHAR_LENGTH(SeText), SeText";
         }
     } else {
         $sql 
         = "SELECT DISTINCT SeID, SeText
          FROM {$tbpref}sentences, {$tbpref}textitems2
-         WHERE Ti2WoID = $wid AND SeID = Ti2SeID AND SeLgID = $lang
-         ORDER BY CHAR_LENGTH(SeText), SeText
-         LIMIT 0,20";
+         WHERE Ti2WoID = $wid AND SeID = Ti2SeID AND SeLgID = $lid
+         ORDER BY CHAR_LENGTH(SeText), SeText";
     }
+    if ($limit)
+        $sql .= " LIMIT 0,$limit";
     return do_mysqli_query($sql);
 }
 
@@ -3829,11 +3836,20 @@ function getSentence($seid, $wordlc, $mode): array
     return array($se, $sejs);
 }
 
-
-function get20Sentences_raw($lang, $wordlc, $wid, $mode): array 
+/**
+ * Return sentences containing a word.
+ * 
+ * @param int      $lang   Language ID
+ * @param string   $wordlc Word to look for in lowercase
+ * @param int|null $wid    Word ID
+ * @param int      $limit  Maximum number of sentences to return
+ * 
+ * @return array Array of sentences found
+ */
+function sentences_with_word($lang, $wordlc, $wid, $mode, $limit=20): array 
 {
     $r = array();
-    $res = sentences_from_word($wid, $wordlc, $lang);
+    $res = sentences_from_word($wid, $wordlc, $lang, $limit);
     $last = '';
     while ($record = mysqli_fetch_assoc($res)) {
         if ($last != $record['SeText']) {
@@ -3869,22 +3885,13 @@ function get20Sentences($lang, $wordlc, $wid, $jsctlname, $mode): string
     $r = '<p><b>Sentences in active texts with <i>' . tohtml($wordlc) . '</i></b></p>
     <p>(Click on <img src="icn/tick-button.png" title="Choose" alt="Choose" /> 
     to copy sentence into above term)</p>';
-    $res = sentences_from_word($wid, $wordlc, $lang);
-    $r .= '<p>';
-    $last = '';
-    while ($record = mysqli_fetch_assoc($res)) {
-        if ($last != $record['SeText']) {
-            $sent = getSentence($record['SeID'], $wordlc, $mode);
-            if (mb_strstr($sent[1], '}', false, 'UTF-8')) {
-                $r .= '<span class="click" onclick="{' . $jsctlname . '.value=' . 
-                    prepare_textdata_js($sent[1]) . '; makeDirty();}">
-                <img src="icn/tick-button.png" title="Choose" alt="Choose" />
-                </span> &nbsp;' . $sent[0] . '<br />';
-            }
-        }
-        $last = $record['SeText'];
+    $sentences = sentences_with_word($lang, $wordlc, $wid, $mode);
+    foreach ($sentences as $sentence) {
+        $r .= '<span class="click" onclick="{' . $jsctlname . '.value=' . 
+            prepare_textdata_js($sentence[1]) . '; makeDirty();}">
+        <img src="icn/tick-button.png" title="Choose" alt="Choose" />
+        </span> &nbsp;' . $sentence[0] . '<br />';
     }
-    mysqli_free_result($res);
     $r .= '</p>';
     return $r;
 }
