@@ -800,8 +800,9 @@ if (isset($_REQUEST['new']) && isset($_REQUEST['lang'])) {
      </tr>
      </table>
      </form>
-     <div id="exsent"><span class="click" onclick="do_ajax_show_sentences(<?php echo $record['LgID']; ?>, <?php echo prepare_textdata_js($wordlc) . ', ' . prepare_textdata_js("document.forms['editword'].WoSentence") . ', ' . $_REQUEST['chg']; ?>);"><img src="icn/sticky-notes-stack.png" title="Show Sentences" alt="Show Sentences" /> Show Sentences</span></div>    
     <?php
+        // Display example sentence button
+        example_sentences_area($record['LgID'], $wordlc, "document.forms['editword'].WoSentence", $_REQUEST['chg']);
     }
     mysqli_free_result($res);
 } else {

@@ -3842,15 +3842,22 @@ function getSentence($seid, $wordlc, $mode): array
  * @param int      $lang   Language ID
  * @param string   $wordlc Word to look for in lowercase
  * @param int|null $wid    Word ID
+ * @param int|null $mode   Sentences to get: 
+ *                         - Up to 1 is 1 sentence, 
+ *                         - 2 is previous and current sentence, 
+ *                         - 3 is previous, current and next one
  * @param int      $limit  Maximum number of sentences to return
  * 
  * @return array Array of sentences found
  */
-function sentences_with_word($lang, $wordlc, $wid, $mode, $limit=20): array 
+function sentences_with_word($lang, $wordlc, $wid, $mode=0, $limit=20): array 
 {
     $r = array();
     $res = sentences_from_word($wid, $wordlc, $lang, $limit);
     $last = '';
+    if (is_null($mode)) {
+        $mode = (int) getSettingWithDefault('set-term-sentence-count');
+    }
     while ($record = mysqli_fetch_assoc($res)) {
         if ($last != $record['SeText']) {
             $sent = getSentence($record['SeID'], $wordlc, $mode);
@@ -3862,6 +3869,23 @@ function sentences_with_word($lang, $wordlc, $wid, $mode, $limit=20): array
     }
     mysqli_free_result($res);
     return $r;
+}
+
+/**
+ * Prepare the area to for examples sentences of a word.
+ */
+function example_sentences_area($lang, $termlc, $selector, $wid)
+{
+    ?>
+<div id="exsent">
+    <span class="click" onclick="do_ajax_show_sentences(
+        <?php echo $lang; ?>, <?php echo prepare_textdata_js($termlc); ?>, 
+        <?php echo htmlentities(json_encode($selector)); ?>, <?php echo $wid; ?>);">
+        <img src="icn/sticky-notes-stack.png" title="Show Sentences" alt="Show Sentences" /> 
+        Show Sentences
+    </span>
+</div>
+    <?php
 }
 
 /**

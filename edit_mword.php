@@ -386,13 +386,9 @@ function edit_mword_display_new($term, $tid, $ord, $len)
         </tr>
     </table>
     </form>
-    <div id="exsent">
-        <span class="click" onclick="do_ajax_show_sentences(<?= $term->lgid; ?>, <?= prepare_textdata_js($term->textlc) ?>, <?= prepare_textdata_js('document.forms[\'newword\'].WoSentence') ?>, -1);">
-            <img src="icn/sticky-notes-stack.png" title="Show Sentences" alt="Show Sentences" /> 
-            Show Sentences
-        </span>
-    </div>
     <?php
+    // Display example sentences button
+    example_sentences_area($term->lgid, $term->textlc, 'document.forms.newword.WoSentence', -1);
 }
 
 /**
@@ -458,7 +454,9 @@ function edit_mword_display_change($term, $tid, $ord)
         <tr title="Only change uppercase/lowercase!">
             <td class="td1 right"><b>Edit Term:</b></td>
             <td class="td1">
-                <input <?= $scrdir; ?> class="notempty checkoutsidebmp" data_info="Term" type="text" name="WoText" id="wordfield" value="<?= tohtml($term->text); ?>" maxlength="250" size="35" /> 
+                <input <?= $scrdir; ?> class="notempty checkoutsidebmp" 
+                data_info="Term" type="text" name="WoText" id="wordfield" 
+                value="<?= tohtml($term->text); ?>" maxlength="250" size="35" /> 
                 <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
             </td>
         </tr>
@@ -466,7 +464,8 @@ function edit_mword_display_change($term, $tid, $ord)
         <tr>
             <td class="td1 right">Translation:</td>
             <td class="td1">
-                <textarea name="WoTranslation" class="setfocus textarea-noreturn checklength checkoutsidebmp" data_maxlength="500" data_info="Translation" cols="35" rows="3"><?= tohtml($transl); ?></textarea>
+                <textarea name="WoTranslation" class="setfocus textarea-noreturn checklength checkoutsidebmp" 
+                data_maxlength="500" data_info="Translation" cols="35" rows="3"><?= tohtml($transl); ?></textarea>
             </td>
         </tr>
         <tr>
@@ -478,20 +477,23 @@ function edit_mword_display_change($term, $tid, $ord)
         <tr>
             <td class="td1 right">Romaniz.:</td>
             <td class="td1">
-                <input type="text" class="checkoutsidebmp" data_info="Romanization" name="WoRomanization" maxlength="100" size="35" 
+                <input type="text" class="checkoutsidebmp" data_info="Romanization" 
+                name="WoRomanization" maxlength="100" size="35" 
                 value="<?= tohtml($record['WoRomanization']); ?>" />
             </td>
         </tr>
         <tr>
             <td class="td1 right">Sentence<br />Term in {...}:</td>
             <td class="td1">
-                <textarea <?= $scrdir; ?> name="WoSentence" class="textarea-noreturn checklength checkoutsidebmp" data_maxlength="1000" data_info="Sentence" cols="35" rows="3"><?= tohtml($sentence); ?></textarea>
+                <textarea <?= $scrdir; ?> name="WoSentence" 
+                class="textarea-noreturn checklength checkoutsidebmp" data_maxlength="1000" 
+                data_info="Sentence" cols="35" rows="3"><?= tohtml($sentence); ?></textarea>
             </td>
         </tr>
         <tr>
             <td class="td1 right">Status:</td>
             <td class="td1">
-                    <?= get_wordstatus_radiooptions($record['WoStatus']); ?>
+                <?= get_wordstatus_radiooptions($record['WoStatus']); ?>
             </td>
         </tr>
         <tr>
@@ -503,13 +505,9 @@ function edit_mword_display_change($term, $tid, $ord)
         </tr>
     </table>
     </form>
-    <div id="exsent">
-        <span class="click" onclick="do_ajax_show_sentences(<?= $term->lgid; ?>, <?= prepare_textdata_js($term->textlc) ?>, <?= prepare_textdata_js("document.forms['editword'].WoSentence") ?>, <?= $term->id; ?>);">
-            <img src="icn/sticky-notes-stack.png" title="Show Sentences" alt="Show Sentences" /> 
-            Show Sentences
-        </span>
-    </div>
         <?php
+        // Display example sentences button
+        example_sentences_area($term->lgid, $term->textlc, 'document.forms.editword.WoSentence', $term->id);
     }
     mysqli_free_result($res);
 }
