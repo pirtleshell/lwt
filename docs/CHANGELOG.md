@@ -26,6 +26,7 @@ It features the following interaction:
     * ``theme_path``: theming path for a file.
     * ``texts_statistics``: various words statistics for each text.
     * ``media_paths``: paths of files and folders in the ``/media`` folder.
+    * ``example_sentences``: list of sentences containing a word.
   * On POST, ``action_type`` can be:
     * ``text`` of ``audio`` change the reading position for a text or it's audio.
     * ``simterms``: similar terms to a given term
@@ -75,8 +76,9 @@ the intendended page. Same goes for "New Text" on "Archived Texts" page.
   * ``inc/ajax_get_theme.php`` should be accessed through ``action_type=theme_path``. Argument ``filepath`` is now ``path``.
   * ``inc/ajax_save_setting.php`` should be accessed through ``action_type=save_setting``, same arguments.
   * ``inc/ajax_save_text_position.php`` should be accessed through ``action=reading_position``, arguments changed.
-  * ``inc/ajax_word_counts.php`` should be accessed through ``action=texts_statistics``, on GET. Argument ``id`` is now ``texts_id``.
-  * ``imc/ajax_update_media_select.php`` should be accessed through ``action=media_paths``.
+  * ``inc/ajax_word_counts.php`` should be accessed through ``action_type=texts_statistics``, on GET. Argument ``id`` is now ``texts_id``.
+  * ``inc/ajax_update_media_select.php`` should be accessed through ``action_type=media_paths``.
+  * ``inc/ajax_show_sentences.php`` should be accessed through ``action_type=example_sentences``, on GET. Argument ``lang`` is now ``lid``, ``word`` is ``word_lc`` and ``woid`` is ``wid``, ``ctl`` is no longer required.
 
 ## 2.8.1-fork (April 14 2023)
 

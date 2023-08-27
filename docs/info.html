@@ -1879,6 +1879,8 @@ It features the following interaction:
 <code>texts_statistics</code>: various words statistics for each text.</li>
 <li>
 <code>media_paths</code>: paths of files and folders in the <code>/media</code> folder.</li>
+<li>
+<code>example_sentences</code>: list of sentences containing a word.</li>
 </ul>
 </li>
 <li>On POST, <code>action_type</code> can be:
@@ -1960,9 +1962,11 @@ the intendended page. Same goes for "New Text" on "Archived Texts" page.</li>
 <li>
 <code>inc/ajax_save_text_position.php</code> should be accessed through <code>action=reading_position</code>, arguments changed.</li>
 <li>
-<code>inc/ajax_word_counts.php</code> should be accessed through <code>action=texts_statistics</code>, on GET. Argument <code>id</code> is now <code>texts_id</code>.</li>
+<code>inc/ajax_word_counts.php</code> should be accessed through <code>action_type=texts_statistics</code>, on GET. Argument <code>id</code> is now <code>texts_id</code>.</li>
 <li>
-<code>imc/ajax_update_media_select.php</code> should be accessed through <code>action=media_paths</code>.</li>
+<code>inc/ajax_update_media_select.php</code> should be accessed through <code>action_type=media_paths</code>.</li>
+<li>
+<code>inc/ajax_show_sentences.php</code> should be accessed through <code>action_type=example_sentences</code>, on GET. Argument <code>lang</code> is now <code>lid</code>, <code>word</code> is <code>word_lc</code> and <code>woid</code> is <code>wid</code>, <code>ctl</code> is no longer required.</li>
 </ul>
 </li>
 </ul>

@@ -1231,32 +1231,40 @@ function do_ajax_update_media_select () {
   );
 }
 
-function display_example_sentences(data, click_target)
+/**
+ * Prepare am HTML element that formats the sentences
+ * 
+ * @param {JSON}   sentences    A list of sentences to display. 
+ * @param {string} click_target The selector for the element that should change value on click
+ * @returns {HTMLElement} A formatted group of sentences
+ */
+function display_example_sentences(sentences, click_target)
 {
-  let img, element, parentDiv, elements = document.createElement("div");
-  for (let i = 0; i < data.length; i++) {
+  let img, clickable, parentDiv;
+  const outElement = document.createElement("div");
+  for (let i = 0; i < sentences.length; i++) {
     // Add the checbox
     img = document.createElement("img");
     img.src = "icn/tick-button.png";
     img.title = "Choose";
     // Clickable element
-    element = document.createElement('span');
-    element.classList.add("click");
+    clickable = document.createElement('span');
+    clickable.classList.add("click");
     // Doesn't feel the right way to do it
-    element.setAttribute(
+    clickable.setAttribute(
       "onclick", 
       "{" + 
-      click_target + ".value = '" + data[i][1].replaceAll("'", "\\'") +"';makeDirty();}"
+      click_target + ".value = '" + sentences[i][1].replaceAll("'", "\\'") +"';makeDirty();}"
     );
-    element.appendChild(img);
+    clickable.appendChild(img);
     // Create parent
     parentDiv = document.createElement("div");
-    parentDiv.appendChild(element);
-    parentDiv.innerHTML += "&nbsp; " + data[i][0];
+    parentDiv.appendChild(clickable);
+    parentDiv.innerHTML += "&nbsp; " + sentences[i][0];
     // Add to the output
-    elements.appendChild(parentDiv);
+    outElement.appendChild(parentDiv);
   }
-  return elements;
+  return outElement;
 }
 
 /**
@@ -1264,7 +1272,7 @@ function display_example_sentences(data, click_target)
  * 
  * @param {int}    lang Language ID 
  * @param {string} word Term text (the looked for term) 
- * @param {string} ctl  Path of the textarea showing sentence of the edited term
+ * @param {string} ctl  Selector for the element to edit on click
  * @param {int}    woid Term id (word or multi-word)
  * @returns {undefined}
  */
