@@ -49,9 +49,11 @@ function get_imported_terms($recno, $currentpage, $last_update): string
             if ($currentpage > 1) {
                 ?>
             &nbsp; &nbsp;
-            <img src="icn/control-stop-180.png" title="First Page" alt="First Page" onclick="$('#res_data').load('inc/ajax_show_imported_terms.php',{'last_update':'<?php echo $last_update; ?>','count':$('#recno').text(),'page':'1'}); return false;" />
+            <img src="icn/control-stop-180.png" title="First Page" alt="First Page" 
+            onclick="$('#res_data').load('inc/ajax_show_imported_terms.php',{'last_update':'<?php echo $last_update; ?>','count':$('#recno').text(),'page':'1'}); return false;" />
             &nbsp;
-            <img  src="icn/control-180.png" title="Previous Page" alt="Previous Page" onclick="$('#res_data').load('inc/ajax_show_imported_terms.php',{'last_update':'<?php echo $last_update; ?>','count':$('#recno').text(),'page':'<?php echo $currentpage-1; ?>'}); return false;" />
+            <img  src="icn/control-180.png" title="Previous Page" alt="Previous Page" 
+            onclick="$('#res_data').load('inc/ajax_show_imported_terms.php',{'last_update':'<?php echo $last_update; ?>','count':$('#recno').text(),'page':'<?php echo $currentpage-1; ?>'}); return false;" />
             &nbsp;
                 <?php
             } else {
@@ -68,7 +70,8 @@ function get_imported_terms($recno, $currentpage, $last_update): string
                 echo '1'; 
             } else {
                 ?>
-            <select name="page" onchange="{val=document.form1.page.options[document.form1.page.selectedIndex].value;$('#res_data').load('inc/ajax_show_imported_terms.php',{'last_update':'<?php echo $last_update; ?>','count':$('#recno').text(),'page':val}); return false;}">
+            <select name="page" 
+            onchange="{val=document.form1.page.options[document.form1.page.selectedIndex].value;$('#res_data').load('inc/ajax_show_imported_terms.php',{'last_update':'<?php echo $last_update; ?>','count':$('#recno').text(),'page':val}); return false;}">
                 <?php echo get_paging_selectoptions($currentpage, $pages); ?>
             </select>
                 <?php
@@ -76,8 +79,10 @@ function get_imported_terms($recno, $currentpage, $last_update): string
             echo ' of ' . $pages . '&nbsp; ';
             if ($currentpage < $pages) { 
                 ?>
-            <img src="icn/control.png" title="Next Page" alt="Next Page" onclick="$('#res_data').load('inc/ajax_show_imported_terms.php',{'last_update':'<?php echo $last_update; ?>','count':$('#recno').text(),'page':'<?php echo $currentpage+1; ?>'}); return false;" />&nbsp;
-            <img src="icn/control-stop.png" title="Last Page" alt="Last Page" onclick="$('#res_data').load('inc/ajax_show_imported_terms.php',{'last_update':'<?php echo $last_update; ?>','count':$('#recno').text(),'page':'<?php echo $pages; ?>'}); return false;" />&nbsp; &nbsp;
+            <img src="icn/control.png" title="Next Page" alt="Next Page" 
+            onclick="$('#res_data').load('inc/ajax_show_imported_terms.php',{'last_update':'<?php echo $last_update; ?>','count':$('#recno').text(),'page':'<?php echo $currentpage+1; ?>'}); return false;" />&nbsp;
+            <img src="icn/control-stop.png" title="Last Page" alt="Last Page" 
+            onclick="$('#res_data').load('inc/ajax_show_imported_terms.php',{'last_update':'<?php echo $last_update; ?>','count':$('#recno').text(),'page':'<?php echo $pages; ?>'}); return false;" />&nbsp; &nbsp;
                 <?php 
             } else {
                 ?>
@@ -105,56 +110,67 @@ function get_imported_terms($recno, $currentpage, $last_update): string
 function show_imported_terms($last_update, $limit, $rtl)
 {
     global $tbpref;
-    echo '<table class="sortable tab2"  cellspacing="0" cellpadding="5">
-    <tr>';
     ?>
+    <table class="sortable tab2" cellspacing="0" cellpadding="5">
+    <tr>
         <th class="th1 clickable">Term /<br />Romanization</th>
         <th class="th1 clickable">Translation</th>
         <th class="th1 sorttable_nosort">Tags</th>
         <th class="th1 sorttable_nosort">Se.</th>
         <th class="th1 sorttable_numeric clickable">Status</th>
+    </tr>
     <?php
-    $sql = 'SELECT WoID, WoText, WoTranslation, WoRomanization, WoSentence, 
-    IFNULL(WoSentence, \'\') LIKE CONCAT(\'%{\', WoText, \'}%\') AS SentOK, 
+    $sql = "SELECT WoID, WoText, WoTranslation, WoRomanization, WoSentence, 
+    IFNULL(WoSentence, '') LIKE CONCAT('%{', WoText, '}%') AS SentOK, 
     WoStatus, 
     IFNULL(
         CONCAT(
-            \'[\', 
-            group_concat(DISTINCT TgText ORDER BY TgText separator \', \'),
-            \']\'
-        ), \'\'
+            '[', 
+            group_concat(DISTINCT TgText ORDER BY TgText separator ', '),
+            ']'
+        ), ''
     ) AS taglist 
     FROM (
-        (' . $tbpref . 'words LEFT JOIN ' . $tbpref . 'wordtags ON WoID = WtWoID) 
-        LEFT JOIN ' . $tbpref . 'tags ON TgID = WtTgID
+        ({$tbpref}words LEFT JOIN {$tbpref}wordtags ON WoID = WtWoID)
+        LEFT JOIN {$tbpref}tags ON TgID = WtTgID
     ) 
-    WHERE WoStatusChanged > ' . convert_string_to_sqlsyntax($last_update) . ' 
-    GROUP BY WoID ' . $limit;
+    WHERE WoStatusChanged > " . convert_string_to_sqlsyntax($last_update) . " 
+    GROUP BY WoID $limit";
     $res = do_mysqli_query($sql);
     while ($record = mysqli_fetch_assoc($res)) {
-        echo '<tr>';
-        echo '<td class="td1">
-            <span' . ($rtl ? ' dir="rtl" ' : '') . '>' . tohtml($record['WoText']) . '</span>' . 
-            ($record['WoRomanization'] != '' ? (' / <span id="roman' . $record['WoID'] . '" class="edit_area clickedit">' . 
-            tohtml(repl_tab_nl($record['WoRomanization'])) . '</span>') : 
-            (' / <span id="roman' . $record['WoID'] . '" class="edit_area clickedit">*</span>')) . 
-        '</td>';
-        echo '<td class="td1">
-            <span id="trans' . $record['WoID'] . '" class="edit_area clickedit">' . tohtml(repl_tab_nl($record['WoTranslation'])) . '</span>
-        </td>';
-        echo '<td class="td1"><span class="smallgray2">' . tohtml($record['taglist']) . '</span></td>';
-        echo '<td class="td1 center">
-            <b>' . 
-                ($record['SentOK']!=0 ? '<img src="icn/status.png" title="' . tohtml($record['WoSentence']) . '" alt="Yes" />' : 
-                '<img src="icn/status-busy.png" title="(No valid sentence)" alt="No" />') . 
-            '</b>
-        </td>';
-        echo '<td class="td1 center" title="' . tohtml(get_status_name($record['WoStatus'])) . '">' . tohtml(get_status_abbr($record['WoStatus'])) . '</td>';
-        echo "</tr>\n";
+        echo '<tr>
+            <td class="td1">
+                <span' . ($rtl ? ' dir="rtl" ' : '') . '>' . 
+                    tohtml($record['WoText']) . '</span>' .
+                    ' / <span id="roman' . $record['WoID'] . '" class="edit_area clickedit">' . 
+                    ($record['WoRomanization'] != '' ? tohtml(repl_tab_nl($record['WoRomanization'])) : '*') . 
+                '</span>
+            </td>
+            <td class="td1">
+                <span id="trans' . $record['WoID'] . '" class="edit_area clickedit">' . 
+                    tohtml(repl_tab_nl($record['WoTranslation'])) . 
+                '</span>
+            </td>
+            <td class="td1">
+                <span class="smallgray2">' . tohtml($record['taglist']) . '</span>
+            </td>
+            <td class="td1 center">
+                <b>' . 
+                    (
+                        $record['SentOK'] !=0  ? 
+                        '<img src="icn/status.png" title="' . tohtml($record['WoSentence']) . '" alt="Yes" />' : 
+                        '<img src="icn/status-busy.png" title="(No valid sentence)" alt="No" />'
+                    ) . 
+                '</b>
+            </td>
+            <td class="td1 center" title="' . tohtml(get_status_name($record['WoStatus'])) . '">' . 
+                tohtml(get_status_abbr($record['WoStatus'])) . 
+            '</td>
+        </tr>';
     }
     mysqli_free_result($res);
-    echo "</table>";
     ?>
+    </table>
     <script type="text/javascript">
         $(document).ready(function() {
             $('.edit_area').editable(
@@ -187,7 +203,7 @@ function show_imported_terms($last_update, $limit, $rtl)
 function do_ajax_show_imported_terms($last_update, $currentpage, $recno, $rtl)
 {
     chdir('..');
-    if($recno > 0) { 
+    if ($recno > 0) {
         $limit = get_imported_terms($recno, $currentpage, $last_update);
         show_imported_terms($last_update, $limit, $rtl);
     } else if ($recno==0) {
