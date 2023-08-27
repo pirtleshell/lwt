@@ -148,9 +148,25 @@ function get_texts_statistics($get_req)
 /**
  * List the audio files in the media folder.
  */
-function media_paths($get_req) {
+function media_paths($get_req) 
+{
     chdir("..");
     return json_encode(get_media_paths());
+}
+
+/**
+ * Return the example sentences containing an input word.
+ * 
+ * @param array $get_req Get request with fields "lid", "word_lc" and "wid".
+ */
+function example_sentences($get_req)
+{
+    chdir("..");
+    return json_encode(sentences_with_word(
+        (int) $get_req["lid"],
+        $get_req["word_lc"],
+        (int) $get_req["wid"]
+    ));
 }
 
 
@@ -312,6 +328,9 @@ if (isset($_GET['action'])) {
                 break;
             case "media_paths":
                 echo media_paths($_GET);
+                break;
+            case "example_sentences":
+                echo example_sentences($_GET);
                 break;
             default:
                 echo unknown_get_action_type($_GET);

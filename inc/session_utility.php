@@ -3878,12 +3878,26 @@ function example_sentences_area($lang, $termlc, $selector, $wid)
 {
     ?>
 <div id="exsent">
-    <span class="click" onclick="do_ajax_show_sentences(
-        <?php echo $lang; ?>, <?php echo prepare_textdata_js($termlc); ?>, 
-        <?php echo htmlentities(json_encode($selector)); ?>, <?php echo $wid; ?>);">
-        <img src="icn/sticky-notes-stack.png" title="Show Sentences" alt="Show Sentences" /> 
-        Show Sentences
-    </span>
+    <!-- Interactable text -->
+    <div id="exsent-interactable">
+        <span class="click" onclick="do_ajax_show_sentences(
+            <?php echo $lang; ?>, <?php echo prepare_textdata_js($termlc); ?>, 
+            <?php echo htmlentities(json_encode($selector)); ?>, <?php echo $wid; ?>);">
+            <img src="icn/sticky-notes-stack.png" title="Show Sentences" alt="Show Sentences" /> 
+            Show Sentences
+        </span>
+    </div>
+    <!-- Loading icon -->
+    <img id="exsent-waiting" style="display: none;" src="icn/waiting2.gif" />
+    <!-- Displayed output -->
+    <div id="exsent-sentences" style="display: none;">
+        <p><b>Sentences in active texts with <i><?php echo tohtml($termlc) ?></i></b></p>
+        <p>
+            (Click on 
+            <img src="icn/tick-button.png" title="Choose" alt="Choose" /> 
+            to copy sentence into above term)
+        </p>
+    </div>
 </div>
     <?php
 }

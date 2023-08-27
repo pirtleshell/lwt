@@ -1231,8 +1231,36 @@ function do_ajax_update_media_select () {
   );
 }
 
+function display_example_sentences(data, click_target)
+{
+  let img, element, parentDiv, elements = document.createElement("div");
+  for (let i = 0; i < data.length; i++) {
+    // Add the checbox
+    img = document.createElement("img");
+    img.src = "icn/tick-button.png";
+    img.title = "Choose";
+    // Clickable element
+    element = document.createElement('span');
+    element.classList.add("click");
+    // Doesn't feel the right way to do it
+    element.setAttribute(
+      "onclick", 
+      "{" + 
+      click_target + ".value = '" + data[i][1].replaceAll("'", "\\'") +"';makeDirty();}"
+    );
+    element.appendChild(img);
+    // Create parent
+    parentDiv = document.createElement("div");
+    parentDiv.appendChild(element);
+    parentDiv.innerHTML += "&nbsp; " + data[i][0];
+    // Add to the output
+    elements.appendChild(parentDiv);
+  }
+  return elements;
+}
+
 /**
- * Show the sentences containing specific word.
+ * Get and display the sentences containing specific word.
  * 
  * @param {int}    lang Language ID 
  * @param {string} word Term text (the looked for term) 
@@ -1241,11 +1269,25 @@ function do_ajax_update_media_select () {
  * @returns {undefined}
  */
 function do_ajax_show_sentences (lang, word, ctl, woid) {
-  $('#exsent').html('<img src="icn/waiting2.gif" />');
-  $.post(
-    'inc/ajax_show_sentences.php', 
-    { lang: lang, word: word, ctl: ctl, woid: woid },
-    function (data) { $('#exsent').html(data); }
+  $('#exsent-interactable').css("display", "none");
+  $('#exsent-waiting').css("display", "inherit");
+
+  $.get(
+    'inc/ajax.php', 
+    { 
+      action: "query",
+      action_type: "example_sentences",
+      lid: lang, 
+      word_lc: word,
+      wid: woid
+    },
+    function (data) {
+      $('#exsent-waiting').css("display", "none");
+      $('#exsent-sentences').css("display", "inherit");
+      const new_element = display_example_sentences(data, ctl);
+      $('#exsent-sentences').append(new_element);
+    },
+    "json"
   );
 }
 
