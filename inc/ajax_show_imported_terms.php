@@ -16,18 +16,17 @@
 require_once __DIR__ . '/session_utility.php';
 
 /**
- * Get the list of imported terms and start the display.
+ * Prepare the page to display imported terms.
  *
  * @param int    $recno       Record number
  * @param int    $currentpage Current page
  * @param string $last_update Last update
+ * @param int    $maxperpage  Maximum number of terms per page
  *
- * @return string SQL-formatted query to limit the number of results
+ * @return int Offset to apply to the returned results
  */
-function get_imported_terms($recno, $currentpage, $last_update): string
-{
-    $maxperpage = 100;
-    
+function imported_terms_header($recno, $currentpage, $last_update, $maxperpage=100): int
+{   
     $pages = intval(($recno-1) / $maxperpage) + 1;
         
     if ($currentpage < 1) { 
@@ -37,6 +36,7 @@ function get_imported_terms($recno, $currentpage, $last_update): string
         $currentpage = $pages; 
     }
     $limit = ' LIMIT ' . (($currentpage-1) * $maxperpage) . ',' . $maxperpage;
+    $limit = ($currentpage - 1) * $maxperpage;
     ?>
 <table class="tab2"  cellspacing="0" cellpadding="2">
     <tr>
@@ -100,26 +100,27 @@ function get_imported_terms($recno, $currentpage, $last_update): string
 }
 
 /**
- * Show the imported terms.
+ * Prepare the page to display imported terms.
  *
+ * @param int    $recno       Record number
+ * @param int    $currentpage Current page
  * @param string $last_update Last update
- * @param string $limit       SQL-formatted query to limit the number of results
+ *
+ * @return string SQL-formatted query to limit the number of results
  * 
- * @return void
+ * @deprecated 2.9.0 Use imported_terms_header instead
  */
-function show_imported_terms($last_update, $limit, $rtl)
+function get_imported_terms($recno, $currentpage, $last_update): string
+{
+    $maxperpage = 100;
+    $offset = imported_terms_header($recno, $currentpage, $last_update, $maxperpage);
+    return " LIMIT $offset, $maxperpage";
+}
+
+
+function select_imported_terms($last_update, $offset, $max_terms)
 {
     global $tbpref;
-    ?>
-    <table class="sortable tab2" cellspacing="0" cellpadding="5">
-    <tr>
-        <th class="th1 clickable">Term /<br />Romanization</th>
-        <th class="th1 clickable">Translation</th>
-        <th class="th1 sorttable_nosort">Tags</th>
-        <th class="th1 sorttable_nosort">Se.</th>
-        <th class="th1 sorttable_numeric clickable">Status</th>
-    </tr>
-    <?php
     $sql = "SELECT WoID, WoText, WoTranslation, WoRomanization, WoSentence, 
     IFNULL(WoSentence, '') LIKE CONCAT('%{', WoText, '}%') AS SentOK, 
     WoStatus, 
@@ -135,9 +136,37 @@ function show_imported_terms($last_update, $limit, $rtl)
         LEFT JOIN {$tbpref}tags ON TgID = WtTgID
     ) 
     WHERE WoStatusChanged > " . convert_string_to_sqlsyntax($last_update) . " 
-    GROUP BY WoID $limit";
+    GROUP BY WoID 
+    LIMIT $offset, $max_terms";
     $res = do_mysqli_query($sql);
-    while ($record = mysqli_fetch_assoc($res)) {
+    $records = mysqli_fetch_all($res, MYSQLI_ASSOC);
+    mysqli_free_result($res);
+    return $records;
+}
+
+/**
+ * Show the imported terms.
+ *
+ * @param string $last_update Last update
+ * @param string $limit       SQL-formatted query to limit the number of results
+ * 
+ * @return void
+ */
+function show_imported_terms($last_update, $limit, $rtl)
+{
+    ?>
+    <table class="sortable tab2" cellspacing="0" cellpadding="5">
+    <tr>
+        <th class="th1 clickable">Term /<br />Romanization</th>
+        <th class="th1 clickable">Translation</th>
+        <th class="th1 sorttable_nosort">Tags</th>
+        <th class="th1 sorttable_nosort">Se.</th>
+        <th class="th1 sorttable_numeric clickable">Status</th>
+    </tr>
+    <?php
+    preg_match('/.+(\d+)\s*,\s*(\d+)/', $limit, $matches);
+    $rows = select_imported_terms($last_update, $matches[1], $matches[2]);
+    foreach ($rows as $record) {
         echo '<tr>
             <td class="td1">
                 <span' . ($rtl ? ' dir="rtl" ' : '') . '>' . 
@@ -168,7 +197,6 @@ function show_imported_terms($last_update, $limit, $rtl)
             '</td>
         </tr>';
     }
-    mysqli_free_result($res);
     ?>
     </table>
     <script type="text/javascript">
@@ -204,7 +232,9 @@ function do_ajax_show_imported_terms($last_update, $currentpage, $recno, $rtl)
 {
     chdir('..');
     if ($recno > 0) {
-        $limit = get_imported_terms($recno, $currentpage, $last_update);
+        $maxperpage = 100;
+        $offset = imported_terms_header($recno, $currentpage, $last_update, $maxperpage);
+        $limit = " LIMIT $offset, $maxperpage";
         show_imported_terms($last_update, $limit, $rtl);
     } else if ($recno==0) {
         echo '<p>No terms imported.</p>';
