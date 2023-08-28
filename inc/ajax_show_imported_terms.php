@@ -13,6 +13,18 @@
  */
 require_once __DIR__ . '/session_utility.php';
 
+function limit_current_page($currentpage, $recno, $maxperpage)
+{
+    $pages = intval(($recno-1) / $maxperpage) + 1;
+    if ($currentpage < 1) { 
+        $currentpage = 1; 
+    }
+    if ($currentpage > $pages) { 
+        $currentpage = $pages; 
+    }
+    return $currentpage;
+}
+
 /**
  * Prepare the page to display imported terms.
  *
@@ -21,19 +33,12 @@ require_once __DIR__ . '/session_utility.php';
  * @param string $last_update Last update
  * @param int    $maxperpage  Maximum number of terms per page
  *
- * @return int Offset to apply to the returned results
+ * @return void
  */
-function imported_terms_header($recno, $currentpage, $last_update, $maxperpage=100): int
+function imported_terms_header($recno, $currentpage, $last_update, $maxperpage=100): void
 {   
     $pages = intval(($recno-1) / $maxperpage) + 1;
-        
-    if ($currentpage < 1) { 
-        $currentpage = 1; 
-    }
-    if ($currentpage > $pages) { 
-        $currentpage = $pages; 
-    }
-    $limit = ($currentpage - 1) * $maxperpage;
+    $currentpage = limit_current_page($currentpage, $recno, $maxperpage);
     ?>
 <table class="tab2"  cellspacing="0" cellpadding="2">
     <tr>
@@ -92,7 +97,6 @@ function imported_terms_header($recno, $currentpage, $last_update, $maxperpage=1
         </th>
     </table>
     <?php
-    return $limit;
 }
 
 /**
@@ -109,7 +113,9 @@ function imported_terms_header($recno, $currentpage, $last_update, $maxperpage=1
 function get_imported_terms($recno, $currentpage, $last_update): string
 {
     $maxperpage = 100;
-    $offset = imported_terms_header($recno, $currentpage, $last_update, $maxperpage);
+    $currentpage = limit_current_page($currentpage, $recno, $maxperpage);
+    imported_terms_header($recno, $currentpage, $last_update, $maxperpage);
+    $offset = ($currentpage - 1) * $maxperpage;
     return " LIMIT $offset, $maxperpage";
 }
 
@@ -229,7 +235,9 @@ function do_ajax_show_imported_terms($last_update, $currentpage, $recno, $rtl)
     chdir('..');
     if ($recno > 0) {
         $maxperpage = 100;
-        $offset = imported_terms_header($recno, $currentpage, $last_update, $maxperpage);
+        $currentpage = limit_current_page($currentpage, $recno, $maxperpage);
+        imported_terms_header($recno, $currentpage, $last_update, $maxperpage);
+        $offset = ($currentpage - 1) * $maxperpage;
         $limit = " LIMIT $offset, $maxperpage";
         show_imported_terms($last_update, $limit, $rtl);
     } else if ($recno==0) {
@@ -239,7 +247,8 @@ function do_ajax_show_imported_terms($last_update, $currentpage, $recno, $rtl)
 
 function imported_terms_list($last_update, $currentpage, $recno) {
     $maxperpage = 100;
-    $offset = imported_terms_header($recno, $currentpage, $last_update, $maxperpage);
+    $currentpage = limit_current_page($currentpage, $recno, $maxperpage);
+    $offset = ($currentpage - 1) * $maxperpage;
     return select_imported_terms($last_update, $offset, $maxperpage);
 }
 

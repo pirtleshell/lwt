@@ -342,6 +342,7 @@ if (isset($_GET['action'])) {
                 break;
             case "imported_terms":
                 echo imported_terms($_GET);
+                break;
             default:
                 echo unknown_get_action_type($_GET);
                 break;

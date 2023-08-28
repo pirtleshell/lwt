@@ -553,7 +553,41 @@ function display_imported_terms($last_update, $rtl)
     ?>
 <script type="text/javascript">
 function formatImportedTerms(data) {
-    return data;
+    let output = "", row, record;
+    for (let i = 0; i < data.length; i++) {
+        record = data[i];
+        row = `<tr>
+            <td class="td1">
+                <span` + (record["rtl"] ? ` dir="rtl" ` : ``) + `>` + 
+                escape_html_chars(record[`WoText`]) + `</span>` +
+                    ` / <span id="roman` + record[`WoText`] + `" class="edit_area clickedit">` + 
+                    (record[`WoText`] != `` ? escape_html_chars(record[`WoText`]) : `*`) + 
+                `</span>
+            </td>
+            <td class="td1">
+                <span id="trans` + record[`WoID`] + `" class="edit_area clickedit">` + 
+                escape_html_chars(record[`WoTranslation`]) + 
+                `</span>
+            </td>
+            <td class="td1">
+                <span class="smallgray2">` + escape_html_chars(record[`taglist`]) + `</span>
+            </td>
+            <td class="td1 center">
+                <b>` + 
+                    (
+                        record[`SentOK`] !=0  ? 
+                        `<img src="icn/status.png" title="` + escape_html_chars(record[`WoSentence`]) + `" alt="Yes" />` : 
+                        `<img src="icn/status-busy.png" title="(No valid sentence)" alt="No" />`
+                    ) + 
+                `</b>
+            </td>
+            <td class="td1 center" title="` + escape_html_chars(STATUSES[record[`WoStatus`]].name) + `">` + 
+                escape_html_chars(STATUSES[record[`WoStatus`]].abbr) + 
+            `</td>
+        </tr>`;
+        output += row;
+    }
+    return output;
 }
 
 function showImportedTerms(last_update, rtl, count, page) {
@@ -563,18 +597,8 @@ function showImportedTerms(last_update, rtl, count, page) {
         $('#res_data-res_table').css("display", "none");
     } else {
         $('#res_data-no_terms_imported').css("display", "none");
-        $('#res_data-navigation').css("display", "inherit");
-        $('#res_data-res_table').css("display", "inherit");
-        $('#res_data')
-        .load(
-            'inc/ajax_show_imported_terms.php',
-            {
-                'last_update': last_update,
-                'rtl': rtl,
-                'count': count,
-                'page': page
-            }
-        );
+        $('#res_data-navigation').css("display", "");
+        $('#res_data-res_table').css("display", "");
         $.get(
             "inc/ajax.php",
             {
@@ -585,7 +609,10 @@ function showImportedTerms(last_update, rtl, count, page) {
                 page: page
             },
             function (data) {
-                $('#res_data-res_table').append(formatImportedTerms(data));
+                console.log(data);
+                const html_content = formatImportedTerms(data);
+                console.log(html_content);
+                $('#res_data-res_table-body').append($(html_content));
             },
             "json"
         )
@@ -594,16 +621,79 @@ function showImportedTerms(last_update, rtl, count, page) {
 </script>
 <form name="form1" action="#" onsubmit="showImportedTerms('<?php echo $last_update; ?>', $('#recno').text(), document.form1.page.options[document.form1.page.selectedIndex].value); return false;">
 <div id="res_data">
-    <table id="res_data-navigation" class="tab2" cellspacing="0" cellpadding="2"></table>
-    <table id="res_data-res_table" class="sortable tab2" cellspacing="0" cellpadding="5">
+    <table id="res_data-navigation" class="tab2" cellspacing="0" cellpadding="2">
     <tr>
-        <th class="th1 clickable">Term /<br />Romanization</th>
-        <th class="th1 clickable">Translation</th>
-        <th class="th1 sorttable_nosort">Tags</th>
-        <th class="th1 sorttable_nosort">Se.</th>
-        <th class="th1 sorttable_numeric clickable">Status</th>
-    </tr>
-    <p id="res_data-no_terms_imported" style="display: none;">No terms imported.</p>
+        <th class="th1" colspan="2" nowrap="nowrap">
+            <span id="recno"><?php echo $recno; ?></span> 
+            Term<?php echo ($recno == 1 ?'':'s'); ?>
+        </th>
+        <th class="th1" colspan="1" nowrap="nowrap">
+            &nbsp; &nbsp;
+            <?php
+            /*
+            if ($currentpage > 1) {
+                ?>
+            <img src="icn/control-stop-180.png" title="First Page" alt="First Page" 
+            onclick="showImportedTerms('<?php echo $last_update; ?>', undefined, $('#recno').text(), '1')" />
+            &nbsp;
+            <img  src="icn/control-180.png" title="Previous Page" alt="Previous Page" 
+            onclick="showImportedTerms('<?php echo $last_update; ?>', undefined, $('#recno').text(), <?php echo $currentpage-1; ?>)" />
+                <?php
+            } else {
+                ?>
+            <img src="<?php print_file_path('icn/placeholder.png');?>" alt="-" />&nbsp;
+            <img src="<?php print_file_path('icn/placeholder.png');?>" alt="-" />
+                <?php
+            }
+            ?> &nbsp;
+            Page
+            <?php
+            if ($pages==1) { 
+                echo '1'; 
+            } else {
+                ?>
+            <select name="page" 
+            onchange="{val=document.form1.page.options[document.form1.page.selectedIndex].value;showImportedTerms('<?php echo $last_update; ?>', undefined, $('#recno').text(), val);}">
+                <?php echo get_paging_selectoptions($currentpage, $pages); ?>
+            </select>
+                <?php
+            }
+            echo ' of ' . $pages . '&nbsp; ';
+            if ($currentpage < $pages) { 
+                ?>
+            <img src="icn/control.png" title="Next Page" alt="Next Page" 
+            onclick="showImportedTerms('<?php echo $last_update; ?>', undefined, $('#recno').text(), '<?php echo $currentpage+1; ?>')" />
+            &nbsp;
+            <img src="icn/control-stop.png" title="Last Page" alt="Last Page" 
+            onclick="showImportedTerms('<?php echo $last_update; ?>', undefined, $('#recno').text(), <?php echo $pages; ?>)" />
+                <?php 
+            } else {
+                ?>
+            <img src="<?php print_file_path('icn/placeholder.png');?>" alt="-" />
+            &nbsp;
+            <img src="<?php print_file_path('icn/placeholder.png');?>" alt="-" />
+                <?php
+            }*/
+            ?>
+            &nbsp; &nbsp; 
+        </th>
+    </table>
+    <table id="res_data-res_table" class="sortable tab2" cellspacing="0" cellpadding="5">
+        <thead id="res_data-res_table-header">
+            <tr>
+                <th class="th1 clickable">Term /<br />Romanization</th>
+                <th class="th1 clickable">Translation</th>
+                <th class="th1 sorttable_nosort">Tags</th>
+                <th class="th1 sorttable_nosort">Se.</th>
+                <th class="th1 sorttable_numeric clickable">Status</th>
+            </tr>
+        </thead>
+        <tbody id="res_data-res_table-body">
+        </tbody>
+    </table>
+    <p id="res_data-no_terms_imported" style="display: none;">
+        No terms imported.
+    </p>
 </div>
 </form>
 <script type="text/javascript">
@@ -611,6 +701,21 @@ function showImportedTerms(last_update, rtl, count, page) {
         '<?php echo $last_update; ?>', '<?php echo $rtl; ?>', 
         <?php echo $recno; ?>, '1'
     );
+
+    $(document).ready(function() {
+        $('.edit_area').editable(
+            'inline_edit.php', 
+            { 
+                type      : 'textarea',
+                indicator : '<img src="icn/indicator.gif">',
+                tooltip   : 'Click to edit...',
+                submit    : 'Save',
+                cancel    : 'Cancel',
+                rows      : 3,
+                cols      : 35
+            }
+        );
+    });
 </script>
     <?php
 }
