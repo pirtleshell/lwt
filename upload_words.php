@@ -18,15 +18,152 @@ require_once 'inc/session_utility.php';
  * @return (null|string)[]|false|null
  *
  * @psalm-return false|non-empty-list<null|string>|null
+ * 
+ * @deprecated 2.9.0 This function is no longer used and will be removed
  */
 function my_str_getcsv($input) 
 {
-    $temp=fopen("php://memory", "rw");
+    $temp = fopen("php://memory", "rw");
     fwrite($temp, $input);
     fseek($temp, 0);
     $data = fgetcsv($temp);
     fclose($temp);
     return $data;
+}
+
+function upload_words_import_dummy(
+    $lang, $fields, $columns, $tabs, $file_name, $status
+)
+{
+    global $tbpref;
+    $removeSpaces = get_first_value(
+        "SELECT LgRemoveSpaces AS value FROM {$tbpref}languages WHERE LgID=$lang"
+    );
+    $local_infile_enabled = in_array(
+        get_first_value("SELECT @@GLOBAL.local_infile as value"), 
+        array(1, '1', 'ON')
+    );
+    if ($local_infile_enabled) {
+        $sql = "LOAD DATA LOCAL INFILE " . 
+        convert_string_to_sqlsyntax($file_name) . 
+        " IGNORE INTO TABLE {$tbpref}words 
+        FIELDS TERMINATED BY '$tabs' ENCLOSED BY '\"' LINES TERMINATED BY '\\n' 
+        " . ($_REQUEST["IgnFirstLine"] == '1' ? "IGNORE 1 LINES" : "") . "
+        $columns 
+        SET WoLgID = $lang, " . 
+        ($removeSpaces ? 
+        'WoTextLC = LOWER(REPLACE(@wotext," ","")),
+        WoText = REPLACE(@wotext, " ", "")':
+        'WoTextLC = LOWER(WoText)') . ", 
+        WoStatus = $status, WoStatusChanged = NOW(), " . 
+        make_score_random_insert_update('u');
+        runsql($sql, '');
+    } else {
+        $handle = fopen($file_name, 'r');
+        $data_text = fread($handle, filesize($file_name));
+        fclose($handle);
+        $values = array();
+        $i = 0;
+        foreach (explode(PHP_EOL, $data_text) as $line) {
+            if ($i++ == 0 && $_REQUEST["IgnFirstLine"] == '1') {
+                continue;
+            }
+            $row = array();
+            $parsed_line = explode($tabs, $line); 
+            $wotext = $parsed_line[$fields["txt"] - 1];
+            // Fill WoText and WoTextLC
+            if ($removeSpaces) {
+                $row[] = str_replace("", " ", $wotext);
+                $row[] = mb_strtolower(str_replace("", " ", $wotext));
+            } else {
+                $row[] = $wotext;
+                $row[] = mb_strtolower($wotext);
+            }
+            if ($fields["tr"] != 0) {
+                $row[] = $parsed_line[$fields["tr"] - 1];
+            }
+            if ($fields["ro"] != 0) {
+                $row[] = $parsed_line[$fields["ro"] - 1];
+            }
+            if ($fields["se"] != 0) {
+                $row[] = $parsed_line[$fields["se"] - 1];
+            }
+
+            $row = array_map('convert_string_to_sqlsyntax', $row);
+            $row = array_merge(
+                $row, array(
+                    (string)$lang, (string)$status, "NOW()", 
+                    getsqlscoreformula(2), getsqlscoreformula(3), "RAND()"
+                )
+            );
+            $values[] = "(" . implode(",", $row) . ")";
+        }
+        do_mysqli_query(
+            "INSERT INTO {$tbpref}words(
+                WoText, WoTextLC, " . 
+                ($fields["tr"] != 0 ? 'WoTranslation, ' : '') . 
+                ($fields["ro"] != 0 ? 'WoRomanization, ' : '') . 
+                ($fields["se"] != 0 ? 'WoSentence, ' : '') . 
+                "WoLgID, WoStatus, WoStatusChanged, 
+                WoTodayScore, WoTomorrowScore, WoRandom
+            )
+            VALUES " . implode(',', $values)
+        );
+    }
+
+}
+
+function upload_words_handle_multiwords($lang, $last_update)
+{
+    global $tbpref;
+    $mwords = get_first_value(
+        "SELECT count(*) AS value from {$tbpref}words 
+        WHERE WoWordCount>1 AND WoCreated > " . 
+        convert_string_to_sqlsyntax($last_update)
+    );
+    if ($mwords > 40) {
+        runsql(
+            "DELETE FROM {$tbpref}sentences WHERE SeLgID = $lang", 
+            "Sentences deleted"
+        );
+        runsql(
+            "DELETE FROM {$tbpref}textitems2 WHERE Ti2LgID = $lang", 
+            "Text items deleted"
+        );
+        adjust_autoincr('sentences', 'SeID');
+        $sql = "SELECT TxID, TxText FROM {$tbpref}texts 
+        WHERE TxLgID = $lang ORDER BY TxID";
+        $res = do_mysqli_query($sql);
+        while ($record = mysqli_fetch_assoc($res)) {
+            $txtid = (int) $record["TxID"];
+            $txttxt = $record["TxText"];
+            splitCheckText($txttxt, $lang, $txtid);
+        }
+        mysqli_free_result($res);
+    } else if ($mwords!=0) {
+        $sqlarr = array();
+        $res = do_mysqli_query(
+            "SELECT WoID, WoTextLC, WoWordCount 
+            FROM {$tbpref}words 
+            WHERE WoWordCount>1 AND WoCreated > " . 
+            convert_string_to_sqlsyntax($last_update)
+        );
+        while ($record = mysqli_fetch_assoc($res)) {
+            $len = $record['WoWordCount'];
+            $wid = $record['WoID'];
+            $textlc = $record['WoTextLC'];
+            $sqlarr[] = insertExpressions($textlc, $lang, $wid, $len, 2);
+        }
+        mysqli_free_result($res);
+        $sqlarr = array_filter($sqlarr);
+        if (!empty($sqlarr)) {
+            $sqltext = "INSERT INTO {$tbpref}textitems2 (
+                Ti2WoID, Ti2LgID, Ti2TxID, Ti2SeID, Ti2Order, Ti2WordCount,
+                Ti2Text
+            ) VALUES " . rtrim(implode(',', $sqlarr), ',');
+            do_mysqli_query($sqltext);
+        }
+    }
 }
 
 /**
@@ -78,72 +215,9 @@ function upload_words_import_terms($fields, $tabs, $file_upl, $col, $lang): stri
         array(1, '1', 'ON')
     );
     if ($fields["tl"]==0 and $overwrite==0) {
-
-        if ($local_infile_enabled) {
-            $sql .= " IGNORE INTO TABLE {$tbpref}words 
-            FIELDS TERMINATED BY '$tabs' ENCLOSED BY '\"' LINES TERMINATED BY '\\n' 
-            " . ($_REQUEST["IgnFirstLine"] == '1' ? "IGNORE 1 LINES" : "") . "
-            $columns 
-            SET WoLgID = $lang, " . 
-            ($removeSpaces ? 
-            'WoTextLC = LOWER(REPLACE(@wotext," ","")),
-            WoText = REPLACE(@wotext, " ", "")':
-            'WoTextLC = LOWER(WoText)') . ", 
-            WoStatus = $status, WoStatusChanged = NOW(), " . 
-            make_score_random_insert_update('u');
-            runsql($sql, '');
-        } else {
-            $handle = fopen($file_name, 'r');
-            $data_text = fread($handle, filesize($file_name));
-            fclose($handle);
-            $values = array();
-            $i = 0;
-            foreach (explode(PHP_EOL, $data_text) as $line) {
-                if ($i++ == 0 && $_REQUEST["IgnFirstLine"] == '1') {
-                    continue;
-                }
-                $row = array();
-                $parsed_line = explode($tabs, $line); 
-                $wotext = $parsed_line[$fields["txt"] - 1];
-                // Fill WoText and WoTextLC
-                if ($removeSpaces) {
-                    $row[] = str_replace("", " ", $wotext);
-                    $row[] = mb_strtolower(str_replace("", " ", $wotext));
-                } else {
-                    $row[] = $wotext;
-                    $row[] = mb_strtolower($wotext);
-                }
-                if ($fields["tr"] != 0) {
-                    $row[] = $parsed_line[$fields["tr"] - 1];
-                }
-                if ($fields["ro"] != 0) {
-                    $row[] = $parsed_line[$fields["ro"] - 1];
-                }
-                if ($fields["se"] != 0) {
-                    $row[] = $parsed_line[$fields["se"] - 1];
-                }
-
-                $row = array_map('convert_string_to_sqlsyntax', $row);
-                $row = array_merge(
-                    $row, array(
-                        (string)$lang, (string)$status, "NOW()", 
-                        getsqlscoreformula(2), getsqlscoreformula(3), "RAND()"
-                    )
-                );
-                $values[] = "(" . implode(",", $row) . ")";
-            }
-            do_mysqli_query(
-                "INSERT INTO {$tbpref}words(
-                    WoText, WoTextLC, " . 
-                    ($fields["tr"] != 0 ? 'WoTranslation, ' : '') . 
-                    ($fields["ro"] != 0 ? 'WoRomanization, ' : '') . 
-                    ($fields["se"] != 0 ? 'WoSentence, ' : '') . 
-                    "WoLgID, WoStatus, WoStatusChanged, 
-                    WoTodayScore, WoTomorrowScore, WoRandom
-                )
-                VALUES " . implode(',', $values)
-            );
-        }
+        upload_words_import_dummy(
+            $lang, $fields, $columns, $tabs, $file_name, $status
+        );
     } else {
         runsql('SET GLOBAL max_heap_table_size = 1024 * 1024 * 1024 * 2', '');
         runsql(
@@ -454,54 +528,7 @@ function upload_words_import_terms($fields, $tabs, $file_upl, $col, $lang): stri
         SET Ti2WoID=WoID", 
         ''
     );
-    $mwords = get_first_value(
-        "SELECT count(*) AS value from {$tbpref}words 
-        WHERE WoWordCount>1 AND WoCreated > " . 
-        convert_string_to_sqlsyntax($last_update)
-    );
-    if ($mwords > 40) {
-        runsql(
-            "DELETE FROM  {$tbpref}sentences WHERE SeLgID = $lang", 
-            "Sentences deleted"
-        );
-        runsql(
-            "DELETE FROM {$tbpref}textitems2 WHERE Ti2LgID = $lang", 
-            "Text items deleted"
-        );
-        adjust_autoincr('sentences', 'SeID');
-        $sql = "SELECT TxID, TxText FROM {$tbpref}texts 
-        WHERE TxLgID = $lang ORDER BY TxID";
-        $res = do_mysqli_query($sql);
-        while ($record = mysqli_fetch_assoc($res)) {
-            $txtid = (int) $record["TxID"];
-            $txttxt = $record["TxText"];
-            splitCheckText($txttxt, $lang, $txtid);
-        }
-        mysqli_free_result($res);
-    } else if ($mwords!=0) {
-        $sqlarr = array();
-        $res = do_mysqli_query(
-            "SELECT WoID, WoTextLC, WoWordCount 
-            FROM {$tbpref}words 
-            WHERE WoWordCount>1 AND WoCreated > " . 
-            convert_string_to_sqlsyntax($last_update)
-        );
-        while ($record = mysqli_fetch_assoc($res)) {
-            $len = $record['WoWordCount'];
-            $wid = $record['WoID'];
-            $textlc = $record['WoTextLC'];
-            $sqlarr[] = insertExpressions($textlc, $lang, $wid, $len, 2);
-        }
-        mysqli_free_result($res);
-        $sqlarr = array_filter($sqlarr);
-        if (!empty($sqlarr)) {
-            $sqltext = "INSERT INTO {$tbpref}textitems2 (
-                Ti2WoID, Ti2LgID, Ti2TxID, Ti2SeID, Ti2Order, Ti2WordCount,
-                Ti2Text
-            ) VALUES " . rtrim(implode(',', $sqlarr), ',');
-            do_mysqli_query($sqltext);
-        }
-    }
+    upload_words_handle_multiwords($lang, $last_update);
     return $last_update;
 }
 
