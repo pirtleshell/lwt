@@ -508,34 +508,70 @@ function upload_words_import_terms($fields, $tabs, $file_upl, $col, $lang): stri
 function display_imported_terms($last_update, $rtl)
 {
     global $tbpref;
-    $recno = get_first_value(
+    $recno = (int)get_first_value(
         "SELECT count(*) AS value FROM {$tbpref}words 
         where WoStatusChanged > " . convert_string_to_sqlsyntax($last_update)
     );
     ?>
 <script type="text/javascript">
+function formatImportedTerms(data) {
+    return data;
+}
+
 function showImportedTerms(last_update, rtl, count, page) {
-    $('#res_data')
-    .load(
-        'inc/ajax_show_imported_terms.php',
-        {
-            'last_update': last_update,
-            'rtl': rtl,
-            'count': count,
-            'page': page
-        }
-    );
+    if (parseInt(count, 10) === 0) {
+        $('#res_data-no_terms_imported').css("display", "inherit");
+        $('#res_data-navigation').css("display", "none");
+        $('#res_data-res_table').css("display", "none");
+    } else {
+        $('#res_data-no_terms_imported').css("display", "none");
+        $('#res_data-navigation').css("display", "inherit");
+        $('#res_data-res_table').css("display", "inherit");
+        $('#res_data')
+        .load(
+            'inc/ajax_show_imported_terms.php',
+            {
+                'last_update': last_update,
+                'rtl': rtl,
+                'count': count,
+                'page': page
+            }
+        );
+        $.get(
+            "inc/ajax.php",
+            {
+                action: "query",
+                action_type: "imported_terms",
+                last_update: last_update,
+                count: count,
+                page: page
+            },
+            function (data) {
+                $('#res_data-res_table').append(formatImportedTerms(data));
+            },
+            "json"
+        )
+    }
 }
 </script>
 <form name="form1" action="#" onsubmit="showImportedTerms('<?php echo $last_update; ?>', $('#recno').text(), document.form1.page.options[document.form1.page.selectedIndex].value); return false;">
 <div id="res_data">
-<table class="tab2" cellspacing="0" cellpadding="2"></table>
+    <table id="res_data-navigation" class="tab2" cellspacing="0" cellpadding="2"></table>
+    <table id="res_data-res_table" class="sortable tab2" cellspacing="0" cellpadding="5">
+    <tr>
+        <th class="th1 clickable">Term /<br />Romanization</th>
+        <th class="th1 clickable">Translation</th>
+        <th class="th1 sorttable_nosort">Tags</th>
+        <th class="th1 sorttable_nosort">Se.</th>
+        <th class="th1 sorttable_numeric clickable">Status</th>
+    </tr>
+    <p id="res_data-no_terms_imported" style="display: none;">No terms imported.</p>
 </div>
 </form>
 <script type="text/javascript">
     showImportedTerms(
         '<?php echo $last_update; ?>', '<?php echo $rtl; ?>', 
-        '<?php echo $recno; ?>', '1'
+        <?php echo $recno; ?>, '1'
     );
 </script>
     <?php

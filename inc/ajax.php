@@ -9,6 +9,7 @@ require_once __DIR__ . '/ajax_add_term_transl.php';
 require_once __DIR__ . '/ajax_check_regexp.php';
 require_once __DIR__ . '/ajax_chg_term_status.php';
 require_once __DIR__ . '/ajax_save_text_position.php';
+require_once __DIR__ . '/ajax_show_imported_terms.php';
 
 
 // -------------------------- GET REQUESTS -------------------------
@@ -166,6 +167,13 @@ function example_sentences($get_req)
         (int) $get_req["lid"],
         $get_req["word_lc"],
         (int) $get_req["wid"]
+    ));
+}
+
+function imported_terms($get_req)
+{
+    return json_encode(imported_terms_list(
+        $get_req["last_update"], $get_req["page"], $get_req["count"]
     ));
 }
 
@@ -332,6 +340,8 @@ if (isset($_GET['action'])) {
             case "example_sentences":
                 echo example_sentences($_GET);
                 break;
+            case "imported_terms":
+                echo imported_terms($_GET);
             default:
                 echo unknown_get_action_type($_GET);
                 break;

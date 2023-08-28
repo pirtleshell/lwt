@@ -11,8 +11,6 @@
  * @link    https://hugofara.github.io/lwt/docs/html/ajax__show__imported__terms_8php.html
  * @since   1.6.0-fork
  */
-
-
 require_once __DIR__ . '/session_utility.php';
 
 /**
@@ -35,35 +33,32 @@ function imported_terms_header($recno, $currentpage, $last_update, $maxperpage=1
     if ($currentpage > $pages) { 
         $currentpage = $pages; 
     }
-    $limit = ' LIMIT ' . (($currentpage-1) * $maxperpage) . ',' . $maxperpage;
     $limit = ($currentpage - 1) * $maxperpage;
     ?>
 <table class="tab2"  cellspacing="0" cellpadding="2">
     <tr>
         <th class="th1" colspan="2" nowrap="nowrap">
             <span id="recno"><?php echo $recno; ?></span> 
-            Term<?php echo ($recno==1?'':'s'); ?>
+            Term<?php echo ($recno == 1 ?'':'s'); ?>
         </th>
         <th class="th1" colspan="1" nowrap="nowrap">
+            &nbsp; &nbsp;
             <?php
             if ($currentpage > 1) {
                 ?>
-            &nbsp; &nbsp;
             <img src="icn/control-stop-180.png" title="First Page" alt="First Page" 
-            onclick="$('#res_data').load('inc/ajax_show_imported_terms.php',{'last_update':'<?php echo $last_update; ?>','count':$('#recno').text(),'page':'1'}); return false;" />
+            onclick="showImportedTerms('<?php echo $last_update; ?>', undefined, $('#recno').text(), '1')" />
             &nbsp;
             <img  src="icn/control-180.png" title="Previous Page" alt="Previous Page" 
-            onclick="$('#res_data').load('inc/ajax_show_imported_terms.php',{'last_update':'<?php echo $last_update; ?>','count':$('#recno').text(),'page':'<?php echo $currentpage-1; ?>'}); return false;" />
-            &nbsp;
+            onclick="showImportedTerms('<?php echo $last_update; ?>', undefined, $('#recno').text(), <?php echo $currentpage-1; ?>)" />
                 <?php
             } else {
                 ?>
-            &nbsp; &nbsp;
             <img src="<?php print_file_path('icn/placeholder.png');?>" alt="-" />&nbsp;
-            <img src="<?php print_file_path('icn/placeholder.png');?>" alt="-" />&nbsp;
+            <img src="<?php print_file_path('icn/placeholder.png');?>" alt="-" />
                 <?php
             }
-            ?>
+            ?> &nbsp;
             Page
             <?php
             if ($pages==1) { 
@@ -71,7 +66,7 @@ function imported_terms_header($recno, $currentpage, $last_update, $maxperpage=1
             } else {
                 ?>
             <select name="page" 
-            onchange="{val=document.form1.page.options[document.form1.page.selectedIndex].value;$('#res_data').load('inc/ajax_show_imported_terms.php',{'last_update':'<?php echo $last_update; ?>','count':$('#recno').text(),'page':val}); return false;}">
+            onchange="{val=document.form1.page.options[document.form1.page.selectedIndex].value;showImportedTerms('<?php echo $last_update; ?>', undefined, $('#recno').text(), val);}">
                 <?php echo get_paging_selectoptions($currentpage, $pages); ?>
             </select>
                 <?php
@@ -80,19 +75,20 @@ function imported_terms_header($recno, $currentpage, $last_update, $maxperpage=1
             if ($currentpage < $pages) { 
                 ?>
             <img src="icn/control.png" title="Next Page" alt="Next Page" 
-            onclick="$('#res_data').load('inc/ajax_show_imported_terms.php',{'last_update':'<?php echo $last_update; ?>','count':$('#recno').text(),'page':'<?php echo $currentpage+1; ?>'}); return false;" />&nbsp;
+            onclick="showImportedTerms('<?php echo $last_update; ?>', undefined, $('#recno').text(), '<?php echo $currentpage+1; ?>')" />
+            &nbsp;
             <img src="icn/control-stop.png" title="Last Page" alt="Last Page" 
-            onclick="$('#res_data').load('inc/ajax_show_imported_terms.php',{'last_update':'<?php echo $last_update; ?>','count':$('#recno').text(),'page':'<?php echo $pages; ?>'}); return false;" />&nbsp; &nbsp;
+            onclick="showImportedTerms('<?php echo $last_update; ?>', undefined, $('#recno').text(), <?php echo $pages; ?>)" />
                 <?php 
             } else {
                 ?>
             <img src="<?php print_file_path('icn/placeholder.png');?>" alt="-" />
             &nbsp;
             <img src="<?php print_file_path('icn/placeholder.png');?>" alt="-" />
-            &nbsp; &nbsp; 
                 <?php
             }
             ?>
+            &nbsp; &nbsp; 
         </th>
     </table>
     <?php
@@ -239,6 +235,12 @@ function do_ajax_show_imported_terms($last_update, $currentpage, $recno, $rtl)
     } else if ($recno==0) {
         echo '<p>No terms imported.</p>';
     }
+}
+
+function imported_terms_list($last_update, $currentpage, $recno) {
+    $maxperpage = 100;
+    $offset = imported_terms_header($recno, $currentpage, $last_update, $maxperpage);
+    return select_imported_terms($last_update, $offset, $maxperpage);
 }
 
 if (isset($_REQUEST['last_update']) && isset($_REQUEST['page'])  
