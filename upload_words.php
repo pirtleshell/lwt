@@ -38,18 +38,16 @@ function my_str_getcsv($input)
  * @param array<int, string> $col      Columns names
  * @param int      $lang     Language ID
  * 
- * @return void
+ * @return string Last word update timestamp
  * 
  * @global string $tbpref Database table prefix
  */
-function upload_words_import_terms($fields, $tabs, $file_upl, $col, $lang): void
+function upload_words_import_terms($fields, $tabs, $file_upl, $col, $lang): string
 {
     global $tbpref;
-    $sql = "SELECT * FROM {$tbpref}languages WHERE LgID=$lang";
-    $res = do_mysqli_query($sql);
-    $record = mysqli_fetch_assoc($res);
-    $removeSpaces = $record["LgRemoveSpaces"];
-    $rtl = $record['LgRightToLeft'];
+    $removeSpaces = get_first_value(
+        "SELECT LgRemoveSpaces AS value FROM {$tbpref}languages WHERE LgID=$lang"
+    );
     $last_update = get_first_value(
         "SELECT max(WoStatusChanged) AS value FROM {$tbpref}words"
     );
@@ -504,6 +502,12 @@ function upload_words_import_terms($fields, $tabs, $file_upl, $col, $lang): void
             do_mysqli_query($sqltext);
         }
     }
+    return $last_update;
+}
+
+function display_imported_terms($last_update, $rtl)
+{
+    global $tbpref;
     $recno = get_first_value(
         "SELECT count(*) AS value FROM {$tbpref}words 
         where WoStatusChanged > " . convert_string_to_sqlsyntax($last_update)
@@ -706,7 +710,11 @@ function upload_words_import(): void
     
     }
     if ($fields["txt"] > 0) {
-        upload_words_import_terms($fields, $tabs, $file_upl, $col, $lang);
+        $last_update = upload_words_import_terms($fields, $tabs, $file_upl, $col, $lang);
+        $rtl = get_first_value(
+            "SELECT LgRightToLeft AS value FROM {$tbpref}languages WHERE LgID=$lang"
+        );
+        display_imported_terms($last_update, $rtl);
     } else if ($fields["tl"] > 0) {
         upload_words_import_tags($fields, $tabs, $file_upl);
     }
