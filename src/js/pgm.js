@@ -1000,16 +1000,22 @@ function createSentLookupLink (torder, txid, url, txt) {
 /**
  * Replace html characters with encodings
  * 
+ * See https://stackoverflow.com/questions/1787322/what-is-the-htmlspecialchars-equivalent-in-javascript
+ * 
  * @param {string} s String to be escaped 
  * @returns {string} Escaped string
  */
-function escape_html_chars (s) {
-  return s
-  .replace(/&/g, '%AMP%')
-  .replace(/</g, '&#060;').replace(/>/g, '&#062;')
-  .replace(/"/g, '&#034;').replace(/'/g, '&#039;')
-  .replace(/%AMP%/g, '&#038;')
-  .replace(/\x0d/g, '<br />');
+function escape_html_chars(s) {
+  let map = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;',
+    "\x0d": '<br />' // This one inserts HTML, delete? (2.9.0)
+  };
+
+  return s.replace(/[&<>"'\x0d]/g, function(m) { return map[m]; });
 }
 
 /**

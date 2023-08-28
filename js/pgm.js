@@ -314,7 +314,7 @@ try{let final_url=new URL(url);popup|=final_url.searchParams.has('lwt_popup');ex
 if(popup){return' <span class="click" onclick="owin(\''+target_url+'\');">'+txt+'</span> '}
 if(external){return' <a href="'+target_url+'" target="ru" onclick="showRightFrames();">'+txt+'</a> '}
 return r}
-function escape_html_chars(s){return s.replace(/&/g,'%AMP%').replace(/</g,'&#060;').replace(/>/g,'&#062;').replace(/"/g,'&#034;').replace(/'/g,'&#039;').replace(/%AMP%/g,'&#038;').replace(/\x0d/g,'<br />')}
+function escape_html_chars(s){let map={'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;',"\x0d":'<br />'};return s.replace(/[&<>"'\x0d]/g,function(m){return map[m]})}
 function escape_apostrophes(s){return s.replace(/'/g,'\\\'')}
 function selectToggle(toggle,form){const myForm=document.forms[form];for(let i=0;i<myForm.length;i++){if(toggle){myForm.elements[i].checked='checked'}else{myForm.elements[i].checked=''}}
 markClick()}
