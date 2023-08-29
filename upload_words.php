@@ -552,6 +552,51 @@ function display_imported_terms($last_update, $rtl)
     );
     ?>
 <script type="text/javascript">
+function formatImportedTermsNavigation(data) {
+    const currentPage = parseInt(data["current_page"], 10);
+    const totalPages = parseInt(data["total_pages"], 10);
+    if (currentPage > 1) {
+        $('#res_data-navigation-prev').css("display", "inherit");
+        $('#res_data-navigation-no_prev').css("display", "none");
+    } else {
+        $('#res_data-navigation-prev').css("display", "none");
+        $('#res_data-navigation-no_prev').css("display", "inherit");
+    }
+    $('#res_data-navigation-prev-minus')[0].onclick = function () {
+        showImportedTerms(
+            '<?php echo $last_update; ?>', undefined, 
+            $('#recno').text(), currentPage - 1
+        );
+    }
+    if (totalPages == 1) {
+        $('#res_data-navigation-quick_nav').css("display", "none");
+        $('#res_data-navigation-no_quick_nav').css("display", "inherit");
+    } else {
+        $('#res_data-navigation-quick_nav').css("display", "inherit");
+        $('#res_data-navigation-no_quick_nav').css("display", "none");
+    }
+    $('#res_data-navigation-totalPages').text(totalPages);
+    if (currentPage < totalPages) {
+        $('#res_data-navigation-next').css("display", "inherit");
+        $('#res_data-navigation-no_next').css("display", "none");
+    } else {
+        $('#res_data-navigation-next').css("display", "none");
+        $('#res_data-navigation-no_next').css("display", "inherit");
+    }
+    $('#res_data-navigation-next-plus')[0].onclick = function () {
+        showImportedTerms(
+            '<?php echo $last_update; ?>', undefined, 
+            $('#recno').text(), currentPage + 1
+        );
+    }
+    $('#res_data-navigation-next-last')[0].onclick = function () {
+        showImportedTerms(
+            '<?php echo $last_update; ?>', undefined, 
+            $('#recno').text(), totalPages
+        );
+    }
+}
+
 function formatImportedTerms(data) {
     let output = "", row, record;
     for (let i = 0; i < data.length; i++) {
@@ -609,9 +654,8 @@ function showImportedTerms(last_update, rtl, count, page) {
                 page: page
             },
             function (data) {
-                console.log(data);
-                const html_content = formatImportedTerms(data);
-                console.log(html_content);
+                formatImportedTermsNavigation(data["navigation"]);
+                const html_content = formatImportedTerms(data["terms"]);
                 $('#res_data-res_table-body').append($(html_content));
             },
             "json"
@@ -629,52 +673,38 @@ function showImportedTerms(last_update, rtl, count, page) {
         </th>
         <th class="th1" colspan="1" nowrap="nowrap">
             &nbsp; &nbsp;
-            <?php
-            /*
-            if ($currentpage > 1) {
-                ?>
-            <img src="icn/control-stop-180.png" title="First Page" alt="First Page" 
-            onclick="showImportedTerms('<?php echo $last_update; ?>', undefined, $('#recno').text(), '1')" />
-            &nbsp;
-            <img  src="icn/control-180.png" title="Previous Page" alt="Previous Page" 
-            onclick="showImportedTerms('<?php echo $last_update; ?>', undefined, $('#recno').text(), <?php echo $currentpage-1; ?>)" />
-                <?php
-            } else {
-                ?>
-            <img src="<?php print_file_path('icn/placeholder.png');?>" alt="-" />&nbsp;
-            <img src="<?php print_file_path('icn/placeholder.png');?>" alt="-" />
-                <?php
-            }
-            ?> &nbsp;
+            <span id="res_data-navigation-prev">
+                <img src="icn/control-stop-180.png" title="First Page" alt="First Page" 
+                onclick="showImportedTerms('<?php echo $last_update; ?>', undefined, $('#recno').text(), '1')" />
+                &nbsp;
+                <img id="res_data-navigation-prev-minus" 
+                src="icn/control-180.png" title="Previous Page" 
+                alt="Previous Page" />
+            </span>
+            <span id="res_data-navigation-no_prev">
+                <img src="<?php print_file_path('icn/placeholder.png');?>" alt="-" />&nbsp;
+                <img src="<?php print_file_path('icn/placeholder.png');?>" alt="-" />
+            </span>
             Page
-            <?php
-            if ($pages==1) { 
-                echo '1'; 
-            } else {
-                ?>
-            <select name="page" 
+            <span id="res_data-navigation-no_quick_nav">1</span>
+            <span id="res_data-navigation-quick_nav">
+                <select name="page" 
             onchange="{val=document.form1.page.options[document.form1.page.selectedIndex].value;showImportedTerms('<?php echo $last_update; ?>', undefined, $('#recno').text(), val);}">
-                <?php echo get_paging_selectoptions($currentpage, $pages); ?>
+                <?php /*echo get_paging_selectoptions($currentpage, $pages); */ ?>
             </select>
-                <?php
-            }
-            echo ' of ' . $pages . '&nbsp; ';
-            if ($currentpage < $pages) { 
-                ?>
-            <img src="icn/control.png" title="Next Page" alt="Next Page" 
-            onclick="showImportedTerms('<?php echo $last_update; ?>', undefined, $('#recno').text(), '<?php echo $currentpage+1; ?>')" />
-            &nbsp;
-            <img src="icn/control-stop.png" title="Last Page" alt="Last Page" 
-            onclick="showImportedTerms('<?php echo $last_update; ?>', undefined, $('#recno').text(), <?php echo $pages; ?>)" />
-                <?php 
-            } else {
-                ?>
-            <img src="<?php print_file_path('icn/placeholder.png');?>" alt="-" />
-            &nbsp;
-            <img src="<?php print_file_path('icn/placeholder.png');?>" alt="-" />
-                <?php
-            }*/
-            ?>
+            </span> of <span id="res_data-navigation-totalPages"></span> &nbsp;
+            <span id="res_data-navigation-next">
+                <img id="res_data-navigation-next-plus" src="icn/control.png" 
+                title="Next Page" alt="Next Page" />
+                &nbsp;
+                <img id="res_data-navigation-next-last" src="icn/control-stop.png" 
+                title="Last Page" alt="Last Page" />
+            </span>
+            <span id="res_data-navigation-no_next">
+                <img src="<?php print_file_path('icn/placeholder.png');?>" alt="-" />
+                &nbsp;
+                <img src="<?php print_file_path('icn/placeholder.png');?>" alt="-" />
+            </span>
             &nbsp; &nbsp; 
         </th>
     </table>

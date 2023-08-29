@@ -249,7 +249,16 @@ function imported_terms_list($last_update, $currentpage, $recno) {
     $maxperpage = 100;
     $currentpage = limit_current_page($currentpage, $recno, $maxperpage);
     $offset = ($currentpage - 1) * $maxperpage;
-    return select_imported_terms($last_update, $offset, $maxperpage);
+
+    $pages = intval(($recno-1) / $maxperpage) + 1;
+    $output = array(
+        "navigation" => array(
+            "current_page" => $currentpage,
+            "total_pages" => $pages
+        ),
+        "terms" => select_imported_terms($last_update, $offset, $maxperpage)
+    );
+    return $output;
 }
 
 if (isset($_REQUEST['last_update']) && isset($_REQUEST['page'])  
