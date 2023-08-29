@@ -170,6 +170,11 @@ function example_sentences($get_req)
     ));
 }
 
+/**
+ * Return the list of imported terms.
+ * 
+ * @param array $get_req Get request with fields "last_update", "page" and "count".
+ */
 function imported_terms($get_req)
 {
     return json_encode(imported_terms_list(

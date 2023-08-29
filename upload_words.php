@@ -552,16 +552,21 @@ function display_imported_terms($last_update, $rtl)
     );
     ?>
 <script type="text/javascript">
-function formatImportedTermsNavigation(data) {
+    /**
+     * Navigation header for the imported terms.
+     * 
+     * @param {JSON} data Data object for navigation.
+     * @param {string} last_update Terms import timestamp for SQL
+     * @param {bool} rtl If text is right-to-left
+     */
+function formatImportedTermsNavigation(data, last_update, rtl) {
     const currentPage = parseInt(data["current_page"], 10);
     const totalPages = parseInt(data["total_pages"], 10);
     const importedTerms = parseInt($('#recno').text(), 10);
     const showOtherPage = function (page_number) {
         return function () {
-            showImportedTerms(
-            '<?php echo $last_update; ?>', undefined, 
-            importedTerms, page_number
-        )};
+            showImportedTerms(last_update, rtl, importedTerms, page_number);
+        };
     }
 
     if (currentPage > 1) {
@@ -569,6 +574,8 @@ function formatImportedTermsNavigation(data) {
     } else {
         $('#res_data-navigation-prev').css("display", "none");
     }
+    $('#res_data-navigation-prev-first')
+    .on("click", showOtherPage(1));
     $('#res_data-navigation-prev-minus')
     .on("click", showOtherPage(currentPage - 1));
     if (totalPages == 1) {
@@ -602,13 +609,21 @@ function formatImportedTermsNavigation(data) {
     .on("click", showOtherPage(totalPages));
 }
 
-function formatImportedTerms(data) {
+/**
+ * Create the rows with the imported terms.
+ * 
+ * @param {JSON} data Data object containing terms.
+ * @param {bool} rtl If text is right-to-left.
+ * 
+ * @returns {string} HTML-formated rows to display
+ */
+function formatImportedTerms(data, rtl) {
     let output = "", row, record;
     for (let i = 0; i < data.length; i++) {
         record = data[i];
         row = `<tr>
             <td class="td1">
-                <span` + (record["rtl"] ? ` dir="rtl" ` : ``) + `>` + 
+                <span` + (rtl ? ` dir="rtl" ` : ``) + `>` + 
                 escape_html_chars(record[`WoText`]) + `</span>` +
                     ` / <span id="roman` + record[`WoText`] + `" class="edit_area clickedit">` + 
                     (record[`WoText`] != `` ? escape_html_chars(record[`WoText`]) : `*`) + 
@@ -641,10 +656,25 @@ function formatImportedTerms(data) {
 }
 
 /**
+ * Display page content based on raw server answer. 
+ * 
+ * @param {JSON} data Data object for navigation.
+ * @param {string} last_update Terms import timestamp for SQL
+ * @param {bool} rtl If text is right-to-left
+ */
+function imported_terms_handle_answer(data, last_update, rtl)
+{
+    formatImportedTermsNavigation(data["navigation"], last_update, rtl);
+    const html_content = formatImportedTerms(data["terms"], rtl);
+    $('#res_data-res_table-body').empty();
+    $('#res_data-res_table-body').append($(html_content));
+}
+
+/**
  * Show the terms imported.
  * 
  * @param {string} last_update Last update date in SQL compatible format
- * @param {} rtl
+ * @param {bool} rtl If text is right-to-left
  * @param {int} count Number of terms imported
  * @param {int} page Current page number
  */
@@ -667,30 +697,28 @@ function showImportedTerms(last_update, rtl, count, page) {
                 page: page
             },
             function (data) {
-                formatImportedTermsNavigation(data["navigation"]);
-                const html_content = formatImportedTerms(data["terms"]);
-                $('#res_data-res_table-body').empty();
-                $('#res_data-res_table-body').append($(html_content));
+                imported_terms_handle_answer(data, last_update, rtl)
             },
             "json"
         )
     }
 }
 </script>
-<form name="form1" action="#" onsubmit="showImportedTerms('<?php echo $last_update; ?>', $('#recno').text(), document.form1.page.options[document.form1.page.selectedIndex].value); return false;">
+<form name="form1" action="#" 
+onsubmit="showImportedTerms('<?php echo $last_update; ?>', <?php echo $rtl; ?>, <?php echo $recno; ?>, document.form1.page.options[document.form1.page.selectedIndex].value); return false;">
 <div id="res_data">
     <table id="res_data-navigation" class="tab2" cellspacing="0" cellpadding="2">
     <tr>
         <th class="th1" colspan="2" nowrap="nowrap">
             <span id="recno"><?php echo $recno; ?></span> 
-            Term<?php echo ($recno == 1 ?'':'s'); ?>
+            Term<?php echo ($recno == 1 ? '':'s'); ?>
         </th>
         <th class="th1 flex-spaced" colspan="1" nowrap="nowrap">
             <span>
                 <span id="res_data-navigation-prev">
-                    <img src="icn/control-stop-180.png" title="First Page" 
-                    alt="First Page" 
-                    onclick="showImportedTerms('<?php echo $last_update; ?>', undefined, $('#recno').text(), '1')" />
+                    <img id="res_data-navigation-prev-first" 
+                    src="icn/control-stop-180.png" title="First Page" 
+                    alt="First Page" />
                     &nbsp;
                     <img id="res_data-navigation-prev-minus" 
                     src="icn/control-180.png" title="Previous Page" 

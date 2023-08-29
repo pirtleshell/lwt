@@ -27,6 +27,7 @@ It features the following interaction:
     * ``texts_statistics``: various words statistics for each text.
     * ``media_paths``: paths of files and folders in the ``/media`` folder.
     * ``example_sentences``: list of sentences containing a word.
+    * ``imported_terms``: list of imported terms through terms upload.
   * On POST, ``action_type`` can be:
     * ``text`` of ``audio`` change the reading position for a text or it's audio.
     * ``simterms``: similar terms to a given term
@@ -79,6 +80,7 @@ the intendended page. Same goes for "New Text" on "Archived Texts" page.
   * ``inc/ajax_word_counts.php`` should be accessed through ``action_type=texts_statistics``, on GET. Argument ``id`` is now ``texts_id``.
   * ``inc/ajax_update_media_select.php`` should be accessed through ``action_type=media_paths``.
   * ``inc/ajax_show_sentences.php`` should be accessed through ``action_type=example_sentences``, on GET. Argument ``lang`` is now ``lid``, ``word`` is ``word_lc`` and ``woid`` is ``wid``, ``ctl`` is no longer required.
+  * ``inc/ajax_show_imported_terms.php`` should be accessed through ``action_type=imported_terms``, same arguments.
 
 ## 2.8.1-fork (April 14 2023)
 

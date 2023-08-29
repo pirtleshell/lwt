@@ -229,6 +229,8 @@ function show_imported_terms($last_update, $limit, $rtl)
  * @param bool   $rtl         True if this language is right-to-left
  * 
  * @return void
+ * 
+ * @deprecated 2.9.0 Use the AJAX API instead.
  */
 function do_ajax_show_imported_terms($last_update, $currentpage, $recno, $rtl)
 {
@@ -245,6 +247,15 @@ function do_ajax_show_imported_terms($last_update, $currentpage, $recno, $rtl)
     }
 }
 
+/**
+ * Return the list of imported terms of pages information.
+ * 
+ * @param string $last_update Terms import time
+ * @param int    $currentpage Current page number
+ * @param int    $recno       Number of imported terms
+ * 
+ * @return array 
+ */
 function imported_terms_list($last_update, $currentpage, $recno) {
     $maxperpage = 100;
     $currentpage = limit_current_page($currentpage, $recno, $maxperpage);
