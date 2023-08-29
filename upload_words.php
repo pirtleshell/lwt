@@ -566,12 +566,11 @@ function formatImportedTermsNavigation(data) {
 
     if (currentPage > 1) {
         $('#res_data-navigation-prev').css("display", "initial");
-        $('#res_data-navigation-no_prev').css("display", "none");
     } else {
         $('#res_data-navigation-prev').css("display", "none");
-        $('#res_data-navigation-no_prev').css("display", "initial");
     }
-    $('#res_data-navigation-prev-minus')[0].onclick = showOtherPage(currentPage - 1)
+    $('#res_data-navigation-prev-minus')
+    .on("click", showOtherPage(currentPage - 1));
     if (totalPages == 1) {
         $('#res_data-navigation-quick_nav').css("display", "none");
         $('#res_data-navigation-no_quick_nav').css("display", "initial");
@@ -579,16 +578,28 @@ function formatImportedTermsNavigation(data) {
         $('#res_data-navigation-quick_nav').css("display", "initial");
         $('#res_data-navigation-no_quick_nav').css("display", "none");
     }
+    let options = "";
+    for (let i = 1; i < totalPages + 1; i++) {
+            options = '<option value="' + i + '"' + 
+            (i == currentPage ? ' selected="selected"' : '') + '>' + i + 
+            '</option>';
+    }
+    $("#res_data-navigation-quick_nav").html(options);
+    $("#res_data-navigation-quick_nav").on(
+        "change", showOtherPage(
+            document.form1.page.options[document.form1.page.selectedIndex].value
+        )
+    );
     $('#res_data-navigation-totalPages').text(totalPages);
     if (currentPage < totalPages) {
         $('#res_data-navigation-next').css("display", "initial");
-        $('#res_data-navigation-no_next').css("display", "none");
     } else {
         $('#res_data-navigation-next').css("display", "none");
-        $('#res_data-navigation-no_next').css("display", "initial");
     }
-    $('#res_data-navigation-next-plus')[0].onclick = showOtherPage(currentPage + 1);
-    $('#res_data-navigation-next-last')[0].onclick = showOtherPage(totalPages);
+    $('#res_data-navigation-next-plus')
+    .on("click", showOtherPage(currentPage + 1));
+    $('#res_data-navigation-next-last')
+    .on("click", showOtherPage(totalPages));
 }
 
 function formatImportedTerms(data) {
@@ -658,6 +669,7 @@ function showImportedTerms(last_update, rtl, count, page) {
             function (data) {
                 formatImportedTermsNavigation(data["navigation"]);
                 const html_content = formatImportedTerms(data["terms"]);
+                $('#res_data-res_table-body').empty();
                 $('#res_data-res_table-body').append($(html_content));
             },
             "json"
@@ -688,12 +700,8 @@ function showImportedTerms(last_update, rtl, count, page) {
             <span>
                 Page
                 <span id="res_data-navigation-no_quick_nav">1</span>
-                <span id="res_data-navigation-quick_nav">
-                    <select name="page" 
-                onchange="{val=document.form1.page.options[document.form1.page.selectedIndex].value;showImportedTerms('<?php echo $last_update; ?>', undefined, $('#recno').text(), val);}">
-                    <?php /*echo get_paging_selectoptions($currentpage, $pages); */ ?>
-                </select>
-                </span> of <span id="res_data-navigation-totalPages"></span>
+                <select id="res_data-navigation-quick_nav" name="page"></select> 
+                of <span id="res_data-navigation-totalPages"></span>
             </span>
             <span>
                 <span id="res_data-navigation-next">
