@@ -16,21 +16,26 @@
  * @since   1.5.0
  */
 
+namespace Lwt\Interface\Print_Impr_text;
+
 require_once 'inc/session_utility.php';
+
 
 $textid = (int)getreq('text');
 $editmode = getreq('edit');
 $editmode = ($editmode == '' ? 0 : (int)$editmode);
 $delmode = getreq('del');
 $delmode = ($delmode == '' ? 0 : (int)$delmode);
-$ann = get_first_value("select TxAnnotatedText as value from " . $tbpref . "texts where TxID = " . $textid);
-$ann_exists = (strlen($ann) > 0);
+$ann = get_first_value(
+    "SELECT TxAnnotatedText as value from {$tbpref}texts where TxID = $textid"
+);
+$ann_exists = strlen($ann) > 0;
 if ($ann_exists) {
     $ann = recreate_save_ann($textid, $ann);
     $ann_exists = (strlen($ann) > 0);
 }
 
-if ($textid==0) {
+if ($textid == 0) {
     header("Location: edit_texts.php");
     exit();
 }
@@ -119,33 +124,17 @@ pagestart_nobody('Annotated Text', 'input[type="radio"]{display:inline;}');
 <div id="printoptions">
 <h2>Improved Annotated Text<?php
 
-if ($editmode) {
+function edit_mode_display($textid, $ann_exists)
+{
     ?> (Edit Mode) 
     <img src="icn/question-frame.png" title="Help" alt="Help" class="click" onclick="window.open('docs/info.html#il');" />
     </h2>
     <input type="button" value="Display/Print Mode" onclick="location.href='print_impr_text.php?text=<?php echo $textid; ?>';" />
-    <?php
-} else {
-    ?> (Display/Print Mode)</h2>
-    <div class="flex-spaced">
-    <input type="button" value="Edit" onclick="location.href='print_impr_text.php?edit=1&amp;text=<?php echo $textid; ?>';" /> 
-    <input type="button" value="Delete" onclick="if (confirm ('Are you sure?')) location.href='print_impr_text.php?del=1&amp;text=<?php echo $textid; ?>';" /> 
-    <input type="button" value="Print" onclick="window.print();" />
-    <input type="button" value="Display <?php echo (($audio != '') ? ' with Audio Player' : ''); ?> in new Window" 
-    onclick="window.open('display_impr_text.php?text=<?php echo $textid; ?>');" />
-    </div>
-    <?php
-}
-?>
 </div>
 </div> 
 <!-- noprint -->
-<?php
 
-// --------------------------------------------------------
-
-if ($editmode) {  // Edit Mode
-
+    <?php
     if (!$ann_exists) {  // No Ann., Create...
         $ann = create_save_ann($textid);
         $ann_exists = (strlen($ann) > 0);
@@ -170,39 +159,60 @@ if ($editmode) {  // Edit Mode
     echo '<div class="noprint">
     <input type="button" value="Display/Print Mode" onclick="location.href=\'print_impr_text.php?text=' . $textid . '\';" />
     </div>';
+}
 
-} else {  // Print Mode
+function print_mode_display($textid, $audio, $ann, $rtlScript, $title, $textsize, $ttsClass)
+{
+    ?> (Display/Print Mode)</h2>
+    <div class="flex-spaced">
+    <input type="button" value="Edit" onclick="location.href='print_impr_text.php?edit=1&amp;text=<?php echo $textid; ?>';" /> 
+    <input type="button" value="Delete" onclick="if (confirm ('Are you sure?')) location.href='print_impr_text.php?del=1&amp;text=<?php echo $textid; ?>';" /> 
+    <input type="button" value="Print" onclick="window.print();" />
+    <input type="button" value="Display <?php echo (($audio != '') ? ' with Audio Player' : ''); ?> in new Window" 
+    onclick="window.open('display_impr_text.php?text=<?php echo $textid; ?>');" />
+    </div>
+</div>
+</div> 
 
-    echo "<div id=\"print\"" . ($rtlScript ? ' dir="rtl"' : '') . ">";
+<!-- noprint -->
+    <?php
+
+echo "<div id=\"print\"" . ($rtlScript ? ' dir="rtl"' : '') . ">";
     
-    echo '<p style="font-size:' . $textsize . '%;line-height: 1.35; margin-bottom: 10px; ">' . tohtml($title) . '<br /><br />';
-    
-    $items = preg_split('/[\n]/u', $ann);
-    
-    foreach ($items as $item) {
-        $vals = preg_split('/[\t]/u', $item);
-        if ($vals[0] > -1) {
-            $trans = '';
-            if (count($vals) > 3) { 
-                $trans = $vals[3]; 
-            }
-            if ($trans == '*') { 
-                $trans = $vals[1] . " "; // <- U+200A HAIR SPACE
-            }      
-            echo ' <ruby><rb><span class="'.$ttsClass.'anntermruby">' . tohtml($vals[1]) . '</span></rb><rt><span class="anntransruby2">' . tohtml($trans) . '</span></rt></ruby> ';
-        } else {
-            if (count($vals) >= 2) { 
-                echo str_replace(
-                    "¶",
-                    '</p><p style="font-size:' . $textsize . '%;line-height: 1.3; margin-bottom: 10px;">',
-                    " " . tohtml($vals[1]) . " "
-                ); 
-            }
+echo '<p style="font-size:' . $textsize . '%;line-height: 1.35; margin-bottom: 10px; ">' . tohtml($title) . '<br /><br />';
+
+$items = preg_split('/[\n]/u', $ann);
+
+foreach ($items as $item) {
+    $vals = preg_split('/[\t]/u', $item);
+    if ($vals[0] > -1) {
+        $trans = '';
+        if (count($vals) > 3) { 
+            $trans = $vals[3]; 
+        }
+        if ($trans == '*') { 
+            $trans = $vals[1] . " "; // <- U+200A HAIR SPACE
+        }      
+        echo ' <ruby><rb><span class="'.$ttsClass.'anntermruby">' . tohtml($vals[1]) . '</span></rb><rt><span class="anntransruby2">' . tohtml($trans) . '</span></rt></ruby> ';
+    } else {
+        if (count($vals) >= 2) { 
+            echo str_replace(
+                "¶",
+                '</p><p style="font-size:' . $textsize . '%;line-height: 1.3; margin-bottom: 10px;">',
+                " " . tohtml($vals[1]) . " "
+            ); 
         }
     }
-    
-    echo "</p></div>";
+}
 
+echo "</p></div>";
+
+}
+
+if ($editmode) {
+    edit_mode_display($textid, $ann_exists);
+} else {
+    print_mode_display($textid, $audio, $ann, $rtlScript, $title, $textsize, $ttsClass);
 }
 
 pageend();
