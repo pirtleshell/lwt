@@ -555,46 +555,40 @@ function display_imported_terms($last_update, $rtl)
 function formatImportedTermsNavigation(data) {
     const currentPage = parseInt(data["current_page"], 10);
     const totalPages = parseInt(data["total_pages"], 10);
+    const importedTerms = parseInt($('#recno').text(), 10);
+    const showOtherPage = function (page_number) {
+        return function () {
+            showImportedTerms(
+            '<?php echo $last_update; ?>', undefined, 
+            importedTerms, page_number
+        )};
+    }
+
     if (currentPage > 1) {
-        $('#res_data-navigation-prev').css("display", "inherit");
+        $('#res_data-navigation-prev').css("display", "initial");
         $('#res_data-navigation-no_prev').css("display", "none");
     } else {
         $('#res_data-navigation-prev').css("display", "none");
-        $('#res_data-navigation-no_prev').css("display", "inherit");
+        $('#res_data-navigation-no_prev').css("display", "initial");
     }
-    $('#res_data-navigation-prev-minus')[0].onclick = function () {
-        showImportedTerms(
-            '<?php echo $last_update; ?>', undefined, 
-            $('#recno').text(), currentPage - 1
-        );
-    }
+    $('#res_data-navigation-prev-minus')[0].onclick = showOtherPage(currentPage - 1)
     if (totalPages == 1) {
         $('#res_data-navigation-quick_nav').css("display", "none");
-        $('#res_data-navigation-no_quick_nav').css("display", "inherit");
+        $('#res_data-navigation-no_quick_nav').css("display", "initial");
     } else {
-        $('#res_data-navigation-quick_nav').css("display", "inherit");
+        $('#res_data-navigation-quick_nav').css("display", "initial");
         $('#res_data-navigation-no_quick_nav').css("display", "none");
     }
     $('#res_data-navigation-totalPages').text(totalPages);
     if (currentPage < totalPages) {
-        $('#res_data-navigation-next').css("display", "inherit");
+        $('#res_data-navigation-next').css("display", "initial");
         $('#res_data-navigation-no_next').css("display", "none");
     } else {
         $('#res_data-navigation-next').css("display", "none");
-        $('#res_data-navigation-no_next').css("display", "inherit");
+        $('#res_data-navigation-no_next').css("display", "initial");
     }
-    $('#res_data-navigation-next-plus')[0].onclick = function () {
-        showImportedTerms(
-            '<?php echo $last_update; ?>', undefined, 
-            $('#recno').text(), currentPage + 1
-        );
-    }
-    $('#res_data-navigation-next-last')[0].onclick = function () {
-        showImportedTerms(
-            '<?php echo $last_update; ?>', undefined, 
-            $('#recno').text(), totalPages
-        );
-    }
+    $('#res_data-navigation-next-plus')[0].onclick = showOtherPage(currentPage + 1);
+    $('#res_data-navigation-next-last')[0].onclick = showOtherPage(totalPages);
 }
 
 function formatImportedTerms(data) {
@@ -635,6 +629,14 @@ function formatImportedTerms(data) {
     return output;
 }
 
+/**
+ * Show the terms imported.
+ * 
+ * @param {string} last_update Last update date in SQL compatible format
+ * @param {} rtl
+ * @param {int} count Number of terms imported
+ * @param {int} page Current page number
+ */
 function showImportedTerms(last_update, rtl, count, page) {
     if (parseInt(count, 10) === 0) {
         $('#res_data-no_terms_imported').css("display", "inherit");
@@ -671,41 +673,37 @@ function showImportedTerms(last_update, rtl, count, page) {
             <span id="recno"><?php echo $recno; ?></span> 
             Term<?php echo ($recno == 1 ?'':'s'); ?>
         </th>
-        <th class="th1" colspan="1" nowrap="nowrap">
-            &nbsp; &nbsp;
-            <span id="res_data-navigation-prev">
-                <img src="icn/control-stop-180.png" title="First Page" alt="First Page" 
-                onclick="showImportedTerms('<?php echo $last_update; ?>', undefined, $('#recno').text(), '1')" />
-                &nbsp;
-                <img id="res_data-navigation-prev-minus" 
-                src="icn/control-180.png" title="Previous Page" 
-                alt="Previous Page" />
+        <th class="th1 flex-spaced" colspan="1" nowrap="nowrap">
+            <span>
+                <span id="res_data-navigation-prev">
+                    <img src="icn/control-stop-180.png" title="First Page" 
+                    alt="First Page" 
+                    onclick="showImportedTerms('<?php echo $last_update; ?>', undefined, $('#recno').text(), '1')" />
+                    &nbsp;
+                    <img id="res_data-navigation-prev-minus" 
+                    src="icn/control-180.png" title="Previous Page" 
+                    alt="Previous Page" />
+                </span>
             </span>
-            <span id="res_data-navigation-no_prev">
-                <img src="<?php print_file_path('icn/placeholder.png');?>" alt="-" />&nbsp;
-                <img src="<?php print_file_path('icn/placeholder.png');?>" alt="-" />
+            <span>
+                Page
+                <span id="res_data-navigation-no_quick_nav">1</span>
+                <span id="res_data-navigation-quick_nav">
+                    <select name="page" 
+                onchange="{val=document.form1.page.options[document.form1.page.selectedIndex].value;showImportedTerms('<?php echo $last_update; ?>', undefined, $('#recno').text(), val);}">
+                    <?php /*echo get_paging_selectoptions($currentpage, $pages); */ ?>
+                </select>
+                </span> of <span id="res_data-navigation-totalPages"></span>
             </span>
-            Page
-            <span id="res_data-navigation-no_quick_nav">1</span>
-            <span id="res_data-navigation-quick_nav">
-                <select name="page" 
-            onchange="{val=document.form1.page.options[document.form1.page.selectedIndex].value;showImportedTerms('<?php echo $last_update; ?>', undefined, $('#recno').text(), val);}">
-                <?php /*echo get_paging_selectoptions($currentpage, $pages); */ ?>
-            </select>
-            </span> of <span id="res_data-navigation-totalPages"></span> &nbsp;
-            <span id="res_data-navigation-next">
-                <img id="res_data-navigation-next-plus" src="icn/control.png" 
-                title="Next Page" alt="Next Page" />
-                &nbsp;
-                <img id="res_data-navigation-next-last" src="icn/control-stop.png" 
-                title="Last Page" alt="Last Page" />
+            <span>
+                <span id="res_data-navigation-next">
+                    <img id="res_data-navigation-next-plus" 
+                    src="icn/control.png" title="Next Page" alt="Next Page" />
+                    &nbsp;
+                    <img id="res_data-navigation-next-last" 
+                    src="icn/control-stop.png" title="Last Page" alt="Last Page" />
+                </span>
             </span>
-            <span id="res_data-navigation-no_next">
-                <img src="<?php print_file_path('icn/placeholder.png');?>" alt="-" />
-                &nbsp;
-                <img src="<?php print_file_path('icn/placeholder.png');?>" alt="-" />
-            </span>
-            &nbsp; &nbsp; 
         </th>
     </table>
     <table id="res_data-res_table" class="sortable tab2" cellspacing="0" cellpadding="5">
