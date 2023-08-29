@@ -8,6 +8,7 @@ require_once '../do_test_test.php';
 require_once __DIR__ . '/ajax_add_term_transl.php';
 require_once __DIR__ . '/ajax_check_regexp.php';
 require_once __DIR__ . '/ajax_chg_term_status.php';
+require_once __DIR__ . '/ajax_save_impr_text.php';
 require_once __DIR__ . '/ajax_save_text_position.php';
 require_once __DIR__ . '/ajax_show_imported_terms.php';
 
@@ -296,6 +297,17 @@ function set_term_status($post_req)
 }
 
 
+function set_impr_text($post_req)
+{
+    return json_encode(
+        save_impr_text(
+            (int)$post_req["tid"], $post_req['elem'], 
+            json_decode($post_req['data'])
+        )
+    );
+}
+
+
 /**
  * Save a setting to the database.
  * 
@@ -387,6 +399,9 @@ if (isset($_GET['action'])) {
                     break;
                 case 'set_term_status':
                     echo set_term_status($_POST);
+                    break;
+                case 'save_impr_text':
+                    echo set_impr_text($_POST);
                     break;
                 case 'save_setting':
                     echo save_setting($_POST);

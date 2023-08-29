@@ -36,6 +36,7 @@ It features the following interaction:
     * ``regexp``: test if the regular expression is correctly recognized (no more usage in code base?).
     * ``increase_term_status``: increment or decrement the status of a term by one unit.
     * ``set_term_status``: set the status of a term.
+    * ``save_impr_text``: change the annotation value for a term.
     * ``save_setting``: save a setting.
 
 ### Changed
@@ -81,6 +82,7 @@ the intendended page. Same goes for "New Text" on "Archived Texts" page.
   * ``inc/ajax_update_media_select.php`` should be accessed through ``action_type=media_paths``.
   * ``inc/ajax_show_sentences.php`` should be accessed through ``action_type=example_sentences``, on GET. Argument ``lang`` is now ``lid``, ``word`` is ``word_lc`` and ``woid`` is ``wid``, ``ctl`` is no longer required.
   * ``inc/ajax_show_imported_terms.php`` should be accessed through ``action_type=imported_terms``, same arguments.
+  * ``inc/ajax_save_impr_text.php`` should be accessed through ``action_type=save_impr_text``, ``id`` is now ``tid``.
 
 ## 2.8.1-fork (April 14 2023)
 

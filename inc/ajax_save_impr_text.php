@@ -33,8 +33,8 @@ function save_impr_text_data($textid, $line, $val): string
     $success = "NOTOK";
     $ann = get_first_value(
         "SELECT TxAnnotatedText AS value 
-        FROM " . $tbpref . "texts 
-        WHERE TxID = " . $textid
+        FROM {$tbpref}texts 
+        WHERE TxID = $textid"
     );
     $items = preg_split('/[\n]/u', $ann);
     if (count($items) >= $line) {
@@ -43,9 +43,11 @@ function save_impr_text_data($textid, $line, $val): string
             $vals[3] = $val;
             $items[$line-1] = implode("\t", $vals);
             runsql(
-                'UPDATE ' . $tbpref . 'texts 
-                SET TxAnnotatedText = ' . convert_string_to_sqlsyntax(implode("\n", $items)) . ' 
-                WHERE TxID = ' . $textid, ""
+                "UPDATE {$tbpref}texts 
+                SET TxAnnotatedText = " . 
+                convert_string_to_sqlsyntax(implode("\n", $items)) . " 
+                WHERE TxID = $textid", 
+                ""
             );
             $success = "OK";
         }
@@ -74,8 +76,23 @@ function do_ajax_save_impr_text($textid, $elem, $data): string
     }
     $line = (int)substr($elem, 2);
     return save_impr_text_data($textid, $line, $val);
+}
 
-    // error_log ("ajax_save_impr_text / " . $success . " / " . $stringdata);
+
+function save_impr_text($textid, $elem, $data): array 
+{
+    $val = $data->{$elem};
+    if (substr($elem, 0, 2) == "rg" && $val == "") {
+        $val = $data->{'tx' . substr($elem, 2)};
+    }
+    $line = (int)substr($elem, 2);
+    $success = save_impr_text_data($textid, $line, $val);
+    if ($success != "OK") {
+        $output = array("error" => $success);
+    } else {
+        $output = array("success" => $success);
+    }
+    return $output;
 }
 
 if (isset($_POST['id']) && isset($_POST['elem']) && isset($_POST['data'])) {

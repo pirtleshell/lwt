@@ -71,10 +71,18 @@ function getUTF8Length (s) {
   return (new Blob([String(s)]).size);
 }
 
+/**
+ * Force the user scrolling to an anchor.
+ * 
+ * @param {string} aid Anchor ID
+ */
 function scrollToAnchor (aid) {
   document.location.href = '#' + aid;
 }
 
+/**
+ * Change the annotation for a term by setting its text.
+ */
 function changeImprAnnText () {
   const textid = $('#editimprtextdata').attr('data_id');
   $(this).prev('input:radio').attr('checked', 'checked');
@@ -82,28 +90,45 @@ function changeImprAnnText () {
   const idwait = '#wait' + elem.substring(2);
   $(idwait).html('<img src="icn/waiting2.gif" />');
   const thedata = JSON.stringify($('form').serializeObject());
-  $.post('inc/ajax_save_impr_text.php', { id: textid, elem: elem, data: thedata }
-    , function (d) {
+  $.post(
+    'inc/ajax.php',
+    {
+      action: "",
+      action_type: "save_impr_text",
+      tid: textid,
+      elem: elem,
+      data: thedata
+    },
+    function (d) {
       $(idwait).html('<img src="icn/empty.gif" />');
-      if (d != 'OK') { 
-        alert('Saving your changes failed, please reload page and try again!'); 
-      }
+      if ("error" in d)
+        alert('Saving your changes failed, please reload page and try again!');
     }
   );
 }
 
+/**
+ * Change the annotation for a term by setting its text.
+ */
 function changeImprAnnRadio () {
   const textid = $('#editimprtextdata').attr('data_id');
   const elem = $(this).attr('name');
   const idwait = '#wait' + elem.substring(2);
   $(idwait).html('<img src="icn/waiting2.gif" />');
   const thedata = JSON.stringify($('form').serializeObject());
-  $.post('inc/ajax_save_impr_text.php', { id: textid, elem: elem, data: thedata }
-    , function (d) {
+  $.post(
+    'inc/ajax.php',
+    {
+      action: "",
+      action_type: "save_impr_text",
+      tid: textid,
+      elem: elem,
+      data: thedata
+    },
+    function (d) {
       $(idwait).html('<img src="icn/empty.gif" />');
-      if (d != 'OK') { 
+      if ("error" in d)
         alert('Saving your changes failed, please reload page and try again!'); 
-      }
     }
   );
 }
