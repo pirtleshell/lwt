@@ -44,36 +44,22 @@ function make_trans($i, $wid, $trans, $word, $lang): string
             if ($tt == '*' || $tt == '') { 
                 continue; 
             }
-            $r .= '<span class="nowrap">';
-            if (!$set && $tt == $trans) {
-                $set = true;
-                $r .= 
-                '<input class="impr-ann-radio" checked="checked" type="radio" name="rg' . 
-                $i . '" value="' . tohtml($tt) . '" />';
-            } else {
-                $r .= 
-                '<input class="impr-ann-radio" type="radio" name="rg' . $i . 
-                '" value="' . tohtml($tt) . '" />';
-            }
-            $r .= ' &nbsp;' . tohtml($tt) . '
+            $set |= $tt == $trans;
+            $r .= '<span class="nowrap">
+                <input class="impr-ann-radio" ' . 
+                ($set ? '' : 'checked="checked" ') . 'type="radio" name="rg' . 
+                $i . '" value="' . tohtml($tt) . '" /> 
+                &nbsp;' . tohtml($tt) . '
             </span>
             <br />';
         }
-        $r .= '<span class="nowrap">';
-        if (!$set) {
-            $r .= 
-            '<input class="impr-ann-radio" checked="checked" type="radio" name="rg' . 
-            $i . '" value="" />
+        $r .= '<span class="nowrap">
+            <input class="impr-ann-radio" type="radio" name="rg' . $i . '" ' . 
+            ($set ? '' : 'checked="checked" ') . 'value="" />
             &nbsp;
             <input class="impr-ann-text" type="text" name="tx' . $i . 
-            '" id="tx' . $i . '" value="' . tohtml($trans) . '" maxlength="50" size="40" />';
-        } else {
-            $r .= 
-            '<input class="impr-ann-radio" type="radio" name="rg' . $i . '" value="" />
-            &nbsp;
-            <input class="impr-ann-text" type="text" name="tx' . $i . 
-            '" id="tx' . $i . '" value="" maxlength="50" size="40" />';
-        }
+            '" id="tx' . $i . '" value="' . ($set ? '' : tohtml($trans)) . 
+            '" maxlength="50" size="40" />';
     } else {
         $r = 
         '<span class="nowrap">
@@ -85,15 +71,26 @@ function make_trans($i, $wid, $trans, $word, $lang): string
     }
     $r .= 
     ' &nbsp;
-    <img class="click" src="icn/eraser.png" title="Erase Text Field" alt="Erase Text Field" onclick="$(\'#tx' . $i . '\').val(\'\').trigger(\'change\');" />
+    <img class="click" src="icn/eraser.png" title="Erase Text Field" 
+    alt="Erase Text Field" 
+    onclick="$(\'#tx' . $i . '\').val(\'\').trigger(\'change\');" />
      &nbsp;
-    <img class="click" src="icn/star.png" title="* (Set to Term)" alt="* (Set to Term)" onclick="$(\'#tx' . $i . '\').val(\'*\').trigger(\'change\');" />';
+    <img class="click" src="icn/star.png" title="* (Set to Term)" 
+    alt="* (Set to Term)" 
+    onclick="$(\'#tx' . $i . '\').val(\'*\').trigger(\'change\');" />
+    &nbsp;';
     if ($widset) {
-        $r .= ' &nbsp;
-        <img class="click" src="icn/plus-button.png" title="Save another translation to existent term" alt="Save another translation to existent term" onclick="addTermTranslation(' . $wid . ', \'#tx' . $i . '\',\'\',' . $lang . ');" />'; 
+        $r .= 
+        '<img class="click" src="icn/plus-button.png" 
+        title="Save another translation to existent term" 
+        alt="Save another translation to existent term" 
+        onclick="addTermTranslation(' . $wid . ', \'#tx' . $i . '\',\'\',' . $lang . ');" />'; 
     } else { 
-        $r .= ' &nbsp;
-        <img class="click" src="icn/plus-button.png" title="Save translation to new term" alt="Save translation to new term" onclick="addTermTranslation(0, \'#tx' . $i . '\',' . prepare_textdata_js($word) . ',' . $lang . ');" />'; 
+        $r .= 
+        '<img class="click" src="icn/plus-button.png" 
+        title="Save translation to new term" 
+        alt="Save translation to new term" 
+        onclick="addTermTranslation(0, \'#tx' . $i . '\',' . prepare_textdata_js($word) . ',' . $lang . ');" />'; 
     }
     $r .= '&nbsp;&nbsp;
     <span id="wait' . $i . '">
