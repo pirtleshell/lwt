@@ -37,25 +37,26 @@ function edit_mode_display($textid, $ann_exists)
         $ann_exists = (strlen($ann) > 0);
     }
     
-    if (!$ann_exists) {  // No Ann., not possible
+    if (!$ann_exists) {  
+        // No Ann., not possible
         echo '<p>No annotated text found, and creation seems not possible.</p>';
-    } else { // Ann. exists, set up for editing.
-        echo "\n";
-        echo '<div data_id="' . $textid . '" id="editimprtextdata"></div>';
-        echo "\n";
+    } else { 
+        // Ann. exists, set up for editing.
         ?>
+    <div data_id="<?php echo $textid; ?>" id="editimprtextdata"></div>
     <script type="text/javascript">
-        //<![CDATA[
         $(document).ready(function() {
-            do_ajax_edit_impr_text(0,'');
-        } ); 
-        //]]>
+            do_ajax_edit_impr_text(0, '');
+        });
     </script>
         <?php
     }
-    echo '<div class="noprint">
-    <input type="button" value="Display/Print Mode" onclick="location.href=\'print_impr_text.php?text=' . $textid . '\';" />
-    </div>';
+    ?>
+    <div class="noprint">
+        <input type="button" value="Display/Print Mode" 
+        onclick="location.href='print_impr_text.php?text=<?php echo $textid; ?>" />
+    </div>
+    <?php
 }
 
 function print_mode_display($textid, $audio, $ann, $rtlScript, $title, $textsize, $ttsClass)
@@ -129,18 +130,20 @@ function do_content() {
         exit();
     }
     
-    if ($delmode) {  // Delete
+    if ($delmode) {
+        // Delete
         if ($ann_exists) { 
             runsql(
-                'update ' . $tbpref . 'texts set ' .
-                'TxAnnotatedText = ' . convert_string_to_sqlsyntax("") . 
-                ' where TxID = ' . $textid, 
+                "UPDATE {$tbpref}texts 
+                SET TxAnnotatedText = NULL
+                WHERE TxID = $textid", 
                 ""
             );
         }
         $ann_exists = (int)get_first_value(
-            "SELECT length(TxAnnotatedText) AS value 
-            FROM " . $tbpref . "texts where TxID = " . $textid
+            "SELECT LENGTH(TxAnnotatedText) AS value 
+            FROM {$tbpref}texts 
+            WHERE TxID = $textid"
         ) > 0;
         if (!$ann_exists) {
             header("Location: print_text.php?text=" . $textid);
@@ -148,7 +151,8 @@ function do_content() {
         }
     }
     
-    $sql = 'select TxLgID, TxTitle, TxAudioURI, TxSourceURI from ' . $tbpref . 'texts where TxID = ' . $textid;
+    $sql = 'select TxLgID, TxTitle, TxAudioURI, TxSourceURI 
+    from ' . $tbpref . 'texts where TxID = ' . $textid;
     $res = do_mysqli_query($sql);
     $record = mysqli_fetch_assoc($res);
     $title = $record['TxTitle'];
@@ -187,32 +191,40 @@ function do_content() {
     pagestart_nobody('Annotated Text', 'input[type="radio"]{display:inline;}');
     
     ?>
-    <div class="noprint"> 
+<div class="noprint"> 
     <div class="flex-header">
-    <div>
-    <?php echo_lwt_logo(); ?>
+        <div>
+            <?php echo_lwt_logo(); ?>
+        </div>
+        <div>
+            <?php echo getPreviousAndNextTextLinks($textid, 'print_impr_text.php?text=', true, ''); ?>
+        </div>
+        <div>
+            <a href="do_text.php?start=<?php echo $textid; ?>" target="_top">
+                <img src="icn/book-open-bookmark.png" title="Read" alt="Read" />
+            </a>
+            <a href="do_test.php?text=<?php echo $textid; ?>" target="_top">
+                <img src="icn/question-balloon.png" title="Test" alt="Test" />
+            </a>
+            <a href="print_text.php?text=<?php echo $textid; ?>" target="_top">
+                <img src="icn/printer.png" title="Print" alt="Print" />
+            </a>
+            <a target="_top" href="edit_texts.php?chg=<?php echo $textid; ?>">
+                <img src="icn/document--pencil.png" title="Edit Text" alt="Edit Text" />
+            </a>
+        </div>
+        <div>
+            <?php quickMenu(); ?>
+        </div>
     </div>
-    <div>
-    <?php echo getPreviousAndNextTextLinks($textid, 'print_impr_text.php?text=', true, ''); ?>
-    </div>
-    <div><a href="do_text.php?start=<?php echo $textid; ?>" target="_top">
-    <img src="icn/book-open-bookmark.png" title="Read" alt="Read" /></a>
-    <a href="do_test.php?text=<?php echo $textid; ?>" target="_top">
-    <img src="icn/question-balloon.png" title="Test" alt="Test" />
-    </a>
-    <a href="print_text.php?text=<?php echo $textid; ?>" target="_top">
-    <img src="icn/printer.png" title="Print" alt="Print" />
-    <a target="_top" href="edit_texts.php?chg=<?php echo $textid; ?>">
-    <img src="icn/document--pencil.png" title="Edit Text" alt="Edit Text" /></a>
-    </div>
-    <div>
-    <?php quickMenu(); ?>
-    </div></div>
     <h1>ANN.TEXT ▶ <?php echo tohtml($title) . 
-    (isset($sourceURI) && substr(trim($sourceURI), 0, 1)!='#' ? 
-    ' <a href="<?php echo $sourceURI; ?>" target="_blank"><img src="'.get_file_path('icn/chain.png') .
-    '" title="Text Source" alt="Text Source" /></a>' 
-    : '') ?></h1>
+    (isset($sourceURI) && substr(trim($sourceURI), 0, 1) != '#' ? 
+    ' <a href="<?php echo $sourceURI; ?>" target="_blank">
+        <img src="'.get_file_path('icn/chain.png') . 
+        '" title="Text Source" alt="Text Source" />
+    </a>' 
+    : '') ?>
+    </h1>
     <div id="printoptions">
     <?php
     if ($editmode) {
