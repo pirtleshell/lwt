@@ -32,7 +32,10 @@ function make_trans($i, $wid, $trans, $word, $lang): string
     $trans = trim($trans);
     $widset = is_numeric($wid);
     if ($widset) {
-        $alltrans = get_first_value("SELECT WoTranslation AS value FROM " . $tbpref . "words WHERE WoID = " . $wid);
+        $alltrans = get_first_value(
+            "SELECT WoTranslation AS value FROM {$tbpref}words 
+            WHERE WoID = $wid"
+        );
         $transarr = preg_split('/[' . get_sepas()  . ']/u', $alltrans);
         $r = "";
         $set = false;
@@ -41,42 +44,44 @@ function make_trans($i, $wid, $trans, $word, $lang): string
             if ($tt == '*' || $tt == '') { 
                 continue; 
             }
+            $r .= '<span class="nowrap">';
             if (!$set && $tt == $trans) {
                 $set = true;
                 $r .= 
-                '<span class="nowrap">
-                    <input class="impr-ann-radio" checked="checked" type="radio" name="rg' . $i . '" value="' . tohtml($tt) . '" />
-                    &nbsp;' . tohtml($tt) . '
-                </span>
-                <br /> ';
+                '<input class="impr-ann-radio" checked="checked" type="radio" name="rg' . 
+                $i . '" value="' . tohtml($tt) . '" />';
             } else {
                 $r .= 
-                '<span class="nowrap">
-                    <input class="impr-ann-radio" type="radio" name="rg' . $i . '" value="' . tohtml($tt) . '" />
-                    &nbsp;' . tohtml($tt) . '
-                </span> 
-                <br />  ';
+                '<input class="impr-ann-radio" type="radio" name="rg' . $i . 
+                '" value="' . tohtml($tt) . '" />';
             }
+            $r .= ' &nbsp;' . tohtml($tt) . '
+            </span>
+            <br />';
         }
+        $r .= '<span class="nowrap">';
         if (!$set) {
             $r .= 
-            '<span class="nowrap">
-                <input class="impr-ann-radio" checked="checked" type="radio" name="rg' . $i . '" value="" />
-                &nbsp;
-                <input class="impr-ann-text" type="text" name="tx' . $i . '" id="tx' . $i . '" value="' . tohtml($trans) . '" maxlength="50" size="40" />';
+            '<input class="impr-ann-radio" checked="checked" type="radio" name="rg' . 
+            $i . '" value="" />
+            &nbsp;
+            <input class="impr-ann-text" type="text" name="tx' . $i . 
+            '" id="tx' . $i . '" value="' . tohtml($trans) . '" maxlength="50" size="40" />';
         } else {
             $r .= 
-            '<span class="nowrap">
-                <input class="impr-ann-radio" type="radio" name="rg' . $i . '" value="" />
-                &nbsp;
-                <input class="impr-ann-text" type="text" name="tx' . $i . '" id="tx' . $i . '" value="" maxlength="50" size="40" />';
+            '<input class="impr-ann-radio" type="radio" name="rg' . $i . '" value="" />
+            &nbsp;
+            <input class="impr-ann-text" type="text" name="tx' . $i . 
+            '" id="tx' . $i . '" value="" maxlength="50" size="40" />';
         }
     } else {
         $r = 
         '<span class="nowrap">
             <input checked="checked" type="radio" name="rg' . $i . '" value="" />
             &nbsp;
-            <input class="impr-ann-text" type="text" name="tx' . $i . '" id="tx' . $i . '" value="' . tohtml($trans) . '" maxlength="50" size="40" />';
+            <input class="impr-ann-text" type="text" name="tx' . $i . 
+            '" id="tx' . $i . '" value="' . tohtml($trans) . 
+            '" maxlength="50" size="40" />';
     }
     $r .= 
     ' &nbsp;
@@ -90,7 +95,11 @@ function make_trans($i, $wid, $trans, $word, $lang): string
         $r .= ' &nbsp;
         <img class="click" src="icn/plus-button.png" title="Save translation to new term" alt="Save translation to new term" onclick="addTermTranslation(0, \'#tx' . $i . '\',' . prepare_textdata_js($word) . ',' . $lang . ');" />'; 
     }
-    $r .= '&nbsp;&nbsp;<span id="wait' . $i . '"><img src="icn/empty.gif" /></span></span>';
+    $r .= '&nbsp;&nbsp;
+    <span id="wait' . $i . '">
+        <img src="icn/empty.gif" />
+    </span>
+    </span>';
     return $r;
 }
 
@@ -109,7 +118,8 @@ function make_trans($i, $wid, $trans, $word, $lang): string
 function make_form($textid, $wordlc): array
 { 
     global $tbpref;
-    $sql = 'SELECT TxLgID, TxAnnotatedText FROM ' . $tbpref . 'texts WHERE TxID = ' . $textid;
+    $sql = 'SELECT TxLgID, TxAnnotatedText 
+    FROM ' . $tbpref . 'texts WHERE TxID = ' . $textid;
     $res = do_mysqli_query($sql);
     $record = mysqli_fetch_assoc($res);
     $langid = $record['TxLgID'];
@@ -119,7 +129,8 @@ function make_form($textid, $wordlc): array
     }
     mysqli_free_result($res);
     
-    $sql = 'SELECT LgTextSize, LgRightToLeft FROM ' . $tbpref . 'languages WHERE LgID = ' . $langid;
+    $sql = 'SELECT LgTextSize, LgRightToLeft 
+    FROM ' . $tbpref . 'languages WHERE LgID = ' . $langid;
     $res = do_mysqli_query($sql);
     $record = mysqli_fetch_assoc($res);
     $textsize = (int)$record['LgTextSize'];
@@ -138,7 +149,8 @@ function make_form($textid, $wordlc): array
                 <th class="th1 center">Dict.</th>
                 <th class="th1 center">Edit<br />Term</th>
                 <th class="th1 center">
-                    Term Translations (Delim.: ' . tohtml(getSettingWithDefault('set-term-translation-delimiters')) . ')
+                    Term Translations (Delim.: ' . 
+                    tohtml(getSettingWithDefault('set-term-translation-delimiters')) . ')
                     <br />
                     <input type="button" value="Reload" onclick="do_ajax_edit_impr_text(0,\'\');" />
                 </th>
@@ -179,12 +191,17 @@ function make_form($textid, $wordlc): array
             if (count($vals) > 3) { 
                 $trans = $vals[3]; 
             }
-            $r .= '<tr><td class="td1 center" style="font-size:' . $textsize . '%;"' . 
-            ($rtlScript ? ' dir="rtl"' : '') . '><span id="term' . $i . '">';
-            $r .= tohtml($vals[1]);
-            $r .= '</span></td><td class="td1 center" nowrap="nowrap">';
-            $r .= makeDictLinks($langid, prepare_textdata_js($vals[1]));
-            $r .= '</td><td class="td1 center"><span id="editlink' . $i . '">';
+            $r .= '<tr>
+            <td class="td1 center" style="font-size:' . $textsize . '%;"' . 
+            ($rtlScript ? ' dir="rtl"' : '') . '>
+            <span id="term' . $i . '">' . tohtml($vals[1]) . 
+            '</span>
+            </td>
+            <td class="td1 center" nowrap="nowrap">' . 
+            makeDictLinks($langid, prepare_textdata_js($vals[1])) .
+            '</td>
+            <td class="td1 center">
+            <span id="editlink' . $i . '">';
             if ($wid === null) {
                 $plus = '&nbsp;';
             } else {
@@ -195,19 +212,28 @@ function make_form($textid, $wordlc): array
             }
             $mustredo = trim($wordlc) == mb_strtolower(trim($vals[1]), 'UTF-8');
             if ($mustredo) {
-                $rr .= "$('#editlink" . $i . "').html(" . prepare_textdata_js($plus) . ");"; 
+                $rr .= "$('#editlink" . $i . "').html(" . 
+                prepare_textdata_js($plus) . ");"; 
             }
             $r .= $plus;
-            $r .= '</span></td><td class="td1" style="font-size:90%;"><span id="transsel' . $i . '">';
+            $r .= '</span>
+            </td>
+            <td class="td1" style="font-size:90%;">
+            <span id="transsel' . $i . '">';
             $plus = make_trans($i, $wid, $trans, $vals[1], $langid);
             if ($mustredo) { 
-                $rr .= "$('#transsel" . $i . "').html(" . prepare_textdata_js($plus) . ");"; 
+                $rr .= "$('#transsel" . $i . "').html(" . 
+                prepare_textdata_js($plus) . ");"; 
             }
             $r .= $plus;
             $r .= '</span></td></tr>';
         } else {
             if (trim($vals[1]) != '') {
-                $nontermbuffer .= str_replace("¶", '<img src="icn/new_line.png" title="New Line" alt="New Line" />', tohtml($vals[1])); 
+                $nontermbuffer .= str_replace(
+                    "¶", 
+                    '<img src="icn/new_line.png" title="New Line" alt="New Line" />', 
+                    tohtml($vals[1])
+                );
             }
         }
     }
@@ -226,14 +252,15 @@ function make_form($textid, $wordlc): array
                 <th class="th1 center">Dict.</th>
                 <th class="th1 center">Edit<br />Term</th>
                 <th class="th1 center">
-                    Term Translations (Delim.: ' . tohtml(getSettingWithDefault('set-term-translation-delimiters')) . ')
+                    Term Translations (Delim.: ' . 
+                    tohtml(getSettingWithDefault('set-term-translation-delimiters')) . ')
                     <br />
                     <input type="button" value="Reload" onclick="do_ajax_edit_impr_text(1e6,\'\');" />
                     <a name="bottom"></a>
                 </th>
             </tr>
         </table>
-    </form>\n';
+    </form>';
     /*
     $r .= '<script type="text/javascript">' . "\n";
     $r .= '//<![CDATA[' . "\n";
