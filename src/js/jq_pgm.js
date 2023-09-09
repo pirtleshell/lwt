@@ -103,7 +103,8 @@ function changeImprAnnText () {
       $(idwait).html('<img src="icn/empty.gif" />');
       if ("error" in d)
         alert('Saving your changes failed, please reload page and try again!');
-    }
+    },
+    "json"
   );
 }
 
@@ -129,7 +130,8 @@ function changeImprAnnRadio () {
       $(idwait).html('<img src="icn/empty.gif" />');
       if ("error" in d)
         alert('Saving your changes failed, please reload page and try again!'); 
-    }
+    },
+    "json"
   );
 }
 
@@ -1415,7 +1417,8 @@ function set_barchart_item() {
  */
 function set_word_counts () {
   $.each(WORDCOUNTS.totalu, function (key, value) {
-    let knownu = known = todo = stat0 = 0;
+    let knownu, known, todo, stat0;
+    knownu = known = todo = stat0 = 0;
     const expr = WORDCOUNTS.expru[key] ? parseInt((SUW & 2) ? WORDCOUNTS.expru[key] : WORDCOUNTS.expr[key]) : 0;
     if (!WORDCOUNTS.stat[key]) {
       WORDCOUNTS.statu[key] = WORDCOUNTS.stat[key] = [];
@@ -1484,9 +1487,18 @@ function word_count_click () {
 }
 
 function do_ajax_edit_impr_text (pagepos, word) {
-  if (word == '') $('#editimprtextdata').html('<img src="icn/waiting2.gif" />');
+  if (word == '') {
+    $('#editimprtextdata').html('<img src="icn/waiting2.gif" />');
+    location.reload();
+    return;
+  }
   const textid = $('#editimprtextdata').attr('data_id');
-  $.post('inc/ajax_edit_impr_text.php', { id: textid, word: word },
+  $.post(
+    'inc/ajax_edit_impr_text.php', 
+    { 
+      id: textid, 
+      word: word 
+    },
     function (data) {
       eval(data);
       $.scrollTo(pagepos);

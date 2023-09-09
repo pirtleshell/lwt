@@ -82,7 +82,9 @@ the intendended page. Same goes for "New Text" on "Archived Texts" page.
   * ``inc/ajax_update_media_select.php`` should be accessed through ``action_type=media_paths``.
   * ``inc/ajax_show_sentences.php`` should be accessed through ``action_type=example_sentences``, on GET. Argument ``lang`` is now ``lid``, ``word`` is ``word_lc`` and ``woid`` is ``wid``, ``ctl`` is no longer required.
   * ``inc/ajax_show_imported_terms.php`` should be accessed through ``action_type=imported_terms``, same arguments.
-  * ``inc/ajax_save_impr_text.php`` should be accessed through ``action_type=save_impr_text``, ``id`` is now ``tid``.
+  * ``inc/ajax_save_impr_text.php``:
+    * To save a new text: should be accessed through ``action_type=save_impr_text``, ``id`` is now ``tid``.
+    * On display, using ``word=""`` is now deprecated as the page loads in pure PHP.
 
 ## 2.8.1-fork (April 14 2023)
 

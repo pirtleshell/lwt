@@ -1974,7 +1974,12 @@ the intendended page. Same goes for "New Text" on "Archived Texts" page.</li>
 <li>
 <code>inc/ajax_show_imported_terms.php</code> should be accessed through <code>action_type=imported_terms</code>, same arguments.</li>
 <li>
-<code>inc/ajax_save_impr_text.php</code> should be accessed through <code>action_type=save_impr_text</code>, <code>id</code> is now <code>tid</code>.</li>
+<code>inc/ajax_save_impr_text.php</code>:
+<ul>
+<li>To save a new text: should be accessed through <code>action_type=save_impr_text</code>, <code>id</code> is now <code>tid</code>.</li>
+<li>On display, using <code>word=""</code> is now deprecated as the page loads in pure PHP.</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
