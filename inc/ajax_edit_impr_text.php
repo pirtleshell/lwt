@@ -15,18 +15,16 @@
 
 namespace Lwt\Ajax\Improved_Text;
 
-
 require_once __DIR__ . '/session_utility.php';
 
 
-
 /**
- * Make the translation for a word.
+ * Make the translations choices for a word.
  *
- * @param int      $i     Index
+ * @param int      $i     Word unique index in the form
  * @param int|null $wid   Word ID or null 
- * @param string   $trans Translation
- * @param string   $word
+ * @param string   $trans Translation, may be empty
+ * @param string   $word  Word
  * @param int      $lang  Language ID
  *
  * @return string HTML-formatted string
@@ -108,6 +106,14 @@ function make_trans($i, $wid, $trans, $word, $lang): string
     return $r;
 }
 
+/**
+ * Prepare the HTML content for the interaction with a term
+ * 
+ * @param int $textid Text ID
+ * @param string $wordlc Term in lower case
+ * 
+ * @return string JS string of the different fields of the term
+ */
 function edit_term_interaction($textid, $wordlc)
 {
     global $tbpref;
@@ -133,52 +139,68 @@ function edit_term_interaction($textid, $wordlc)
     mysqli_free_result($res);
     
     $rr = "";
-    $items = preg_split('/[\n]/u', $ann);
+    $annotation = preg_split('/[\n]/u', $ann);
     $i = 0;
-    foreach ($items as $item) {
+    foreach ($annotation as $annotation_line) {
         $i++;
-        $vals = preg_split('/[\t]/u', $item);
-        if ($vals[0] > -1) {
-            $wid = null;
-            $trans = '';
-            if (count($vals) > 2) {
-                $wid = $vals[2];
-                if (is_numeric($wid)) {
-                    $temp_wid = (int)get_first_value(
-                        "SELECT COUNT(WoID) AS value 
-                        FROM {$tbpref}words 
-                        WHERE WoID = $wid"
-                    );
-                    if ($temp_wid < 1) { 
-                        $wid = null; 
-                    }
+        $vals = preg_split('/[\t]/u', $annotation_line);
+        // Check if annotation could be split
+        if ($vals === false) {
+            continue;
+        }
+        // Unknown check
+        if ($vals[0] <= -1) {
+            continue;
+        }
+        // Check if the input word is the same as the annotation
+        if (trim($wordlc) != mb_strtolower(trim($vals[1]), 'UTF-8')) {
+            continue;
+        }
+        $wid = null;
+        $trans = '';
+        // Annotation should be in format "pos   term text   term ID    translation"
+        if (count($vals) > 2) {
+            // Word exists and has an ID
+            $wid = $vals[2];
+            if (is_numeric($wid)) {
+                $temp_wid = (int)get_first_value(
+                    "SELECT COUNT(WoID) AS value 
+                    FROM {$tbpref}words 
+                    WHERE WoID = $wid"
+                );
+                if ($temp_wid < 1) { 
+                    $wid = null; 
                 }
             }
-            if (count($vals) > 3) { 
-                $trans = $vals[3]; 
-            }
-            if ($wid === null) {
-                $plus = '&nbsp;';
-            } else {
-                $plus = '<a name="rec' . $i . '"></a>
-                <span class="click" onclick="oewin(\'edit_word.php?fromAnn=\' + $(document).scrollTop() + \'&amp;wid=' . 
-                $wid . '\');">
-                    <img src="icn/sticky-note--pencil.png" title="Edit Term" alt="Edit Term" />
-                </span>';
-            }
-            $mustredo = trim($wordlc) == mb_strtolower(trim($vals[1]), 'UTF-8');
-            if ($mustredo) {
-                $rr .= "$('#editlink" . $i . "').html(" . 
-                prepare_textdata_js($plus) . ");";
-                $plus = make_trans($i, $wid, $trans, $vals[1], $langid);
-                $rr .= "$('#transsel" . $i . "').html(" . 
-                prepare_textdata_js($plus) . ");"; 
-            }
         }
+        if (count($vals) > 3) { 
+            $trans = $vals[3]; 
+        }
+        if ($wid === null) {
+            $plus = '&nbsp;';
+        } else {
+            $plus = '<a name="rec' . $i . '"></a>
+            <span class="click" onclick="oewin(\'edit_word.php?fromAnn=\' + $(document).scrollTop() + \'&amp;wid=' . 
+            $wid . '\');">
+                <img src="icn/sticky-note--pencil.png" title="Edit Term" alt="Edit Term" />
+            </span>';
+        }
+        $rr .= "$('#editlink" . $i . "').html(" . 
+        prepare_textdata_js($plus) . ");";
+        $plus = make_trans($i, $wid, $trans, $vals[1], $langid);
+        $rr .= "$('#transsel" . $i . "').html(" . 
+        prepare_textdata_js($plus) . ");";
     }
     return $rr;
 }
 
+/**
+ * Full form for terms edition in a given text.
+ * 
+ * @param int $textid Text ID.
+ * 
+ * @return string HTML table for all terms
+ */
 function edit_term_form($textid)
 {
     global $tbpref;

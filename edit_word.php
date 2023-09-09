@@ -176,33 +176,32 @@ function edit_word_do_operation($translation, $fromAnn)
     $hex = null;
     $textlc = trim(prepare_textdata($_REQUEST["WoTextLC"]));
     $text = trim(prepare_textdata($_REQUEST["WoText"]));
-    
-    if (mb_strtolower($text, 'UTF-8') == $textlc) {
-        if ($_REQUEST['op'] == 'Save') {
-            // INSERT
-            $output = insert_new_word($textlc, $translation);
-            $wid = $output[0];
-            $message = $output[1];
-            $hex = strToClassName(prepare_textdata($_REQUEST["WoTextLC"]));
-            
-        } else {  
-            // UPDATE
-            // $_REQUEST['op'] != 'Save'
-            $output = edit_term($translation);
-            $wid = $output[0];
-            $message = $output[1];
-            
-        }
-        saveWordTags($wid);
-    } else {
+
+    if (mb_strtolower($text, 'UTF-8') != $textlc) {
         lowercase_term_not_equal($textlc);
         pageend();
         exit();
     }
     
-    echo '<p>OK: ' . tohtml($message) . '</p>';
+    if ($_REQUEST['op'] == 'Save') {
+        // Insert new term
+        $output = insert_new_word($textlc, $translation);
+        $hex = strToClassName(prepare_textdata($_REQUEST["WoTextLC"]));
+    } else {
+        // Update existing term
+        $output = edit_term($translation);
+    }
+    $wid = $output[0];
+    $message = $output[1];
+    saveWordTags($wid);
     
-    if ($fromAnn !== '') {
+    echo '<p>OK: ' . tohtml($message) . '</p>';
+
+    if ($fromAnn === "") {
+        // Word was edited from reading screen
+        change_term_display($wid, $translation, $hex);
+    } else {
+        // Word is from the annotation editing window 
         ?>
 <script type="text/javascript">
     window.opener.do_ajax_edit_impr_text(
@@ -210,9 +209,8 @@ function edit_word_do_operation($translation, $fromAnn)
         );
 </script>
         <?php
-    } else {
-        change_term_display($wid, $translation, $hex);
     }
+    
 }
 
 
