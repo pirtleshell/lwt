@@ -1487,72 +1487,25 @@ function word_count_click () {
 }
 
 
-function make_trans(i, wid, trans, word, lang, transarr) 
+function translation_radio(curr_trans, trans_data) 
 {
-  trans = trans.trim();
-  const widset = Number.isInteger(wid);
+  const widset = Number.isInteger(trans_data.wid);
   let r = "";
   let set = false;
   if (widset) {
-    transarr.forEach(function (val) {
-      const tt = val.trim();
-      if (tt == '*' || tt == '') {
-        return;
-      }
-      set = tt == trans;
-      r += `<span class="nowrap">
-        <input class="impr-ann-radio" ` + 
-          (set ? '' : 'checked="checked" ') + 'type="radio" name="rg' +
-            i + `" value="` + escape_html_chars(tt) + `" /> 
-              &nbsp; ` + escape_html_chars(tt) + `
-      </span>
-      <br />`;
-        
-    });
+    const tt = curr_trans.trim();
+    if (tt == '*' || tt == '') {
+      return "";
+    }
+    set = tt == trans_data.trans && !set;
     r += `<span class="nowrap">
-    <input class="impr-ann-radio" type="radio" name="rg` + i + `" ` + 
-    (set ? `` : `checked="checked" `) + `value="" />
-    &nbsp;
-    <input class="impr-ann-text" type="text" name="tx` + i + 
-    `" id="tx` + i + `" value="` + (set ? '' : escape_html_chars(trans)) + 
-    `" maxlength="50" size="40" />`;
-  } else {
-    r = 
-    `<span class="nowrap">
-        <input checked="checked" type="radio" name="rg` + i + `" value="" />
-        &nbsp;
-        <input class="impr-ann-text" type="text" name="tx` + i + 
-        `" id="tx` + i + `" value="` + escape_html_chars(trans) + 
-        `" maxlength="50" size="40" />`;
+      <input class="impr-ann-radio" ` + 
+        (set ? 'checked="checked" ' : '') + 'type="radio" name="rg' +
+        trans_data.ann_index + `" value="` + escape_html_chars(tt) + `" /> 
+            &nbsp; ` + escape_html_chars(tt) + `
+    </span>
+    <br />`;
   }
-  r += 
-  ` &nbsp;
-  <img class="click" src="icn/eraser.png" title="Erase Text Field" 
-  alt="Erase Text Field" 
-  onclick="$('#tx` + i + `').val('').trigger('change');" />
-    &nbsp;
-  <img class="click" src="icn/star.png" title="* (Set to Term)" 
-  alt="* (Set to Term)" 
-  onclick="$('#tx` + i + `').val('*').trigger('change');" />
-  &nbsp;`;
-  if (widset) {
-    r += 
-    `<img class="click" src="icn/plus-button.png" 
-    title="Save another translation to existent term" 
-    alt="Save another translation to existent term" 
-    onclick="addTermTranslation(` + wid + `, '#tx` + i + `','',` + lang + `);" />`; 
-  } else { 
-    r += 
-    `<img class="click" src="icn/plus-button.png" 
-    title="Save translation to new term" 
-    alt="Save translation to new term" 
-    onclick="addTermTranslation(0, '#tx` + i + `',` + word + `,` + lang + `);" />`; 
-  }
-  r += `&nbsp;&nbsp;
-  <span id="wait` + i + `">
-      <img src="icn/empty.gif" />
-  </span>
-  </span>`;
   return r;
 }
 
@@ -1569,15 +1522,55 @@ function edit_term_ann_translations(trans_data)
       plus = '&nbsp;';
   }
   $('#editlink' + trans_data["ann_index"]).html(plus);
+  let translations_list = "";
   trans_data.translations.forEach(
     function (candidate_trans) {
-      plus = make_trans(
-          trans_data["ann_index"], trans_data["wid"], candidate_trans, 
-          trans_data["term_lc"], trans_data["lang_id"], trans_data.translations
-      );
-      $('#transsel' + trans_data["ann_index"]).html(plus);
+      translations_list += translation_radio(candidate_trans, trans_data);
     }
   );
+
+  const set = trans_data.translations.length > 0;
+  const widset = Number.isInteger(trans_data.wid);
+  // Empty radio button and text field after the list of translations
+  translations_list += `<span class="nowrap">
+  <input class="impr-ann-radio" type="radio" name="rg` + trans_data.ann_index + `" ` + 
+  (set ? 'checked="checked" ' : '') + `value="" />
+  &nbsp;
+  <input class="impr-ann-text" type="text" name="tx` + trans_data.ann_index + 
+    `" id="tx` + trans_data.ann_index + `" value="` +
+    (set ? '' : escape_html_chars(curr_trans)) + 
+  `" maxlength="50" size="40" />
+   &nbsp;
+  <img class="click" src="icn/eraser.png" title="Erase Text Field" 
+  alt="Erase Text Field" 
+  onclick="$('#tx` + trans_data.ann_index + `').val('').trigger('change');" />
+    &nbsp;
+  <img class="click" src="icn/star.png" title="* (Set to Term)" 
+  alt="* (Set to Term)" 
+  onclick="$('#tx` + trans_data.ann_index + `').val('*').trigger('change');" />
+  &nbsp;`;
+  // Add the "plus button" to add a translation
+  if (widset) {
+    translations_list += 
+    `<img class="click" src="icn/plus-button.png" 
+    title="Save another translation to existent term" 
+    alt="Save another translation to existent term" 
+    onclick="addTermTranslation(` + trans_data.wid + `, '#tx` +
+      trans_data.ann_index + `','',` + trans_data.lang_id + `);" />`; 
+  } else { 
+    translations_list += 
+    `<img class="click" src="icn/plus-button.png" 
+    title="Save translation to new term" 
+    alt="Save translation to new term" 
+    onclick="addTermTranslation(0, '#tx` + trans_data.ann_index + `',` +
+      trans_data.term_lc + `,` + trans_data.lang_id + `);" />`; 
+  }
+  translations_list += `&nbsp;&nbsp;
+  <span id="wait` + trans_data.ann_index + `">
+      <img src="icn/empty.gif" />
+  </span>
+  </span>`;
+  $('#transsel' + trans_data["ann_index"]).html(translations_list);
 }
 
 /**

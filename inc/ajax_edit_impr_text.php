@@ -34,46 +34,45 @@ function make_trans($i, $wid, $trans, $word, $lang): string
     global $tbpref;    
     $trans = trim($trans);
     $widset = is_numeric($wid);
+    $r = "";
     if ($widset) {
         $alltrans = get_first_value(
             "SELECT WoTranslation AS value FROM {$tbpref}words 
             WHERE WoID = $wid"
         );
         $transarr = preg_split('/[' . get_sepas()  . ']/u', $alltrans);
-        $r = "";
         $set = false;
         foreach ($transarr as $t) {
             $tt = trim($t);
             if ($tt == '*' || $tt == '') { 
                 continue; 
             }
-            $set |= $tt == $trans;
+            // true if the translation should be checked (this translation is set)
+            $set = $tt == $trans && !$set;
+            // Add a candidate annotation
             $r .= '<span class="nowrap">
                 <input class="impr-ann-radio" ' . 
-                ($set ? '' : 'checked="checked" ') . 'type="radio" name="rg' . 
+                ($set ? 'checked="checked" ' : '') . 'type="radio" name="rg' . 
                 $i . '" value="' . tohtml($tt) . '" /> 
                 &nbsp;' . tohtml($tt) . '
             </span>
             <br />';
         }
-        $r .= '<span class="nowrap">
-            <input class="impr-ann-radio" type="radio" name="rg' . $i . '" ' . 
-            ($set ? '' : 'checked="checked" ') . 'value="" />
-            &nbsp;
-            <input class="impr-ann-text" type="text" name="tx' . $i . 
-            '" id="tx' . $i . '" value="' . ($set ? '' : tohtml($trans)) . 
-            '" maxlength="50" size="40" />';
-    } else {
-        $r = 
-        '<span class="nowrap">
-            <input checked="checked" type="radio" name="rg' . $i . '" value="" />
-            &nbsp;
-            <input class="impr-ann-text" type="text" name="tx' . $i . 
-            '" id="tx' . $i . '" value="' . tohtml($trans) . 
-            '" maxlength="50" size="40" />';
+        ;
+    } 
+    // Set the empty translation if no translation have been set yet
+    if (!isset($set) || !$set) {
+      $set = true;
     }
-    $r .= 
-    ' &nbsp;
+    // Empty radio button and text field after the list of translations
+    $r .= '<span class="nowrap">
+    <input class="impr-ann-radio" type="radio" name="rg' . $i . '" ' . 
+    ($set ? 'checked="checked" ' : '') . 'value="" />
+    &nbsp;
+    <input class="impr-ann-text" type="text" name="tx' . $i . 
+    '" id="tx' . $i . '" value="' . ($set ? tohtml($trans) : '') . 
+    '" maxlength="50" size="40" />
+     &nbsp;
     <img class="click" src="icn/eraser.png" title="Erase Text Field" 
     alt="Erase Text Field" 
     onclick="$(\'#tx' . $i . '\').val(\'\').trigger(\'change\');" />
@@ -82,6 +81,7 @@ function make_trans($i, $wid, $trans, $word, $lang): string
     alt="* (Set to Term)" 
     onclick="$(\'#tx' . $i . '\').val(\'*\').trigger(\'change\');" />
     &nbsp;';
+    // Add the "plus button" to add a translation
     if ($widset) {
         $r .= 
         '<img class="click" src="icn/plus-button.png" 
