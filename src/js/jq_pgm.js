@@ -155,7 +155,7 @@ function addTermTranslation(wordid, txid, word, lang) {
         action: "",
         translation: translation,
   };
-  failure;
+  let failure;
   if (wordid === 0) {
     request["action_type"] = "add_translation";
     request["text"] = word;
