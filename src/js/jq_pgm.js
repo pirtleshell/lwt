@@ -1486,25 +1486,131 @@ function word_count_click () {
   });
 }
 
-function do_ajax_edit_impr_text (pagepos, word) {
+
+function make_trans(i, wid, trans, word, lang, transarr) 
+{
+  trans = trans.trim();
+  const widset = Number.isInteger(wid);
+  let r = "";
+  let set = false;
+  if (widset) {
+    transarr.forEach(function (val) {
+      const tt = val.trim();
+      if (tt == '*' || tt == '') {
+        return;
+      }
+      set = tt == trans;
+      r += `<span class="nowrap">
+        <input class="impr-ann-radio" ` + 
+          (set ? '' : 'checked="checked" ') + 'type="radio" name="rg' +
+            i + `" value="` + escape_html_chars(tt) + `" /> 
+              &nbsp; ` + escape_html_chars(tt) + `
+      </span>
+      <br />`;
+        
+    });
+    r += `<span class="nowrap">
+    <input class="impr-ann-radio" type="radio" name="rg` + i + `" ` + 
+    (set ? `` : `checked="checked" `) + `value="" />
+    &nbsp;
+    <input class="impr-ann-text" type="text" name="tx` + i + 
+    `" id="tx` + i + `" value="` + (set ? '' : escape_html_chars(trans)) + 
+    `" maxlength="50" size="40" />`;
+  } else {
+    r = 
+    `<span class="nowrap">
+        <input checked="checked" type="radio" name="rg` + i + `" value="" />
+        &nbsp;
+        <input class="impr-ann-text" type="text" name="tx` + i + 
+        `" id="tx` + i + `" value="` + escape_html_chars(trans) + 
+        `" maxlength="50" size="40" />`;
+  }
+  r += 
+  ` &nbsp;
+  <img class="click" src="icn/eraser.png" title="Erase Text Field" 
+  alt="Erase Text Field" 
+  onclick="$('#tx` + i + `').val('').trigger('change');" />
+    &nbsp;
+  <img class="click" src="icn/star.png" title="* (Set to Term)" 
+  alt="* (Set to Term)" 
+  onclick="$('#tx` + i + `').val('*').trigger('change');" />
+  &nbsp;`;
+  if (widset) {
+    r += 
+    `<img class="click" src="icn/plus-button.png" 
+    title="Save another translation to existent term" 
+    alt="Save another translation to existent term" 
+    onclick="addTermTranslation(` + wid + `, '#tx` + i + `','',` + lang + `);" />`; 
+  } else { 
+    r += 
+    `<img class="click" src="icn/plus-button.png" 
+    title="Save translation to new term" 
+    alt="Save translation to new term" 
+    onclick="addTermTranslation(0, '#tx` + i + `',` + word + `,` + lang + `);" />`; 
+  }
+  r += `&nbsp;&nbsp;
+  <span id="wait` + i + `">
+      <img src="icn/empty.gif" />
+  </span>
+  </span>`;
+  return r;
+}
+
+function edit_term_ann_translations(trans_data)
+{
+  let plus;
+  if (trans_data["wid"] !== null) {
+    plus = `<a name="rec' + trans_data["ann_index"] + '"></a>
+    <span class="click" onclick="oewin('edit_word.php?fromAnn=' + $(document).scrollTop() + '&amp;wid='` +
+      trans_data["wid"] + `');">
+          <img src="icn/sticky-note--pencil.png" title="Edit Term" alt="Edit Term" />
+      </span>`;
+  } else {
+      plus = '&nbsp;';
+  }
+  $('#editlink' + trans_data["ann_index"]).html(plus);
+  trans_data.translations.forEach(
+    function (candidate_trans) {
+      plus = make_trans(
+          trans_data["ann_index"], trans_data["wid"], candidate_trans, 
+          trans_data["term_lc"], trans_data["lang_id"], trans_data.translations
+      );
+      $('#transsel' + trans_data["ann_index"]).html(plus);
+    }
+  );
+}
+
+/**
+ * Load the possible translations for a word.
+ * 
+ * @param {int} pagepos Position to scroll to 
+ * @param {string} word Word to get annotations
+ * @returns 
+ */
+function do_ajax_edit_impr_text(pagepos, word) {
+  // Special case, on empty word reload the main annotations form
   if (word == '') {
     $('#editimprtextdata').html('<img src="icn/waiting2.gif" />');
     location.reload();
     return;
   }
+  // Load the possible translations for a word
   const textid = $('#editimprtextdata').attr('data_id');
-  $.post(
-    'inc/ajax_edit_impr_text.php', 
-    { 
-      id: textid, 
-      word: word 
+  $.get(
+    'inc/ajax.php', 
+    {
+      action: "query",
+      action_type: "term_translations",
+      text_id: textid, 
+      term_lc: word 
     },
     function (data) {
-      eval(data);
+      edit_term_ann_translations(data);
       $.scrollTo(pagepos);
       $('input.impr-ann-text').on('change', changeImprAnnText);
       $('input.impr-ann-radio').on('change', changeImprAnnRadio);
-    }
+    },
+    "json"
   );
 }
 
