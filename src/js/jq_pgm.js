@@ -1487,8 +1487,11 @@ function word_count_click () {
 }
 
 function do_ajax_edit_impr_text (pagepos, word) {
-  if (word == '') 
+  if (word == '') {
     $('#editimprtextdata').html('<img src="icn/waiting2.gif" />');
+    location.reload();
+    return;
+  }
   const textid = $('#editimprtextdata').attr('data_id');
   $.post(
     'inc/ajax_edit_impr_text.php', 

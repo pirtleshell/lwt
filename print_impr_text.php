@@ -19,6 +19,9 @@
 namespace Lwt\Interface\Print_Impr_text;
 
 require_once 'inc/session_utility.php';
+require_once 'inc/ajax_edit_impr_text.php';
+
+use function Lwt\Ajax\Improved_Text\edit_term_form;
 
 function edit_mode_display($textid, $ann_exists)
 {
@@ -32,21 +35,26 @@ function edit_mode_display($textid, $ann_exists)
 <!-- noprint -->
 
     <?php
-    if (!$ann_exists) {  // No Ann., Create...
+    if (!$ann_exists) {
+        // No annotations, try create them
         $ann = create_save_ann($textid);
-        $ann_exists = (strlen($ann) > 0);
+        $ann_exists = strlen($ann) > 0;
     }
     
     if (!$ann_exists) {  
-        // No Ann., not possible
+        // No annotations, creation not possible
         echo '<p>No annotated text found, and creation seems not possible.</p>';
-    } else { 
-        // Ann. exists, set up for editing.
+    } else {
+        // Annotations exist, set up for editing.
         ?>
-    <div data_id="<?php echo $textid; ?>" id="editimprtextdata"></div>
+    <div data_id="<?php echo $textid; ?>" id="editimprtextdata">
+    <?php echo edit_term_form($textid); ?>
+    </div>
     <script type="text/javascript">
         $(document).ready(function() {
-            do_ajax_edit_impr_text(0, '');
+            //do_ajax_edit_impr_text(0, '');
+            $('input.impr-ann-text').on('change', changeImprAnnText);
+            $('input.impr-ann-radio').on('change', changeImprAnnRadio);
         });
     </script>
         <?php
@@ -76,9 +84,10 @@ function print_mode_display($textid, $audio, $ann, $rtlScript, $title, $textsize
 <!-- noprint -->
     <?php
 
-    echo "<div id=\"print\"" . ($rtlScript ? ' dir="rtl"' : '') . ">";
-        
-    echo '<p style="font-size:' . $textsize . '%;line-height: 1.35; margin-bottom: 10px; ">' . tohtml($title) . '<br /><br />';
+    echo '<div id="print"' . ($rtlScript ? ' dir="rtl"' : '') . '>
+    <p style="font-size:' . $textsize . '%;line-height: 1.35; margin-bottom: 10px; ">' . 
+    tohtml($title) . 
+    '<br /><br />';
 
     $items = preg_split('/[\n]/u', $ann);
 
@@ -92,20 +101,20 @@ function print_mode_display($textid, $audio, $ann, $rtlScript, $title, $textsize
             if ($trans == '*') { 
                 $trans = $vals[1] . " "; // <- U+200A HAIR SPACE
             }      
-            echo ' <ruby><rb><span class="'.$ttsClass.'anntermruby">' . tohtml($vals[1]) . '</span></rb><rt><span class="anntransruby2">' . tohtml($trans) . '</span></rt></ruby> ';
-        } else {
-            if (count($vals) >= 2) { 
-                echo str_replace(
-                    "¶",
-                    '</p><p style="font-size:' . $textsize . '%;line-height: 1.3; margin-bottom: 10px;">',
-                    " " . tohtml($vals[1]) . " "
-                ); 
-            }
+            echo ' <ruby>
+            <rb><span class="' . $ttsClass . 'anntermruby">' . tohtml($vals[1]) . '</span></rb>
+            <rt><span class="anntransruby2">' . tohtml($trans) . '</span></rt>
+            </ruby> ';
+        } else if (count($vals) >= 2) {
+            echo str_replace(
+                "¶",
+                '</p><p style="font-size:' . $textsize . '%;line-height: 1.3; margin-bottom: 10px;">',
+                " " . tohtml($vals[1]) . " "
+            );
         }
     }
 
     echo "</p></div>";
-
 }
 
 

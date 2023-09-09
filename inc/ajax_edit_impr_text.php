@@ -256,7 +256,7 @@ function edit_term_form($textid)
                     <img class="click" src="icn/tick.png" title="Back to \'Display/Print Mode\'" alt="Back to \'Display/Print Mode\'" onclick="location.href=\'print_impr_text.php?text=' . $textid . '\';" />
                     </td>
                 </tr>';
-                $nontermbuffer ='';
+                $nontermbuffer = '';
             }
             $wid = null;
             $trans = '';
@@ -287,7 +287,7 @@ function edit_term_form($textid)
             $r .= '<tr>
                 <td class="td1 center" style="font-size:' . $textsize . '%;"' . 
                 ($rtlScript ? ' dir="rtl"' : '') . '>
-                    <span id="term' . $i . '">' . tohtml($vals[1]) . 
+                    <span id="term' . $i . '">' . tohtml($vals[1]) .
                     '</span>
                 </td>
                 <td class="td1 center" nowrap="nowrap">' . 
@@ -335,16 +335,6 @@ function edit_term_form($textid)
             </tr>
         </table>
     </form>';
-    /*
-    $r .= '<script type="text/javascript">' . "\n";
-    $r .= '//<![CDATA[' . "\n";
-    $r .= '$(document).ready( function() {' . "\n";
-    $r .= "$('input.impr-ann-text').change(changeImprAnnText);\n";
-    $r .= "$('input.impr-ann-radio').change(changeImprAnnRadio);\n";
-    $r .= '} );' . "\n";
-    $r .= '//]]>' . "\n";
-    $r .= '</script>' . "\n";
-    */
     return $r;
 }
 
