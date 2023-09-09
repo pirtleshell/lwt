@@ -11,6 +11,7 @@ require_once __DIR__ . '/ajax_chg_term_status.php';
 require_once __DIR__ . '/ajax_save_impr_text.php';
 require_once __DIR__ . '/ajax_save_text_position.php';
 require_once __DIR__ . '/ajax_show_imported_terms.php';
+require_once __DIR__ . '/ajax_edit_impr_text.php';
 
 
 // -------------------------- GET REQUESTS -------------------------
@@ -181,6 +182,21 @@ function imported_terms($get_req)
     return json_encode(imported_terms_list(
         $get_req["last_update"], $get_req["page"], $get_req["count"]
     ));
+}
+
+
+/**
+ * Translations for a term to choose an annotation.
+ * 
+ * @param array $get_req Get request with fields "text_id" and "page" and "count".
+ */
+function term_translations($get_req)
+{
+    return json_encode(
+        \Lwt\Ajax\Improved_Text\get_term_translations(
+            (int)$get_req["text_id"], (string)$get_req["term_lc"]
+        )
+    );
 }
 
 
@@ -359,6 +375,9 @@ if (isset($_GET['action'])) {
                 break;
             case "imported_terms":
                 echo imported_terms($_GET);
+                break;
+            case "term_translations":
+                echo term_translations($_GET);
                 break;
             default:
                 echo unknown_get_action_type($_GET);

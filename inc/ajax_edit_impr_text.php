@@ -19,12 +19,12 @@ require_once __DIR__ . '/session_utility.php';
 
 
 /**
- * Make the translations choices for a word.
+ * Make the translations choices for a term.
  *
  * @param int      $i     Word unique index in the form
  * @param int|null $wid   Word ID or null 
- * @param string   $trans Translation, may be empty
- * @param string   $word  Word
+ * @param string   $trans Current translation set for the term, may be empty
+ * @param string   $word  Term text
  * @param int      $lang  Language ID
  *
  * @return string HTML-formatted string
@@ -104,6 +104,98 @@ function make_trans($i, $wid, $trans, $word, $lang): string
 }
 
 /**
+ * Return the usefaul data to edit a term annotation on a specific text.
+ * 
+ * @param int $textid Text ID
+ * @param string $wordlc Term in lower case
+ * 
+ * @return string JS string of the different fields of the term
+ */
+function get_term_translations($textid, $wordlc)
+{
+    global $tbpref;
+    $sql = "SELECT TxLgID, TxAnnotatedText 
+    FROM {$tbpref}texts WHERE TxID = $textid";
+    $res = do_mysqli_query($sql);
+    $record = mysqli_fetch_assoc($res);
+    $langid = $record['TxLgID'];
+    $ann = $record['TxAnnotatedText'];
+    if (strlen($ann) > 0) {
+        $ann = recreate_save_ann($textid, $ann);
+    }
+    mysqli_free_result($res);
+    
+    $textsize = (float)get_first_value(
+        "SELECT LgTextSize AS value 
+        FROM {$tbpref}languages WHERE LgID = $langid"
+    );
+    if ($textsize > 100) { 
+        $textsize = intval($textsize * 0.8); 
+    }
+    
+    $output = array();
+    $annotations = preg_split('/[\n]/u', $ann);
+    foreach ($annotations as $annotation_line) {
+        $ann_data = array();
+        $vals = preg_split('/[\t]/u', $annotation_line);
+        // Check if annotation could be split
+        if ($vals === false) {
+            continue;
+        }
+        // Unknown check
+        if ($vals[0] <= -1) {
+            continue;
+        }
+        // Check if the input word is the same as the annotation
+        if (trim($wordlc) != mb_strtolower(trim($vals[1]), 'UTF-8')) {
+            continue;
+        }
+        $wid = null;
+        $trans = '';
+        // Annotation should be in format "pos   term text   term ID    translation"
+        if (count($vals) > 2) {
+            // Word exists and has an ID
+            $wid = $vals[2];
+            if (is_numeric($wid)) {
+                $temp_wid = (int)get_first_value(
+                    "SELECT COUNT(WoID) AS value 
+                    FROM {$tbpref}words 
+                    WHERE WoID = $wid"
+                );
+                if ($temp_wid < 1) { 
+                    $wid = null; 
+                }
+            }
+        }
+        if (count($vals) > 3) { 
+            $trans = $vals[3]; 
+        }
+        if ($wid !== null) {
+            $ann_data["wid"] = $wid;
+            $ann_data["trans"] = $trans;
+        }
+        $ann_data["lang_id"] = $langid;
+        // Add other translation choices
+        if ($wid !== null) {
+            $alltrans = get_first_value(
+                "SELECT WoTranslation AS value FROM {$tbpref}words 
+                WHERE WoID = $wid"
+            );
+            $transarr = preg_split('/[' . get_sepas()  . ']/u', $alltrans);
+            foreach (array_values($transarr) as $j => $t) {
+                $tt = trim($t);
+                if ($tt == '*' || $tt == '') { 
+                    continue; 
+                }
+                $ann_data["trans" . $j] = $tt;
+            }
+        }
+        $output[] = $ann_data;
+    }
+    return $output;
+}
+
+/**
  * Prepare the HTML content for the interaction with a term
  * 
  * @param int $textid Text ID
@@ -125,21 +217,17 @@ function edit_term_interaction($textid, $wordlc)
     }
     mysqli_free_result($res);
     
-    $sql = "SELECT LgTextSize, LgRightToLeft 
-    FROM {$tbpref}languages WHERE LgID = $langid";
-    $res = do_mysqli_query($sql);
-    $record = mysqli_fetch_assoc($res);
-    $textsize = (int)$record['LgTextSize'];
+    $textsize = (float)get_first_value(
+        "SELECT LgTextSize AS value 
+        FROM {$tbpref}languages WHERE LgID = $langid"
+    );
     if ($textsize > 100) { 
         $textsize = intval($textsize * 0.8); 
     }
-    mysqli_free_result($res);
     
     $rr = "";
-    $annotation = preg_split('/[\n]/u', $ann);
-    $i = 0;
-    foreach ($annotation as $annotation_line) {
-        $i++;
+    $annotations = preg_split('/[\n]/u', $ann);
+    foreach (array_values($annotations) as $i => $annotation_line) {
         $vals = preg_split('/[\t]/u', $annotation_line);
         // Check if annotation could be split
         if ($vals === false) {
@@ -238,10 +326,8 @@ function edit_term_form($textid)
                 </th>
             </tr>';
     $items = preg_split('/[\n]/u', $ann);
-    $i = 0;
     $nontermbuffer ='';
-    foreach ($items as $item) {
-        $i++;
+    foreach (array_values($items) as $i => $item) {
         $vals = preg_split('/[\t]/u', $item);
         if ($vals[0] > -1) {
             if ($nontermbuffer != '') {
@@ -519,6 +605,7 @@ function do_ajax_edit_impr_text($textid, $wordlc)
     chdir('..');
 
     if ($wordlc == '') {
+        // Load page, deprecated (function should be called directly)
         $html_content = edit_term_form($textid);
         echo "$('#editimprtextdata').html(" . prepare_textdata_js($html_content) . ");"; 
     } else {
