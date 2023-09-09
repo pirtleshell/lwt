@@ -104,28 +104,28 @@ function make_trans($i, $wid, $trans, $word, $lang): string
 }
 
 /**
- * Return the usefaul data to edit a term annotation on a specific text.
+ * Gather useful data to edit a term annotation on a specific text.
  * 
- * @param int $textid Text ID
  * @param string $wordlc Term in lower case
+ * @param int    $textid Text ID
  * 
- * @return string JS string of the different fields of the term
+ * @return array Return the useful data to edit a term annotation on a specific text
  */
-function get_term_translations($textid, $wordlc)
+function get_term_translations($wordlc, $textid)
 {
     global $tbpref;
     $sql = "SELECT TxLgID, TxAnnotatedText 
     FROM {$tbpref}texts WHERE TxID = $textid";
     $res = do_mysqli_query($sql);
     $record = mysqli_fetch_assoc($res);
-    $langid = $record['TxLgID'];
-    $ann = $record['TxAnnotatedText'];
+    $langid = (int)$record['TxLgID'];
+    $ann = (string)$record['TxAnnotatedText'];
     if (strlen($ann) > 0) {
         $ann = recreate_save_ann($textid, $ann);
     }
     mysqli_free_result($res);
     
-    $textsize = (float)get_first_value(
+    $textsize = (int)get_first_value(
         "SELECT LgTextSize AS value 
         FROM {$tbpref}languages WHERE LgID = $langid"
     );
@@ -133,10 +133,9 @@ function get_term_translations($textid, $wordlc)
         $textsize = intval($textsize * 0.8); 
     }
     
-    $output = array();
+    $ann_data = array();
     $annotations = preg_split('/[\n]/u', $ann);
     foreach ($annotations as $annotation_line) {
-        $ann_data = array();
         $vals = preg_split('/[\t]/u', $annotation_line);
         // Check if annotation could be split
         if ($vals === false) {
@@ -157,6 +156,7 @@ function get_term_translations($textid, $wordlc)
             // Word exists and has an ID
             $wid = $vals[2];
             if (is_numeric($wid)) {
+                $wid = (int)$wid;
                 $temp_wid = (int)get_first_value(
                     "SELECT COUNT(WoID) AS value 
                     FROM {$tbpref}words 
@@ -165,6 +165,8 @@ function get_term_translations($textid, $wordlc)
                 if ($temp_wid < 1) { 
                     $wid = null; 
                 }
+            } else {
+                $wid = null;
             }
         }
         if (count($vals) > 3) { 
@@ -177,33 +179,34 @@ function get_term_translations($textid, $wordlc)
         $ann_data["lang_id"] = $langid;
         // Add other translation choices
         if ($wid !== null) {
+            $translations = array();
             $alltrans = get_first_value(
                 "SELECT WoTranslation AS value FROM {$tbpref}words 
                 WHERE WoID = $wid"
             );
             $transarr = preg_split('/[' . get_sepas()  . ']/u', $alltrans);
-            foreach (array_values($transarr) as $j => $t) {
+            foreach ($transarr as $t) {
                 $tt = trim($t);
                 if ($tt == '*' || $tt == '') { 
                     continue; 
                 }
-                $ann_data["trans" . $j] = $tt;
+                $translations[] = $tt;
             }
+            $ann_data["translations"] = $translations;
         }
-        $output[] = $ann_data;
     }
-    return $output;
+    return $ann_data;
 }
 
 /**
  * Prepare the HTML content for the interaction with a term
  * 
- * @param int $textid Text ID
  * @param string $wordlc Term in lower case
+ * @param int    $textid Text ID
  * 
  * @return string JS string of the different fields of the term
  */
-function edit_term_interaction($textid, $wordlc)
+function edit_term_interaction($wordlc, $textid)
 {
     global $tbpref;
     $sql = "SELECT TxLgID, TxAnnotatedText 
@@ -226,6 +229,7 @@ function edit_term_interaction($textid, $wordlc)
     }
     
     $rr = "";
+    $trans_data = get_term_translations($wordlc, $textid);
     $annotations = preg_split('/[\n]/u', $ann);
     foreach (array_values($annotations) as $i => $annotation_line) {
         $vals = preg_split('/[\t]/u', $annotation_line);
@@ -241,38 +245,28 @@ function edit_term_interaction($textid, $wordlc)
         if (trim($wordlc) != mb_strtolower(trim($vals[1]), 'UTF-8')) {
             continue;
         }
-        $wid = null;
         $trans = '';
         // Annotation should be in format "pos   term text   term ID    translation"
-        if (count($vals) > 2) {
-            // Word exists and has an ID
-            $wid = $vals[2];
-            if (is_numeric($wid)) {
-                $temp_wid = (int)get_first_value(
-                    "SELECT COUNT(WoID) AS value 
-                    FROM {$tbpref}words 
-                    WHERE WoID = $wid"
-                );
-                if ($temp_wid < 1) { 
-                    $wid = null; 
-                }
-            }
-        }
         if (count($vals) > 3) { 
             $trans = $vals[3]; 
         }
-        if ($wid === null) {
-            $plus = '&nbsp;';
-        } else {
+        if (array_key_exists("wid", $trans_data)) {
             $plus = '<a name="rec' . $i . '"></a>
             <span class="click" onclick="oewin(\'edit_word.php?fromAnn=\' + $(document).scrollTop() + \'&amp;wid=' . 
-            $wid . '\');">
+            $trans_data["wid"] . '\');">
                 <img src="icn/sticky-note--pencil.png" title="Edit Term" alt="Edit Term" />
             </span>';
+        } else {
+            $plus = '&nbsp;';
+
         }
         $rr .= "$('#editlink" . $i . "').html(" . 
         prepare_textdata_js($plus) . ");";
-        $plus = make_trans($i, $wid, $trans, $vals[1], $langid);
+        $plus = make_trans(
+            $i, 
+            array_key_exists("wid", $trans_data) ? $trans_data["wid"] : null, 
+            $trans, $vals[1], $langid
+        );
         $rr .= "$('#transsel" . $i . "').html(" . 
         prepare_textdata_js($plus) . ");";
     }
@@ -432,6 +426,8 @@ function edit_term_form($textid)
  * @global string $tbpref Database table prefix.
  *
  * @psalm-return array{0: string, 1: string}
+ * 
+ * @deprecated 2.9.0 Use AJAX instead 
  */
 function make_form($textid, $wordlc): array
 { 
@@ -579,16 +575,6 @@ function make_form($textid, $wordlc): array
             </tr>
         </table>
     </form>';
-    /*
-    $r .= '<script type="text/javascript">' . "\n";
-    $r .= '//<![CDATA[' . "\n";
-    $r .= '$(document).ready( function() {' . "\n";
-    $r .= "$('input.impr-ann-text').change(changeImprAnnText);\n";
-    $r .= "$('input.impr-ann-radio').change(changeImprAnnRadio);\n";
-    $r .= '} );' . "\n";
-    $r .= '//]]>' . "\n";
-    $r .= '</script>' . "\n";
-    */
     return array($r, $rr);
 }
 
@@ -609,7 +595,7 @@ function do_ajax_edit_impr_text($textid, $wordlc)
         $html_content = edit_term_form($textid);
         echo "$('#editimprtextdata').html(" . prepare_textdata_js($html_content) . ");"; 
     } else {
-        $js_content = edit_term_interaction($textid, $wordlc);
+        $js_content = edit_term_interaction($wordlc, $textid);
         echo $js_content; 
     }
 }

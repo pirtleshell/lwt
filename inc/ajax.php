@@ -194,7 +194,7 @@ function term_translations($get_req)
 {
     return json_encode(
         \Lwt\Ajax\Improved_Text\get_term_translations(
-            (int)$get_req["text_id"], (string)$get_req["term_lc"]
+            (string)$get_req["term_lc"], (int)$get_req["text_id"]
         )
     );
 }
