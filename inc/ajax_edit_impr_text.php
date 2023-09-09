@@ -13,7 +13,12 @@
  * @since   1.5.0
  */
 
+namespace Lwt\Ajax\Improved_Text;
+
+
 require_once __DIR__ . '/session_utility.php';
+
+
 
 /**
  * Make the translation for a word.
@@ -100,6 +105,224 @@ function make_trans($i, $wid, $trans, $word, $lang): string
         <img src="icn/empty.gif" />
     </span>
     </span>';
+    return $r;
+}
+
+function edit_term_interaction($textid, $wordlc)
+{
+    global $tbpref;
+    $sql = "SELECT TxLgID, TxAnnotatedText 
+    FROM {$tbpref}texts WHERE TxID = $textid";
+    $res = do_mysqli_query($sql);
+    $record = mysqli_fetch_assoc($res);
+    $langid = $record['TxLgID'];
+    $ann = $record['TxAnnotatedText'];
+    if (strlen($ann) > 0) {
+        $ann = recreate_save_ann($textid, $ann);
+    }
+    mysqli_free_result($res);
+    
+    $sql = "SELECT LgTextSize, LgRightToLeft 
+    FROM {$tbpref}languages WHERE LgID = $langid";
+    $res = do_mysqli_query($sql);
+    $record = mysqli_fetch_assoc($res);
+    $textsize = (int)$record['LgTextSize'];
+    if ($textsize > 100) { 
+        $textsize = intval($textsize * 0.8); 
+    }
+    mysqli_free_result($res);
+    
+    $rr = "";
+    $items = preg_split('/[\n]/u', $ann);
+    $i = 0;
+    foreach ($items as $item) {
+        $i++;
+        $vals = preg_split('/[\t]/u', $item);
+        if ($vals[0] > -1) {
+            $wid = null;
+            $trans = '';
+            if (count($vals) > 2) {
+                $wid = $vals[2];
+                if (is_numeric($wid)) {
+                    $temp_wid = (int)get_first_value(
+                        "SELECT COUNT(WoID) AS value 
+                        FROM {$tbpref}words 
+                        WHERE WoID = $wid"
+                    );
+                    if ($temp_wid < 1) { 
+                        $wid = null; 
+                    }
+                }
+            }
+            if (count($vals) > 3) { 
+                $trans = $vals[3]; 
+            }
+            if ($wid === null) {
+                $plus = '&nbsp;';
+            } else {
+                $plus = '<a name="rec' . $i . '"></a>
+                <span class="click" onclick="oewin(\'edit_word.php?fromAnn=\' + $(document).scrollTop() + \'&amp;wid=' . 
+                $wid . '\');">
+                    <img src="icn/sticky-note--pencil.png" title="Edit Term" alt="Edit Term" />
+                </span>';
+            }
+            $mustredo = trim($wordlc) == mb_strtolower(trim($vals[1]), 'UTF-8');
+            if ($mustredo) {
+                $rr .= "$('#editlink" . $i . "').html(" . 
+                prepare_textdata_js($plus) . ");";
+                $plus = make_trans($i, $wid, $trans, $vals[1], $langid);
+                $rr .= "$('#transsel" . $i . "').html(" . 
+                prepare_textdata_js($plus) . ");"; 
+            }
+        }
+    }
+    return $rr;
+}
+
+function edit_term_form($textid)
+{
+    global $tbpref;
+    $sql = "SELECT TxLgID, TxAnnotatedText 
+    FROM {$tbpref}texts WHERE TxID = $textid";
+    $res = do_mysqli_query($sql);
+    $record = mysqli_fetch_assoc($res);
+    $langid = $record['TxLgID'];
+    $ann = $record['TxAnnotatedText'];
+    if (strlen($ann) > 0) {
+        $ann = recreate_save_ann($textid, $ann);
+    }
+    mysqli_free_result($res);
+    
+    $sql = "SELECT LgTextSize, LgRightToLeft 
+    FROM {$tbpref}languages WHERE LgID = $langid";
+    $res = do_mysqli_query($sql);
+    $record = mysqli_fetch_assoc($res);
+    $textsize = (int)$record['LgTextSize'];
+    if ($textsize > 100) { 
+        $textsize = intval($textsize * 0.8); 
+    }
+    $rtlScript = $record['LgRightToLeft'];
+    mysqli_free_result($res);
+    
+    $r = 
+    '<form action="" method="post">
+        <table class="tab2" cellspacing="0" cellpadding="5">
+            <tr>
+                <th class="th1 center">Text</th>
+                <th class="th1 center">Dict.</th>
+                <th class="th1 center">Edit<br />Term</th>
+                <th class="th1 center">
+                    Term Translations (Delim.: ' . 
+                    tohtml(getSettingWithDefault('set-term-translation-delimiters')) . ')
+                    <br />
+                    <input type="button" value="Reload" onclick="do_ajax_edit_impr_text(0,\'\');" />
+                </th>
+            </tr>';
+    $items = preg_split('/[\n]/u', $ann);
+    $i = 0;
+    $nontermbuffer ='';
+    foreach ($items as $item) {
+        $i++;
+        $vals = preg_split('/[\t]/u', $item);
+        if ($vals[0] > -1) {
+            if ($nontermbuffer != '') {
+                $r .= '<tr>
+                    <td class="td1 center" style="font-size:' . $textsize . '%;">' . 
+                        $nontermbuffer .
+                    '</td>
+                    <td class="td1 right" colspan="3">
+                    <img class="click" src="icn/tick.png" title="Back to \'Display/Print Mode\'" alt="Back to \'Display/Print Mode\'" onclick="location.href=\'print_impr_text.php?text=' . $textid . '\';" />
+                    </td>
+                </tr>';
+                $nontermbuffer ='';
+            }
+            $wid = null;
+            $trans = '';
+            if (count($vals) > 2) {
+                $wid = $vals[2];
+                if (is_numeric($wid)) {
+                    $temp_wid = (int)get_first_value(
+                        "SELECT COUNT(WoID) AS value 
+                        FROM {$tbpref}words 
+                        WHERE WoID = $wid"
+                    );
+                    if ($temp_wid < 1) { 
+                        $wid = null; 
+                    }
+                }
+            }
+            if (count($vals) > 3) { 
+                $trans = $vals[3]; 
+            }
+            $word_link = "&nbsp;";
+            if ($wid !== null) {
+                $word_link = '<a name="rec' . $i . '"></a>
+                <span class="click" onclick="oewin(\'edit_word.php?fromAnn=\' + $(document).scrollTop() + \'&amp;wid=' . 
+                $wid . '\');">
+                    <img src="icn/sticky-note--pencil.png" title="Edit Term" alt="Edit Term" />
+                </span>';
+            }
+            $r .= '<tr>
+                <td class="td1 center" style="font-size:' . $textsize . '%;"' . 
+                ($rtlScript ? ' dir="rtl"' : '') . '>
+                    <span id="term' . $i . '">' . tohtml($vals[1]) . 
+                    '</span>
+                </td>
+                <td class="td1 center" nowrap="nowrap">' . 
+                    makeDictLinks($langid, prepare_textdata_js($vals[1])) .
+                '</td>
+                <td class="td1 center">
+                    <span id="editlink' . $i . '">' . $word_link . '</span>
+                </td>
+                <td class="td1" style="font-size:90%;">
+                    <span id="transsel' . $i . '">' .
+                        make_trans($i, $wid, $trans, $vals[1], $langid) . '
+                    </span>
+                </td>
+            </tr>';
+        } else {
+            // Not a term, may add a new line
+            $nontermbuffer .= str_replace(
+                "¶",
+                '<img src="icn/new_line.png" title="New Line" alt="New Line" />', 
+                tohtml(trim($vals[1]))
+            );
+        }
+    }
+    if ($nontermbuffer != '') {
+        $r .= '<tr>
+            <td class="td1 center" style="font-size:' . $textsize . '%;">' . 
+            $nontermbuffer . 
+            '</td>
+            <td class="td1 right" colspan="3">
+                <img class="click" src="icn/tick.png" title="Back to \'Display/Print Mode\'" alt="Back to \'Display/Print Mode\'" onclick="location.href=\'print_impr_text.php?text=' . $textid . '\';" />
+            </td>
+        </tr>';
+    }
+    $r .= '
+                <th class="th1 center">Text</th>
+                <th class="th1 center">Dict.</th>
+                <th class="th1 center">Edit<br />Term</th>
+                <th class="th1 center">
+                    Term Translations (Delim.: ' . 
+                    tohtml(getSettingWithDefault('set-term-translation-delimiters')) . ')
+                    <br />
+                    <input type="button" value="Reload" onclick="do_ajax_edit_impr_text(1e6,\'\');" />
+                    <a name="bottom"></a>
+                </th>
+            </tr>
+        </table>
+    </form>';
+    /*
+    $r .= '<script type="text/javascript">' . "\n";
+    $r .= '//<![CDATA[' . "\n";
+    $r .= '$(document).ready( function() {' . "\n";
+    $r .= "$('input.impr-ann-text').change(changeImprAnnText);\n";
+    $r .= "$('input.impr-ann-radio').change(changeImprAnnRadio);\n";
+    $r .= '} );' . "\n";
+    $r .= '//]]>' . "\n";
+    $r .= '</script>' . "\n";
+    */
     return $r;
 }
 
@@ -286,10 +509,11 @@ function do_ajax_edit_impr_text($textid, $wordlc)
 {
     chdir('..');
 
-    list($html_content, $js_content) = make_form($textid, $wordlc);
     if ($wordlc == '') {
+        $html_content = edit_term_form($textid);
         echo "$('#editimprtextdata').html(" . prepare_textdata_js($html_content) . ");"; 
     } else {
+        $js_content = edit_term_interaction($textid, $wordlc);
         echo $js_content; 
     }
 }
