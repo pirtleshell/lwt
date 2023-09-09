@@ -135,13 +135,13 @@ function get_term_translations($wordlc, $textid)
     
     $ann_data = array();
     $annotations = preg_split('/[\n]/u', $ann);
-    foreach ($annotations as $annotation_line) {
+    foreach (array_values($annotations) as $i => $annotation_line) {
         $vals = preg_split('/[\t]/u', $annotation_line);
         // Check if annotation could be split
         if ($vals === false) {
             continue;
         }
-        // Unknown check
+        // Skip when term is punctuation
         if ($vals[0] <= -1) {
             continue;
         }
@@ -149,8 +149,10 @@ function get_term_translations($wordlc, $textid)
         if (trim($wordlc) != mb_strtolower(trim($vals[1]), 'UTF-8')) {
             continue;
         }
-        $wid = null;
-        $trans = '';
+        $ann_data["term_lc"] = trim($wordlc);
+        $ann_data["wid"] = null;
+        $ann_data["trans"] = '';
+        $ann_data["ann_index"] = $i;
         // Annotation should be in format "pos   term text   term ID    translation"
         if (count($vals) > 2) {
             // Word exists and has an ID
@@ -169,12 +171,11 @@ function get_term_translations($wordlc, $textid)
                 $wid = null;
             }
         }
-        if (count($vals) > 3) { 
-            $trans = $vals[3]; 
+        if (count($vals) > 3) {
+            $ann_data["trans"] = $vals[3];
         }
         if ($wid !== null) {
             $ann_data["wid"] = $wid;
-            $ann_data["trans"] = $trans;
         }
         $ann_data["lang_id"] = $langid;
         // Add other translation choices
@@ -208,66 +209,25 @@ function get_term_translations($wordlc, $textid)
  */
 function edit_term_interaction($wordlc, $textid)
 {
-    global $tbpref;
-    $sql = "SELECT TxLgID, TxAnnotatedText 
-    FROM {$tbpref}texts WHERE TxID = $textid";
-    $res = do_mysqli_query($sql);
-    $record = mysqli_fetch_assoc($res);
-    $langid = $record['TxLgID'];
-    $ann = $record['TxAnnotatedText'];
-    if (strlen($ann) > 0) {
-        $ann = recreate_save_ann($textid, $ann);
-    }
-    mysqli_free_result($res);
-    
-    $textsize = (float)get_first_value(
-        "SELECT LgTextSize AS value 
-        FROM {$tbpref}languages WHERE LgID = $langid"
-    );
-    if ($textsize > 100) { 
-        $textsize = intval($textsize * 0.8); 
-    }
-    
     $rr = "";
     $trans_data = get_term_translations($wordlc, $textid);
-    $annotations = preg_split('/[\n]/u', $ann);
-    foreach (array_values($annotations) as $i => $annotation_line) {
-        $vals = preg_split('/[\t]/u', $annotation_line);
-        // Check if annotation could be split
-        if ($vals === false) {
-            continue;
-        }
-        // Unknown check
-        if ($vals[0] <= -1) {
-            continue;
-        }
-        // Check if the input word is the same as the annotation
-        if (trim($wordlc) != mb_strtolower(trim($vals[1]), 'UTF-8')) {
-            continue;
-        }
-        $trans = '';
-        // Annotation should be in format "pos   term text   term ID    translation"
-        if (count($vals) > 3) { 
-            $trans = $vals[3]; 
-        }
-        if (array_key_exists("wid", $trans_data)) {
-            $plus = '<a name="rec' . $i . '"></a>
-            <span class="click" onclick="oewin(\'edit_word.php?fromAnn=\' + $(document).scrollTop() + \'&amp;wid=' . 
-            $trans_data["wid"] . '\');">
-                <img src="icn/sticky-note--pencil.png" title="Edit Term" alt="Edit Term" />
-            </span>';
-        } else {
-            $plus = '&nbsp;';
-
-        }
-        $rr .= "$('#editlink" . $i . "').html(" . 
-        prepare_textdata_js($plus) . ");";
+    if ($trans_data["wid"] !== null) {
+        $plus = '<a name="rec' . $trans_data["ann_index"] . '"></a>
+        <span class="click" onclick="oewin(\'edit_word.php?fromAnn=\' + $(document).scrollTop() + \'&amp;wid=' . 
+        $trans_data["wid"] . '\');">
+            <img src="icn/sticky-note--pencil.png" title="Edit Term" alt="Edit Term" />
+        </span>';
+    } else {
+        $plus = '&nbsp;';
+    }
+    $rr .= "$('#editlink" . $trans_data["ann_index"] . "').html(" . 
+    prepare_textdata_js($plus) . ");";
+    foreach ($trans_data["translations"] as $candidate_trans) {
         $plus = make_trans(
-            $i, 
-            array_key_exists("wid", $trans_data) ? $trans_data["wid"] : null, 
-            $trans, $vals[1], $langid
+            $trans_data["ann_index"], $trans_data["wid"], $candidate_trans, 
+            $trans_data["term_lc"], $trans_data["lang_id"]
         );
-        $rr .= "$('#transsel" . $i . "').html(" . 
+        $rr .= "$('#transsel" . $trans_data["ann_index"] . "').html(" . 
         prepare_textdata_js($plus) . ");";
     }
     return $rr;
