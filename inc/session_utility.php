@@ -4477,9 +4477,14 @@ function restore_file($handle, $title): string
 }
 
 
-
-// -------------------------------------------------------------
-
+/**
+ * Uses provided annotations, and annotations from database to update annotations.
+ * 
+ * @param int $textid Id of the text on which to update annotations
+ * @param string $oldann Old annotations
+ * 
+ * @return string Updated annotations for this text. 
+ */
 function recreate_save_ann($textid, $oldann): string 
 {
     global $tbpref;
@@ -4517,37 +4522,43 @@ function recreate_save_ann($textid, $oldann): string
         $ann .= $item . "\n";
     }
     runsql(
-        'update ' . $tbpref . 'texts set ' .
-        'TxAnnotatedText = ' . convert_string_to_sqlsyntax($ann) . ' 
-        where TxID = ' . $textid, 
+        "UPDATE {$tbpref}texts 
+        SET TxAnnotatedText = " . convert_string_to_sqlsyntax($ann) . " 
+        WHERE TxID = $textid", 
         ""
     );
     return (string)get_first_value(
-        "select TxAnnotatedText as value 
-        from " . $tbpref . "texts 
-        where TxID = " . $textid
+        "SELECT TxAnnotatedText AS value 
+        FROM {$tbpref}texts 
+        where TxID = $textid"
     );
 }
 
-// -------------------------------------------------------------
-
+/**
+ * Create new annotations for a text.
+ * 
+ * @param int $textid Id of the text to create annotations for
+ * 
+ * @return string Annotations for the text
+ */
 function create_ann($textid): string 
 {
     global $tbpref;
     $ann = '';
     $sql = 
-    'SELECT 
+    "SELECT 
     CASE WHEN Ti2WordCount>0 THEN Ti2WordCount ELSE 1 END AS Code, 
     CASE WHEN CHAR_LENGTH(Ti2Text)>0 THEN Ti2Text ELSE WoText END AS TiText, 
     Ti2Order, 
     CASE WHEN Ti2WordCount > 0 THEN 0 ELSE 1 END AS TiIsNotWord, 
     WoID, WoTranslation 
     FROM (
-        ' . $tbpref . 'textitems2 
-        LEFT JOIN ' . $tbpref . 'words ON (Ti2WoID = WoID) AND (Ti2LgID = WoLgID)
+        {$tbpref}textitems2 
+        LEFT JOIN {$tbpref}words
+        ON Ti2WoID = WoID AND Ti2LgID = WoLgID
     ) 
-    WHERE Ti2TxID = ' . $textid . ' 
-    ORDER BY Ti2Order asc, Ti2WordCount desc';
+    WHERE Ti2TxID = $textid
+    ORDER BY Ti2Order ASC, Ti2WordCount DESC";
     $savenonterm = '';
     $saveterm = '';
     $savetrans = '';
@@ -4558,27 +4569,24 @@ function create_ann($textid): string
     while ($record = mysqli_fetch_assoc($res)) {
         $actcode = (int)$record['Code'];
         $order = (int)$record['Ti2Order'];
-        if ($order <= $until ) {
+        if ($order <= $until) {
             continue;
         }
-        if ($order > $until ) {
-            $ann = $ann . process_term(
-                $savenonterm, $saveterm, $savetrans, $savewordid, $order
-            );
-            $savenonterm = '';
-            $saveterm = '';
-            $savetrans = '';
-            $savewordid = '';
-            $until = $order;
-        }
+        $ann .= process_term(
+            $savenonterm, $saveterm, $savetrans, $savewordid, $order
+        );
+        $savenonterm = '';
+        $saveterm = '';
+        $savetrans = '';
+        $savewordid = '';
+        $until = $order;
         if ($record['TiIsNotWord'] != 0) {
             $savenonterm = $savenonterm . $record['TiText'];
-        }
-        else {
+        } else {
             $until = $order + 2 * ($actcode-1);
             $saveterm = $record['TiText'];
             $savetrans = '';
-            if(isset($record['WoID'])) {
+            if (isset($record['WoID'])) {
                 $savetrans = $record['WoTranslation'];
                 $savewordid = $record['WoID'];
             }
