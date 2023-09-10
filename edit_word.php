@@ -7,13 +7,15 @@
  * Call: edit_word.php?....
  *  ... op=Save ... do insert new
  *  ... op=Change ... do update
- *  ... fromAnn=recno ... calling from impr. annotation editing
+ *  ... fromAnn=recno&tid=[textid]&ord=[textpos] ... calling from impr. annotation editing
  *  ... tid=[textid]&ord=[textpos]&wid= ... new word  
  *  ... tid=[textid]&ord=[textpos]&wid=[wordid] ... edit word 
  * 
  * @since  1.0.3
  * @author LWT Project <lwt-project@hotmail.com>
  */
+
+namespace Lwt\Interface\Edit_Word;
 
 require_once 'inc/session_utility.php';
 require_once 'inc/simterms.php';
@@ -214,20 +216,23 @@ function edit_word_do_operation($translation, $fromAnn)
 }
 
 
-function edit_word_do_form($fromAnn)
+function edit_word_do_form($wid, $text_id, $ord, $fromAnn)
 {
     global $tbpref, $langDefs;
     $lang = null;
     $term = null;
-    $wid = getreq('wid');
     
-    if ($wid == '') {    
+    if ($wid == -1) {
+        // Get the $wid from the term text
         $sql = 
-        'SELECT Ti2Text, Ti2LgID FROM ' . $tbpref . 'textitems2 
-        WHERE Ti2TxID = ' . $_REQUEST['tid'] . ' AND Ti2WordCount = 1 AND Ti2Order = ' . $_REQUEST['ord'];
+        "SELECT Ti2Text, Ti2LgID FROM {$tbpref}textitems2 
+        WHERE Ti2TxID = $text_id AND Ti2WordCount = 1 AND Ti2Order = $ord";
         $res = do_mysqli_query($sql);
         $record = mysqli_fetch_assoc($res);
-        if (!$record) {
+        if ($record === false) {
+            my_die("Failure while running the SQL query!");
+        }
+        if ($record === null) {
             my_die("Cannot access Term and Language in edit_word.php");
         }
         $term = $record['Ti2Text'];
@@ -236,11 +241,18 @@ function edit_word_do_form($fromAnn)
         
         $termlc = mb_strtolower($term, 'UTF-8');
         
-        $wid = get_first_value(
+        $temp_id = get_first_value(
             "SELECT WoID AS value 
             FROM {$tbpref}words 
-            WHERE WoLgID = $lang AND WoTextLC = " . convert_string_to_sqlsyntax($termlc)
+            WHERE WoLgID = $lang AND WoTextLC = " . 
+            convert_string_to_sqlsyntax($termlc)
         );
+        if ($temp_id === null) {
+            $new = true;
+        } else {
+            $new = false;
+            $wid = (int)$temp_id;
+        }
     } else {
         $sql = "SELECT WoText, WoLgID FROM {$tbpref}words WHERE WoID = $wid";
         $res = do_mysqli_query($sql);
@@ -252,10 +264,8 @@ function edit_word_do_form($fromAnn)
         $lang = $record['WoLgID'];
         mysqli_free_result($res);
         $termlc = mb_strtolower($term, 'UTF-8');
-        
+        $new = false;
     }
-    
-    $new = (isset($wid) == false);
 
     $titletext = ($new ? "New Term" : "Edit Term") . ": " . tohtml($term);
     pagestart_nobody($titletext);
@@ -274,7 +284,7 @@ function edit_word_do_form($fromAnn)
     if ($new) {
         $seid = get_first_value(
             "SELECT Ti2SeID AS value FROM " . $tbpref . "textitems2 
-            WHERE Ti2TxID = " . $_REQUEST['tid'] . " AND Ti2WordCount = 1 AND Ti2Order = " . $_REQUEST['ord']
+            WHERE Ti2TxID = $text_id AND Ti2WordCount = 1 AND Ti2Order = $ord"
         );
         $sent = getSentence($seid, $termlc, (int) getSettingWithDefault('set-term-sentence-count'));
             
@@ -284,8 +294,8 @@ function edit_word_do_form($fromAnn)
  <input type="hidden" name="fromAnn" value="<?php echo $fromAnn; ?>" />
  <input type="hidden" name="WoLgID" id="langfield" value="<?php echo $lang; ?>" />
  <input type="hidden" name="WoTextLC" value="<?php echo tohtml($termlc); ?>" />
- <input type="hidden" name="tid" value="<?php echo $_REQUEST['tid']; ?>" />
- <input type="hidden" name="ord" value="<?php echo $_REQUEST['ord']; ?>" />
+ <input type="hidden" name="tid" value="<?php echo $text_id; ?>" />
+ <input type="hidden" name="ord" value="<?php echo $ord; ?>" />
  <table class="tab2" cellspacing="0" cellpadding="5">
     <tr title="Only change uppercase/lowercase!">
         <td class="td1 right"><b>New Term:</b></td>
@@ -409,10 +419,10 @@ function edit_word_do_form($fromAnn)
                 $status = 1;
             }
             $sentence = repl_tab_nl($record['WoSentence']);
-            if ($sentence == '' && isset($_REQUEST['tid']) && isset($_REQUEST['ord'])) {
+            if ($sentence == '' && isset($text_id) && isset($ord)) {
                 $seid = get_first_value(
                     "select Ti2SeID as value from " . $tbpref . "textitems2 
-                    where Ti2TxID = " . $_REQUEST['tid'] . " and Ti2WordCount = 1 and Ti2Order = " . $_REQUEST['ord']
+                    where Ti2TxID = " . $text_id . " and Ti2WordCount = 1 and Ti2Order = " . $ord
                 );
                 $sent = getSentence($seid, $termlc, (int) getSettingWithDefault('set-term-sentence-count'));
                 $sentence = repl_tab_nl($sent[1]);
@@ -496,31 +506,52 @@ function edit_word_do_form($fromAnn)
      </form>
         <?php
             // Display example sentences button
-            example_sentences_area($lang, $termlc, 'document.forms.editword.WoSentence', $wid);
+            example_sentences_area(
+                $lang, $termlc, 'document.forms.editword.WoSentence', $wid
+            );
         }
         mysqli_free_result($res);
     }
 }
 
-$translation_raw = repl_tab_nl(getreq("WoTranslation"));
-if ($translation_raw == '') { 
-    $translation = '*'; 
-} else { 
-    $translation = $translation_raw; 
+function do_content() {
+    $fromAnn = getreq("fromAnn"); // from-recno or empty
+    if (isset($_REQUEST['op'])) {
+        // if (isset($_REQUEST['op']))
+        $translation_raw = repl_tab_nl(getreq("WoTranslation"));
+        if ($translation_raw == '') { 
+            $translation = '*'; 
+        } else { 
+            $translation = $translation_raw; 
+        }
+        edit_word_do_operation($translation, $fromAnn);
+    } else {  
+        // FORM
+        $from_ann = false;
+        if (array_key_exists("wid", $_REQUEST) && is_integer(getreq('wid'))) {
+            $wid = (int)getreq('wid');
+        } else {
+            $wid = -1;
+        }
+        if ($fromAnn != "") {
+            $from_ann = true;
+        }
+        $text_id = (int)getreq("tid");
+        $ord = (int)getreq("ord");
+        edit_word_do_form($wid, $text_id, $ord, $from_ann);
+    }
+    
+    pageend();
 }
 
-$fromAnn = getreq("fromAnn"); // from-recno or empty
-if (isset($_REQUEST['op'])) {
-    // if (isset($_REQUEST['op']))
-    edit_word_do_operation($translation, $fromAnn);
-} else {  
-    // FORM
-    // if (! isset($_REQUEST['op']))
 
-    // edit_word.php?tid=..&ord=..&wid=..
-    edit_word_do_form($fromAnn);
+if (
+    getreq("wid") != "" || 
+    getreq("tid") . getreq("ord") != "" || 
+    array_key_exists("op", $_REQUEST)
+    ) 
+{
+    do_content();
 }
-
-pageend();
 
 ?>

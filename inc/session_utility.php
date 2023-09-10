@@ -4437,7 +4437,7 @@ function restore_file($handle, $title): string
                 $start = 0;
                 continue;
             }
-            if (substr($sql_line, 0, 3) !== '-- ' ) {
+            if (substr($sql_line, 0, 3) !== '-- ') {
                 $res = mysqli_query(
                     $GLOBALS['DBCONNECTION'], insert_prefix_in_sql($sql_line)
                 );
@@ -4488,13 +4488,12 @@ function restore_file($handle, $title): string
 function recreate_save_ann($textid, $oldann): string 
 {
     global $tbpref;
-    $newann = create_ann($textid);
     // Get the translations from $oldann:
     $oldtrans = array();
     $olditems = preg_split('/[\n]/u', $oldann);
     foreach ($olditems as $olditem) {
         $oldvals = preg_split('/[\t]/u', $olditem);
-        if ($oldvals[0] > -1) {
+        if ((int)$oldvals[0] > -1) {
             $trans = '';
             if (count($oldvals) > 3) { 
                 $trans = $oldvals[3]; 
@@ -4503,11 +4502,12 @@ function recreate_save_ann($textid, $oldann): string
         }
     }
     // Reset the translations from $oldann in $newann and rebuild in $ann:
+    $newann = create_ann($textid);
     $newitems = preg_split('/[\n]/u', $newann);
     $ann = '';
     foreach ($newitems as $newitem) {
         $newvals = preg_split('/[\t]/u', $newitem);
-        if ($newvals[0] > -1) {
+        if ((int)$newvals[0] > -1) {
             $key = $newvals[0] . "\t";
             if (isset($newvals[1])) { 
                 $key .= $newvals[1]; 
@@ -4540,6 +4540,9 @@ function recreate_save_ann($textid, $oldann): string
  * @param int $textid Id of the text to create annotations for
  * 
  * @return string Annotations for the text
+ * 
+ * @since 2.9.0 Annotations "position" change, they are now equal to Ti2Order
+ * it was shifted by one index before.
  */
 function create_ann($textid): string 
 {
@@ -4566,34 +4569,34 @@ function create_ann($textid): string
     $until = 0;
     $res = do_mysqli_query($sql);
     $order = null;
+    // For each term (includes blanks)
     while ($record = mysqli_fetch_assoc($res)) {
         $actcode = (int)$record['Code'];
         $order = (int)$record['Ti2Order'];
         if ($order <= $until) {
             continue;
         }
-        $ann .= process_term(
-            $savenonterm, $saveterm, $savetrans, $savewordid, $order
-        );
         $savenonterm = '';
         $saveterm = '';
         $savetrans = '';
         $savewordid = '';
         $until = $order;
         if ($record['TiIsNotWord'] != 0) {
-            $savenonterm = $savenonterm . $record['TiText'];
+            $savenonterm = $record['TiText'];
         } else {
-            $until = $order + 2 * ($actcode-1);
+            $until = $order + 2 * ($actcode - 1);
             $saveterm = $record['TiText'];
-            $savetrans = '';
             if (isset($record['WoID'])) {
                 $savetrans = $record['WoTranslation'];
                 $savewordid = $record['WoID'];
             }
         }
-    } // while
+        // Append the annotation
+        $ann .= process_term(
+            $savenonterm, $saveterm, $savetrans, $savewordid, $order
+        );
+    }
     mysqli_free_result($res);
-    $ann .= process_term($savenonterm, $saveterm, $savetrans, $savewordid, $order);
     return $ann;
 }
 
@@ -4609,9 +4612,11 @@ function insert_prefix_in_sql($sql_line)
     }
     if (substr($sql_line, 0, 21) == "DROP TABLE IF EXISTS ") {
         return substr($sql_line, 0, 21) . $tbpref . substr($sql_line, 21);
-    } if (substr($sql_line, 0, 14) == "CREATE TABLE `") {
+    } 
+    if (substr($sql_line, 0, 14) == "CREATE TABLE `") {
         return substr($sql_line, 0, 14) . $tbpref . substr($sql_line, 14);
-    } if (substr($sql_line, 0, 13) == "CREATE TABLE ") {
+    } 
+    if (substr($sql_line, 0, 13) == "CREATE TABLE ") {
         return substr($sql_line, 0, 13) . $tbpref . substr($sql_line, 13);
     } 
     return $sql_line; 
@@ -4641,10 +4646,10 @@ function process_term($nonterm, $term, $trans, $wordid, $line): string
 {
     $r = '';
     if ($nonterm != '') { 
-        $r = $r . "-1\t" . $nonterm . "\n"; 
+        $r = "-1\t$nonterm\n"; 
     }
     if ($term != '') { 
-        $r = $r . $line . "\t" . $term . "\t" . trim($wordid) . "\t" . 
+        $r .=  "$line\t$term\t" . trim($wordid) . "\t" . 
         get_first_translation($trans) . "\n"; 
     }
     return $r;
@@ -4655,10 +4660,12 @@ function process_term($nonterm, $term, $trans, $wordid, $line): string
 function get_first_translation($trans): string 
 {
     $arr = preg_split('/[' . get_sepas()  . ']/u', $trans);
-    if (count($arr) < 1) { return ''; 
+    if (count($arr) < 1) { 
+        return ''; 
     }
     $r = trim($arr[0]);
-    if ($r == '*') { $r =""; 
+    if ($r == '*') { 
+        $r = ""; 
     }
     return $r;
 }
@@ -4671,8 +4678,7 @@ function get_annotation_link($textid): string
     if (get_first_value('select length(TxAnnotatedText) as value from ' . $tbpref . 'texts where TxID=' . $textid) > 0) { 
         return ' &nbsp;<a href="print_impr_text.php?text=' . $textid . 
         '" target="_top"><img src="icn/tick.png" title="Annotated Text" alt="Annotated Text" /></a>'; 
-    }
-    else { 
+    } else { 
         return ''; 
     }
 }

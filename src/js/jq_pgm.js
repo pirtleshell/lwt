@@ -1519,17 +1519,23 @@ function translation_radio(curr_trans, trans_data)
  * When a term translation is edited, recreate it's annotations.
  * 
  * @param {Object} trans_data Useful data for this term
+ * @param {int}    text_id    Text ID
  */
-function edit_term_ann_translations(trans_data)
+function edit_term_ann_translations(trans_data, text_id)
 {
   const widset = trans_data.wid !== null;
   // First create a link to edit the word in a new window
   let edit_word_link;
   if (widset) {
+    const req_arg = $.param({
+      fromAnn: "$(document).scrollTop()",
+      wid: trans_data.wid,
+      ord: trans_data.term_ord,
+      tid: text_id
+    })
     edit_word_link = `<a name="rec${trans_data.ann_index}"></a>
     <span class="click"
-    onclick="oewin('edit_word.php?fromAnn=' + $(document).scrollTop() + '&amp;wid=${trans_data.wid}` +
-      `');">
+    onclick="oewin('edit_word.php?` + escape_html_chars(req_arg) + `');">
           <img src="icn/sticky-note--pencil.png" title="Edit Term" alt="Edit Term" />
       </span>`;
   } else {
@@ -1612,7 +1618,7 @@ function do_ajax_edit_impr_text(pagepos, word) {
       term_lc: word 
     },
     function (data) {
-      edit_term_ann_translations(data);
+      edit_term_ann_translations(data, textid);
       $.scrollTo(pagepos);
       $('input.impr-ann-text').on('change', changeImprAnnText);
       $('input.impr-ann-radio').on('change', changeImprAnnRadio);

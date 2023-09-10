@@ -133,9 +133,9 @@ function get_term_translations($wordlc, $textid)
         $textsize = intval($textsize * 0.8); 
     }
     
-    $ann_data = array();
     $annotations = preg_split('/[\n]/u', $ann);
-    foreach (array_values($annotations) as $i => $annotation_line) {
+    $i = -1;
+    foreach (array_values($annotations) as $index => $annotation_line) {
         $vals = preg_split('/[\t]/u', $annotation_line);
         // Check if annotation could be split
         if ($vals === false) {
@@ -149,52 +149,62 @@ function get_term_translations($wordlc, $textid)
         if (trim($wordlc) != mb_strtolower(trim($vals[1]), 'UTF-8')) {
             continue;
         }
-        $ann_data["term_lc"] = trim($wordlc);
-        $ann_data["wid"] = null;
-        $ann_data["trans"] = '';
-        $ann_data["ann_index"] = $i;
-        // Annotation should be in format "pos   term text   term ID    translation"
-        if (count($vals) > 2) {
-            // Word exists and has an ID
-            $wid = $vals[2];
-            if (is_numeric($wid)) {
-                $wid = (int)$wid;
-                $temp_wid = (int)get_first_value(
-                    "SELECT COUNT(WoID) AS value 
-                    FROM {$tbpref}words 
-                    WHERE WoID = $wid"
-                );
-                if ($temp_wid < 1) { 
-                    $wid = null; 
-                }
-            } else {
-                $wid = null;
-            }
-        }
-        if (count($vals) > 3) {
-            $ann_data["trans"] = $vals[3];
-        }
-        if ($wid !== null) {
-            $ann_data["wid"] = $wid;
-        }
-        $ann_data["lang_id"] = $langid;
-        // Add other translation choices
-        if ($wid !== null) {
-            $translations = array();
-            $alltrans = get_first_value(
-                "SELECT WoTranslation AS value FROM {$tbpref}words 
+        $i = $index;
+        break;
+    }
+    $ann_data = array();
+    if ($i == -1) {
+        $ann_data["error"] = "Annotation not found";
+        return $ann_data;
+    }
+    $annotation_line = $annotations[$i];
+    $vals = preg_split('/[\t]/u', $annotation_line);
+    $ann_data["term_lc"] = trim($wordlc);
+    $ann_data["wid"] = null;
+    $ann_data["trans"] = '';
+    $ann_data["ann_index"] = $i;
+    $ann_data["term_ord"] = (int)$vals[0];
+    // Annotation should be in format "pos   term text   term ID    translation"
+    if (count($vals) > 2) {
+        // Word exists and has an ID
+        $wid = $vals[2];
+        if (is_numeric($wid)) {
+            $wid = (int)$wid;
+            $temp_wid = (int)get_first_value(
+                "SELECT COUNT(WoID) AS value 
+                FROM {$tbpref}words 
                 WHERE WoID = $wid"
             );
-            $transarr = preg_split('/[' . get_sepas()  . ']/u', $alltrans);
-            foreach ($transarr as $t) {
-                $tt = trim($t);
-                if ($tt == '*' || $tt == '') { 
-                    continue; 
-                }
-                $translations[] = $tt;
+            if ($temp_wid < 1) { 
+                $wid = null; 
             }
-            $ann_data["translations"] = $translations;
+        } else {
+            $wid = null;
         }
+    }
+    if (count($vals) > 3) {
+        $ann_data["trans"] = $vals[3];
+    }
+    if ($wid !== null) {
+        $ann_data["wid"] = $wid;
+    }
+    $ann_data["lang_id"] = $langid;
+    // Add other translation choices
+    if ($wid !== null) {
+        $translations = array();
+        $alltrans = get_first_value(
+            "SELECT WoTranslation AS value FROM {$tbpref}words 
+            WHERE WoID = $wid"
+        );
+        $transarr = preg_split('/[' . get_sepas()  . ']/u', $alltrans);
+        foreach ($transarr as $t) {
+            $tt = trim($t);
+            if ($tt == '*' || $tt == '') { 
+                continue; 
+            }
+            $translations[] = $tt;
+        }
+        $ann_data["translations"] = $translations;
     }
     return $ann_data;
 }
@@ -206,6 +216,8 @@ function get_term_translations($wordlc, $textid)
  * @param int    $textid Text ID
  * 
  * @return string JS string of the different fields of the term
+ * 
+ * @deprecated 2.9.0 Use AJAX instead
  */
 function edit_term_interaction($wordlc, $textid)
 {
@@ -283,7 +295,7 @@ function edit_term_form($textid)
     $nontermbuffer ='';
     foreach (array_values($items) as $i => $item) {
         $vals = preg_split('/[\t]/u', $item);
-        if ($vals[0] > -1) {
+        if ((int)$vals[0] > -1) {
             if ($nontermbuffer != '') {
                 $r .= '<tr>
                     <td class="td1 center" style="font-size:' . $textsize . '%;">' . 
@@ -316,8 +328,9 @@ function edit_term_form($textid)
             $word_link = "&nbsp;";
             if ($wid !== null) {
                 $word_link = '<a name="rec' . $i . '"></a>
-                <span class="click" onclick="oewin(\'edit_word.php?fromAnn=\' + $(document).scrollTop() + \'&amp;wid=' . 
-                $wid . '\');">
+                <span class="click" 
+                onclick="oewin(\'edit_word.php?fromAnn=\' + $(document).scrollTop() + \'&amp;wid=' . 
+                $wid . '&amp;tid=' . $textid . '&amp;ord=' . (int)$vals[0] . '\');">
                     <img src="icn/sticky-note--pencil.png" title="Edit Term" alt="Edit Term" />
                 </span>';
             }
@@ -555,6 +568,7 @@ function do_ajax_edit_impr_text($textid, $wordlc)
         $html_content = edit_term_form($textid);
         echo "$('#editimprtextdata').html(" . prepare_textdata_js($html_content) . ");"; 
     } else {
+        // Load the possible translations for a word, use AJAX instead
         $js_content = edit_term_interaction($wordlc, $textid);
         echo $js_content; 
     }

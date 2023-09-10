@@ -49,6 +49,7 @@ It features the following interaction:
 * User Experience:
   * When reading text, you can click on "Show All" and "Translations" to click the checkbox.
   * When changing a word status, the displayed messaged is now more informative: before database change, success message, now: waiting screen, tentative database change, result message (error or success). Under the hood, we are transitionning from pure PHP to AJAX.
+* Annotations "order" are now identical to ``Ti2Order`` (in ``textitems2``). It makes management easier, but users may need to reload the annotations once.
 
 ### Fixed
 

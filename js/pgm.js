@@ -196,9 +196,10 @@ const set=trim_trans==trans_data.trans;const option=`<span class="nowrap">
           &nbsp; `+escape_html_chars(trim_trans)+`
   </span>
   <br />`;return option}
-function edit_term_ann_translations(trans_data){const widset=trans_data.wid!==null;let edit_word_link;if(widset){edit_word_link=`<a name="rec${trans_data.ann_index}"></a>
+function edit_term_ann_translations(trans_data,text_id){const widset=trans_data.wid!==null;let edit_word_link;if(widset){const req_arg=$.param({fromAnn:"$(document).scrollTop()",wid:trans_data.wid,ord:trans_data.term_ord,tid:text_id})
+edit_word_link=`<a name="rec${trans_data.ann_index}"></a>
     <span class="click"
-    onclick="oewin('edit_word.php?fromAnn=' + $(document).scrollTop() + '&amp;wid=${trans_data.wid}`+`');">
+    onclick="oewin('edit_word.php?`+escape_html_chars(req_arg)+`');">
           <img src="icn/sticky-note--pencil.png" title="Edit Term" alt="Edit Term" />
       </span>`}else{edit_word_link='&nbsp;'}
 $(`#editlink${trans_data.ann_index}`).html(edit_word_link);let translations_list="";trans_data.translations.forEach(function(candidate_trans){translations_list+=translation_radio(candidate_trans,trans_data)});const select_last=trans_data.translations.length==0;translations_list+=`<span class="nowrap">
@@ -226,7 +227,7 @@ translations_list+=`&nbsp;&nbsp;
   </span>
   </span>`;$(`#transsel${trans_data.ann_index}`).html(translations_list)}
 function do_ajax_edit_impr_text(pagepos,word){if(word==''){$('#editimprtextdata').html('<img src="icn/waiting2.gif" />');location.reload();return}
-const textid=$('#editimprtextdata').attr('data_id');$.get('inc/ajax.php',{action:"query",action_type:"term_translations",text_id:textid,term_lc:word},function(data){edit_term_ann_translations(data);$.scrollTo(pagepos);$('input.impr-ann-text').on('change',changeImprAnnText);$('input.impr-ann-radio').on('change',changeImprAnnRadio)},"json")}
+const textid=$('#editimprtextdata').attr('data_id');$.get('inc/ajax.php',{action:"query",action_type:"term_translations",text_id:textid,term_lc:word},function(data){edit_term_ann_translations(data,textid);$.scrollTo(pagepos);$('input.impr-ann-text').on('change',changeImprAnnText);$('input.impr-ann-radio').on('change',changeImprAnnRadio)},"json")}
 function showRightFrames(roUrl,ruUrl){if(roUrl!==undefined){top.frames.ro.location.href=roUrl}
 if(ruUrl!==undefined){top.frames.ru.location.href=ruUrl}
 if($('#frames-r').length){$('#frames-r').animate({right:'5px'});return!0}
