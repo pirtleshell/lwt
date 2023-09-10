@@ -28,6 +28,7 @@ It features the following interaction:
     * ``media_paths``: paths of files and folders in the ``/media`` folder.
     * ``example_sentences``: list of sentences containing a word.
     * ``imported_terms``: list of imported terms through terms upload.
+    * ``term_translations``: get the list of term translations to edit it's anotation.
   * On POST, ``action_type`` can be:
     * ``text`` of ``audio`` change the reading position for a text or it's audio.
     * ``simterms``: similar terms to a given term
@@ -82,9 +83,10 @@ the intendended page. Same goes for "New Text" on "Archived Texts" page.
   * ``inc/ajax_update_media_select.php`` should be accessed through ``action_type=media_paths``.
   * ``inc/ajax_show_sentences.php`` should be accessed through ``action_type=example_sentences``, on GET. Argument ``lang`` is now ``lid``, ``word`` is ``word_lc`` and ``woid`` is ``wid``, ``ctl`` is no longer required.
   * ``inc/ajax_show_imported_terms.php`` should be accessed through ``action_type=imported_terms``, same arguments.
-  * ``inc/ajax_save_impr_text.php``:
-    * To save a new text: should be accessed through ``action_type=save_impr_text``, ``id`` is now ``tid``.
+  * ``inc/ajax_save_impr_text.php`` should be accessed through ``action_type=save_impr_text``, ``id`` is now ``tid``.
+  * ``inc/ajax_edit_impr_text.php``:
     * On display, using ``word=""`` is now deprecated as the page loads in pure PHP.
+    * On term edition, should be accessed through ``action_type=term_translations``, ``id`` is now ``text_id`` and ``word`` becomes ``text_lc``.
 
 ## 2.8.1-fork (April 14 2023)
 

@@ -1486,42 +1486,55 @@ function word_count_click () {
   });
 }
 
-
+/**
+ * Create a radio button with a candidate choice for a term annotation.
+ * 
+ * @param {string} curr_trans Current anotation (translation) set for the term 
+ * @param {string} trans_data All the useful data for the term
+ * @returns {string} An HTML-formatted option
+ */
 function translation_radio(curr_trans, trans_data) 
 {
-  const widset = Number.isInteger(trans_data.wid);
-  let r = "";
-  let set = false;
-  if (widset) {
-    const tt = curr_trans.trim();
-    if (tt == '*' || tt == '') {
-      return "";
-    }
-    set = tt == trans_data.trans && !set;
-    r += `<span class="nowrap">
-      <input class="impr-ann-radio" ` + 
-        (set ? 'checked="checked" ' : '') + 'type="radio" name="rg' +
-        trans_data.ann_index + `" value="` + escape_html_chars(tt) + `" /> 
-            &nbsp; ` + escape_html_chars(tt) + `
-    </span>
-    <br />`;
+  if (trans_data.wid === null) {
+    return "";
   }
-  return r;
+  const trim_trans = curr_trans.trim();
+  if (trim_trans == '*' || trim_trans == '') {
+    return "";
+  }
+  const set = trim_trans == trans_data.trans;
+  const option = `<span class="nowrap">
+    <input class="impr-ann-radio" ` + 
+      (set ? 'checked="checked" ' : '') + 'type="radio" name="rg' +
+      trans_data.ann_index + `" value="` + escape_html_chars(trim_trans) + `" /> 
+          &nbsp; ` + escape_html_chars(trim_trans) + `
+  </span>
+  <br />`;
+  return option;
 }
 
+/**
+ * When a term translation is edited, recreate it's annotations.
+ * 
+ * @param {Object} trans_data Useful data for this term
+ */
 function edit_term_ann_translations(trans_data)
 {
-  let plus;
-  if (trans_data["wid"] !== null) {
-    plus = `<a name="rec' + trans_data["ann_index"] + '"></a>
-    <span class="click" onclick="oewin('edit_word.php?fromAnn=' + $(document).scrollTop() + '&amp;wid='` +
-      trans_data["wid"] + `');">
+  const widset = trans_data.wid !== null;
+  // First create a link to edit the word in a new window
+  let edit_word_link;
+  if (widset) {
+    edit_word_link = `<a name="rec${trans_data.ann_index}"></a>
+    <span class="click"
+    onclick="oewin('edit_word.php?fromAnn=' + $(document).scrollTop() + '&amp;wid=${trans_data.wid}` +
+      `');">
           <img src="icn/sticky-note--pencil.png" title="Edit Term" alt="Edit Term" />
       </span>`;
   } else {
-      plus = '&nbsp;';
+    edit_word_link = '&nbsp;';
   }
-  $('#editlink' + trans_data["ann_index"]).html(plus);
+  $(`#editlink${trans_data.ann_index}`).html(edit_word_link);
+  // Now edit translations (if necessary)
   let translations_list = "";
   trans_data.translations.forEach(
     function (candidate_trans) {
@@ -1529,25 +1542,24 @@ function edit_term_ann_translations(trans_data)
     }
   );
 
-  const set = trans_data.translations.length > 0;
-  const widset = Number.isInteger(trans_data.wid);
+  const select_last = trans_data.translations.length == 0;
   // Empty radio button and text field after the list of translations
   translations_list += `<span class="nowrap">
-  <input class="impr-ann-radio" type="radio" name="rg` + trans_data.ann_index + `" ` + 
-  (set ? 'checked="checked" ' : '') + `value="" />
+  <input class="impr-ann-radio" type="radio" name="rg${trans_data.ann_index}" ` + 
+  (select_last ? 'checked="checked" ' : '') + `value="" />
   &nbsp;
-  <input class="impr-ann-text" type="text" name="tx` + trans_data.ann_index + 
-    `" id="tx` + trans_data.ann_index + `" value="` +
-    (set ? '' : escape_html_chars(curr_trans)) + 
+  <input class="impr-ann-text" type="text" name="tx${trans_data.ann_index}` + 
+    `" id="tx${trans_data.ann_index}" value="` +
+    (select_last ? escape_html_chars(curr_trans) : '') + 
   `" maxlength="50" size="40" />
    &nbsp;
   <img class="click" src="icn/eraser.png" title="Erase Text Field" 
   alt="Erase Text Field" 
-  onclick="$('#tx` + trans_data.ann_index + `').val('').trigger('change');" />
+  onclick="$('#tx${trans_data.ann_index}').val('').trigger('change');" />
     &nbsp;
   <img class="click" src="icn/star.png" title="* (Set to Term)" 
   alt="* (Set to Term)" 
-  onclick="$('#tx` + trans_data.ann_index + `').val('*').trigger('change');" />
+  onclick="$('#tx${trans_data.ann_index}').val('*').trigger('change');" />
   &nbsp;`;
   // Add the "plus button" to add a translation
   if (widset) {
@@ -1555,22 +1567,22 @@ function edit_term_ann_translations(trans_data)
     `<img class="click" src="icn/plus-button.png" 
     title="Save another translation to existent term" 
     alt="Save another translation to existent term" 
-    onclick="addTermTranslation(` + trans_data.wid + `, '#tx` +
-      trans_data.ann_index + `','',` + trans_data.lang_id + `);" />`; 
+    onclick="addTermTranslation(${trans_data.wid}, ` +
+      `'#tx${trans_data.ann_index}', '',${trans_data.lang_id});" />`; 
   } else { 
     translations_list += 
     `<img class="click" src="icn/plus-button.png" 
     title="Save translation to new term" 
     alt="Save translation to new term" 
-    onclick="addTermTranslation(0, '#tx` + trans_data.ann_index + `',` +
-      trans_data.term_lc + `,` + trans_data.lang_id + `);" />`; 
+    onclick="addTermTranslation(0, '#tx${trans_data.ann_index}',` +
+      `${trans_data.term_lc},${trans_data.lang_id});" />`; 
   }
   translations_list += `&nbsp;&nbsp;
-  <span id="wait` + trans_data.ann_index + `">
+  <span id="wait${trans_data.ann_index}">
       <img src="icn/empty.gif" />
   </span>
   </span>`;
-  $('#transsel' + trans_data["ann_index"]).html(translations_list);
+  $(`#transsel${trans_data.ann_index}`).html(translations_list);
 }
 
 /**

@@ -1883,6 +1883,8 @@ It features the following interaction:
 <code>example_sentences</code>: list of sentences containing a word.</li>
 <li>
 <code>imported_terms</code>: list of imported terms through terms upload.</li>
+<li>
+<code>term_translations</code>: get the list of term translations to edit it's anotation.</li>
 </ul>
 </li>
 <li>On POST, <code>action_type</code> can be:
@@ -1974,10 +1976,12 @@ the intendended page. Same goes for "New Text" on "Archived Texts" page.</li>
 <li>
 <code>inc/ajax_show_imported_terms.php</code> should be accessed through <code>action_type=imported_terms</code>, same arguments.</li>
 <li>
-<code>inc/ajax_save_impr_text.php</code>:
+<code>inc/ajax_save_impr_text.php</code> should be accessed through <code>action_type=save_impr_text</code>, <code>id</code> is now <code>tid</code>.</li>
+<li>
+<code>inc/ajax_edit_impr_text.php</code>:
 <ul>
-<li>To save a new text: should be accessed through <code>action_type=save_impr_text</code>, <code>id</code> is now <code>tid</code>.</li>
 <li>On display, using <code>word=""</code> is now deprecated as the page loads in pure PHP.</li>
+<li>On term edition, should be accessed through <code>action_type=term_translations</code>, <code>id</code> is now <code>text_id</code> and <code>word</code> becomes <code>text_lc</code>.</li>
 </ul>
 </li>
 </ul>
