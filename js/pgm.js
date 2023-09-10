@@ -73,10 +73,10 @@ function alertFirstCharacterOutsideBasicMultilingualPlane(s,info){const match=/[
 return 0}
 function getUTF8Length(s){return(new Blob([String(s)]).size)}
 function scrollToAnchor(aid){document.location.href='#'+aid}
-function changeImprAnnText(){const textid=$('#editimprtextdata').attr('data_id');$(this).prev('input:radio').attr('checked','checked');const elem=$(this).attr('name');const idwait='#wait'+elem.substring(2);$(idwait).html('<img src="icn/waiting2.gif" />');const thedata=JSON.stringify($('form').serializeObject());$.post('inc/ajax.php',{action:"",action_type:"save_impr_text",tid:textid,elem:elem,data:thedata},function(d){$(idwait).html('<img src="icn/empty.gif" />');if("error" in d)
-alert('Saving your changes failed, please reload page and try again!');},"json")}
-function changeImprAnnRadio(){const textid=$('#editimprtextdata').attr('data_id');const elem=$(this).attr('name');const idwait='#wait'+elem.substring(2);$(idwait).html('<img src="icn/waiting2.gif" />');const thedata=JSON.stringify($('form').serializeObject());$.post('inc/ajax.php',{action:"",action_type:"save_impr_text",tid:textid,elem:elem,data:thedata},function(d){$(idwait).html('<img src="icn/empty.gif" />');if("error" in d)
-alert('Saving your changes failed, please reload page and try again!');},"json")}
+function do_ajax_save_impr_text(textid,elem,form_data,idwait){$(idwait).html('<img src="icn/waiting2.gif" />');$.post('inc/ajax.php',{action:"",action_type:"save_impr_text",tid:textid,elem:elem,data:form_data},function(data){$(idwait).html('<img src="icn/empty.gif" />');if("error" in data)
+alert('Saving your changes failed, please reload the page and try again! '+'Error message: "'+data.error+'"');},"json")}
+function changeImprAnnText(){$(this).prev('input:radio').attr('checked','checked');const textid=$('#editimprtextdata').attr('data_id');const elem=$(this).attr('name');const idwait='#wait'+elem.substring(2);const thedata=JSON.stringify($('form').serializeObject());do_ajax_save_impr_text(textid,elem,thedata,idwait)}
+function changeImprAnnRadio(){const textid=$('#editimprtextdata').attr('data_id');const elem=$(this).attr('name');const idwait='#wait'+elem.substring(2);$(idwait).html('<img src="icn/waiting2.gif" />');const thedata=JSON.stringify($('form').serializeObject());do_ajax_save_impr_text(textid,elem,thedata)}
 function addTermTranslation(wordid,txid,word,lang){const translation=$(txid).val().trim();const pagepos=$(document).scrollTop();if(translation==''||translation=='*'){alert('Text Field is empty or = \'*\'!');return}
 let request={action:"",translation:translation,};let failure;if(wordid===0){request.action_type="add_translation";request.text=word;request.lang=lang;failure="Adding translation to term failed!"}else{request.action_type="update_translation";request.wordid=wordid;failure="Updating translation of term failed!"}
 failure+="Please reload page and try again."

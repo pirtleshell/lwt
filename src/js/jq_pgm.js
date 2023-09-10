@@ -81,15 +81,17 @@ function scrollToAnchor (aid) {
 }
 
 /**
- * Change the annotation for a term by setting its text.
+ * Set an existing translation as annotation for a term.
+ * 
+ * @param {int} textid Text ID 
+ * @param {string} elem Element of which to change annotation (e. g.: "rg1") 
+ * @param {Object} form_data All the data from the form 
+ * (e. g. {"rg0": "foo", "rg1": "bar"})
+ * @param {string} idwait HTML ID of the waiting element 
  */
-function changeImprAnnText () {
-  const textid = $('#editimprtextdata').attr('data_id');
-  $(this).prev('input:radio').attr('checked', 'checked');
-  const elem = $(this).attr('name');
-  const idwait = '#wait' + elem.substring(2);
+function do_ajax_save_impr_text(textid, elem, form_data, idwait) {
   $(idwait).html('<img src="icn/waiting2.gif" />');
-  const thedata = JSON.stringify($('form').serializeObject());
+  // elem: "rg2", form_data: {"rg2": "translation"}
   $.post(
     'inc/ajax.php',
     {
@@ -97,15 +99,30 @@ function changeImprAnnText () {
       action_type: "save_impr_text",
       tid: textid,
       elem: elem,
-      data: thedata
+      data: form_data
     },
-    function (d) {
+    function (data) {
       $(idwait).html('<img src="icn/empty.gif" />');
-      if ("error" in d)
-        alert('Saving your changes failed, please reload page and try again!');
+      if ("error" in data)
+        alert(
+          'Saving your changes failed, please reload the page and try again! ' +
+          'Error message: "' + data.error + '"'
+        );
     },
     "json"
   );
+}
+
+/**
+ * Change the annotation for a term by setting its text.
+ */
+function changeImprAnnText () {
+  $(this).prev('input:radio').attr('checked', 'checked');
+  const textid = $('#editimprtextdata').attr('data_id');
+  const elem = $(this).attr('name');
+  const idwait = '#wait' + elem.substring(2);
+  const thedata = JSON.stringify($('form').serializeObject());
+  do_ajax_save_impr_text(textid, elem, thedata, idwait);
 }
 
 /**
@@ -117,22 +134,7 @@ function changeImprAnnRadio () {
   const idwait = '#wait' + elem.substring(2);
   $(idwait).html('<img src="icn/waiting2.gif" />');
   const thedata = JSON.stringify($('form').serializeObject());
-  $.post(
-    'inc/ajax.php',
-    {
-      action: "",
-      action_type: "save_impr_text",
-      tid: textid,
-      elem: elem,
-      data: thedata
-    },
-    function (d) {
-      $(idwait).html('<img src="icn/empty.gif" />');
-      if ("error" in d)
-        alert('Saving your changes failed, please reload page and try again!'); 
-    },
-    "json"
-  );
+  do_ajax_save_impr_text(textid, elem, thedata);
 }
 
 /**
