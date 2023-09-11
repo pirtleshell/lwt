@@ -256,7 +256,8 @@ function do_ajax_show_imported_terms($last_update, $currentpage, $recno, $rtl)
  * 
  * @return array 
  */
-function imported_terms_list($last_update, $currentpage, $recno) {
+function imported_terms_list($last_update, $currentpage, $recno)
+{
     $maxperpage = 100;
     $currentpage = limit_current_page($currentpage, $recno, $maxperpage);
     $offset = ($currentpage - 1) * $maxperpage;

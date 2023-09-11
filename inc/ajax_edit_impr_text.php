@@ -62,7 +62,7 @@ function make_trans($i, $wid, $trans, $word, $lang): string
     } 
     // Set the empty translation if no translation have been set yet
     if (!isset($set) || !$set) {
-      $set = true;
+        $set = true;
     }
     // Empty radio button and text field after the list of translations
     $r .= '<span class="nowrap">

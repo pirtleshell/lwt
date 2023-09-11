@@ -40,7 +40,7 @@ runsql(
             convert_string_to_sqlsyntax($translation) . ', "", "", NOW(), ' .  
             make_score_random_insert_update('id') . '
         )', 
-        "Term saved"
+    "Term saved"
 );
 $wid = get_last_key();
 do_mysqli_query(
