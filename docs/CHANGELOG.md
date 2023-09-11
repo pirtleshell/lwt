@@ -43,6 +43,8 @@ the intendended page. Same goes for "New Text" on "Archived Texts" page.
 * It was impossible to copy a similar term that had apostrophes ([#127](https://github.com/HugoFara/lwt/issues/127)).
 * A deprecation warning for ``trim`` was sent in simterms when no similar term was found.
 * During a text creation, the ``media_uri`` property of ``Text`` was used instead of ``source``. Thanks to [@hangug-eo](https://github.com/hangug-eo) for his PR [#133](https://github.com/HugoFara/lwt/pull/133)!
+* Multi-words were not properly highlighted for languages separating each
+character as a word (e. g.: Chinese). Big thanks to [@hangug-eo](https://github.com/hangug-eo) for signaling the issue and solving it in his PR [#140](https://github.com/HugoFara/lwt/pull/140)!
 
 ### Deprecated
 
