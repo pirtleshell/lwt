@@ -22,8 +22,9 @@ class Database_Connection {
     public string $dbname;
     public string $socket;
 
-    function __construct($server = "", $userid = "", $passwd = "", $dbname = "", $socket = "")
-    {
+    function __construct(
+        $server = "", $userid = "", $passwd = "", $dbname = "", $socket = ""
+    ) {
         $this->server = $server;
         $this->userid = $userid;
         $this->passwd = $passwd;
@@ -86,15 +87,21 @@ function database_wizard_do_operation($op) {
             $message = "MySQL is not accessible!";
         } else {
             try {
-                if (strlen($socket) > 0) {
-                    $success = mysqli_real_connect($conn, $server, $userid, $passwd, $dbname, 0, $socket);
+                if ($socket != "") {
+                    $success = mysqli_real_connect(
+                        $conn, $server, $userid, $passwd, $dbname, 
+                        socket: $socket
+                    );
                 } else {
-                    $success = mysqli_real_connect($conn, $server, $userid, $passwd, $dbname);
+                    $success = mysqli_real_connect(
+                        $conn, $server, $userid, $passwd, $dbname
+                    );
                 }
                 if (!$success) {
                     $message = "Can't connect!";
                 } else if (mysqli_errno($conn) != 0) {
-                    $message = "ERROR: " . mysqli_error($conn) . " error number: " . mysqli_errno($conn);
+                    $message = "ERROR: " . mysqli_error($conn) . 
+                    " error number: " . mysqli_errno($conn);
                 } else {
                     $message = "Connection established with success!";
                 }
@@ -102,7 +109,6 @@ function database_wizard_do_operation($op) {
                 $message = (string)$exept;
             }
         }
-        //$message = "RRRRRRR";
     } else if ($op == "Change") {
         $server = getreq("server"); 
         $userid = getreq("userid");
@@ -110,7 +116,9 @@ function database_wizard_do_operation($op) {
         $dbname = getreq("dbname");
         $socket = getreq("socket");
     }
-    $conn = new Database_Connection($server, $userid, $passwd, $dbname, $socket);
+    $conn = new Database_Connection(
+        $server, $userid, $passwd, $dbname, $socket
+    );
     if ($op == "Change") {
         database_wizard_change($conn);
     }
@@ -125,30 +133,40 @@ function database_wizard_do_operation($op) {
 function database_wizard_form($conn, $error_message=null) {
     pagestart_kernel_nobody("Database Connection Wizard", true);
     if ($error_message != null) {
-        //error_message_with_hide($error_message, true);
         echo $error_message;
     }
     ?>
-    <form name="database_connect" action="<?= $_SERVER['PHP_SELF']; ?>" method="post">
+    <form name="database_connect" action="<?= $_SERVER['PHP_SELF']; ?>" 
+    method="post">
         <p>
             <label for="server">Server address:</label>
-            <input type="text" name="server" id="server" value="<?= htmlspecialchars($conn->server) ?>" required placeholder="localhost">
+            <input type="text" name="server" id="server" 
+            value="<?= htmlspecialchars($conn->server) ?>" required 
+            placeholder="localhost">
         </p> 
         <p>
             <label for="userid">Database User Name:</label>
-            <input type="text" name="userid" id="userid" value="<?= htmlspecialchars($conn->userid); ?>" required placeholder="root">
+            <input type="text" name="userid" id="userid" 
+            value="<?= htmlspecialchars($conn->userid); ?>" required 
+            placeholder="root">
         </p>
         <p>
             <label for="passwd">Password:</label>
-            <input type="password" name="passwd" id="passwd" value="<?= htmlspecialchars($conn->passwd); ?>" placeholder="abcxyz">
+            <input type="password" name="passwd" id="passwd" 
+            value="<?= htmlspecialchars($conn->passwd); ?>" 
+            placeholder="abcxyz">
         </p>
         <p>
             <label for="dbname">Database Name:</label>
-            <input type="text" name="dbname" id="dbname" value="<?= htmlspecialchars($conn->dbname); ?>" required placeholder="lwt">
+            <input type="text" name="dbname" id="dbname" 
+            value="<?= htmlspecialchars($conn->dbname); ?>" required 
+            placeholder="lwt">
         </p>
         <p>
             <label for="socket">Socket Name:</label>
-            <input type="text" name="socket" id="socket" value="<?= htmlspecialchars($conn->socket); ?>" required placeholder="/var/run/mysql.sock">
+            <input type="text" name="socket" id="socket" 
+            value="<?= htmlspecialchars($conn->socket); ?>" required 
+            placeholder="/var/run/mysql.sock">
         </p>
         <input type="submit" name="op" value="Autocomplete" />
         <input type="submit" name="op" value="Check" />
@@ -171,12 +189,10 @@ function new_database_connection() {
 
 if (getreq('op') != '') {
     database_wizard_do_operation(getreq('op'));
+} else if (file_exists('connect.inc.php')) {
+    edit_database_connection();
 } else {
-    if (file_exists('connect.inc.php')) {
-        edit_database_connection();
-    } else {
-        new_database_connection();
-    }
+    new_database_connection();
 }
 
 ?>
