@@ -39,6 +39,7 @@ It features the following interaction:
     * ``set_term_status``: set the status of a term.
     * ``save_impr_text``: change the annotation value for a term.
     * ``save_setting``: save a setting.
+* Similar terms mark the word edit form as edited only if something was actually changed.
 
 ### Changed
 

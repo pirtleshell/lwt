@@ -65,18 +65,19 @@ $('input[name=\'step\']').val(++val);document.lwt_form1.submit();return!1});$(do
  * @author  andreask7 <andreasks7@users.noreply.github.com>
  * @since   1.6.16-fork
  */
-TEXTPOS=-1;OPENED=0;WID=0;TID=0;WBLINK1='';WBLINK2='';WBLINK3='';SOLUTION='';ADDFILTER='';RTL=0;ANN_ARRAY={};DELIMITER='';JQ_TOOLTIP=0;function setTransRoman(tra,rom){if($('textarea[name="WoTranslation"]').length==1){$('textarea[name="WoTranslation"]').val(tra)}
-if($('input[name="WoRomanization"]').length==1){$('input[name="WoRomanization"]').val(rom)}
-makeDirty()}
+TEXTPOS=-1;OPENED=0;WID=0;TID=0;WBLINK1='';WBLINK2='';WBLINK3='';SOLUTION='';ADDFILTER='';RTL=0;ANN_ARRAY={};DELIMITER='';JQ_TOOLTIP=0;function setTransRoman(tra,rom){let form_changed=!1;if($('textarea[name="WoTranslation"]').length==1){$('textarea[name="WoTranslation"]').val(tra);form_changed|=!0}
+if($('input[name="WoRomanization"]').length==1){$('input[name="WoRomanization"]').val(rom);form_changed|=!0}
+if(form_changed)
+makeDirty();}
 function containsCharacterOutsideBasicMultilingualPlane(s){return/[\uD800-\uDFFF]/.test(s)}
-function alertFirstCharacterOutsideBasicMultilingualPlane(s,info){const match=/[\uD800-\uDFFF]/.exec(s);if(match){alert('ERROR\n\nText "'+info+'" contains invalid character(s) '+'(in the Unicode Supplementary Multilingual Planes, > U+FFFF) like emojis '+'or very rare characters.\n\nFirst invalid character: "'+s.substring(match.index,match.index+2)+'" at position '+(match.index+1)+'.\n\n'+'More info: https://en.wikipedia.org/wiki/Plane_(Unicode)\n\n'+'Please remove this/these character(s) and try again.');return 1}
-return 0}
-function getUTF8Length(s){return(new Blob([String(s)]).size)}
+function alertFirstCharacterOutsideBasicMultilingualPlane(s,info){if(!containsCharacterOutsideBasicMultilingualPlane(s)){return 0}
+const match=/[\uD800-\uDFFF]/.exec(s);alert('ERROR\n\nText "'+info+'" contains invalid character(s) '+'(in the Unicode Supplementary Multilingual Planes, > U+FFFF) like emojis '+'or very rare characters.\n\nFirst invalid character: "'+s.substring(match.index,match.index+2)+'" at position '+(match.index+1)+'.\n\n'+'More info: https://en.wikipedia.org/wiki/Plane_(Unicode)\n\n'+'Please remove this/these character(s) and try again.');return 1}
+function getUTF8Length(s){return new Blob([String(s)]).size}
 function scrollToAnchor(aid){document.location.href='#'+aid}
-function do_ajax_save_impr_text(textid,elem,form_data,idwait){$(idwait).html('<img src="icn/waiting2.gif" />');$.post('inc/ajax.php',{action:"",action_type:"save_impr_text",tid:textid,elem:elem,data:form_data},function(data){$(idwait).html('<img src="icn/empty.gif" />');if("error" in data)
-alert('Saving your changes failed, please reload the page and try again! '+'Error message: "'+data.error+'"');},"json")}
-function changeImprAnnText(){$(this).prev('input:radio').attr('checked','checked');const textid=$('#editimprtextdata').attr('data_id');const elem=$(this).attr('name');const idwait='#wait'+elem.substring(2);const thedata=JSON.stringify($('form').serializeObject());do_ajax_save_impr_text(textid,elem,thedata,idwait)}
-function changeImprAnnRadio(){const textid=$('#editimprtextdata').attr('data_id');const elem=$(this).attr('name');const idwait='#wait'+elem.substring(2);$(idwait).html('<img src="icn/waiting2.gif" />');const thedata=JSON.stringify($('form').serializeObject());do_ajax_save_impr_text(textid,elem,thedata)}
+function do_ajax_save_impr_text(textid,elem_name,form_data){const idwait='#wait'+elem_name.substring(2);$(idwait).html('<img src="icn/waiting2.gif" />');$.post('inc/ajax.php',{action:"",action_type:"save_impr_text",tid:textid,elem:elem_name,data:form_data},function(data){$(idwait).html('<img src="icn/empty.gif" />');if("error" in data)
+alert('Saving your changes failed, please reload the page and try again! '+'Error message: "'+data.error+'".');},"json")}
+function changeImprAnnText(){$(this).prev('input:radio').attr('checked','checked');const textid=$('#editimprtextdata').attr('data_id');const elem_name=$(this).attr('name');const form_data=JSON.stringify($('form').serializeObject());do_ajax_save_impr_text(textid,elem_name,form_data)}
+function changeImprAnnRadio(){const textid=$('#editimprtextdata').attr('data_id');const elem_name=$(this).attr('name');const form_data=JSON.stringify($('form').serializeObject());do_ajax_save_impr_text(textid,elem_name,form_data)}
 function addTermTranslation(wordid,txid,word,lang){const translation=$(txid).val().trim();const pagepos=$(document).scrollTop();if(translation==''||translation=='*'){alert('Text Field is empty or = \'*\'!');return}
 let request={action:"",translation:translation,};let failure;if(wordid===0){request.action_type="add_translation";request.text=word;request.lang=lang;failure="Adding translation to term failed!"}else{request.action_type="update_translation";request.wordid=wordid;failure="Updating translation of term failed!"}
 failure+="Please reload page and try again."
@@ -227,7 +228,7 @@ translations_list+=`&nbsp;&nbsp;
   </span>
   </span>`;$(`#transsel${trans_data.ann_index}`).html(translations_list)}
 function do_ajax_edit_impr_text(pagepos,word){if(word==''){$('#editimprtextdata').html('<img src="icn/waiting2.gif" />');location.reload();return}
-const textid=$('#editimprtextdata').attr('data_id');$.get('inc/ajax.php',{action:"query",action_type:"term_translations",text_id:textid,term_lc:word},function(data){edit_term_ann_translations(data,textid);$.scrollTo(pagepos);$('input.impr-ann-text').on('change',changeImprAnnText);$('input.impr-ann-radio').on('change',changeImprAnnRadio)},"json")}
+const textid=$('#editimprtextdata').attr('data_id');$.get('inc/ajax.php',{action:"query",action_type:"term_translations",text_id:textid,term_lc:word},function(data){if("error" in data){alert(data.error)}else{edit_term_ann_translations(data,textid);$.scrollTo(pagepos);$('input.impr-ann-text').on('change',changeImprAnnText);$('input.impr-ann-radio').on('change',changeImprAnnRadio)}},"json")}
 function showRightFrames(roUrl,ruUrl){if(roUrl!==undefined){top.frames.ro.location.href=roUrl}
 if(ruUrl!==undefined){top.frames.ru.location.href=ruUrl}
 if($('#frames-r').length){$('#frames-r').animate({right:'5px'});return!0}

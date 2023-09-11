@@ -36,39 +36,69 @@ JQ_TOOLTIP = 0;
 LWT jQuery functions
 ***************************************************************/
 
-function setTransRoman (tra, rom) {
+/**
+ * Set translation and romanization in a form when possible.
+ * 
+ * Marj the form as edited if something was changed.
+ * 
+ * @param {string} tra Translation
+ * @param {string} rom Romanization
+ */
+function setTransRoman(tra, rom) {
+  let form_changed = false;
   if ($('textarea[name="WoTranslation"]').length == 1) { 
-    $('textarea[name="WoTranslation"]').val(tra); 
+    $('textarea[name="WoTranslation"]').val(tra);
+    form_changed |= true;
   }
   if ($('input[name="WoRomanization"]').length == 1) { 
-    $('input[name="WoRomanization"]').val(rom); 
+    $('input[name="WoRomanization"]').val(rom);
+    form_changed |= true;
   }
-  makeDirty();
+  if (form_changed)
+    makeDirty();
 }
 
+/**
+ * Return whether characters are outside the multilingual plane.
+ * 
+ * @param {string} s Input string
+ * @returns {boolean} true is some characters are outside the plane
+ */
 function containsCharacterOutsideBasicMultilingualPlane (s) {
   return /[\uD800-\uDFFF]/.test(s);
 }
 
+/**
+ * Alert if characters are outside the multilingual plane.
+ * 
+ * @param {string} s Input string
+ * @returns {boolean} true is some characters are outside the plane
+ */
 function alertFirstCharacterOutsideBasicMultilingualPlane (s, info) {
-  const match = /[\uD800-\uDFFF]/.exec(s);
-  if (match) {
-    alert(
-      'ERROR\n\nText "' + info + '" contains invalid character(s) ' + 
-      '(in the Unicode Supplementary Multilingual Planes, > U+FFFF) like emojis ' + 
-      'or very rare characters.\n\nFirst invalid character: "' + 
-      s.substring(match.index, match.index + 2) + '" at position ' + 
-      (match.index + 1) + '.\n\n' + 
-      'More info: https://en.wikipedia.org/wiki/Plane_(Unicode)\n\n' + 
-      'Please remove this/these character(s) and try again.'
-    );
-    return 1;
+  if (!containsCharacterOutsideBasicMultilingualPlane(s)) {
+    return 0;
   }
-  return 0;
+  const match = /[\uD800-\uDFFF]/.exec(s);
+  alert(
+    'ERROR\n\nText "' + info + '" contains invalid character(s) ' + 
+    '(in the Unicode Supplementary Multilingual Planes, > U+FFFF) like emojis ' + 
+    'or very rare characters.\n\nFirst invalid character: "' + 
+    s.substring(match.index, match.index + 2) + '" at position ' + 
+    (match.index + 1) + '.\n\n' + 
+    'More info: https://en.wikipedia.org/wiki/Plane_(Unicode)\n\n' + 
+    'Please remove this/these character(s) and try again.'
+  );
+  return 1;
 }
 
+/**
+ * Return the memory size of an UTF8 string.
+ * 
+ * @param {string} s String to evaluate
+ * @returns {number} Size in bytes
+ */
 function getUTF8Length (s) {
-  return (new Blob([String(s)]).size);
+  return new Blob([String(s)]).size;
 }
 
 /**
@@ -84,12 +114,12 @@ function scrollToAnchor (aid) {
  * Set an existing translation as annotation for a term.
  * 
  * @param {int} textid Text ID 
- * @param {string} elem Element of which to change annotation (e. g.: "rg1") 
+ * @param {string} elem_name Name of the element of which to change annotation (e. g.: "rg1") 
  * @param {Object} form_data All the data from the form 
  * (e. g. {"rg0": "foo", "rg1": "bar"})
- * @param {string} idwait HTML ID of the waiting element 
  */
-function do_ajax_save_impr_text(textid, elem, form_data, idwait) {
+function do_ajax_save_impr_text(textid, elem_name, form_data) {
+  const idwait = '#wait' + elem_name.substring(2);
   $(idwait).html('<img src="icn/waiting2.gif" />');
   // elem: "rg2", form_data: {"rg2": "translation"}
   $.post(
@@ -98,7 +128,7 @@ function do_ajax_save_impr_text(textid, elem, form_data, idwait) {
       action: "",
       action_type: "save_impr_text",
       tid: textid,
-      elem: elem,
+      elem: elem_name,
       data: form_data
     },
     function (data) {
@@ -106,7 +136,7 @@ function do_ajax_save_impr_text(textid, elem, form_data, idwait) {
       if ("error" in data)
         alert(
           'Saving your changes failed, please reload the page and try again! ' +
-          'Error message: "' + data.error + '"'
+          'Error message: "' + data.error + '".'
         );
     },
     "json"
@@ -119,10 +149,9 @@ function do_ajax_save_impr_text(textid, elem, form_data, idwait) {
 function changeImprAnnText () {
   $(this).prev('input:radio').attr('checked', 'checked');
   const textid = $('#editimprtextdata').attr('data_id');
-  const elem = $(this).attr('name');
-  const idwait = '#wait' + elem.substring(2);
-  const thedata = JSON.stringify($('form').serializeObject());
-  do_ajax_save_impr_text(textid, elem, thedata, idwait);
+  const elem_name = $(this).attr('name');
+  const form_data = JSON.stringify($('form').serializeObject());
+  do_ajax_save_impr_text(textid, elem_name, form_data);
 }
 
 /**
@@ -130,11 +159,9 @@ function changeImprAnnText () {
  */
 function changeImprAnnRadio () {
   const textid = $('#editimprtextdata').attr('data_id');
-  const elem = $(this).attr('name');
-  const idwait = '#wait' + elem.substring(2);
-  $(idwait).html('<img src="icn/waiting2.gif" />');
-  const thedata = JSON.stringify($('form').serializeObject());
-  do_ajax_save_impr_text(textid, elem, thedata);
+  const elem_name = $(this).attr('name');
+  const form_data = JSON.stringify($('form').serializeObject());
+  do_ajax_save_impr_text(textid, elem_name, form_data);
 }
 
 /**
@@ -1618,10 +1645,14 @@ function do_ajax_edit_impr_text(pagepos, word) {
       term_lc: word 
     },
     function (data) {
-      edit_term_ann_translations(data, textid);
-      $.scrollTo(pagepos);
-      $('input.impr-ann-text').on('change', changeImprAnnText);
-      $('input.impr-ann-radio').on('change', changeImprAnnRadio);
+      if ("error" in data) {
+        alert(data["error"]);
+      } else {
+        edit_term_ann_translations(data, textid);
+        $.scrollTo(pagepos);
+        $('input.impr-ann-text').on('change', changeImprAnnText);
+        $('input.impr-ann-radio').on('change', changeImprAnnRadio);
+      }
     },
     "json"
   );

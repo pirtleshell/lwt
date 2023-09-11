@@ -25,22 +25,22 @@ use function Lwt\Ajax\Improved_Text\edit_term_form;
 
 function edit_mode_display($textid, $ann_exists)
 {
-    ?>
-    <h2>Improved Annotated Text (Edit Mode) 
-    <img src="icn/question-frame.png" title="Help" alt="Help" class="click" onclick="window.open('docs/info.html#il');" />
-    </h2>
-    <input type="button" value="Display/Print Mode" onclick="location.href='print_impr_text.php?text=<?php echo $textid; ?>';" />
-</div>
-</div> 
-<!-- noprint -->
-
-    <?php
     if (!$ann_exists) {
         // No annotations, try create them
         $ann = create_save_ann($textid);
         $ann_exists = strlen($ann) > 0;
     }
-    
+    ?>
+<div id="printoptions">
+    <h2>Improved Annotated Text (Edit Mode) 
+        <img src="icn/question-frame.png" title="Help" alt="Help" class="click" 
+        onclick="window.open('docs/info.html#il');" />
+    </h2>
+    <input type="button" value="Display/Print Mode" onclick="location.href='print_impr_text.php?text=<?php echo $textid; ?>';" />
+    </div>
+</div> 
+<!-- noprint -->
+<?php
     if (!$ann_exists) {  
         // No annotations, creation not possible
         echo '<p>No annotated text found, and creation seems not possible.</p>';
@@ -48,11 +48,10 @@ function edit_mode_display($textid, $ann_exists)
         // Annotations exist, set up for editing.
         ?>
     <div data_id="<?php echo $textid; ?>" id="editimprtextdata">
-    <?php echo edit_term_form($textid); ?>
+        <?php echo edit_term_form($textid); ?>
     </div>
     <script type="text/javascript">
         $(document).ready(function() {
-            //do_ajax_edit_impr_text(0, '');
             $('input.impr-ann-text').on('change', changeImprAnnText);
             $('input.impr-ann-radio').on('change', changeImprAnnRadio);
         });
@@ -67,28 +66,47 @@ function edit_mode_display($textid, $ann_exists)
     <?php
 }
 
-function print_mode_display($textid, $audio, $ann, $rtlScript, $title, $textsize, $ttsClass)
+function print_mode_display($textid, $langid, $audio, $ann, $title)
 {
+    global $tbpref;
+    $sql = "SELECT LgTextSize, LgRemoveSpaces, LgRightToLeft, LgGoogleTranslateURI 
+    from {$tbpref}languages where LgID = $langid";
+    $res = do_mysqli_query($sql);
+    $record = mysqli_fetch_assoc($res);
+    $textsize = $record['LgTextSize'];
+    $rtlScript = $record['LgRightToLeft'];
+    $ttsClass = ''; 
+    if (!empty($record['LgGoogleTranslateURI'])) {
+        $ttsLg = preg_replace(
+            '/.*[?&]sl=([a-zA-Z\-]*)(&.*)*$/', '$1', 
+            $record['LgGoogleTranslateURI']
+        );
+        if ($record['LgGoogleTranslateURI'] != $ttsLg) {
+            $ttsClass = 'tts_' . $ttsLg . ' '; 
+        }
+    }
+    mysqli_free_result($res);
     ?>
+<div id="printoptions">
     <h2>Improved Annotated Text (Display/Print Mode)</h2>
     <div class="flex-spaced">
-    <input type="button" value="Edit" onclick="location.href='print_impr_text.php?edit=1&amp;text=<?php echo $textid; ?>';" /> 
-    <input type="button" value="Delete" onclick="if (confirm ('Are you sure?')) location.href='print_impr_text.php?del=1&amp;text=<?php echo $textid; ?>';" /> 
-    <input type="button" value="Print" onclick="window.print();" />
-    <input type="button" value="Display <?php echo (($audio != '') ? ' with Audio Player' : ''); ?> in new Window" 
-    onclick="window.open('display_impr_text.php?text=<?php echo $textid; ?>');" />
+        <input type="button" value="Edit" 
+        onclick="location.href='print_impr_text.php?edit=1&amp;text=<?php echo $textid; ?>';" /> 
+        <input type="button" value="Delete" 
+        onclick="if (confirm ('Are you sure?')) location.href='print_impr_text.php?del=1&amp;text=<?php echo $textid; ?>';" /> 
+        <input type="button" value="Print" onclick="window.print();" />
+        <input type="button" 
+        value="Display <?php echo (($audio != '') ? ' with Audio Player' : ''); ?> in new Window" 
+        onclick="window.open('display_impr_text.php?text=<?php echo $textid; ?>');" />
+    </div>
     </div>
 </div>
-</div> 
-
 <!-- noprint -->
+<div id="print"<?php echo ($rtlScript ? ' dir="rtl"' : ''); ?>>
+    <p style="font-size:<?php echo $textsize; ?>%;line-height: 1.35; margin-bottom: 10px; ">
+        <?php echo tohtml($title); ?>
+        <br /><br />
     <?php
-
-    echo '<div id="print"' . ($rtlScript ? ' dir="rtl"' : '') . '>
-    <p style="font-size:' . $textsize . '%;line-height: 1.35; margin-bottom: 10px; ">' . 
-    tohtml($title) . 
-    '<br /><br />';
-
     $items = preg_split('/[\n]/u', $ann);
 
     foreach ($items as $item) {
@@ -102,8 +120,14 @@ function print_mode_display($textid, $audio, $ann, $rtlScript, $title, $textsize
                 $trans = $vals[1] . " "; // <- U+200A HAIR SPACE
             }      
             echo ' <ruby>
-            <rb><span class="' . $ttsClass . 'anntermruby">' . tohtml($vals[1]) . '</span></rb>
-            <rt><span class="anntransruby2">' . tohtml($trans) . '</span></rt>
+                <rb>
+                    <span class="' . $ttsClass . 'anntermruby">' . 
+                        tohtml($vals[1]) . 
+                    '</span>
+                </rb>
+                <rt>
+                    <span class="anntransruby2">' . tohtml($trans) . '</span>
+                </rt>
             </ruby> ';
         } else if (count($vals) >= 2) {
             echo str_replace(
@@ -113,8 +137,10 @@ function print_mode_display($textid, $audio, $ann, $rtlScript, $title, $textsize
             );
         }
     }
-
-    echo "</p></div>";
+    ?>
+    </p>
+</div>
+    <?php
 }
 
 
@@ -126,12 +152,13 @@ function do_content() {
     $delmode = getreq('del');
     $delmode = ($delmode == '' ? 0 : (int)$delmode);
     $ann = get_first_value(
-        "SELECT TxAnnotatedText as value from {$tbpref}texts where TxID = $textid"
+        "SELECT TxAnnotatedText AS value FROM {$tbpref}texts 
+        WHERE TxID = $textid"
     );
     $ann_exists = strlen($ann) > 0;
     if ($ann_exists) {
         $ann = recreate_save_ann($textid, $ann);
-        $ann_exists = (strlen($ann) > 0);
+        $ann_exists = strlen($ann) > 0;
     }
     
     if ($textid == 0) {
@@ -155,13 +182,13 @@ function do_content() {
             WHERE TxID = $textid"
         ) > 0;
         if (!$ann_exists) {
-            header("Location: print_text.php?text=" . $textid);
+            header("Location: print_text.php?text=$textid");
             exit();
         }
     }
     
-    $sql = 'select TxLgID, TxTitle, TxAudioURI, TxSourceURI 
-    from ' . $tbpref . 'texts where TxID = ' . $textid;
+    $sql = "SELECT TxLgID, TxTitle, TxAudioURI, TxSourceURI 
+    from {$tbpref}texts where TxID = $textid";
     $res = do_mysqli_query($sql);
     $record = mysqli_fetch_assoc($res);
     $title = $record['TxTitle'];
@@ -172,27 +199,6 @@ function do_content() {
         $audio = ''; 
     }
     $audio = trim($audio);
-    mysqli_free_result($res);
-    
-    $sql = 'select LgTextSize, LgRemoveSpaces, LgRightToLeft, LgGoogleTranslateURI 
-    from ' . $tbpref . 'languages where LgID = ' . $langid;
-    $res = do_mysqli_query($sql);
-    $record = mysqli_fetch_assoc($res);
-    $textsize = $record['LgTextSize'];
-    $rtlScript = $record['LgRightToLeft'];
-    if (!empty($record['LgGoogleTranslateURI'])) {
-        $ttsLg = preg_replace(
-            '/.*[?&]sl=([a-zA-Z\-]*)(&.*)*$/', '$1', 
-            $record['LgGoogleTranslateURI']
-        );
-        if ($record['LgGoogleTranslateURI']==$ttsLg) {
-            $ttsClass='';
-        } else { 
-            $ttsClass = 'tts_'.$ttsLg.' '; 
-        }
-    } else { 
-        $ttsClass=''; 
-    }
     mysqli_free_result($res);
     
     saveSetting('currenttext', $textid);
@@ -206,7 +212,9 @@ function do_content() {
             <?php echo_lwt_logo(); ?>
         </div>
         <div>
-            <?php echo getPreviousAndNextTextLinks($textid, 'print_impr_text.php?text=', true, ''); ?>
+            <?php echo getPreviousAndNextTextLinks(
+                $textid, 'print_impr_text.php?text=', true, ''
+            ); ?>
         </div>
         <div>
             <a href="do_text.php?start=<?php echo $textid; ?>" target="_top">
@@ -219,7 +227,8 @@ function do_content() {
                 <img src="icn/printer.png" title="Print" alt="Print" />
             </a>
             <a target="_top" href="edit_texts.php?chg=<?php echo $textid; ?>">
-                <img src="icn/document--pencil.png" title="Edit Text" alt="Edit Text" />
+                <img src="icn/document--pencil.png" title="Edit Text" 
+                alt="Edit Text" />
             </a>
         </div>
         <div>
@@ -234,12 +243,13 @@ function do_content() {
     </a>' 
     : '') ?>
     </h1>
-    <div id="printoptions">
     <?php
     if ($editmode) {
         edit_mode_display($textid, $ann_exists);
     } else {
-        print_mode_display($textid, $audio, $ann, $rtlScript, $title, $textsize, $ttsClass);
+        print_mode_display(
+            $textid, $langid, $audio, $ann, $title
+        );
     }
     
     pageend();
