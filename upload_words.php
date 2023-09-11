@@ -33,8 +33,7 @@ function my_str_getcsv($input)
 
 function upload_words_import_simple(
     $lang, $fields, $columns, $tabs, $file_name, $status
-)
-{
+) {
     global $tbpref;
     $removeSpaces = get_first_value(
         "SELECT LgRemoveSpaces AS value FROM {$tbpref}languages WHERE LgID=$lang"
@@ -115,8 +114,7 @@ function upload_words_import_simple(
 
 function upload_words_import_complete(
     $lang, $fields, $columns, $tabs, $file_name, $status, $overwrite
-) 
-{
+) { 
     global $tbpref;
     $removeSpaces = get_first_value(
         "SELECT LgRemoveSpaces AS value FROM {$tbpref}languages WHERE LgID=$lang"
@@ -483,11 +481,11 @@ function upload_words_handle_multiwords($lang, $last_update)
 /**
  * Import terms to the database.
  * 
- * @param array    $fields   Fields indexes
- * @param string   $tabs     Columns separator
- * @param bool     $file_upl If the input text is an uploaded file
+ * @param array              $fields   Fields indexes
+ * @param string             $tabs     Columns separator
+ * @param bool               $file_upl If the input text is an uploaded file
  * @param array<int, string> $col      Columns names
- * @param int      $lang     Language ID
+ * @param int                $lang     Language ID
  * 
  * @return string Last word update timestamp
  * 
@@ -787,9 +785,9 @@ onsubmit="showImportedTerms('<?php echo $last_update; ?>', <?php echo $rtl; ?>, 
 /**
  * Import term tags only to the database.
  * 
- * @param array    $fields   Fields indexes
- * @param string   $tabs     Columns separator
- * @param bool     $file_upl If the input text is an uploaded file
+ * @param array  $fields   Fields indexes
+ * @param string $tabs     Columns separator
+ * @param bool   $file_upl If the input text is an uploaded file
  * 
  * @return void
  * 
@@ -824,7 +822,8 @@ function upload_words_import_tags($fields, $tabs, $file_upl): void
     if (in_array(
         get_first_value("SELECT @@GLOBAL.local_infile as value"), 
         array(1, '1', 'ON')
-    )) {
+    )
+    ) {
         $sql = "LOAD DATA LOCAL INFILE " . convert_string_to_sqlsyntax($file_name) . 
         " IGNORE INTO TABLE {$tbpref}tempwords 
         FIELDS TERMINATED BY '$tabs' ENCLOSED BY '\"' LINES TERMINATED BY '\\n'
@@ -999,7 +998,7 @@ function upload_words_display(): void
             <td class="td1">
                 <select name="LgID" class="notempty setfocus">
                     <?php
-    echo get_languages_selectoptions(getSetting('currentlanguage'), '[Choose...]');
+                    echo get_languages_selectoptions(getSetting('currentlanguage'), '[Choose...]');
                     ?>
                 </select>
                 <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" /> 

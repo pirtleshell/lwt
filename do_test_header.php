@@ -150,7 +150,7 @@ function do_test_header_row($_p)
             $textid, 'do_test.php?text=', false, ''
         ) . '</div>';
         
-    ?>
+        ?>
     <div>
         <a href="do_text.php?start=<?php echo $textid; ?>" target="_top">
             <img src="icn/book-open-bookmark.png" title="Read" alt="Read" />
@@ -160,7 +160,7 @@ function do_test_header_row($_p)
         </a>
         <?php echo get_annotation_link($textid); ?>
     </div>
-    <?php
+        <?php
     }
     ?>
     <div>

@@ -858,11 +858,11 @@ function edit_language_form($language)
             <input type="button" value="Cancel" 
             onclick="{resetDirty(); location.href='edit_languages.php';}" /> 
             <?php 
-    if ($language->id == 0) {
-        echo '<input type="submit" name="op" value="Save" />';
-    } else {
-        echo '<input type="submit" name="op" value="Change" />';
-    }
+            if ($language->id == 0) {
+                echo '<input type="submit" name="op" value="Save" />';
+            } else {
+                echo '<input type="submit" name="op" value="Change" />';
+            }
             ?>
         </td>
     </tr>
@@ -1058,7 +1058,7 @@ function edit_languages_change($lid)
     $sql = "SELECT * FROM {$tbpref}languages WHERE LgID = $lid";
     $res = do_mysqli_query($sql);
     if (mysqli_fetch_assoc($res)) {
-    ?>
+        ?>
     <script type="text/javascript" charset="utf-8">
         const LANGDEFS = <?php echo json_encode($langDefs); ?>;
 
@@ -1078,7 +1078,7 @@ function edit_languages_change($lid)
         (e.g. RegExp Word Characters, etc.)<wbr />
         may cause partial or complete loss of improved annotated texts!
     </p>
-    <?php
+        <?php
     }
     mysqli_free_result($res);
 }

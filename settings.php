@@ -217,9 +217,9 @@ echo error_message_with_hide($message, 1);
         <td class="td1 center">
             <select name="set-theme-dir" class="notempty respinput">
                 <?php
-echo get_themes_selectoptions(
-    getSettingWithDefault('set-theme-dir')
-);
+                echo get_themes_selectoptions(
+                    getSettingWithDefault('set-theme-dir')
+                );
                 ?>
             </select>
         </td>
@@ -297,9 +297,9 @@ echo get_themes_selectoptions(
         <td class="td1 center">
             <select name="set-words-to-do-buttons" class="notempty respinput">
             <?php 
-        echo get_words_to_do_buttons_selectoptions(
-            getSettingWithDefault('set-words-to-do-buttons')
-        );
+            echo get_words_to_do_buttons_selectoptions(
+                getSettingWithDefault('set-words-to-do-buttons')
+            );
             ?>
             </select>
         </td>
@@ -313,9 +313,9 @@ echo get_themes_selectoptions(
         <td class="td1 center">
             <select name="set-tooltip-mode" class="notempty respinput">
         <?php
-echo get_tooltip_selectoptions(
-    getSettingWithDefault('set-tooltip-mode')
-);
+        echo get_tooltip_selectoptions(
+            getSettingWithDefault('set-tooltip-mode')
+        );
         ?>
             </select>
         </td>
@@ -429,9 +429,9 @@ echo get_tooltip_selectoptions(
         <td class="td1 center">
             <select name="set-mobile-display-mode" class="respinput">
             <?php
-    echo get_mobile_display_mode_selectoptions(
-        getSettingWithDefault('set-mobile-display-mode') // , true, true, true what is it???
-    );
+            echo get_mobile_display_mode_selectoptions(
+                getSettingWithDefault('set-mobile-display-mode') // , true, true, true what is it???
+            );
             ?>
             </select>
         </td>
@@ -450,9 +450,9 @@ echo get_tooltip_selectoptions(
         <td class="td1 center">
             <select name="set-text-visit-statuses-via-key" class="respinput">
             <?php
-    echo get_wordstatus_selectoptions(
-        getSettingWithDefault('set-text-visit-statuses-via-key'), true, true, true
-    );
+            echo get_wordstatus_selectoptions(
+                getSettingWithDefault('set-text-visit-statuses-via-key'), true, true, true
+            );
             ?>
             </select>
         </td>
@@ -467,9 +467,9 @@ echo get_tooltip_selectoptions(
         <td class="td1 center">
             <select name="set-display-text-frame-term-translation" class="respinput">
             <?php
-    echo get_wordstatus_selectoptions(
-        getSettingWithDefault('set-display-text-frame-term-translation'), true, true, true
-    );
+            echo get_wordstatus_selectoptions(
+                getSettingWithDefault('set-display-text-frame-term-translation'), true, true, true
+            );
             ?>
             </select>
         </td>
@@ -484,9 +484,9 @@ echo get_tooltip_selectoptions(
         <td class="td1 center">
             <select name="set-text-frame-annotation-position" class="notempty respinput">
             <?php
-    echo get_annotation_position_selectoptions(
-        getSettingWithDefault('set-text-frame-annotation-position')
-    );
+            echo get_annotation_position_selectoptions(
+                getSettingWithDefault('set-text-frame-annotation-position')
+            );
             ?>
             </select>
         </td>
@@ -501,9 +501,9 @@ echo get_tooltip_selectoptions(
         <td class="td1 center">
             <select name="set-test-sentence-count" class="notempty respinput">
             <?php
-    echo get_sentence_count_selectoptions(
-        getSettingWithDefault('set-test-sentence-count')
-    );
+            echo get_sentence_count_selectoptions(
+                getSettingWithDefault('set-test-sentence-count')
+            );
             ?>
             </select>
         </td>
@@ -518,9 +518,9 @@ echo get_tooltip_selectoptions(
         <td class="td1 center">
             <select name="set-term-sentence-count" class="notempty respinput">
             <?php
-    echo get_sentence_count_selectoptions(
-        getSettingWithDefault('set-term-sentence-count')
-    );
+            echo get_sentence_count_selectoptions(
+                getSettingWithDefault('set-term-sentence-count')
+            );
             ?>
             </select>
         </td>
@@ -661,9 +661,9 @@ echo get_tooltip_selectoptions(
         <td class="td1 center">
             <select name="set-regex-mode" class="respinput">
             <?php
-    echo get_regex_selectoptions(
-        getSettingWithDefault('set-regex-mode')
-    );
+            echo get_regex_selectoptions(
+                getSettingWithDefault('set-regex-mode')
+            );
             ?>
             </select>
         </td>

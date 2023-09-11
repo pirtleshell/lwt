@@ -64,9 +64,9 @@ function do_header_row($textid, $langid): void
     </div>
     <div>
         <?php 
-    echo getPreviousAndNextTextLinks(
-        $textid, 'do_text.php?start=', false, ''
-    );
+        echo getPreviousAndNextTextLinks(
+            $textid, 'do_text.php?start=', false, ''
+        );
         ?>
     </div>
     <div>
@@ -109,15 +109,15 @@ function do_title($title, $sourceURI): void
     ?>
     <h1>READ ▶ 
         <?php 
-    echo tohtml($title);
-    if (isset($sourceURI) && substr(trim($sourceURI), 0, 1) != '#') { 
-        ?>
+        echo tohtml($title);
+        if (isset($sourceURI) && !str_starts_with(trim($sourceURI), '#')) { 
+            ?>
         <a href="<?php echo $sourceURI ?>" target="_blank">
             <img src="<?php echo get_file_path('icn/chain.png') ?>" title="Text Source" alt="Text Source" />
         </a>
-        <?php 
-    } 
-    ?>
+            <?php 
+        } 
+        ?>
     </h1>
     <?php
 }

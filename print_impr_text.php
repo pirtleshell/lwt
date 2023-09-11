@@ -40,7 +40,7 @@ function edit_mode_display($textid, $ann_exists)
     </div>
 </div> 
 <!-- noprint -->
-<?php
+    <?php
     if (!$ann_exists) {  
         // No annotations, creation not possible
         echo '<p>No annotated text found, and creation seems not possible.</p>';
@@ -144,7 +144,8 @@ function print_mode_display($textid, $langid, $audio, $ann, $title)
 }
 
 
-function do_content() {
+function do_content()
+{
     global $tbpref;
     $textid = (int)getreq('text');
     $editmode = getreq('edit');

@@ -110,14 +110,14 @@ function getLanguagesSettings($langid)
 /**
  * Print the output when the word is a term (word or multi-word).
  *
- * @param int                      $actcode       Action code, number of words forming 
- *                                                the term (> 1 for multiword)
- * @param int                      $showAll       Show all words or not
- * @param int                      $hideuntil     Unused
- * @param string                   $spanid        ID for this span element
- * @param int                      $currcharcount Current number of characters
- * @param array<string, string>    $record        Various data
- * @param array                    $exprs         Current expressions
+ * @param int                   $actcode       Action code, number of words forming 
+ *                                             the term (> 1 for multiword)
+ * @param int                   $showAll       Show all words or not
+ * @param int                   $hideuntil     Unused
+ * @param string                $spanid        ID for this span element
+ * @param int                   $currcharcount Current number of characters
+ * @param array<string, string> $record        Various data
+ * @param array                 $exprs         Current expressions
  * 
  * @return void
  * 
@@ -126,31 +126,34 @@ function getLanguagesSettings($langid)
 function echo_term(
     $actcode, $showAll, $spanid, $hidetag, $currcharcount, $record, 
     &$exprs = array()
-)
-{
+) {
     $actcode = (int)$record['Code'];
     if ($actcode > 1) {
         // A multiword, $actcode is the number of words composing it
-		if (empty($exprs) || $exprs[sizeof($exprs)-1][1] != $record['TiText'])
-			$exprs[] = array($actcode, $record['TiText'], $actcode);
+        if (empty($exprs) || $exprs[sizeof($exprs)-1][1] != $record['TiText']) {
+            $exprs[] = array($actcode, $record['TiText'], $actcode);
+        }
 
         if (isset($record['WoID'])) {
 
             $attributes = array(
-				'id' => $spanid,
-				'class' => implode(" ", [
+            'id' => $spanid,
+            'class' => implode(
+                " ", [
                     $hidetag, "click", "mword", ($showAll ? 'mwsty' : 'wsty'), 
                     "order" . $record['Ti2Order'],
-				    'word' . $record['WoID'], 'status' . $record['WoStatus'], 
-				    'TERM' . strToClassName($record['TiTextLC'])]
-                ),
-				'data_pos' => $currcharcount,
-				'data_order' => $record['Ti2Order'],
-				'data_wid' => $record['WoID'],
-				'data_trans' => tohtml(repl_tab_nl($record['WoTranslation']) . 
-				getWordTagList($record['WoID'], ' ', 1, 0)),
-				'data_rom' => tohtml($record['WoRomanization']),
-				'data_status' => $record['WoStatus'],
+                'word' . $record['WoID'], 'status' . $record['WoStatus'], 
+                'TERM' . strToClassName($record['TiTextLC'])]
+            ),
+            'data_pos' => $currcharcount,
+            'data_order' => $record['Ti2Order'],
+            'data_wid' => $record['WoID'],
+            'data_trans' => tohtml(
+                repl_tab_nl($record['WoTranslation']) . 
+                getWordTagList($record['WoID'], ' ', 1, 0)
+            ),
+            'data_rom' => tohtml($record['WoRomanization']),
+            'data_status' => $record['WoStatus'],
                 'data_code' =>  $actcode,
                 'data_text' => tohtml($record['TiText'])
             );
@@ -171,53 +174,59 @@ function echo_term(
         // Single word
         if (isset($record['WoID'])) {
             // Word found status 1-5|98|99
-			$attributes = array(
-				'id' => $spanid,
-				'class' => implode(" ", [
+            $attributes = array(
+            'id' => $spanid,
+            'class' => implode(
+                " ", [
                     $hidetag, "click", "word", "wsty", "word" . $record['WoID'],
                     'status' . $record['WoStatus'], 
                     'TERM' . strToClassName($record['TiTextLC'])
-                ]),
-				'data_pos' => $currcharcount,
-				'data_order' => $record['Ti2Order'],
-				'data_wid' => $record['WoID'],
-				'data_trans' => tohtml(repl_tab_nl($record['WoTranslation']) . 
-				getWordTagList($record['WoID'], ' ', 1, 0)),
-				'data_rom' => tohtml($record['WoRomanization']),
-				'data_status' => $record['WoStatus']
-			);
+                ]
+            ),
+            'data_pos' => $currcharcount,
+            'data_order' => $record['Ti2Order'],
+            'data_wid' => $record['WoID'],
+            'data_trans' => tohtml(
+                repl_tab_nl($record['WoTranslation']) . 
+                getWordTagList($record['WoID'], ' ', 1, 0)
+            ),
+            'data_rom' => tohtml($record['WoRomanization']),
+            'data_status' => $record['WoStatus']
+            );
         } else {
             // Not registered word (status 0)
-			$attributes = array(
-				'id' => $spanid,
-				'class' => implode(" ", [
+            $attributes = array(
+            'id' => $spanid,
+            'class' => implode(
+                " ", [
                     $hidetag, "click", "word", "wsty", "status0", 
                     "TERM" . strToClassName($record['TiTextLC'])
-                ]),
-				'data_pos' => $currcharcount,
-				'data_order' => $record['Ti2Order'],
-				'data_trans' => '',
-				'data_rom' => '',
-				'data_status' => '0',
-				'data_wid' => ''
-			);
+                ]
+            ),
+            'data_pos' => $currcharcount,
+            'data_order' => $record['Ti2Order'],
+            'data_trans' => '',
+            'data_rom' => '',
+            'data_status' => '0',
+            'data_wid' => ''
+            );
         }
-		foreach ($exprs as $expr) {
-			$attributes['data_mw' . $expr[0]] = tohtml($expr[1]);
-		}
+        foreach ($exprs as $expr) {
+            $attributes['data_mw' . $expr[0]] = tohtml($expr[1]);
+        }
         $span = '<span';
         foreach ($attributes as $attr_name => $val) {
             $span .= ' ' . $attr_name . '="' . $val . '"';
-		}
+        }
         $span .= '>' . tohtml($record['TiText']) . '</span>';
         echo $span;
-		for ($i = sizeof($exprs) - 1; $i >= 0; $i--) {
-			$exprs[$i][2]--;
-			if ($exprs[$i][2] < 1) {
-				unset($exprs[$i]);
-				$exprs = array_values($exprs);
-			}
-		}
+        for ($i = sizeof($exprs) - 1; $i >= 0; $i--) {
+            $exprs[$i][2]--;
+            if ($exprs[$i][2] < 1) {
+                unset($exprs[$i]);
+                $exprs = array_values($exprs);
+            }
+        }
     }
 }
 
@@ -332,11 +341,11 @@ function sentenceParser($sid, $old_sid)
 /**
  * Process each text item (can be punction, term, etc...)
  *
- * @param array    $record        Text item information
- * @param 0|1      $showAll       Show all words or not
- * @param int      $currcharcount Current number of caracters
- * @param bool     $hide          Should some item be hidden, depends on $showAll
- * @param array    $exprs         Current expressions
+ * @param array $record        Text item information
+ * @param 0|1   $showAll       Show all words or not
+ * @param int   $currcharcount Current number of caracters
+ * @param bool  $hide          Should some item be hidden, depends on $showAll
+ * @param array $exprs         Current expressions
  * 
  * @return void
  * 
@@ -344,8 +353,8 @@ function sentenceParser($sid, $old_sid)
  * @since 2.8.0-fork Take a new optional arguent $exprs
  */
 function item_parser(
-    $record, $showAll, $currcharcount, $hide, &$exprs = array()): void
-{
+    $record, $showAll, $currcharcount, $hide, &$exprs = array()
+): void {
     $actcode = (int)$record['Code'];
     $spanid = 'ID-' . $record['Ti2Order'] . '-' . $actcode;
 

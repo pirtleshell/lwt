@@ -65,10 +65,8 @@ if (isset($_REQUEST['op'])) {
             $wid = (int)$_REQUEST["WoID"];
             saveWordTags($wid);
             
-        }  // $_REQUEST['op'] == 'Change'
-    // (mb_strtolower($text, 'UTF-8') == $textlc)
-    } else { 
-        // (mb_strtolower($text, 'UTF-8') != $textlc)
+        }
+    } else {
         $titletext = "New/Edit Term: " . tohtml(prepare_textdata($_REQUEST["WoTextLC"]));
         pagestart_nobody($titletext);
         echo '<h1>' . $titletext . '</h1>';        
