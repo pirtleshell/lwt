@@ -4019,6 +4019,10 @@ function insert_standard_expression($textlc, $lid, $wid, $len, $mode): array
         WHERE SeLgID = $lid AND SeText LIKE " . 
         convert_string_to_sqlsyntax_notrim_nonull("%$textlc%");
     }
+
+    if ($splitEachChar) {
+        $textlc = preg_replace('/([^\s])/u', "$1 ", $textlc);
+    }
     $wis = $textlc;
     $res = do_mysqli_query($sql);
     $notermchar = "/[^$termchar]($textlc)[^$termchar]/ui";
@@ -4193,9 +4197,6 @@ function insertExpressions($textlc, $lid, $wid, $len, $mode): string|null
     $mecab = 'MECAB' == strtoupper(trim($record['LgRegexpWordCharacters']));
     $splitEachChar = !$mecab && $record['LgSplitEachChar'];
     mysqli_free_result($res);
-    if ($splitEachChar) {
-        $textlc = preg_replace('/([^\s])/u', "$1 ", $textlc);
-    }
 
     /*
     * TODO:
