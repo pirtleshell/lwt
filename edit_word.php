@@ -286,7 +286,20 @@ function edit_word_do_form($wid, $text_id, $ord, $fromAnn)
             "SELECT Ti2SeID AS value FROM " . $tbpref . "textitems2 
             WHERE Ti2TxID = $text_id AND Ti2WordCount = 1 AND Ti2Order = $ord"
         );
-        $sent = getSentence($seid, $termlc, (int) getSettingWithDefault('set-term-sentence-count'));
+        $sent = getSentence(
+            $seid, $termlc, 
+            (int) getSettingWithDefault('set-term-sentence-count')
+        );
+        $trans_uri = get_first_value(
+            "SELECT LgGoogleTranslateURI AS value FROM {$tbpref}languages 
+            WHERE LgID = $lang"
+        );
+        $lgname = get_first_value(
+            "SELECT LgName AS value FROM {$tbpref}languages 
+            WHERE LgID = $lang"
+        );
+        $lang_short = array_key_exists($lgname, $langDefs) ? 
+        $langDefs[$lgname][1] : ''
             
         ?>
     
@@ -300,9 +313,12 @@ function edit_word_do_form($wid, $text_id, $ord, $fromAnn)
     <tr title="Only change uppercase/lowercase!">
         <td class="td1 right"><b>New Term:</b></td>
         <td class="td1">
-            <input <?php echo $scrdir; ?> class="notempty checkoutsidebmp" data_info="New Term" type="text" 
-            name="WoText" id="wordfield" value="<?php echo tohtml($term); ?>" maxlength="250" size="35" />
-            <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+            <input <?php echo $scrdir; ?> class="notempty checkoutsidebmp" 
+            data_info="New Term" type="text" 
+            name="WoText" id="wordfield" value="<?php echo tohtml($term); ?>" 
+            maxlength="250" size="35" />
+            <img src="icn/status-busy.png" title="Field must not be empty" 
+            alt="Field must not be empty" />
         </td>
     </tr>
             <?php print_similar_terms_tabrow(); ?>
@@ -310,7 +326,8 @@ function edit_word_do_form($wid, $text_id, $ord, $fromAnn)
         <td class="td1 right">Translation:</td>
         <td class="td1">
             <textarea name="WoTranslation" 
-            class="setfocus textarea-noreturn checklength checkoutsidebmp" data_maxlength="500" 
+            class="setfocus textarea-noreturn checklength checkoutsidebmp" 
+            data_maxlength="500" 
             data_info="Translation" cols="35" rows="3"></textarea>
         </td>
     </tr>
@@ -323,7 +340,8 @@ function edit_word_do_form($wid, $text_id, $ord, $fromAnn)
     <tr>
         <td class="td1 right">Romaniz.:</td>
         <td class="td1">
-            <input type="text" class="checkoutsidebmp" data_info="Romanization" name="WoRomanization" 
+            <input type="text" class="checkoutsidebmp" data_info="Romanization" 
+            name="WoRomanization" 
             value="" maxlength="100" size="35" />
         </td>
     </tr>
@@ -331,7 +349,8 @@ function edit_word_do_form($wid, $text_id, $ord, $fromAnn)
         <td class="td1 right">Sentence<br />Term in {...}:</td>
         <td class="td1">
             <textarea <?php echo $scrdir; ?> name="WoSentence" 
-            class="textarea-noreturn checklength checkoutsidebmp" data_maxlength="1000" data_info="Sentence" cols="35" 
+            class="textarea-noreturn checklength checkoutsidebmp" 
+            data_maxlength="1000" data_info="Sentence" cols="35" 
             rows="3"><?php echo tohtml(repl_tab_nl($sent[1])); ?></textarea>
         </td>
     </tr>
@@ -353,22 +372,9 @@ function edit_word_do_form($wid, $text_id, $ord, $fromAnn)
  </table>
  </form>
     <script type="text/javascript">
-        const TRANS_URI = <?php 
-        echo json_encode(
-            get_first_value(
-                "SELECT LgGoogleTranslateURI AS value FROM {$tbpref}languages 
-                WHERE LgID = $lang"
-            )
-        );
-        ?> 
-        const LANG_SHORT = <?php 
-        $lgname = get_first_value(
-            "SELECT LgName AS value FROM {$tbpref}languages WHERE LgID = $lang"
-        );
-        echo json_encode(
-            array_key_exists($lgname, $langDefs) ? $langDefs[$lgname][1] : ''
-        );
-        ?> || getLangFromDict(TRANS_URI);
+        const TRANS_URI = <?php echo json_encode($trans_uri); ?> 
+        const LANG_SHORT = <?php echo json_encode($lang_short); ?> || 
+        getLangFromDict(TRANS_URI);
 
         /**
          * Sets the translation of a term.
@@ -421,15 +427,15 @@ function edit_word_do_form($wid, $text_id, $ord, $fromAnn)
             $sentence = repl_tab_nl($record['WoSentence']);
             if ($sentence == '' && isset($text_id) && isset($ord)) {
                 $seid = get_first_value(
-                    "select Ti2SeID as value from " . $tbpref . "textitems2 
-                    where Ti2TxID = " . $text_id . " and Ti2WordCount = 1 and Ti2Order = " . $ord
+                    "SELECT Ti2SeID as value from {$tbpref}textitems2 
+                    where Ti2TxID = $text_id and Ti2WordCount = 1 and Ti2Order = $ord"
                 );
                 $sent = getSentence($seid, $termlc, (int) getSettingWithDefault('set-term-sentence-count'));
                 $sentence = repl_tab_nl($sent[1]);
             }
             $transl = repl_tab_nl($record['WoTranslation']);
             if ($transl == '*') { 
-                $transl=''; 
+                $transl = ''; 
             }
             ?>
         
@@ -457,7 +463,8 @@ function edit_word_do_form($wid, $text_id, $ord, $fromAnn)
         <tr>
             <td class="td1 right">Translation:</td>
             <td class="td1">
-                <textarea name="WoTranslation" class="setfocus textarea-noreturn checklength checkoutsidebmp" 
+                <textarea name="WoTranslation" 
+                class="setfocus textarea-noreturn checklength checkoutsidebmp" 
                 data_maxlength="500" data_info="Translation" cols="35" 
                 rows="3"><?php echo tohtml($transl); ?></textarea>
             </td>
@@ -515,7 +522,7 @@ function edit_word_do_form($wid, $text_id, $ord, $fromAnn)
         </tr>
      </table>
      </form>
-        <?php
+            <?php
             // Display example sentences button
             example_sentences_area(
                 $lang, $termlc, 'document.forms.editword.WoSentence', $wid
@@ -525,10 +532,11 @@ function edit_word_do_form($wid, $text_id, $ord, $fromAnn)
     }
 }
 
-function do_content() {
-    $fromAnn = getreq("fromAnn"); // from-recno or empty
+function do_content()
+{
+    // from-recno or empty
+    $fromAnn = getreq("fromAnn"); 
     if (isset($_REQUEST['op'])) {
-        // if (isset($_REQUEST['op']))
         $translation_raw = repl_tab_nl(getreq("WoTranslation"));
         if ($translation_raw == '') { 
             $translation = '*'; 
@@ -537,7 +545,7 @@ function do_content() {
         }
         edit_word_do_operation($translation, $fromAnn);
     } else {  
-        // FORM
+        // Display a form
         $from_ann = false;
         if (array_key_exists("wid", $_REQUEST) && is_integer(getreq('wid'))) {
             $wid = (int)getreq('wid');
@@ -556,12 +564,10 @@ function do_content() {
 }
 
 
-if (
-    getreq("wid") != "" || 
-    getreq("tid") . getreq("ord") != "" || 
-    array_key_exists("op", $_REQUEST)
-    ) 
-{
+if (getreq("wid") != ""  
+    || getreq("tid") . getreq("ord") != ""  
+    || array_key_exists("op", $_REQUEST)
+) {
     do_content();
 }
 

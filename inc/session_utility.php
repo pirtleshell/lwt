@@ -1031,14 +1031,16 @@ function get_links_from_new_feed($NfSourceURI): array|false
         $source = ($feed_tags['item']=='entry') ? 'content' : 'description';
         $rss_data['feed_text'] = $source;
         foreach ($rss_data as $i=>$val){
-            if (is_array($val))
+            if (is_array($val)) {
                 $rss_data[$i]['text'] = $val[$source];
+            }
         }
     } else if ($enc_count > $enc_nocount) {
         $rss_data['feed_text'] = 'encoded';
         foreach ($rss_data as $i=>$val){
-            if (is_array($val))
+            if (is_array($val)) {
                 $rss_data[$i]['text'] = $val['encoded'];
+            }
         }
     }
     $rss_data['feed_title'] = $rss->getElementsByTagName('title')->item(0)->nodeValue;
@@ -2102,59 +2104,59 @@ function get_selected($value, $selval)
 /**
  * Create a projection operator do perform word test.
  * 
- * @param int $key Type of test. 
- *                 * 0: word selection
- *                 * 1: text item selection
- *                 * 2: from language
- *                 * 3: from text
+ * @param int       $key   Type of test. 
+ *                         - 0: word selection
+ *                         - 1: text item selection
+ *                         - 2: from language
+ *                         - 3: from text
  * @param array|int $value Object to select.
  * 
  * @return string Operator
  * 
- * @global string $tbpref;
+ * @global string $tbpref
  */
 function do_test_test_get_projection($key, $value)
 {
     global $tbpref;
     switch ($key)
     {
-        case 0:
-            $id_string = implode(",", $value);
-            $testsql = " {$tbpref}words WHERE WoID IN ($id_string) ";
-            $cntlang = get_first_value(
-                "SELECT COUNT(DISTINCT WoLgID) AS value 
+    case 0:
+        $id_string = implode(",", $value);
+        $testsql = " {$tbpref}words WHERE WoID IN ($id_string) ";
+        $cntlang = get_first_value(
+            "SELECT COUNT(DISTINCT WoLgID) AS value 
                 FROM $testsql"
-            );
-            if ($cntlang > 1) {
-                echo "<p>Sorry - The selected terms are in $cntlang languages," . 
-                " but tests are only possible in one language at a time.</p>";
-                exit();
-            }
-            break;
-        case 1:
-            $id_string = implode(",", $value);
-            $testsql = " {$tbpref}words, {$tbpref}textitems2 
+        );
+        if ($cntlang > 1) {
+            echo "<p>Sorry - The selected terms are in $cntlang languages," . 
+            " but tests are only possible in one language at a time.</p>";
+            exit();
+        }
+        break;
+    case 1:
+        $id_string = implode(",", $value);
+        $testsql = " {$tbpref}words, {$tbpref}textitems2 
             WHERE Ti2LgID = WoLgID AND Ti2WoID = WoID AND Ti2TxID IN ($id_string) ";
-            $cntlang = get_first_value(
-                "SELECT COUNT(DISTINCT WoLgID) AS value 
+        $cntlang = get_first_value(
+            "SELECT COUNT(DISTINCT WoLgID) AS value 
                 FROM $testsql"
-            );
-            if ($cntlang > 1) {
-                echo "<p>Sorry - The selected terms are in $cntlang languages," . 
-                " but tests are only possible in one language at a time.</p>";
-                exit();
-            }
-            break;
-        case 2:
-            $testsql = " {$tbpref}words WHERE WoLgID = $value ";
-            break;
-        case 3:
-            $testsql = " {$tbpref}words, {$tbpref}textitems2 
+        );
+        if ($cntlang > 1) {
+            echo "<p>Sorry - The selected terms are in $cntlang languages," . 
+            " but tests are only possible in one language at a time.</p>";
+            exit();
+        }
+        break;
+    case 2:
+        $testsql = " {$tbpref}words WHERE WoLgID = $value ";
+        break;
+    case 3:
+        $testsql = " {$tbpref}words, {$tbpref}textitems2 
             WHERE Ti2LgID = WoLgID AND Ti2WoID = WoID AND Ti2TxID = $value ";
-            break;
-        default:
-            my_die("do_test_test.php called with wrong parameters"); 
-            break;
+        break;
+    default:
+        my_die("do_test_test.php called with wrong parameters"); 
+        break;
     }
     return $testsql;
 }
@@ -2162,32 +2164,33 @@ function do_test_test_get_projection($key, $value)
 /**
  * Prepare the SQL when the text is a selection.
  * 
- * @param int $selection_type. 2 is words selection and 3 is terms selection.
- * @param string $selection_data Comma separated ID of elements to test.
+ * @param int    $selection_type. 2 is words selection and 3 is terms selection.
+ * @param string $selection_data  Comma separated ID of elements to test.
  * 
  * @return string SQL formatted string suitable to projection (inserted in a "FROM ")
  */
-function do_test_test_from_selection($selection_type, $selection_data) {
+function do_test_test_from_selection($selection_type, $selection_data)
+{
     $data_string_array = explode(",", trim($selection_data, "()"));
     $data_int_array = array_map('intval', $data_string_array);
     switch ((int)$selection_type) {
-        case 2:
-            $test_sql = do_test_test_get_projection(0, $data_int_array);
-            break;
-        case 3:
-            $test_sql = do_test_test_get_projection(1, $data_int_array);
-            break;
-        default:
-            $test_sql = $selection_data;
-            $cntlang = get_first_value(
-                "SELECT COUNT(DISTINCT WoLgID) AS value 
+    case 2:
+        $test_sql = do_test_test_get_projection(0, $data_int_array);
+        break;
+    case 3:
+        $test_sql = do_test_test_get_projection(1, $data_int_array);
+        break;
+    default:
+        $test_sql = $selection_data;
+        $cntlang = get_first_value(
+            "SELECT COUNT(DISTINCT WoLgID) AS value 
                 FROM $test_sql"
-            );
-            if ($cntlang > 1) {
-                echo "<p>Sorry - The selected terms are in $cntlang languages," . 
-                " but tests are only possible in one language at a time.</p>";
-                exit();
-            }
+        );
+        if ($cntlang > 1) {
+            echo "<p>Sorry - The selected terms are in $cntlang languages," . 
+            " but tests are only possible in one language at a time.</p>";
+            exit();
+        }
     }
     return $test_sql;
 }
@@ -2682,7 +2685,7 @@ Page
     else {
         ?>
 <select name="page" onchange="{val=document.<?php echo $formname; ?>.page.options[document.<?php echo $formname; ?>.page.selectedIndex].value; location.href='<?php echo $script; ?>?page=' + val;}">
-    <?php echo get_paging_selectoptions($currentpage, $pages); ?>
+        <?php echo get_paging_selectoptions($currentpage, $pages); ?>
 </select>
         <?php
     }
@@ -2824,9 +2827,11 @@ function createTheDictLink($u, $t)
     }
     // 2 ### found
     // Get encoding
-    $enc = trim(substr(
-        $url, $pos + mb_strlen($matches[0]), $pos2 - $pos - mb_strlen($matches[0])
-    ));
+    $enc = trim(
+        substr(
+            $url, $pos + mb_strlen($matches[0]), $pos2 - $pos - mb_strlen($matches[0])
+        )
+    );
     $r = substr($url, 0, $pos);
     $r .= urlencode(mb_convert_encoding($trm, $enc, 'UTF-8'));
     if ($pos2+3 < strlen($url)) { 
@@ -2982,10 +2987,9 @@ function makeOpenDictStrDynSent($url, $sentctljs, $txt): string
     }
     parse_str($parsed_url['query'], $url_query);
     $popup |= array_key_exists('lwt_popup', $url_query);
-    if (
-        str_starts_with($url, "ggl.php") || 
-        str_ends_with($parsed_url['path'], "/ggl.php")
-        ) {
+    if (str_starts_with($url, "ggl.php")  
+        || str_ends_with($parsed_url['path'], "/ggl.php")
+    ) {
         $url = str_replace('?', '?sent=1&', $url);
     }
     return '<span class="click" onclick="translateSentence'.($popup ? '2' : '').'(' . 
@@ -3038,8 +3042,10 @@ function createDictLinksInEditWin2($lang, $sentctljs, $wordctljs): string
         $r .= '<span class="click" onclick="translateWord2(' . 
         prepare_textdata_js($wb3) . ',' . $wordctljs . ');">Translator</span>
          | <span class="click" onclick="translateSentence2(' . 
-         prepare_textdata_js($sent_mode ? 
-         str_replace('?', '?sent=1&', $wb3) : $wb3) . ',' . $sentctljs . 
+        prepare_textdata_js(
+            $sent_mode ? 
+            str_replace('?', '?sent=1&', $wb3) : $wb3
+        ) . ',' . $sentctljs . 
          ');">Translate sentence</span>'; 
     }
     return $r;
@@ -3168,7 +3174,7 @@ function createDictLinksInEditWin3($lang, $sentctljs, $wordctljs): string
 /**
  * Return checked attribute if $val is in array $_REQUEST[$name]
  *
- * @param mixed  $val Value to look for, needle
+ * @param mixed  $val  Value to look for, needle
  * @param string $name Key of request haystack.
  *
  * @return string ' ' of ' checked="checked" ' if the qttribute should be checked.
@@ -3535,7 +3541,8 @@ function return_textwordcount($texts_id): array
  * 
  * @deprecated 2.9.0 Use return_textwordcount instead.
  */
-function textwordcount($textID) {
+function textwordcount($textID)
+{
     echo json_encode(return_textwordcount($textID));
 }
 
@@ -3598,8 +3605,9 @@ function texttodocount2($textid): string
             $dict = "http://" . $dict;
         }
         parse_str(parse_url($dict, PHP_URL_QUERY), $url_query);
-        if (array_key_exists('lwt_translator', $url_query) && 
-        $url_query['lwt_translator'] == "libretranslate") {
+        if (array_key_exists('lwt_translator', $url_query)  
+            && $url_query['lwt_translator'] == "libretranslate"
+        ) {
             $tl = $url_query['target'];
             $sl = $url_query['source'];
         } else {
@@ -3720,8 +3728,9 @@ function sentences_from_word($wid, $wordlc, $lid, $limit=-1)
          WHERE Ti2WoID = $wid AND SeID = Ti2SeID AND SeLgID = $lid
          ORDER BY CHAR_LENGTH(SeText), SeText";
     }
-    if ($limit)
+    if ($limit) {
         $sql .= " LIMIT 0,$limit";
+    }
     return do_mysqli_query($sql);
 }
 
@@ -4480,7 +4489,7 @@ function restore_file($handle, $title): string
 /**
  * Uses provided annotations, and annotations from database to update annotations.
  * 
- * @param int $textid Id of the text on which to update annotations
+ * @param int    $textid Id of the text on which to update annotations
  * @param string $oldann Old annotations
  * 
  * @return string Updated annotations for this text. 

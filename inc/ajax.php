@@ -25,20 +25,22 @@ require_once __DIR__ . '/ajax_edit_impr_text.php';
  */
 function rest_api_version($get_req)
 {
-    return (string)json_encode(array(
+    return (string)json_encode(
+        array(
         "version"      => "0.0.1",
         "release_date" => "2023-09-01"
-    ));
+        )
+    );
 }
 
 /**
  * Retun the next word to test as JSON
  * 
- * @param string $testsql SQL projection query
- * @param bool $nosent Test is in word mode
- * @param int $lgid Language ID
+ * @param string $testsql   SQL projection query
+ * @param bool   $nosent    Test is in word mode
+ * @param int    $lgid      Language ID
  * @param string $wordregex Word selection regular expression
- * @param int $testtype Test type
+ * @param int    $testtype  Test type
  * 
  * @return string Next word formatted as JSON.
  */
@@ -85,7 +87,8 @@ function get_word_test_ajax($testsql, $nosent, $lgid, $wordregex, $testtype)
  * 
  * @return string Tests for tomorrow as JSON
  */
-function get_tomorrow_test_count($testsql) {
+function get_tomorrow_test_count($testsql)
+{
     $output = array(
         "test_count" => do_test_get_tomorrow_tests_count($testsql)
     );
@@ -96,7 +99,7 @@ function get_tomorrow_test_count($testsql) {
  * Return the next word to test.
  * 
  * @param array $get_req Array with the fields {test_sql, test_nosent, 
- * test_lgid, test_wordregex, test_type}
+ *                       test_lgid, test_wordregex, test_type}
  */
 function word_test_ajax($get_req)
 {
@@ -165,11 +168,13 @@ function media_paths($get_req)
 function example_sentences($get_req)
 {
     chdir("..");
-    return json_encode(sentences_with_word(
-        (int) $get_req["lid"],
-        $get_req["word_lc"],
-        (int) $get_req["wid"]
-    ));
+    return json_encode(
+        sentences_with_word(
+            (int) $get_req["lid"],
+            $get_req["word_lc"],
+            (int) $get_req["wid"]
+        )
+    );
 }
 
 /**
@@ -179,9 +184,11 @@ function example_sentences($get_req)
  */
 function imported_terms($get_req)
 {
-    return json_encode(imported_terms_list(
-        $get_req["last_update"], $get_req["page"], $get_req["count"]
-    ));
+    return json_encode(
+        imported_terms_list(
+            $get_req["last_update"], $get_req["page"], $get_req["count"]
+        )
+    );
 }
 
 
@@ -350,86 +357,86 @@ function unknown_post_action_type($post_req)
 if (isset($_GET['action'])) {
     if ($_GET['action'] == 'query') {
         switch ($_GET['action_type']) {
-            case 'version':
-                echo rest_api_version($_GET);
-            case 'test':
-                echo word_test_ajax($_GET);
-                break;
-            case 'tomorrow_test_count':
-                echo tomorrow_test_count($_GET);
-                break;
-            case 'phonetic_reading':
-                echo get_phonetic_reading($_GET);
-                break;
-            case 'theme_path':
-                echo get_theme_path($_GET);
-                break;
-            case "texts_statistics":
-                echo get_texts_statistics($_GET);
-                break;
-            case "media_paths":
-                echo media_paths($_GET);
-                break;
-            case "example_sentences":
-                echo example_sentences($_GET);
-                break;
-            case "imported_terms":
-                echo imported_terms($_GET);
-                break;
-            case "term_translations":
-                echo term_translations($_GET);
-                break;
-            default:
-                echo unknown_get_action_type($_GET);
-                break;
+        case 'version':
+            echo rest_api_version($_GET);
+        case 'test':
+            echo word_test_ajax($_GET);
+            break;
+        case 'tomorrow_test_count':
+            echo tomorrow_test_count($_GET);
+            break;
+        case 'phonetic_reading':
+            echo get_phonetic_reading($_GET);
+            break;
+        case 'theme_path':
+            echo get_theme_path($_GET);
+            break;
+        case "texts_statistics":
+            echo get_texts_statistics($_GET);
+            break;
+        case "media_paths":
+            echo media_paths($_GET);
+            break;
+        case "example_sentences":
+            echo example_sentences($_GET);
+            break;
+        case "imported_terms":
+            echo imported_terms($_GET);
+            break;
+        case "term_translations":
+            echo term_translations($_GET);
+            break;
+        default:
+            echo unknown_get_action_type($_GET);
+            break;
         }
     }
 } else if (isset($_POST['action'])) {
     switch ($_POST['action']) {
-        case "reading_position":
-            switch ($_POST['action_type']) {
-                case "text":
-                    echo set_text_position($_POST);
-                    break;
-                case "audio":
-                    echo set_audio_position($_POST);
-                    break;
-                default:
-                    echo unknown_post_action_type($_POST);
-                    break;
-            }
+    case "reading_position":
+        switch ($_POST['action_type']) {
+        case "text":
+            echo set_text_position($_POST);
+            break;
+        case "audio":
+            echo set_audio_position($_POST);
             break;
         default:
-            switch ($_POST['action_type']) {
-                case "simterms":
-                    echo similar_terms($_POST); // really on POST?
-                    break;
-                case "add_translation":
-                    echo add_translation($_POST);
-                    break;
-                case "update_translation":
-                    echo update_translation($_POST);
-                    break;
-                case 'regexp':
-                    echo check_regexp($_POST);
-                    break;
-                case 'increase_term_status':
-                    echo increase_term_status($_POST);
-                    break;
-                case 'set_term_status':
-                    echo set_term_status($_POST);
-                    break;
-                case 'save_impr_text':
-                    echo set_impr_text($_POST);
-                    break;
-                case 'save_setting':
-                    echo save_setting($_POST);
-                    break;
-                default:
-                    echo unknown_post_action_type($_POST);
-                    break;
-            }
+            echo unknown_post_action_type($_POST);
             break;
+        }
+        break;
+    default:
+        switch ($_POST['action_type']) {
+        case "simterms":
+            echo similar_terms($_POST); // really on POST?
+            break;
+        case "add_translation":
+            echo add_translation($_POST);
+            break;
+        case "update_translation":
+            echo update_translation($_POST);
+            break;
+        case 'regexp':
+            echo check_regexp($_POST);
+            break;
+        case 'increase_term_status':
+            echo increase_term_status($_POST);
+            break;
+        case 'set_term_status':
+            echo set_term_status($_POST);
+            break;
+        case 'save_impr_text':
+            echo set_impr_text($_POST);
+            break;
+        case 'save_setting':
+            echo save_setting($_POST);
+            break;
+        default:
+            echo unknown_post_action_type($_POST);
+            break;
+        }
+        break;
     }
 }
 
