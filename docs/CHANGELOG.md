@@ -17,6 +17,10 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
   * Page do not need to reload.
   * The timer continues instead of resetting.
 * REST API, the new ``inc/ajax.php`` is intended to continue developping itself as a REST API.
+* You can now specify a socket for your database through ``$socket`` in
+``connect.inc.php``. This feature was brought to you by
+[@hangug-eo](https://github.com/hangug-eo) in his PR
+[#132](https://github.com/HugoFara/lwt/pull/132).
 
 ### Changed
 
@@ -45,6 +49,9 @@ the intendended page. Same goes for "New Text" on "Archived Texts" page.
 * During a text creation, the ``media_uri`` property of ``Text`` was used instead of ``source``. Thanks to [@hangug-eo](https://github.com/hangug-eo) for his PR [#133](https://github.com/HugoFara/lwt/pull/133)!
 * Multi-words were not properly highlighted for languages separating each
 character as a word (e. g.: Chinese). Big thanks to [@hangug-eo](https://github.com/hangug-eo) for signaling the issue and solving it in his PR [#140](https://github.com/HugoFara/lwt/pull/140)!
+* The database wizard was not correctly saving the password. This is fixed by
+[@hangug-eo](https://github.com/hangug-eo) in
+[#132](https://github.com/HugoFara/lwt/pull/132).
 
 ### Deprecated
 
