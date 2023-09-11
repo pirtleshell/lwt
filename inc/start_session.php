@@ -68,10 +68,10 @@ function start_session(): void
 }
 
 /**
-* Launch a new session for WordPress.
-*
-* @return void
-*/
+ * Launch a new session for WordPress.
+ *
+ * @return void
+ */
 function start_session_main(): void 
 {
     set_error_reporting($GLOBALS['dsplerrors']);

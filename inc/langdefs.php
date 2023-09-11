@@ -145,7 +145,7 @@ $langDefs = array(
         false, false, false),
     
     "Japanese" => 
-        array("ja", "ja", true, 	
+        array("ja", "ja", true,
         "\\x{4E00}-\\x{9FFF}\\x{F900}-\\x{FAFF}\\x{3040}-\\x{30FF}\\x{31F0}-\\x{31FF}",
         ".!?:;。！？：；", 
         true, true, false),

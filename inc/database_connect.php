@@ -984,11 +984,10 @@ function parse_standard_text($text, $id, $lid): ?array
     // It is faster to write to a file and let SQL do its magic, but may run into
     // security restrictions
     $use_local_infile = false;
-    if (
-        !in_array(
+    if (!in_array(
         get_first_value("SELECT @@GLOBAL.local_infile as value"), 
         array(1, '1', 'ON')
-        )
+    )
     ) {
         $use_local_infile = false;
     }
@@ -1351,9 +1350,9 @@ function check_text_with_expressions($id, $lid, $wl, $wl_max, $mw_sql): string
  * @param string     $text Text to parse
  * @param string|int $lid  Language ID (LgID from languages table)
  * @param int        $id   References whether the text is new to the database
- *                     $id = -1     => Check, return protocol
- *                     $id = -2     => Only return sentence array
- *                     $id = TextID => Split: insert sentences/textitems entries in DB
+ *                         $id = -1     => Check, return protocol
+ *                         $id = -2     => Only return sentence array
+ *                         $id = TextID => Split: insert sentences/textitems entries in DB
  *
  * @global string $tbpref Database table prefix
  *
@@ -1528,12 +1527,15 @@ function update_database($dbname)
             ADD WoTodayScore DOUBLE NOT NULL DEFAULT 0, 
             ADD WoTomorrowScore DOUBLE NOT NULL DEFAULT 0, 
             ADD WoRandom DOUBLE NOT NULL DEFAULT 0", 
-            '', false);
+            '', 
+            false
+        );
         runsql(
             "ALTER TABLE {$tbpref}words 
             ADD WoWordCount tinyint(3) unsigned NOT NULL DEFAULT 0 AFTER WoSentence", 
             '', 
-            false);
+            false
+        );
         runsql(
             "ALTER TABLE {$tbpref}words 
             ADD INDEX WoTodayScore (WoTodayScore), 
@@ -1551,59 +1553,73 @@ function update_database($dbname)
         runsql(
             "ALTER TABLE {$tbpref}texts 
             ADD TxAnnotatedText LONGTEXT NOT NULL AFTER TxText", 
-            '', false
+            '', 
+            false
         );
         runsql(
             "ALTER TABLE {$tbpref}archivedtexts 
             ADD AtAnnotatedText LONGTEXT NOT NULL AFTER AtText", 
-            '', false
+            '', 
+            false
         );
         runsql(
             "ALTER TABLE {$tbpref}tags 
             CHANGE TgComment TgComment VARCHAR(200) 
             CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT ''", 
-            '', false
+            '', 
+            false
         );
         runsql(
             "ALTER TABLE {$tbpref}tags2 
             CHANGE T2Comment T2Comment VARCHAR(200) 
             CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT ''", 
-            '', false
+            '', 
+            false
         );
         runsql(
             "ALTER TABLE {$tbpref}languages 
             CHANGE LgGoogleTTSURI LgExportTemplate VARCHAR(1000) 
             CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL", 
-            '', false
+            '', 
+            false
         );
         runsql(
             "ALTER TABLE {$tbpref}texts 
             ADD TxSourceURI VARCHAR(1000) 
             CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL", 
-            '', false
+            '', 
+            false
         );
         runsql(
             "ALTER TABLE {$tbpref}archivedtexts 
             ADD AtSourceURI VARCHAR(1000) 
             CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL", 
-            '', false
+            '', 
+            false
         );
         runsql(
-            "ALTER TABLE {$tbpref}texts ADD TxPosition smallint(5) NOT NULL DEFAULT 0", 
-            '', false
+            "ALTER TABLE {$tbpref}texts 
+            ADD TxPosition smallint(5) NOT NULL DEFAULT 0", 
+            '', 
+            false
         );
         runsql(
-            "ALTER TABLE {$tbpref}texts ADD TxAudioPosition float NOT NULL DEFAULT 0", 
-            '', false
+            "ALTER TABLE {$tbpref}texts 
+            ADD TxAudioPosition float NOT NULL DEFAULT 0", 
+            '', 
+            false
         );
         runsql(
-            "ALTER TABLE `{$tbpref}wordtags` DROP INDEX WtWoID", '', false
+            "ALTER TABLE `{$tbpref}wordtags` 
+            DROP INDEX WtWoID", '', false
         );
         runsql(
-            "ALTER TABLE `{$tbpref}texttags` DROP INDEX TtTxID", '', false
+            "ALTER TABLE `{$tbpref}texttags` 
+            DROP INDEX TtTxID", '', false
         );
         runsql(
-            "ALTER TABLE `{$tbpref}archtexttags` DROP INDEX AgAtID", '', false
+            "ALTER TABLE `{$tbpref}archtexttags` 
+            DROP INDEX AgAtID", '', false
         );
 
         // Database manipulations to upgrade from the official LWT to the community 

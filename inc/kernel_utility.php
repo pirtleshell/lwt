@@ -130,88 +130,88 @@ function get_setting_data()
             "dft" => '37', "num" => 1, "min" => 5, "max" => 95
         ),
         'set-test-h-frameheight' => array(
-        	"dft" => '140', "num" => 1, "min" => 10, "max" => 999
+            "dft" => '140', "num" => 1, "min" => 10, "max" => 999
         ),
         'set-test-l-framewidth-percent' => array(
-        	"dft" => '50', "num" => 1, "min" => 5, "max" => 95
+            "dft" => '50', "num" => 1, "min" => 5, "max" => 95
         ),
         'set-test-r-frameheight-percent' => array(
-        	"dft" => '50', "num" => 1, "min" => 5, "max" => 95
+            "dft" => '50', "num" => 1, "min" => 5, "max" => 95
         ),
         'set-words-to-do-buttons' => array(
-        	"dft" => '1', "num" => 0
+            "dft" => '1', "num" => 0
         ),
         'set-tooltip-mode' => array(
-        	"dft" => '2', "num" => 0
+            "dft" => '2', "num" => 0
         ),
         'set-display-text-frame-term-translation' => array(
-        	"dft" => '1', "num" => 0
+            "dft" => '1', "num" => 0
         ),
         'set-text-frame-annotation-position' => array(
-        	"dft" => '2', "num" => 0
+            "dft" => '2', "num" => 0
         ),
         'set-test-main-frame-waiting-time' => array(
-        	"dft" => '0', "num" => 1, "min" => 0, "max" => 9999
+            "dft" => '0', "num" => 1, "min" => 0, "max" => 9999
         ),
         'set-test-edit-frame-waiting-time' => array(
-        	"dft" => '500', "num" => 1, "min" => 0, "max" => 99999999
+            "dft" => '500', "num" => 1, "min" => 0, "max" => 99999999
         ),
         'set-test-sentence-count' => array(
-        	"dft" => '1', "num" => 0
+            "dft" => '1', "num" => 0
         ),
         'set-tts' => array(
-        	"dft" => '1', "num" => 0
+            "dft" => '1', "num" => 0
         ),
         'set-term-sentence-count' => array(
-        	"dft" => '1', "num" => 0
+            "dft" => '1', "num" => 0
         ),
         'set-archivedtexts-per-page' => array(
-        	"dft" => '100', "num" => 1, "min" => 1, "max" => 9999
+            "dft" => '100', "num" => 1, "min" => 1, "max" => 9999
         ),
         'set-texts-per-page' => array(
-        	"dft" => '10', "num" => 1, "min" => 1, "max" => 9999
+            "dft" => '10', "num" => 1, "min" => 1, "max" => 9999
         ),
         'set-terms-per-page' => array(
-        	"dft" => '100', "num" => 1, "min" => 1, "max" => 9999
+            "dft" => '100', "num" => 1, "min" => 1, "max" => 9999
         ),
         'set-tags-per-page' => array(
-        	"dft" => '100', "num" => 1, "min" => 1, "max" => 9999
+            "dft" => '100', "num" => 1, "min" => 1, "max" => 9999
         ),
         'set-articles-per-page' => array(
-        	"dft" => '10', "num" => 1, "min" => 1, "max" => 9999
+            "dft" => '10', "num" => 1, "min" => 1, "max" => 9999
         ),
         'set-feeds-per-page' => array(
-        	"dft" => '50', "num" => 1, "min" => 1, "max" => 9999
+            "dft" => '50', "num" => 1, "min" => 1, "max" => 9999
         ),
         'set-max-articles-with-text' => array(
-        	"dft" => '100', "num" => 1, "min" => 1, "max" => 9999
+            "dft" => '100', "num" => 1, "min" => 1, "max" => 9999
         ),
         'set-max-articles-without-text' => array(
-        	"dft" => '250', "num" => 1, "min" => 1, "max" => 9999
+            "dft" => '250', "num" => 1, "min" => 1, "max" => 9999
         ),
         'set-max-texts-per-feed' => array(
-        	"dft" => '20', "num" => 1, "min" => 1, "max" => 9999
+            "dft" => '20', "num" => 1, "min" => 1, "max" => 9999
         ),
         'set-ggl-translation-per-page' => array(
-        	"dft" => '100', "num" => 1, "min" => 1, "max" => 9999
+            "dft" => '100', "num" => 1, "min" => 1, "max" => 9999
         ),
         'set-regex-mode' => array(
-        	"dft" => '', "num" => 0
+            "dft" => '', "num" => 0
         ),
         'set-theme_dir' => array(
-        	"dft" => 'themes/default/', "num" => 0
+            "dft" => 'themes/default/', "num" => 0
         ),
         'set-text-visit-statuses-via-key' => array(
-        	"dft" => '', "num" => 0
+            "dft" => '', "num" => 0
         ),
         'set-term-translation-delimiters' => array(
-        	"dft" => '/;|', "num" => 0
+            "dft" => '/;|', "num" => 0
         ),
         'set-mobile-display-mode' => array(
-        	"dft" => '0', "num" => 0
+            "dft" => '0', "num" => 0
         ),
         'set-similar-terms-count' => array(
-        	"dft" => '0', "num" => 1, "min" => 0, "max" => 9)
+            "dft" => '0', "num" => 1, "min" => 0, "max" => 9)
         );
     }
     return $setting_data;
@@ -672,8 +672,8 @@ function getsqlscoreformula($method): string
 /**
  * Display a error message vanishing after a few seconds.
  * 
- * @param string $msg Message to display.
- * @param bool $noback If true, don't display a button to go back
+ * @param string $msg    Message to display.
+ * @param bool   $noback If true, don't display a button to go back
  * 
  * @return string HTML-formatted string for an automating vanishing message.
  */
@@ -697,14 +697,16 @@ function error_message_with_hide($msg, $noback): string
  * 
  * @param string $url Input URL, usually Google Translate or LibreTranslate
  */
-function langFromDict($url) {
+function langFromDict($url)
+{
     if ($url == '') {
         return '';
     }
     $query = parse_url($url, PHP_URL_QUERY);
     parse_str($query, $parsed_query);
-    if (array_key_exists("lwt_translator", $parsed_query) && 
-    $parsed_query["lwt_translator"] == "libretranslate") {
+    if (array_key_exists("lwt_translator", $parsed_query)  
+        && $parsed_query["lwt_translator"] == "libretranslate"
+    ) {
         return $parsed_query["source"] ?? "";
     }
     // Fallback to Google Translate
@@ -716,21 +718,25 @@ function langFromDict($url) {
  * 
  * @param string $url Input URL, usually Google Translate or LibreTranslate
  */
-function targetLangFromDict($url) {
+function targetLangFromDict($url)
+{
     if ($url == '') {
         return '';
     }
     $query = parse_url($url, PHP_URL_QUERY);
     parse_str($query, $parsed_query);
-    if (array_key_exists("lwt_translator", $parsed_query) && 
-    $parsed_query["lwt_translator"] == "libretranslate") {
+    if (array_key_exists("lwt_translator", $parsed_query)  
+        && $parsed_query["lwt_translator"] == "libretranslate"
+    ) {
         return $parsed_query["target"] ?? "";
     }
     // Fallback to Google Translate
     return $parsed_query["tl"] ?? "";
 } 
 
-/***************** Wrappers for PHP <8.0  ********************/
+/*****************
+ * Wrappers for PHP <8.0  
+********************/
 if (!function_exists('str_starts_with')) {
     function str_starts_with($haystack, $needle) 
     {
