@@ -1,21 +1,26 @@
 # Changelog
 
-This project's changelog. Versions marked with "-fork" come from the community, other versions come from the canonical LWT ("official" branch on Git).
-For git tags, official releases are marked like "v1.0.0", while unofficial ones are marked like "v1.0.0-fork".
+This project's changelog. Versions marked with "-fork" come from the community,
+other versions come from the canonical LWT ("official" branch on Git).
+For git tags, official releases are marked like "v1.0.0", while unofficial
+ones are marked like "v1.0.0-fork".
 
 ## [Unreleased]
 
 ### Added
 
-* ``langFromDict`` and ``targetLangFromDict`` are now officially coming to the kernel utility functions.
-* Text and title boxes change language according to the text's language for short text creation/edition, long text creation and text check ([#111](https://github.com/HugoFara/lwt/issues/111)).
+* ``langFromDict`` and ``targetLangFromDict`` are now officially coming to the
+kernel utility functions.
+* Text and title boxes change language according to the text's language for
+short text creation/edition, long text creation and text check
+([#111](https://github.com/HugoFara/lwt/issues/111)).
 * Refactored texts with OOP:
   * New class: ``Text`` (in ``inc/classes/Text.php``).
   * New function: ``edit_texts_form`` (in ``edit_texts.php``) that takes a Text object as input.
 * Tests (checking if you know words) now use AJAX ([#112](https://github.com/HugoFara/lwt/issues/112)), it has several advantages:
   * Musics play fully
   * Page do not need to reload.
-  * The timer continues instead of resetting.
+  * The timer continues instead of reseting.
 * REST API, the new ``inc/ajax.php`` is intended to continue developping itself as a REST API.
 It features the following interaction:
   * On GET, ``action_type`` can be:
