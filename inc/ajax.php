@@ -42,7 +42,7 @@ function rest_api_version($get_req)
  * @param string $wordregex Word selection regular expression
  * @param int    $testtype  Test type
  * 
- * @return string Next word formatted as JSON.
+ * @return array Next word formatted as an array.
  */
 function get_word_test_ajax($testsql, $nosent, $lgid, $wordregex, $testtype)
 {
@@ -71,41 +71,32 @@ function get_word_test_ajax($testsql, $nosent, $lgid, $wordregex, $testtype)
         $word_record, $sent, $testtype, $nosent, $wordregex
     );
     
-    $output = array(
+    return array(
         "word_id" => $word_record['WoID'],
         "solution" => get_test_solution($testtype, $word_record, $nosent, $save),
         "word_text" => $save,
         "group" => $r 
     );
-    return json_encode($output);
 }
 
-/**
- * Retur the number of tests for tomorrow.
- * 
- * @param string $testsql
- * 
- * @return string Tests for tomorrow as JSON
- */
-function get_tomorrow_test_count($testsql)
-{
-    $output = array(
-        "test_count" => do_test_get_tomorrow_tests_count($testsql)
-    );
-    return json_encode($output);
-}
 
 /**
  * Return the next word to test.
  * 
- * @param array $get_req Array with the fields {test_sql, test_nosent, 
- *                       test_lgid, test_wordregex, test_type}
+ * @param array $get_req Array with the fields {test_sql: string, 
+ *                       test_nosent: bool, test_lgid: int, 
+ *                       test_wordregex: string, test_type: int}
+ * 
+ * @return string Next word formatted as JSON.
  */
 function word_test_ajax($get_req)
 {
-    return get_word_test_ajax(
-        $get_req['test_sql'], $get_req['test_nosent'], $get_req['test_lgid'], 
-        $get_req['test_wordregex'], $get_req['test_type']
+    return json_encode(
+        get_word_test_ajax(
+            $get_req['test_sql'], $get_req['test_nosent'], 
+            $get_req['test_lgid'], 
+            $get_req['test_wordregex'], $get_req['test_type']
+        )
     );
 }
 
@@ -113,20 +104,28 @@ function word_test_ajax($get_req)
  * Return the number of tests for tomorrow by using the supllied query.
  * 
  * @param array $get_req Array with the field "test_sql"
+ * 
+ * @return string JSON-encoded result
  */
 function tomorrow_test_count($get_req) 
 {
-    return get_tomorrow_test_count($get_req['test_sql']);
+    $output = array(
+        "test_count" => do_test_get_tomorrow_tests_count($get_req['test_sql'])
+    );
+    return json_encode($output);
 }
 
 /**
  * Get the phonetic reading of a word based on it's language.
  * 
  * @param array $get_req Array with the fields "text" and "lang" (short language name)
+ * 
+ * @return string JSON-encoded result
  */
 function get_phonetic_reading($get_req)
 {
-    return phonetic_reading($get_req['text'], $get_req['lang']);
+    $data = phonetic_reading($get_req['text'], $get_req['lang']);
+    return json_encode(array("phonetic_reading" => $data));
 }
 
     
@@ -134,6 +133,8 @@ function get_phonetic_reading($get_req)
  * Get the file path using theme.
  * 
  * @param array $get_req Get request with field "path", relative filepath using theme.
+ * 
+ * @return string JSON-encoded result
  */
 function get_theme_path($get_req)
 {
@@ -212,7 +213,9 @@ function term_translations($get_req)
  */
 function unknown_get_action_type($get_req)
 {
-    return 'Action type of type "' . $get_req["action_type"] . '" with action "' . $get_req["action"] . '" does not exist!'; 
+    $message = 'Action type of type "' . $get_req["action_type"] . 
+    '" with action "' . $get_req["action"] . '" does not exist!';
+    return json_encode(array("error" => $message)); 
 }
 
 // --------------------------------- POST REQUESTS ---------------------

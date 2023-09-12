@@ -178,21 +178,22 @@ function saveCurrentPosition() {
 function getPhoneticText(text, lang) {
     let phoneticText;
     $.ajax(
+        'inc/ajax.php',
         {
-            url:'inc/ajax.php',
             async: false,
             data: {
                 action: "query",
                 action_type: "phonetic_reading",
                 text: text,
                 lang: lang 
-            }, 
+            },
+            dataType: "json",
             type: "GET",
         }
     )
     .done(
         function (data) {
-            phoneticText = data;
+            phoneticText = data["phonetic_reading"];
         }
     );
     return phoneticText;
@@ -207,12 +208,12 @@ function getPhoneticText(text, lang) {
 async function getPhoneticTextAsync(text, lang) {
     return $.get(
         'inc/ajax.php',
-        data={
+        {
             action: "query",
             action_type: "phonetic_reading",
             text: text, 
             lang: lang 
-        },
+        }
     );
 }
 
@@ -262,7 +263,7 @@ async function getPhoneticTextAsync(text, lang) {
  */
 function readTextAloud(text, lang, rate, pitch) {
     let parsed_text;
-    if (lang.substring(0, 2) == 'ja') {
+    if (lang.startsWith('ja')) {
         parsed_text = getPhoneticText(text, lang);
     } else {
         parsed_text = text;
