@@ -21,13 +21,16 @@ class Database_Connection
     public string $userid;
     public string $passwd;
     public string $dbname;
+    public string $socket;
 
-    function __construct($server = "", $userid = "", $passwd = "", $dbname = "")
-    {
+    function __construct(
+        $server = "", $userid = "", $passwd = "", $dbname = "", $socket = ""
+    ) {
         $this->server = $server;
         $this->userid = $userid;
         $this->passwd = $passwd;
         $this->dbname = $dbname;
+        $this->socket = $socket;
     }
 
     public function load_file(string $file_name)
@@ -37,6 +40,7 @@ class Database_Connection
         $this->userid = $userid;
         $this->passwd = $passwd;
         $this->dbname = $dbname;
+        $this->socket = $socket;
     }
 
     public function get_as_text()
@@ -52,6 +56,7 @@ class Database_Connection
         $userid = "' . $this->userid . '";
         $passwd = "' . $this->passwd . '";
         $dbname = "' . $this->dbname . '";
+        $socket = "' . $this->socket . '";
         
         ?>
         ';
@@ -74,22 +79,34 @@ function database_wizard_do_operation($op)
         $userid = $_SERVER['SERVER_NAME']; 
         $passwd = "";
         $dbname = "";
+        $socket = "";
     } else if ($op == "Check") {
         //require_once 'inc/database_connect.php';
         $server = getreq("server"); 
         $userid = getreq("userid");
-        $passwd = getreq("passw");
+        $passwd = getreq("passwd");
         $dbname = getreq("dbname");
+        $socket = getreq("socket");
         $conn = mysqli_init();
         if ($conn === false) {
             $message = "MySQL is not accessible!";
         } else {
             try {
-                $success = mysqli_real_connect($conn, $server, $userid, $passwd, $dbname);
+                if ($socket != "") {
+                    $success = mysqli_real_connect(
+                        $conn, $server, $userid, $passwd, $dbname, 
+                        socket: $socket
+                    );
+                } else {
+                    $success = mysqli_real_connect(
+                        $conn, $server, $userid, $passwd, $dbname
+                    );
+                }
                 if (!$success) {
                     $message = "Can't connect!";
                 } else if (mysqli_errno($conn) != 0) {
-                    $message = "ERROR: " . mysqli_error($conn) . " error number: " . mysqli_errno($conn);
+                    $message = "ERROR: " . mysqli_error($conn) . 
+                    " error number: " . mysqli_errno($conn);
                 } else {
                     $message = "Connection established with success!";
                 }
@@ -97,14 +114,16 @@ function database_wizard_do_operation($op)
                 $message = (string)$exept;
             }
         }
-        //$message = "RRRRRRR";
     } else if ($op == "Change") {
         $server = getreq("server"); 
         $userid = getreq("userid");
-        $passwd = getreq("passw");
+        $passwd = getreq("passwd");
         $dbname = getreq("dbname");
+        $socket = getreq("socket");
     }
-    $conn = new Database_Connection($server, $userid, $passwd, $dbname);
+    $conn = new Database_Connection(
+        $server, $userid, $passwd, $dbname, $socket
+    );
     if ($op == "Change") {
         database_wizard_change($conn);
     }
@@ -120,34 +139,40 @@ function database_wizard_form($conn, $error_message=null)
 {
     pagestart_kernel_nobody("Database Connection Wizard", true);
     if ($error_message != null) {
-        //error_message_with_hide($error_message, true);
         echo $error_message;
     }
     ?>
-    <form name="database_connect" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+    <form name="database_connect" action="<?= $_SERVER['PHP_SELF']; ?>" 
+    method="post">
         <p>
             <label for="server">Server address:</label>
             <input type="text" name="server" id="server" 
-            value="<?php echo htmlspecialchars($conn->server) ?>" 
-            required placeholder="localhost">
+            value="<?= htmlspecialchars($conn->server) ?>" required 
+            placeholder="localhost">
         </p> 
         <p>
             <label for="userid">Database User Name:</label>
             <input type="text" name="userid" id="userid" 
-            value="<?php echo htmlspecialchars($conn->userid); ?>" 
-            required placeholder="root">
+            value="<?= htmlspecialchars($conn->userid); ?>" required 
+            placeholder="root">
         </p>
         <p>
             <label for="passwd">Password:</label>
             <input type="password" name="passwd" id="passwd" 
-            value="<?php echo htmlspecialchars($conn->passwd); ?>" 
+            value="<?= htmlspecialchars($conn->passwd); ?>" 
             placeholder="abcxyz">
         </p>
         <p>
             <label for="dbname">Database Name:</label>
             <input type="text" name="dbname" id="dbname" 
-            value="<?php echo htmlspecialchars($conn->dbname); ?>" 
-            required placeholder="lwt">
+            value="<?= htmlspecialchars($conn->dbname); ?>" required 
+            placeholder="lwt">
+        </p>
+        <p>
+            <label for="socket">Socket Name:</label>
+            <input type="text" name="socket" id="socket" 
+            value="<?= htmlspecialchars($conn->socket); ?>" required 
+            placeholder="/var/run/mysql.sock">
         </p>
         <input type="submit" name="op" value="Autocomplete" />
         <input type="submit" name="op" value="Check" />
@@ -172,12 +197,10 @@ function new_database_connection()
 
 if (getreq('op') != '') {
     database_wizard_do_operation(getreq('op'));
+} else if (file_exists('connect.inc.php')) {
+    edit_database_connection();
 } else {
-    if (file_exists('connect.inc.php')) {
-        edit_database_connection();
-    } else {
-        new_database_connection();
-    }
+    new_database_connection();
 }
 
 ?>

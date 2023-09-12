@@ -4179,6 +4179,10 @@ function insert_standard_expression($textlc, $lid, $wid, $len, $mode): array
         WHERE SeLgID = $lid AND SeText LIKE " . 
         convert_string_to_sqlsyntax_notrim_nonull("%$textlc%");
     }
+
+    if ($splitEachChar) {
+        $textlc = preg_replace('/([^\s])/u', "$1 ", $textlc);
+    }
     $wis = $textlc;
     $res = do_mysqli_query($sql);
     $notermchar = "/[^$termchar]($textlc)[^$termchar]/ui";
@@ -4347,15 +4351,9 @@ function new_expression_interactable2($hex, $appendtext, $wid, $len): void
 function insertExpressions($textlc, $lid, $wid, $len, $mode): string|null 
 {
     global $tbpref;
-    $sql = "SELECT * FROM {$tbpref}languages WHERE LgID=$lid";
-    $res = do_mysqli_query($sql);
-    $record = mysqli_fetch_assoc($res);
-    $mecab = 'MECAB' == strtoupper(trim($record['LgRegexpWordCharacters']));
-    $splitEachChar = !$mecab && $record['LgSplitEachChar'];
-    mysqli_free_result($res);
-    if ($splitEachChar) {
-        $textlc = preg_replace('/([^\s])/u', "$1 ", $textlc);
-    }
+    $regexp = (string)get_first_value(
+        "SELECT LgRegexpWordCharacters FROM {$tbpref}languages WHERE LgID=$lid"
+    );
 
     /*
     * TODO:
@@ -4363,7 +4361,7 @@ function insertExpressions($textlc, $lid, $wid, $len, $mode): string|null
     * $sqlarr: Expression to append to the database (text independent)
     * Should separate the two
     */ 
-    if ($mecab) {
+    if ('MECAB' == strtoupper(trim($regexp))) {
         list($appendtext, $sqlarr) = insert_expression_from_mecab(
             $textlc, $lid, $wid, $len
         );
@@ -4386,8 +4384,7 @@ function insertExpressions($textlc, $lid, $wid, $len, $mode): string|null
     }
 
     if ($mode == 0) {
-        $hex = strToClassName(prepare_textdata($textlc)); 
-        //new_expression_interactable($hex, $appendtext, $sid, $len);
+        $hex = strToClassName(prepare_textdata($textlc));
         new_expression_interactable2($hex, $appendtext, $wid, $len);
     }
     if ($mode == 2) { 

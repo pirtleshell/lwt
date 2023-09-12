@@ -2201,14 +2201,21 @@ function check_update_db($debug, $tbpref, $dbname): void
 /**
  * Make the connection to the database.
  * 
+ * @param string $server Server name
+ * @param string $userid Database user ID
+ * @param string $passwd User password
+ * @param string $dbname Database name
+ * @param string $socket Database socket
+ * 
  * @return mysqli Connection to the database
  * 
  * @psalm-suppress UndefinedDocblockClass
  * 
  * @since 2.6.0-fork Use mysqli_init and mysql_real_connect instead of deprecated mysql_connect
  * @since 2.6.0-fork Tries to allow local infiles for the connection.
+ * @since 2.9.0 Can accept a $socket as an optional argument
  */
-function connect_to_database($server, $userid, $passwd, $dbname) 
+function connect_to_database($server, $userid, $passwd, $dbname, $socket="") 
 {
     // @ suppresses error messages
     
@@ -2229,9 +2236,15 @@ function connect_to_database($server, $userid, $passwd, $dbname)
 
     @mysqli_options($dbconnection, MYSQLI_OPT_LOCAL_INFILE, 1);
 
-    $success = @mysqli_real_connect(
-        $dbconnection, $server, $userid, $passwd, $dbname
-    );
+    if ($socket != "") {
+	    $success = @mysqli_real_connect(
+		    $dbconnection, $server, $userid, $passwd, $dbname, socket: $socket
+	    );
+    } else {
+	    $success = @mysqli_real_connect(
+		    $dbconnection, $server, $userid, $passwd, $dbname
+	    );
+    }
 
     if (!$success && mysqli_connect_errno() == 1049) {
         // Database unknown, try with generic database
@@ -2350,7 +2363,9 @@ if (!empty($dspltime)) {
 /**
  * @var mysqli $DBCONNECTION Connection to the database
  */
-$DBCONNECTION = connect_to_database($server, $userid, $passwd, $dbname);
+$DBCONNECTION = connect_to_database(
+    $server, $userid, $passwd, $dbname, $socket ?? ""
+);
 /** 
  * @var string $tbpref Database table prefix 
  */

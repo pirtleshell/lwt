@@ -40,6 +40,10 @@ It features the following interaction:
     * ``save_impr_text``: change the annotation value for a term.
     * ``save_setting``: save a setting.
 * Similar terms mark the word edit form as edited only if something was actually changed.
+* You can now specify a socket for your database through ``$socket`` in
+``connect.inc.php``. This feature was brought to you by
+[@hangug-eo](https://github.com/hangug-eo) in his PR
+[#132](https://github.com/HugoFara/lwt/pull/132).
 
 ### Changed
 
@@ -70,6 +74,11 @@ the intendended page. Same goes for "New Text" on "Archived Texts" page.
 * A deprecation warning for ``trim`` was sent in simterms when no similar term was found.
 * During a text creation, the ``media_uri`` property of ``Text`` was used instead of ``source``. Thanks to [@hangug-eo](https://github.com/hangug-eo) for his PR [#133](https://github.com/HugoFara/lwt/pull/133)!
 * When looking for an audio file on file edit/creation, the displayed path may have been wrong for characters between 0x80 and 0x9F.
+* Multi-words were not properly highlighted for languages separating each
+character as a word (e. g.: Chinese). Big thanks to [@hangug-eo](https://github.com/hangug-eo) for signaling the issue and solving it in his PR [#140](https://github.com/HugoFara/lwt/pull/140)!
+* The database wizard was not correctly saving the password. This is fixed by
+[@hangug-eo](https://github.com/hangug-eo) in
+[#132](https://github.com/HugoFara/lwt/pull/132).
 
 ### Deprecated
 
