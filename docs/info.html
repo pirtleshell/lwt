@@ -1915,6 +1915,10 @@ It features the following interaction:
 </ul>
 </li>
 <li>Similar terms mark the word edit form as edited only if something was actually changed.</li>
+<li>You can now specify a socket for your database through <code>$socket</code> in
+<code>connect.inc.php</code>. This feature was brought to you by
+<a href="https://github.com/hangug-eo">@hangug-eo</a> in his PR
+<a href="https://github.com/HugoFara/lwt/pull/132">#132</a>.</li>
 </ul>
 <h4>Changed</h4>
 <ul>
@@ -1952,6 +1956,11 @@ the intendended page. Same goes for "New Text" on "Archived Texts" page.</li>
 <li>A deprecation warning for <code>trim</code> was sent in simterms when no similar term was found.</li>
 <li>During a text creation, the <code>media_uri</code> property of <code>Text</code> was used instead of <code>source</code>. Thanks to <a href="https://github.com/hangug-eo">@hangug-eo</a> for his PR <a href="https://github.com/HugoFara/lwt/pull/133">#133</a>!</li>
 <li>When looking for an audio file on file edit/creation, the displayed path may have been wrong for characters between 0x80 and 0x9F.</li>
+<li>Multi-words were not properly highlighted for languages separating each
+character as a word (e. g.: Chinese). Big thanks to <a href="https://github.com/hangug-eo">@hangug-eo</a> for signaling the issue and solving it in his PR <a href="https://github.com/HugoFara/lwt/pull/140">#140</a>!</li>
+<li>The database wizard was not correctly saving the password. This is fixed by
+<a href="https://github.com/hangug-eo">@hangug-eo</a> in
+<a href="https://github.com/HugoFara/lwt/pull/132">#132</a>.</li>
 </ul>
 <h4>Deprecated</h4>
 <ul>
