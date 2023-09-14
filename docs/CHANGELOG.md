@@ -74,7 +74,9 @@ the intendended page. Same goes for "New Text" on "Archived Texts" page.
 * A warning when savings settings in ``settings.php`` was sometimes displayed ([#121](https://github.com/HugoFara/lwt/issues/121)).
 * Test header was different when testing languages or terms since 2.1.0-fork.
 * Wrong link to documentation (``info.php`` instead of ``docs/info.html``). Signaled by Mooncake on Discord.
-* The reading button is usable at last! Clicking the button a second time stops the reading process ([#108](https://github.com/HugoFara/lwt/issues/118)).
+* Text reading:
+  * The reading button is usable at last! Clicking the button a second time stops the reading process ([#108](https://github.com/HugoFara/lwt/issues/118)).
+  * Text language code was often wrong in TTT settings (``text_to_speech_settings.php``).
 * It was impossible to copy a similar term that had apostrophes ([#127](https://github.com/HugoFara/lwt/issues/127)).
 * A deprecation warning for ``trim`` was sent in simterms when no similar term was found.
 * During a text creation, the ``media_uri`` property of ``Text`` was used instead of ``source``. Thanks to [@hangug-eo](https://github.com/hangug-eo) for his PR [#133](https://github.com/HugoFara/lwt/pull/133)!

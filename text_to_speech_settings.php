@@ -154,9 +154,8 @@ function tts_demo()
     ?>
 <th class="th1 center">Demo</th>
 <td class="td1 center" colspan="2">
-    <textarea id="tts-demo" title="Enter your text here" class="respinput">
-    Lorem ipsum dolor sit amet...
-    </textarea>
+    <textarea id="tts-demo" title="Enter your text here" class="respinput"
+    >Lorem ipsum dolor sit amet...</textarea>
 </td>
 <td class="td1 right">
     <button onclick="readingDemo();">Read</button>
@@ -207,12 +206,13 @@ function tts_js()
      */
     function readingDemo()
     {
-        let lang = 
+        const lang = getLanguageCode() + 
+        (getRegionCode() ? '-' + getRegionCode() : '');
         readTextAloud(
             $('#tts-demo')[0].value,
-            getLanguageCode + (getRegionCode() ? '-' + getRegionCode() : ''),
-            $('#rate')[0].value,
-            $('#pitch')[0].value
+            lang,
+            parseFloat($('#rate')[0].value),
+            parseFloat($('#pitch')[0].value)
         );
     }
 

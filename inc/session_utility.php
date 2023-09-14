@@ -4708,12 +4708,14 @@ function trim_value(&$value): void
  * @param  string $text Text to be converted
  * @param  string $lang Language code (usually BCP 47 or ISO 639-1)
  * @return string Parsed text in a phonetic format.
+ * 
+ * @since 2.9.0 Any language starting by "ja" or "jp" is considered phonetic.
  */
 function phonetic_reading($text, $lang) 
 {
     global $tbpref;
     // Many languages are already phonetic
-    if ($lang != 'ja' && $lang != 'jp-JP' && $lang != 'jp' ) {
+    if (!str_starts_with($lang, "ja") && !str_starts_with($lang, "jp")) {
         return $text;
     }
 
