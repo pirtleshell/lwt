@@ -111,7 +111,7 @@ function tts_settings_form()
             </td>
         </tr>
         <tr>
-            <th class="th1 center" rowspan="2">Voice</th>
+            <th class="th1 center" rowspan="2">Speech</th>
             <td class="td1 center">Reading Rate</td>
             <td class="td1 center">
                 <input type="range" name="LgTTSRate" class="respinput" 
@@ -230,7 +230,7 @@ function tts_js()
      */
     function populateVoiceList() {
         voices = window.speechSynthesis.getVoices();
-        $('#voice')[0].innerHTML = '';
+        $('#voice').empty();
         const languageCode = getLanguageCode();
         for (i = 0; i < voices.length ; i++) {
             if (voices[i].lang != languageCode && !voices[i].default)
