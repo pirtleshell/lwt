@@ -206,7 +206,7 @@ function getPhoneticText(text, lang) {
  * @param {string} lang Language, either two letters code or four letters (BCP 47)
  */
 async function getPhoneticTextAsync(text, lang) {
-    return $.get(
+    return $.getJSON(
         'inc/ajax.php',
         {
             action: "query",
@@ -227,16 +227,26 @@ async function getPhoneticTextAsync(text, lang) {
  * @param {number} pitch Pitch value 
  * 
  * @return {SpeechSynthesisUtterance} The spoken message object
+ * 
+ * @since 2.9.0 Accepts "voice" as a new optional argument
  */
- function readRawTextAloud(text, lang, rate, pitch) {
+ function readRawTextAloud(text, lang, rate, pitch, voice) {
     let msg = new SpeechSynthesisUtterance();
     const trimmed = lang.substring(0, 2);
     const prefix = 'tts[' + trimmed;
     msg.text = text;
     if (lang) {
         msg.lang = lang;
-    } else if (getCookie(prefix + 'RegName]')) {
-        msg.lang = trimmed + '-' + getCookie(prefix + 'RegName]');
+    }
+    // Voice is a string but we have to assign a SpeechSynthesysVoice
+    const useVoice = voice || getCookie(prefix + 'Voice]');
+    if (useVoice) {
+        const voices = window.speechSynthesis.getVoices();
+        for (let i = 0; i < voices.length; i++) {
+            if (voices[i].name === useVoice) {
+                msg.voice = voices[i];
+            }
+          }
     }
     if (rate) {
         msg.rate = rate;
@@ -255,18 +265,26 @@ async function getPhoneticTextAsync(text, lang) {
 /**
  * Read a text aloud, may parse the text to get a phonetic version.
  * 
- * @param {string} text  Text to read, do not need to be phonetic
- * @param {string} lang  Language code with BCP 47 convention  
- *                       (e. g. "en-US" for English with an American accent) 
- * @param {number} rate  Reading rate 
- * @param {number} pitch Pitch value 
+ * @param {string} text   Text to read, do not need to be phonetic
+ * @param {string} lang   Language code with BCP 47 convention  
+ *                        (e. g. "en-US" for English with an American accent) 
+ * @param {number} rate   Reading rate 
+ * @param {number} pitch  Pitch value
+ * @param {string} voice Optional voice, the result will depend on the browser used
+ * 
+ * @since 2.9.0 Accepts "voice" as a new optional argument
  */
-function readTextAloud(text, lang, rate, pitch) {
-    let parsed_text;
+function readTextAloud(text, lang, rate, pitch, voice) {
     if (lang.startsWith('ja')) {
-        parsed_text = getPhoneticText(text, lang);
+        getPhoneticTextAsync(text, lang)
+            .then(
+                function (data) {
+                    readRawTextAloud(
+                        data.phonetic_reading, lang, rate, pitch, voice
+                    );
+                }
+            );
     } else {
-        parsed_text = text;
+        readRawTextAloud(text, lang, rate, pitch, voice);
     }
-    readRawTextAloud(parsed_text, lang, rate, pitch);
 }

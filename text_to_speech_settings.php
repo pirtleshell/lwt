@@ -100,9 +100,9 @@ function tts_settings_form()
             </td>
         </tr>
         <tr>
-            <td class="td1 center">Region <wbr />(depends on your browser)</td>
+            <td class="td1 center">Voice <wbr />(depends on your browser)</td>
             <td class="td1 center">
-                <select name="LgRegName" id="region-code" class="notempty respinput">
+                <select name="LgVoice" id="voice" class="notempty respinput">
                 </select>
             </td>
             <td class="td1 center">
@@ -114,7 +114,8 @@ function tts_settings_form()
             <th class="th1 center" rowspan="2">Voice</th>
             <td class="td1 center">Reading Rate</td>
             <td class="td1 center">
-                <input type="range" name="LgTTSRate" class="respinput" min="0.5" max="2" value="1" step="0.1" id="rate">
+                <input type="range" name="LgTTSRate" class="respinput" 
+                min="0.5" max="2" value="1" step="0.1" id="rate">
             </td>
             <td class="td1 center">
                 <img src="<?php print_file_path("icn/status.png") ?>" />
@@ -135,7 +136,8 @@ function tts_settings_form()
         </tr>
         <tr>
             <td class="td1 right" colspan="4">
-                <input type="button" value="Cancel" onclick="{resetDirty(); location.href='text_to_speech_settings.php';}" /> 
+                <input type="button" value="Cancel" 
+                onclick="{resetDirty(); location.href='text_to_speech_settings.php';}" /> 
                 <input type="submit" name="op" value="Save" />
             </td>
         </tr>
@@ -158,7 +160,7 @@ function tts_demo()
     >Lorem ipsum dolor sit amet...</textarea>
 </td>
 <td class="td1 right">
-    <button onclick="readingDemo();">Read</button>
+    <input type="button" onclick="readingDemo();" value="Read"/>
 </td>
     <?php
 }
@@ -186,17 +188,7 @@ function tts_js()
      */
     function getLanguageCode()
     {
-        return $('#get-language')[0].value;
-    }
-
-    /**
-     * Get the language region code from the page.
-     * 
-     * @returns {string} Region code (e. g. "US")
-     */
-    function getRegionCode()
-    {
-        return $('#region-code')[0].value;
+        return $('#get-language').val();
     }
 
     /** 
@@ -206,13 +198,13 @@ function tts_js()
      */
     function readingDemo()
     {
-        const lang = getLanguageCode() + 
-        (getRegionCode() ? '-' + getRegionCode() : '');
+        const lang = getLanguageCode();
         readTextAloud(
-            $('#tts-demo')[0].value,
+            $('#tts-demo').val(),
             lang,
-            parseFloat($('#rate')[0].value),
-            parseFloat($('#pitch')[0].value)
+            parseFloat($('#rate').val()),
+            parseFloat($('#pitch').val()),
+            $('#voice').val()
         );
     }
 
@@ -221,12 +213,14 @@ function tts_js()
      */
     function presetTTSData()
     {
-        $('#get-language')[0].value = CURRENT_LANGUAGE;
-        $('#region-code')[0].value = getCookie(
-            'tts[' + CURRENT_LANGUAGE + 'RegName]'
+        $('#get-language').val(CURRENT_LANGUAGE);
+        $('#voice').val(
+            getCookie(
+                'tts[' + CURRENT_LANGUAGE + 'RegName]'
+            )
         );
-        $('#rate')[0].value = getCookie('tts[' + CURRENT_LANGUAGE + 'Rate]');
-        $('#pitch')[0].value = getCookie('tts[' + CURRENT_LANGUAGE + 'Pitch]');
+        $('#rate').val(getCookie('tts[' + CURRENT_LANGUAGE + 'Rate]'));
+        $('#pitch').val(getCookie('tts[' + CURRENT_LANGUAGE + 'Pitch]'));
     }
 
     /**
@@ -236,7 +230,7 @@ function tts_js()
      */
     function populateVoiceList() {
         voices = window.speechSynthesis.getVoices();
-        $('#region-code')[0].innerHTML = '';
+        $('#voice')[0].innerHTML = '';
         const languageCode = getLanguageCode();
         for (i = 0; i < voices.length ; i++) {
             if (voices[i].lang != languageCode && !voices[i].default)
@@ -250,7 +244,7 @@ function tts_js()
 
             option.setAttribute('data-lang', voices[i].lang);
             option.setAttribute('data-name', voices[i].name);
-            $('#region-code')[0].appendChild(option);
+            $('#voice')[0].appendChild(option);
         }
     }
 
@@ -297,10 +291,8 @@ function tts_settings_full_page($message)
  * Save the text-to-speech settings as cookies.
  *
  * @param array $form Inputs from the main form.
- *
- * @return string A confirmation or an error message
  */
-function tts_save_settings($form): string
+function tts_save_settings($form): void
 {
     $lgname = $form['LgName'];
     $prefix = 'tts[' . $lgname;
@@ -310,7 +302,7 @@ function tts_save_settings($form): string
     'secure' => isset($params['secure']),
     'httponly' => isset($params['httponly'])
     */
-    $cookie_options = array (
+    $cookie_options = array(
         'expires' => strtotime('+5 years'),
         'domain' => 
         ($_SERVER['HTTP_HOST'] != 'localhost') ? $_SERVER['HTTP_HOST'] : false,
@@ -318,15 +310,15 @@ function tts_save_settings($form): string
         'samesite' => 'Strict' // None || Lax || Strict
     );
     //setcookie($prefix . ']', $record['LgID'], $cookie_options);
-    setcookie($prefix . 'RegName]', $form['LgRegName'], $cookie_options);
+    setcookie($prefix . 'Voice]', $form['LgVoice'], $cookie_options);
     setcookie($prefix . 'Rate]', $form['LgTTSRate'], $cookie_options);
     setcookie($prefix . 'Pitch]', $form['LgPitch'], $cookie_options);
-    return $prefix . 'RegName]';
 }
 
 $message = '';
 if (array_key_exists('op', $_REQUEST) && $_REQUEST['op'] == 'Save') {
-    $message = tts_save_settings($_REQUEST);
+    tts_save_settings($_REQUEST);
+    $message = "Settings saved!";
 }
 tts_settings_full_page($message);
 

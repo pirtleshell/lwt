@@ -49,6 +49,8 @@ It features the following interaction:
 ``connect.inc.php``. This feature was brought to you by
 [@hangug-eo](https://github.com/hangug-eo) in his PR
 [#132](https://github.com/HugoFara/lwt/pull/132).
+* You can now change the voice of the TTT feature through
+``text_to_speech_settings.php``.
 
 ### Changed
 
@@ -76,7 +78,8 @@ the intendended page. Same goes for "New Text" on "Archived Texts" page.
 * Wrong link to documentation (``info.php`` instead of ``docs/info.html``). Signaled by Mooncake on Discord.
 * Text reading:
   * The reading button is usable at last! Clicking the button a second time stops the reading process ([#108](https://github.com/HugoFara/lwt/issues/118)).
-  * Text language code was often wrong in TTT settings (``text_to_speech_settings.php``).
+  * Text language code was often not recognized in TTT settings (``text_to_speech_settings.php``).
+  * Clicking the "Read" button in TTT Settings was refreshing the page.
 * It was impossible to copy a similar term that had apostrophes ([#127](https://github.com/HugoFara/lwt/issues/127)).
 * A deprecation warning for ``trim`` was sent in simterms when no similar term was found.
 * During a text creation, the ``media_uri`` property of ``Text`` was used instead of ``source``. Thanks to [@hangug-eo](https://github.com/hangug-eo) for his PR [#133](https://github.com/HugoFara/lwt/pull/133)!
