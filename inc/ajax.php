@@ -320,7 +320,8 @@ function update_translation($post_req)
  */
 function check_regexp($post_req)
 {
-    return do_ajax_check_regexp(trim($post_req['regexp']));
+    $result = do_ajax_check_regexp(trim($post_req['regexp'])); 
+    return json_encode(array("check_regexp" => $result));
 }
 
 /**
@@ -328,9 +329,18 @@ function check_regexp($post_req)
  * 
  * @param array $post_req Array with the fields "wid" (int) and "status_up" (1 or 0)
  */
-function increase_term_status($post_req)
+function increment_term_status($post_req)
 {
-    return do_ajax_chg_term_status((int)$post_req['wid'], (bool)$post_req['status_up']);
+    $result = ajax_increment_term_status(
+        (int)$post_req['wid'], (bool)$post_req['status_up']
+    );
+    $raw_answer = array();
+    if ($result == '') {
+        $raw_answer["error"] = '';
+    } else {
+        $raw_answer["increment"] = $result;
+    }
+    return json_encode($raw_answer);
 }
 
 /**
@@ -340,7 +350,14 @@ function increase_term_status($post_req)
  */
 function set_term_status($post_req)
 {
-    return set_word_status((int)$post_req['wid'], (int)$post_req['status']);
+    $result = set_word_status((int)$post_req['wid'], (int)$post_req['status']);
+    $raw_answer = array();
+    if (is_numeric($result)) {
+        $raw_answer["set"] = (int)$result;
+    } else {
+        $raw_answer["error"] = $result;
+    }
+    return json_encode($raw_answer);
 }
 
 
@@ -372,9 +389,14 @@ function save_setting($post_req)
 /**
  * Notify of an error on POST method.
  */
-function unknown_post_action_type($post_req)
+function unknown_post_action_type($post_req, $action_exists=false)
 {
-    return 'Action type of type "' . $post_req["action_type"] . '" with action "' . $post_req["action"] . '" does not exist!'; 
+    if ($action_exists) {
+        return 'action_type of type "' . $post_req["action_type"] . 
+        '" with action "' . $post_req["action"] . '" does not exist!'; 
+    }
+    return 'action_type of type "' . $post_req["action_type"] . 
+    '" with default action (' . $post_req["action"] . ') does not exist'; 
 }
 
 
@@ -426,7 +448,7 @@ if (isset($_GET['action'])) {
             echo set_audio_position($_POST);
             break;
         default:
-            echo unknown_post_action_type($_POST);
+            echo unknown_post_action_type($_POST, true);
             break;
         }
         break;
@@ -439,22 +461,30 @@ if (isset($_GET['action'])) {
                 echo update_translation($_POST);
                 break;
             default:
-                echo unknown_post_action_type($_POST);
+                echo unknown_post_action_type($_POST, true);
                 break;
         }
+        break;
+    case "term_status":
+        switch ($_POST['action_type']) {
+            case "increment":
+                echo increment_term_status($_POST);
+                break;
+            case "set":
+                echo set_term_status($_POST);
+                break;
+            default:
+                echo unknown_post_action_type($_POST, true);
+                break;
+        }
+        break;
     default:
         switch ($_POST['action_type']) {
         case "similar_terms":
-            echo similar_terms($_POST); // really on POST?
+            echo similar_terms($_POST); // 2.9.0: really on POST?
             break;
-        case 'regexp':
+        case 'check_regexp':
             echo check_regexp($_POST);
-            break;
-        case 'increase_term_status':
-            echo increase_term_status($_POST);
-            break;
-        case 'set_term_status':
-            echo set_term_status($_POST);
             break;
         case 'save_impr_text':
             echo set_impr_text($_POST);

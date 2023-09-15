@@ -32,7 +32,8 @@ function set_word_status($wid, $status)
     global $tbpref;
     $m1 = runsql(
         "UPDATE {$tbpref}words 
-        SET WoStatus = $status, WoStatusChanged = NOW()," . make_score_random_insert_update('u') . " 
+        SET WoStatus = $status, WoStatusChanged = NOW()," . 
+        make_score_random_insert_update('u') . " 
         WHERE WoID = $wid", 
         ''
     );
@@ -69,7 +70,7 @@ function get_new_status($oldstatus, $up)
 } 
 
 /**
- * Save the new word status to the database.
+ * Save the new word status to the database, return the controls.
  * 
  * @param int $wid        Word ID
  * @param int $currstatus Current status in the good value range. 
@@ -90,11 +91,44 @@ function update_word_status($wid, $currstatus)
             if (!isset($currstatus)) {
                 return null;
             }
-            return make_status_controls_test_table(1, $currstatus, $wid);
+            return make_status_controls_test_table(1, (int)$currstatus, $wid);
         }
     } else {
         return null;
     }
+}
+
+
+/**
+ * Do a word status change.
+ * 
+ * @param int  $wid Word ID
+ * @param bool $up  Should the status be incremeted or decremented
+ * 
+ * @return string HTML-formatted string for increments
+ * 
+ * @global string $tbpref Database table prefix.
+ * 
+ * @todo 2.9.0 Dirty PHP implementation, needs further refactoring
+ */
+function ajax_increment_term_status($wid, $up)
+{
+    global $tbpref;
+
+    $tempstatus = get_first_value(
+        "SELECT WoStatus as value 
+        FROM {$tbpref}words 
+        WHERE WoID = $wid"
+    );
+    if (!isset($tempstatus)) {
+        return '';
+    }
+    $currstatus = get_new_status((int)$tempstatus, $up);
+    $formatted = update_word_status($wid, $currstatus);
+    if ($formatted === null) {
+        return '';
+    }
+    return $formatted;
 }
 
 /**
@@ -106,23 +140,16 @@ function update_word_status($wid, $currstatus)
  * @return void
  * 
  * @global string $tbpref Database table prefix.
+ * 
+ * @see ajax_increment_term_status Return values instead of printing.
  */
 function do_ajax_chg_term_status($wid, $up)
 {
-    global $tbpref;
-    chdir('..');
-
-    $tempstatus = get_first_value(
-        "SELECT WoStatus as value 
-        FROM {$tbpref}words 
-        WHERE WoID = $wid"
-    );
-    if (!isset($tempstatus)) {
+    $result = ajax_increment_term_status($wid, $up);
+    if ($result == null) {
         echo '';
-        return;
     }
-    $currstatus = get_new_status((int)$tempstatus, $up);
-    echo update_word_status($wid, $currstatus);
+    echo $result;
 }
 
 if (getreq('id') != '' && getreq('data') != '') {

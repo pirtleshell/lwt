@@ -226,16 +226,18 @@ function changeTableTestStatus (wordid, up) {
   $.post(
     'inc/ajax.php',
     {
-      action: "increase_term_status",
-      action_type: "increase_term_status",
-      id: wordid,
+      action: "term_status",
+      action_type: "increment",
+      wid: parseInt(wordid, 10),
       status_up: (up ? 1 : 0) 
     }, 
     function (data) {
-      if (data != '') {
-        $('#STAT' + wordid).html(data);
+      if (data == "" || "error" in data) {
+        return;
       }
-    }
+      $('#STAT' + wordid).html(data.increment);
+    },
+    "json"
   );
 }
 
@@ -275,8 +277,8 @@ function check () {
         type: 'POST',
         url: 'inc/ajax.php',
         data: {
-          action: "regexp",
-          action_type: "regexp",
+          action: "",
+          action_type: "check_regexp",
           regex: regexp 
         },
 			 async: false

@@ -58,17 +58,19 @@ function set_word_status_ajax($wid, $status)
     $.post(
         'inc/ajax.php',
         {
-            action: "set_term_status",
-            action_type: "set_term_status",
+            action: "term_status",
+            action_type: "set",
             wid: wordid,
             status: status 
         }, 
         function (data) {
-            if (data.trim() == '')
+            if (data == "" || "error" in data) {
                 word_update_error();
-            else
+            } else {
                 apply_word_update(wordid, status);
-        }
+            }
+        },
+        "json"
     );
 </script>
     <?php
@@ -89,7 +91,8 @@ function set_word_status_database($wid, $status)
     global $tbpref;
     $m1 = runsql(
         "UPDATE {$tbpref}words 
-        SET WoStatus = $status, WoStatusChanged = NOW()," . make_score_random_insert_update('u') . " 
+        SET WoStatus = $status, WoStatusChanged = NOW()," . 
+        make_score_random_insert_update('u') . " 
         WHERE WoID = $wid", 
         'Status changed'
     );
@@ -185,7 +188,6 @@ function set_word_status_display_page($tid, $wid, $status, $word, $trans, $roman
 function do_set_word_status($textid, $wordid, $status)
 {
     list($word, $trans, $roman) = get_word_data($wordid);
-    //set_word_status_database($wordid, $status);
     set_word_status_display_page($textid, $wordid, $status, $word, $trans, $roman);
     set_word_status_ajax($wordid, $status);
 }

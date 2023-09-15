@@ -35,15 +35,16 @@ It features the following interaction:
     * ``imported_terms``: list of imported terms through terms upload.
     * ``term_translations``: get the list of term translations to edit it's anotation.
   * On POST, ``action`` can be:
-    * ``reading_position``: ``text`` of ``audio`` change the reading position for a text or it's audio.
+    * ``reading_position``: ``text`` of ``audio`` change the reading position for a text or its audio.
     * ``change_translation``:
       * ``add``: add a translation for a new word.
       * ``update``: edit the translation of an existing word.
+    * ``term_status``:
+      * ``increment``: increment or decrement the status of a term by one unit.
+      * ``set``: set the status of a term.
     * For any other value, set ``action_type`` to:
       * ``similar_terms``: similar terms to a given term.
       * ``regexp``: test if the regular expression is correctly recognized (no more usage in code base?).
-      * ``increase_term_status``: increment or decrement the status of a term by one unit.
-      * ``set_term_status``: set the status of a term.
       * ``save_impr_text``: change the annotation value for a term.
       * ``save_setting``: save a setting.
 * Similar terms mark the word edit form as edited only if something was actually changed.
@@ -98,8 +99,8 @@ character as a word (e. g.: Chinese). Big thanks to [@hangug-eo](https://github.
   * ``inc/show_similar_terms.php``, use ``action_type=similar_terms``, same arguments.
   * ``inc/ajax_add_term_transl.php``, use ``action=change_translation``, with
   ``action_type=add`` or ``action_type=update``. The arguments were also changed.
-  * ``inc/ajax_check_regexp.php`` should be accessed through ``action_type=regexp``. Argument ``regex`` is now ``regexp``, on post only.
-  * ``inc/ajax_chg_term_status.php`` should be accessed through ``action_type=increase_term_status``. Argument ``data`` is now ``status_up``, on post only.
+  * ``inc/ajax_check_regexp.php`` should be accessed through ``action_type=check_regexp``. Argument ``regex`` is now ``regexp``, on post only.
+  * ``inc/ajax_chg_term_status.php`` should be accessed through ``action=term_status`` and ``action_type=increment``. Argument ``data`` is now ``status_up``, on post only.
   * ``inc/ajax_get_phonetic.php`` should be accessed through ``action_type=phonetic_reading``, same arguments.
   * ``inc/ajax_get_theme.php`` should be accessed through ``action_type=theme_path``. Argument ``filepath`` is now ``path``.
   * ``inc/ajax_save_setting.php`` should be accessed through ``action_type=save_setting``, same arguments.
