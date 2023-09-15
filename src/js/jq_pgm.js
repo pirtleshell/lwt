@@ -98,7 +98,7 @@ function alertFirstCharacterOutsideBasicMultilingualPlane (s, info) {
  * @returns {number} Size in bytes
  */
 function getUTF8Length (s) {
-  return new Blob([String(s)]).size;
+  return (new Blob([String(s)])).size;
 }
 
 /**
@@ -126,7 +126,7 @@ function do_ajax_save_impr_text(textid, elem_name, form_data) {
     'inc/ajax.php',
     {
       action: "",
-      action_type: "save_impr_text",
+      action_type: "set_annotation",
       tid: textid,
       elem: elem_name,
       data: form_data

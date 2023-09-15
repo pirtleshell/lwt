@@ -360,15 +360,26 @@ function set_term_status($post_req)
     return json_encode($raw_answer);
 }
 
-
-function set_impr_text($post_req)
+/**
+ * Save the annotation for a term.
+ * 
+ * @param array $post_req Post request with keys "tid", "elem" and "data".
+ * 
+ * @return string JSON-encoded result
+ */
+function set_annotation($post_req)
 {
-    return json_encode(
-        save_impr_text(
-            (int)$post_req["tid"], $post_req['elem'], 
-            json_decode($post_req['data'])
-        )
+    $result = save_impr_text(
+        (int)$post_req["tid"], $post_req['elem'], 
+        json_decode($post_req['data'])
     );
+    $raw_answer = array();
+    if (array_key_exists("error", $result)) {
+        $raw_answer["error"] = $result["error"];
+    } else {
+        $raw_answer["save_impr_text"] = $result["success"];
+    }
+    return json_encode($raw_answer);
 }
 
 
@@ -486,8 +497,8 @@ if (isset($_GET['action'])) {
         case 'check_regexp':
             echo check_regexp($_POST);
             break;
-        case 'save_impr_text':
-            echo set_impr_text($_POST);
+        case 'set_annotation':
+            echo set_annotation($_POST);
             break;
         case 'save_setting':
             echo save_setting($_POST);

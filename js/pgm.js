@@ -72,9 +72,9 @@ makeDirty();}
 function containsCharacterOutsideBasicMultilingualPlane(s){return/[\uD800-\uDFFF]/.test(s)}
 function alertFirstCharacterOutsideBasicMultilingualPlane(s,info){if(!containsCharacterOutsideBasicMultilingualPlane(s)){return 0}
 const match=/[\uD800-\uDFFF]/.exec(s);alert('ERROR\n\nText "'+info+'" contains invalid character(s) '+'(in the Unicode Supplementary Multilingual Planes, > U+FFFF) like emojis '+'or very rare characters.\n\nFirst invalid character: "'+s.substring(match.index,match.index+2)+'" at position '+(match.index+1)+'.\n\n'+'More info: https://en.wikipedia.org/wiki/Plane_(Unicode)\n\n'+'Please remove this/these character(s) and try again.');return 1}
-function getUTF8Length(s){return new Blob([String(s)]).size}
+function getUTF8Length(s){return(new Blob([String(s)])).size}
 function scrollToAnchor(aid){document.location.href='#'+aid}
-function do_ajax_save_impr_text(textid,elem_name,form_data){const idwait='#wait'+elem_name.substring(2);$(idwait).html('<img src="icn/waiting2.gif" />');$.post('inc/ajax.php',{action:"",action_type:"save_impr_text",tid:textid,elem:elem_name,data:form_data},function(data){$(idwait).html('<img src="icn/empty.gif" />');if("error" in data)
+function do_ajax_save_impr_text(textid,elem_name,form_data){const idwait='#wait'+elem_name.substring(2);$(idwait).html('<img src="icn/waiting2.gif" />');$.post('inc/ajax.php',{action:"",action_type:"set_annotation",tid:textid,elem:elem_name,data:form_data},function(data){$(idwait).html('<img src="icn/empty.gif" />');if("error" in data)
 alert('Saving your changes failed, please reload the page and try again! '+'Error message: "'+data.error+'".');},"json")}
 function changeImprAnnText(){$(this).prev('input:radio').attr('checked','checked');const textid=$('#editimprtextdata').attr('data_id');const elem_name=$(this).attr('name');const form_data=JSON.stringify($('form').serializeObject());do_ajax_save_impr_text(textid,elem_name,form_data)}
 function changeImprAnnRadio(){const textid=$('#editimprtextdata').attr('data_id');const elem_name=$(this).attr('name');const form_data=JSON.stringify($('form').serializeObject());do_ajax_save_impr_text(textid,elem_name,form_data)}

@@ -45,7 +45,7 @@ It features the following interaction:
     * For any other value, set ``action_type`` to:
       * ``similar_terms``: similar terms to a given term.
       * ``regexp``: test if the regular expression is correctly recognized (no more usage in code base?).
-      * ``save_impr_text``: change the annotation value for a term.
+      * ``set_annotation``: change the annotation value for a term.
       * ``save_setting``: save a setting.
 * Similar terms mark the word edit form as edited only if something was actually changed.
 * You can now specify a socket for your database through ``$socket`` in
@@ -109,7 +109,7 @@ character as a word (e. g.: Chinese). Big thanks to [@hangug-eo](https://github.
   * ``inc/ajax_update_media_select.php`` should be accessed through ``action_type=media_paths``.
   * ``inc/ajax_show_sentences.php`` should be accessed through ``action_type=example_sentences``, on GET. Argument ``lang`` is now ``lid``, ``word`` is ``word_lc`` and ``woid`` is ``wid``, ``ctl`` is no longer required.
   * ``inc/ajax_show_imported_terms.php`` should be accessed through ``action_type=imported_terms``, same arguments.
-  * ``inc/ajax_save_impr_text.php`` should be accessed through ``action_type=save_impr_text``, ``id`` is now ``tid``.
+  * ``inc/ajax_save_impr_text.php`` should be accessed through ``action_type=set_annotation``, ``id`` is now ``tid``.
   * ``inc/ajax_edit_impr_text.php``:
     * On display, using ``word=""`` is now deprecated as the page loads in pure PHP.
     * On term edition, should be accessed through ``action_type=term_translations``, ``id`` is now ``text_id`` and ``word`` becomes ``text_lc``.

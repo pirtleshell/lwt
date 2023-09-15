@@ -79,7 +79,15 @@ function do_ajax_save_impr_text($textid, $elem, $data): string
     return save_impr_text_data($textid, $line, $val);
 }
 
-
+/**
+ * Save a text with improved annotations.
+ * 
+ * @param int    $textid Text ID
+ * @param string $elem   Element to select
+ * @param mixed  $data   Data element
+ * 
+ * @return string[] Result as array, with answer on "error" or "success"
+ */
 function save_impr_text($textid, $elem, $data): array 
 {
     $new_annotation = $data->{$elem};
