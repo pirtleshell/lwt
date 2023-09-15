@@ -35,11 +35,11 @@ It features the following interaction:
     * ``imported_terms``: list of imported terms through terms upload.
     * ``term_translations``: get the list of term translations to edit it's anotation.
   * On POST, ``action`` can be:
-    * ``reading_position``: ``text`` of ``audio`` change the reading position for a text or its audio.
-    * ``change_translation``:
+    * ``reading_position``: ``action_type`` set to ``text`` of ``audio`` change the reading position for a text or its audio.
+    * ``change_translation``, with values for ``action_type`` set to:
       * ``add``: add a translation for a new word.
       * ``update``: edit the translation of an existing word.
-    * ``term_status``:
+    * ``term_status``, with values for ``action_type`` set to:
       * ``increment``: increment or decrement the status of a term by one unit.
       * ``set``: set the status of a term.
     * For any other value, set ``action_type`` to:

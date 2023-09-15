@@ -212,11 +212,22 @@ function term_translations($get_req)
 
 /**
  * Error message when the provided action_type does not match anything known.
+ * 
+ * @param array $post_req GET request used
+ * @param bool  $action_exists Set to true if the action is recognized but not 
+ * the action_type
+ * 
+ * @return string JSON-encoded error message.
  */
-function unknown_get_action_type($get_req)
+function unknown_get_action_type($get_req, $action_exists=false)
 {
-    $message = 'Action type of type "' . $get_req["action_type"] . 
-    '" with action "' . $get_req["action"] . '" does not exist!';
+    if ($action_exists) {
+        $message = 'action_type with value "' . $get_req["action_type"] . 
+        '" with action "' . $get_req["action"] . '" does not exist!';
+    } else {
+        $message = 'action_type with value "' . $get_req["action_type"] . 
+        '" with default action (' . $get_req["action"] . ') does not exist'; 
+    }
     return json_encode(array("error" => $message)); 
 }
 
@@ -404,15 +415,23 @@ function save_setting($post_req)
 
 /**
  * Notify of an error on POST method.
+ * 
+ * @param array $post_req POST request used
+ * @param bool  $action_exists Set to true if the action is recognized but not 
+ * the action_type
+ * 
+ * @return string JSON-encoded error message
  */
 function unknown_post_action_type($post_req, $action_exists=false)
 {
     if ($action_exists) {
-        return 'action_type of type "' . $post_req["action_type"] . 
+        $message = 'action_type with value "' . $post_req["action_type"] . 
         '" with action "' . $post_req["action"] . '" does not exist!'; 
+    } else {
+        $message = 'action_type with value "' . $post_req["action_type"] . 
+        '" with default action (' . $post_req["action"] . ') does not exist'; 
     }
-    return 'action_type of type "' . $post_req["action_type"] . 
-    '" with default action (' . $post_req["action"] . ') does not exist'; 
+    return json_encode(array("error" => $message)); 
 }
 
 

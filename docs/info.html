@@ -1908,9 +1908,9 @@ It features the following interaction:
 <li>On POST, <code>action</code> can be:
 <ul>
 <li>
-<code>reading_position</code>: <code>text</code> of <code>audio</code> change the reading position for a text or its audio.</li>
+<code>reading_position</code>: <code>action_type</code> set to <code>text</code> of <code>audio</code> change the reading position for a text or its audio.</li>
 <li>
-<code>change_translation</code>:
+<code>change_translation</code>, with values for <code>action_type</code> set to:
 <ul>
 <li>
 <code>add</code>: add a translation for a new word.</li>
@@ -1919,7 +1919,7 @@ It features the following interaction:
 </ul>
 </li>
 <li>
-<code>term_status</code>:
+<code>term_status</code>, with values for <code>action_type</code> set to:
 <ul>
 <li>
 <code>increment</code>: increment or decrement the status of a term by one unit.</li>
