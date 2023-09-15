@@ -392,9 +392,14 @@ function set_annotation($post_req)
  */
 function save_setting($post_req) 
 {
-    chdir('..');
-
-    saveSetting($post_req['k'], $post_req['v']);
+    $status = saveSetting($post_req['k'], $post_req['v']);
+    $raw_answer = array();
+    if (str_starts_with($status, "OK: ")) {
+        $raw_answer["save_setting"] = substr($status, 4);
+    } else {
+        $raw_answer["error"] = $status;
+    }
+    return json_encode($raw_answer);
 }
 
 /**

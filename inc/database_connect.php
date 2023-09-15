@@ -433,21 +433,23 @@ function getSettingWithDefault($key)
  * 
  * @global string $tbpref Table name prefix
  * 
- * @return string Error or success message
+ * @return string Success message (starts by "OK: "), or error message
+ * 
+ * @since 2.9.0 Success message starts by "OK: "
  */
 function saveSetting($k, $v) 
 {
     global $tbpref;
     $dft = get_setting_data();
     if (!isset($v)) {
-        return ''; 
+        return 'Value is not set!'; 
     }
     if ($v === '') {
-        return '';
+        return 'Value is an empty string!';
     }
     runsql(
-        'DELETE FROM ' . $tbpref . 'settings 
-        WHERE StKey = ' . convert_string_to_sqlsyntax($k), 
+        "DELETE FROM {$tbpref}settings 
+        WHERE StKey = " . convert_string_to_sqlsyntax($k), 
         ''
     );
     if (isset($dft[$k]) && $dft[$k]['num']) {
@@ -460,11 +462,14 @@ function saveSetting($k, $v)
         }
     }
     $dum = runsql(
-        'INSERT INTO ' . $tbpref . 'settings (StKey, StValue) values(' .
+        "INSERT INTO {$tbpref}settings (StKey, StValue) VALUES(" .
         convert_string_to_sqlsyntax($k) . ', ' . 
         convert_string_to_sqlsyntax($v) . ')', 
         ''
     );
+    if (is_numeric($dum)) {
+        return "OK: $dum rows changed";
+    }
     return $dum;
 }
 

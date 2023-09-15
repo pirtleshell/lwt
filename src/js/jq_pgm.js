@@ -1203,7 +1203,12 @@ function keydown_event_do_text_text (e) {
 function do_ajax_save_setting (k, v) {
   $.post(
     'inc/ajax.php', 
-    { action: '', action_type: 'save_setting', k: k, v: v }
+    {
+      action: '',
+      action_type: 'save_setting',
+      k: k,
+      v: v
+    }
   );
 }
 
