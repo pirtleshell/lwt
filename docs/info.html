@@ -22,6 +22,8 @@
  		<script type="text/javascript">
 			/**
 			 * Perform an AJAX query to get the current theme style sheet.
+			 * 
+			 * @since 2.9.0 Function is modified to use JSON with the REST API.
 			 */
 			function ajaxGetTheme () {
 				$.ajax(
@@ -35,10 +37,18 @@
 							path: '../css/styles.css' 
 						}, 
 						success: function (data) {
-							if (data.match(/styles.css$/g)) 
-								$('style').text( "@import url(../" + data.trim() + ");" );
+							if ("error" in data)
+								return;
+							const path = data["theme_path"].trim();
+							if (path.endsWith("styles.css")) {
+								$('style').html(
+									"@import url(../" + path + ");"
+								);
+							}
+						},
+						dataType: "json"
 					}
-				});
+				);
 			}
 
 			/**
@@ -1895,16 +1905,23 @@ It features the following interaction:
 <code>term_translations</code>: get the list of term translations to edit it's anotation.</li>
 </ul>
 </li>
-<li>On POST, <code>action_type</code> can be:
+<li>On POST, <code>action</code> can be:
 <ul>
 <li>
-<code>text</code> of <code>audio</code> change the reading position for a text or it's audio.</li>
+<code>reading_position</code>: <code>text</code> of <code>audio</code> change the reading position for a text or it's audio.</li>
 <li>
-<code>simterms</code>: similar terms to a given term</li>
+<code>change_translation</code>:
+<ul>
 <li>
-<code>add_translation</code>: add a translation for a new word</li>
+<code>add</code>: add a translation for a new word.</li>
 <li>
-<code>update_translation</code>: edit the translation of an existing word.</li>
+<code>update</code>: edit the translation of an existing word.</li>
+</ul>
+</li>
+<li>For any other value, set <code>action_type</code> to:
+<ul>
+<li>
+<code>similar_terms</code>: similar terms to a given term.</li>
 <li>
 <code>regexp</code>: test if the regular expression is correctly recognized (no more usage in code base?).</li>
 <li>
@@ -1915,6 +1932,8 @@ It features the following interaction:
 <code>save_impr_text</code>: change the annotation value for a term.</li>
 <li>
 <code>save_setting</code>: save a setting.</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -1980,9 +1999,10 @@ character as a word (e. g.: Chinese). Big thanks to <a href="https://github.com/
 <li>Legacy AJAX API. The following AJAX interactions are now deprecated in favor to the new REST API　(at <code>inc/ajax.php</code>):
 <ul>
 <li>
-<code>inc/show_similar_terms.php</code>, use <code>action_type=simterms</code>, same arguments.</li>
+<code>inc/show_similar_terms.php</code>, use <code>action_type=similar_terms</code>, same arguments.</li>
 <li>
-<code>inc/ajax_add_term_transl.php</code>, use <code>action_type=add_translation</code> or <code>action_type=update_translation</code>. The arguments were also changed.</li>
+<code>inc/ajax_add_term_transl.php</code>, use <code>action=change_translation</code>, with
+<code>action_type=add</code> or <code>action_type=update</code>. The arguments were also changed.</li>
 <li>
 <code>inc/ajax_check_regexp.php</code> should be accessed through <code>action_type=regexp</code>. Argument <code>regex</code> is now <code>regexp</code>, on post only.</li>
 <li>

@@ -232,9 +232,9 @@ function unknown_get_action_type($get_req)
  */
 function set_text_position($post_req) 
 {
-    return save_text_position(
+    return json_encode(array("text" => save_text_position(
         (int)$post_req["tid"], (int)$post_req["tposition"]
-    );
+    )));
 }
 
 /**
@@ -246,8 +246,12 @@ function set_text_position($post_req)
  */
 function set_audio_position($post_req) 
 {
-    return save_audio_position(
-        (int)$post_req["tid"], (int)$post_req["audio_position"]
+    return json_encode(
+        array(
+            "audio" => save_audio_position(
+                (int)$post_req["tid"], (int)$post_req["audio_position"]
+            )
+        )
     );
 }
 
@@ -260,10 +264,10 @@ function set_audio_position($post_req)
  */
 function similar_terms($post_req) 
 {
-    return print_similar_terms(
+    return json_encode(array("similar_terms" => print_similar_terms(
         (int)$post_req["simterms_lgid"], 
         (string) $post_req["simterms_word"]
-    );
+    )));
 }
 
 /**
@@ -275,9 +279,17 @@ function similar_terms($post_req)
  */
 function add_translation($post_req)
 {
-    return add_new_term_transl(
-        trim($post_req['text']), (int)$post_req['lang'], trim($post_req['translation'])
+    $text = trim($post_req['text']);
+    $result = add_new_term_transl(
+        $text, (int)$post_req['lang'], trim($post_req['translation'])
     );
+    $raw_answer = array();
+    if ($result == mb_strtolower($text, 'UTF-8')) {
+        $raw_answer["add"] = $result;
+    } else {
+        $raw_answer["error"] = $result;
+    }
+    return json_encode($raw_answer);
 }
 
 /**
@@ -289,9 +301,16 @@ function add_translation($post_req)
  */
 function update_translation($post_req)
 {
-    return do_ajax_check_update_translation(
+    $result = do_ajax_check_update_translation(
         (int)$post_req['id'], trim($post_req['translation'])
     );
+    $raw_answer = array();
+    if ($result == "") {
+        $raw_answer["error"] = $result;
+    } else {
+        $raw_answer["update"] = $result;
+    }
+    return json_encode($raw_answer);
 }
 
 /**
@@ -411,16 +430,22 @@ if (isset($_GET['action'])) {
             break;
         }
         break;
+    case "change_translation":
+        switch ($_POST['action_type']) {
+            case "add":
+                echo add_translation($_POST);
+                break;
+            case "update":
+                echo update_translation($_POST);
+                break;
+            default:
+                echo unknown_post_action_type($_POST);
+                break;
+        }
     default:
         switch ($_POST['action_type']) {
-        case "simterms":
+        case "similar_terms":
             echo similar_terms($_POST); // really on POST?
-            break;
-        case "add_translation":
-            echo add_translation($_POST);
-            break;
-        case "update_translation":
-            echo update_translation($_POST);
             break;
         case 'regexp':
             echo check_regexp($_POST);

@@ -181,20 +181,22 @@ function addTermTranslation(wordid, txid, word, lang) {
     return;
   }
   let request = {
-        action: "",
+        action: "change_translation",
         translation: translation,
   };
   let failure;
+  let action_type;
   if (wordid === 0) {
-    request["action_type"] = "add_translation";
+    action_type = "add";
     request["text"] = word;
     request["lang"] = lang;
     failure = "Adding translation to term failed!";
   } else {
-    request["action_type"] = "update_translation";
+    action_type = "update";
     request["wordid"] = wordid;
     failure = "Updating translation of term failed!";
   }
+  request["action_type"] = action_type;
   failure += "Please reload page and try again."
   $.post(
     'inc/ajax.php', 
@@ -202,10 +204,15 @@ function addTermTranslation(wordid, txid, word, lang) {
     function (d) {
       if (d == '') {
         alert(failure);
-      } else {
-        do_ajax_edit_impr_text(pagepos, d);
+        return;
       }
-    }
+      if ("error" in d) {
+        alert(failure + "\n" + d.error);
+        return;
+      }
+      do_ajax_edit_impr_text(pagepos, d[action_type]);
+    },
+    "json"
   );
 }
 
@@ -1360,12 +1367,15 @@ function do_ajax_show_similar_terms () {
   $.post(
     'inc/ajax.php',
     {
-      "action": "simterms",
-      "action_type": "simterms",
+      "action": "similar_terms",
+      "action_type": "similar_terms",
       "simterms_lgid": $('#langfield').val(),
       "simterms_word": $('#wordfield').val()
     },
-    function (data) { $('#simwords').html(data); }
+    function (data) {
+      $('#simwords').html(data.similar_terms);
+    },
+    "json"
   )
 }
 
