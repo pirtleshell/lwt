@@ -139,7 +139,9 @@ function get_phonetic_reading($get_req)
 function get_theme_path($get_req)
 {
     chdir('..');
-    return get_file_path($get_req['path']);
+    return json_encode(
+        array("theme_path" => get_file_path($get_req['path']))
+    );
 }
 
 /**
