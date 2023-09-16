@@ -685,7 +685,7 @@ function showImportedTerms(last_update, rtl, count, page) {
         $('#res_data-no_terms_imported').css("display", "none");
         $('#res_data-navigation').css("display", "");
         $('#res_data-res_table').css("display", "");
-        $.get(
+        $.getJSON(
             "inc/ajax.php",
             {
                 action: "query",
@@ -696,8 +696,7 @@ function showImportedTerms(last_update, rtl, count, page) {
             },
             function (data) {
                 imported_terms_handle_answer(data, last_update, rtl)
-            },
-            "json"
+            }
         )
     }
 }

@@ -1290,14 +1290,13 @@ function do_ajax_update_media_select () {
   $('#mediaSelectErrorMessage').css("display", "none");
   $('#mediaselect select').css("display", "none");
   $('#mediaSelectLoadingImg').css("display", "inherit");
-  $.get(
+  $.getJSON(
     'inc/ajax.php',
     {
       action: "query",
       action_type: "media_paths"
     },
-    media_select_receive_data,
-    "json"
+    media_select_receive_data
   );
 }
 
@@ -1350,7 +1349,7 @@ function do_ajax_show_sentences (lang, word, ctl, woid) {
   $('#exsent-interactable').css("display", "none");
   $('#exsent-waiting').css("display", "inherit");
 
-  $.get(
+  $.getJSON(
     'inc/ajax.php', 
     { 
       action: "query",
@@ -1364,8 +1363,7 @@ function do_ajax_show_sentences (lang, word, ctl, woid) {
       $('#exsent-sentences').css("display", "inherit");
       const new_element = display_example_sentences(data, ctl);
       $('#exsent-sentences').append(new_element);
-    },
-    "json"
+    }
   );
 }
 
@@ -1396,7 +1394,7 @@ function do_ajax_word_counts () {
     return $(this).val(); 
   })
   .get().join(',');
-  $.get(
+  $.getJSON(
     'inc/ajax.php', 
     {
       action: "query",
@@ -1407,8 +1405,7 @@ function do_ajax_word_counts () {
       WORDCOUNTS = data;
       word_count_click();
       $('.barchart').removeClass('hide');
-    },
-    'json'
+    }
   );
 }
 
@@ -1653,7 +1650,7 @@ function do_ajax_edit_impr_text(pagepos, word) {
   }
   // Load the possible translations for a word
   const textid = $('#editimprtextdata').attr('data_id');
-  $.get(
+  $.getJSON(
     'inc/ajax.php', 
     {
       action: "query",
@@ -1670,8 +1667,7 @@ function do_ajax_edit_impr_text(pagepos, word) {
         $('input.impr-ann-text').on('change', changeImprAnnText);
         $('input.impr-ann-radio').on('change', changeImprAnnRadio);
       }
-    },
-    "json"
+    }
   );
 }
 

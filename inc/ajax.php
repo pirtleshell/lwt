@@ -435,107 +435,114 @@ function unknown_post_action_type($post_req, $action_exists=false)
 }
 
 
-if (isset($_GET['action'])) {
-    if ($_GET['action'] == 'query') {
-        switch ($_GET['action_type']) {
-        case 'version':
-            echo rest_api_version($_GET);
-            break;
-        case 'test':
-            echo word_test_ajax($_GET);
-            break;
-        case 'tomorrow_test_count':
-            echo tomorrow_test_count($_GET);
-            break;
-        case 'phonetic_reading':
-            echo get_phonetic_reading($_GET);
-            break;
-        case 'theme_path':
-            echo get_theme_path($_GET);
-            break;
-        case "texts_statistics":
-            echo get_texts_statistics($_GET);
-            break;
-        case "media_paths":
-            echo media_paths($_GET);
-            break;
-        case "example_sentences":
-            echo example_sentences($_GET);
-            break;
-        case "imported_terms":
-            echo imported_terms($_GET);
-            break;
-        case "term_translations":
-            echo term_translations($_GET);
-            break;
-        default:
-            echo unknown_get_action_type($_GET, true);
-            break;
-        }
-    } else {
-        echo unknown_get_action_type($_GET);
-    }
-} else if (isset($_POST['action'])) {
-    switch ($_POST['action']) {
-    case "reading_position":
-        switch ($_POST['action_type']) {
-        case "text":
-            echo set_text_position($_POST);
-            break;
-        case "audio":
-            echo set_audio_position($_POST);
-            break;
-        default:
-            echo unknown_post_action_type($_POST, true);
-            break;
-        }
-        break;
-    case "change_translation":
-        switch ($_POST['action_type']) {
-            case "add":
-                echo add_translation($_POST);
+function handle_request() {
+    header('Content-Type: application/json; charset=utf-8');
+    if (isset($_GET['action'])) {
+        if ($_GET['action'] == 'query') {
+            switch ($_GET['action_type']) {
+            case 'version':
+                echo rest_api_version($_GET);
                 break;
-            case "update":
-                echo update_translation($_POST);
+            case 'test':
+                echo word_test_ajax($_GET);
+                break;
+            case 'tomorrow_test_count':
+                echo tomorrow_test_count($_GET);
+                break;
+            case 'phonetic_reading':
+                echo get_phonetic_reading($_GET);
+                break;
+            case 'theme_path':
+                echo get_theme_path($_GET);
+                break;
+            case "texts_statistics":
+                echo get_texts_statistics($_GET);
+                break;
+            case "media_paths":
+                echo media_paths($_GET);
+                break;
+            case "example_sentences":
+                echo example_sentences($_GET);
+                break;
+            case "imported_terms":
+                echo imported_terms($_GET);
+                break;
+            case "term_translations":
+                echo term_translations($_GET);
+                break;
+            default:
+                echo unknown_get_action_type($_GET, true);
+                break;
+            }
+        } else {
+            echo unknown_get_action_type($_GET);
+        }
+    } else if (isset($_POST['action'])) {
+        switch ($_POST['action']) {
+        case "reading_position":
+            switch ($_POST['action_type']) {
+            case "text":
+                echo set_text_position($_POST);
+                break;
+            case "audio":
+                echo set_audio_position($_POST);
                 break;
             default:
                 echo unknown_post_action_type($_POST, true);
                 break;
-        }
-        break;
-    case "term_status":
-        switch ($_POST['action_type']) {
-            case "increment":
-                echo increment_term_status($_POST);
-                break;
-            case "set":
-                echo set_term_status($_POST);
-                break;
-            default:
-                echo unknown_post_action_type($_POST, true);
-                break;
-        }
-        break;
-    default:
-        switch ($_POST['action_type']) {
-        case "similar_terms":
-            echo similar_terms($_POST); // 2.9.0: really on POST?
+            }
             break;
-        case 'check_regexp':
-            echo check_regexp($_POST);
+        case "change_translation":
+            switch ($_POST['action_type']) {
+                case "add":
+                    echo add_translation($_POST);
+                    break;
+                case "update":
+                    echo update_translation($_POST);
+                    break;
+                default:
+                    echo unknown_post_action_type($_POST, true);
+                    break;
+            }
             break;
-        case 'set_annotation':
-            echo set_annotation($_POST);
-            break;
-        case 'save_setting':
-            echo save_setting($_POST);
+        case "term_status":
+            switch ($_POST['action_type']) {
+                case "increment":
+                    echo increment_term_status($_POST);
+                    break;
+                case "set":
+                    echo set_term_status($_POST);
+                    break;
+                default:
+                    echo unknown_post_action_type($_POST, true);
+                    break;
+            }
             break;
         default:
-            echo unknown_post_action_type($_POST);
+            switch ($_POST['action_type']) {
+            case "similar_terms":
+                echo similar_terms($_POST); // 2.9.0: really on POST?
+                break;
+            case 'check_regexp':
+                echo check_regexp($_POST);
+                break;
+            case 'set_annotation':
+                echo set_annotation($_POST);
+                break;
+            case 'save_setting':
+                echo save_setting($_POST);
+                break;
+            default:
+                echo unknown_post_action_type($_POST);
+                break;
+            }
             break;
         }
-        break;
     }
+}
+
+if (isset($_GET['action']) || isset($_POST['action'])) {
+    handle_request();
 }
 
 ?>

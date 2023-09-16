@@ -21,7 +21,7 @@ short text creation/edition, long text creation and text check
   * Musics play fully
   * Page do not need to reload.
   * The timer continues instead of reseting.
-* REST API, the new ``inc/ajax.php`` is intended to continue developping itself
+* REST API, the new ``inc/ajax.php`` is intended to continue developing itself
 as a REST API. It features the following interaction:
   * On GET, ``action_type`` can be:
     * ``version``: the REST API version and release date.
