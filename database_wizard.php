@@ -6,22 +6,46 @@
  * 
  * Call: database_wizard.php
  * 
- * @package Lwt
- * @author  HugoFara <hugo.farajallah@protonmail.com>
- * @license Unlicense <http://unlicense.org/>
- * @link    https://hugofara.github.io/lwt/docs/html/database__wizard_8php.html
- * @since   2.5.0-fork
+ * php version 8.1.0
+ * 
+ * @category Interface
+ * @package  Lwt
+ * @author   HugoFara <hugo.farajallah@protonmail.com>
+ * @license  Unlicense <http://unlicense.org/>
+ * @link     https://hugofara.github.io/lwt/docs/html/database__wizard_8php.html
+ * @since    2.5.0-fork
  */
+
+namespace Lwt\Interface\Database_Wizard;
 
 require_once 'inc/kernel_utility.php';
 
-class Database_Connection {
+/**
+ * A connection to database stored as an object.
+ * 
+ * @category Database
+ * @package  Lwt
+ * @author   HugoFara <hugo.farajallah@protonmail.com>
+ * @license  Unlicense <http://unlicense.org/>
+ * @link     https://hugofara.github.io/lwt/docs/html/database__wizard_8php.html
+ */
+class Database_Connection
+{
     public string $server;
     public string $userid;
     public string $passwd;
     public string $dbname;
     public string $socket;
 
+    /**
+     * Build a new connection object.
+     * 
+     * @param string $server Server name
+     * @param string $userid User ID
+     * @param string $passwd Password for this user
+     * @param string $dbname Database name
+     * @param string $socket Socket to use
+     */
     function __construct(
         $server = "", $userid = "", $passwd = "", $dbname = "", $socket = ""
     ) {
@@ -32,7 +56,17 @@ class Database_Connection {
         $this->socket = $socket;
     }
 
-    public function load_file(string $file_name) {
+    /**
+     * Load data from a PHP file.
+     * 
+     * The file is usually connect.inc.php or equivalent.
+     * 
+     * @param string $file_name PHP file to load data from.
+     * 
+     * @return void
+     */
+    public function loadFile(string $file_name)
+    {
         include $file_name;
         $this->server = $server;
         $this->userid = $userid;
@@ -41,7 +75,13 @@ class Database_Connection {
         $this->socket = $socket;
     }
 
-    public function get_as_text() {
+    /**
+     * Connection a PHP formatted string.
+     * 
+     * @return string PHP string representing connection details
+     */
+    public function getAsText()
+    {
         return '<?php
 
         /**
@@ -61,13 +101,29 @@ class Database_Connection {
 
 }
 
-function database_wizard_change($conn) {
+/**
+ * Save the connection to the file connect.inc.php.
+ * 
+ * @param Database_Connection $conn Connection object.
+ * 
+ * @return void
+ */
+function writeToFile($conn)
+{
     $handle = fopen(__DIR__ . "/connect.inc.php", 'w');
-    fwrite($handle, $conn->get_as_text());
+    fwrite($handle, $conn->getAsText());
     fclose($handle);
 }
 
-function database_wizard_do_operation($op) {
+/**
+ * Execute operation.
+ * 
+ * @param string $op Operation to execute.
+ * 
+ * @return void
+ */
+function doOperation($op)
+{
     $message = null;
     if ($op == "Autocomplete") {
         $server = $_SERVER['SERVER_ADDR'];
@@ -105,7 +161,7 @@ function database_wizard_do_operation($op) {
                 } else {
                     $message = "Connection established with success!";
                 }
-            } catch (Exception $exept) {
+            } catch (\Exception $exept) {
                 $message = (string)$exept;
             }
         }
@@ -120,52 +176,56 @@ function database_wizard_do_operation($op) {
         $server, $userid, $passwd, $dbname, $socket
     );
     if ($op == "Change") {
-        database_wizard_change($conn);
+        writeToFile($conn);
     }
-    database_wizard_form($conn, $message);
+    displayForm($conn, $message);
 }
 
 /**
  * Generate a form to edit the connection.
  * 
- * @param \Database_Connection conn Database connection object 
+ * @param Database_Connection $conn          Database connection object
+ * @param string|null         $error_message Error message to display
+ * 
+ * @return void
  */
-function database_wizard_form($conn, $error_message=null) {
+function displayForm($conn, $error_message=null)
+{
     pagestart_kernel_nobody("Database Connection Wizard", true);
     if ($error_message != null) {
         echo $error_message;
     }
     ?>
-    <form name="database_connect" action="<?= $_SERVER['PHP_SELF']; ?>" 
+    <form name="database_connect" action="<?php echo $_SERVER['PHP_SELF']; ?>" 
     method="post">
         <p>
             <label for="server">Server address:</label>
             <input type="text" name="server" id="server" 
-            value="<?= htmlspecialchars($conn->server) ?>" required 
+            value="<?php echo htmlspecialchars($conn->server) ?>" required 
             placeholder="localhost">
         </p> 
         <p>
             <label for="userid">Database User Name:</label>
             <input type="text" name="userid" id="userid" 
-            value="<?= htmlspecialchars($conn->userid); ?>" required 
+            value="<?php echo htmlspecialchars($conn->userid); ?>" required 
             placeholder="root">
         </p>
         <p>
             <label for="passwd">Password:</label>
             <input type="password" name="passwd" id="passwd" 
-            value="<?= htmlspecialchars($conn->passwd); ?>" 
+            value="<?php echo htmlspecialchars($conn->passwd); ?>" 
             placeholder="abcxyz">
         </p>
         <p>
             <label for="dbname">Database Name:</label>
             <input type="text" name="dbname" id="dbname" 
-            value="<?= htmlspecialchars($conn->dbname); ?>" required 
+            value="<?php echo htmlspecialchars($conn->dbname); ?>" required 
             placeholder="lwt">
         </p>
         <p>
             <label for="socket">Socket Name:</label>
             <input type="text" name="socket" id="socket" 
-            value="<?= htmlspecialchars($conn->socket); ?>" required 
+            value="<?php echo htmlspecialchars($conn->socket); ?>" required 
             placeholder="/var/run/mysql.sock">
         </p>
         <input type="submit" name="op" value="Autocomplete" />
@@ -176,23 +236,35 @@ function database_wizard_form($conn, $error_message=null) {
     pageend();
 }
 
-// May be dangerous to expose passwords in clear
-function edit_database_connection() {
+/**
+ * Display the main form, filled with data from an existing connection file.
+ * 
+ * @return void
+ */
+function editConnection()
+{
     $conn = new Database_Connection();
-    $conn->load_file('connect.inc.php');
-    database_wizard_form($conn);
+    // May be dangerous to expose passwords in clear
+    $conn->loadFile('connect.inc.php');
+    displayForm($conn);
 }
 
-function new_database_connection() {
-    database_wizard_form(new Database_Connection());
+/**
+ * Display the main form blank.
+ * 
+ * @return void
+ */
+function createNewConnection()
+{
+    displayForm(new Database_Connection());
 }
 
 if (getreq('op') != '') {
-    database_wizard_do_operation(getreq('op'));
+    doOperation(getreq('op'));
 } else if (file_exists('connect.inc.php')) {
-    edit_database_connection();
+    editConnection();
 } else {
-    new_database_connection();
+    createNewConnection();
 }
 
 ?>

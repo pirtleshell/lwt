@@ -81,8 +81,7 @@ function set_test_status_change_progress($stchange)
  */
 function do_set_test_status_javascript(
     $wid, $status, $stchange, $tests_status=array(), $ajax=false
-)
-{
+) {
     ?>
 <script type="text/javascript">
     const context = window.parent;

@@ -41,17 +41,17 @@ if ($record = mysqli_fetch_assoc($res)) {
 <tr>
     <td class="td1 right">Translation:</td>
     <td class="td1" style="font-size:120%;"><b><?php
-if(!empty($ann)) {
-    echo 
-    str_replace_first(
-        tohtml($ann), 
-        '<span style="color:red">' . tohtml($ann) . '</span>', 
-        tohtml($transl)
-    );
-} else { 
-    echo tohtml($transl); 
-}
-?></b></td>
+    if(!empty($ann)) {
+        echo 
+        str_replace_first(
+            tohtml($ann), 
+            '<span style="color:red">' . tohtml($ann) . '</span>', 
+            tohtml($transl)
+        );
+    } else { 
+        echo tohtml($transl); 
+    }
+    ?></b></td>
 </tr>
     <?php if ($tags != '') { ?>
 <tr>

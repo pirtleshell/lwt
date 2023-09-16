@@ -207,26 +207,25 @@ class GoogleTranslate
      * @param string     $string     Word to translate
      * @param string     $from       Source language code (i.e. en,de,fr,...)
      * @param string     $to         Target language code (i.e. en,de,fr,...)
-     * all supported language codes can be found here: 
-     * https://cloud.google.com/translate/docs/basic/discovering-supported-languages#getting_a_list_of_supported_languages
+     *                               all supported language codes can be found here: 
+     *                               https://cloud.google.com/translate/docs/basic/discovering-supported-languages#getting_a_list_of_supported_languages
      * 
      * @param int[]|null $time_token (optional) array() from 
-     * https://translate.google.com. If empty, array(408254,585515986) is used
+     *                               https://translate.google.com. If empty, array(408254,585515986) is used
      * @param string     $domain     (optional) Connect to Google Domain 
-     * (i.e. 'com' for  https://translate.google.com). If empty, 
-     * a random domain will be used (the default value can be altered by changing DEFAULT_DOMAIN)
-     * Possible values:
-     *  ('com.ar', 'at', 'com.au', 'be', 'com.br', 'ca', 'cat', 'ch', 'cl', 'cn', 'cz', 
-     * 'de', 'dk', 'es', 'fi', 'fr', 'gr', 'com.hk', 'hr', 'hu', 'co.id', 'ie', 
-     * 'co.il', 'im', 'co.in', 'it', 'co.jp', 'co.kr', 'com.mx', 'nl', 'no', 'pl', 
-     * 'pt', 'ru', 'se', 'com.sg', 'co.th', 'com.tw', 'co.uk', 'com')
+     *                               (i.e. 'com' for  https://translate.google.com). If empty, 
+     *                               a random domain will be used (the default value can be altered by changing DEFAULT_DOMAIN)
+     *                               Possible values:
+     *                               ('com.ar', 'at', 'com.au', 'be', 'com.br', 'ca', 'cat', 'ch', 'cl', 'cn', 'cz', 
+     *                               'de', 'dk', 'es', 'fi', 'fr', 'gr', 'com.hk', 'hr', 'hu', 'co.id', 'ie', 
+     *                               'co.il', 'im', 'co.in', 'it', 'co.jp', 'co.kr', 'com.mx', 'nl', 'no', 'pl', 
+     *                               'pt', 'ru', 'se', 'com.sg', 'co.th', 'com.tw', 'co.uk', 'com')
      * 
      * @return string[]|false An array of translation, or false if an error occured.
      */
     public static function staticTranslate(
         $string, $from, $to, $time_token = null, $domain = self::DEFAULT_DOMAIN
-        ): array|false 
-    {
+    ): array|false { 
         self::setDomain($domain);
         $url = sprintf(
             self::$urlFormat, self::$gglDomain, rawurlencode($string), 

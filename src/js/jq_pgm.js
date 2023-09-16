@@ -36,98 +36,183 @@ JQ_TOOLTIP = 0;
 LWT jQuery functions
 ***************************************************************/
 
-function setTransRoman (tra, rom) {
+/**
+ * Set translation and romanization in a form when possible.
+ * 
+ * Marj the form as edited if something was changed.
+ * 
+ * @param {string} tra Translation
+ * @param {string} rom Romanization
+ */
+function setTransRoman(tra, rom) {
+  let form_changed = false;
   if ($('textarea[name="WoTranslation"]').length == 1) { 
-    $('textarea[name="WoTranslation"]').val(tra); 
+    $('textarea[name="WoTranslation"]').val(tra);
+    form_changed |= true;
   }
   if ($('input[name="WoRomanization"]').length == 1) { 
-    $('input[name="WoRomanization"]').val(rom); 
+    $('input[name="WoRomanization"]').val(rom);
+    form_changed |= true;
   }
-  makeDirty();
+  if (form_changed)
+    makeDirty();
 }
 
+/**
+ * Return whether characters are outside the multilingual plane.
+ * 
+ * @param {string} s Input string
+ * @returns {boolean} true is some characters are outside the plane
+ */
 function containsCharacterOutsideBasicMultilingualPlane (s) {
   return /[\uD800-\uDFFF]/.test(s);
 }
 
+/**
+ * Alert if characters are outside the multilingual plane.
+ * 
+ * @param {string} s Input string
+ * @returns {boolean} true is some characters are outside the plane
+ */
 function alertFirstCharacterOutsideBasicMultilingualPlane (s, info) {
-  const match = /[\uD800-\uDFFF]/.exec(s);
-  if (match) {
-    alert(
-      'ERROR\n\nText "' + info + '" contains invalid character(s) ' + 
-      '(in the Unicode Supplementary Multilingual Planes, > U+FFFF) like emojis ' + 
-      'or very rare characters.\n\nFirst invalid character: "' + 
-      s.substring(match.index, match.index + 2) + '" at position ' + 
-      (match.index + 1) + '.\n\n' + 
-      'More info: https://en.wikipedia.org/wiki/Plane_(Unicode)\n\n' + 
-      'Please remove this/these character(s) and try again.'
-    );
-    return 1;
+  if (!containsCharacterOutsideBasicMultilingualPlane(s)) {
+    return 0;
   }
-  return 0;
+  const match = /[\uD800-\uDFFF]/.exec(s);
+  alert(
+    'ERROR\n\nText "' + info + '" contains invalid character(s) ' + 
+    '(in the Unicode Supplementary Multilingual Planes, > U+FFFF) like emojis ' + 
+    'or very rare characters.\n\nFirst invalid character: "' + 
+    s.substring(match.index, match.index + 2) + '" at position ' + 
+    (match.index + 1) + '.\n\n' + 
+    'More info: https://en.wikipedia.org/wiki/Plane_(Unicode)\n\n' + 
+    'Please remove this/these character(s) and try again.'
+  );
+  return 1;
 }
 
+/**
+ * Return the memory size of an UTF8 string.
+ * 
+ * @param {string} s String to evaluate
+ * @returns {number} Size in bytes
+ */
 function getUTF8Length (s) {
-  return (new Blob([String(s)]).size);
+  return (new Blob([String(s)])).size;
 }
 
+/**
+ * Force the user scrolling to an anchor.
+ * 
+ * @param {string} aid Anchor ID
+ */
 function scrollToAnchor (aid) {
   document.location.href = '#' + aid;
 }
 
-function changeImprAnnText () {
-  const textid = $('#editimprtextdata').attr('data_id');
-  $(this).prev('input:radio').attr('checked', 'checked');
-  const elem = $(this).attr('name');
-  const idwait = '#wait' + elem.substring(2);
+/**
+ * Set an existing translation as annotation for a term.
+ * 
+ * @param {int} textid Text ID 
+ * @param {string} elem_name Name of the element of which to change annotation (e. g.: "rg1") 
+ * @param {Object} form_data All the data from the form 
+ * (e. g. {"rg0": "foo", "rg1": "bar"})
+ */
+function do_ajax_save_impr_text(textid, elem_name, form_data) {
+  const idwait = '#wait' + elem_name.substring(2);
   $(idwait).html('<img src="icn/waiting2.gif" />');
-  const thedata = JSON.stringify($('form').serializeObject());
-  $.post('inc/ajax_save_impr_text.php', { id: textid, elem: elem, data: thedata }
-    , function (d) {
+  // elem: "rg2", form_data: {"rg2": "translation"}
+  $.post(
+    'inc/ajax.php',
+    {
+      action: "",
+      action_type: "set_annotation",
+      tid: textid,
+      elem: elem_name,
+      data: form_data
+    },
+    function (data) {
       $(idwait).html('<img src="icn/empty.gif" />');
-      if (d != 'OK') { 
-        alert('Saving your changes failed, please reload page and try again!'); 
-      }
-    }
+      if ("error" in data)
+        alert(
+          'Saving your changes failed, please reload the page and try again! ' +
+          'Error message: "' + data.error + '".'
+        );
+    },
+    "json"
   );
 }
 
+/**
+ * Change the annotation for a term by setting its text.
+ */
+function changeImprAnnText () {
+  $(this).prev('input:radio').attr('checked', 'checked');
+  const textid = $('#editimprtextdata').attr('data_id');
+  const elem_name = $(this).attr('name');
+  const form_data = JSON.stringify($('form').serializeObject());
+  do_ajax_save_impr_text(textid, elem_name, form_data);
+}
+
+/**
+ * Change the annotation for a term by setting its text.
+ */
 function changeImprAnnRadio () {
   const textid = $('#editimprtextdata').attr('data_id');
-  const elem = $(this).attr('name');
-  const idwait = '#wait' + elem.substring(2);
-  $(idwait).html('<img src="icn/waiting2.gif" />');
-  const thedata = JSON.stringify($('form').serializeObject());
-  $.post('inc/ajax_save_impr_text.php', { id: textid, elem: elem, data: thedata }
-    , function (d) {
-      $(idwait).html('<img src="icn/empty.gif" />');
-      if (d != 'OK') { 
-        alert('Saving your changes failed, please reload page and try again!'); 
-      }
-    }
-  );
+  const elem_name = $(this).attr('name');
+  const form_data = JSON.stringify($('form').serializeObject());
+  do_ajax_save_impr_text(textid, elem_name, form_data);
 }
 
-function addTermTranslation (wordid, txid, word, lang) {
-  const thedata = $(txid).val().trim();
+/**
+ * Add (new word) or update (existing word) a word translation.
+ * 
+ * @param {int}    wordid Word ID, 0 for new wrod
+ * @param {string} txid   Text HTML ID or unique HTML selector
+ * @param {string} word   Word text
+ * @param {int}    lang   Language ID
+ * @returns 
+ */
+function addTermTranslation(wordid, txid, word, lang) {
+  const translation = $(txid).val().trim();
   const pagepos = $(document).scrollTop();
-  if ((thedata == '') || (thedata == '*')) {
+  if (translation == '' || translation == '*') {
     alert('Text Field is empty or = \'*\'!');
     return;
   }
+  let request = {
+        action: "change_translation",
+        translation: translation,
+  };
+  let failure;
+  let action_type;
+  if (wordid === 0) {
+    action_type = "add";
+    request["text"] = word;
+    request["lang"] = lang;
+    failure = "Adding translation to term failed!";
+  } else {
+    action_type = "update";
+    request["wordid"] = wordid;
+    failure = "Updating translation of term failed!";
+  }
+  request["action_type"] = action_type;
+  failure += "Please reload page and try again."
   $.post(
-    'inc/ajax_add_term_transl.php', 
-    { id: wordid, data: thedata, text: word, lang: lang }, 
+    'inc/ajax.php', 
+    request,
     function (d) {
       if (d == '') {
-        alert(
-          'Adding translation to term OR term creation failed, ' + 
-          'please reload page and try again!'
-        );
-      } else {
-        do_ajax_edit_impr_text(pagepos, d);
+        alert(failure);
+        return;
       }
-    }
+      if ("error" in d) {
+        alert(failure + "\n" + d.error);
+        return;
+      }
+      do_ajax_edit_impr_text(pagepos, d[action_type]);
+    },
+    "json"
   );
 }
 
@@ -139,13 +224,20 @@ function addTermTranslation (wordid, txid, word, lang) {
  */
 function changeTableTestStatus (wordid, up) {
   $.post(
-    'inc/ajax_chg_term_status.php', 
-    { id: wordid, data: (up ? 1 : 0) }, 
+    'inc/ajax.php',
+    {
+      action: "term_status",
+      action_type: "increment",
+      wid: parseInt(wordid, 10),
+      status_up: (up ? 1 : 0) 
+    }, 
     function (data) {
-      if (data != '') {
-        $('#STAT' + wordid).html(data);
+      if (data == "" || "error" in data) {
+        return;
       }
-    }
+      $('#STAT' + wordid).html(data.increment);
+    },
+    "json"
   );
 }
 
@@ -177,13 +269,18 @@ function check () {
       }
     }
   });
+  // Note: as of LWT 2.9.0, no field with "checkregexp" property is found in the code base
   $('input.checkregexp').each(function (_n) {
     const regexp = $(this).val().trim();
     if (regexp.length > 0) {
       $.ajax({
         type: 'POST',
-        url: 'inc/ajax_check_regexp.php',
-        data: { regex: regexp },
+        url: 'inc/ajax.php',
+        data: {
+          action: "",
+          action_type: "check_regexp",
+          regex: regexp 
+        },
 			 async: false
       }
       ).always(function (data) {
@@ -1097,32 +1194,176 @@ function keydown_event_do_text_text (e) {
   return true;
 }
 
+/**
+ * Save a setting to the database.
+ * 
+ * @param {string} k Setting name as a key 
+ * @param {string} v Setting value 
+ */
 function do_ajax_save_setting (k, v) {
-  $.post('inc/ajax_save_setting.php', { k: k, v: v });
-}
-
-function do_ajax_update_media_select () {
-  $('#mediaselect').html('&nbsp; <img src="icn/waiting2.gif" />');
-  $.post('inc/ajax_update_media_select.php',
-    function (data) { $('#mediaselect').html(data); }
+  $.post(
+    'inc/ajax.php', 
+    {
+      action: '',
+      action_type: 'save_setting',
+      k: k,
+      v: v
+    }
   );
 }
 
 /**
- * Show the sentences containing specific word.
+ * Assign the display value of a select element to the value element of another input. 
+ * 
+ * @param {elem} select_elem 
+ * @param {elem} input_elem 
+ */
+function quick_select_to_input(select_elem, input_elem)
+{
+  let val = select_elem.options[select_elem.selectedIndex].value; 
+  if (val != '') 
+    input_elem.value = val; 
+  select_elem.value = '';
+}
+
+/**
+ * Return an HTML group of options to add to a select field.
+ * 
+ * @param {string[]} paths     All paths (files and folders)
+ * @param {string[]} folders   Folders paths, should be a subset of paths
+ * @param {string}   base_path Base path for LWT to append
+ * 
+ * @returns {HTMLOptionElement[]} List of options to append to the select.
+ */
+function select_media_path(paths, folders, base_path)
+{
+  let options = [], temp_option = document.createElement('option');
+  temp_option.value = "";
+  temp_option.text = "[Choose...]";
+  options.push(temp_option);
+  for (let i = 0; i < paths.length; i++) {
+    temp_option = document.createElement('option')
+    if (folders.includes(paths[i])) {
+      temp_option.setAttribute("disabled", "disabled");
+      temp_option.text = '-- Directory: ' + paths[i] + '--';
+    } else {
+      temp_option.value = base_path + "/" + paths[i];
+      temp_option.text = paths[i];
+    }
+    options.push(temp_option);
+  }
+  return options;
+}
+
+/**
+ * Process the received data from media selection query
+ * 
+ * @param {Object} data Received data as a JSON object 
+ */
+function media_select_receive_data(data) {
+    $('#mediaSelectLoadingImg').css("display", "none");
+    if (data["error"] !== undefined) {
+      let msg;
+      if (data["error"] == "not_a_directory") {
+        msg = '[Error: "../' + data["base_path"] + '/media" exists, but it is not a directory.]';
+      } else if (data["error"] == "does_not_exist") {
+        msg = '[Directory "../' + data["base_path"] + '/media" does not yet exist.]';
+      } else {
+        msg = "[Unknown error!]";
+      }
+      $('#mediaSelectErrorMessage').text(msg);
+      $('#mediaSelectErrorMessage').css("display", "inherit");
+    } else {
+      const options = select_media_path(data["paths"], data["folders"], data["base_path"]);
+      $('#mediaselect select').empty();
+      for (let i = 0; i < options.length; i++) {
+        $('#mediaselect select').append(options[i]);
+      }
+      $('#mediaselect select').css("display", "inherit");
+    }
+}
+
+/**
+ * Perform an AJAX query to retrieve and display the media files path.
+ */
+function do_ajax_update_media_select () {
+  $('#mediaSelectErrorMessage').css("display", "none");
+  $('#mediaselect select').css("display", "none");
+  $('#mediaSelectLoadingImg').css("display", "inherit");
+  $.getJSON(
+    'inc/ajax.php',
+    {
+      action: "query",
+      action_type: "media_paths"
+    },
+    media_select_receive_data
+  );
+}
+
+/**
+ * Prepare am HTML element that formats the sentences
+ * 
+ * @param {JSON}   sentences    A list of sentences to display. 
+ * @param {string} click_target The selector for the element that should change value on click
+ * @returns {HTMLElement} A formatted group of sentences
+ */
+function display_example_sentences(sentences, click_target)
+{
+  let img, clickable, parentDiv;
+  const outElement = document.createElement("div");
+  for (let i = 0; i < sentences.length; i++) {
+    // Add the checbox
+    img = document.createElement("img");
+    img.src = "icn/tick-button.png";
+    img.title = "Choose";
+    // Clickable element
+    clickable = document.createElement('span');
+    clickable.classList.add("click");
+    // Doesn't feel the right way to do it
+    clickable.setAttribute(
+      "onclick", 
+      "{" + 
+      click_target + ".value = '" + sentences[i][1].replaceAll("'", "\\'") +"';makeDirty();}"
+    );
+    clickable.appendChild(img);
+    // Create parent
+    parentDiv = document.createElement("div");
+    parentDiv.appendChild(clickable);
+    parentDiv.innerHTML += "&nbsp; " + sentences[i][0];
+    // Add to the output
+    outElement.appendChild(parentDiv);
+  }
+  return outElement;
+}
+
+/**
+ * Get and display the sentences containing specific word.
  * 
  * @param {int}    lang Language ID 
  * @param {string} word Term text (the looked for term) 
- * @param {string} ctl  Path of the textarea showing sentence of the edited term
+ * @param {string} ctl  Selector for the element to edit on click
  * @param {int}    woid Term id (word or multi-word)
  * @returns {undefined}
  */
 function do_ajax_show_sentences (lang, word, ctl, woid) {
-  $('#exsent').html('<img src="icn/waiting2.gif" />');
-  $.post(
-    'inc/ajax_show_sentences.php', 
-    { lang: lang, word: word, ctl: ctl, woid: woid },
-    function (data) { $('#exsent').html(data); }
+  $('#exsent-interactable').css("display", "none");
+  $('#exsent-waiting').css("display", "inherit");
+
+  $.getJSON(
+    'inc/ajax.php', 
+    { 
+      action: "query",
+      action_type: "example_sentences",
+      lid: lang, 
+      word_lc: word,
+      wid: woid
+    },
+    function (data) {
+      $('#exsent-waiting').css("display", "none");
+      $('#exsent-sentences').css("display", "inherit");
+      const new_element = display_example_sentences(data, ctl);
+      $('#exsent-sentences').append(new_element);
+    }
   );
 }
 
@@ -1131,12 +1372,15 @@ function do_ajax_show_similar_terms () {
   $.post(
     'inc/ajax.php',
     {
-      "action": "simterms",
-      "action_type": "simterms",
+      "action": "similar_terms",
+      "action_type": "similar_terms",
       "simterms_lgid": $('#langfield').val(),
       "simterms_word": $('#wordfield').val()
     },
-    function (data) { $('#simwords').html(data); }
+    function (data) {
+      $('#simwords').html(data.similar_terms);
+    },
+    "json"
   )
 }
 
@@ -1147,18 +1391,22 @@ function do_ajax_show_similar_terms () {
  */
 function do_ajax_word_counts () {
   const t = $('.markcheck').map(function () { 
-    return $(this).val(); })
-    .get().join(',');
-  $.post(
-    'inc/ajax_word_counts.php', 
-    { id: t },
+    return $(this).val(); 
+  })
+  .get().join(',');
+  $.getJSON(
+    'inc/ajax.php', 
+    {
+      action: "query",
+      action_type: "texts_statistics",
+      texts_id: t 
+    },
     function (data) {
       WORDCOUNTS = data;
       word_count_click();
       $('.barchart').removeClass('hide');
-    }, 
-    'json'
-    );
+    }
+  );
 }
 
 /**
@@ -1212,7 +1460,8 @@ function set_barchart_item() {
  */
 function set_word_counts () {
   $.each(WORDCOUNTS.totalu, function (key, value) {
-    let knownu = known = todo = stat0 = 0;
+    let knownu, known, todo, stat0;
+    knownu = known = todo = stat0 = 0;
     const expr = WORDCOUNTS.expru[key] ? parseInt((SUW & 2) ? WORDCOUNTS.expru[key] : WORDCOUNTS.expr[key]) : 0;
     if (!WORDCOUNTS.stat[key]) {
       WORDCOUNTS.statu[key] = WORDCOUNTS.stat[key] = [];
@@ -1280,15 +1529,144 @@ function word_count_click () {
   });
 }
 
-function do_ajax_edit_impr_text (pagepos, word) {
-  if (word == '') $('#editimprtextdata').html('<img src="icn/waiting2.gif" />');
+/**
+ * Create a radio button with a candidate choice for a term annotation.
+ * 
+ * @param {string} curr_trans Current anotation (translation) set for the term 
+ * @param {string} trans_data All the useful data for the term
+ * @returns {string} An HTML-formatted option
+ */
+function translation_radio(curr_trans, trans_data) 
+{
+  if (trans_data.wid === null) {
+    return "";
+  }
+  const trim_trans = curr_trans.trim();
+  if (trim_trans == '*' || trim_trans == '') {
+    return "";
+  }
+  const set = trim_trans == trans_data.trans;
+  const option = `<span class="nowrap">
+    <input class="impr-ann-radio" ` + 
+      (set ? 'checked="checked" ' : '') + 'type="radio" name="rg' +
+      trans_data.ann_index + `" value="` + escape_html_chars(trim_trans) + `" /> 
+          &nbsp; ` + escape_html_chars(trim_trans) + `
+  </span>
+  <br />`;
+  return option;
+}
+
+/**
+ * When a term translation is edited, recreate it's annotations.
+ * 
+ * @param {Object} trans_data Useful data for this term
+ * @param {int}    text_id    Text ID
+ */
+function edit_term_ann_translations(trans_data, text_id)
+{
+  const widset = trans_data.wid !== null;
+  // First create a link to edit the word in a new window
+  let edit_word_link;
+  if (widset) {
+    const req_arg = $.param({
+      fromAnn: "$(document).scrollTop()",
+      wid: trans_data.wid,
+      ord: trans_data.term_ord,
+      tid: text_id
+    })
+    edit_word_link = `<a name="rec${trans_data.ann_index}"></a>
+    <span class="click"
+    onclick="oewin('edit_word.php?` + escape_html_chars(req_arg) + `');">
+          <img src="icn/sticky-note--pencil.png" title="Edit Term" alt="Edit Term" />
+      </span>`;
+  } else {
+    edit_word_link = '&nbsp;';
+  }
+  $(`#editlink${trans_data.ann_index}`).html(edit_word_link);
+  // Now edit translations (if necessary)
+  let translations_list = "";
+  trans_data.translations.forEach(
+    function (candidate_trans) {
+      translations_list += translation_radio(candidate_trans, trans_data);
+    }
+  );
+
+  const select_last = trans_data.translations.length == 0;
+  // Empty radio button and text field after the list of translations
+  translations_list += `<span class="nowrap">
+  <input class="impr-ann-radio" type="radio" name="rg${trans_data.ann_index}" ` + 
+  (select_last ? 'checked="checked" ' : '') + `value="" />
+  &nbsp;
+  <input class="impr-ann-text" type="text" name="tx${trans_data.ann_index}` + 
+    `" id="tx${trans_data.ann_index}" value="` +
+    (select_last ? escape_html_chars(curr_trans) : '') + 
+  `" maxlength="50" size="40" />
+   &nbsp;
+  <img class="click" src="icn/eraser.png" title="Erase Text Field" 
+  alt="Erase Text Field" 
+  onclick="$('#tx${trans_data.ann_index}').val('').trigger('change');" />
+    &nbsp;
+  <img class="click" src="icn/star.png" title="* (Set to Term)" 
+  alt="* (Set to Term)" 
+  onclick="$('#tx${trans_data.ann_index}').val('*').trigger('change');" />
+  &nbsp;`;
+  // Add the "plus button" to add a translation
+  if (widset) {
+    translations_list += 
+    `<img class="click" src="icn/plus-button.png" 
+    title="Save another translation to existent term" 
+    alt="Save another translation to existent term" 
+    onclick="addTermTranslation(${trans_data.wid}, ` +
+      `'#tx${trans_data.ann_index}', '',${trans_data.lang_id});" />`; 
+  } else { 
+    translations_list += 
+    `<img class="click" src="icn/plus-button.png" 
+    title="Save translation to new term" 
+    alt="Save translation to new term" 
+    onclick="addTermTranslation(0, '#tx${trans_data.ann_index}',` +
+      `${trans_data.term_lc},${trans_data.lang_id});" />`; 
+  }
+  translations_list += `&nbsp;&nbsp;
+  <span id="wait${trans_data.ann_index}">
+      <img src="icn/empty.gif" />
+  </span>
+  </span>`;
+  $(`#transsel${trans_data.ann_index}`).html(translations_list);
+}
+
+/**
+ * Load the possible translations for a word.
+ * 
+ * @param {int} pagepos Position to scroll to 
+ * @param {string} word Word to get annotations
+ * @returns 
+ */
+function do_ajax_edit_impr_text(pagepos, word) {
+  // Special case, on empty word reload the main annotations form
+  if (word == '') {
+    $('#editimprtextdata').html('<img src="icn/waiting2.gif" />');
+    location.reload();
+    return;
+  }
+  // Load the possible translations for a word
   const textid = $('#editimprtextdata').attr('data_id');
-  $.post('inc/ajax_edit_impr_text.php', { id: textid, word: word },
+  $.getJSON(
+    'inc/ajax.php', 
+    {
+      action: "query",
+      action_type: "term_translations",
+      text_id: textid, 
+      term_lc: word 
+    },
     function (data) {
-      eval(data);
-      $.scrollTo(pagepos);
-      $('input.impr-ann-text').on('change', changeImprAnnText);
-      $('input.impr-ann-radio').on('change', changeImprAnnRadio);
+      if ("error" in data) {
+        alert(data["error"]);
+      } else {
+        edit_term_ann_translations(data, textid);
+        $.scrollTo(pagepos);
+        $('input.impr-ann-text').on('change', changeImprAnnText);
+        $('input.impr-ann-radio').on('change', changeImprAnnRadio);
+      }
     }
   );
 }

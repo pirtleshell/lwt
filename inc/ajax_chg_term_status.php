@@ -1,9 +1,11 @@
 <?php
 /**
  * \file
- * \brief Change term status (Table Test)
+ * \brief Change term status (Table Test).
  * 
- * Call: inc/ajax_chg_term_status.php?id=[wordID]&data=[translation]
+ * value-difference should be either 1 or -1.
+ * 
+ * Call: inc/ajax_chg_term_status.php?id=[wordID]&data=[value-difference]
  * 
  * @package Lwt
  * @author  LWT Project <lwt-project@hotmail.com>
@@ -13,6 +15,30 @@
  */
 
 require_once __DIR__ . '/session_utility.php';
+
+
+/**
+ * Force a term to get a new status.
+ * 
+ * @param string $wid    ID of the word to edit
+ * @param string $status New status to set
+ * 
+ * @return string Number of affected rows or error message
+ * 
+ * @global string $tbpref 
+ */
+function set_word_status($wid, $status)
+{
+    global $tbpref;
+    $m1 = runsql(
+        "UPDATE {$tbpref}words 
+        SET WoStatus = $status, WoStatusChanged = NOW()," . 
+        make_score_random_insert_update('u') . " 
+        WHERE WoID = $wid", 
+        ''
+    );
+    return $m1;
+}
 
 /**
  * Check the consistency of the new status.
@@ -44,7 +70,7 @@ function get_new_status($oldstatus, $up)
 } 
 
 /**
- * Save the new word status to the database.
+ * Save the new word status to the database, return the controls.
  * 
  * @param int $wid        Word ID
  * @param int $currstatus Current status in the good value range. 
@@ -57,21 +83,52 @@ function update_word_status($wid, $currstatus)
 {
     global $tbpref;
     if (($currstatus >= 1 && $currstatus <= 5) || $currstatus == 99 || $currstatus == 98) {
-        $m1 = (int)runsql(
-            'UPDATE ' . $tbpref . 'words 
-            SET WoStatus = ' . $currstatus . ', WoStatusChanged = NOW(),' . make_score_random_insert_update('u') . '
-            WHERE WoID = ' . $wid, ''
-        );
+        $m1 = (int)set_word_status($wid, $currstatus);
         if ($m1 == 1) {
-            $currstatus = get_first_value('SELECT WoStatus as value FROM ' . $tbpref . 'words where WoID = ' . $wid);
+            $currstatus = get_first_value(
+                "SELECT WoStatus AS value FROM {$tbpref}words WHERE WoID = $wid"
+            );
             if (!isset($currstatus)) {
                 return null;
             }
-            return make_status_controls_test_table(1, $currstatus, $wid);
+            return make_status_controls_test_table(1, (int)$currstatus, $wid);
         }
     } else {
         return null;
     }
+}
+
+
+/**
+ * Do a word status change.
+ * 
+ * @param int  $wid Word ID
+ * @param bool $up  Should the status be incremeted or decremented
+ * 
+ * @return string HTML-formatted string for increments
+ * 
+ * @global string $tbpref Database table prefix.
+ * 
+ * @todo 2.9.0 Dirty PHP implementation, needs further refactoring
+ */
+function ajax_increment_term_status($wid, $up)
+{
+    global $tbpref;
+
+    $tempstatus = get_first_value(
+        "SELECT WoStatus as value 
+        FROM {$tbpref}words 
+        WHERE WoID = $wid"
+    );
+    if (!isset($tempstatus)) {
+        return '';
+    }
+    $currstatus = get_new_status((int)$tempstatus, $up);
+    $formatted = update_word_status($wid, $currstatus);
+    if ($formatted === null) {
+        return '';
+    }
+    return $formatted;
 }
 
 /**
@@ -83,26 +140,21 @@ function update_word_status($wid, $currstatus)
  * @return void
  * 
  * @global string $tbpref Database table prefix.
+ * 
+ * @see ajax_increment_term_status Return values instead of printing.
  */
 function do_ajax_chg_term_status($wid, $up)
 {
-    global $tbpref;
-    chdir('..');
-
-    $tempstatus = get_first_value(
-        'SELECT WoStatus as value 
-        FROM ' . $tbpref . 'words 
-        WHERE WoID = ' . $wid
-    );
-    if (!isset($tempstatus)) {
+    $result = ajax_increment_term_status($wid, $up);
+    if ($result == null) {
         echo '';
-        return;
     }
-    $currstatus = get_new_status((int)$tempstatus, $up);
-    echo update_word_status($wid, $currstatus);
+    echo $result;
 }
 
 if (getreq('id') != '' && getreq('data') != '') {
+    // Deprecated way of accessing the request since 2.9.0! 
+    // Use the REST API with "action_type=regexp".
     do_ajax_chg_term_status((int)$_REQUEST['id'], (bool)$_REQUEST['data']);
 }
 

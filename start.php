@@ -44,7 +44,7 @@ function start_do_page()
 
     pagestart('Select Table Set', false);
 
-?>
+    ?>
 
 <table class="tab2" cellspacing="0" cellpadding="5">
     <tr>
@@ -74,7 +74,7 @@ function start_do_page()
     </tr>
 </table>
 
-<?php
+    <?php
     pageend();
 }
 

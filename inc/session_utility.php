@@ -1031,14 +1031,16 @@ function get_links_from_new_feed($NfSourceURI): array|false
         $source = ($feed_tags['item']=='entry') ? 'content' : 'description';
         $rss_data['feed_text'] = $source;
         foreach ($rss_data as $i=>$val){
-            if (is_array($val))
+            if (is_array($val)) {
                 $rss_data[$i]['text'] = $val[$source];
+            }
         }
     } else if ($enc_count > $enc_nocount) {
         $rss_data['feed_text'] = 'encoded';
         foreach ($rss_data as $i=>$val){
-            if (is_array($val))
+            if (is_array($val)) {
                 $rss_data[$i]['text'] = $val['encoded'];
+            }
         }
     }
     $rss_data['feed_title'] = $rss->getElementsByTagName('title')->item(0)->nodeValue;
@@ -1601,45 +1603,76 @@ function getprefixes(): array
     return $prefix;
 }
 
+
 /**
- * Select the path for a media (audio or video).
+ * Return the list of media files found in folder, recursively.
  *
- * @param string $f Previous media file URI
+ * @param string $dir Directory to search into.
  *
- * @return string HTML-formatted string for media selection
+ * @return array All paths found (matching files and folders) in "paths" and folders in "folders".
  */
-function selectmediapath($f): string 
+function media_paths_search($dir)
 {
-    $exists = file_exists('media');
-    if ($exists) {
-        if (is_dir('media')) { 
-            $msg = ''; 
-        } else { 
-            $msg = '<br />[Error: "../' . basename(getcwd()) . '/media" exists, but it is not a directory.]'; 
+    $is_windows = str_starts_with(strtoupper(PHP_OS), "WIN");
+    $mediadir = scandir($dir);
+    $formats = array('mp3', 'mp4', 'ogg', 'wav', 'webm');
+    $paths = array(
+        "paths" => array($dir),
+        "folders" => array($dir)
+    );
+    // For each item in directory
+    foreach ($mediadir as $path) {
+        if (str_starts_with($path, ".") || is_dir($dir . '/' . $path)) {
+            continue;
         }
-    } else {
-        $msg = '<br />[Directory "../' . basename(getcwd()) . '/media" does not yet exist.]';
+        // Add files to paths
+        if ($is_windows) { 
+            $encoded = mb_convert_encoding($path, 'UTF-8', 'Windows-1252'); 
+        } else {
+            $encoded = $path;
+        }
+        $ex = strtolower(pathinfo($encoded, PATHINFO_EXTENSION));
+        if (in_array($ex, $formats)) {
+            $paths["paths"][] = $dir . '/' . $encoded;
+        }
     }
-    $r = '<p>
-    YouTube, Dailymotion, Vimeo or choose a file in "../' . basename(getcwd()) . '/media"
-    <br />
-    (only mp3, mp4, ogg, wav, webm files shown):
-    </p> ' . $msg;
-    if ($msg == '') {
-        $r .= '
-        <select name="Dir" onchange="{val=this.form.Dir.options[this.form.Dir.selectedIndex].value; if (val != \'\') this.form.' 
-            . $f . '.value = val; this.form.Dir.value=\'\';}" style="width: 200px;">
-            <option value="">[Choose...]</option>' . 
-            selectmediapathoptions('media') . 
-        '</select> ';
+    // Do the folder in a second time to get a better ordering
+    foreach ($mediadir as $path) {
+        if (str_starts_with($path, ".") || !is_dir($dir . '/' . $path)) {
+            continue;
+        }
+        // For each folder, recursive search
+        $subfolder_paths = media_paths_search($dir . '/' . $path);
+        $paths["folders"] = array_merge($paths["folders"], $subfolder_paths["folders"]);
+        $paths["paths"] = array_merge($paths["paths"], $subfolder_paths["paths"]);
     }
-    $r .= '<span class="click" onclick="do_ajax_update_media_select();" style="margin-left: 16px;">
-        <img src="icn/arrow-circle-135.png" title="Refresh Media Selection" alt="Refresh Media Selection" /> Refresh</span>';
-    return $r;
+    return $paths;
 }
 
 /**
- * Get the dirrent options to dsplay as acceptable media files.
+ * Return the paths for all media files.
+ *
+ * @return string[] Paths of media files
+ */
+function get_media_paths()
+{
+    $answer = array(
+        "base_path" => basename(getcwd())
+    );
+    if (!file_exists('media')) {
+        $answer["error"] = "does_not_exist";
+    } else if (!is_dir('media')) {
+        $answer["error"] = "not_a_directory";
+    } else {
+        $paths = media_paths_search('media');
+        $answer["paths"] = $paths["paths"];
+        $answer["folders"] = $paths["folders"];
+    }
+    return $answer;
+}
+
+/**
+ * Get the different options to display as acceptable media files.
  *
  * @param string $dir Directory containing files
  *
@@ -1647,27 +1680,48 @@ function selectmediapath($f): string
  */
 function selectmediapathoptions($dir): string 
 {
-    $is_windows = ("WIN" == strtoupper(substr(PHP_OS, 0, 3)));
-    $mediadir = scandir($dir);
-    $formats = array('mp3', 'mp4', 'ogg', 'wav', 'webm');
-    $r = '<option disabled="disabled">-- Directory: ' . tohtml($dir) . ' --</option>';
-    foreach ($mediadir as $entry) {
-        if ($is_windows) { 
-            $entry = mb_convert_encoding($entry, 'UTF-8', 'ISO-8859-1'); 
-        }
-        if (substr($entry, 0, 1) != '.' && !is_dir($dir . '/' . $entry)) {
-            $ex = strtolower(pathinfo($entry, PATHINFO_EXTENSION));
-            if (in_array($ex, $formats)) {
-                $r .= '<option value="' . tohtml($dir . '/' . $entry) . '">' . 
-                tohtml($dir . '/' . $entry) . '</option>'; 
-            }
+    $r = "";
+    //$r = '<option disabled="disabled">-- Directory: ' . tohtml($dir) . ' --</option>';
+    $options = media_paths_search($dir);
+    foreach ($options["paths"] as $op) {
+        if (in_array($op, $options["folders"])) {
+            $r .= '<option disabled="disabled">-- Directory: ' . tohtml($op) . '--</option>';
+        } else {
+            $r .= '<option value="' . tohtml($op) . '">' . tohtml($op) . '</option>';
         }
     }
-    foreach ($mediadir as $entry) {
-        if (substr($entry, 0, 1) != '.' && is_dir($dir . '/' . $entry)) {
-            $r .= selectmediapathoptions($dir . '/' . $entry); 
-        }
-    }
+    return $r;
+}
+
+/**
+ * Select the path for a media (audio or video).
+ *
+ * @param string $f HTML field name for media string in form. Will be used as this.form.[$f] in JS.
+ *
+ * @return string HTML-formatted string for media selection
+ */
+function selectmediapath($f): string 
+{
+    $media = get_media_paths();
+    $r = '<p>
+        YouTube, Dailymotion, Vimeo or choose a file in "../' . $media["base_path"] . '/media"
+        <br />
+        (only mp3, mp4, ogg, wav, webm files shown):
+    </p>
+    <p style="display: none;" id="mediaSelectErrorMessage"></p>
+    <img style="float: right; display: none;" id="mediaSelectLoadingImg" src="icn/waiting2.gif" />
+    <select name="Dir" style="display: none; width: 200px;" 
+    onchange="{val=this.form.Dir.options[this.form.Dir.selectedIndex].value; if (val != \'\') this.form.' 
+        . $f . '.value = val; this.form.Dir.value=\'\';}">
+    </select>
+    <span class="click" onclick="do_ajax_update_media_select();" style="margin-left: 16px;">
+        <img src="icn/arrow-circle-135.png" title="Refresh Media Selection" alt="Refresh Media Selection" /> 
+        Refresh
+    </span>
+    <script type="text/javascript">
+        // Populate fields with data
+        media_select_receive_data(' . json_encode($media) . ');
+    </script>';
     return $r;
 }
 
@@ -1690,7 +1744,8 @@ function get_seconds_selectoptions($v): string
 
 function get_playbackrate_selectoptions($v): string 
 {
-    if (! isset($v) ) { $v = '10'; 
+    if (!isset($v) ) { 
+        $v = '10'; 
     }
     $r = '';
     for ($i=5; $i <= 15; $i++) {
@@ -2049,59 +2104,59 @@ function get_selected($value, $selval)
 /**
  * Create a projection operator do perform word test.
  * 
- * @param int $key Type of test. 
- *                 * 0: word selection
- *                 * 1: text item selection
- *                 * 2: from language
- *                 * 3: from text
+ * @param int       $key   Type of test. 
+ *                         - 0: word selection
+ *                         - 1: text item selection
+ *                         - 2: from language
+ *                         - 3: from text
  * @param array|int $value Object to select.
  * 
  * @return string Operator
  * 
- * @global string $tbpref;
+ * @global string $tbpref
  */
 function do_test_test_get_projection($key, $value)
 {
     global $tbpref;
     switch ($key)
     {
-        case 0:
-            $id_string = implode(",", $value);
-            $testsql = " {$tbpref}words WHERE WoID IN ($id_string) ";
-            $cntlang = get_first_value(
-                "SELECT COUNT(DISTINCT WoLgID) AS value 
+    case 0:
+        $id_string = implode(",", $value);
+        $testsql = " {$tbpref}words WHERE WoID IN ($id_string) ";
+        $cntlang = get_first_value(
+            "SELECT COUNT(DISTINCT WoLgID) AS value 
                 FROM $testsql"
-            );
-            if ($cntlang > 1) {
-                echo "<p>Sorry - The selected terms are in $cntlang languages," . 
-                " but tests are only possible in one language at a time.</p>";
-                exit();
-            }
-            break;
-        case 1:
-            $id_string = implode(",", $value);
-            $testsql = " {$tbpref}words, {$tbpref}textitems2 
+        );
+        if ($cntlang > 1) {
+            echo "<p>Sorry - The selected terms are in $cntlang languages," . 
+            " but tests are only possible in one language at a time.</p>";
+            exit();
+        }
+        break;
+    case 1:
+        $id_string = implode(",", $value);
+        $testsql = " {$tbpref}words, {$tbpref}textitems2 
             WHERE Ti2LgID = WoLgID AND Ti2WoID = WoID AND Ti2TxID IN ($id_string) ";
-            $cntlang = get_first_value(
-                "SELECT COUNT(DISTINCT WoLgID) AS value 
+        $cntlang = get_first_value(
+            "SELECT COUNT(DISTINCT WoLgID) AS value 
                 FROM $testsql"
-            );
-            if ($cntlang > 1) {
-                echo "<p>Sorry - The selected terms are in $cntlang languages," . 
-                " but tests are only possible in one language at a time.</p>";
-                exit();
-            }
-            break;
-        case 2:
-            $testsql = " {$tbpref}words WHERE WoLgID = $value ";
-            break;
-        case 3:
-            $testsql = " {$tbpref}words, {$tbpref}textitems2 
+        );
+        if ($cntlang > 1) {
+            echo "<p>Sorry - The selected terms are in $cntlang languages," . 
+            " but tests are only possible in one language at a time.</p>";
+            exit();
+        }
+        break;
+    case 2:
+        $testsql = " {$tbpref}words WHERE WoLgID = $value ";
+        break;
+    case 3:
+        $testsql = " {$tbpref}words, {$tbpref}textitems2 
             WHERE Ti2LgID = WoLgID AND Ti2WoID = WoID AND Ti2TxID = $value ";
-            break;
-        default:
-            my_die("do_test_test.php called with wrong parameters"); 
-            break;
+        break;
+    default:
+        my_die("do_test_test.php called with wrong parameters"); 
+        break;
     }
     return $testsql;
 }
@@ -2109,32 +2164,33 @@ function do_test_test_get_projection($key, $value)
 /**
  * Prepare the SQL when the text is a selection.
  * 
- * @param int $selection_type. 2 is words selection and 3 is terms selection.
- * @param string $selection_data Comma separated ID of elements to test.
+ * @param int    $selection_type. 2 is words selection and 3 is terms selection.
+ * @param string $selection_data  Comma separated ID of elements to test.
  * 
  * @return string SQL formatted string suitable to projection (inserted in a "FROM ")
  */
-function do_test_test_from_selection($selection_type, $selection_data) {
+function do_test_test_from_selection($selection_type, $selection_data)
+{
     $data_string_array = explode(",", trim($selection_data, "()"));
     $data_int_array = array_map('intval', $data_string_array);
     switch ((int)$selection_type) {
-        case 2:
-            $test_sql = do_test_test_get_projection(0, $data_int_array);
-            break;
-        case 3:
-            $test_sql = do_test_test_get_projection(1, $data_int_array);
-            break;
-        default:
-            $test_sql = $selection_data;
-            $cntlang = get_first_value(
-                "SELECT COUNT(DISTINCT WoLgID) AS value 
+    case 2:
+        $test_sql = do_test_test_get_projection(0, $data_int_array);
+        break;
+    case 3:
+        $test_sql = do_test_test_get_projection(1, $data_int_array);
+        break;
+    default:
+        $test_sql = $selection_data;
+        $cntlang = get_first_value(
+            "SELECT COUNT(DISTINCT WoLgID) AS value 
                 FROM $test_sql"
-            );
-            if ($cntlang > 1) {
-                echo "<p>Sorry - The selected terms are in $cntlang languages," . 
-                " but tests are only possible in one language at a time.</p>";
-                exit();
-            }
+        );
+        if ($cntlang > 1) {
+            echo "<p>Sorry - The selected terms are in $cntlang languages," . 
+            " but tests are only possible in one language at a time.</p>";
+            exit();
+        }
     }
     return $test_sql;
 }
@@ -2629,7 +2685,7 @@ Page
     else {
         ?>
 <select name="page" onchange="{val=document.<?php echo $formname; ?>.page.options[document.<?php echo $formname; ?>.page.selectedIndex].value; location.href='<?php echo $script; ?>?page=' + val;}">
-    <?php echo get_paging_selectoptions($currentpage, $pages); ?>
+        <?php echo get_paging_selectoptions($currentpage, $pages); ?>
 </select>
         <?php
     }
@@ -2771,9 +2827,11 @@ function createTheDictLink($u, $t)
     }
     // 2 ### found
     // Get encoding
-    $enc = trim(substr(
-        $url, $pos + mb_strlen($matches[0]), $pos2 - $pos - mb_strlen($matches[0])
-    ));
+    $enc = trim(
+        substr(
+            $url, $pos + mb_strlen($matches[0]), $pos2 - $pos - mb_strlen($matches[0])
+        )
+    );
     $r = substr($url, 0, $pos);
     $r .= urlencode(mb_convert_encoding($trm, $enc, 'UTF-8'));
     if ($pos2+3 < strlen($url)) { 
@@ -2929,10 +2987,9 @@ function makeOpenDictStrDynSent($url, $sentctljs, $txt): string
     }
     parse_str($parsed_url['query'], $url_query);
     $popup |= array_key_exists('lwt_popup', $url_query);
-    if (
-        str_starts_with($url, "ggl.php") || 
-        str_ends_with($parsed_url['path'], "/ggl.php")
-        ) {
+    if (str_starts_with($url, "ggl.php")  
+        || str_ends_with($parsed_url['path'], "/ggl.php")
+    ) {
         $url = str_replace('?', '?sent=1&', $url);
     }
     return '<span class="click" onclick="translateSentence'.($popup ? '2' : '').'(' . 
@@ -2985,8 +3042,10 @@ function createDictLinksInEditWin2($lang, $sentctljs, $wordctljs): string
         $r .= '<span class="click" onclick="translateWord2(' . 
         prepare_textdata_js($wb3) . ',' . $wordctljs . ');">Translator</span>
          | <span class="click" onclick="translateSentence2(' . 
-         prepare_textdata_js($sent_mode ? 
-         str_replace('?', '?sent=1&', $wb3) : $wb3) . ',' . $sentctljs . 
+        prepare_textdata_js(
+            $sent_mode ? 
+            str_replace('?', '?sent=1&', $wb3) : $wb3
+        ) . ',' . $sentctljs . 
          ');">Translate sentence</span>'; 
     }
     return $r;
@@ -3115,7 +3174,7 @@ function createDictLinksInEditWin3($lang, $sentctljs, $wordctljs): string
 /**
  * Return checked attribute if $val is in array $_REQUEST[$name]
  *
- * @param mixed  $val Value to look for, needle
+ * @param mixed  $val  Value to look for, needle
  * @param string $name Key of request haystack.
  *
  * @return string ' ' of ' checked="checked" ' if the qttribute should be checked.
@@ -3398,6 +3457,75 @@ function mask_term_in_sentence($s,$regexword): string
 }
 
 /**
+ * Return statistics about a list of text ID.
+ *
+ * It is useful for unknown percent with this fork.
+ *
+ * The echo is an output array{0: int, 1: int, 2: int, 
+ * 3: int, 4: int, 5: int} 
+ * Total number of words, number of expression, statistics, total unique, 
+ * number of unique expressions, unique statistics
+ *
+ * @param string $texts_id Texts ID separated by comma
+ *
+ * @global string $tbpref Table name prefix
+ * 
+ * @return array Statistics under the form of an array
+ */
+function return_textwordcount($texts_id): array
+{
+    global $tbpref;
+    
+    $r = array(
+        // Total for text
+        'total'=> array(), 
+        'expr'=> array(), 
+        'stat'=> array(),
+        // Unique words
+        'totalu' => array(),
+        'expru' => array(),
+        'statu'=> array()
+    );
+    $res = do_mysqli_query(
+        "SELECT Ti2TxID AS text, COUNT(DISTINCT LOWER(Ti2Text)) AS value, 
+        COUNT(LOWER(Ti2Text)) AS total
+		FROM {$tbpref}textitems2
+		WHERE Ti2WordCount = 1 AND Ti2TxID IN($texts_id)
+		GROUP BY Ti2TxID"
+    );
+    while ($record = mysqli_fetch_assoc($res)) {
+        $r["total"][$record['text']] = $record['total'];
+        $r["totalu"][$record['text']] = $record['value'];
+    }
+    mysqli_free_result($res);
+    $res = do_mysqli_query(
+        "SELECT Ti2TxID AS text, COUNT(DISTINCT Ti2WoID) AS value, 
+        COUNT(Ti2WoID) AS total
+		FROM {$tbpref}textitems2
+		WHERE Ti2WordCount > 1 AND Ti2TxID IN({$texts_id})
+		GROUP BY Ti2TxID"
+    );
+    while ($record = mysqli_fetch_assoc($res)) {
+        $r["expr"][$record['text']] = $record['total'];
+        $r["expru"][$record['text']] = $record['value'];
+    }
+    mysqli_free_result($res);
+    $res = do_mysqli_query(
+        "SELECT Ti2TxID AS text, COUNT(DISTINCT Ti2WoID) AS value, 
+        COUNT(Ti2WoID) AS total, WoStatus AS status
+		FROM {$tbpref}textitems2, {$tbpref}words
+		WHERE Ti2WoID != 0 AND Ti2TxID IN({$texts_id}) AND Ti2WoID = WoID
+		GROUP BY Ti2TxID, WoStatus"
+    );
+    while ($record = mysqli_fetch_assoc($res)) {
+        $r["stat"][$record['text']][$record['status']] = $record['total'];
+        $r["statu"][$record['text']][$record['status']] = $record['value'];
+    }
+    mysqli_free_result($res);
+    return $r;
+}
+
+/**
  * Compute and echo word statistics about a list of text ID.
  *
  * It is useful for unknown percent with this fork.
@@ -3410,52 +3538,12 @@ function mask_term_in_sentence($s,$regexword): string
  * @param string $textID Text IDs separated by comma
  *
  * @global string $tbpref Table name prefix
+ * 
+ * @deprecated 2.9.0 Use return_textwordcount instead.
  */
-function textwordcount($textID): void 
+function textwordcount($textID)
 {
-    global $tbpref;
-    $total = $total_unique = $expr = $expr_unique = $stat = $stat_unique = array();
-    $res = do_mysqli_query(
-        "SELECT Ti2TxID AS text, COUNT(DISTINCT LOWER(Ti2Text)) AS value, 
-        COUNT(LOWER(Ti2Text)) AS total
-		FROM {$tbpref}textitems2
-		WHERE Ti2WordCount = 1 AND Ti2TxID IN($textID)
-		GROUP BY Ti2TxID"
-    );
-    while ($record = mysqli_fetch_assoc($res)) {
-        $total[$record['text']] = $record['total'];
-        $total_unique[$record['text']] = $record['value'];
-    }
-    mysqli_free_result($res);
-    $res = do_mysqli_query(
-        'SELECT Ti2TxID as text, count(distinct Ti2WoID) as value, 
-        count(Ti2WoID) as total
-		from ' . $tbpref . 'textitems2
-		where Ti2WordCount > 1 and Ti2TxID in(' . $textID . ')
-		group by Ti2TxID'
-    );
-    while ($record = mysqli_fetch_assoc($res)) {
-        $expr[$record['text']] = $record['total'];
-        $expr_unique[$record['text']] = $record['value'];
-    }
-    mysqli_free_result($res);
-    $res = do_mysqli_query(
-        'SELECT Ti2TxID as text, count(distinct Ti2WoID) as value, 
-        count(Ti2WoID) as total, WoStatus as status
-		from ' . $tbpref . 'textitems2, ' . $tbpref . 'words
-		where Ti2WoID!=0 and Ti2TxID in(' . $textID . ') and Ti2WoID=WoID
-		group by Ti2TxID, WoStatus'
-    );
-    while ($record = mysqli_fetch_assoc($res)) {
-        $stat[$record['text']][$record['status']]=$record['total'];
-        $stat_unique[$record['text']][$record['status']]=$record['value'];
-    }
-    mysqli_free_result($res);
-    $r = array(
-        'total'=>$total, 'expr'=>$expr, 'stat'=>$stat, 'totalu'=>$total_unique,
-        'expru'=>$expr_unique, 'statu'=>$stat_unique
-    );
-    echo json_encode($r);
+    echo json_encode(return_textwordcount($textID));
 }
 
 // -------------------------------------------------------------
@@ -3517,8 +3605,9 @@ function texttodocount2($textid): string
             $dict = "http://" . $dict;
         }
         parse_str(parse_url($dict, PHP_URL_QUERY), $url_query);
-        if (array_key_exists('lwt_translator', $url_query) && 
-        $url_query['lwt_translator'] == "libretranslate") {
+        if (array_key_exists('lwt_translator', $url_query)  
+            && $url_query['lwt_translator'] == "libretranslate"
+        ) {
             $tl = $url_query['target'];
             $sl = $url_query['source'];
         } else {
@@ -3544,6 +3633,105 @@ function texttodocount2($textid): string
         ');" value="Ignore All" />'; 
     }
     return $res;
+}
+
+/**
+ * Perform a SQL query to find sentences containing a word.
+ * 
+ * @param int|null $wid    Word ID
+ * @param string   $wordlc Word to look for in lowercase
+ * @param int      $lid    Language ID
+ * @param int      $limit  Maximum number of sentences to return
+ * 
+ * @return mysqli_result Query
+ */
+function sentences_from_word($wid, $wordlc, $lid, $limit=-1)
+{
+    global $tbpref;
+    $mecab_str = null;
+    if (empty($wid)) {
+        $sql = "SELECT DISTINCT SeID, SeText 
+        FROM {$tbpref}sentences, {$tbpref}textitems2 
+        WHERE LOWER(Ti2Text) = " . convert_string_to_sqlsyntax($wordlc) . " 
+        AND Ti2WoID = 0 AND SeID = Ti2SeID AND SeLgID = $lid 
+        ORDER BY CHAR_LENGTH(SeText), SeText";
+    } else if ($wid == -1) {
+        $res = do_mysqli_query(
+            "SELECT LgRegexpWordCharacters, LgRemoveSpaces 
+            FROM {$tbpref}languages 
+            WHERE LgID = $lid"
+        );
+        $record = mysqli_fetch_assoc($res);
+        mysqli_free_result($res);
+        $removeSpaces = $record["LgRemoveSpaces"];
+        if ('MECAB'== strtoupper(trim($record["LgRegexpWordCharacters"]))) {
+            $mecab_file = sys_get_temp_dir() . "/" . $tbpref . "mecab_to_db.txt";
+            //$mecab_args = ' -F {%m%t\\t -U {%m%t\\t -E \\n ';
+            // For instance, "このラーメン" becomes "この    6    68\nラーメン    7    38"
+            $mecab_args = ' -F %m\\t%t\\t%h\\n -U %m\\t%t\\t%h\\n -E EOP\\t3\\t7\\n ';
+            if (file_exists($mecab_file)) { 
+                unlink($mecab_file); 
+            }
+            $fp = fopen($mecab_file, 'w');
+            fwrite($fp, $wordlc . "\n");
+            fclose($fp);
+            $mecab = get_mecab_path($mecab_args);
+            $handle = popen($mecab . $mecab_file, "r");
+            if (!feof($handle)) {
+                $row = fgets($handle, 256);
+                // Format string removing numbers. 
+                // MeCab tip: 2 = hiragana, 6 = kanji, 7 = katakana
+                $mecab_str = "\t" . preg_replace_callback(
+                    '([267]?)\t[0-9]+$', 
+                    function ($matches) {
+                        return isset($matches[1]) ? "\t" : "";
+                    }, 
+                    $row
+                ); 
+            }
+            pclose($handle);
+            unlink($mecab_file);
+            $sql 
+            = "SELECT SeID, SeText, 
+            concat(
+                '\\t',
+                group_concat(Ti2Text ORDER BY Ti2Order asc SEPARATOR '\\t'),
+                '\\t'
+            ) val
+             FROM {$tbpref}sentences, {$tbpref}textitems2
+             WHERE lower(SeText)
+             LIKE " . convert_string_to_sqlsyntax("%$wordlc%") . "
+             AND SeID = Ti2SeID AND SeLgID = $lid AND Ti2WordCount<2
+             GROUP BY SeID HAVING val 
+             LIKE " . convert_string_to_sqlsyntax_notrim_nonull("%$mecab_str%") . "
+             ORDER BY CHAR_LENGTH(SeText), SeText";
+        } else {
+            if ($removeSpaces == 1) {
+                $pattern = convert_string_to_sqlsyntax($wordlc);
+            } else {
+                $pattern = convert_regexp_to_sqlsyntax(
+                    '(^|[^' . $record["LgRegexpWordCharacters"] . '])'
+                     . remove_spaces($wordlc, $removeSpaces)
+                     . '([^' . $record["LgRegexpWordCharacters"] . ']|$)'
+                );
+            }
+            $sql 
+            = "SELECT DISTINCT SeID, SeText
+             FROM {$tbpref}sentences
+             WHERE SeText RLIKE $pattern AND SeLgID = $lid
+             ORDER BY CHAR_LENGTH(SeText), SeText";
+        }
+    } else {
+        $sql 
+        = "SELECT DISTINCT SeID, SeText
+         FROM {$tbpref}sentences, {$tbpref}textitems2
+         WHERE Ti2WoID = $wid AND SeID = Ti2SeID AND SeLgID = $lid
+         ORDER BY CHAR_LENGTH(SeText), SeText";
+    }
+    if ($limit) {
+        $sql .= " LIMIT 0,$limit";
+    }
+    return do_mysqli_query($sql);
 }
 
 /**
@@ -3658,6 +3846,72 @@ function getSentence($seid, $wordlc, $mode): array
 }
 
 /**
+ * Return sentences containing a word.
+ * 
+ * @param int      $lang   Language ID
+ * @param string   $wordlc Word to look for in lowercase
+ * @param int|null $wid    Word ID
+ * @param int|null $mode   Sentences to get: 
+ *                         - Up to 1 is 1 sentence, 
+ *                         - 2 is previous and current sentence, 
+ *                         - 3 is previous, current and next one
+ * @param int      $limit  Maximum number of sentences to return
+ * 
+ * @return array Array of sentences found
+ */
+function sentences_with_word($lang, $wordlc, $wid, $mode=0, $limit=20): array 
+{
+    $r = array();
+    $res = sentences_from_word($wid, $wordlc, $lang, $limit);
+    $last = '';
+    if (is_null($mode)) {
+        $mode = (int) getSettingWithDefault('set-term-sentence-count');
+    }
+    while ($record = mysqli_fetch_assoc($res)) {
+        if ($last != $record['SeText']) {
+            $sent = getSentence($record['SeID'], $wordlc, $mode);
+            if (mb_strstr($sent[1], '}', false, 'UTF-8')) {
+                $r[] = $sent;
+            }
+        }
+        $last = $record['SeText'];
+    }
+    mysqli_free_result($res);
+    return $r;
+}
+
+/**
+ * Prepare the area to for examples sentences of a word.
+ */
+function example_sentences_area($lang, $termlc, $selector, $wid)
+{
+    ?>
+<div id="exsent">
+    <!-- Interactable text -->
+    <div id="exsent-interactable">
+        <span class="click" onclick="do_ajax_show_sentences(
+            <?php echo $lang; ?>, <?php echo prepare_textdata_js($termlc); ?>, 
+            <?php echo htmlentities(json_encode($selector)); ?>, <?php echo $wid; ?>);">
+            <img src="icn/sticky-notes-stack.png" title="Show Sentences" alt="Show Sentences" /> 
+            Show Sentences
+        </span>
+    </div>
+    <!-- Loading icon -->
+    <img id="exsent-waiting" style="display: none;" src="icn/waiting2.gif" />
+    <!-- Displayed output -->
+    <div id="exsent-sentences" style="display: none;">
+        <p><b>Sentences in active texts with <i><?php echo tohtml($termlc) ?></i></b></p>
+        <p>
+            (Click on 
+            <img src="icn/tick-button.png" title="Choose" alt="Choose" /> 
+            to copy sentence into above term)
+        </p>
+    </div>
+</div>
+    <?php
+}
+
+/**
  * Show 20 sentences containg $wordlc.
  *
  * @param int      $lang      Language ID
@@ -3675,110 +3929,16 @@ function getSentence($seid, $wordlc, $mode): array
  */
 function get20Sentences($lang, $wordlc, $wid, $jsctlname, $mode): string 
 {
-    global $tbpref;
     $r = '<p><b>Sentences in active texts with <i>' . tohtml($wordlc) . '</i></b></p>
     <p>(Click on <img src="icn/tick-button.png" title="Choose" alt="Choose" /> 
     to copy sentence into above term)</p>';
-    $mecab_str = null;
-    if (empty($wid)) {
-        $sql = "SELECT DISTINCT SeID, SeText 
-        FROM {$tbpref}sentences, {$tbpref}textitems2 
-        WHERE LOWER(Ti2Text) = " . convert_string_to_sqlsyntax($wordlc) . " 
-        AND Ti2WoID = 0 AND SeID = Ti2SeID AND SeLgID = $lang 
-        ORDER BY CHAR_LENGTH(SeText), SeText 
-        LIMIT 0,20";
-    } else if ($wid==-1) {
-        $res = do_mysqli_query(
-            'SELECT LgRegexpWordCharacters, LgRemoveSpaces 
-            FROM ' . $tbpref . 'languages 
-            WHERE LgID = ' . $lang
-        );
-        $record = mysqli_fetch_assoc($res);
-        mysqli_free_result($res);
-        $removeSpaces = $record["LgRemoveSpaces"];
-        if ('MECAB'== strtoupper(trim($record["LgRegexpWordCharacters"]))) {
-            $mecab_file = sys_get_temp_dir() . "/" . $tbpref . "mecab_to_db.txt";
-            //$mecab_args = ' -F {%m%t\\t -U {%m%t\\t -E \\n ';
-            // For instance, "このラーメン" becomes "この    6    68\nラーメン    7    38"
-            $mecab_args = ' -F %m\\t%t\\t%h\\n -U %m\\t%t\\t%h\\n -E EOP\\t3\\t7\\n ';
-            if (file_exists($mecab_file)) { 
-                unlink($mecab_file); 
-            }
-            $fp = fopen($mecab_file, 'w');
-            fwrite($fp, $wordlc . "\n");
-            fclose($fp);
-            $mecab = get_mecab_path($mecab_args);
-            $handle = popen($mecab . $mecab_file, "r");
-            if (!feof($handle)) {
-                $row = fgets($handle, 256);
-                // Format string removing numbers. 
-                // MeCab tip: 2 = hiragana, 6 = kanji, 7 = katakana
-                $mecab_str = "\t" . preg_replace_callback(
-                    '([267]?)\t[0-9]+$', 
-                    function ($matches) {
-                        return isset($matches[1]) ? "\t" : "";
-                    }, 
-                    $row
-                ); 
-            }
-            pclose($handle);
-            unlink($mecab_file);
-            $sql 
-            = 'SELECT SeID, SeText, 
-            concat(
-                "\\t",
-                group_concat(Ti2Text ORDER BY Ti2Order asc SEPARATOR "\\t"),
-                "\\t"
-            ) val
-             FROM ' . $tbpref . 'sentences, ' . $tbpref . 'textitems2
-             WHERE lower(SeText)
-             LIKE ' . convert_string_to_sqlsyntax("%$wordlc%") . '
-             AND SeID = Ti2SeID AND SeLgID = ' . $lang . ' AND Ti2WordCount<2
-             GROUP BY SeID HAVING val 
-             LIKE ' . convert_string_to_sqlsyntax_notrim_nonull("%$mecab_str%") . '
-             ORDER BY CHAR_LENGTH(SeText), SeText 
-             LIMIT 0,20';
-        } else {
-            if (!($removeSpaces==1)) {
-                $pattern = convert_regexp_to_sqlsyntax(
-                    '(^|[^' . $record["LgRegexpWordCharacters"] . '])'
-                     . remove_spaces($wordlc, $removeSpaces)
-                     . '([^' . $record["LgRegexpWordCharacters"] . ']|$)'
-                );
-            } else {
-                $pattern = convert_string_to_sqlsyntax($wordlc);
-            }
-            $sql 
-            = "SELECT DISTINCT SeID, SeText
-             FROM {$tbpref}sentences
-             WHERE SeText RLIKE $pattern AND SeLgID = $lang
-             ORDER BY CHAR_LENGTH(SeText), SeText 
-             LIMIT 0,20";
-        }
-    } else {
-        $sql 
-        = "SELECT DISTINCT SeID, SeText
-         FROM {$tbpref}sentences, {$tbpref}textitems2
-         WHERE Ti2WoID = $wid AND SeID = Ti2SeID AND SeLgID = $lang
-         ORDER BY CHAR_LENGTH(SeText), SeText
-         LIMIT 0,20";
+    $sentences = sentences_with_word($lang, $wordlc, $wid, $mode);
+    foreach ($sentences as $sentence) {
+        $r .= '<span class="click" onclick="{' . $jsctlname . '.value=' . 
+            prepare_textdata_js($sentence[1]) . '; makeDirty();}">
+        <img src="icn/tick-button.png" title="Choose" alt="Choose" />
+        </span> &nbsp;' . $sentence[0] . '<br />';
     }
-    $res = do_mysqli_query($sql);
-    $r .= '<p>';
-    $last = '';
-    while ($record = mysqli_fetch_assoc($res)) {
-        if ($last != $record['SeText']) {
-            $sent = getSentence($record['SeID'], $wordlc, $mode);
-            if (mb_strstr($sent[1], '}', false, 'UTF-8')) {
-                $r .= '<span class="click" onclick="{' . $jsctlname . '.value=' . 
-                    prepare_textdata_js($sent[1]) . '; makeDirty();}">
-                <img src="icn/tick-button.png" title="Choose" alt="Choose" />
-                </span> &nbsp;' . $sent[0] . '<br />';
-            }
-        }
-        $last = $record['SeText'];
-    }
-    mysqli_free_result($res);
     $r .= '</p>';
     return $r;
 }
@@ -4283,7 +4443,7 @@ function restore_file($handle, $title): string
                 $start = 0;
                 continue;
             }
-            if (substr($sql_line, 0, 3) !== '-- ' ) {
+            if (substr($sql_line, 0, 3) !== '-- ') {
                 $res = mysqli_query(
                     $GLOBALS['DBCONNECTION'], insert_prefix_in_sql($sql_line)
                 );
@@ -4323,19 +4483,23 @@ function restore_file($handle, $title): string
 }
 
 
-
-// -------------------------------------------------------------
-
+/**
+ * Uses provided annotations, and annotations from database to update annotations.
+ * 
+ * @param int    $textid Id of the text on which to update annotations
+ * @param string $oldann Old annotations
+ * 
+ * @return string Updated annotations for this text. 
+ */
 function recreate_save_ann($textid, $oldann): string 
 {
     global $tbpref;
-    $newann = create_ann($textid);
     // Get the translations from $oldann:
     $oldtrans = array();
     $olditems = preg_split('/[\n]/u', $oldann);
     foreach ($olditems as $olditem) {
         $oldvals = preg_split('/[\t]/u', $olditem);
-        if ($oldvals[0] > -1) {
+        if ((int)$oldvals[0] > -1) {
             $trans = '';
             if (count($oldvals) > 3) { 
                 $trans = $oldvals[3]; 
@@ -4344,11 +4508,12 @@ function recreate_save_ann($textid, $oldann): string
         }
     }
     // Reset the translations from $oldann in $newann and rebuild in $ann:
+    $newann = create_ann($textid);
     $newitems = preg_split('/[\n]/u', $newann);
     $ann = '';
     foreach ($newitems as $newitem) {
         $newvals = preg_split('/[\t]/u', $newitem);
-        if ($newvals[0] > -1) {
+        if ((int)$newvals[0] > -1) {
             $key = $newvals[0] . "\t";
             if (isset($newvals[1])) { 
                 $key .= $newvals[1]; 
@@ -4363,37 +4528,46 @@ function recreate_save_ann($textid, $oldann): string
         $ann .= $item . "\n";
     }
     runsql(
-        'update ' . $tbpref . 'texts set ' .
-        'TxAnnotatedText = ' . convert_string_to_sqlsyntax($ann) . ' 
-        where TxID = ' . $textid, 
+        "UPDATE {$tbpref}texts 
+        SET TxAnnotatedText = " . convert_string_to_sqlsyntax($ann) . " 
+        WHERE TxID = $textid", 
         ""
     );
     return (string)get_first_value(
-        "select TxAnnotatedText as value 
-        from " . $tbpref . "texts 
-        where TxID = " . $textid
+        "SELECT TxAnnotatedText AS value 
+        FROM {$tbpref}texts 
+        where TxID = $textid"
     );
 }
 
-// -------------------------------------------------------------
-
+/**
+ * Create new annotations for a text.
+ * 
+ * @param int $textid Id of the text to create annotations for
+ * 
+ * @return string Annotations for the text
+ * 
+ * @since 2.9.0 Annotations "position" change, they are now equal to Ti2Order
+ * it was shifted by one index before.
+ */
 function create_ann($textid): string 
 {
     global $tbpref;
     $ann = '';
     $sql = 
-    'SELECT 
+    "SELECT 
     CASE WHEN Ti2WordCount>0 THEN Ti2WordCount ELSE 1 END AS Code, 
     CASE WHEN CHAR_LENGTH(Ti2Text)>0 THEN Ti2Text ELSE WoText END AS TiText, 
     Ti2Order, 
     CASE WHEN Ti2WordCount > 0 THEN 0 ELSE 1 END AS TiIsNotWord, 
     WoID, WoTranslation 
     FROM (
-        ' . $tbpref . 'textitems2 
-        LEFT JOIN ' . $tbpref . 'words ON (Ti2WoID = WoID) AND (Ti2LgID = WoLgID)
+        {$tbpref}textitems2 
+        LEFT JOIN {$tbpref}words
+        ON Ti2WoID = WoID AND Ti2LgID = WoLgID
     ) 
-    WHERE Ti2TxID = ' . $textid . ' 
-    ORDER BY Ti2Order asc, Ti2WordCount desc';
+    WHERE Ti2TxID = $textid
+    ORDER BY Ti2Order ASC, Ti2WordCount DESC";
     $savenonterm = '';
     $saveterm = '';
     $savetrans = '';
@@ -4401,37 +4575,34 @@ function create_ann($textid): string
     $until = 0;
     $res = do_mysqli_query($sql);
     $order = null;
+    // For each term (includes blanks)
     while ($record = mysqli_fetch_assoc($res)) {
         $actcode = (int)$record['Code'];
         $order = (int)$record['Ti2Order'];
-        if ($order <= $until ) {
+        if ($order <= $until) {
             continue;
         }
-        if ($order > $until ) {
-            $ann = $ann . process_term(
-                $savenonterm, $saveterm, $savetrans, $savewordid, $order
-            );
-            $savenonterm = '';
-            $saveterm = '';
-            $savetrans = '';
-            $savewordid = '';
-            $until = $order;
-        }
+        $savenonterm = '';
+        $saveterm = '';
+        $savetrans = '';
+        $savewordid = '';
+        $until = $order;
         if ($record['TiIsNotWord'] != 0) {
-            $savenonterm = $savenonterm . $record['TiText'];
-        }
-        else {
-            $until = $order + 2 * ($actcode-1);
+            $savenonterm = $record['TiText'];
+        } else {
+            $until = $order + 2 * ($actcode - 1);
             $saveterm = $record['TiText'];
-            $savetrans = '';
-            if(isset($record['WoID'])) {
+            if (isset($record['WoID'])) {
                 $savetrans = $record['WoTranslation'];
                 $savewordid = $record['WoID'];
             }
         }
-    } // while
+        // Append the annotation
+        $ann .= process_term(
+            $savenonterm, $saveterm, $savetrans, $savewordid, $order
+        );
+    }
     mysqli_free_result($res);
-    $ann .= process_term($savenonterm, $saveterm, $savetrans, $savewordid, $order);
     return $ann;
 }
 
@@ -4447,9 +4618,11 @@ function insert_prefix_in_sql($sql_line)
     }
     if (substr($sql_line, 0, 21) == "DROP TABLE IF EXISTS ") {
         return substr($sql_line, 0, 21) . $tbpref . substr($sql_line, 21);
-    } if (substr($sql_line, 0, 14) == "CREATE TABLE `") {
+    } 
+    if (substr($sql_line, 0, 14) == "CREATE TABLE `") {
         return substr($sql_line, 0, 14) . $tbpref . substr($sql_line, 14);
-    } if (substr($sql_line, 0, 13) == "CREATE TABLE ") {
+    } 
+    if (substr($sql_line, 0, 13) == "CREATE TABLE ") {
         return substr($sql_line, 0, 13) . $tbpref . substr($sql_line, 13);
     } 
     return $sql_line; 
@@ -4479,10 +4652,10 @@ function process_term($nonterm, $term, $trans, $wordid, $line): string
 {
     $r = '';
     if ($nonterm != '') { 
-        $r = $r . "-1\t" . $nonterm . "\n"; 
+        $r = "-1\t$nonterm\n"; 
     }
     if ($term != '') { 
-        $r = $r . $line . "\t" . $term . "\t" . trim($wordid) . "\t" . 
+        $r .=  "$line\t$term\t" . trim($wordid) . "\t" . 
         get_first_translation($trans) . "\n"; 
     }
     return $r;
@@ -4493,10 +4666,12 @@ function process_term($nonterm, $term, $trans, $wordid, $line): string
 function get_first_translation($trans): string 
 {
     $arr = preg_split('/[' . get_sepas()  . ']/u', $trans);
-    if (count($arr) < 1) { return ''; 
+    if (count($arr) < 1) { 
+        return ''; 
     }
     $r = trim($arr[0]);
-    if ($r == '*') { $r =""; 
+    if ($r == '*') { 
+        $r = ""; 
     }
     return $r;
 }
@@ -4509,8 +4684,7 @@ function get_annotation_link($textid): string
     if (get_first_value('select length(TxAnnotatedText) as value from ' . $tbpref . 'texts where TxID=' . $textid) > 0) { 
         return ' &nbsp;<a href="print_impr_text.php?text=' . $textid . 
         '" target="_top"><img src="icn/tick.png" title="Annotated Text" alt="Annotated Text" /></a>'; 
-    }
-    else { 
+    } else { 
         return ''; 
     }
 }
@@ -4534,12 +4708,14 @@ function trim_value(&$value): void
  * @param  string $text Text to be converted
  * @param  string $lang Language code (usually BCP 47 or ISO 639-1)
  * @return string Parsed text in a phonetic format.
+ * 
+ * @since 2.9.0 Any language starting by "ja" or "jp" is considered phonetic.
  */
 function phonetic_reading($text, $lang) 
 {
     global $tbpref;
     // Many languages are already phonetic
-    if ($lang != 'ja' && $lang != 'jp-JP' && $lang != 'jp' ) {
+    if (!str_starts_with($lang, "ja") && !str_starts_with($lang, "jp")) {
         return $text;
     }
 

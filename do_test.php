@@ -239,7 +239,6 @@ function do_test_page($p)
 {
     pagestart_nobody(
         'Test',
-    
         "body {
             margin: 20px;
             max-width: 100%;

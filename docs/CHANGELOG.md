@@ -1,26 +1,65 @@
 # Changelog
 
-This project's changelog. Versions marked with "-fork" come from the community, other versions come from the canonical LWT ("official" branch on Git).
-For git tags, official releases are marked like "v1.0.0", while unofficial ones are marked like "v1.0.0-fork".
+This project's changelog. Versions marked with "-fork" come from the community,
+other versions come from the canonical LWT ("official" branch on Git).
+For git tags, official releases are marked like "v1.0.0", while unofficial
+ones are marked like "v1.0.0-fork".
 
 ## [Unreleased]
 
 ### Added
 
-* ``langFromDict`` and ``targetLangFromDict`` are now officially coming to the kernel utility functions.
-* Text and title boxes change language according to the text's language for short text creation/edition, long text creation and text check ([#111](https://github.com/HugoFara/lwt/issues/111)).
+* ``langFromDict`` and ``targetLangFromDict`` are now officially coming to the
+kernel utility functions.
+* Text and title boxes change language according to the text's language for
+short text creation/edition, long text creation and text check
+([#111](https://github.com/HugoFara/lwt/issues/111)).
 * Refactored texts with OOP:
   * New class: ``Text`` (in ``inc/classes/Text.php``).
   * New function: ``edit_texts_form`` (in ``edit_texts.php``) that takes a Text object as input.
 * Tests (checking if you know words) now use AJAX ([#112](https://github.com/HugoFara/lwt/issues/112)), it has several advantages:
   * Musics play fully
   * Page do not need to reload.
-  * The timer continues instead of resetting.
-* REST API, the new ``inc/ajax.php`` is intended to continue developping itself as a REST API.
+  * The timer continues instead of reseting.
+* REST API, the new ``inc/ajax.php`` is intended to continue developing itself
+as a REST API. It features the following interaction:
+  * On GET, ``action_type`` can be:
+    * ``version``: the REST API version and release date.
+    * ``test``: next word to test.
+    * ``tomorrow_test_count``: number of tests for the next day.
+    * ``phonetic_reading``: phonetic reading of a text.
+    * ``theme_path``: theming path for a file.
+    * ``texts_statistics``: various words statistics for each text.
+    * ``media_paths``: paths of files and folders in the ``/media`` folder.
+    * ``example_sentences``: list of sentences containing a word.
+    * ``imported_terms``: list of imported terms through terms upload.
+    * ``term_translations``: get the list of term translations to edit it's
+    annotation.
+  * On POST, ``action`` can be:
+    * ``reading_position``: ``action_type`` set to ``text`` of ``audio`` change
+    the reading position for a text or its audio.
+    * ``change_translation``, with values for ``action_type`` set to:
+      * ``add``: add a translation for a new word.
+      * ``update``: edit the translation of an existing word.
+    * ``term_status``, with values for ``action_type`` set to:
+      * ``increment``: increment or decrement the status of a term by one unit.
+      * ``set``: set the status of a term.
+    * For any other value, set ``action_type`` to:
+      * ``similar_terms``: similar terms to a given term.
+      * ``regexp``: test if the regular expression is correctly recognized
+      (no more usage in code base?).
+      * ``set_annotation``: change the annotation value for a term.
+      * ``save_setting``: save a setting.
+* Similar terms mark the word edit form as edited only if something was
+actually changed.
 * You can now specify a socket for your database through ``$socket`` in
 ``connect.inc.php``. This feature was brought to you by
 [@hangug-eo](https://github.com/hangug-eo) in his PR
 [#132](https://github.com/HugoFara/lwt/pull/132).
+* You can now change the voice of the TTT feature through
+``text_to_speech_settings.php``.
+* ``server_data.php`` was reorganized and is more informative with details
+about the REST API.
 
 ### Changed
 
@@ -30,6 +69,9 @@ For git tags, official releases are marked like "v1.0.0", while unofficial ones 
   * The long text import page looks a bit nicer.
 * User Experience:
   * When reading text, you can click on "Show All" and "Translations" to click the checkbox.
+  * When changing a word status, the displayed messaged is now more informative: before database change, success message, now: waiting screen, tentative database change, result message (error or success). Under the hood, we are transitionning from pure PHP to AJAX.
+* Annotations "order" are now identical to ``Ti2Order`` (in ``textitems2``). It makes management easier, but users may need to reload the annotations once.
+* Updated composer dependencies (up-to-date 2023-09-11).
 
 ### Fixed
 
@@ -43,10 +85,14 @@ the intendended page. Same goes for "New Text" on "Archived Texts" page.
 * A warning when savings settings in ``settings.php`` was sometimes displayed ([#121](https://github.com/HugoFara/lwt/issues/121)).
 * Test header was different when testing languages or terms since 2.1.0-fork.
 * Wrong link to documentation (``info.php`` instead of ``docs/info.html``). Signaled by Mooncake on Discord.
-* The reading button is usable at last! Clicking the button a second time stops the reading process ([#108](https://github.com/HugoFara/lwt/issues/118)).
+* Text reading:
+  * The reading button is usable at last! Clicking the button a second time stops the reading process ([#108](https://github.com/HugoFara/lwt/issues/118)).
+  * Text language code was often not recognized in TTT settings (``text_to_speech_settings.php``).
+  * Clicking the "Read" button in TTT Settings was refreshing the page.
 * It was impossible to copy a similar term that had apostrophes ([#127](https://github.com/HugoFara/lwt/issues/127)).
 * A deprecation warning for ``trim`` was sent in simterms when no similar term was found.
 * During a text creation, the ``media_uri`` property of ``Text`` was used instead of ``source``. Thanks to [@hangug-eo](https://github.com/hangug-eo) for his PR [#133](https://github.com/HugoFara/lwt/pull/133)!
+* When looking for an audio file on file edit/creation, the displayed path may have been wrong for characters between 0x80 and 0x9F.
 * Multi-words were not properly highlighted for languages separating each
 character as a word (e. g.: Chinese). Big thanks to [@hangug-eo](https://github.com/hangug-eo) for signaling the issue and solving it in his PR [#140](https://github.com/HugoFara/lwt/pull/140)!
 * The database wizard was not correctly saving the password. This is fixed by
@@ -55,7 +101,24 @@ character as a word (e. g.: Chinese). Big thanks to [@hangug-eo](https://github.
 
 ### Deprecated
 
-* Using the file ``inc/show_similar_terms.php`` is deprecated in favor of ``inc/ajax.php`` with action POST, action type simterms.
+* Legacy AJAX API. The following AJAX interactions are now deprecated in favor to the new REST API　(at ``inc/ajax.php``):
+  * ``inc/show_similar_terms.php``, use ``action_type=similar_terms``, same arguments.
+  * ``inc/ajax_add_term_transl.php``, use ``action=change_translation``, with
+  ``action_type=add`` or ``action_type=update``. The arguments were also changed.
+  * ``inc/ajax_check_regexp.php`` should be accessed through ``action_type=check_regexp``. Argument ``regex`` is now ``regexp``, on post only.
+  * ``inc/ajax_chg_term_status.php`` should be accessed through ``action=term_status`` and ``action_type=increment``. Argument ``data`` is now ``status_up``, on post only.
+  * ``inc/ajax_get_phonetic.php`` should be accessed through ``action_type=phonetic_reading``, same arguments.
+  * ``inc/ajax_get_theme.php`` should be accessed through ``action_type=theme_path``. Argument ``filepath`` is now ``path``.
+  * ``inc/ajax_save_setting.php`` should be accessed through ``action_type=save_setting``, same arguments.
+  * ``inc/ajax_save_text_position.php`` should be accessed through ``action=reading_position``, arguments changed.
+  * ``inc/ajax_word_counts.php`` should be accessed through ``action_type=texts_statistics``, on GET. Argument ``id`` is now ``texts_id``.
+  * ``inc/ajax_update_media_select.php`` should be accessed through ``action_type=media_paths``.
+  * ``inc/ajax_show_sentences.php`` should be accessed through ``action_type=example_sentences``, on GET. Argument ``lang`` is now ``lid``, ``word`` is ``word_lc`` and ``woid`` is ``wid``, ``ctl`` is no longer required.
+  * ``inc/ajax_show_imported_terms.php`` should be accessed through ``action_type=imported_terms``, same arguments.
+  * ``inc/ajax_save_impr_text.php`` should be accessed through ``action_type=set_annotation``, ``id`` is now ``tid``.
+  * ``inc/ajax_edit_impr_text.php``:
+    * On display, using ``word=""`` is now deprecated as the page loads in pure PHP.
+    * On term edition, should be accessed through ``action_type=term_translations``, ``id`` is now ``text_id`` and ``word`` becomes ``text_lc``.
 
 ## 2.8.1-fork (April 14 2023)
 

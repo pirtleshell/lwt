@@ -102,6 +102,12 @@ You can configure the reporting level in ``psalm.xml``.
 
 Nobody likes to debug unreadable code. A good way to avoid thinking about it is to include phpcs directly in your IDE. You can also download it and run it regularly on your code.
 
+You can run it through composer. Use ``php ./vendor/bin/squizlabs/phpcs.phar [filename]`` to see style violations on a file. You can fix them using
+
+```bash
+php ./vendor/bin/squizlabs/phpcbf.phar [filename]
+```
+
 ## Improving Documentation
 
 To regenerate all documentation, use ``composer doc``.

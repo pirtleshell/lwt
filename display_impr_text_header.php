@@ -129,12 +129,12 @@ function do_diplay_impr_text_header_content($title, $textid, $audio, $sourceURI)
     </div>
     <div>
         <?php
-            if (isset($sourceURI)) {
-                echo ' <a href="' . $sourceURI . '" target="_blank">
+        if (isset($sourceURI)) {
+            echo ' <a href="' . $sourceURI . '" target="_blank">
                 <img src="'.get_file_path('icn/chain.png').'" title="Text Source" alt="Text Source" />
-                </a>';
-            }
-            echo getPreviousAndNextTextLinks($textid, 'display_impr_text.php?text=', true, ' &nbsp; &nbsp; ');
+            </a>';
+        }
+        echo getPreviousAndNextTextLinks($textid, 'display_impr_text.php?text=', true, ' &nbsp; &nbsp; ');
         ?>
     </div>
     <div>

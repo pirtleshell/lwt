@@ -54,7 +54,8 @@ class Text
      */
     public $audio_pos;
 
-    public function load_from_db_record($record) {
+    public function load_from_db_record($record)
+    {
         $this->id = $record['TxID'];
         $this->lgid = $record['TxLgID'];
         $this->title = $record['TxTitle'];

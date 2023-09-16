@@ -38,19 +38,33 @@ require_once __DIR__ . '/../src/php/markdown_converter.php';
  		<script type="text/javascript">
 			/**
 			 * Perform an AJAX query to get the current theme style sheet.
+			 * 
+			 * @since 2.9.0 Function is modified to use JSON with the REST API.
 			 */
 			function ajaxGetTheme () {
 				$.ajax(
 					{
 						type: 'GET',
-						url: '../inc/ajax_get_theme.php',
+						url: '../inc/ajax.php',
 						async: false, 
-						data: { file: '../css/styles.css' }, 
+						data: {
+							action: "query",
+							action_type: "theme_path",
+							path: '../css/styles.css' 
+						}, 
 						success: function (data) {
-							if (data.match(/styles.css$/g)) 
-								$('style').text( "@import url(../" + data.trim() + ");" );
+							if ("error" in data)
+								return;
+							const path = data["theme_path"].trim();
+							if (path.endsWith("styles.css")) {
+								$('style').html(
+									"@import url(../" + path + ");"
+								);
+							}
+						},
+						dataType: "json"
 					}
-				});
+				);
 			}
 
 			/**

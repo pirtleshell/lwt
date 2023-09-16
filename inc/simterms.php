@@ -30,7 +30,7 @@ function letterPairs($str): array
 
 /**
  * @psalm-return list<string>
- * @return string[]
+ * @return       string[]
  */
 function wordLetterPairs($str): array 
 {
@@ -69,9 +69,10 @@ function getSimilarityRanking($str1, $str2)
  * For a language $lang_id and a term $compared_term (UTF-8).
  * If string is already in database, it will be excluded in results.
  * 
- * @param int $lang_id Language ID
- * @param int max_count Maximum number of terms to display
- * 
+ * @param int    $lang_id       Language ID
+ * @param string $compared_term Term to compare with
+ * @param int    $max_count     Maximum number of terms to display
+ * @param float  $min_ranking   For terms to match
  *
  * @return int[] All $max_count wordids with a similarity ranking > $min_ranking, 
  *               sorted decending
@@ -164,7 +165,6 @@ function format_term($termid, $compare)
  * 
  * @param int    $lang_id       Language ID
  * @param string $compared_term Similar term we compare to
- * 
  */
 function print_similar_terms($lang_id, $compared_term): string 
 {

@@ -60,7 +60,8 @@ if ($currentquery!=='') {
         if (@mysqli_query(
             $GLOBALS["DBCONNECTION"], 
             'select "test" rlike ' . convert_string_to_sqlsyntax($currentquery)
-            ) === false) {
+        ) === false
+        ) {
             $currentquery='';
             $wh_query = '';
             unset($_SESSION['currentwordquery']);
@@ -578,7 +579,7 @@ if (isset($_REQUEST['chg'])) {
             <img src="icn/tick.png" title="Annotated Text available" alt="Annotated Text available" />
         </th>
     </tr>
-    <?php
+        <?php
 
         $sql = "SELECT AtID, AtTitle, LgName, AtAudioURI, AtSourceURI, 
         length(AtAnnotatedText) as annotlen, 
@@ -652,7 +653,7 @@ if (isset($_REQUEST['chg'])) {
 </table>
 
 
-<?php if($pages > 1) { ?>
+        <?php if($pages > 1) { ?>
 <table class="tab2" cellspacing="0" cellpadding="5">
     <tr>
         <th class="th1" nowrap="nowrap">
@@ -664,8 +665,8 @@ if (isset($_REQUEST['chg'])) {
     </tr>
 </table>
 </form>
-<?php 
-}
+            <?php 
+        }
     }
 }
 

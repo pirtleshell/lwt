@@ -2,7 +2,7 @@
 
 /**
  * \file
- * \brief Save text and/or audio position (Read Text Screen)
+ * \brief Save text or audio position (Read Text Screen)
  * 
  * Call: inc/ajax_save_text_position.php?...
  *          ...textid=[textid]&position=[text position]
@@ -31,9 +31,9 @@ function save_text_position($textid, $position)
 {
     global $tbpref;
     runsql(
-        'UPDATE ' . $tbpref . 'texts 
-        SET TxPosition = ' . $position . ' 
-        WHERE TxID = ' . $textid, 
+        "UPDATE {$tbpref}texts 
+        SET TxPosition = $position 
+        WHERE TxID = $textid", 
         ""
     ); 
 }
@@ -52,9 +52,9 @@ function save_audio_position($textid, $audioposition)
 {
     global $tbpref;
     runsql(
-        'UPDATE ' . $tbpref . 'texts 
-        SET TxAudioPosition = ' . $audioposition . ' 
-        WHERE TxID = ' . $textid, 
+        "UPDATE {$tbpref}texts 
+        SET TxAudioPosition = $audioposition 
+        WHERE TxID = $textid", 
         ""
     ); 
 }

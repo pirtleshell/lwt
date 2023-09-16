@@ -60,7 +60,7 @@ function check_mecab_accessibility()
 }
 
 /**
- * Check if string 'test' is consistently recorgnized a word.
+ * Check if string 'test' is consistently recognized as a word.
  * 
  * @return void
  */
@@ -96,7 +96,7 @@ function do_ajax_check_regexp($regex)
     chdir('..');
     // Turn off error reporting
     $old_error = error_reporting(0); 
-    if('MECAB'== strtoupper(trim($regex))) {
+    if ('MECAB'== strtoupper(trim($regex))) {
         check_mecab_accessibility();
     } else {
         check_standard_regex($regex);
@@ -106,6 +106,9 @@ function do_ajax_check_regexp($regex)
 }
 
 if (getreq('regex')) {
+    // Deprecated way of accessing the request since 2.9.0! 
+    // Use the REST API with "action_type=regexp".
+    // Please mind the final "p"!
     do_ajax_check_regexp(getreq('regex'));
 }
 

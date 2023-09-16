@@ -13,15 +13,18 @@
  * @since   1.5.0
  */
 
+namespace Lwt\Ajax\Improved_Text;
+
 require_once __DIR__ . '/session_utility.php';
 
+
 /**
- * Make the translation for a word.
+ * Make the translations choices for a term.
  *
- * @param int      $i     Index
+ * @param int      $i     Word unique index in the form
  * @param int|null $wid   Word ID or null 
- * @param string   $trans Translation
- * @param string   $word
+ * @param string   $trans Current translation set for the term, may be empty
+ * @param string   $word  Term text
  * @param int      $lang  Language ID
  *
  * @return string HTML-formatted string
@@ -31,66 +34,357 @@ function make_trans($i, $wid, $trans, $word, $lang): string
     global $tbpref;    
     $trans = trim($trans);
     $widset = is_numeric($wid);
+    $r = "";
     if ($widset) {
-        $alltrans = get_first_value("SELECT WoTranslation AS value FROM " . $tbpref . "words WHERE WoID = " . $wid);
+        $alltrans = get_first_value(
+            "SELECT WoTranslation AS value FROM {$tbpref}words 
+            WHERE WoID = $wid"
+        );
         $transarr = preg_split('/[' . get_sepas()  . ']/u', $alltrans);
-        $r = "";
         $set = false;
         foreach ($transarr as $t) {
             $tt = trim($t);
             if ($tt == '*' || $tt == '') { 
                 continue; 
             }
-            if (!$set && $tt == $trans) {
-                $set = true;
-                $r .= 
-                '<span class="nowrap">
-                    <input class="impr-ann-radio" checked="checked" type="radio" name="rg' . $i . '" value="' . tohtml($tt) . '" />
-                    &nbsp;' . tohtml($tt) . '
-                </span>
-                <br /> ';
-            } else {
-                $r .= 
-                '<span class="nowrap">
-                    <input class="impr-ann-radio" type="radio" name="rg' . $i . '" value="' . tohtml($tt) . '" />
-                    &nbsp;' . tohtml($tt) . '
-                </span> 
-                <br />  ';
-            }
+            // true if the translation should be checked (this translation is set)
+            $set = $tt == $trans && !$set;
+            // Add a candidate annotation
+            $r .= '<span class="nowrap">
+                <input class="impr-ann-radio" ' . 
+                ($set ? 'checked="checked" ' : '') . 'type="radio" name="rg' . 
+                $i . '" value="' . tohtml($tt) . '" /> 
+                &nbsp;' . tohtml($tt) . '
+            </span>
+            <br />';
         }
-        if (!$set) {
-            $r .= 
-            '<span class="nowrap">
-                <input class="impr-ann-radio" checked="checked" type="radio" name="rg' . $i . '" value="" />
-                &nbsp;
-                <input class="impr-ann-text" type="text" name="tx' . $i . '" id="tx' . $i . '" value="' . tohtml($trans) . '" maxlength="50" size="40" />';
-        } else {
-            $r .= 
-            '<span class="nowrap">
-                <input class="impr-ann-radio" type="radio" name="rg' . $i . '" value="" />
-                &nbsp;
-                <input class="impr-ann-text" type="text" name="tx' . $i . '" id="tx' . $i . '" value="" maxlength="50" size="40" />';
-        }
-    } else {
-        $r = 
-        '<span class="nowrap">
-            <input checked="checked" type="radio" name="rg' . $i . '" value="" />
-            &nbsp;
-            <input class="impr-ann-text" type="text" name="tx' . $i . '" id="tx' . $i . '" value="' . tohtml($trans) . '" maxlength="50" size="40" />';
+        ;
+    } 
+    // Set the empty translation if no translation have been set yet
+    if (!isset($set) || !$set) {
+        $set = true;
     }
-    $r .= 
-    ' &nbsp;
-    <img class="click" src="icn/eraser.png" title="Erase Text Field" alt="Erase Text Field" onclick="$(\'#tx' . $i . '\').val(\'\').trigger(\'change\');" />
+    // Empty radio button and text field after the list of translations
+    $r .= '<span class="nowrap">
+    <input class="impr-ann-radio" type="radio" name="rg' . $i . '" ' . 
+    ($set ? 'checked="checked" ' : '') . 'value="" />
+    &nbsp;
+    <input class="impr-ann-text" type="text" name="tx' . $i . 
+    '" id="tx' . $i . '" value="' . ($set ? tohtml($trans) : '') . 
+    '" maxlength="50" size="40" />
      &nbsp;
-    <img class="click" src="icn/star.png" title="* (Set to Term)" alt="* (Set to Term)" onclick="$(\'#tx' . $i . '\').val(\'*\').trigger(\'change\');" />';
+    <img class="click" src="icn/eraser.png" title="Erase Text Field" 
+    alt="Erase Text Field" 
+    onclick="$(\'#tx' . $i . '\').val(\'\').trigger(\'change\');" />
+     &nbsp;
+    <img class="click" src="icn/star.png" title="* (Set to Term)" 
+    alt="* (Set to Term)" 
+    onclick="$(\'#tx' . $i . '\').val(\'*\').trigger(\'change\');" />
+    &nbsp;';
+    // Add the "plus button" to add a translation
     if ($widset) {
-        $r .= ' &nbsp;
-        <img class="click" src="icn/plus-button.png" title="Save another translation to existent term" alt="Save another translation to existent term" onclick="addTermTranslation(' . $wid . ', \'#tx' . $i . '\',\'\',' . $lang . ');" />'; 
+        $r .= 
+        '<img class="click" src="icn/plus-button.png" 
+        title="Save another translation to existent term" 
+        alt="Save another translation to existent term" 
+        onclick="addTermTranslation(' . $wid . ', \'#tx' . $i . '\',\'\',' . $lang . ');" />'; 
     } else { 
-        $r .= ' &nbsp;
-        <img class="click" src="icn/plus-button.png" title="Save translation to new term" alt="Save translation to new term" onclick="addTermTranslation(0, \'#tx' . $i . '\',' . prepare_textdata_js($word) . ',' . $lang . ');" />'; 
+        $r .= 
+        '<img class="click" src="icn/plus-button.png" 
+        title="Save translation to new term" 
+        alt="Save translation to new term" 
+        onclick="addTermTranslation(0, \'#tx' . $i . '\',' . prepare_textdata_js($word) . ',' . $lang . ');" />'; 
     }
-    $r .= '&nbsp;&nbsp;<span id="wait' . $i . '"><img src="icn/empty.gif" /></span></span>';
+    $r .= '&nbsp;&nbsp;
+    <span id="wait' . $i . '">
+        <img src="icn/empty.gif" />
+    </span>
+    </span>';
+    return $r;
+}
+
+/**
+ * Gather useful data to edit a term annotation on a specific text.
+ * 
+ * @param string $wordlc Term in lower case
+ * @param int    $textid Text ID
+ * 
+ * @return array Return the useful data to edit a term annotation on a specific text
+ */
+function get_term_translations($wordlc, $textid)
+{
+    global $tbpref;
+    $sql = "SELECT TxLgID, TxAnnotatedText 
+    FROM {$tbpref}texts WHERE TxID = $textid";
+    $res = do_mysqli_query($sql);
+    $record = mysqli_fetch_assoc($res);
+    $langid = (int)$record['TxLgID'];
+    $ann = (string)$record['TxAnnotatedText'];
+    if (strlen($ann) > 0) {
+        $ann = recreate_save_ann($textid, $ann);
+    }
+    mysqli_free_result($res);
+    
+    $textsize = (int)get_first_value(
+        "SELECT LgTextSize AS value 
+        FROM {$tbpref}languages WHERE LgID = $langid"
+    );
+    if ($textsize > 100) { 
+        $textsize = intval($textsize * 0.8); 
+    }
+    
+    $annotations = preg_split('/[\n]/u', $ann);
+    $i = -1;
+    foreach (array_values($annotations) as $index => $annotation_line) {
+        $vals = preg_split('/[\t]/u', $annotation_line);
+        // Check if annotation could be split
+        if ($vals === false) {
+            continue;
+        }
+        // Skip when term is punctuation
+        if ($vals[0] <= -1) {
+            continue;
+        }
+        // Check if the input word is the same as the annotation
+        if (trim($wordlc) != mb_strtolower(trim($vals[1]), 'UTF-8')) {
+            continue;
+        }
+        $i = $index;
+        break;
+    }
+    $ann_data = array();
+    if ($i == -1) {
+        $ann_data["error"] = "Annotation not found";
+        return $ann_data;
+    }
+    $annotation_line = $annotations[$i];
+    $vals = preg_split('/[\t]/u', $annotation_line);
+    $ann_data["term_lc"] = trim($wordlc);
+    $ann_data["wid"] = null;
+    $ann_data["trans"] = '';
+    $ann_data["ann_index"] = $i;
+    $ann_data["term_ord"] = (int)$vals[0];
+    // Annotation should be in format "pos   term text   term ID    translation"
+    if (count($vals) > 2) {
+        // Word exists and has an ID
+        $wid = $vals[2];
+        if (is_numeric($wid)) {
+            $wid = (int)$wid;
+            $temp_wid = (int)get_first_value(
+                "SELECT COUNT(WoID) AS value 
+                FROM {$tbpref}words 
+                WHERE WoID = $wid"
+            );
+            if ($temp_wid < 1) { 
+                $wid = null; 
+            }
+        } else {
+            $wid = null;
+        }
+    }
+    if (count($vals) > 3) {
+        $ann_data["trans"] = $vals[3];
+    }
+    if ($wid !== null) {
+        $ann_data["wid"] = $wid;
+    }
+    $ann_data["lang_id"] = $langid;
+    // Add other translation choices
+    if ($wid !== null) {
+        $translations = array();
+        $alltrans = get_first_value(
+            "SELECT WoTranslation AS value FROM {$tbpref}words 
+            WHERE WoID = $wid"
+        );
+        $transarr = preg_split('/[' . get_sepas()  . ']/u', $alltrans);
+        foreach ($transarr as $t) {
+            $tt = trim($t);
+            if ($tt == '*' || $tt == '') { 
+                continue; 
+            }
+            $translations[] = $tt;
+        }
+        $ann_data["translations"] = $translations;
+    }
+    return $ann_data;
+}
+
+/**
+ * Prepare the HTML content for the interaction with a term
+ * 
+ * @param string $wordlc Term in lower case
+ * @param int    $textid Text ID
+ * 
+ * @return string JS string of the different fields of the term
+ * 
+ * @deprecated 2.9.0 Use AJAX instead
+ */
+function edit_term_interaction($wordlc, $textid)
+{
+    $rr = "";
+    $trans_data = get_term_translations($wordlc, $textid);
+    if ($trans_data["wid"] !== null) {
+        $plus = '<a name="rec' . $trans_data["ann_index"] . '"></a>
+        <span class="click" onclick="oewin(\'edit_word.php?fromAnn=\' + $(document).scrollTop() + \'&amp;wid=' . 
+        $trans_data["wid"] . '\');">
+            <img src="icn/sticky-note--pencil.png" title="Edit Term" alt="Edit Term" />
+        </span>';
+    } else {
+        $plus = '&nbsp;';
+    }
+    $rr .= "$('#editlink" . $trans_data["ann_index"] . "').html(" . 
+    prepare_textdata_js($plus) . ");";
+    foreach ($trans_data["translations"] as $candidate_trans) {
+        $plus = make_trans(
+            $trans_data["ann_index"], $trans_data["wid"], $candidate_trans, 
+            $trans_data["term_lc"], $trans_data["lang_id"]
+        );
+        $rr .= "$('#transsel" . $trans_data["ann_index"] . "').html(" . 
+        prepare_textdata_js($plus) . ");";
+    }
+    return $rr;
+}
+
+/**
+ * Full form for terms edition in a given text.
+ * 
+ * @param int $textid Text ID.
+ * 
+ * @return string HTML table for all terms
+ */
+function edit_term_form($textid)
+{
+    global $tbpref;
+    $sql = "SELECT TxLgID, TxAnnotatedText 
+    FROM {$tbpref}texts WHERE TxID = $textid";
+    $res = do_mysqli_query($sql);
+    $record = mysqli_fetch_assoc($res);
+    $langid = $record['TxLgID'];
+    $ann = $record['TxAnnotatedText'];
+    if (strlen($ann) > 0) {
+        $ann = recreate_save_ann($textid, $ann);
+    }
+    mysqli_free_result($res);
+    
+    $sql = "SELECT LgTextSize, LgRightToLeft 
+    FROM {$tbpref}languages WHERE LgID = $langid";
+    $res = do_mysqli_query($sql);
+    $record = mysqli_fetch_assoc($res);
+    $textsize = (int)$record['LgTextSize'];
+    if ($textsize > 100) { 
+        $textsize = intval($textsize * 0.8); 
+    }
+    $rtlScript = $record['LgRightToLeft'];
+    mysqli_free_result($res);
+    
+    $r = 
+    '<form action="" method="post">
+        <table class="tab2" cellspacing="0" cellpadding="5">
+            <tr>
+                <th class="th1 center">Text</th>
+                <th class="th1 center">Dict.</th>
+                <th class="th1 center">Edit<br />Term</th>
+                <th class="th1 center">
+                    Term Translations (Delim.: ' . 
+                    tohtml(getSettingWithDefault('set-term-translation-delimiters')) . ')
+                    <br />
+                    <input type="button" value="Reload" onclick="do_ajax_edit_impr_text(0,\'\');" />
+                </th>
+            </tr>';
+    $items = preg_split('/[\n]/u', $ann);
+    $nontermbuffer ='';
+    foreach (array_values($items) as $i => $item) {
+        $vals = preg_split('/[\t]/u', $item);
+        if ((int)$vals[0] > -1) {
+            if ($nontermbuffer != '') {
+                $r .= '<tr>
+                    <td class="td1 center" style="font-size:' . $textsize . '%;">' . 
+                        $nontermbuffer .
+                    '</td>
+                    <td class="td1 right" colspan="3">
+                    <img class="click" src="icn/tick.png" title="Back to \'Display/Print Mode\'" alt="Back to \'Display/Print Mode\'" onclick="location.href=\'print_impr_text.php?text=' . $textid . '\';" />
+                    </td>
+                </tr>';
+                $nontermbuffer = '';
+            }
+            $wid = null;
+            $trans = '';
+            if (count($vals) > 2) {
+                $wid = $vals[2];
+                if (is_numeric($wid)) {
+                    $temp_wid = (int)get_first_value(
+                        "SELECT COUNT(WoID) AS value 
+                        FROM {$tbpref}words 
+                        WHERE WoID = $wid"
+                    );
+                    if ($temp_wid < 1) { 
+                        $wid = null; 
+                    }
+                }
+            }
+            if (count($vals) > 3) { 
+                $trans = $vals[3]; 
+            }
+            $word_link = "&nbsp;";
+            if ($wid !== null) {
+                $word_link = '<a name="rec' . $i . '"></a>
+                <span class="click" 
+                onclick="oewin(\'edit_word.php?fromAnn=\' + $(document).scrollTop() + \'&amp;wid=' . 
+                $wid . '&amp;tid=' . $textid . '&amp;ord=' . (int)$vals[0] . '\');">
+                    <img src="icn/sticky-note--pencil.png" title="Edit Term" alt="Edit Term" />
+                </span>';
+            }
+            $r .= '<tr>
+                <td class="td1 center" style="font-size:' . $textsize . '%;"' . 
+                ($rtlScript ? ' dir="rtl"' : '') . '>
+                    <span id="term' . $i . '">' . tohtml($vals[1]) .
+                    '</span>
+                </td>
+                <td class="td1 center" nowrap="nowrap">' . 
+                    makeDictLinks($langid, prepare_textdata_js($vals[1])) .
+                '</td>
+                <td class="td1 center">
+                    <span id="editlink' . $i . '">' . $word_link . '</span>
+                </td>
+                <td class="td1" style="font-size:90%;">
+                    <span id="transsel' . $i . '">' .
+                        make_trans($i, $wid, $trans, $vals[1], $langid) . '
+                    </span>
+                </td>
+            </tr>';
+        } else {
+            // Not a term, may add a new line
+            $nontermbuffer .= str_replace(
+                "¶",
+                '<img src="icn/new_line.png" title="New Line" alt="New Line" />', 
+                tohtml(trim($vals[1]))
+            );
+        }
+    }
+    if ($nontermbuffer != '') {
+        $r .= '<tr>
+            <td class="td1 center" style="font-size:' . $textsize . '%;">' . 
+            $nontermbuffer . 
+            '</td>
+            <td class="td1 right" colspan="3">
+                <img class="click" src="icn/tick.png" title="Back to \'Display/Print Mode\'" alt="Back to \'Display/Print Mode\'" onclick="location.href=\'print_impr_text.php?text=' . $textid . '\';" />
+            </td>
+        </tr>';
+    }
+    $r .= '
+                <th class="th1 center">Text</th>
+                <th class="th1 center">Dict.</th>
+                <th class="th1 center">Edit<br />Term</th>
+                <th class="th1 center">
+                    Term Translations (Delim.: ' . 
+                    tohtml(getSettingWithDefault('set-term-translation-delimiters')) . ')
+                    <br />
+                    <input type="button" value="Reload" onclick="do_ajax_edit_impr_text(1e6,\'\');" />
+                    <a name="bottom"></a>
+                </th>
+            </tr>
+        </table>
+    </form>';
     return $r;
 }
 
@@ -105,11 +399,14 @@ function make_trans($i, $wid, $trans, $word, $lang): string
  * @global string $tbpref Database table prefix.
  *
  * @psalm-return array{0: string, 1: string}
+ * 
+ * @deprecated 2.9.0 Use AJAX instead 
  */
 function make_form($textid, $wordlc): array
 { 
     global $tbpref;
-    $sql = 'SELECT TxLgID, TxAnnotatedText FROM ' . $tbpref . 'texts WHERE TxID = ' . $textid;
+    $sql = 'SELECT TxLgID, TxAnnotatedText 
+    FROM ' . $tbpref . 'texts WHERE TxID = ' . $textid;
     $res = do_mysqli_query($sql);
     $record = mysqli_fetch_assoc($res);
     $langid = $record['TxLgID'];
@@ -119,7 +416,8 @@ function make_form($textid, $wordlc): array
     }
     mysqli_free_result($res);
     
-    $sql = 'SELECT LgTextSize, LgRightToLeft FROM ' . $tbpref . 'languages WHERE LgID = ' . $langid;
+    $sql = 'SELECT LgTextSize, LgRightToLeft 
+    FROM ' . $tbpref . 'languages WHERE LgID = ' . $langid;
     $res = do_mysqli_query($sql);
     $record = mysqli_fetch_assoc($res);
     $textsize = (int)$record['LgTextSize'];
@@ -138,7 +436,8 @@ function make_form($textid, $wordlc): array
                 <th class="th1 center">Dict.</th>
                 <th class="th1 center">Edit<br />Term</th>
                 <th class="th1 center">
-                    Term Translations (Delim.: ' . tohtml(getSettingWithDefault('set-term-translation-delimiters')) . ')
+                    Term Translations (Delim.: ' . 
+                    tohtml(getSettingWithDefault('set-term-translation-delimiters')) . ')
                     <br />
                     <input type="button" value="Reload" onclick="do_ajax_edit_impr_text(0,\'\');" />
                 </th>
@@ -179,12 +478,17 @@ function make_form($textid, $wordlc): array
             if (count($vals) > 3) { 
                 $trans = $vals[3]; 
             }
-            $r .= '<tr><td class="td1 center" style="font-size:' . $textsize . '%;"' . 
-            ($rtlScript ? ' dir="rtl"' : '') . '><span id="term' . $i . '">';
-            $r .= tohtml($vals[1]);
-            $r .= '</span></td><td class="td1 center" nowrap="nowrap">';
-            $r .= makeDictLinks($langid, prepare_textdata_js($vals[1]));
-            $r .= '</td><td class="td1 center"><span id="editlink' . $i . '">';
+            $r .= '<tr>
+            <td class="td1 center" style="font-size:' . $textsize . '%;"' . 
+            ($rtlScript ? ' dir="rtl"' : '') . '>
+            <span id="term' . $i . '">' . tohtml($vals[1]) . 
+            '</span>
+            </td>
+            <td class="td1 center" nowrap="nowrap">' . 
+            makeDictLinks($langid, prepare_textdata_js($vals[1])) .
+            '</td>
+            <td class="td1 center">
+            <span id="editlink' . $i . '">';
             if ($wid === null) {
                 $plus = '&nbsp;';
             } else {
@@ -195,19 +499,28 @@ function make_form($textid, $wordlc): array
             }
             $mustredo = trim($wordlc) == mb_strtolower(trim($vals[1]), 'UTF-8');
             if ($mustredo) {
-                $rr .= "$('#editlink" . $i . "').html(" . prepare_textdata_js($plus) . ");"; 
+                $rr .= "$('#editlink" . $i . "').html(" . 
+                prepare_textdata_js($plus) . ");"; 
             }
             $r .= $plus;
-            $r .= '</span></td><td class="td1" style="font-size:90%;"><span id="transsel' . $i . '">';
+            $r .= '</span>
+            </td>
+            <td class="td1" style="font-size:90%;">
+            <span id="transsel' . $i . '">';
             $plus = make_trans($i, $wid, $trans, $vals[1], $langid);
             if ($mustredo) { 
-                $rr .= "$('#transsel" . $i . "').html(" . prepare_textdata_js($plus) . ");"; 
+                $rr .= "$('#transsel" . $i . "').html(" . 
+                prepare_textdata_js($plus) . ");"; 
             }
             $r .= $plus;
             $r .= '</span></td></tr>';
         } else {
             if (trim($vals[1]) != '') {
-                $nontermbuffer .= str_replace("¶", '<img src="icn/new_line.png" title="New Line" alt="New Line" />', tohtml($vals[1])); 
+                $nontermbuffer .= str_replace(
+                    "¶", 
+                    '<img src="icn/new_line.png" title="New Line" alt="New Line" />', 
+                    tohtml($vals[1])
+                );
             }
         }
     }
@@ -226,24 +539,15 @@ function make_form($textid, $wordlc): array
                 <th class="th1 center">Dict.</th>
                 <th class="th1 center">Edit<br />Term</th>
                 <th class="th1 center">
-                    Term Translations (Delim.: ' . tohtml(getSettingWithDefault('set-term-translation-delimiters')) . ')
+                    Term Translations (Delim.: ' . 
+                    tohtml(getSettingWithDefault('set-term-translation-delimiters')) . ')
                     <br />
                     <input type="button" value="Reload" onclick="do_ajax_edit_impr_text(1e6,\'\');" />
                     <a name="bottom"></a>
                 </th>
             </tr>
         </table>
-    </form>\n';
-    /*
-    $r .= '<script type="text/javascript">' . "\n";
-    $r .= '//<![CDATA[' . "\n";
-    $r .= '$(document).ready( function() {' . "\n";
-    $r .= "$('input.impr-ann-text').change(changeImprAnnText);\n";
-    $r .= "$('input.impr-ann-radio').change(changeImprAnnRadio);\n";
-    $r .= '} );' . "\n";
-    $r .= '//]]>' . "\n";
-    $r .= '</script>' . "\n";
-    */
+    </form>';
     return array($r, $rr);
 }
 
@@ -259,10 +563,13 @@ function do_ajax_edit_impr_text($textid, $wordlc)
 {
     chdir('..');
 
-    list($html_content, $js_content) = make_form($textid, $wordlc);
     if ($wordlc == '') {
+        // Load page, deprecated (function should be called directly)
+        $html_content = edit_term_form($textid);
         echo "$('#editimprtextdata').html(" . prepare_textdata_js($html_content) . ");"; 
     } else {
+        // Load the possible translations for a word, use AJAX instead
+        $js_content = edit_term_interaction($wordlc, $textid);
         echo $js_content; 
     }
 }

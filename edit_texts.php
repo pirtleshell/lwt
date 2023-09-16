@@ -546,12 +546,13 @@ function edit_texts_do_operation($op, $message1, $no_pagestart): string
 /**
  * Display the main form for text creation and edition.
  * 
- * @param Text $text Text object to edit
+ * @param Text $text      Text object to edit
  * @param bool $annotated True if this text has annotations
  * 
  * @return void
  */
-function edit_texts_form($text, $annotated) {
+function edit_texts_form($text, $annotated)
+{
     global $tbpref;
     $new_text = $text->id == 0;
     $sql = "SELECT LgID, LgGoogleTranslateURI FROM {$tbpref}languages 

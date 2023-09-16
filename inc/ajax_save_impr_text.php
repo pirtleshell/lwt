@@ -19,38 +19,43 @@ require_once __DIR__ . '/session_utility.php';
  *
  * @param int    $textid Text ID
  * @param int    $line   Line number to save
- * @param string $val
+ * @param string $val    Proposed new annotation for the term
  *
- * @return string Success string
+ * @return string Error message, or "OK" if success.
  *
  * @global string $tbpref Database table prefix.
- *
- * @psalm-return 'NOTOK'|'OK'
  */
 function save_impr_text_data($textid, $line, $val): string
 {
     global $tbpref;
-    $success = "NOTOK";
     $ann = get_first_value(
         "SELECT TxAnnotatedText AS value 
-        FROM " . $tbpref . "texts 
-        WHERE TxID = " . $textid
+        FROM {$tbpref}texts 
+        WHERE TxID = $textid"
     );
     $items = preg_split('/[\n]/u', $ann);
-    if (count($items) >= $line) {
-        $vals = preg_split('/[\t]/u', $items[$line-1]);
-        if ($vals[0] > -1 && count($vals) == 4) {
-            $vals[3] = $val;
-            $items[$line-1] = implode("\t", $vals);
-            runsql(
-                'UPDATE ' . $tbpref . 'texts 
-                SET TxAnnotatedText = ' . convert_string_to_sqlsyntax(implode("\n", $items)) . ' 
-                WHERE TxID = ' . $textid, ""
-            );
-            $success = "OK";
-        }
+    if (count($items) <= $line) {
+        return "Unreachable translation: line request is $line, but only " . 
+        count($items) . " translations were found"; 
     }
-    return $success;
+    // Annotation should be in format "pos   term text   term ID    translation"
+    $vals = preg_split('/[\t]/u', $items[$line]);
+    if ((int)$vals[0] <= -1) {
+        return "Term is punctation! Term position is {$vals[0]}"; 
+    }
+    if (count($vals) < 4) {
+        return "Not enough columns: " . count($vals);
+    }
+    // Change term translation
+    $items[$line] = implode("\t", array($vals[0], $vals[1], $vals[2], $val));
+    runsql(
+        "UPDATE {$tbpref}texts 
+        SET TxAnnotatedText = " . 
+        convert_string_to_sqlsyntax(implode("\n", $items)) . " 
+        WHERE TxID = $textid", 
+        ""
+    );
+    return "OK";
 }
 
 /**
@@ -61,8 +66,6 @@ function save_impr_text_data($textid, $line, $val): string
  * @param mixed  $data   JSON data
  *
  * @return string Success string
- *
- * @psalm-return 'NOTOK'|'OK'
  */
 function do_ajax_save_impr_text($textid, $elem, $data): string 
 {
@@ -74,8 +77,31 @@ function do_ajax_save_impr_text($textid, $elem, $data): string
     }
     $line = (int)substr($elem, 2);
     return save_impr_text_data($textid, $line, $val);
+}
 
-    // error_log ("ajax_save_impr_text / " . $success . " / " . $stringdata);
+/**
+ * Save a text with improved annotations.
+ * 
+ * @param int    $textid Text ID
+ * @param string $elem   Element to select
+ * @param mixed  $data   Data element
+ * 
+ * @return string[] Result as array, with answer on "error" or "success"
+ */
+function save_impr_text($textid, $elem, $data): array 
+{
+    $new_annotation = $data->{$elem};
+    $line = (int)substr($elem, 2);
+    if (str_starts_with($elem, "rg") && $new_annotation == "") {
+        $new_annotation = $data->{'tx' . $line};
+    }
+    $status = save_impr_text_data($textid, $line, $new_annotation);
+    if ($status != "OK") {
+        $output = array("error" => $status);
+    } else {
+        $output = array("success" => $status);
+    }
+    return $output;
 }
 
 if (isset($_POST['id']) && isset($_POST['elem']) && isset($_POST['data'])) {

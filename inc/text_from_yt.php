@@ -19,7 +19,7 @@ define('YT_API_KEY', null);
 
 function do_form_fragment()
 {
-?>
+    ?>
 <tr>
   <td class="td1 right">YouTube Video Id:</td>
   <td class="td1">
@@ -29,12 +29,12 @@ function do_form_fragment()
     <p id='ytDataStatus'></p>
   </td>
 </tr>
-<?php
+    <?php
 }
 
 function do_js() 
 {
-  ?>
+    ?>
 <script>
 function setYtDataStatus(msg) {
   $('#ytDataStatus').text(msg);
@@ -57,16 +57,8 @@ function getYtTextData() {
   const ytVideoId = document.getElementById('ytVideoId').value;
   const API_KEY = document.getElementById('ytApiKey').value;
   const url = `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${ytVideoId}&key=${API_KEY}`;
-  /*const req = new XMLHttpRequest();
-  req.onload = function(e) {
-    const res = JSON.parse(req.responseText);
-    fetching_success(res);
-  };
-  req.open('GET', url);
-  req.send();*/
-
   $.get(url, fetching_success);
 }
 </script>
-  <?php
+    <?php
 }

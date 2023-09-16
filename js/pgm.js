@@ -65,21 +65,29 @@ $('input[name=\'step\']').val(++val);document.lwt_form1.submit();return!1});$(do
  * @author  andreask7 <andreasks7@users.noreply.github.com>
  * @since   1.6.16-fork
  */
-TEXTPOS=-1;OPENED=0;WID=0;TID=0;WBLINK1='';WBLINK2='';WBLINK3='';SOLUTION='';ADDFILTER='';RTL=0;ANN_ARRAY={};DELIMITER='';JQ_TOOLTIP=0;function setTransRoman(tra,rom){if($('textarea[name="WoTranslation"]').length==1){$('textarea[name="WoTranslation"]').val(tra)}
-if($('input[name="WoRomanization"]').length==1){$('input[name="WoRomanization"]').val(rom)}
-makeDirty()}
+TEXTPOS=-1;OPENED=0;WID=0;TID=0;WBLINK1='';WBLINK2='';WBLINK3='';SOLUTION='';ADDFILTER='';RTL=0;ANN_ARRAY={};DELIMITER='';JQ_TOOLTIP=0;function setTransRoman(tra,rom){let form_changed=!1;if($('textarea[name="WoTranslation"]').length==1){$('textarea[name="WoTranslation"]').val(tra);form_changed|=!0}
+if($('input[name="WoRomanization"]').length==1){$('input[name="WoRomanization"]').val(rom);form_changed|=!0}
+if(form_changed)
+makeDirty();}
 function containsCharacterOutsideBasicMultilingualPlane(s){return/[\uD800-\uDFFF]/.test(s)}
-function alertFirstCharacterOutsideBasicMultilingualPlane(s,info){const match=/[\uD800-\uDFFF]/.exec(s);if(match){alert('ERROR\n\nText "'+info+'" contains invalid character(s) '+'(in the Unicode Supplementary Multilingual Planes, > U+FFFF) like emojis '+'or very rare characters.\n\nFirst invalid character: "'+s.substring(match.index,match.index+2)+'" at position '+(match.index+1)+'.\n\n'+'More info: https://en.wikipedia.org/wiki/Plane_(Unicode)\n\n'+'Please remove this/these character(s) and try again.');return 1}
-return 0}
-function getUTF8Length(s){return(new Blob([String(s)]).size)}
+function alertFirstCharacterOutsideBasicMultilingualPlane(s,info){if(!containsCharacterOutsideBasicMultilingualPlane(s)){return 0}
+const match=/[\uD800-\uDFFF]/.exec(s);alert('ERROR\n\nText "'+info+'" contains invalid character(s) '+'(in the Unicode Supplementary Multilingual Planes, > U+FFFF) like emojis '+'or very rare characters.\n\nFirst invalid character: "'+s.substring(match.index,match.index+2)+'" at position '+(match.index+1)+'.\n\n'+'More info: https://en.wikipedia.org/wiki/Plane_(Unicode)\n\n'+'Please remove this/these character(s) and try again.');return 1}
+function getUTF8Length(s){return(new Blob([String(s)])).size}
 function scrollToAnchor(aid){document.location.href='#'+aid}
-function changeImprAnnText(){const textid=$('#editimprtextdata').attr('data_id');$(this).prev('input:radio').attr('checked','checked');const elem=$(this).attr('name');const idwait='#wait'+elem.substring(2);$(idwait).html('<img src="icn/waiting2.gif" />');const thedata=JSON.stringify($('form').serializeObject());$.post('inc/ajax_save_impr_text.php',{id:textid,elem:elem,data:thedata},function(d){$(idwait).html('<img src="icn/empty.gif" />');if(d!='OK'){alert('Saving your changes failed, please reload page and try again!')}})}
-function changeImprAnnRadio(){const textid=$('#editimprtextdata').attr('data_id');const elem=$(this).attr('name');const idwait='#wait'+elem.substring(2);$(idwait).html('<img src="icn/waiting2.gif" />');const thedata=JSON.stringify($('form').serializeObject());$.post('inc/ajax_save_impr_text.php',{id:textid,elem:elem,data:thedata},function(d){$(idwait).html('<img src="icn/empty.gif" />');if(d!='OK'){alert('Saving your changes failed, please reload page and try again!')}})}
-function addTermTranslation(wordid,txid,word,lang){const thedata=$(txid).val().trim();const pagepos=$(document).scrollTop();if((thedata=='')||(thedata=='*')){alert('Text Field is empty or = \'*\'!');return}
-$.post('inc/ajax_add_term_transl.php',{id:wordid,data:thedata,text:word,lang:lang},function(d){if(d==''){alert('Adding translation to term OR term creation failed, '+'please reload page and try again!')}else{do_ajax_edit_impr_text(pagepos,d)}})}
-function changeTableTestStatus(wordid,up){$.post('inc/ajax_chg_term_status.php',{id:wordid,data:(up?1:0)},function(data){if(data!=''){$('#STAT'+wordid).html(data)}})}
+function do_ajax_save_impr_text(textid,elem_name,form_data){const idwait='#wait'+elem_name.substring(2);$(idwait).html('<img src="icn/waiting2.gif" />');$.post('inc/ajax.php',{action:"",action_type:"set_annotation",tid:textid,elem:elem_name,data:form_data},function(data){$(idwait).html('<img src="icn/empty.gif" />');if("error" in data)
+alert('Saving your changes failed, please reload the page and try again! '+'Error message: "'+data.error+'".');},"json")}
+function changeImprAnnText(){$(this).prev('input:radio').attr('checked','checked');const textid=$('#editimprtextdata').attr('data_id');const elem_name=$(this).attr('name');const form_data=JSON.stringify($('form').serializeObject());do_ajax_save_impr_text(textid,elem_name,form_data)}
+function changeImprAnnRadio(){const textid=$('#editimprtextdata').attr('data_id');const elem_name=$(this).attr('name');const form_data=JSON.stringify($('form').serializeObject());do_ajax_save_impr_text(textid,elem_name,form_data)}
+function addTermTranslation(wordid,txid,word,lang){const translation=$(txid).val().trim();const pagepos=$(document).scrollTop();if(translation==''||translation=='*'){alert('Text Field is empty or = \'*\'!');return}
+let request={action:"change_translation",translation:translation,};let failure;let action_type;if(wordid===0){action_type="add";request.text=word;request.lang=lang;failure="Adding translation to term failed!"}else{action_type="update";request.wordid=wordid;failure="Updating translation of term failed!"}
+request.action_type=action_type;failure+="Please reload page and try again."
+$.post('inc/ajax.php',request,function(d){if(d==''){alert(failure);return}
+if("error" in d){alert(failure+"\n"+d.error);return}
+do_ajax_edit_impr_text(pagepos,d[action_type])},"json")}
+function changeTableTestStatus(wordid,up){$.post('inc/ajax.php',{action:"term_status",action_type:"increment",wid:parseInt(wordid,10),status_up:(up?1:0)},function(data){if(data==""||"error" in data){return}
+$('#STAT'+wordid).html(data.increment)},"json")}
 function check(){let count=0;$('.notempty').each(function(_n){if($(this).val().trim()=='')count++});if(count>0){alert('ERROR\n\n'+count+' field(s) - marked with * - must not be empty!');return!1}
-count=0;$('input.checkurl').each(function(_n){if($(this).val().trim().length>0){if(($(this).val().trim().indexOf('http://')!=0)&&($(this).val().trim().indexOf('https://')!=0)&&($(this).val().trim().indexOf('#')!=0)){alert('ERROR\n\nField "'+$(this).attr('data_info')+'" must start with "http://" or "https://" if not empty.');count++}}});$('input.checkregexp').each(function(_n){const regexp=$(this).val().trim();if(regexp.length>0){$.ajax({type:'POST',url:'inc/ajax_check_regexp.php',data:{regex:regexp},async:!1}).always(function(data){if(data!=''){alert(data);count++}})}});$('input[class*="max_int_"]').each(function(_n){const maxvalue=parseInt($(this).attr('class').replace(/.*maxint_([0-9]+).*/,'$1'));if($(this).val().trim().length>0){if($(this).val()>maxvalue){alert('ERROR\n\n Max Value of Field "'+$(this).attr('data_info')+'" is '+maxvalue);count++}}});$('input.checkdicturl').each(function(_n){const translate_input=$(this).val().trim();if(translate_input.length>0){let refinned=translate_input;if(translate_input.startsWith('*')){refinned=translate_input.substring(1)}
+count=0;$('input.checkurl').each(function(_n){if($(this).val().trim().length>0){if(($(this).val().trim().indexOf('http://')!=0)&&($(this).val().trim().indexOf('https://')!=0)&&($(this).val().trim().indexOf('#')!=0)){alert('ERROR\n\nField "'+$(this).attr('data_info')+'" must start with "http://" or "https://" if not empty.');count++}}});$('input.checkregexp').each(function(_n){const regexp=$(this).val().trim();if(regexp.length>0){$.ajax({type:'POST',url:'inc/ajax.php',data:{action:"",action_type:"check_regexp",regex:regexp},async:!1}).always(function(data){if(data!=''){alert(data);count++}})}});$('input[class*="max_int_"]').each(function(_n){const maxvalue=parseInt($(this).attr('class').replace(/.*maxint_([0-9]+).*/,'$1'));if($(this).val().trim().length>0){if($(this).val()>maxvalue){alert('ERROR\n\n Max Value of Field "'+$(this).attr('data_info')+'" is '+maxvalue);count++}}});$('input.checkdicturl').each(function(_n){const translate_input=$(this).val().trim();if(translate_input.length>0){let refinned=translate_input;if(translate_input.startsWith('*')){refinned=translate_input.substring(1)}
 if(!/^https?:\/\//.test(refinned)){refinned='http://'+refinned}
 try{new URL(refinned)}catch(err){if(err instanceof TypeError){alert('ERROR\n\nField "'+$(this).attr('data_info')+'" should be an URL if not empty.');count++}}}});$('input.posintnumber').each(function(_n){if($(this).val().trim().length>0){if(!(isInt($(this).val().trim())&&(parseInt($(this).val().trim(),10)>0))){alert('ERROR\n\nField "'+$(this).attr('data_info')+'" must be an integer number > 0.');count++}}});$('input.zeroposintnumber').each(function(_n){if($(this).val().trim().length>0){if(!(isInt($(this).val().trim())&&(parseInt($(this).val().trim(),10)>=0))){alert('ERROR\n\nField "'+$(this).attr('data_info')+'" must be an integer number >= 0.');count++}}});$('input.checkoutsidebmp').each(function(_n){if($(this).val().trim().length>0){if(containsCharacterOutsideBasicMultilingualPlane($(this).val())){count+=alertFirstCharacterOutsideBasicMultilingualPlane($(this).val(),$(this).attr('data_info'))}}});$('textarea.checklength').each(function(_n){if($(this).val().trim().length>(0+$(this).attr('data_maxlength'))){alert('ERROR\n\nText is too long in field "'+$(this).attr('data_info')+'", please make it shorter! (Maximum length: '+$(this).attr('data_maxlength')+' char.)');count++}});$('textarea.checkoutsidebmp').each(function(_n){if(containsCharacterOutsideBasicMultilingualPlane($(this).val())){count+=alertFirstCharacterOutsideBasicMultilingualPlane($(this).val(),$(this).attr('data_info'))}});$('textarea.checkbytes').each(function(_n){if(getUTF8Length($(this).val().trim())>(0+$(this).attr('data_maxlength'))){alert('ERROR\n\nText is too long in field "'+$(this).attr('data_info')+'", please make it shorter! (Maximum length: '+$(this).attr('data_maxlength')+' bytes.)');count++}});$('input.noblanksnocomma').each(function(_n){if($(this).val().indexOf(' ')>0||$(this).val().indexOf(',')>0){alert('ERROR\n\nNo spaces or commas allowed in field "'+$(this).attr('data_info')+'", please remove!');count++}});return(count==0)}
 function isInt(value){for(let i=0;i<value.length;i++){if((value.charAt(i)<'0')||(value.charAt(i)>'9')){return!1}}
@@ -158,14 +166,25 @@ if(popup){owin(createTheDictUrl(target_url,txt))}else{showRightFrames(undefined,
 if(e.which==69||e.which==71){let url='';if(curr.hasClass('mword')){url='edit_mword.php?wid='+wid+'&len='+curr.attr('data_code')+'&tid='+TID+'&ord='+ord+dict}else if(stat=='0'){url='edit_word.php?wid=&tid='+TID+'&ord='+ord+dict}else{url='edit_word.php?wid='+wid+'&tid='+TID+'&ord='+ord+dict}
 showRightFrames(url);return!1}
 return!0}
-function do_ajax_save_setting(k,v){$.post('inc/ajax_save_setting.php',{k:k,v:v})}
-function do_ajax_update_media_select(){$('#mediaselect').html('&nbsp; <img src="icn/waiting2.gif" />');$.post('inc/ajax_update_media_select.php',function(data){$('#mediaselect').html(data)})}
-function do_ajax_show_sentences(lang,word,ctl,woid){$('#exsent').html('<img src="icn/waiting2.gif" />');$.post('inc/ajax_show_sentences.php',{lang:lang,word:word,ctl:ctl,woid:woid},function(data){$('#exsent').html(data)})}
-function do_ajax_show_similar_terms(){$('#simwords').html('<img src="icn/waiting2.gif" />');$.post('inc/ajax.php',{"action":"simterms","action_type":"simterms","simterms_lgid":$('#langfield').val(),"simterms_word":$('#wordfield').val()},function(data){$('#simwords').html(data)})}
-function do_ajax_word_counts(){const t=$('.markcheck').map(function(){return $(this).val()}).get().join(',');$.post('inc/ajax_word_counts.php',{id:t},function(data){WORDCOUNTS=data;word_count_click();$('.barchart').removeClass('hide')},'json')}
+function do_ajax_save_setting(k,v){$.post('inc/ajax.php',{action:'',action_type:'save_setting',k:k,v:v})}
+function quick_select_to_input(select_elem,input_elem){let val=select_elem.options[select_elem.selectedIndex].value;if(val!='')
+input_elem.value=val;select_elem.value=''}
+function select_media_path(paths,folders,base_path){let options=[],temp_option=document.createElement('option');temp_option.value="";temp_option.text="[Choose...]";options.push(temp_option);for(let i=0;i<paths.length;i++){temp_option=document.createElement('option')
+if(folders.includes(paths[i])){temp_option.setAttribute("disabled","disabled");temp_option.text='-- Directory: '+paths[i]+'--'}else{temp_option.value=base_path+"/"+paths[i];temp_option.text=paths[i]}
+options.push(temp_option)}
+return options}
+function media_select_receive_data(data){$('#mediaSelectLoadingImg').css("display","none");if(data.error!==undefined){let msg;if(data.error=="not_a_directory"){msg='[Error: "../'+data.base_path+'/media" exists, but it is not a directory.]'}else if(data.error=="does_not_exist"){msg='[Directory "../'+data.base_path+'/media" does not yet exist.]'}else{msg="[Unknown error!]"}
+$('#mediaSelectErrorMessage').text(msg);$('#mediaSelectErrorMessage').css("display","inherit")}else{const options=select_media_path(data.paths,data.folders,data.base_path);$('#mediaselect select').empty();for(let i=0;i<options.length;i++){$('#mediaselect select').append(options[i])}
+$('#mediaselect select').css("display","inherit")}}
+function do_ajax_update_media_select(){$('#mediaSelectErrorMessage').css("display","none");$('#mediaselect select').css("display","none");$('#mediaSelectLoadingImg').css("display","inherit");$.getJSON('inc/ajax.php',{action:"query",action_type:"media_paths"},media_select_receive_data)}
+function display_example_sentences(sentences,click_target){let img,clickable,parentDiv;const outElement=document.createElement("div");for(let i=0;i<sentences.length;i++){img=document.createElement("img");img.src="icn/tick-button.png";img.title="Choose";clickable=document.createElement('span');clickable.classList.add("click");clickable.setAttribute("onclick","{"+click_target+".value = '"+sentences[i][1].replaceAll("'","\\'")+"';makeDirty();}");clickable.appendChild(img);parentDiv=document.createElement("div");parentDiv.appendChild(clickable);parentDiv.innerHTML+="&nbsp; "+sentences[i][0];outElement.appendChild(parentDiv)}
+return outElement}
+function do_ajax_show_sentences(lang,word,ctl,woid){$('#exsent-interactable').css("display","none");$('#exsent-waiting').css("display","inherit");$.getJSON('inc/ajax.php',{action:"query",action_type:"example_sentences",lid:lang,word_lc:word,wid:woid},function(data){$('#exsent-waiting').css("display","none");$('#exsent-sentences').css("display","inherit");const new_element=display_example_sentences(data,ctl);$('#exsent-sentences').append(new_element)})}
+function do_ajax_show_similar_terms(){$('#simwords').html('<img src="icn/waiting2.gif" />');$.post('inc/ajax.php',{"action":"similar_terms","action_type":"similar_terms","simterms_lgid":$('#langfield').val(),"simterms_word":$('#wordfield').val()},function(data){$('#simwords').html(data.similar_terms)},"json")}
+function do_ajax_word_counts(){const t=$('.markcheck').map(function(){return $(this).val()}).get().join(',');$.getJSON('inc/ajax.php',{action:"query",action_type:"texts_statistics",texts_id:t},function(data){WORDCOUNTS=data;word_count_click();$('.barchart').removeClass('hide')})}
 function set_barchart_item(){const id=$(this).find('span').first().attr('id').split('_')[2];let v;if(SUW&16){v=parseInt(WORDCOUNTS.expru[id]||0,10)+parseInt(WORDCOUNTS.totalu[id],10)}else{v=parseInt(WORDCOUNTS.expr[id]||0,10)+parseInt(WORDCOUNTS.total[id],10)}
 $(this).children('li').each(function(){let cat_word_count=parseInt($(this).children('span').text(),10);cat_word_count+=1;v+=1;const h=25-Math.log(cat_word_count)/Math.log(v)*25;$(this).css('border-top-width',h+'px')})}
-function set_word_counts(){$.each(WORDCOUNTS.totalu,function(key,value){let knownu=known=todo=stat0=0;const expr=WORDCOUNTS.expru[key]?parseInt((SUW&2)?WORDCOUNTS.expru[key]:WORDCOUNTS.expr[key]):0;if(!WORDCOUNTS.stat[key]){WORDCOUNTS.statu[key]=WORDCOUNTS.stat[key]=[]}
+function set_word_counts(){$.each(WORDCOUNTS.totalu,function(key,value){let knownu,known,todo,stat0;knownu=known=todo=stat0=0;const expr=WORDCOUNTS.expru[key]?parseInt((SUW&2)?WORDCOUNTS.expru[key]:WORDCOUNTS.expr[key]):0;if(!WORDCOUNTS.stat[key]){WORDCOUNTS.statu[key]=WORDCOUNTS.stat[key]=[]}
 $('#total_'+key).html((SUW&1?value:WORDCOUNTS.total[key]));$.each(WORDCOUNTS.statu[key],function(k,v){if(SUW&8)
 $('#stat_'+k+'_'+key).html(v);knownu+=parseInt(v)});$.each(WORDCOUNTS.stat[key],function(k,v){if(!(SUW&8))
 $('#stat_'+k+'_'+key).html(v);known+=parseInt(v)});$('#saved_'+key).html(known?((SUW&2?knownu:known)-expr+'+'+expr):0);if(SUW&4){todo=parseInt(value)+parseInt(WORDCOUNTS.expru[key]||0)-parseInt(knownu)}else{todo=parseInt(WORDCOUNTS.total[key])+parseInt(WORDCOUNTS.expr[key]||0)-parseInt(known)}
@@ -174,7 +193,45 @@ $('#unknownpercent_'+key).html(unknownpercent==0?0:unknownpercent.toFixed(2));if
 $('#stat_0_'+key).html(stat0)});$('.barchart').each(set_barchart_item)}
 function word_count_click(){$('.wc_cont').children().each(function(){if(parseInt($(this).attr('data_wo_cnt'))==1){$(this).html('u')}else{$(this).html('t')}
 SUW=(parseInt($('#chart').attr('data_wo_cnt'))<<4)+(parseInt($('#unknownpercent').attr('data_wo_cnt'))<<3)+(parseInt($('#unknown').attr('data_wo_cnt'))<<2)+(parseInt($('#saved').attr('data_wo_cnt'))<<1)+(parseInt($('#total').attr('data_wo_cnt')));set_word_counts()})}
-function do_ajax_edit_impr_text(pagepos,word){if(word=='')$('#editimprtextdata').html('<img src="icn/waiting2.gif" />');const textid=$('#editimprtextdata').attr('data_id');$.post('inc/ajax_edit_impr_text.php',{id:textid,word:word},function(data){eval(data);$.scrollTo(pagepos);$('input.impr-ann-text').on('change',changeImprAnnText);$('input.impr-ann-radio').on('change',changeImprAnnRadio)})}
+function translation_radio(curr_trans,trans_data){if(trans_data.wid===null){return""}
+const trim_trans=curr_trans.trim();if(trim_trans=='*'||trim_trans==''){return""}
+const set=trim_trans==trans_data.trans;const option=`<span class="nowrap">
+    <input class="impr-ann-radio" `+(set?'checked="checked" ':'')+'type="radio" name="rg'+trans_data.ann_index+`" value="`+escape_html_chars(trim_trans)+`" /> 
+          &nbsp; `+escape_html_chars(trim_trans)+`
+  </span>
+  <br />`;return option}
+function edit_term_ann_translations(trans_data,text_id){const widset=trans_data.wid!==null;let edit_word_link;if(widset){const req_arg=$.param({fromAnn:"$(document).scrollTop()",wid:trans_data.wid,ord:trans_data.term_ord,tid:text_id})
+edit_word_link=`<a name="rec${trans_data.ann_index}"></a>
+    <span class="click"
+    onclick="oewin('edit_word.php?`+escape_html_chars(req_arg)+`');">
+          <img src="icn/sticky-note--pencil.png" title="Edit Term" alt="Edit Term" />
+      </span>`}else{edit_word_link='&nbsp;'}
+$(`#editlink${trans_data.ann_index}`).html(edit_word_link);let translations_list="";trans_data.translations.forEach(function(candidate_trans){translations_list+=translation_radio(candidate_trans,trans_data)});const select_last=trans_data.translations.length==0;translations_list+=`<span class="nowrap">
+  <input class="impr-ann-radio" type="radio" name="rg${trans_data.ann_index}" `+(select_last?'checked="checked" ':'')+`value="" />
+  &nbsp;
+  <input class="impr-ann-text" type="text" name="tx${trans_data.ann_index}`+`" id="tx${trans_data.ann_index}" value="`+(select_last?escape_html_chars(curr_trans):'')+`" maxlength="50" size="40" />
+   &nbsp;
+  <img class="click" src="icn/eraser.png" title="Erase Text Field" 
+  alt="Erase Text Field" 
+  onclick="$('#tx${trans_data.ann_index}').val('').trigger('change');" />
+    &nbsp;
+  <img class="click" src="icn/star.png" title="* (Set to Term)" 
+  alt="* (Set to Term)" 
+  onclick="$('#tx${trans_data.ann_index}').val('*').trigger('change');" />
+  &nbsp;`;if(widset){translations_list+=`<img class="click" src="icn/plus-button.png" 
+    title="Save another translation to existent term" 
+    alt="Save another translation to existent term" 
+    onclick="addTermTranslation(${trans_data.wid}, `+`'#tx${trans_data.ann_index}', '',${trans_data.lang_id});" />`}else{translations_list+=`<img class="click" src="icn/plus-button.png" 
+    title="Save translation to new term" 
+    alt="Save translation to new term" 
+    onclick="addTermTranslation(0, '#tx${trans_data.ann_index}',`+`${trans_data.term_lc},${trans_data.lang_id});" />`}
+translations_list+=`&nbsp;&nbsp;
+  <span id="wait${trans_data.ann_index}">
+      <img src="icn/empty.gif" />
+  </span>
+  </span>`;$(`#transsel${trans_data.ann_index}`).html(translations_list)}
+function do_ajax_edit_impr_text(pagepos,word){if(word==''){$('#editimprtextdata').html('<img src="icn/waiting2.gif" />');location.reload();return}
+const textid=$('#editimprtextdata').attr('data_id');$.getJSON('inc/ajax.php',{action:"query",action_type:"term_translations",text_id:textid,term_lc:word},function(data){if("error" in data){alert(data.error)}else{edit_term_ann_translations(data,textid);$.scrollTo(pagepos);$('input.impr-ann-text').on('change',changeImprAnnText);$('input.impr-ann-radio').on('change',changeImprAnnRadio)}})}
 function showRightFrames(roUrl,ruUrl){if(roUrl!==undefined){top.frames.ro.location.href=roUrl}
 if(ruUrl!==undefined){top.frames.ru.location.href=ruUrl}
 if($('#frames-r').length){$('#frames-r').animate({right:'5px'});return!0}
@@ -301,7 +358,7 @@ try{let final_url=new URL(url);popup|=final_url.searchParams.has('lwt_popup');ex
 if(popup){return' <span class="click" onclick="owin(\''+target_url+'\');">'+txt+'</span> '}
 if(external){return' <a href="'+target_url+'" target="ru" onclick="showRightFrames();">'+txt+'</a> '}
 return r}
-function escape_html_chars(s){return s.replace(/&/g,'%AMP%').replace(/</g,'&#060;').replace(/>/g,'&#062;').replace(/"/g,'&#034;').replace(/'/g,'&#039;').replace(/%AMP%/g,'&#038;').replace(/\x0d/g,'<br />')}
+function escape_html_chars(s){let map={'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;',"\x0d":'<br />'};return s.replace(/[&<>"'\x0d]/g,function(m){return map[m]})}
 function escape_apostrophes(s){return s.replace(/'/g,'\\\'')}
 function selectToggle(toggle,form){const myForm=document.forms[form];for(let i=0;i<myForm.length;i++){if(toggle){myForm.elements[i].checked='checked'}else{myForm.elements[i].checked=''}}
 markClick()}
@@ -339,7 +396,7 @@ function addTranslation(s){let w=window.parent.frames.ro;if(w===undefined)
 w=window.opener;if(w===undefined){alert('Translation can not be copied!');return}
 let c=w.document.forms[0].WoTranslation;if(typeof c!='object'){alert('Translation can not be copied!');return}
 let oldValue=c.value;if(oldValue.trim()==''){c.value=s;w.makeDirty()}else{if(oldValue.indexOf(s)==-1){c.value=oldValue+' / '+s;w.makeDirty()}else{if(confirm('"'+s+'" seems already to exist as a translation.\nInsert anyway?')){c.value=oldValue+' / '+s;w.makeDirty()}}}}
-function getGlosbeTranslation(text,lang,dest){$.ajax({url:'http://glosbe.com/gapi/translate?from='+lang+'&dest='+dest+'&format=json&phrase='+text+'&callback=?',type:"GET",dataType:'jsonp',jsonp:'getTranslationFromGlosbeApi',jsonpCallback:'getTranslationFromGlosbeApi',async:'true'})}
+function getGlosbeTranslation(text,lang,dest){$.ajax({url:'http://glosbe.com/gapi/translate?'+$.param({from:lang,dest:dest,format:"json",phrase:text,callback:"?"}),type:"GET",dataType:'jsonp',jsonp:'getTranslationFromGlosbeApi',jsonpCallback:'getTranslationFromGlosbeApi',async:'true'})}
 function getTranslationFromGlosbeApi(data){try{$.each(data.tuc,function(i,rows){if(rows.phrase){$('#translations').append('<span class="click" onclick="addTranslation(\''+rows.phrase.text+'\');">'+'<img src="icn/tick-button.png" title="Copy" alt="Copy" />'+' &nbsp; '+rows.phrase.text+'</span><br />')}else if(rows.meanings){$('#translations').append('<span class="click" onclick="addTranslation('+"'("+rows.meanings[0].text+")'"+');">'+'<img src="icn/tick-button.png" title="Copy" alt="Copy" />'+' &nbsp; '+"("+rows.meanings[0].text+")"+'</span><br />')}});if(!data.tuc.length){$('#translations').before('<p>No translations found ('+data.from+'-'+data.dest+').</p>');if(data.dest!='en'&&data.from!='en'){$('#translations').attr('id','no_trans').after('<hr /><p>&nbsp;</p><h3><a href="http://glosbe.com/'+data.from+'/en/'+data.phrase+'">Glosbe Dictionary ('+data.from+'-en):  &nbsp; <span class="red2">'+data.phrase+'</span></a></h3>&nbsp;<p id="translations"></p>');getGlosbeTranslation(data.phrase,data.from,'en')}else $('#translations').after('<hr />')}else $('#translations').after('<p>&nbsp;<br/>'+data.tuc.length+' translation'+(data.tuc.length==1?'':'s')+' retrieved via <a href="http://glosbe.com/a-api" target="_blank">'+'Glosbe API</a>.</p><hr />')}catch(err){$('#translations').text('Retrieval error. Possible reason: There is a limit of Glosbe API '+'calls that may be done from one IP address in a fixed period of time,'+' to prevent from abuse.').after('<hr />')}}
 async function getLibreTranslateTranslationBase(text,lang,dest,key="",url="http://localhost:5000/translate"){const res=await fetch(url,{method:"POST",body:JSON.stringify({q:text,source:lang,target:dest,format:"text",api_key:key}),headers:{"Content-Type":"application/json"}});const data=await res.json();return data.translatedText}
 async function getLibreTranslateTranslation(libre_url,text,lang,dest){const search_params=libre_url.searchParams;if(search_params.get("lwt_translator")!="libretranslate"){throw 'Translation API not supported: '+search_params.get("lwt_translator")+"!"}
@@ -407,12 +464,12 @@ $(i,context).before('<span id="ID-'+key+'-'+length+'"'+attrs+'>'+text[key]+'</sp
 function prepareTextInteractions(){$('.word').each(word_each_do_text_text);$('.mword').each(mword_each_do_text_text);$('.word').on('click',word_click_event_do_text_text);$('#thetext').on('selectstart','span',!1).on('mousedown','.wsty',{annotation:ANNOTATIONS_MODE},mword_drag_n_drop_select);$('#thetext').on('click','.mword',mword_click_event_do_text_text);$('.word').on('dblclick',word_dblclick_event_do_text_text);$('#thetext').on('dblclick','.mword',word_dblclick_event_do_text_text);$(document).on('keydown',keydown_event_do_text_text);$('#thetext').hoverIntent({over:word_hover_over,out:word_hover_out,interval:150,selector:".wsty,.mwsty"})}
 function goToLastPosition(){const lookPos=POS;let pos=0;if(lookPos>0){let posObj=$(".wsty[data_pos="+lookPos+"]").not(".hide").eq(0);if(posObj.attr("data_pos")===undefined){pos=$(".wsty").not(".hide").filter(function(){return $(this).attr("data_pos")<=lookPos}).eq(-1)}}
 $(document).scrollTo(pos);focus();setTimeout(overlib,10);setTimeout(cClick,100)}
-function saveCurrentPosition(){var pos=0;var top=$(window).scrollTop()-$('.wsty').not('.hide').eq(0).height();$('.wsty').not('.hide').each(function(){if($(this).offset().top>=top){pos=$(this).attr('data_pos');return!1}});$.ajax({type:"POST",url:'inc/ajax_save_text_position.php',data:{id:TID,position:pos},async:!1})}
-function getPhoneticText(text,lang){let phoneticText;$.ajax({async:!1,data:{text:text,lang:lang},type:"GET",url:'inc/ajax_get_phonetic.php',}).done(function(data){phoneticText=data});return phoneticText}
-async function getPhoneticTextAsync(text,lang){return $.get('inc/ajax_get_phonetic.php',data={text:text,lang:lang},)}
-function readRawTextAloud(text,lang,rate,pitch){let msg=new SpeechSynthesisUtterance();const trimmed=lang.substring(0,2);const prefix='tts['+trimmed;msg.text=text;if(lang){msg.lang=lang}else if(getCookie(prefix+'RegName]')){msg.lang=trimmed+'-'+getCookie(prefix+'RegName]')}
+function saveCurrentPosition(){let pos=0;const top_pos=$(window).scrollTop()-$('.wsty').not('.hide').eq(0).height();$('.wsty').not('.hide').each(function(){if($(this).offset().top>=top_pos){pos=$(this).attr('data_pos');return!1}});$.ajax({type:"POST",url:'inc/ajax.php',data:{action:"reading_position",action_type:"text",tid:TID,tposition:pos},async:!1})}
+function getPhoneticText(text,lang){let phoneticText;$.ajax('inc/ajax.php',{async:!1,data:{action:"query",action_type:"phonetic_reading",text:text,lang:lang},dataType:"json",type:"GET",}).done(function(data){phoneticText=data.phonetic_reading});return phoneticText}
+async function getPhoneticTextAsync(text,lang){return $.getJSON('inc/ajax.php',{action:"query",action_type:"phonetic_reading",text:text,lang:lang})}
+function readRawTextAloud(text,lang,rate,pitch,voice){let msg=new SpeechSynthesisUtterance();const trimmed=lang.substring(0,2);const prefix='tts['+trimmed;msg.text=text;if(lang){msg.lang=lang}
+const useVoice=voice||getCookie(prefix+'Voice]');if(useVoice){const voices=window.speechSynthesis.getVoices();for(let i=0;i<voices.length;i++){if(voices[i].name===useVoice){msg.voice=voices[i]}}}
 if(rate){msg.rate=rate}else if(getCookie(prefix+'Rate]')){msg.rate=parseInt(getCookie(prefix+'Rate]'),10)}
 if(pitch){msg.pitch=pitch}else if(getCookie(prefix+'Pitch]')){msg.pitch=parseInt(getCookie(prefix+'Pitch]'),10)}
 window.speechSynthesis.speak(msg);return msg}
-function readTextAloud(text,lang,rate,pitch){let parsed_text;if(lang.substring(0,2)=='ja'){parsed_text=getPhoneticText(text,lang)}else{parsed_text=text}
-readRawTextAloud(parsed_text,lang,rate,pitch)}
+function readTextAloud(text,lang,rate,pitch,voice){if(lang.startsWith('ja')){getPhoneticTextAsync(text,lang).then(function(data){readRawTextAloud(data.phonetic_reading,lang,rate,pitch,voice)})}else{readRawTextAloud(text,lang,rate,pitch,voice)}}

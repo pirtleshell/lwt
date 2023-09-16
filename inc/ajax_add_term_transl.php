@@ -24,16 +24,18 @@ require_once __DIR__ . '/session_utility.php';
  * @return string Error message if failure, lowercase $text otherwise
  * 
  * @global string $tbpref Database table prefix
+ * 
+ * @since 2.9.0 Error messages are much more explicit
  */
 function add_new_term_transl($text, $lang, $data) 
 {
     global $tbpref;
     $textlc = mb_strtolower($text, 'UTF-8');
     $dummy = runsql(
-        'INSERT INTO ' . $tbpref . 'words (
+        "INSERT INTO {$tbpref}words (
             WoLgID, WoTextLC, WoText, WoStatus, WoTranslation, 
             WoSentence, WoRomanization, WoStatusChanged, 
-            ' .  make_score_random_insert_update('iv') . '
+            " .  make_score_random_insert_update('iv') . '
         ) VALUES( ' . 
         $lang . ', ' .
         convert_string_to_sqlsyntax($textlc) . ', ' .
@@ -43,14 +45,19 @@ function add_new_term_transl($text, $lang, $data)
         convert_string_to_sqlsyntax('') . ', NOW(), ' .  
         make_score_random_insert_update('id') . ')', ""
     );
-    if (!is_numeric($dummy) || (int)$dummy != 1) {
-        return "";
+    if (!is_numeric($dummy)) {
+        // Error message
+        return $dummy;
+    }
+    if ((int)$dummy != 1) {
+        return "Error: $dummy rows affected, expected 1!";
     }
     $wid = get_last_key();
     do_mysqli_query(
-        'UPDATE ' . $tbpref . 'textitems2 
-        SET Ti2WoID = ' . $wid . ' 
-        WHERE Ti2LgID = ' . $lang . ' AND LOWER(Ti2Text) =' . convert_string_to_sqlsyntax_notrim_nonull($textlc)
+        "UPDATE {$tbpref}textitems2 
+        SET Ti2WoID = $wid 
+        WHERE Ti2LgID = $lang AND LOWER(Ti2Text) = " . 
+        convert_string_to_sqlsyntax_notrim_nonull($textlc)
     );
     return $textlc;
 }
@@ -70,8 +77,8 @@ function edit_term_transl($wid, $new_trans)
     global $tbpref;
     $oldtrans = get_first_value(
         "SELECT WoTranslation AS value 
-        FROM " . $tbpref . "words 
-        WHERE WoID = " . $wid
+        FROM {$tbpref}words 
+        WHERE WoID = $wid"
     );
     
     $oldtransarr = preg_split('/[' . get_sepas()  . ']/u', $oldtrans);
@@ -84,16 +91,42 @@ function edit_term_transl($wid, $new_trans)
             $oldtrans .= ' ' . get_first_sepa() . ' ' . $new_trans;
         }
         runsql(
-            'UPDATE ' . $tbpref . 'words 
-            SET WoTranslation = ' . convert_string_to_sqlsyntax($oldtrans) . ' 
-            WHERE WoID = ' . $wid, ""
+            "UPDATE {$tbpref}words 
+            SET WoTranslation = " . convert_string_to_sqlsyntax($oldtrans) . 
+            " WHERE WoID = $wid", 
+            ""
         );
     }
     return (string)get_first_value(
         "SELECT WoTextLC AS value 
-        FROM " . $tbpref . "words 
-        WHERE WoID = " . $wid
+        FROM {$tbpref}words 
+        WHERE WoID = $wid"
     );
+}
+
+
+/**
+ * Edit term translation if it exists.
+ * 
+ * @param int    $wid       Word ID
+ * @param string $new_trans New translation
+ * 
+ * @return string Term in lower case, or "" if term does not exist
+ * 
+ * @global string $tbpref
+ */
+function do_ajax_check_update_translation($wid, $new_trans)
+{
+    global $tbpref;
+    $cnt_words = (int)get_first_value(
+        "SELECT COUNT(WoID) AS value 
+        FROM {$tbpref}words 
+        WHERE WoID = $wid"
+    );
+    if ($cnt_words == 1) {
+        return edit_term_transl($wid, $new_trans);
+    }
+    return "";
 }
 
 /**
@@ -104,35 +137,19 @@ function edit_term_transl($wid, $new_trans)
  * 
  * @return string Database alteration message
  * 
- * @global string $tbpref
+ * @deprecated Deprecated in 2.9.0 in favor to the REST API. 
  */
 function do_ajax_add_term_transl($wid, $data)
 {
-    global $tbpref;
     chdir('..');
-    /// Save data
+    // Save data
     $success = "";
     if ($wid == 0) {
-        /**
-         * @var string $text 
-         * Text, only for only wid=0 (new)
-         */
-        $text = trim($_POST['text']);
-        /**
-         * @var int $lang 
-         * Language ID only wid=0 (lang-id)
-         */
-        $lang = (int)$_POST['lang'];
-        $success = add_new_term_transl($text, $lang, $data);
-    } else {
-        $cnt_words = (int)get_first_value(
-            "SELECT COUNT(WoID) AS value 
-            FROM " . $tbpref . "words 
-            WHERE WoID = " . $wid
+        $success = add_new_term_transl(
+            trim($_POST['text']), (int)$_POST['lang'], $data
         );
-        if ($cnt_words == 1) {
-            $success = edit_term_transl($wid, $data);
-        }
+    } else {
+        $success = do_ajax_check_update_translation($wid, $data);
     }
     return $success;
 }

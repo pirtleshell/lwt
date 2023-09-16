@@ -25,8 +25,8 @@ require_once 'inc/langdefs.php';
  * 
  * @param bool|null   $selection    Test is of type selection
  * @param string|null $sess_testsql SQL string for test
- * @param int|null    $lang Test is of type language, for the language $lang ID
- * @param int|null    $text Testing text with ID $text
+ * @param int|null    $lang         Test is of type language, for the language $lang ID
+ * @param int|null    $text         Testing text with ID $text
  * 
  * @return string SQL projection (selection) string
  */
@@ -356,10 +356,10 @@ function do_test_get_word($testsql)
 /**
  * Get the solution to a test.
  * 
- * @param int $testtype Test type between 1 and 5
- * @param array $wo_record Word record element
- * @param bool $nosent Test is in word mode
- * @param string $wo_text Word text
+ * @param int    $testtype  Test type between 1 and 5
+ * @param array  $wo_record Word record element
+ * @param bool   $nosent    Test is in word mode
+ * @param string $wo_text   Word text
  * 
  * @return string Solution to display.  
  */
@@ -691,7 +691,8 @@ function do_test_test_interaction_globals($wb1, $wb2, $wb3)
  * @global string $tbpref  Database table prefix
  * @global string $angDefs Languages definition array
  */
-function do_test_test_javascript_clickable($wo_record, $solution) {
+function do_test_test_javascript_clickable($wo_record, $solution)
+{
     global $tbpref, $langDefs;
 
     $wid = $wo_record['WoID'];

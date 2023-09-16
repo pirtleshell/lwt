@@ -12,6 +12,8 @@
  * @license Unlicense <http://unlicense.org/>
  * @link    https://hugofara.github.io/lwt/docs/html/ajax__update__media__select_8php.html
  * @since   1.1.0
+ * 
+ * @deprecated 2.9.0 Use the REST API instead.
  */
 
 require_once __DIR__ . '/session_utility.php';

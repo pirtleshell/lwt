@@ -133,9 +133,8 @@ function regenerateThemes()
     $folder = 'src/themes/';
     $folder_scan = scandir($folder);
     foreach ($folder_scan as $parent_file) {
-        if (
-            is_dir($folder . $parent_file) && 
-            $parent_file != '.' && $parent_file != '..'
+        if (is_dir($folder . $parent_file)  
+            && $parent_file != '.' && $parent_file != '..'
         ) {
             regenerateSingleTheme($folder, $parent_file);
         }

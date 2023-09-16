@@ -64,9 +64,9 @@ function do_header_row($textid, $langid): void
     </div>
     <div>
         <?php 
-    echo getPreviousAndNextTextLinks(
-        $textid, 'do_text.php?start=', false, ''
-    );
+        echo getPreviousAndNextTextLinks(
+            $textid, 'do_text.php?start=', false, ''
+        );
         ?>
     </div>
     <div>
@@ -109,15 +109,15 @@ function do_title($title, $sourceURI): void
     ?>
     <h1>READ ▶ 
         <?php 
-    echo tohtml($title);
-    if (isset($sourceURI) && substr(trim($sourceURI), 0, 1) != '#') { 
-        ?>
+        echo tohtml($title);
+        if (isset($sourceURI) && !str_starts_with(trim($sourceURI), '#')) { 
+            ?>
         <a href="<?php echo $sourceURI ?>" target="_blank">
             <img src="<?php echo get_file_path('icn/chain.png') ?>" title="Text Source" alt="Text Source" />
         </a>
-        <?php 
-    } 
-    ?>
+            <?php 
+        } 
+        ?>
     </h1>
     <?php
 }
@@ -198,26 +198,13 @@ function browser_tts($text, $languageName): void
         lang: getLangFromDict(WBLINK3) || <?php echo json_encode($languageCode); ?>,
 
         /// {string} Rate at wich the speech is done
-        rate: 0.8,
-
-        /**
-         * Reads a text using the browser text reader.
-         * 
-         * @deprecated Since 2.3.0-fork, use of window.readTextAloud is recommended instead. 
-         */
-        readTextAloud: function () {
-            const msg = new SpeechSynthesisUtterance(this.text);
-            console.log('This function is deprecated, do not use it!')
-            msg.text = this.text;
-            msg.lang = this.lang;
-            msg.rate = this.rate;
-            window.speechSynthesis.cancel();
-            window.speechSynthesis.speak(msg);
-        },
+        rate: 0.8
 
     };
 
-    /** Check browser compatibility before reading */
+    /** 
+     * Check browser compatibility before reading 
+     */
     function init_reading() {
         if (!('speechSynthesis' in window)) {
             alert('Your browser does not support speechSynthesis!');
@@ -249,7 +236,7 @@ function browser_tts($text, $languageName): void
      */
     function annotationModeChanged(mode) {
         console.log(mode);
-
+        // 2.9.0: seems to be a debug function, candidate to deletion
     }
 </script>
     <?php
@@ -277,12 +264,14 @@ function save_audio_position($textid): void
         var pos = $("#jquery_jplayer_1").data("jPlayer").status.currentTime;
         $.ajax({
             type: "POST",
-            url:'inc/ajax_save_text_position.php', 
-            data: { 
-                id: '<?php echo $textid; ?>', 
-                audioposition: pos
+            url:'inc/ajax.php', 
+            data: {
+                action: "reading_position",
+                action_type: "audio",
+                tid: '<?php echo $textid; ?>', 
+                audio_position: pos
             }, 
-            async: false
+            async: false // Asynchronous should be safe (2.9.0)
         });
     }
 

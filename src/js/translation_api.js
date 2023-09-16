@@ -52,8 +52,13 @@ function addTranslation (s) {
 
 function getGlosbeTranslation(text, lang, dest) {
 	$.ajax({
-		url:'http://glosbe.com/gapi/translate?from=' + lang + '&dest=' + dest + 
-		'&format=json&phrase=' + text + '&callback=?',
+		url: 'http://glosbe.com/gapi/translate?' + $.param({
+			from: lang,
+			dest: dest,
+			format: "json",
+			phrase: text,
+			callback: "?"
+		}),
 		type:"GET",
 		dataType: 'jsonp',
 		jsonp: 'getTranslationFromGlosbeApi',

@@ -265,7 +265,7 @@ function get_server_data(): array
  */
 function index_load_warnings()
 {
-?>
+    ?>
 <script type="text/javascript">
     //<![CDATA[
     const load_warnings = {
@@ -306,7 +306,7 @@ function index_load_warnings()
     load_warnings.lwt_version(<?php echo json_encode(get_version()); ?>);
     //]]>
 </script>
-<?php
+    <?php
 }
 
 /**
@@ -422,7 +422,7 @@ function index_do_main_page()
         <a href="http://unlicense.org/" target="_blank">More information and detailed Unlicense ...</a>
     </p>
 </footer>
-<?php
+    <?php
     index_load_warnings();
     pageend();
 }

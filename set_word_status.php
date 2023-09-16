@@ -28,8 +28,8 @@ require_once 'inc/session_utility.php';
 function get_word_data($wid)
 {
     global $tbpref;
-    $sql = 'SELECT WoText, WoTranslation, WoRomanization 
-    FROM ' . $tbpref . 'words WHERE WoID = ' . $wid;
+    $sql = "SELECT WoText, WoTranslation, WoRomanization 
+    FROM {$tbpref}words WHERE WoID = $wid";
     $res = do_mysqli_query($sql);
     $record = mysqli_fetch_assoc($res);
     if (!$record) {
@@ -42,10 +42,44 @@ function get_word_data($wid)
     return array($word, $trans, $roman);
 }
 
+
 /**
- * Edit the word from the database.
+ * Sent an AJAX request to change a word satus.
  * 
- * @param string $wid    ID of the word to delete
+ * @param string $wid    ID of the word status to change
+ * @param string $status New status to set
+ */
+function set_word_status_ajax($wid, $status)
+{
+    ?>
+<script type="text/javascript">
+    const wordid = <?php echo $wid; ?>;
+    const status = <?php echo $status; ?>;
+    $.post(
+        'inc/ajax.php',
+        {
+            action: "term_status",
+            action_type: "set",
+            wid: wordid,
+            status: status 
+        }, 
+        function (data) {
+            if (data == "" || "error" in data) {
+                word_update_error();
+            } else {
+                apply_word_update(wordid, status);
+            }
+        },
+        "json"
+    );
+</script>
+    <?php
+}
+
+/**
+ * Edit the term status in the database.
+ * 
+ * @param string $wid    ID of the word to update
  * @param string $status New status to set
  * 
  * @return string Some edit message, number of affected rows or error message
@@ -56,9 +90,10 @@ function set_word_status_database($wid, $status)
 {
     global $tbpref;
     $m1 = runsql(
-        'UPDATE ' . $tbpref . 'words 
-        SET WoStatus = ' . $status . ', WoStatusChanged = NOW(),' . make_score_random_insert_update('u') . ' 
-        WHERE WoID = ' . $wid, 
+        "UPDATE {$tbpref}words 
+        SET WoStatus = $status, WoStatusChanged = NOW()," . 
+        make_score_random_insert_update('u') . " 
+        WHERE WoID = $wid", 
         'Status changed'
     );
     return $m1;
@@ -80,25 +115,37 @@ function set_word_status_javascript($tid, $wid, $status, $word, $trans, $roman)
 {
     ?>
 <script type="text/javascript">
-    //<![CDATA[
-    let context = window.parent.document.getElementById('frame-l');
-    let contexth = window.parent.document.getElementById('frame-h');
-    let status = '<?php echo $status; ?>';
-    let title = '';
-    if (!window.parent.JQ_TOOLTIP) {
-        title = make_tooltip(
-            <?php echo prepare_textdata_js($word); ?>, <?php echo prepare_textdata_js($trans); ?>, <?php echo prepare_textdata_js($roman); ?>, status
-        );
+    function word_update_error() {
+        $('#status_change_log').text("Word status update failed!");
+        cleanupRightFrames();
     }
-    $('.word<?php echo $wid; ?>', context)
-    .removeClass('status98 status99 status1 status2 status3 status4 status5')
-    .addClass('status<?php echo $status; ?>')
-    .attr('data_status','<?php echo $status; ?>')
-    .attr('title',title);
-    $('#learnstatus', contexth).html('<?php echo addslashes(texttodocount2($tid)); ?>');
 
-    cleanupRightFrames();
-    //]]>
+    function update_word_display(wid, status, word, trans, roman, tid) {
+        let context = window.parent.document.getElementById('frame-l');
+        let contexth = window.parent.document.getElementById('frame-h');
+        let title = '';
+        if (!window.parent.JQ_TOOLTIP) {
+            title = make_tooltip(word, trans, roman, status);
+        }
+        $('.word' + wid, context)
+        .removeClass('status98 status99 status1 status2 status3 status4 status5')
+        .addClass('status' + status)
+        .attr('data_status', status)
+        .attr('title', title);
+        $('#learnstatus', contexth).html(tid);
+    }
+
+    function apply_word_update(wid, status) {
+        $('#status_change_log').text('Term status changed to ' + status);
+        update_word_display(
+            wid, status, 
+            <?php echo json_encode($word); ?>, 
+            <?php echo json_encode($trans); ?>, 
+            <?php echo json_encode($roman); ?>,
+            <?php echo json_encode(texttodocount2($tid)); ?>
+        );
+        cleanupRightFrames();
+    }
 </script>
     <?php
 }
@@ -117,8 +164,8 @@ function set_word_status_javascript($tid, $wid, $status, $word, $trans, $roman)
  */
 function set_word_status_display_page($tid, $wid, $status, $word, $trans, $roman)
 {
-    pagestart("Term: " . $word, false);
-    echo '<p>OK, this term has status ' . get_colored_status_msg($status) . ' from now!</p>';
+    pagestart("Term: $word", false);
+    echo "<p id='status_change_log'>Term status updating...</p>";
     set_word_status_javascript($tid, $wid, $status, $word, $trans, $roman);
     pageend();
 
@@ -141,8 +188,8 @@ function set_word_status_display_page($tid, $wid, $status, $word, $trans, $roman
 function do_set_word_status($textid, $wordid, $status)
 {
     list($word, $trans, $roman) = get_word_data($wordid);
-    set_word_status_database($wordid, $status);
     set_word_status_display_page($textid, $wordid, $status, $word, $trans, $roman);
+    set_word_status_ajax($wordid, $status);
 }
 
 
