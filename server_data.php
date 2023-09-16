@@ -6,12 +6,16 @@
  * 
  * Call: server_data.php
  * 
+ * @version php version 8.1.1
+ * 
  * @package Lwt
  * @author  HugoFara <hugo.farajallah@protonmail.com>
  * @license Unlicense <http://unlicense.org/>
  * @link    https://hugofara.github.io/lwt/docs/html/index_8php.html
  * @since   2.7.0
  */
+
+namespace Lwt\Interface\Server\Data;
 
 require_once 'inc/session_utility.php';
 
@@ -37,33 +41,42 @@ function get_server_data_table(): array
     $data_table = array();
     $data_table["db_name"] = $dbname;
     $data_table["db_prefix"] = $tbpref;
-    $data_table["db_size"] = (float)get_first_value(
+    $temp_size = get_first_value(
         "SELECT ROUND(SUM(data_length+index_length)/1024/1024, 1) AS value 
         FROM information_schema.TABLES 
         WHERE table_schema = $dbaccess_format 
         AND table_name IN (
-            '{$tbpref}archivedtexts', '{$tbpref}archtexttags', '{$tbpref}feedlinks', '{$tbpref}languages',
-            '{$tbpref}newsfeeds', '{$tbpref}sentences', '{$tbpref}settings', '{$tbpref}tags', '{$tbpref}tags2', 
-            '{$tbpref}textitems2', '{$tbpref}texts', '{$tbpref}texttags', '{$tbpref}words', '{$tbpref}wordtags'
+            '{$tbpref}archivedtexts', '{$tbpref}archtexttags', 
+            '{$tbpref}feedlinks', '{$tbpref}languages',
+            '{$tbpref}newsfeeds', '{$tbpref}sentences', '{$tbpref}settings', 
+            '{$tbpref}tags', '{$tbpref}tags2', 
+            '{$tbpref}textitems2', '{$tbpref}texts', '{$tbpref}texttags', 
+            '{$tbpref}words', '{$tbpref}wordtags'
         )"
     );
-    if (!isset($data_table["db_size"])) { 
+    if ($temp_size === null) { 
         $data_table["db_size"] = 0.0; 
+    } else {
+        $data_table["db_size"] = floatval($temp_size);
     }
 
-    $data_table["server_soft"] = explode(' ', $_SERVER['SERVER_SOFTWARE']);
+    $data_table["server_soft"] = $_SERVER['SERVER_SOFTWARE'];
     $data_table["apache"] = "Apache/?";
-    if (substr($data_table["server_soft"][0], 0, 7) == "Apache/") { 
-        $data_table["apache"] = $data_table["server_soft"][0]; 
+    if (str_starts_with($data_table["server_soft"], "Apache/")) {
+        $temp_soft = explode(' ', $data_table["server_soft"]);
+        $data_table["apache"] = $temp_soft[0];
     }
     $data_table["php"] = phpversion();
-    $data_table["mysql"] = (string)get_first_value("SELECT VERSION() as value");
+    $data_table["mysql"] = (string)get_first_value("SELECT VERSION() AS value");
     return $data_table;
 }
 
-$data = get_server_data_table();
 
-pagestart("Server Data", true);
+function display_content() 
+{
+    $data = get_server_data_table();
+
+    pagestart("Server Data", true);
 ?>
 <table>
     <thead>
@@ -78,7 +91,10 @@ pagestart("Server Data", true);
             <td><?php echo get_version_number(); ?></td>
         </tr>
         <tr>
-            <td><a href="https://en.wikipedia.org/wiki/Database" target="_blank">Database</a> name</td>
+            <td>
+                <a href="https://en.wikipedia.org/wiki/Database" target="_blank">
+                    Database
+                </a> name</td>
             <td><i><?php echo $data["db_name"]; ?></i></td>
         </tr>
         <tr>
@@ -86,16 +102,24 @@ pagestart("Server Data", true);
             <td>"<?php echo $data["db_prefix"]; ?>"</td>
         </tr>
         <tr>
-            <td>Database Location</td>
-            <td><i><?php echo $data["server_soft"][0]; ?></i></td>
-        </tr>
-        <tr>
             <td>Database Size</td>
             <td><?php echo $data["db_size"]; ?> MB</td>
         </tr>
         <tr>
-            <td><a href="https://en.wikipedia.org/wiki/Web_server" target="_blank">Web Server</a></td>
-            <td><i><?php echo $_SERVER['HTTP_HOST']; ?></i></td>
+            <td>
+                <a href="https://en.wikipedia.org/wiki/MySQL" target="_blank">
+                    MySQL
+                </a> Version
+            </td>
+            <td><?php echo $data["mysql"]; ?></td>
+        </tr>
+        <tr>
+            <td>
+                <a href="https://en.wikipedia.org/wiki/Web_server" target="_blank">
+                    Web Server
+                </a>
+            </td>
+            <td><i><?php echo $data["server_soft"]; ?></i></td>
         </tr>
         <tr>
             <td>Server Software</td>
@@ -106,12 +130,61 @@ pagestart("Server Data", true);
             </td>
         </tr>
         <tr>
-            <td><a href="https://en.wikipedia.org/wiki/PHP" target="_blank">PHP</a> Version</td>
-            <td><?php echo $data["php"];; ?></td>
+            <td>Server Location</td>
+            <td><i><?php echo $_SERVER['HTTP_HOST']; ?></i></td>
         </tr>
         <tr>
-            <td><a href="https://en.wikipedia.org/wiki/MySQL" target="_blank">MySQL</a> Version</td>
-            <td><?php echo $data["mysql"];; ?></td>
+            <td>
+                <a href="https://en.wikipedia.org/wiki/PHP" target="_blank">
+                    PHP
+                </a> Version
+            </td>
+            <td><?php echo $data["php"]; ?></td>
+        </tr>
+        <tr>
+            <td>
+                <a href="https://en.wikipedia.org/wiki/REST">
+                    REST API
+                </a> Version
+            </td>
+            <td id="rest-api-version"><!-- JS inserts version here --></td>
+        </tr>
+        <tr>
+            <td>
+                <a href="https://en.wikipedia.org/wiki/REST">
+                    REST API
+                </a> Release date
+            </td>
+            <td id="rest-api-release-date"><!-- Get version --></td>
         </tr>
     </tbody>
 </table>
+<script type="text/javascript">
+    function handle_api_version_answer(data) {
+        console.log(data);
+        if ("error" in data) {
+            $("#rest-api-version").text(
+                "Error while getting data from the REST API!" +
+                "\nMessage: " + data.error
+            );
+            $("#rest-api-release-date").empty();
+        } else {
+            $("#rest-api-version").text(data.version);
+            $("#rest-api-release-date").text(data.release_date);
+        }
+    }
+
+    $.getJSON(
+        "inc/ajax.php",
+        {
+            action: "query",
+            action_type: "version"
+        },
+        handle_api_version_answer
+    );
+</script>
+    <?php
+    pageend();
+}
+
+display_content();

@@ -440,6 +440,7 @@ if (isset($_GET['action'])) {
         switch ($_GET['action_type']) {
         case 'version':
             echo rest_api_version($_GET);
+            break;
         case 'test':
             echo word_test_ajax($_GET);
             break;
@@ -468,9 +469,11 @@ if (isset($_GET['action'])) {
             echo term_translations($_GET);
             break;
         default:
-            echo unknown_get_action_type($_GET);
+            echo unknown_get_action_type($_GET, true);
             break;
         }
+    } else {
+        echo unknown_get_action_type($_GET);
     }
 } else if (isset($_POST['action'])) {
     switch ($_POST['action']) {
