@@ -21,8 +21,8 @@ short text creation/edition, long text creation and text check
   * Musics play fully
   * Page do not need to reload.
   * The timer continues instead of reseting.
-* REST API, the new ``inc/ajax.php`` is intended to continue developping itself as a REST API.
-It features the following interaction:
+* REST API, the new ``inc/ajax.php`` is intended to continue developping itself
+as a REST API. It features the following interaction:
   * On GET, ``action_type`` can be:
     * ``version``: the REST API version and release date.
     * ``test``: next word to test.
@@ -33,9 +33,11 @@ It features the following interaction:
     * ``media_paths``: paths of files and folders in the ``/media`` folder.
     * ``example_sentences``: list of sentences containing a word.
     * ``imported_terms``: list of imported terms through terms upload.
-    * ``term_translations``: get the list of term translations to edit it's anotation.
+    * ``term_translations``: get the list of term translations to edit it's
+    annotation.
   * On POST, ``action`` can be:
-    * ``reading_position``: ``action_type`` set to ``text`` of ``audio`` change the reading position for a text or its audio.
+    * ``reading_position``: ``action_type`` set to ``text`` of ``audio`` change
+    the reading position for a text or its audio.
     * ``change_translation``, with values for ``action_type`` set to:
       * ``add``: add a translation for a new word.
       * ``update``: edit the translation of an existing word.
@@ -44,16 +46,20 @@ It features the following interaction:
       * ``set``: set the status of a term.
     * For any other value, set ``action_type`` to:
       * ``similar_terms``: similar terms to a given term.
-      * ``regexp``: test if the regular expression is correctly recognized (no more usage in code base?).
+      * ``regexp``: test if the regular expression is correctly recognized
+      (no more usage in code base?).
       * ``set_annotation``: change the annotation value for a term.
       * ``save_setting``: save a setting.
-* Similar terms mark the word edit form as edited only if something was actually changed.
+* Similar terms mark the word edit form as edited only if something was
+actually changed.
 * You can now specify a socket for your database through ``$socket`` in
 ``connect.inc.php``. This feature was brought to you by
 [@hangug-eo](https://github.com/hangug-eo) in his PR
 [#132](https://github.com/HugoFara/lwt/pull/132).
 * You can now change the voice of the TTT feature through
 ``text_to_speech_settings.php``.
+* ``server_data.php`` was reorganized and is more informative with details
+about the REST API.
 
 ### Changed
 

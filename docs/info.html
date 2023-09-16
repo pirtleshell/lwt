@@ -1878,8 +1878,8 @@ short text creation/edition, long text creation and text check
 <li>The timer continues instead of reseting.</li>
 </ul>
 </li>
-<li>REST API, the new <code>inc/ajax.php</code> is intended to continue developping itself as a REST API.
-It features the following interaction:
+<li>REST API, the new <code>inc/ajax.php</code> is intended to continue developping itself
+as a REST API. It features the following interaction:
 <ul>
 <li>On GET, <code>action_type</code> can be:
 <ul>
@@ -1902,13 +1902,15 @@ It features the following interaction:
 <li>
 <code>imported_terms</code>: list of imported terms through terms upload.</li>
 <li>
-<code>term_translations</code>: get the list of term translations to edit it's anotation.</li>
+<code>term_translations</code>: get the list of term translations to edit it's
+annotation.</li>
 </ul>
 </li>
 <li>On POST, <code>action</code> can be:
 <ul>
 <li>
-<code>reading_position</code>: <code>action_type</code> set to <code>text</code> of <code>audio</code> change the reading position for a text or its audio.</li>
+<code>reading_position</code>: <code>action_type</code> set to <code>text</code> of <code>audio</code> change
+the reading position for a text or its audio.</li>
 <li>
 <code>change_translation</code>, with values for <code>action_type</code> set to:
 <ul>
@@ -1932,7 +1934,8 @@ It features the following interaction:
 <li>
 <code>similar_terms</code>: similar terms to a given term.</li>
 <li>
-<code>regexp</code>: test if the regular expression is correctly recognized (no more usage in code base?).</li>
+<code>regexp</code>: test if the regular expression is correctly recognized
+(no more usage in code base?).</li>
 <li>
 <code>set_annotation</code>: change the annotation value for a term.</li>
 <li>
@@ -1943,13 +1946,17 @@ It features the following interaction:
 </li>
 </ul>
 </li>
-<li>Similar terms mark the word edit form as edited only if something was actually changed.</li>
+<li>Similar terms mark the word edit form as edited only if something was
+actually changed.</li>
 <li>You can now specify a socket for your database through <code>$socket</code> in
 <code>connect.inc.php</code>. This feature was brought to you by
 <a href="https://github.com/hangug-eo">@hangug-eo</a> in his PR
 <a href="https://github.com/HugoFara/lwt/pull/132">#132</a>.</li>
 <li>You can now change the voice of the TTT feature through
 <code>text_to_speech_settings.php</code>.</li>
+<li>
+<code>server_data.php</code> was reorganized and is more informative with details
+about the REST API.</li>
 </ul>
 <h4>Changed</h4>
 <ul>

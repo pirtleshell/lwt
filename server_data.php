@@ -78,6 +78,7 @@ function display_content()
 
     pagestart("Server Data", true);
 ?>
+<h2>Server</h2>
 <table>
     <thead>
         <tr>
@@ -89,29 +90,6 @@ function display_content()
         <tr>
             <td>LWT version</td>
             <td><?php echo get_version_number(); ?></td>
-        </tr>
-        <tr>
-            <td>
-                <a href="https://en.wikipedia.org/wiki/Database" target="_blank">
-                    Database
-                </a> name</td>
-            <td><i><?php echo $data["db_name"]; ?></i></td>
-        </tr>
-        <tr>
-            <td>Database prefix (surrounded by "")</td>
-            <td>"<?php echo $data["db_prefix"]; ?>"</td>
-        </tr>
-        <tr>
-            <td>Database Size</td>
-            <td><?php echo $data["db_size"]; ?> MB</td>
-        </tr>
-        <tr>
-            <td>
-                <a href="https://en.wikipedia.org/wiki/MySQL" target="_blank">
-                    MySQL
-                </a> Version
-            </td>
-            <td><?php echo $data["mysql"]; ?></td>
         </tr>
         <tr>
             <td>
@@ -141,6 +119,51 @@ function display_content()
             </td>
             <td><?php echo $data["php"]; ?></td>
         </tr>
+    </tbody>
+</table>
+<h2>Database</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Data</th>
+            <th>Value</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                <a href="https://en.wikipedia.org/wiki/Database" target="_blank">
+                    Database
+                </a> name</td>
+            <td><i><?php echo $data["db_name"]; ?></i></td>
+        </tr>
+        <tr>
+            <td>Database prefix (surrounded by "")</td>
+            <td>"<?php echo $data["db_prefix"]; ?>"</td>
+        </tr>
+        <tr>
+            <td>Database Size</td>
+            <td><?php echo $data["db_size"]; ?> MB</td>
+        </tr>
+        <tr>
+            <td>
+                <a href="https://en.wikipedia.org/wiki/MySQL" target="_blank">
+                    MySQL
+                </a> Version
+            </td>
+            <td><?php echo $data["mysql"]; ?></td>
+        </tr>
+    </tbody>
+</table>
+<h2>Client API</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Data</th>
+            <th>Value</th>
+        </tr>
+    </thead>
+    <tbody>
         <tr>
             <td>
                 <a href="https://en.wikipedia.org/wiki/REST">
@@ -155,13 +178,12 @@ function display_content()
                     REST API
                 </a> Release date
             </td>
-            <td id="rest-api-release-date"><!-- Get version --></td>
+            <td id="rest-api-release-date"><!-- JS acts here --></td>
         </tr>
     </tbody>
 </table>
 <script type="text/javascript">
     function handle_api_version_answer(data) {
-        console.log(data);
         if ("error" in data) {
             $("#rest-api-version").text(
                 "Error while getting data from the REST API!" +
