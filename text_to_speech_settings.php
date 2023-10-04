@@ -318,13 +318,11 @@ function tts_save_settings($form): void
     'secure' => isset($params['secure']),
     'httponly' => isset($params['httponly'])
     */
-    // $cookie_options = array(
-    //     'expires' => strtotime('+5 years'),
-    //     'domain' => 
-    //     ($_SERVER['HTTP_HOST'] != 'localhost') ? $_SERVER['HTTP_HOST'] : false,
-    //     'path' => '/',
-    //     'samesite' => 'Strict' // None || Lax || Strict
-    // );
+    $cookie_options = array(
+        'expires' => strtotime('+5 years'),
+        'path' => '/',
+        'samesite' => 'Strict' // None || Lax || Strict
+    );
     //setcookie($prefix . ']', $record['LgID'], $cookie_options);
     setcookie($prefix . 'Voice]', $form['LgVoice'], $cookie_options);
     setcookie($prefix . 'Rate]', $form['LgTTSRate'], $cookie_options);
