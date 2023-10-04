@@ -25,7 +25,6 @@ require_once 'inc/langdefs.php';
 function get_language_code($language)
 {
     global $langDefs;
-    //TODO Add language codes to edit_language.php to fix error of unsupported lan
     return $langDefs[$language][1];
 }
 
@@ -141,7 +140,7 @@ function tts_settings_form()
 {
 "input": ...,
 "options": ...
-}</pre>;use the placeholders specified in docs, and leave empty or default SpeechAPI won't function</td>
+}</pre>;'lwt_text'(required),'lwt_lang"(optional)</td>
             <td class="td1 center">
             <textarea id="request" name="LgRequest" class="respinput" rows="10" cols="200" style="width: 378px; height: 211px;"></textarea>
             </td>
