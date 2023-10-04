@@ -141,7 +141,7 @@ function tts_settings_form()
 {
 "input": ...,
 "options": ...
-}</pre>;use text and lang with no quotes for placeholder, and leave empty or default SpeechAPI won't function</td>
+}</pre>;use the placeholders specified in docs, and leave empty or default SpeechAPI won't function</td>
             <td class="td1 center">
             <textarea id="request" name="LgRequest" class="respinput" rows="10" cols="200" style="width: 378px; height: 211px;"></textarea>
             </td>
