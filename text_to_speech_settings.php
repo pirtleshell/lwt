@@ -25,6 +25,7 @@ require_once 'inc/langdefs.php';
 function get_language_code($language)
 {
     global $langDefs;
+    //TODO Add language codes to edit_language.php to fix error of unsupported lan
     return $langDefs[$language][1];
 }
 
@@ -135,6 +136,20 @@ function tts_settings_form()
             <?php tts_demo(); ?>
         </tr>
         <tr>
+            <th class="th1 center" rowspan="1">Voice API Request</th>
+            <td class="td1 center">Enter Voice API Request   <pre style="text-align: left;background-color: #f0f0f0; font-family: monospace; padding: 10px; border: 1px solid #ccc; white-space: pre-wrap;"class="code-block">
+{
+"input": ...,
+"options": ...
+}</pre>;use text and lang with no quotes for placeholder, and leave empty or default SpeechAPI won't function</td>
+            <td class="td1 center">
+            <textarea id="request" name="LgRequest" class="respinput" rows="10" cols="200" style="width: 378px; height: 211px;"></textarea>
+            </td>
+            <td class="td1 center">
+                <img src="<?php print_file_path("icn/status.png") ?>" />
+            </td>
+        </tr>
+        <tr>
             <td class="td1 right" colspan="4">
                 <input type="button" value="Cancel" 
                 onclick="{resetDirty(); location.href='text_to_speech_settings.php';}" /> 
@@ -221,6 +236,7 @@ function tts_js()
         );
         $('#rate').val(getCookie('tts[' + CURRENT_LANGUAGE + 'Rate]'));
         $('#pitch').val(getCookie('tts[' + CURRENT_LANGUAGE + 'Pitch]'));
+        $('#request').val(getCookie('tts[' + CURRENT_LANGUAGE + 'Request'));
     }
 
     /**
@@ -302,17 +318,18 @@ function tts_save_settings($form): void
     'secure' => isset($params['secure']),
     'httponly' => isset($params['httponly'])
     */
-    $cookie_options = array(
-        'expires' => strtotime('+5 years'),
-        'domain' => 
-        ($_SERVER['HTTP_HOST'] != 'localhost') ? $_SERVER['HTTP_HOST'] : false,
-        'path' => '/',
-        'samesite' => 'Strict' // None || Lax || Strict
-    );
+    // $cookie_options = array(
+    //     'expires' => strtotime('+5 years'),
+    //     'domain' => 
+    //     ($_SERVER['HTTP_HOST'] != 'localhost') ? $_SERVER['HTTP_HOST'] : false,
+    //     'path' => '/',
+    //     'samesite' => 'Strict' // None || Lax || Strict
+    // );
     //setcookie($prefix . ']', $record['LgID'], $cookie_options);
     setcookie($prefix . 'Voice]', $form['LgVoice'], $cookie_options);
     setcookie($prefix . 'Rate]', $form['LgTTSRate'], $cookie_options);
     setcookie($prefix . 'Pitch]', $form['LgPitch'], $cookie_options);
+    setcookie($prefix. 'Request]',$form['LgRequest'],$cookie_options);
 }
 
 $message = '';

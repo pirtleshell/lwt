@@ -467,9 +467,18 @@ $(document).scrollTo(pos);focus();setTimeout(overlib,10);setTimeout(cClick,100)}
 function saveCurrentPosition(){let pos=0;const top_pos=$(window).scrollTop()-$('.wsty').not('.hide').eq(0).height();$('.wsty').not('.hide').each(function(){if($(this).offset().top>=top_pos){pos=$(this).attr('data_pos');return!1}});$.ajax({type:"POST",url:'inc/ajax.php',data:{action:"reading_position",action_type:"text",tid:TID,tposition:pos},async:!1})}
 function getPhoneticText(text,lang){let phoneticText;$.ajax('inc/ajax.php',{async:!1,data:{action:"query",action_type:"phonetic_reading",text:text,lang:lang},dataType:"json",type:"GET",}).done(function(data){phoneticText=data.phonetic_reading});return phoneticText}
 async function getPhoneticTextAsync(text,lang){return $.getJSON('inc/ajax.php',{action:"query",action_type:"phonetic_reading",text:text,lang:lang})}
+function findDataString(obj){for(const key in obj){if(obj.hasOwnProperty(key)){if(typeof obj[key]==='string'&&obj[key].startsWith('data:')){return obj[key]}else if(typeof obj[key]==='object'){const result=findDataString(obj[key]);if(result){return result}}}}
+return null}
 function readRawTextAloud(text,lang,rate,pitch,voice){let msg=new SpeechSynthesisUtterance();const trimmed=lang.substring(0,2);const prefix='tts['+trimmed;msg.text=text;if(lang){msg.lang=lang}
 const useVoice=voice||getCookie(prefix+'Voice]');if(useVoice){const voices=window.speechSynthesis.getVoices();for(let i=0;i<voices.length;i++){if(voices[i].name===useVoice){msg.voice=voices[i]}}}
 if(rate){msg.rate=rate}else if(getCookie(prefix+'Rate]')){msg.rate=parseInt(getCookie(prefix+'Rate]'),10)}
 if(pitch){msg.pitch=pitch}else if(getCookie(prefix+'Pitch]')){msg.pitch=parseInt(getCookie(prefix+'Pitch]'),10)}
-window.speechSynthesis.speak(msg);return msg}
+if(getCookie(prefix+'Request]')!=""){let fetchRequest=JSON.parse(getCookie(prefix+'Request]'));function deepReplace(obj,searchString,replacefunc){for(let key in obj){if(typeof obj[key]==='object'){deepReplace(obj[key],searchString,replacefunc)}else if(typeof obj[key]==='string'&&obj[key].includes(searchString)){obj[key]=obj[key].replace(searchString,replacefunc(searchString))}}}
+deepReplace(fetchRequest,'text',eval)
+deepReplace(fetchRequest,'lang',eval)
+fetchRequest.options.body=JSON.stringify(fetchRequest.options.body)
+fetch(fetchRequest.input,fetchRequest.options).then(response=>response.json()).then(data=>{const encodeString=findDataString(data)
+const utter=new Audio(encodeString)
+utter.play()}).catch(error=>{console.error(error)})}else{window.speechSynthesis.speak(msg)}
+return msg}
 function readTextAloud(text,lang,rate,pitch,voice){if(lang.startsWith('ja')){getPhoneticTextAsync(text,lang).then(function(data){readRawTextAloud(data.phonetic_reading,lang,rate,pitch,voice)})}else{readRawTextAloud(text,lang,rate,pitch,voice)}}
