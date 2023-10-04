@@ -304,8 +304,8 @@ return null; // Return null if no matching string is found
         let fetchRequest = JSON.parse(getCookie(prefix+ 'Request]'));
 
     //TODO can expose more vars to Request
-    deepReplace(fetchRequest,'text',text)
-     deepReplace(fetchRequest,'lang',lang)
+    deepReplace(fetchRequest,'lwt_term',text)
+     deepReplace(fetchRequest,'lwt_lang',lang)
 
 
 fetchRequest.options.body = JSON.stringify(fetchRequest.options.body)
