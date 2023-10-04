@@ -218,7 +218,24 @@ async function getPhoneticTextAsync(text, lang) {
 }
   
 
-
+/**
+ * Helper function used in readRawTextAloud
+ * 
+ * @param {dict} obj to search in
+ * @param {string} string to find
+ * @param {string} replacement variable
+ * */
+function deepReplace(obj, searchString, replaceVar) {
+    for (let key in obj) {
+      if (typeof obj[key] === 'object') {
+        // Recursively search nested objects
+        deepReplace(obj[key], searchString, replaceVar);
+      } else if (typeof obj[key] === 'string' && obj[key].includes(searchString)) {
+        // If the property is a string and contains the searchString, replace it
+        obj[key] = obj[key].replace(searchString,replaceVar );
+      }
+    }
+  }
   
 /**
  * Helper function used in readRawTextAloud
@@ -285,20 +302,10 @@ return null; // Return null if no matching string is found
     if (getCookie(prefix + 'Request]') != "")
     {
         let fetchRequest = JSON.parse(getCookie(prefix+ 'Request]'));
-//Keep inside scope or eval won't run properly
-function deepReplace(obj, searchString, replacefunc) {
-    for (let key in obj) {
-      if (typeof obj[key] === 'object') {
-        // Recursively search nested objects
-        deepReplace(obj[key], searchString, replacefunc);
-      } else if (typeof obj[key] === 'string' && obj[key].includes(searchString)) {
-        // If the property is a string and contains the searchString, replace it
-        obj[key] = obj[key].replace(searchString, replacefunc(searchString));
-      }
-    }
-  }
-    deepReplace(fetchRequest,'text',eval)
-     deepReplace(fetchRequest,'lang',eval)
+
+    //TODO can expose more vars to Request
+    deepReplace(fetchRequest,'text',text)
+     deepReplace(fetchRequest,'lang',lang)
 
 
 fetchRequest.options.body = JSON.stringify(fetchRequest.options.body)
