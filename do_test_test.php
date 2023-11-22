@@ -444,7 +444,7 @@ function do_test_prepare_ajax_test_area($testsql, $count, $testtype): int
                 do_test_finished(<?php echo json_encode($count); ?>);
                 const options = {
                     "action": "query", 
-                    "action_type": "tomorrow_test_count",
+                    "action_type": "tomorrow_tests_number",
                     "test_sql": <?php echo json_encode((string)$testsql); ?>
                 };
                 $.getJSON(
@@ -471,7 +471,7 @@ function do_test_prepare_ajax_test_area($testsql, $count, $testtype): int
             // Get new word through AJAX
             const options = {
                 "action": "query", 
-                "action_type": "test",
+                "action_type": "test_next_word",
                 "test_sql": <?php echo json_encode((string)$testsql); ?>,
                 "test_nosent": <?php echo json_encode((string)$nosent); ?>,
                 "test_lgid": <?php echo json_encode((string)$lgid); ?>,

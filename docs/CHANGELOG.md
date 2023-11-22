@@ -25,8 +25,8 @@ short text creation/edition, long text creation and text check
 as a REST API. It features the following interaction:
   * On GET, ``action_type`` can be:
     * ``version``: the REST API version and release date.
-    * ``test``: next word to test.
-    * ``tomorrow_test_count``: number of tests for the next day.
+    * ``test_next_word``: next word to test.
+    * ``tomorrow_tests_number``: number of tests for the next day.
     * ``phonetic_reading``: phonetic reading of a text.
     * ``theme_path``: theming path for a file.
     * ``texts_statistics``: various words statistics for each text.

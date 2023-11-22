@@ -101,7 +101,7 @@ function word_test_ajax($get_req)
 }
 
 /**
- * Return the number of tests for tomorrow by using the supllied query.
+ * Return the number of tests for tomorrow by using the suplied query.
  * 
  * @param array $get_req Array with the field "test_sql"
  * 
@@ -443,10 +443,10 @@ function handle_request() {
             case 'version':
                 echo rest_api_version($_GET);
                 break;
-            case 'test':
+            case 'test_next_word':
                 echo word_test_ajax($_GET);
                 break;
-            case 'tomorrow_test_count':
+            case 'tomorrow_tests_number':
                 echo tomorrow_test_count($_GET);
                 break;
             case 'phonetic_reading':
