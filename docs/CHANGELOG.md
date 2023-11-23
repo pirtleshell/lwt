@@ -9,7 +9,7 @@ ones are marked like "v1.0.0-fork".
 
 ### Added
 
-* ``langFromDict`` and ``targetLangFromDict`` are now officially coming to the
+* ``langFromDict`` and ``targetLangFromDict`` are now officially going to the
 kernel utility functions.
 * Text and title boxes change language according to the text's language for
 short text creation/edition, long text creation and text check
@@ -71,7 +71,7 @@ about the REST API.
   * When reading text, you can click on "Show All" and "Translations" to click the checkbox.
   * When changing a word status, the displayed messaged is now more informative: before database change, success message, now: waiting screen, tentative database change, result message (error or success). Under the hood, we are transitionning from pure PHP to AJAX.
 * Annotations "order" are now identical to ``Ti2Order`` (in ``textitems2``). It makes management easier, but users may need to reload the annotations once.
-* Updated composer dependencies (up-to-date 2023-09-11).
+* Updated composer dependencies (up-to-date 2023-11-23).
 
 ### Fixed
 
@@ -101,7 +101,7 @@ character as a word (e. g.: Chinese). Big thanks to [@hangug-eo](https://github.
 
 ### Deprecated
 
-* Legacy AJAX API. The following AJAX interactions are now deprecated in favor to the new REST API　(at ``inc/ajax.php``):
+* Legacy AJAX API. The following AJAX interactions are now deprecated in favor to the new REST API (at ``inc/ajax.php``):
   * ``inc/show_similar_terms.php``, use ``action_type=similar_terms``, same arguments.
   * ``inc/ajax_add_term_transl.php``, use ``action=change_translation``, with
   ``action_type=add`` or ``action_type=update``. The arguments were also changed.
