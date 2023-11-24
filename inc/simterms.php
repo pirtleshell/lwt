@@ -146,7 +146,8 @@ function format_term($termid, $compare)
             $rom = "";
             $romd = "";
         }
-        $js_event = "setTransRoman(" . prepare_textdata_js($tra) . ',' . prepare_textdata_js($rom) . ')';
+        $js_event = "setTransRoman(" . prepare_textdata_js($tra) . ',' . 
+        prepare_textdata_js($rom) . ')';
         $output = '<img class="clickedit" src="icn/tick-button-small.png" ' .
         'title="Copy → Translation &amp; Romanization Field(s)" ' .
         'onclick="' . tohtml($js_event) .'" /> ' . 
@@ -190,8 +191,9 @@ function print_similar_terms($lang_id, $compared_term): string
     return implode($rarr); 
 }
 
-// -------------------------------------------------------------
-
+/**
+ * Print a row for similar terms if the feature is enabled.
+ */
 function print_similar_terms_tabrow(): void 
 {
     if ((int)getSettingWithDefault("set-similar-terms-count") > 0) { 

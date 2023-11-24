@@ -1902,6 +1902,8 @@ as a REST API. It features the following interaction:
 <li>
 <code>imported_terms</code>: list of imported terms through terms upload.</li>
 <li>
+<code>similar_terms</code>: similar terms to a given term.</li>
+<li>
 <code>term_translations</code>: get the list of term translations to edit it's
 annotation.</li>
 </ul>
@@ -1931,8 +1933,6 @@ the reading position for a text or its audio.</li>
 </li>
 <li>For any other value, set <code>action_type</code> to:
 <ul>
-<li>
-<code>similar_terms</code>: similar terms to a given term.</li>
 <li>
 <code>regexp</code>: test if the regular expression is correctly recognized
 (no more usage in code base?).</li>
@@ -2011,7 +2011,7 @@ character as a word (e. g.: Chinese). Big thanks to <a href="https://github.com/
 <li>Legacy AJAX API. The following AJAX interactions are now deprecated in favor to the new REST API (at <code>inc/ajax.php</code>):
 <ul>
 <li>
-<code>inc/show_similar_terms.php</code>, use <code>action_type=similar_terms</code>, same arguments.</li>
+<code>inc/ajax_show_similar_terms.php</code>, use <code>action_type=similar_terms</code> on GET, same arguments.</li>
 <li>
 <code>inc/ajax_add_term_transl.php</code>, use <code>action=change_translation</code>, with
 <code>action_type=add</code> or <code>action_type=update</code>. The arguments were also changed.</li>

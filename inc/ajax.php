@@ -196,6 +196,22 @@ function imported_terms($get_req)
 
 
 /**
+ * Get terms similar to a given term.
+ * 
+ * @param array $get_req Input get request.
+ * 
+ * @return string Similar terms in HTML format.
+ */
+function similar_terms($get_req) 
+{
+    return json_encode(array("similar_terms" => print_similar_terms(
+        (int)$get_req["simterms_lgid"], 
+        (string) $get_req["simterms_word"]
+    )));
+}
+
+
+/**
  * Translations for a term to choose an annotation.
  * 
  * @param array $get_req Get request with fields "text_id" and "page" and "count".
@@ -266,20 +282,6 @@ function set_audio_position($post_req)
     );
 }
 
-/**
- * Get terms similar to a given term.
- * 
- * @param array $post_req Input post request.
- * 
- * @return string Similar terms in HTML format.
- */
-function similar_terms($post_req) 
-{
-    return json_encode(array("similar_terms" => print_similar_terms(
-        (int)$post_req["simterms_lgid"], 
-        (string) $post_req["simterms_word"]
-    )));
-}
 
 /**
  * Create the translation for a new term.
@@ -467,6 +469,9 @@ function handle_request() {
             case "imported_terms":
                 echo imported_terms($_GET);
                 break;
+            case "similar_terms":
+                echo similar_terms($_GET);
+                break;
             case "term_translations":
                 echo term_translations($_GET);
                 break;
@@ -520,9 +525,6 @@ function handle_request() {
             break;
         default:
             switch ($_POST['action_type']) {
-            case "similar_terms":
-                echo similar_terms($_POST); // 2.9.0: really on POST?
-                break;
             case 'check_regexp':
                 echo check_regexp($_POST);
                 break;

@@ -33,6 +33,7 @@ as a REST API. It features the following interaction:
     * ``media_paths``: paths of files and folders in the ``/media`` folder.
     * ``example_sentences``: list of sentences containing a word.
     * ``imported_terms``: list of imported terms through terms upload.
+    * ``similar_terms``: similar terms to a given term.
     * ``term_translations``: get the list of term translations to edit it's
     annotation.
   * On POST, ``action`` can be:
@@ -45,7 +46,6 @@ as a REST API. It features the following interaction:
       * ``increment``: increment or decrement the status of a term by one unit.
       * ``set``: set the status of a term.
     * For any other value, set ``action_type`` to:
-      * ``similar_terms``: similar terms to a given term.
       * ``regexp``: test if the regular expression is correctly recognized
       (no more usage in code base?).
       * ``set_annotation``: change the annotation value for a term.
@@ -102,7 +102,7 @@ character as a word (e. g.: Chinese). Big thanks to [@hangug-eo](https://github.
 ### Deprecated
 
 * Legacy AJAX API. The following AJAX interactions are now deprecated in favor to the new REST API (at ``inc/ajax.php``):
-  * ``inc/show_similar_terms.php``, use ``action_type=similar_terms``, same arguments.
+  * ``inc/ajax_show_similar_terms.php``, use ``action_type=similar_terms`` on GET, same arguments.
   * ``inc/ajax_add_term_transl.php``, use ``action=change_translation``, with
   ``action_type=add`` or ``action_type=update``. The arguments were also changed.
   * ``inc/ajax_check_regexp.php`` should be accessed through ``action_type=check_regexp``. Argument ``regex`` is now ``regexp``, on post only.

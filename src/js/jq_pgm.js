@@ -1367,21 +1367,42 @@ function do_ajax_show_sentences (lang, word, ctl, woid) {
   );
 }
 
-function do_ajax_show_similar_terms () {
-  $('#simwords').html('<img src="icn/waiting2.gif" />');
-  $.post(
+/**
+ * Send an AJAX request to get similar terms to a term.
+ * 
+ * @param {number} lg_id Language ID
+ * @param {string} word_text Text to match
+ * @returns 
+ */
+function do_ajax_req_sim_terms(lg_id, word_text) {
+  return $.getJSON(
     'inc/ajax.php',
     {
-      "action": "similar_terms",
+      "action": "query",
       "action_type": "similar_terms",
-      "simterms_lgid": $('#langfield').val(),
-      "simterms_word": $('#wordfield').val()
-    },
+      "simterms_lgid": lg_id,
+      "simterms_word": word_text
+    }
+  );
+}
+
+/**
+ * Display the terms similar to a specific term with AJAX.
+ */
+function do_ajax_show_similar_terms () {
+  $('#simwords').html('<img src="icn/waiting2.gif" />');
+  do_ajax_req_sim_terms(
+    parseInt($('#langfield').val(), 10), $('#wordfield').val()
+  )
+  .done(
     function (data) {
       $('#simwords').html(data.similar_terms);
-    },
-    "json"
-  )
+    }
+  ).fail(
+    function (data) {
+      console.log(data);
+    }
+  );
 }
 
 /**
