@@ -20,10 +20,12 @@ plugins
 # Backup files (Doxygen)
 *.bak
 
-/vendor/
+vendor/
 .phpunit.result.cache
 
 composer.phar
+
+node_modules/
 
 # Editor
 .vscode
