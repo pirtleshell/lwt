@@ -14,6 +14,95 @@ require_once __DIR__ . '/ajax_show_imported_terms.php';
 require_once __DIR__ . '/ajax_edit_impr_text.php';
 
 
+/**
+ * Send JSON response
+ */
+function send_response($status = 200, $data = null) {
+    header('Content-Type: application/json');
+    http_response_code($status);
+    echo json_encode($data);
+    exit;
+}
+
+function endpoint_exits($method, $requestUri) {
+    // Set up API endpoints
+    $endpoints = [ 
+        'media-paths' => ['GET'],
+
+        'raw-term' => ['GET'],
+        // change for raw-term/sentences?term=term-text structure
+        //'raw-term/(?<term-text>\w+)/sentences' => ['GET'],
+        //'raw-term/(?<term-text>\w+)/similar' => ['GET'],
+
+
+        'settings' => ['POST'],
+        'settings/theme-path' => ['GET'],
+
+        'terms' => ['GET', 'POST'],
+        'terms/imported' => ['GET'],
+
+        //'terms/(?<term-id>\d+)/translations' => ['GET'],
+
+        //'terms/(?<term-id>\d+)/status/down' => ['POST'],
+        //'terms/(?<term-id>\d+)/status/up' => ['POST'],
+        //'terms/(?<term-id>\d+)/status/(?<new-status>\d+)' => ['POST'],
+        
+        'tests' => ['GET'],
+        //'tests/(?<text-id>\d+)/next-word' => ['GET'],
+        //'tests/(?<text-id>\d+)/tomorrow-tests-count' => ['GET'],
+
+        'texts' => ['GET', 'POST'],
+        
+        //'texts/(?<text-id>\d+)/phonetic-reading' => ['GET'],
+        
+        //'texts/(?<text-id>\d+)/annotation' => ['POST'],
+        //'texts/(?<text-id>\d+)/audio-position' => ['POST'],
+        //'texts/(?<text-id>\d+)/reading-position' => ['POST'],
+
+        'texts-statistics' => ['GET'],
+        //'texts/(?<text-id>\d+)/statistics' => ['GET'],
+        
+        //'translations/(?<term-id>\d+)' => ['POST'],
+        'translations' => ['POST'],
+        'translations/new' => ['POST'],
+
+        'version' => ['GET'], 
+
+        'regexp/test' => ['POST'],
+    ];
+
+
+    // Extract requested endpoint from URI
+    $uri_query = parse_url($requestUri, PHP_URL_PATH);
+    $matching = preg_match('/(.+?\/ajax.php\/v\d\/).+/', $uri_query, $matches);
+    if (!$matching) {
+        send_response(400, ['error' => 'Unrecognized URL format' . $uri_query]);
+    }
+    if (count($matches) == 0) {
+        send_response(404, ['error' => 'Wrong API Location: ' . $uri_query]);
+    }
+    // endpoint without prepending URL, like 'version'
+    $req_endpoint = rtrim(str_replace($matches[1], '', $uri_query), '/');
+    $methods_allowed = null; 
+    if (array_key_exists($req_endpoint, $endpoints)) {
+        $methods_allowed = $endpoints[$req_endpoint];
+    } else { 
+        $first_elem = preg_split('/\//', $req_endpoint)[0];
+        if (array_key_exists($first_elem, $endpoints)) {
+            $methods_allowed = $endpoints[$first_elem];
+        } else {
+            send_response(404, ['error' => 'Endpoint Not Found: ' . $req_endpoint]);
+        }
+    }
+
+    // Validate request method for the req_endpoint
+    if (!in_array($method, $methods_allowed)) {
+        send_response(405, ['error' => 'Method Not Allowed']);
+    }
+    return $req_endpoint;
+}
+
+
 // -------------------------- GET REQUESTS -------------------------
 
 /**
@@ -255,7 +344,7 @@ function unknown_get_action_type($get_req, $action_exists=false)
  * 
  * @param array $post_req Array with the fields "tid" (int) and "tposition"
  * 
- * @return void
+ * @return string
  */
 function set_text_position($post_req) 
 {
@@ -269,7 +358,7 @@ function set_text_position($post_req)
  * 
  * @param array $post_req Array with the fields "tid" (int) and "audio_position"
  * 
- * @return void
+ * @return string
  */
 function set_audio_position($post_req) 
 {
@@ -401,9 +490,9 @@ function set_annotation($post_req)
  * 
  * @param array $post_req Array with the fields "k" (key, setting name) and "v" (value)
  * 
- * @return void
+ * @return string Setting save status
  */
-function save_setting($post_req) 
+function save_setting($post_req): string
 {
     $status = saveSetting($post_req['k'], $post_req['v']);
     $raw_answer = array();
@@ -543,7 +632,159 @@ function handle_request() {
     }
 }
 
-if (isset($_GET['action']) || isset($_POST['action'])) {
+
+function main_enpoint($method, $requestUri) {
+    // Extract requested endpoint from URI
+    $req_endpoint = endpoint_exits($method, $requestUri);
+    parse_str(parse_url($requestUri, PHP_URL_QUERY), $req_param);
+    $endpoint_fragments = preg_split("/\//", $req_endpoint);
+
+    // Process endpoint request
+    if ($method === 'GET') {
+        // Handle GET request for each endpoint
+        switch ($endpoint_fragments[0]) {
+            case 'media-paths':
+                $answer = json_decode(media_paths($req_param));
+                send_response(200, $answer);
+                break;
+            case 'settings':
+                switch ($endpoint_fragments[1]) {
+                    case 'theme-path':
+                        $answer = json_decode(get_theme_path($req_param));
+                        send_response(200, $answer);
+                    default:
+                        send_response(404, ['error' => 'Endpoint Not Found']);
+                }
+                break;
+            case 'terms':
+                if ($endpoint_fragments[1] == "imported") {
+                    $answer = json_decode(imported_terms($req_param));
+                    send_response(200, $answer);
+                } else if (ctype_digit($endpoint_fragments[1]) && $endpoint_fragments[2] == 'translations') {
+                    $req_param['text_id'] = $endpoint_fragments[1];
+                    $answer = json_decode(term_translations($req_param));
+                    send_response(200, $answer);
+                } else {
+                    send_response(404, ['error' => 'Endpoint Not Found' . $endpoint_fragments[1]]);
+                }
+                break;
+            case 'tests':
+                if (!ctype_digit($endpoint_fragments[1])) {
+                    send_response(404, ['error' => 'Integer Expected, Got ' . $endpoint_fragments[1]]);
+                }
+                switch ($endpoint_fragments[2]) {
+                    case 'next-word':
+                        $answer = json_decode(word_test_ajax($req_param));
+                        send_response(200, $answer);
+                        break;
+                    case 'tomorrow-tests-count':
+                        $answer = json_decode(tomorrow_test_count($req_param));
+                        send_response(200, $answer);
+                        break;
+                    default:
+                        send_response(404, ['error' => 'Endpoint Not Found' . $endpoint_fragments[2]]);
+                }
+                break;
+            case 'texts':
+                if (!ctype_digit($endpoint_fragments[1])) {
+                    send_response(404, ['error' => 'Integer Expected, Got ' . $endpoint_fragments[1]]);
+                }
+                if ($endpoint_fragments[2] == 'phonetic-reading') {
+                    $answer = json_decode(get_phonetic_reading($req_param));
+                    send_response(200, $answer);
+                } else {
+                    send_response(404, ['error' => 'Endpoint Not Found']);
+                }
+                break;
+            case 'texts-statistics':
+                $answer = json_decode(get_texts_statistics($req_param));
+                send_response(200, $answer);
+            case 'version':
+                $answer = json_decode(rest_api_version($req_param));
+                send_response(200, $answer);
+                break;
+            // Add more GET handlers for other endpoints
+            default:
+                send_response(404, ['error' => 'Endpoint Not Found']);
+        }
+    } elseif ($method === 'POST') {
+        // Handle POST request for each endpoint
+        switch ($req_endpoint) {
+            case 'regexp/test':
+                $answer = json_decode(check_regexp($_POST));
+                send_response(200, $answer);
+                break;
+            case 'settings':
+                $answer = json_decode(save_setting($_POST));
+                send_response(200, $answer);
+                break;
+            case 'texts':
+                if (!ctype_digit($endpoint_fragments[1])) {
+                    send_response(404, ['error' => 'Integer Expected, Got ' . $endpoint_fragments[1]]);
+                }
+                switch ($endpoint_fragments[2]) {
+                    case 'audio-position':
+                        $answer = json_decode(set_audio_position($_POST));
+                        send_response(200, $answer);
+                        break;
+                    case 'annotation':
+                        $answer = json_decode(set_annotation($_POST));
+                        send_response(200, $answer);
+                        break;
+                    case 'reading-position':
+                        $answer = json_decode(set_text_position($_POST));
+                        send_response(200, $answer);
+                        break;
+                    default:
+                        send_response(404, ['error' => 'Endpoint Not Found']);
+                }
+                break;
+            case 'terms':
+                if (!ctype_digit($endpoint_fragments[1])) {
+                    send_response(404, ['error' => 'Integer Expected, Got ' . $endpoint_fragments[1]]);
+                }
+                switch ($endpoint_fragments[3]) {
+                    // TODO: merge all in one endpoint
+                    case 'up':
+                        $answer = json_decode(increment_term_status($_POST));
+                        send_response(200, $answer);
+                        break;
+                    case 'down':
+                        $answer = json_decode(increment_term_status($_POST));
+                        send_response(200, $answer);
+                        break;
+                    case 'set':
+                        $answer = json_decode(set_term_status($_POST));
+                        send_response(200, $answer);
+                        break;
+                    default:
+                        send_response(404, ['error' => 'Endpoint Not Found']);
+                }
+                break;
+            case 'translations/new':
+                $answer = json_decode(add_translation($_POST));
+                send_response(200, $answer);
+                break;
+            case 'translations':
+                if (!ctype_digit($endpoint_fragments[1])) {
+                    send_response(404, ['error' => 'Integer Expected, Got ' . $endpoint_fragments[1]]);
+                }
+                $answer = json_decode(update_translation($_POST));
+                send_response(200, $answer);
+                break;
+            default:
+                send_response(404, ['error' => 'Endpoint Not Found']);
+        }
+    }
+}
+
+
+// Validate request method
+if ($_SERVER['REQUEST_METHOD'] !== 'GET' && $_SERVER['REQUEST_METHOD'] !== 'POST') {
+    send_response(405, ['error' => 'Method Not Allowed']);
+} else if (array_key_exists('use_rest', $_REQUEST)) {
+    main_enpoint($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
+} else {
     handle_request();
 }
 
