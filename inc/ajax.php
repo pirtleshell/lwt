@@ -29,9 +29,11 @@ function endpoint_exits($method, $requestUri) {
     $endpoints = [ 
         'media-paths' => ['GET'],
 
-        'raw-term' => ['GET'],
+        //'raw-term' => ['GET'],
         // change for raw-term/sentences?term=term-text structure
-        //'raw-term/(?<term-text>\w+)/sentences' => ['GET'],
+        // sentences-with-term
+        'sentences-with-term' => ['GET'],
+        'similar-terms' => ['GET'],
         //'raw-term/(?<term-text>\w+)/similar' => ['GET'],
 
 
@@ -48,12 +50,12 @@ function endpoint_exits($method, $requestUri) {
         //'terms/(?<term-id>\d+)/status/(?<new-status>\d+)' => ['POST'],
         
         'tests' => ['GET'],
-        //'tests/(?<text-id>\d+)/next-word' => ['GET'],
-        //'tests/(?<text-id>\d+)/tomorrow-tests-count' => ['GET'],
+        //'tests/next-word' => ['GET'],
+        //'tests/tomorrow-count' => ['GET'],
 
         'texts' => ['GET', 'POST'],
         
-        //'texts/(?<text-id>\d+)/phonetic-reading' => ['GET'],
+        //'texts/phonetic-reading' => ['GET'],
         
         //'texts/(?<text-id>\d+)/annotation' => ['POST'],
         //'texts/(?<text-id>\d+)/audio-position' => ['POST'],
@@ -76,7 +78,7 @@ function endpoint_exits($method, $requestUri) {
     $uri_query = parse_url($requestUri, PHP_URL_PATH);
     $matching = preg_match('/(.+?\/ajax.php\/v\d\/).+/', $uri_query, $matches);
     if (!$matching) {
-        send_response(400, ['error' => 'Unrecognized URL format' . $uri_query]);
+        send_response(400, ['error' => 'Unrecognized URL format ' . $uri_query]);
     }
     if (count($matches) == 0) {
         send_response(404, ['error' => 'Wrong API Location: ' . $uri_query]);
@@ -647,52 +649,76 @@ function main_enpoint($method, $requestUri) {
                 $answer = json_decode(media_paths($req_param));
                 send_response(200, $answer);
                 break;
+            case 'sentences-with-term':
+                $answer = json_decode(example_sentences($req_param));
+                send_response(200, $answer);
+                break;
+            case 'similar-terms':
+                $answer = json_decode(similar_terms($req_param));
+                send_response(200, $answer);
+                break;
             case 'settings':
                 switch ($endpoint_fragments[1]) {
                     case 'theme-path':
                         $answer = json_decode(get_theme_path($req_param));
                         send_response(200, $answer);
+                        break;
                     default:
-                        send_response(404, ['error' => 'Endpoint Not Found']);
+                        send_response(
+                            404, 
+                            ['error' => 'Endpoint Not Found: ' . 
+                            $endpoint_fragments[1]]
+                        );
                 }
                 break;
             case 'terms':
                 if ($endpoint_fragments[1] == "imported") {
                     $answer = json_decode(imported_terms($req_param));
                     send_response(200, $answer);
-                } else if (ctype_digit($endpoint_fragments[1]) && $endpoint_fragments[2] == 'translations') {
+                } else if (
+                    ctype_digit($endpoint_fragments[1]) && 
+                    $endpoint_fragments[2] == 'translations'
+                ) {
                     $req_param['text_id'] = $endpoint_fragments[1];
                     $answer = json_decode(term_translations($req_param));
                     send_response(200, $answer);
                 } else {
-                    send_response(404, ['error' => 'Endpoint Not Found' . $endpoint_fragments[1]]);
+                    send_response(
+                        404, 
+                        ['error' => 'Endpoint Not Found' . 
+                        $endpoint_fragments[1]]
+                    );
                 }
                 break;
             case 'tests':
-                if (!ctype_digit($endpoint_fragments[1])) {
-                    send_response(404, ['error' => 'Integer Expected, Got ' . $endpoint_fragments[1]]);
-                }
-                switch ($endpoint_fragments[2]) {
+                switch ($endpoint_fragments[1]) {
                     case 'next-word':
                         $answer = json_decode(word_test_ajax($req_param));
                         send_response(200, $answer);
                         break;
-                    case 'tomorrow-tests-count':
+                    case 'tomorrow-count':
                         $answer = json_decode(tomorrow_test_count($req_param));
                         send_response(200, $answer);
                         break;
                     default:
-                        send_response(404, ['error' => 'Endpoint Not Found' . $endpoint_fragments[2]]);
+                        send_response(
+                            404, 
+                            ['error' => 'Endpoint Not Found' . 
+                            $endpoint_fragments[2]]
+                        );
                 }
                 break;
             case 'texts':
-                if (!ctype_digit($endpoint_fragments[1])) {
-                    send_response(404, ['error' => 'Integer Expected, Got ' . $endpoint_fragments[1]]);
-                }
                 if ($endpoint_fragments[2] == 'phonetic-reading') {
                     $answer = json_decode(get_phonetic_reading($req_param));
                     send_response(200, $answer);
-                } else {
+                } else if (!ctype_digit($endpoint_fragments[1])) {
+                    send_response(
+                        404, 
+                        ['error' => 'Text ID (Integer) Expected, Got ' . 
+                        $endpoint_fragments[1]]
+                    );
+                }else {
                     send_response(404, ['error' => 'Endpoint Not Found']);
                 }
                 break;
@@ -720,7 +746,11 @@ function main_enpoint($method, $requestUri) {
                 break;
             case 'texts':
                 if (!ctype_digit($endpoint_fragments[1])) {
-                    send_response(404, ['error' => 'Integer Expected, Got ' . $endpoint_fragments[1]]);
+                    send_response(
+                        404, 
+                        ['error' => 'Text ID (Integer) Expected, Got ' . 
+                        $endpoint_fragments[1]]
+                    );
                 }
                 switch ($endpoint_fragments[2]) {
                     case 'audio-position':
@@ -736,29 +766,43 @@ function main_enpoint($method, $requestUri) {
                         send_response(200, $answer);
                         break;
                     default:
-                        send_response(404, ['error' => 'Endpoint Not Found']);
+                        send_response(
+                            404, 
+                            ['error' => 'Endpoint Not Found: ' . 
+                            $endpoint_fragments[2]]
+                        );
                 }
                 break;
             case 'terms':
                 if (!ctype_digit($endpoint_fragments[1])) {
-                    send_response(404, ['error' => 'Integer Expected, Got ' . $endpoint_fragments[1]]);
+                    send_response(
+                        404, 
+                        ['error' => 'Term ID (Integer) Expected, Got ' . 
+                        $endpoint_fragments[1]]
+                    );
                 }
-                switch ($endpoint_fragments[3]) {
-                    // TODO: merge all in one endpoint
-                    case 'up':
-                        $answer = json_decode(increment_term_status($_POST));
-                        send_response(200, $answer);
-                        break;
-                    case 'down':
-                        $answer = json_decode(increment_term_status($_POST));
-                        send_response(200, $answer);
-                        break;
-                    case 'set':
-                        $answer = json_decode(set_term_status($_POST));
-                        send_response(200, $answer);
-                        break;
-                    default:
-                        send_response(404, ['error' => 'Endpoint Not Found']);
+                if ($endpoint_fragments[2] != "status") {
+                    send_response(
+                        404, 
+                        ['error' => '"status" Expected, Got ' . 
+                        $endpoint_fragments[2]]
+                    );
+                }
+                if (ctype_digit($endpoint_fragments[3])) {
+                    $answer = json_decode(set_term_status($_POST));
+                    send_response(200, $answer);
+                } else if ($endpoint_fragments[3] == 'down') {
+                    $answer = json_decode(increment_term_status($_POST));
+                    send_response(200, $answer);
+                } else if ($endpoint_fragments[3] == 'up') {
+                    $answer = json_decode(increment_term_status($_POST));
+                    send_response(200, $answer);
+                } else {
+                    send_response(
+                        404, 
+                        ['error' => 'Endpoint Not Found: ' . 
+                        $endpoint_fragments[3]]
+                    );
                 }
                 break;
             case 'translations/new':
@@ -767,7 +811,11 @@ function main_enpoint($method, $requestUri) {
                 break;
             case 'translations':
                 if (!ctype_digit($endpoint_fragments[1])) {
-                    send_response(404, ['error' => 'Integer Expected, Got ' . $endpoint_fragments[1]]);
+                    send_response(
+                        404, 
+                        ['error' => 'Text ID (Integer) Expected, Got ' . 
+                        $endpoint_fragments[1]]
+                    );
                 }
                 $answer = json_decode(update_translation($_POST));
                 send_response(200, $answer);
@@ -782,10 +830,8 @@ function main_enpoint($method, $requestUri) {
 // Validate request method
 if ($_SERVER['REQUEST_METHOD'] !== 'GET' && $_SERVER['REQUEST_METHOD'] !== 'POST') {
     send_response(405, ['error' => 'Method Not Allowed']);
-} else if (array_key_exists('use_rest', $_REQUEST)) {
-    main_enpoint($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
 } else {
-    handle_request();
+    main_enpoint($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
 }
 
 ?>

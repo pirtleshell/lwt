@@ -261,14 +261,15 @@ function save_audio_position($textid): void
         if ($("#jquery_jplayer_1") === null || $("#jquery_jplayer_1").length == 0) {
             return;
         }
-        var pos = $("#jquery_jplayer_1").data("jPlayer").status.currentTime;
+        const pos = $("#jquery_jplayer_1").data("jPlayer").status.currentTime;
+        const text_id = parseInt(<?php echo json_encode($textid); ?>, 10);
         $.ajax({
             type: "POST",
-            url:'inc/ajax.php', 
+            url:'inc/ajax.php/v1/texts/' + text_id + '/reading-position',
             data: {
                 action: "reading_position",
                 action_type: "audio",
-                tid: '<?php echo $textid; ?>', 
+                tid: text_id,
                 audio_position: pos
             }, 
             async: false // Asynchronous should be safe (2.9.0)

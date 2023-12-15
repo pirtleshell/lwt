@@ -157,7 +157,7 @@ function saveCurrentPosition() {
     $.ajax(
         {
             type: "POST",
-            url:'inc/ajax.php',
+            url:'inc/ajax.php/v1/texts/' + TID + '/reading-position',
             data: {
                 action: "reading_position",
                 action_type: "text",
@@ -178,7 +178,7 @@ function saveCurrentPosition() {
 function getPhoneticText(text, lang) {
     let phoneticText;
     $.ajax(
-        'inc/ajax.php',
+        'inc/ajax.php/v1/phonetic-reading',
         {
             async: false,
             data: {
@@ -207,7 +207,7 @@ function getPhoneticText(text, lang) {
  */
 async function getPhoneticTextAsync(text, lang) {
     return $.getJSON(
-        'inc/ajax.php',
+        'inc/ajax.php/v1/phonetic-reading',
         {
             action: "query",
             action_type: "phonetic_reading",
