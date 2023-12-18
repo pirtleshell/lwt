@@ -1,7 +1,7 @@
 const { expect } = require('chai');
 const supertest = require('supertest');
 const host = 'http://localhost'
-const api_path = '/lwt/inc/ajax.php/v1';
+const api_path = '/lwt/api.php/v1';
 
 describe('Random API call', function() {
   it('expect a 400 without message', function(done) {

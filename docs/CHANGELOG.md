@@ -21,7 +21,7 @@ short text creation/edition, long text creation and text check
   * Musics play fully
   * Page do not need to reload.
   * The timer continues instead of reseting.
-* REST API, the new ``inc/ajax.php`` is intended to continue developing itself
+* REST API, the new ``api.php`` is intended to continue developing itself
 as a REST API. It features the following interaction:
   * On GET, ``action_type`` can be:
     * ``version``: the REST API version and release date.
@@ -101,7 +101,7 @@ character as a word (e. g.: Chinese). Big thanks to [@hangug-eo](https://github.
 
 ### Deprecated
 
-* Legacy AJAX API. The following AJAX interactions are now deprecated in favor to the new REST API (at ``inc/ajax.php``):
+* Legacy AJAX API. The following AJAX interactions are now deprecated in favor to the new REST API (at ``api.php``):
   * ``inc/ajax_show_similar_terms.php``, use ``action_type=similar_terms`` on GET, same arguments.
   * ``inc/ajax_add_term_transl.php``, use ``action=change_translation``, with
   ``action_type=add`` or ``action_type=update``. The arguments were also changed.

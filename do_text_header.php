@@ -265,7 +265,7 @@ function save_audio_position($textid): void
         const text_id = parseInt(<?php echo json_encode($textid); ?>, 10);
         $.ajax({
             type: "POST",
-            url:'inc/ajax.php/v1/texts/' + text_id + '/reading-position',
+            url:'api.php/v1/texts/' + text_id + '/reading-position',
             data: {
                 action: "reading_position",
                 action_type: "audio",

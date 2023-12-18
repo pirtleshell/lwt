@@ -29,7 +29,7 @@
 				$.ajax(
 					{
 						type: 'GET',
-						url: '../inc/ajax.php/v1/settings/theme-path',
+						url: '../api.php/v1/settings/theme-path',
 						async: false, 
 						data: {
 							action: "query",
@@ -1878,7 +1878,7 @@ short text creation/edition, long text creation and text check
 <li>The timer continues instead of reseting.</li>
 </ul>
 </li>
-<li>REST API, the new <code>inc/ajax.php</code> is intended to continue developing itself
+<li>REST API, the new <code>api.php</code> is intended to continue developing itself
 as a REST API. It features the following interaction:
 <ul>
 <li>On GET, <code>action_type</code> can be:
@@ -2008,7 +2008,7 @@ character as a word (e. g.: Chinese). Big thanks to <a href="https://github.com/
 </ul>
 <h4>Deprecated</h4>
 <ul>
-<li>Legacy AJAX API. The following AJAX interactions are now deprecated in favor to the new REST API (at <code>inc/ajax.php</code>):
+<li>Legacy AJAX API. The following AJAX interactions are now deprecated in favor to the new REST API (at <code>api.php</code>):
 <ul>
 <li>
 <code>inc/ajax_show_similar_terms.php</code>, use <code>action_type=similar_terms</code> on GET, same arguments.</li>

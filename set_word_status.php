@@ -56,7 +56,7 @@ function set_word_status_ajax($wid, $status)
     const wordid = parseInt(<?php echo $wid; ?>, 10);
     const status = parseInt(<?php echo $status; ?>, 10);
     $.post(
-        'inc/ajax.php/v1/' + wordid + '/status/' + status,
+        'api.php/v1/' + wordid + '/status/' + status,
         {
             action: "term_status",
             action_type: "set",

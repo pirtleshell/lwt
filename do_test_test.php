@@ -448,7 +448,7 @@ function do_test_prepare_ajax_test_area($testsql, $count, $testtype): int
                     "test_sql": <?php echo json_encode((string)$testsql); ?>
                 };
                 $.getJSON(
-                    'inc/ajax.php/v1/tests/tomorrow-count?' + $.param(options)
+                    'api.php/v1/tests/tomorrow-count?' + $.param(options)
                 ).done(function (data) {
                     if (data["test_count"]) {
                         $('#tests-tomorrow').css("display", "inherit");
@@ -479,7 +479,7 @@ function do_test_prepare_ajax_test_area($testsql, $count, $testtype): int
                 "test_type": <?php echo json_encode((string)$testtype); ?>
             };
             $.getJSON(
-                'inc/ajax.php/v1/tests/next-word?' + $.param(options)
+                'api.php/v1/tests/next-word?' + $.param(options)
             ).done(test_query_handler);
 
             // Close any previous tooltip

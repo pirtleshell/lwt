@@ -45,7 +45,7 @@ require_once __DIR__ . '/../src/php/markdown_converter.php';
 				$.ajax(
 					{
 						type: 'GET',
-						url: '../inc/ajax.php/v1/settings/theme-path',
+						url: '../api.php/v1/settings/theme-path',
 						async: false, 
 						data: {
 							action: "query",
