@@ -29,12 +29,8 @@ function endpoint_exits($method, $requestUri) {
     $endpoints = [ 
         'media-paths' => ['GET'],
 
-        //'raw-term' => ['GET'],
-        // change for raw-term/sentences?term=term-text structure
-        // sentences-with-term
         'sentences-with-term' => ['GET'],
         'similar-terms' => ['GET'],
-        //'raw-term/(?<term-text>\w+)/similar' => ['GET'],
 
 
         'settings' => ['POST'],
@@ -116,11 +112,9 @@ function endpoint_exits($method, $requestUri) {
  */
 function rest_api_version($get_req)
 {
-    return (string)json_encode(
-        array(
+    return array(
         "version"      => "0.0.1",
         "release_date" => "2023-09-01"
-        )
     );
 }
 
@@ -144,7 +138,7 @@ function get_word_test_ajax($testsql, $nosent, $lgid, $wordregex, $testtype)
             "word_text" => '',
             "group" => '' 
         );
-        return json_encode($output);
+        return $output;
     }
     $sent = repl_tab_nl($word_record['WoSentence']);
     if ($nosent) {
@@ -182,12 +176,10 @@ function get_word_test_ajax($testsql, $nosent, $lgid, $wordregex, $testtype)
  */
 function word_test_ajax($get_req)
 {
-    return json_encode(
-        get_word_test_ajax(
-            $get_req['test_sql'], $get_req['test_nosent'], 
-            $get_req['test_lgid'], 
-            $get_req['test_wordregex'], $get_req['test_type']
-        )
+    return get_word_test_ajax(
+        $get_req['test_sql'], $get_req['test_nosent'], 
+        $get_req['test_lgid'], 
+        $get_req['test_wordregex'], $get_req['test_type']
     );
 }
 
@@ -203,7 +195,7 @@ function tomorrow_test_count($get_req)
     $output = array(
         "test_count" => do_test_get_tomorrow_tests_count($get_req['test_sql'])
     );
-    return json_encode($output);
+    return $output;
 }
 
 /**
@@ -216,7 +208,7 @@ function tomorrow_test_count($get_req)
 function get_phonetic_reading($get_req)
 {
     $data = phonetic_reading($get_req['text'], $get_req['lang']);
-    return json_encode(array("phonetic_reading" => $data));
+    return array("phonetic_reading" => $data);
 }
 
     
@@ -230,9 +222,7 @@ function get_phonetic_reading($get_req)
 function get_theme_path($get_req)
 {
     chdir('..');
-    return json_encode(
-        array("theme_path" => get_file_path($get_req['path']))
-    );
+    return array("theme_path" => get_file_path($get_req['path']));
 }
 
 /**
@@ -242,16 +232,20 @@ function get_theme_path($get_req)
  */
 function get_texts_statistics($get_req)
 {
-    return json_encode(return_textwordcount($get_req["texts_id"]));
+    return return_textwordcount($get_req["texts_id"]);
 }
 
 /**
  * List the audio files in the media folder.
+ * 
+ * @param array $get_req Unnused
+ * 
+ * @return string[] Path of media files
  */
 function media_paths($get_req) 
 {
     chdir("..");
-    return json_encode(get_media_paths());
+    return get_media_paths();
 }
 
 /**
@@ -262,12 +256,10 @@ function media_paths($get_req)
 function example_sentences($get_req)
 {
     chdir("..");
-    return json_encode(
-        sentences_with_word(
-            (int) $get_req["lid"],
-            $get_req["word_lc"],
-            (int) $get_req["wid"]
-        )
+    return sentences_with_word(
+        (int) $get_req["lid"],
+        $get_req["word_lc"],
+        (int) $get_req["wid"]
     );
 }
 
@@ -275,13 +267,13 @@ function example_sentences($get_req)
  * Return the list of imported terms.
  * 
  * @param array $get_req Get request with fields "last_update", "page" and "count".
+ * 
+ * @return array 
  */
 function imported_terms($get_req)
 {
-    return json_encode(
-        imported_terms_list(
-            $get_req["last_update"], $get_req["page"], $get_req["count"]
-        )
+    return imported_terms_list(
+        $get_req["last_update"], $get_req["page"], $get_req["count"]
     );
 }
 
@@ -295,10 +287,10 @@ function imported_terms($get_req)
  */
 function similar_terms($get_req) 
 {
-    return json_encode(array("similar_terms" => print_similar_terms(
+    return array("similar_terms" => print_similar_terms(
         (int)$get_req["simterms_lgid"], 
         (string) $get_req["simterms_word"]
-    )));
+    ));
 }
 
 
@@ -309,10 +301,8 @@ function similar_terms($get_req)
  */
 function term_translations($get_req)
 {
-    return json_encode(
-        \Lwt\Ajax\Improved_Text\get_term_translations(
-            (string)$get_req["term_lc"], (int)$get_req["text_id"]
-        )
+    return \Lwt\Ajax\Improved_Text\get_term_translations(
+        (string)$get_req["term_lc"], (int)$get_req["text_id"]
     );
 }
 
@@ -335,7 +325,7 @@ function unknown_get_action_type($get_req, $action_exists=false)
         $message = 'action_type with value "' . $get_req["action_type"] . 
         '" with default action (' . $get_req["action"] . ') does not exist'; 
     }
-    return json_encode(array("error" => $message)); 
+    return array("error" => $message); 
 }
 
 // --------------------------------- POST REQUESTS ---------------------
@@ -350,9 +340,9 @@ function unknown_get_action_type($get_req, $action_exists=false)
  */
 function set_text_position($post_req) 
 {
-    return json_encode(array("text" => save_text_position(
+    return array("text" => save_text_position(
         (int)$post_req["tid"], (int)$post_req["tposition"]
-    )));
+    ));
 }
 
 /**
@@ -364,11 +354,9 @@ function set_text_position($post_req)
  */
 function set_audio_position($post_req) 
 {
-    return json_encode(
-        array(
-            "audio" => save_audio_position(
-                (int)$post_req["tid"], (int)$post_req["audio_position"]
-            )
+    return array(
+        "audio" => save_audio_position(
+            (int)$post_req["tid"], (int)$post_req["audio_position"]
         )
     );
 }
@@ -393,7 +381,7 @@ function add_translation($post_req)
     } else {
         $raw_answer["error"] = $result;
     }
-    return json_encode($raw_answer);
+    return $raw_answer;
 }
 
 /**
@@ -414,7 +402,7 @@ function update_translation($post_req)
     } else {
         $raw_answer["update"] = $result;
     }
-    return json_encode($raw_answer);
+    return $raw_answer;
 }
 
 /**
@@ -425,7 +413,7 @@ function update_translation($post_req)
 function check_regexp($post_req)
 {
     $result = do_ajax_check_regexp(trim($post_req['regexp'])); 
-    return json_encode(array("check_regexp" => $result));
+    return array("check_regexp" => $result);
 }
 
 /**
@@ -444,7 +432,7 @@ function increment_term_status($post_req)
     } else {
         $raw_answer["increment"] = $result;
     }
-    return json_encode($raw_answer);
+    return $raw_answer;
 }
 
 /**
@@ -461,7 +449,7 @@ function set_term_status($post_req)
     } else {
         $raw_answer["error"] = $result;
     }
-    return json_encode($raw_answer);
+    return $raw_answer;
 }
 
 /**
@@ -483,7 +471,7 @@ function set_annotation($post_req)
     } else {
         $raw_answer["save_impr_text"] = $result["success"];
     }
-    return json_encode($raw_answer);
+    return $raw_answer;
 }
 
 
@@ -492,9 +480,9 @@ function set_annotation($post_req)
  * 
  * @param array $post_req Array with the fields "k" (key, setting name) and "v" (value)
  * 
- * @return string Setting save status
+ * @return string[] Setting save status
  */
-function save_setting($post_req): string
+function save_setting($post_req): array
 {
     $status = saveSetting($post_req['k'], $post_req['v']);
     $raw_answer = array();
@@ -503,7 +491,7 @@ function save_setting($post_req): string
     } else {
         $raw_answer["error"] = $status;
     }
-    return json_encode($raw_answer);
+    return $raw_answer;
 }
 
 /**
@@ -524,114 +512,7 @@ function unknown_post_action_type($post_req, $action_exists=false)
         $message = 'action_type with value "' . $post_req["action_type"] . 
         '" with default action (' . $post_req["action"] . ') does not exist'; 
     }
-    return json_encode(array("error" => $message)); 
-}
-
-
-function handle_request() {
-    header('Content-Type: application/json; charset=utf-8');
-    if (isset($_GET['action'])) {
-        if ($_GET['action'] == 'query') {
-            switch ($_GET['action_type']) {
-            case 'version':
-                echo rest_api_version($_GET);
-                break;
-            case 'test_next_word':
-                echo word_test_ajax($_GET);
-                break;
-            case 'tomorrow_tests_number':
-                echo tomorrow_test_count($_GET);
-                break;
-            case 'phonetic_reading':
-                echo get_phonetic_reading($_GET);
-                break;
-            case 'theme_path':
-                echo get_theme_path($_GET);
-                break;
-            case "texts_statistics":
-                echo get_texts_statistics($_GET);
-                break;
-            case "media_paths":
-                echo media_paths($_GET);
-                break;
-            case "example_sentences":
-                echo example_sentences($_GET);
-                break;
-            case "imported_terms":
-                echo imported_terms($_GET);
-                break;
-            case "similar_terms":
-                echo similar_terms($_GET);
-                break;
-            case "term_translations":
-                echo term_translations($_GET);
-                break;
-            default:
-                echo unknown_get_action_type($_GET, true);
-                break;
-            }
-        } else {
-            echo unknown_get_action_type($_GET);
-        }
-    } else if (isset($_POST['action'])) {
-        switch ($_POST['action']) {
-        case "reading_position":
-            switch ($_POST['action_type']) {
-            case "text":
-                echo set_text_position($_POST);
-                break;
-            case "audio":
-                echo set_audio_position($_POST);
-                break;
-            default:
-                echo unknown_post_action_type($_POST, true);
-                break;
-            }
-            break;
-        case "change_translation":
-            switch ($_POST['action_type']) {
-                case "add":
-                    echo add_translation($_POST);
-                    break;
-                case "update":
-                    echo update_translation($_POST);
-                    break;
-                default:
-                    echo unknown_post_action_type($_POST, true);
-                    break;
-            }
-            break;
-        case "term_status":
-            switch ($_POST['action_type']) {
-                case "increment":
-                    echo increment_term_status($_POST);
-                    break;
-                case "set":
-                    echo set_term_status($_POST);
-                    break;
-                default:
-                    echo unknown_post_action_type($_POST, true);
-                    break;
-            }
-            break;
-        default:
-            switch ($_POST['action_type']) {
-            case 'check_regexp':
-                echo check_regexp($_POST);
-                break;
-            case 'set_annotation':
-                echo set_annotation($_POST);
-                break;
-            case 'save_setting':
-                echo save_setting($_POST);
-                break;
-            default:
-                echo unknown_post_action_type($_POST);
-                break;
-            }
-            break;
-        }
-    }
+    return array("error" => $message); 
 }
 
 
@@ -646,21 +527,21 @@ function main_enpoint($method, $requestUri) {
         // Handle GET request for each endpoint
         switch ($endpoint_fragments[0]) {
             case 'media-paths':
-                $answer = json_decode(media_paths($req_param));
+                $answer = media_paths($req_param);
                 send_response(200, $answer);
                 break;
             case 'sentences-with-term':
-                $answer = json_decode(example_sentences($req_param));
+                $answer = example_sentences($req_param);
                 send_response(200, $answer);
                 break;
             case 'similar-terms':
-                $answer = json_decode(similar_terms($req_param));
+                $answer = similar_terms($req_param);
                 send_response(200, $answer);
                 break;
             case 'settings':
                 switch ($endpoint_fragments[1]) {
                     case 'theme-path':
-                        $answer = json_decode(get_theme_path($req_param));
+                        $answer = get_theme_path($req_param);
                         send_response(200, $answer);
                         break;
                     default:
@@ -673,14 +554,14 @@ function main_enpoint($method, $requestUri) {
                 break;
             case 'terms':
                 if ($endpoint_fragments[1] == "imported") {
-                    $answer = json_decode(imported_terms($req_param));
+                    $answer = imported_terms($req_param);
                     send_response(200, $answer);
                 } else if (
                     ctype_digit($endpoint_fragments[1]) && 
                     $endpoint_fragments[2] == 'translations'
                 ) {
                     $req_param['text_id'] = $endpoint_fragments[1];
-                    $answer = json_decode(term_translations($req_param));
+                    $answer = term_translations($req_param);
                     send_response(200, $answer);
                 } else {
                     send_response(
@@ -693,11 +574,11 @@ function main_enpoint($method, $requestUri) {
             case 'tests':
                 switch ($endpoint_fragments[1]) {
                     case 'next-word':
-                        $answer = json_decode(word_test_ajax($req_param));
+                        $answer = word_test_ajax($req_param);
                         send_response(200, $answer);
                         break;
                     case 'tomorrow-count':
-                        $answer = json_decode(tomorrow_test_count($req_param));
+                        $answer = tomorrow_test_count($req_param);
                         send_response(200, $answer);
                         break;
                     default:
@@ -710,7 +591,7 @@ function main_enpoint($method, $requestUri) {
                 break;
             case 'texts':
                 if ($endpoint_fragments[2] == 'phonetic-reading') {
-                    $answer = json_decode(get_phonetic_reading($req_param));
+                    $answer = get_phonetic_reading($req_param);
                     send_response(200, $answer);
                 } else if (!ctype_digit($endpoint_fragments[1])) {
                     send_response(
@@ -723,10 +604,10 @@ function main_enpoint($method, $requestUri) {
                 }
                 break;
             case 'texts-statistics':
-                $answer = json_decode(get_texts_statistics($req_param));
+                $answer = get_texts_statistics($req_param);
                 send_response(200, $answer);
             case 'version':
-                $answer = json_decode(rest_api_version($req_param));
+                $answer = rest_api_version($req_param);
                 send_response(200, $answer);
                 break;
             // Add more GET handlers for other endpoints
@@ -737,11 +618,11 @@ function main_enpoint($method, $requestUri) {
         // Handle POST request for each endpoint
         switch ($req_endpoint) {
             case 'regexp/test':
-                $answer = json_decode(check_regexp($_POST));
+                $answer = check_regexp($_POST);
                 send_response(200, $answer);
                 break;
             case 'settings':
-                $answer = json_decode(save_setting($_POST));
+                $answer = save_setting($_POST);
                 send_response(200, $answer);
                 break;
             case 'texts':
@@ -754,15 +635,15 @@ function main_enpoint($method, $requestUri) {
                 }
                 switch ($endpoint_fragments[2]) {
                     case 'audio-position':
-                        $answer = json_decode(set_audio_position($_POST));
+                        $answer = set_audio_position($_POST);
                         send_response(200, $answer);
                         break;
                     case 'annotation':
-                        $answer = json_decode(set_annotation($_POST));
+                        $answer = set_annotation($_POST);
                         send_response(200, $answer);
                         break;
                     case 'reading-position':
-                        $answer = json_decode(set_text_position($_POST));
+                        $answer = set_text_position($_POST);
                         send_response(200, $answer);
                         break;
                     default:
@@ -789,13 +670,13 @@ function main_enpoint($method, $requestUri) {
                     );
                 }
                 if (ctype_digit($endpoint_fragments[3])) {
-                    $answer = json_decode(set_term_status($_POST));
+                    $answer = set_term_status($_POST);
                     send_response(200, $answer);
                 } else if ($endpoint_fragments[3] == 'down') {
-                    $answer = json_decode(increment_term_status($_POST));
+                    $answer = increment_term_status($_POST);
                     send_response(200, $answer);
                 } else if ($endpoint_fragments[3] == 'up') {
-                    $answer = json_decode(increment_term_status($_POST));
+                    $answer = increment_term_status($_POST);
                     send_response(200, $answer);
                 } else {
                     send_response(
@@ -806,7 +687,7 @@ function main_enpoint($method, $requestUri) {
                 }
                 break;
             case 'translations/new':
-                $answer = json_decode(add_translation($_POST));
+                $answer = add_translation($_POST);
                 send_response(200, $answer);
                 break;
             case 'translations':
@@ -817,7 +698,7 @@ function main_enpoint($method, $requestUri) {
                         $endpoint_fragments[1]]
                     );
                 }
-                $answer = json_decode(update_translation($_POST));
+                $answer = update_translation($_POST);
                 send_response(200, $answer);
                 break;
             default:
