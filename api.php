@@ -2,16 +2,16 @@
 
 namespace Lwt\Ajax;
 
-require_once 'session_utility.php';
-require_once __DIR__ . '/simterms.php';
-require_once '../do_test_test.php';
-require_once __DIR__ . '/ajax_add_term_transl.php';
-require_once __DIR__ . '/ajax_check_regexp.php';
-require_once __DIR__ . '/ajax_chg_term_status.php';
-require_once __DIR__ . '/ajax_save_impr_text.php';
-require_once __DIR__ . '/ajax_save_text_position.php';
-require_once __DIR__ . '/ajax_show_imported_terms.php';
-require_once __DIR__ . '/ajax_edit_impr_text.php';
+require_once __DIR__ . '/inc/session_utility.php';
+require_once __DIR__ . '/inc/simterms.php';
+require_once 'do_test_test.php';
+require_once __DIR__ . '/inc/ajax_add_term_transl.php';
+require_once __DIR__ . '/inc/ajax_check_regexp.php';
+require_once __DIR__ . '/inc/ajax_chg_term_status.php';
+require_once __DIR__ . '/inc/ajax_save_impr_text.php';
+require_once __DIR__ . '/inc/ajax_save_text_position.php';
+require_once __DIR__ . '/inc/ajax_show_imported_terms.php';
+require_once __DIR__ . '/inc/ajax_edit_impr_text.php';
 
 
 /**
@@ -72,7 +72,7 @@ function endpoint_exits($method, $requestUri) {
 
     // Extract requested endpoint from URI
     $uri_query = parse_url($requestUri, PHP_URL_PATH);
-    $matching = preg_match('/(.+?\/ajax.php\/v\d\/).+/', $uri_query, $matches);
+    $matching = preg_match('/(.+?\/api.php\/v\d\/).+/', $uri_query, $matches);
     if (!$matching) {
         send_response(400, ['error' => 'Unrecognized URL format ' . $uri_query]);
     }
