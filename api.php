@@ -221,7 +221,6 @@ function get_phonetic_reading($get_req)
  */
 function get_theme_path($get_req)
 {
-    chdir('..');
     return array("theme_path" => get_file_path($get_req['path']));
 }
 
@@ -244,7 +243,6 @@ function get_texts_statistics($get_req)
  */
 function media_paths($get_req) 
 {
-    chdir("..");
     return get_media_paths();
 }
 
