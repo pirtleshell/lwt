@@ -79,7 +79,7 @@ alert('Saving your changes failed, please reload the page and try again! '+'Erro
 function changeImprAnnText(){$(this).prev('input:radio').attr('checked','checked');const textid=$('#editimprtextdata').attr('data_id');const elem_name=$(this).attr('name');const form_data=JSON.stringify($('form').serializeObject());do_ajax_save_impr_text(textid,elem_name,form_data)}
 function changeImprAnnRadio(){const textid=$('#editimprtextdata').attr('data_id');const elem_name=$(this).attr('name');const form_data=JSON.stringify($('form').serializeObject());do_ajax_save_impr_text(textid,elem_name,form_data)}
 function addTermTranslation(wordid,txid,word,lang){const translation=$(txid).val().trim();const pagepos=$(document).scrollTop();if(translation==''||translation=='*'){alert('Text Field is empty or = \'*\'!');return}
-let request={action:"change_translation",translation:translation,};let failure,action_type,endpoint;if(wordid===0){action_type="add";endpoint="new";request.text=word;request.lang=lang;failure="Adding translation to term failed!"}else{action_type="update";endpoint=parseInt(wordid,10);request.wordid=wordid;failure="Updating translation of term failed!"}
+let request={translation:translation,};let failure,action_type,endpoint;if(wordid===0){action_type="add";endpoint="new";request.term_text=word;request.lg_id=lang;failure="Adding translation to term failed!"}else{action_type="update";endpoint=parseInt(wordid,10);failure="Updating translation of term failed!"}
 request.action_type=action_type;failure+="Please reload page and try again."
 $.post('api.php/v1/translations/'+endpoint,request,function(d){if(d==''){alert(failure);return}
 if("error" in d){alert(failure+"\n"+d.error);return}

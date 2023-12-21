@@ -423,12 +423,12 @@ function set_text_position($post_req)
 /**
  * Change the status of a term by one unit.
  * 
- * @param array $post_req Array with the fields "wid" (int) and "status_up" (1 or 0)
+ * @param array $post_req Array with the fields "term_id" (int) and "status_up" (1 or 0)
  */
 function increment_term_status($post_req)
 {
     $result = ajax_increment_term_status(
-        (int)$post_req['wid'], (bool)$post_req['status_up']
+        (int)$post_req['term_id'], (bool)$post_req['status_up']
     );
     $raw_answer = array();
     if ($result == '') {
@@ -443,11 +443,11 @@ function increment_term_status($post_req)
 /**
  * Set the status of a term.
  * 
- * @param array $post_req Array with the fields "wid" (int) and "status" (0-5|98|99)
+ * @param array $post_req Array with the fields "term_id" (int) and "status" (0-5|98|99)
  */
 function set_term_status($post_req)
 {
-    $result = set_word_status((int)$post_req['wid'], (int)$post_req['status']);
+    $result = set_word_status((int)$post_req['term_id'], (int)$post_req['status']);
     $raw_answer = array();
     if (is_numeric($result)) {
         $raw_answer["set"] = (int)$result;
@@ -457,39 +457,18 @@ function set_term_status($post_req)
     return $raw_answer;
 }
 
-/**
- * Create the translation for a new term.
- * 
- * @param array $post_req Input post request.
- * 
- * @return string Error message in case of failure, lowercase term otherwise
- */
-function add_translation($post_req)
-{
-    $text = trim($post_req['text']);
-    $result = add_new_term_transl(
-        $text, (int)$post_req['lang'], trim($post_req['translation'])
-    );
-    $raw_answer = array();
-    if ($result == mb_strtolower($text, 'UTF-8')) {
-        $raw_answer["add"] = $result;
-    } else {
-        $raw_answer["error"] = $result;
-    }
-    return $raw_answer;
-}
 
 /**
  * Edit the translation of an existing term.
  * 
- * @param array $post_req Input post request.
+ * @param array $post_req Array with the fields "term_id" (int) and "translation".
  * 
  * @return string Term in lower case, or "" if term does not exist
  */
 function update_translation($post_req)
 {
     $result = do_ajax_check_update_translation(
-        (int)$post_req['id'], trim($post_req['translation'])
+        (int)$post_req['term_id'], trim($post_req['translation'])
     );
     $raw_answer = array();
     if ($result == "") {
@@ -500,6 +479,27 @@ function update_translation($post_req)
     return $raw_answer;
 }
 
+/**
+ * Create the translation for a new term.
+ * 
+ * @param array $post_req Array with the fields "term_text", "lg_id" (int) and "translation".
+ * 
+ * @return string Error message in case of failure, lowercase term otherwise
+ */
+function add_translation($post_req)
+{
+    $text = trim($post_req['term_text']);
+    $result = add_new_term_transl(
+        $text, (int)$post_req['lg_id'], trim($post_req['translation'])
+    );
+    $raw_answer = array();
+    if ($result == mb_strtolower($text, 'UTF-8')) {
+        $raw_answer["add"] = $result;
+    } else {
+        $raw_answer["error"] = $result;
+    }
+    return $raw_answer;
+}
 
 /**
  * Notify of an error on POST method.
@@ -678,14 +678,18 @@ function main_enpoint($method, $requestUri) {
                         $endpoint_fragments[2]]
                     );
                 }
-                if (ctype_digit($endpoint_fragments[3])) {
-                    $answer = set_term_status($_POST);
-                    send_response(200, $answer);
-                } else if ($endpoint_fragments[3] == 'down') {
+                $_POST['term_id'] = (int) $endpoint_fragments[1];
+                if ($endpoint_fragments[3] == 'down') {
+                    $_POST['status_up'] = 0;
                     $answer = increment_term_status($_POST);
                     send_response(200, $answer);
                 } else if ($endpoint_fragments[3] == 'up') {
+                    $_POST['status_up'] = 1;
                     $answer = increment_term_status($_POST);
+                    send_response(200, $answer);
+                } else if (ctype_digit($endpoint_fragments[3])) {
+                    $_POST['status'] = (int) $endpoint_fragments[3];
+                    $answer = set_term_status($_POST);
                     send_response(200, $answer);
                 } else {
                     send_response(
@@ -699,10 +703,11 @@ function main_enpoint($method, $requestUri) {
                 if (!ctype_digit($endpoint_fragments[1])) {
                     send_response(
                         404, 
-                        ['error' => 'Text ID (Integer) Expected, Got ' . 
+                        ['error' => 'Term ID (Integer) Expected, Got ' . 
                         $endpoint_fragments[1]]
                     );
                 }
+                $_POST["term_id"] = (int) $endpoint_fragments[1];
                 $answer = update_translation($_POST);
                 send_response(200, $answer);
                 break;

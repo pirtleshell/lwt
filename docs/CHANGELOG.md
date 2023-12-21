@@ -105,7 +105,7 @@ character as a word (e. g.: Chinese). Big thanks to [@hangug-eo](https://github.
 * Legacy AJAX API. The following AJAX interactions are now deprecated in favor to the new REST API (at ``api.php``):
   * ``inc/ajax_show_similar_terms.php``, use ``/similar-terms`` on GET, `simterms_lgid` becomes `lg_id` and `simterms_word` `term`.
   * ``inc/ajax_add_term_transl.php``, use ``/translations``, with
-  ``/new`` or ``/{term-id}``. The arguments were also changed.
+  ``/new`` or ``/{term-id}``. The arguments were also changed. `lang` becomes `lg_id`, `text` is `term_text`.
   * ``inc/ajax_check_regexp.php`` should no longer be used and will be removed.
   * ``inc/ajax_chg_term_status.php`` should be accessed through ``/terms/{term-id}/status``. Argument ``data`` is now part of the URL, on post only.
   * ``inc/ajax_get_phonetic.php`` should be accessed through ``/texts/{text-id}/phonetic-reading``, same arguments.

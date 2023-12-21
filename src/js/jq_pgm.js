@@ -181,20 +181,18 @@ function addTermTranslation(wordid, txid, word, lang) {
     return;
   }
   let request = {
-        action: "change_translation",
         translation: translation,
   };
   let failure, action_type, endpoint;
   if (wordid === 0) {
     action_type = "add";
     endpoint = "new";
-    request["text"] = word;
-    request["lang"] = lang;
+    request["term_text"] = word;
+    request["lg_id"] = lang;
     failure = "Adding translation to term failed!";
   } else {
     action_type = "update";
     endpoint = parseInt(wordid, 10);
-    request["wordid"] = wordid;
     failure = "Updating translation of term failed!";
   }
   request["action_type"] = action_type;

@@ -161,6 +161,7 @@ Decrements the status of a term.
 
 - **Endpoint**: `/terms/{term-id}/status/down`
 - **Method**: POST
+- **Arguments**: None
 
 ### Increment Term Status
 
@@ -168,6 +169,7 @@ Increments the status of a term.
 
 - **Endpoint**: `/terms/{term-id}/status/up`
 - **Method**: POST
+- **Arguments**: None
 
 ### Set Term Status
 
@@ -175,14 +177,7 @@ Sets the status of a term to a new value.
 
 - **Endpoint**: `/terms/{term-id}/status/{new-status}`
 - **Method**: POST
-
-
-### Add Translation
-
-Adds a new translation for a term.
-
-- **Endpoint**: `/translations/new`
-- **Method**: POST
+- **Arguments**: None
 
 ### Update Translation
 
@@ -190,6 +185,15 @@ Updates an existing translation for a term.
 
 - **Endpoint**: `/translations/{term-id}`
 - **Method**: POST
+- **Arguments**: `translation`
+
+### Add Translation
+
+Adds a new translation for a term.
+
+- **Endpoint**: `/translations/new`
+- **Method**: POST
+- **Arguments**: `text`, `lg_id` and `translation`
 
 ## Response Format
 
