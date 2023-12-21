@@ -25,7 +25,8 @@ short text creation/edition, long text creation and text check
 as a REST API. It features the following interaction:
   * On GET, the endpoints are:
     * `/media-paths`: the list of audio and video files in the media folder.
-    * `/sentences-with-term`: sentences containing a term.
+    * `/sentences-with-term`: sentences containing a new term.
+    * `/sentences-with-term/{term-id}`: sentences containing a registred term.
     * `/similar-terms`: terms similar to a given one.
     * `/theme-path`: the path for a media using theme.
     * `/terms`

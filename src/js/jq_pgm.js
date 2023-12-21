@@ -1339,6 +1339,21 @@ function display_example_sentences(sentences, click_target)
   return outElement;
 }
 
+
+/**
+ * Prepare am HTML element that formats the sentences
+ * 
+ * @param {JSON}   sentences    A list of sentences to display. 
+ * @param {string} click_target The selector for the element that should change value on click
+ * @returns {HTMLElement} A formatted group of sentences
+ */
+function change_example_sentences_zone(sentences, ctl) {
+  $('#exsent-waiting').css("display", "none");
+  $('#exsent-sentences').css("display", "inherit");
+  const new_element = display_example_sentences(sentences, ctl);
+  $('#exsent-sentences').append(new_element);
+}
+
 /**
  * Get and display the sentences containing specific word.
  * 
@@ -1352,23 +1367,29 @@ function do_ajax_show_sentences (lang, word, ctl, woid) {
   $('#exsent-interactable').css("display", "none");
   $('#exsent-waiting').css("display", "inherit");
 
-  $.getJSON(
-    'api.php/v1/sentences-with-term',
-    { 
-      action: "query",
-      action_type: "example_sentences",
-      lid: lang, 
-      word_lc: word,
-      wid: woid,
-      term: word
-    },
-    function (data) {
-      $('#exsent-waiting').css("display", "none");
-      $('#exsent-sentences').css("display", "inherit");
-      const new_element = display_example_sentences(data, ctl);
-      $('#exsent-sentences').append(new_element);
+  if (isInt(woid) && woid != -1) {
+    $.getJSON(
+      'api.php/v1/sentences-with-term/' + woid,
+      {
+        lg_id: lang, 
+        word_lc: word
+      },
+      (data) => change_example_sentences_zone(data, ctl)
+    );
+  } else {
+    let query = { 
+      lg_id: lang, 
+      word_lc: word
+    };
+    if (parseInt(woid, 10) == -1) {
+      query["advanced_search"] = true;
     }
-  );
+    $.getJSON(
+      'api.php/v1/sentences-with-term',
+      query,
+      (data) => change_example_sentences_zone(data, ctl)
+    );
+  }
 }
 
 /**

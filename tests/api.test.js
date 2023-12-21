@@ -34,6 +34,31 @@ describe('Calls on GET', function() {
       .expect(200, done)
   });
 
+
+  it('GET /sentences-with-term, normal search', function(done) {
+    supertest(host)
+      .get(api_path + '/sentences-with-term/1')
+      .query({lg_id: 1, word_lc: 'test'})
+      .expect('Content-Type', 'application/json')
+      .expect(200, done)
+  });
+
+  it('GET /sentences-with-term, advanced search', function(done) {
+    supertest(host)
+      .get(api_path + '/sentences-with-term/1')
+      .query({lg_id: 1, word_lc: 'test', advanced_search: -1})
+      .expect('Content-Type', 'application/json')
+      .expect(200, done)
+  });
+
+  it('GET /sentences-with-term/{term-id}', function(done) {
+    supertest(host)
+      .get(api_path + '/sentences-with-term/1')
+      .query({lg_id: 1, word_lc: 'test'})
+      .expect('Content-Type', 'application/json')
+      .expect(200, done)
+  });
+
   it('GET /settings/theme-path', function(done) {
     supertest(host)
       .get(api_path + '/settings/theme-path')

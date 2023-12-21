@@ -31,12 +31,22 @@ Retrieves the media paths to the audio and video files in the media folder.
 - **Endpoint**: `/media-paths`
 - **Method**: GET
 
-### Get Sentences Containing Term
+### Get Sentences Containing New Term
 
 Retrieves sentences that contain the specified term.
 
 - **Endpoint**: `/sentences-with-term`
 - **Method**: GET
+- **Arguments**: `lg_id`, `word_lc`, and `advanced_search` (optional)
+
+### Get Sentences Containing Registred Term
+
+Retrieves sentences that contain the specified term.
+
+- **Endpoint**: `/sentences-with-term/{term-id}`
+- **Method**: GET
+- **Arguments**: `lg_id`, `word_lc`
+
 
 ### Get Terms Similar to Another
 

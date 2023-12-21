@@ -33,8 +33,9 @@ function endpoint_exits($method, $requestUri) {
         'review/tomorrow-count' => ['GET'],
 
         'sentences-with-term' => ['GET'],
-        'similar-terms' => ['GET'],
+        //'sentences-with-term/(?<term-id>\d+)' => ['GET'],
 
+        'similar-terms' => ['GET'],
 
         'settings' => ['POST'],
         'settings/theme-path' => ['GET'],
@@ -248,17 +249,34 @@ function media_paths($get_req)
 }
 
 /**
+ * Sentences containing an input word.
+ * 
+ * @param array $get_req Get request with fields "lg_id", "word_lc" and "word_id".
+ */
+function sentences_with_registred_term($get_req)
+{
+    return sentences_with_word(
+        (int) $get_req["lg_id"],
+        $get_req["word_lc"],
+        (int) $get_req["word_id"]
+    );
+}
+
+/**
  * Return the example sentences containing an input word.
  * 
- * @param array $get_req Get request with fields "lid", "word_lc" and "wid".
+ * @param array $get_req Get request with fields "lg_id" and "advanced_search" (optional).
  */
-function example_sentences($get_req)
+function sentences_with_new_term($get_req)
 {
-    chdir("..");
+    $advanced = null;
+    if (array_key_exists("advanced_search", $get_req)) {
+        $advanced = -1;
+    }
     return sentences_with_word(
-        (int) $get_req["lid"],
+        (int) $get_req["lg_id"],
         $get_req["word_lc"],
-        (int) $get_req["wid"]
+        $advanced
     );
 }
 
@@ -530,7 +548,12 @@ function main_enpoint($method, $requestUri) {
                 send_response(200, $answer);
                 break;
             case 'sentences-with-term':
-                $answer = example_sentences($req_param);
+                if (ctype_digit($endpoint_fragments[1])) {
+                    $get_req['word_id'] = (int) $endpoint_fragments[1];
+                    $answer = sentences_with_registred_term($req_param);
+                } else {
+                    $answer = sentences_with_new_term($req_param);
+                }
                 send_response(200, $answer);
                 break;
             case 'similar-terms':
