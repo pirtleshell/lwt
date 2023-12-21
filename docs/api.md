@@ -31,6 +31,23 @@ Retrieves the media paths to the audio and video files in the media folder.
 - **Endpoint**: `/media-paths`
 - **Method**: GET
 
+
+### Get Next Word to Review
+
+Retrieves the next word to be reviewed.
+
+- **Endpoint**: `/review/next-word`
+- **Method**: GET
+- **Arguments**: `test_sql`, `word_mode`, `lg_id`, `word_regex`, `type`
+
+### Get Tomorrow's Reviews Number
+
+Retrieves the number of reviews scheduled for tomorrow.
+
+- **Endpoint**: `/review/tomorrow-count`
+- **Method**: GET
+- **Arguments**: `test_sql`
+
 ### Get Sentences Containing New Term
 
 Retrieves sentences that contain the specified term.
@@ -74,20 +91,6 @@ Retrieves the terms that were imported.
 Retrieves the translations for a specific term.
 
 - **Endpoint**: `/terms/{term-id}/translations`
-- **Method**: GET
-
-### Get Next Word to Review
-
-Retrieves the next word to be reviewed.
-
-- **Endpoint**: `/review/next-word`
-- **Method**: GET
-
-### Get Tomorrow's Reviews Number
-
-Retrieves the number of reviews scheduled for tomorrow.
-
-- **Endpoint**: `/review/tomorrow-count`
 - **Method**: GET
 
 ### Get Phonetic Reading

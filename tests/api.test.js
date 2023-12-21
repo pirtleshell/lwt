@@ -108,6 +108,10 @@ describe('Calls on GET', function() {
   it('GET /review/next-word', function(done) {
     supertest(host)
       .get(api_path + '/review/next-word')
+      .query({
+        'test_sql': '', 'word_mode': true, 'lg_id': 1,
+        'word_regex': 'test', 'type': 0
+      })
       //.expect('Content-Type', 'application/json')
       .expect(200, done)
   });
@@ -115,6 +119,9 @@ describe('Calls on GET', function() {
   it('GET /review/tomorrow-count', function(done) {
     supertest(host)
       .get(api_path + '/review/tomorrow-count')
+      .query({
+        'test_sql': ''
+      })
       //.expect('Content-Type', 'application/json')
       .expect(200, done)
   });

@@ -122,14 +122,14 @@ function rest_api_version($get_req)
  * Retun the next word to test as JSON
  * 
  * @param string $testsql   SQL projection query
- * @param bool   $nosent    Test is in word mode
+ * @param bool   $word_mode    Test is in word mode
  * @param int    $lgid      Language ID
  * @param string $wordregex Word selection regular expression
  * @param int    $testtype  Test type
  * 
  * @return array Next word formatted as an array.
  */
-function get_word_test_ajax($testsql, $nosent, $lgid, $wordregex, $testtype)
+function get_word_test_ajax($testsql, $word_mode, $lgid, $wordregex, $testtype)
 {
     $word_record = do_test_get_word($testsql);
     if (empty($word_record)) {
@@ -141,7 +141,7 @@ function get_word_test_ajax($testsql, $nosent, $lgid, $wordregex, $testtype)
         return $output;
     }
     $sent = repl_tab_nl($word_record['WoSentence']);
-    if ($nosent) {
+    if ($word_mode) {
         $sent = "{" . $word_record['WoText'] . "}";
     } else {
         // $nosent == FALSE, mode 1-3
@@ -153,12 +153,13 @@ function get_word_test_ajax($testsql, $nosent, $lgid, $wordregex, $testtype)
         }
     }
     list($r, $save) = do_test_get_term_test(
-        $word_record, $sent, $testtype, $nosent, $wordregex
+        $word_record, $sent, $testtype, $word_mode, $wordregex
     );
+    $solution = get_test_solution($testtype, $word_record, $word_mode, $save);
     
     return array(
         "word_id" => $word_record['WoID'],
-        "solution" => get_test_solution($testtype, $word_record, $nosent, $save),
+        "solution" => $solution,
         "word_text" => $save,
         "group" => $r 
     );
@@ -169,17 +170,17 @@ function get_word_test_ajax($testsql, $nosent, $lgid, $wordregex, $testtype)
  * Return the next word to test.
  * 
  * @param array $get_req Array with the fields {test_sql: string, 
- *                       test_nosent: bool, test_lgid: int, 
- *                       test_wordregex: string, test_type: int}
+ *                       word_mode: bool, lg_id: int, 
+ *                       word_regex: string, type: int}
  * 
  * @return string Next word formatted as JSON.
  */
 function word_test_ajax($get_req)
 {
     return get_word_test_ajax(
-        $get_req['test_sql'], $get_req['test_nosent'], 
-        $get_req['test_lgid'], 
-        $get_req['test_wordregex'], $get_req['test_type']
+        $get_req['test_sql'], $get_req['word_mode'], 
+        $get_req['lg_id'], 
+        $get_req['word_regex'], $get_req['type']
     );
 }
 
@@ -193,7 +194,7 @@ function word_test_ajax($get_req)
 function tomorrow_test_count($get_req) 
 {
     $output = array(
-        "test_count" => do_test_get_tomorrow_tests_count($get_req['test_sql'])
+        "count" => do_test_get_tomorrow_tests_count($get_req['test_sql'])
     );
     return $output;
 }
@@ -545,6 +546,24 @@ function main_enpoint($method, $requestUri) {
                 $answer = media_paths($req_param);
                 send_response(200, $answer);
                 break;
+            case 'review':
+                switch ($endpoint_fragments[1]) {
+                    case 'next-word':
+                        $answer = word_test_ajax($req_param);
+                        send_response(200, $answer);
+                        break;
+                    case 'tomorrow-count':
+                        $answer = tomorrow_test_count($req_param);
+                        send_response(200, $answer);
+                        break;
+                    default:
+                        send_response(
+                            404, 
+                            ['error' => 'Endpoint Not Found' . 
+                            $endpoint_fragments[1]]
+                        );
+                }
+                break;
             case 'sentences-with-term':
                 if (ctype_digit($endpoint_fragments[1])) {
                     $get_req['word_id'] = (int) $endpoint_fragments[1];
@@ -589,24 +608,6 @@ function main_enpoint($method, $requestUri) {
                         ['error' => 'Endpoint Not Found' . 
                         $endpoint_fragments[1]]
                     );
-                }
-                break;
-            case 'review':
-                switch ($endpoint_fragments[1]) {
-                    case 'next-word':
-                        $answer = word_test_ajax($req_param);
-                        send_response(200, $answer);
-                        break;
-                    case 'tomorrow-count':
-                        $answer = tomorrow_test_count($req_param);
-                        send_response(200, $answer);
-                        break;
-                    default:
-                        send_response(
-                            404, 
-                            ['error' => 'Endpoint Not Found' . 
-                            $endpoint_fragments[2]]
-                        );
                 }
                 break;
             case 'texts':

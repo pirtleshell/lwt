@@ -114,7 +114,7 @@ character as a word (e. g.: Chinese). Big thanks to [@hangug-eo](https://github.
   * ``inc/ajax_save_text_position.php`` should be accessed through ``/texts/{text-id}/reading-position``, arguments changed.
   * ``inc/ajax_word_counts.php`` should be accessed through ``/texts-statistics/{texts-ids}``, on GET. Argument ``id`` is now ``{texts-ids}``.
   * ``inc/ajax_update_media_select.php`` should be accessed through ``/media-paths``.
-  * ``inc/ajax_show_sentences.php`` should be accessed through ``/sentences-with-term``, on GET. Argument ``lang`` is now ``lid``, ``word`` is ``word_lc`` and ``woid`` is ``wid``, ``ctl`` is no longer required.
+  * ``inc/ajax_show_sentences.php`` should be accessed through ``/sentences-with-term``, on GET. Argument ``lang`` is now ``lg_id``, ``word`` is ``word_lc`` and ``woid`` is ``word_id``, ``ctl`` is no longer required.
   * ``inc/ajax_show_imported_terms.php`` should be accessed through ``/terms/imported``, same arguments.
   * ``inc/ajax_save_impr_text.php`` should be accessed through ``/texts/{text-id}/annotation``, ``id`` is now ``{text-id}``.
   * ``inc/ajax_edit_impr_text.php``:
