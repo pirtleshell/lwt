@@ -297,15 +297,15 @@ function imported_terms($get_req)
 /**
  * Get terms similar to a given term.
  * 
- * @param array $get_req Input get request.
+ * @param array $get_req Get request with fields "lg_id" and "term".
  * 
  * @return string Similar terms in HTML format.
  */
 function similar_terms($get_req) 
 {
     return array("similar_terms" => print_similar_terms(
-        (int)$get_req["simterms_lgid"], 
-        (string) $get_req["simterms_word"]
+        (int)$get_req["lg_id"], 
+        (string) $get_req["term"]
     ));
 }
 

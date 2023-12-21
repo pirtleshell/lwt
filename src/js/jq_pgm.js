@@ -1403,10 +1403,8 @@ function do_ajax_req_sim_terms(lg_id, word_text) {
   return $.getJSON(
     'api.php/v1/similar-terms',
     {
-      "action": "query",
-      "action_type": "similar_terms",
-      "simterms_lgid": lg_id,
-      "simterms_word": word_text
+      "lg_id": lg_id,
+      "term": word_text
     }
   );
 }

@@ -71,6 +71,7 @@ Retrieves terms similar to the specified term.
 
 - **Endpoint**: `/similar-terms`
 - **Method**: GET
+- **Arguments**: `lg_id` and `term`
 
 ### Get Theme Path
 

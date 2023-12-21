@@ -103,7 +103,7 @@ character as a word (e. g.: Chinese). Big thanks to [@hangug-eo](https://github.
 ### Deprecated
 
 * Legacy AJAX API. The following AJAX interactions are now deprecated in favor to the new REST API (at ``api.php``):
-  * ``inc/ajax_show_similar_terms.php``, use ``/similar-terms`` on GET, same arguments.
+  * ``inc/ajax_show_similar_terms.php``, use ``/similar-terms`` on GET, `simterms_lgid` becomes `lg_id` and `simterms_word` `term`.
   * ``inc/ajax_add_term_transl.php``, use ``/translations``, with
   ``/new`` or ``/{term-id}``. The arguments were also changed.
   * ``inc/ajax_check_regexp.php`` should no longer be used and will be removed.
