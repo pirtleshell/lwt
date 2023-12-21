@@ -346,20 +346,45 @@ function unknown_get_action_type($get_req, $action_exists=false)
 
 // --------------------------------- POST REQUESTS ---------------------
 
+/**
+ * Save a setting to the database.
+ * 
+ * @param array $post_req Array with the fields "key" (setting name) and "value"
+ * 
+ * @return string[] Setting save status
+ */
+function save_setting($post_req): array
+{
+    $status = saveSetting($post_req['key'], $post_req['value']);
+    $raw_answer = array();
+    if (str_starts_with($status, "OK: ")) {
+        $raw_answer["message"] = substr($status, 4);
+    } else {
+        $raw_answer["error"] = $status;
+    }
+    return $raw_answer;
+}
 
 /**
- * Set text reading position.
+ * Save the annotation for a term.
  * 
- * @param array $post_req Array with the fields "text_id" (int) and "position"
+ * @param array $post_req Post request with keys "text_id", "elem" and "data".
  * 
- * @return string
+ * @return string JSON-encoded result
  */
-function set_text_position($post_req) 
+function set_annotation($post_req)
 {
-    save_text_position(
-        (int)$post_req["text_id"], (int)$post_req["position"]
+    $result = save_impr_text(
+        (int)$post_req["text_id"], $post_req['elem'], 
+        json_decode($post_req['data'])
     );
-    return array("text" => "Reading position set");
+    $raw_answer = array();
+    if (array_key_exists("error", $result)) {
+        $raw_answer["error"] = $result["error"];
+    } else {
+        $raw_answer["save_impr_text"] = $result["success"];
+    }
+    return $raw_answer;
 }
 
 /**
@@ -379,6 +404,58 @@ function set_audio_position($post_req)
     );
 }
 
+/**
+ * Set text reading position.
+ * 
+ * @param array $post_req Array with the fields "text_id" (int) and "position"
+ * 
+ * @return string
+ */
+function set_text_position($post_req) 
+{
+    save_text_position(
+        (int)$post_req["text_id"], (int)$post_req["position"]
+    );
+    return array("text" => "Reading position set");
+}
+
+
+/**
+ * Change the status of a term by one unit.
+ * 
+ * @param array $post_req Array with the fields "wid" (int) and "status_up" (1 or 0)
+ */
+function increment_term_status($post_req)
+{
+    $result = ajax_increment_term_status(
+        (int)$post_req['wid'], (bool)$post_req['status_up']
+    );
+    $raw_answer = array();
+    if ($result == '') {
+        $raw_answer["error"] = '';
+    } else {
+        $raw_answer["increment"] = $result;
+    }
+    return $raw_answer;
+}
+
+
+/**
+ * Set the status of a term.
+ * 
+ * @param array $post_req Array with the fields "wid" (int) and "status" (0-5|98|99)
+ */
+function set_term_status($post_req)
+{
+    $result = set_word_status((int)$post_req['wid'], (int)$post_req['status']);
+    $raw_answer = array();
+    if (is_numeric($result)) {
+        $raw_answer["set"] = (int)$result;
+    } else {
+        $raw_answer["error"] = $result;
+    }
+    return $raw_answer;
+}
 
 /**
  * Create the translation for a new term.
@@ -423,94 +500,6 @@ function update_translation($post_req)
     return $raw_answer;
 }
 
-/**
- * Check if a regexp is correctly recognized.
- * 
- * @param array $post_req Array with the field "regexp"
- */
-function check_regexp($post_req)
-{
-    $result = do_ajax_check_regexp(trim($post_req['regexp'])); 
-    return array("check_regexp" => $result);
-}
-
-/**
- * Change the status of a term by one unit.
- * 
- * @param array $post_req Array with the fields "wid" (int) and "status_up" (1 or 0)
- */
-function increment_term_status($post_req)
-{
-    $result = ajax_increment_term_status(
-        (int)$post_req['wid'], (bool)$post_req['status_up']
-    );
-    $raw_answer = array();
-    if ($result == '') {
-        $raw_answer["error"] = '';
-    } else {
-        $raw_answer["increment"] = $result;
-    }
-    return $raw_answer;
-}
-
-/**
- * Set the status of a term.
- * 
- * @param array $post_req Array with the fields "wid" (int) and "status" (0-5|98|99)
- */
-function set_term_status($post_req)
-{
-    $result = set_word_status((int)$post_req['wid'], (int)$post_req['status']);
-    $raw_answer = array();
-    if (is_numeric($result)) {
-        $raw_answer["set"] = (int)$result;
-    } else {
-        $raw_answer["error"] = $result;
-    }
-    return $raw_answer;
-}
-
-/**
- * Save the annotation for a term.
- * 
- * @param array $post_req Post request with keys "text_id", "elem" and "data".
- * 
- * @return string JSON-encoded result
- */
-function set_annotation($post_req)
-{
-    $result = save_impr_text(
-        (int)$post_req["text_id"], $post_req['elem'], 
-        json_decode($post_req['data'])
-    );
-    $raw_answer = array();
-    if (array_key_exists("error", $result)) {
-        $raw_answer["error"] = $result["error"];
-    } else {
-        $raw_answer["save_impr_text"] = $result["success"];
-    }
-    return $raw_answer;
-}
-
-
-/**
- * Save a setting to the database.
- * 
- * @param array $post_req Array with the fields "key" (setting name) and "value"
- * 
- * @return string[] Setting save status
- */
-function save_setting($post_req): array
-{
-    $status = saveSetting($post_req['key'], $post_req['value']);
-    $raw_answer = array();
-    if (str_starts_with($status, "OK: ")) {
-        $raw_answer["message"] = substr($status, 4);
-    } else {
-        $raw_answer["error"] = $status;
-    }
-    return $raw_answer;
-}
 
 /**
  * Notify of an error on POST method.
@@ -706,10 +695,6 @@ function main_enpoint($method, $requestUri) {
                     );
                 }
                 break;
-            case 'translations/new':
-                $answer = add_translation($_POST);
-                send_response(200, $answer);
-                break;
             case 'translations':
                 if (!ctype_digit($endpoint_fragments[1])) {
                     send_response(
@@ -719,6 +704,10 @@ function main_enpoint($method, $requestUri) {
                     );
                 }
                 $answer = update_translation($_POST);
+                send_response(200, $answer);
+                break;
+            case 'translations/new':
+                $answer = add_translation($_POST);
                 send_response(200, $answer);
                 break;
             default:
