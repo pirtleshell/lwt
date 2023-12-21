@@ -280,21 +280,6 @@ function sentences_with_new_term($get_req)
 }
 
 /**
- * Return the list of imported terms.
- * 
- * @param array $get_req Get request with fields "last_update", "page" and "count".
- * 
- * @return array 
- */
-function imported_terms($get_req)
-{
-    return imported_terms_list(
-        $get_req["last_update"], $get_req["page"], $get_req["count"]
-    );
-}
-
-
-/**
  * Get terms similar to a given term.
  * 
  * @param array $get_req Get request with fields "lg_id" and "term".
@@ -309,11 +294,26 @@ function similar_terms($get_req)
     ));
 }
 
+/**
+ * Return the list of imported terms.
+ * 
+ * @param array $get_req Get request with fields "last_update", "page" and "count".
+ * 
+ * @return array 
+ */
+function imported_terms($get_req)
+{
+    return imported_terms_list(
+        $get_req["last_update"], $get_req["page"], $get_req["count"]
+    );
+}
+
+
 
 /**
  * Translations for a term to choose an annotation.
  * 
- * @param array $get_req Get request with fields "text_id" and "page" and "count".
+ * @param array $get_req Get request with fields "text_id".
  */
 function term_translations($get_req)
 {

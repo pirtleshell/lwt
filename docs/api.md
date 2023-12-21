@@ -30,7 +30,7 @@ Retrieves the media paths to the audio and video files in the media folder.
 
 - **Endpoint**: `/media-paths`
 - **Method**: GET
-
+- **Arguments**: None
 
 ### Get Next Word to Review
 
@@ -62,7 +62,7 @@ Retrieves sentences that contain the specified term.
 
 - **Endpoint**: `/sentences-with-term/{term-id}`
 - **Method**: GET
-- **Arguments**: `lg_id`, `word_lc`
+- **Arguments**: `lg_id` and `word_lc`
 
 
 ### Get Terms Similar to Another
@@ -79,6 +79,7 @@ Retrieves the path for a file using the user theme.
 
 - **Endpoint**: `/settings/theme-path`
 - **Method**: GET
+- **Arguments**: `path`
 
 ### Get Imported Terms
 
@@ -86,6 +87,7 @@ Retrieves the terms that were imported.
 
 - **Endpoint**: `/terms/imported`
 - **Method**: GET
+- **Arguments**: `last_update`, `page` and `count`
 
 ### Get Term Translations
 
@@ -93,6 +95,7 @@ Retrieves the translations for a specific term.
 
 - **Endpoint**: `/terms/{term-id}/translations`
 - **Method**: GET
+- **Arguments**: `text_id` and `term_lc`
 
 ### Get Phonetic Reading
 
@@ -100,6 +103,7 @@ Retrieves the phonetic reading for a specific text.
 
 - **Endpoint**: `/texts/{text-id}/phonetic-reading`
 - **Method**: GET
+- **Arguments**: `text` and `lang`.
 
 ### Get Texts Statistics
 
@@ -107,6 +111,7 @@ Retrieves statistics for multiple texts.
 
 - **Endpoint**: `/texts-statistics/{texts-ids}`
 - **Method**: GET
+- **Arguments**: `texts_id`
 
 ### Get API Version
 
@@ -114,6 +119,7 @@ Retrieves the version of the LWT API.
 
 - **Endpoint**: `/version`
 - **Method**: GET
+- **Arguments**: None
 
 ## POST API Endpoints
 
