@@ -129,6 +129,31 @@ Saves user settings.
 
 - **Endpoint**: `/settings`
 - **Method**: POST
+- **Arguments**: `key` and `value`
+
+### Set Text Annotation
+
+Sets the annotation for a specific text.
+
+- **Endpoint**: `/texts/{text-id}/annotation`
+- **Method**: POST
+- **Arguments**: `elem` and `data`
+
+### Update Audio Position
+
+Updates the audio position for a specific text.
+
+- **Endpoint**: `/texts/{text-id}/audio-position`
+- **Method**: POST
+- **Arguments**: `position`
+
+### Update Reading Position
+
+Updates the reading position for a specific text.
+
+- **Endpoint**: `/texts/{text-id}/reading-position`
+- **Method**: POST
+- **Arguments**: `position`
 
 ### Decrement Term Status
 
@@ -151,26 +176,6 @@ Sets the status of a term to a new value.
 - **Endpoint**: `/terms/{term-id}/status/{new-status}`
 - **Method**: POST
 
-### Set Text Annotation
-
-Sets the annotation for a specific text.
-
-- **Endpoint**: `/texts/{text-id}/annotation`
-- **Method**: POST
-
-### Update Audio Position
-
-Updates the audio position for a specific text.
-
-- **Endpoint**: `/texts/{text-id}/audio-position`
-- **Method**: POST
-
-### Update Reading Position
-
-Updates the reading position for a specific text.
-
-- **Endpoint**: `/texts/{text-id}/reading-position`
-- **Method**: POST
 
 ### Add Translation
 

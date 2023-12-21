@@ -110,13 +110,13 @@ character as a word (e. g.: Chinese). Big thanks to [@hangug-eo](https://github.
   * ``inc/ajax_chg_term_status.php`` should be accessed through ``/terms/{term-id}/status``. Argument ``data`` is now part of the URL, on post only.
   * ``inc/ajax_get_phonetic.php`` should be accessed through ``/texts/{text-id}/phonetic-reading``, same arguments.
   * ``inc/ajax_get_theme.php`` should be accessed through ``/settings/theme-path``. Argument ``filepath`` is now ``path``.
-  * ``inc/ajax_save_setting.php`` should be accessed through ``/settings``, same arguments.
-  * ``inc/ajax_save_text_position.php`` should be accessed through ``/texts/{text-id}/reading-position``, arguments changed.
+  * ``inc/ajax_save_setting.php`` should be accessed through ``/settings``, `k` becomes `key` and `v` `value`.
+  * ``inc/ajax_save_text_position.php`` should be accessed through ``/texts/{text-id}/reading-position``, `tposition` is now `position`.
   * ``inc/ajax_word_counts.php`` should be accessed through ``/texts-statistics/{texts-ids}``, on GET. Argument ``id`` is now ``{texts-ids}``.
   * ``inc/ajax_update_media_select.php`` should be accessed through ``/media-paths``.
   * ``inc/ajax_show_sentences.php`` should be accessed through ``/sentences-with-term``, on GET. Argument ``lang`` is now ``lg_id``, ``word`` is ``word_lc`` and ``woid`` is ``word_id``, ``ctl`` is no longer required.
   * ``inc/ajax_show_imported_terms.php`` should be accessed through ``/terms/imported``, same arguments.
-  * ``inc/ajax_save_impr_text.php`` should be accessed through ``/texts/{text-id}/annotation``, ``id`` is now ``{text-id}``.
+  * ``inc/ajax_save_impr_text.php`` should be accessed through ``/texts/{text-id}/annotation``, ``id`` is now optional.
   * ``inc/ajax_edit_impr_text.php``:
     * On display, using ``word=""`` is now deprecated as the page loads in pure PHP.
     * On term edition, should be accessed through ``/terms/{term-id}/translations``, ``id`` is now ``text_id`` and ``word`` becomes ``text_lc``.

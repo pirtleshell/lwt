@@ -1207,10 +1207,8 @@ function do_ajax_save_setting (k, v) {
   $.post(
     'api.php/v1/settings',
     {
-      action: '',
-      action_type: 'save_setting',
-      k: k,
-      v: v
+      key: k,
+      value: v
     }
   );
 }

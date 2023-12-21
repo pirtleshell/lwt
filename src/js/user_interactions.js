@@ -159,10 +159,7 @@ function saveCurrentPosition() {
             type: "POST",
             url:'api.php/v1/texts/' + TID + '/reading-position',
             data: {
-                action: "reading_position",
-                action_type: "text",
-                tid: TID,
-                tposition: pos 
+                position: pos 
             }, 
             async: false // Asynchronous should be safe (2.9.0)
         }

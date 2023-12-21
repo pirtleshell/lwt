@@ -166,7 +166,7 @@ if(popup){owin(createTheDictUrl(target_url,txt))}else{showRightFrames(undefined,
 if(e.which==69||e.which==71){let url='';if(curr.hasClass('mword')){url='edit_mword.php?wid='+wid+'&len='+curr.attr('data_code')+'&tid='+TID+'&ord='+ord+dict}else if(stat=='0'){url='edit_word.php?wid=&tid='+TID+'&ord='+ord+dict}else{url='edit_word.php?wid='+wid+'&tid='+TID+'&ord='+ord+dict}
 showRightFrames(url);return!1}
 return!0}
-function do_ajax_save_setting(k,v){$.post('api.php/v1/settings',{action:'',action_type:'save_setting',k:k,v:v})}
+function do_ajax_save_setting(k,v){$.post('api.php/v1/settings',{key:k,value:v})}
 function quick_select_to_input(select_elem,input_elem){let val=select_elem.options[select_elem.selectedIndex].value;if(val!='')
 input_elem.value=val;select_elem.value=''}
 function select_media_path(paths,folders,base_path){let options=[],temp_option=document.createElement('option');temp_option.value="";temp_option.text="[Choose...]";options.push(temp_option);for(let i=0;i<paths.length;i++){temp_option=document.createElement('option')
@@ -467,7 +467,7 @@ $(i,context).before('<span id="ID-'+key+'-'+length+'"'+attrs+'>'+text[key]+'</sp
 function prepareTextInteractions(){$('.word').each(word_each_do_text_text);$('.mword').each(mword_each_do_text_text);$('.word').on('click',word_click_event_do_text_text);$('#thetext').on('selectstart','span',!1).on('mousedown','.wsty',{annotation:ANNOTATIONS_MODE},mword_drag_n_drop_select);$('#thetext').on('click','.mword',mword_click_event_do_text_text);$('.word').on('dblclick',word_dblclick_event_do_text_text);$('#thetext').on('dblclick','.mword',word_dblclick_event_do_text_text);$(document).on('keydown',keydown_event_do_text_text);$('#thetext').hoverIntent({over:word_hover_over,out:word_hover_out,interval:150,selector:".wsty,.mwsty"})}
 function goToLastPosition(){const lookPos=POS;let pos=0;if(lookPos>0){let posObj=$(".wsty[data_pos="+lookPos+"]").not(".hide").eq(0);if(posObj.attr("data_pos")===undefined){pos=$(".wsty").not(".hide").filter(function(){return $(this).attr("data_pos")<=lookPos}).eq(-1)}}
 $(document).scrollTo(pos);focus();setTimeout(overlib,10);setTimeout(cClick,100)}
-function saveCurrentPosition(){let pos=0;const top_pos=$(window).scrollTop()-$('.wsty').not('.hide').eq(0).height();$('.wsty').not('.hide').each(function(){if($(this).offset().top>=top_pos){pos=$(this).attr('data_pos');return!1}});$.ajax({type:"POST",url:'api.php/v1/texts/'+TID+'/reading-position',data:{action:"reading_position",action_type:"text",tid:TID,tposition:pos},async:!1})}
+function saveCurrentPosition(){let pos=0;const top_pos=$(window).scrollTop()-$('.wsty').not('.hide').eq(0).height();$('.wsty').not('.hide').each(function(){if($(this).offset().top>=top_pos){pos=$(this).attr('data_pos');return!1}});$.ajax({type:"POST",url:'api.php/v1/texts/'+TID+'/reading-position',data:{position:pos},async:!1})}
 function getPhoneticText(text,lang){let phoneticText;$.ajax('api.php/v1/phonetic-reading',{async:!1,data:{action:"query",action_type:"phonetic_reading",text:text,lang:lang},dataType:"json",type:"GET",}).done(function(data){phoneticText=data.phonetic_reading});return phoneticText}
 async function getPhoneticTextAsync(text,lang){return $.getJSON('api.php/v1/phonetic-reading',{action:"query",action_type:"phonetic_reading",text:text,lang:lang})}
 function readRawTextAloud(text,lang,rate,pitch,voice){let msg=new SpeechSynthesisUtterance();const trimmed=lang.substring(0,2);const prefix='tts['+trimmed;msg.text=text;if(lang){msg.lang=lang}

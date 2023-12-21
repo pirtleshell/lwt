@@ -350,30 +350,32 @@ function unknown_get_action_type($get_req, $action_exists=false)
 /**
  * Set text reading position.
  * 
- * @param array $post_req Array with the fields "tid" (int) and "tposition"
+ * @param array $post_req Array with the fields "text_id" (int) and "position"
  * 
  * @return string
  */
 function set_text_position($post_req) 
 {
-    return array("text" => save_text_position(
-        (int)$post_req["tid"], (int)$post_req["tposition"]
-    ));
+    save_text_position(
+        (int)$post_req["text_id"], (int)$post_req["position"]
+    );
+    return array("text" => "Reading position set");
 }
 
 /**
  * Set audio position.
  * 
- * @param array $post_req Array with the fields "tid" (int) and "audio_position"
+ * @param array $post_req Array with the fields "text_id" (int) and "position"
  * 
  * @return string
  */
 function set_audio_position($post_req) 
 {
+    save_audio_position(
+        (int)$post_req["text_id"], (int)$post_req["position"]
+    );
     return array(
-        "audio" => save_audio_position(
-            (int)$post_req["tid"], (int)$post_req["audio_position"]
-        )
+        "audio" => "Audio position set"
     );
 }
 
@@ -471,14 +473,14 @@ function set_term_status($post_req)
 /**
  * Save the annotation for a term.
  * 
- * @param array $post_req Post request with keys "tid", "elem" and "data".
+ * @param array $post_req Post request with keys "text_id", "elem" and "data".
  * 
  * @return string JSON-encoded result
  */
 function set_annotation($post_req)
 {
     $result = save_impr_text(
-        (int)$post_req["tid"], $post_req['elem'], 
+        (int)$post_req["text_id"], $post_req['elem'], 
         json_decode($post_req['data'])
     );
     $raw_answer = array();
@@ -494,16 +496,16 @@ function set_annotation($post_req)
 /**
  * Save a setting to the database.
  * 
- * @param array $post_req Array with the fields "k" (key, setting name) and "v" (value)
+ * @param array $post_req Array with the fields "key" (setting name) and "value"
  * 
  * @return string[] Setting save status
  */
 function save_setting($post_req): array
 {
-    $status = saveSetting($post_req['k'], $post_req['v']);
+    $status = saveSetting($post_req['key'], $post_req['value']);
     $raw_answer = array();
     if (str_starts_with($status, "OK: ")) {
-        $raw_answer["save_setting"] = substr($status, 4);
+        $raw_answer["message"] = substr($status, 4);
     } else {
         $raw_answer["error"] = $status;
     }
@@ -620,7 +622,7 @@ function main_enpoint($method, $requestUri) {
                         ['error' => 'Text ID (Integer) Expected, Got ' . 
                         $endpoint_fragments[1]]
                     );
-                }else {
+                } else {
                     send_response(404, ['error' => 'Endpoint Not Found']);
                 }
                 break;
@@ -638,10 +640,6 @@ function main_enpoint($method, $requestUri) {
     } elseif ($method === 'POST') {
         // Handle POST request for each endpoint
         switch ($req_endpoint) {
-            case 'regexp/test':
-                $answer = check_regexp($_POST);
-                send_response(200, $answer);
-                break;
             case 'settings':
                 $answer = save_setting($_POST);
                 send_response(200, $answer);
@@ -654,13 +652,14 @@ function main_enpoint($method, $requestUri) {
                         $endpoint_fragments[1]]
                     );
                 }
+                $_POST["text_id"] = (int) $endpoint_fragments[1];
                 switch ($endpoint_fragments[2]) {
-                    case 'audio-position':
-                        $answer = set_audio_position($_POST);
-                        send_response(200, $answer);
-                        break;
                     case 'annotation':
                         $answer = set_annotation($_POST);
+                        send_response(200, $answer);
+                        break;
+                    case 'audio-position':
+                        $answer = set_audio_position($_POST);
                         send_response(200, $answer);
                         break;
                     case 'reading-position':

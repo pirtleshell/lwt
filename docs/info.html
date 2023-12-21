@@ -2036,9 +2036,9 @@ character as a word (e. g.: Chinese). Big thanks to <a href="https://github.com/
 <li>
 <code>inc/ajax_get_theme.php</code> should be accessed through <code>/settings/theme-path</code>. Argument <code>filepath</code> is now <code>path</code>.</li>
 <li>
-<code>inc/ajax_save_setting.php</code> should be accessed through <code>/settings</code>, same arguments.</li>
+<code>inc/ajax_save_setting.php</code> should be accessed through <code>/settings</code>, <code>k</code> becomes <code>key</code> and <code>v</code> <code>value</code>.</li>
 <li>
-<code>inc/ajax_save_text_position.php</code> should be accessed through <code>/texts/{text-id}/reading-position</code>, arguments changed.</li>
+<code>inc/ajax_save_text_position.php</code> should be accessed through <code>/texts/{text-id}/reading-position</code>, <code>tposition</code> is now <code>position</code>.</li>
 <li>
 <code>inc/ajax_word_counts.php</code> should be accessed through <code>/texts-statistics/{texts-ids}</code>, on GET. Argument <code>id</code> is now <code>{texts-ids}</code>.</li>
 <li>
@@ -2048,7 +2048,7 @@ character as a word (e. g.: Chinese). Big thanks to <a href="https://github.com/
 <li>
 <code>inc/ajax_show_imported_terms.php</code> should be accessed through <code>/terms/imported</code>, same arguments.</li>
 <li>
-<code>inc/ajax_save_impr_text.php</code> should be accessed through <code>/texts/{text-id}/annotation</code>, <code>id</code> is now <code>{text-id}</code>.</li>
+<code>inc/ajax_save_impr_text.php</code> should be accessed through <code>/texts/{text-id}/annotation</code>, <code>id</code> is now optional.</li>
 <li>
 <code>inc/ajax_edit_impr_text.php</code>:
 <ul>
