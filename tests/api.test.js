@@ -1,5 +1,6 @@
-const { expect } = require('chai');
-const supertest = require('supertest');
+import { expect } from 'chai';
+import supertest from 'supertest';
+
 const host = 'http://localhost'
 const api_path = '/lwt/api.php/v1';
 
