@@ -29,6 +29,9 @@ function endpoint_exits($method, $requestUri) {
     $endpoints = [ 
         'media-paths' => ['GET'],
 
+        'review/next-word' => ['GET'],
+        'review/tomorrow-count' => ['GET'],
+
         'sentences-with-term' => ['GET'],
         'similar-terms' => ['GET'],
 
@@ -44,10 +47,6 @@ function endpoint_exits($method, $requestUri) {
         //'terms/(?<term-id>\d+)/status/down' => ['POST'],
         //'terms/(?<term-id>\d+)/status/up' => ['POST'],
         //'terms/(?<term-id>\d+)/status/(?<new-status>\d+)' => ['POST'],
-        
-        'tests' => ['GET'],
-        //'tests/next-word' => ['GET'],
-        //'tests/tomorrow-count' => ['GET'],
 
         'texts' => ['GET', 'POST'],
         
@@ -184,7 +183,7 @@ function word_test_ajax($get_req)
 }
 
 /**
- * Return the number of tests for tomorrow by using the suplied query.
+ * Return the number of reviews for tomorrow by using the suplied query.
  * 
  * @param array $get_req Array with the field "test_sql"
  * 
@@ -571,7 +570,7 @@ function main_enpoint($method, $requestUri) {
                     );
                 }
                 break;
-            case 'tests':
+            case 'review':
                 switch ($endpoint_fragments[1]) {
                     case 'next-word':
                         $answer = word_test_ajax($req_param);

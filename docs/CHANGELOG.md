@@ -31,9 +31,9 @@ as a REST API. It features the following interaction:
     * `/terms`
       * `/imported`: imported terms.
       * `/{term-id}/translations`: translations for a term.
-    * `/tests`
-      * `/next-word`: next word to test.
-      * `/tomorrow-count`: number of test for the next day.
+    * `/review`
+      * `/next-word`: next word to review.
+      * `/tomorrow-count`: number of reviewes for the next day.
     * `/texts/{text-id}/phonetic-reading`: phonetic reading for a term or sentence.
     * `/texts-statistices/{texts-ids}/statistics`: statistics on texts.
     * `/version`: REST API version.

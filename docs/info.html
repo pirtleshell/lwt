@@ -1025,20 +1025,20 @@ Actions: You can edit, update, delete a feed or follow the link to the newsfeed.
 <p><img src="../img/22.jpg" alt="Image"></p>
 <p>[Show All] = OFF (see below): Multi-word terms now hide single words and shorter or overlapping multi-word terms. This makes it easier to concentrate on multi-word terms while displaying them without superscripts, but creation and deletion of multi-word terms can be a bit slow in long texts.</p>
 <p><img src="../img/30.jpg" alt="Image"></p>
-<h3>Test terms</h3>
+<h3>Review terms</h3>
 <p>Tests are only possible if a term has a translation. Terms with status "Ignored" and "Well Known" are never tested, and terms with a positive or zero score are not tested today. In summary, the term score must fall below zero to trigger the test. See also <a href="info.html#termscores">Term scores</a>. Terms that are due today are marked with a red bullet in the term table. Terms that are due tomorrow are marked with a yellow bullet in the term table.</p>
 <p>During a test, a status display (at the bottom of the test frame) shows you the elapsed time "mm:ss", a small bar graph, and the total, not yet tested, wrong and correct terms in this test.</p>
-<p>In the following, L1 denotes you mother tongue (= translations), and L2 the language you want to learn (= the terms (words and expressions).</p>
-<h4>Test terms in a text (L2 -&gt; L1)</h4>
+<p>In the following, L1 denotes you mother tongue (= translations), and L2 the language you want to learn (= the terms, meaning words and expressions).</p>
+<h4>Review terms in a text (L2 -&gt; L1)</h4>
 <p>This is Test #1 or #4: L2 -&gt; L1 (recognition) - to train your ability to recognize a L2 term. You may test within sentence context (Button "..[L2].."), or just the term (Button "[L2]"). You can also use the Keyboard in the test frame, see <a href="info.html#keybind">Key Bindings</a>.</p>
 <p><img src="../img/07.jpg" alt="Image"></p>
-<h4>Test terms in a text (L1 -&gt; L2)</h4>
+<h4>Review terms in a text (L1 -&gt; L2)</h4>
 <p>This is Test #2 or #5: L1 -&gt; L2 (recall) - to train your ability to produce a term from L1. You may test within sentence context (Button "..[L1].."), or just the term (Button "[L1]"). You can also use the Keyboard in the test frame, see <a href="info.html#keybind">Key Bindings</a>.</p>
 <p><img src="../img/11.jpg" alt="Image"></p>
-<h4>Test terms in a text (••• -&gt; L2)</h4>
+<h4>Review terms in a text (••• -&gt; L2)</h4>
 <p>This is test #3: ••• -&gt; L2 (recall) - to train your ability to produce a term only from the sentence context (Button "..[••].."). If you hover over "[•••]", a tooltip displays the translation of the term. You can also use the Keyboard in the test frame, see <a href="info.html#keybind">Key Bindings</a>.</p>
 <p><img src="../img/12.jpg" alt="Image"></p>
-<h4>Test yourself in a table / word list format (Button "Table")</h4>
+<h4>Review yourself in a table / word list format (Button "Table")</h4>
 <p>This is test #6: The selected terms and expressions are presented as a table. You can make invisible either the columns "Term" or "Translation", and you can hide or show the columns "Sentence", "Romanization", "Status" and "Ed" (Edit). To reveal the invisible solution ("Term" or "Translation"), you just click into the empty table cell. You can review or test yourself with or without changing the status by clicking "+" or "-" in the "Status" column. A status in red signifies that the term is due for testing. You can also edit the term by clicking the yellow "Edit" icon. Columns 2 to 6 may also my sorted by clicking on the header row. The initial sort order is according to term score.</p>
 <p><img src="../img/32.jpg" alt="Image"></p>
 <h3>Print a text</h3>
@@ -1425,11 +1425,11 @@ Now execute:
 </tr>
 <tr>
 <td>%c</td>
-<td>The sentence, but the "{xxx}" parts are replaced by "[...]" (cloze test question) - as raw text.</td>
+<td>The sentence, but the "{xxx}" parts are replaced by "[...]" (close review question) - as raw text.</td>
 </tr>
 <tr>
 <td>%d</td>
-<td>The sentence, but the "{xxx}" parts are replaced by "[xxx]" (cloze test solution) - as raw text.</td>
+<td>The sentence, but the "{xxx}" parts are replaced by "[xxx]" (close review solution) - as raw text.</td>
 </tr>
 <tr>
 <td>%r</td>
@@ -1477,19 +1477,19 @@ Now execute:
 </tr>
 <tr>
 <td>$c</td>
-<td>The sentence, but the "{xxx}" parts are replaced by "[...]" (cloze test question) - as HTML text.</td>
+<td>The sentence, but the "{xxx}" parts are replaced by "[...]" (close review question) - as HTML text.</td>
 </tr>
 <tr>
 <td>$d</td>
-<td>The sentence, but the "{xxx}" parts are replaced by "[xxx]" (cloze test solution) - as HTML text.</td>
+<td>The sentence, but the "{xxx}" parts are replaced by "[xxx]" (close review solution) - as HTML text.</td>
 </tr>
 <tr>
 <td>$x</td>
-<td>The sentence in Anki2 cloze test notation: the "{xxx}" parts are replaced by "{{c1::xxx}}" - as HTML text.</td>
+<td>The sentence in Anki2 close review notation: the "{xxx}" parts are replaced by "{{c1::xxx}}" - as HTML text.</td>
 </tr>
 <tr>
 <td>$y</td>
-<td>The sentence in Anki2 cloze test notation, with translation: the "{xxx}" parts are replaced by "{{c1::xxx::translation}}" - as HTML text.</td>
+<td>The sentence in Anki2 close review notation, with translation: the "{xxx}" parts are replaced by "{{c1::xxx::translation}}" - as HTML text.</td>
 </tr>
 <tr>
 <td>$r</td>
@@ -1901,12 +1901,12 @@ as a REST API. It features the following interaction:
 </ul>
 </li>
 <li>
-<code>/tests</code>
+<code>/review</code>
 <ul>
 <li>
-<code>/next-word</code>: next word to test.</li>
+<code>/next-word</code>: next word to review.</li>
 <li>
-<code>/tomorrow-count</code>: number of test for the next day.</li>
+<code>/tomorrow-count</code>: number of reviewes for the next day.</li>
 </ul>
 </li>
 <li>

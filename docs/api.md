@@ -66,18 +66,18 @@ Retrieves the translations for a specific term.
 - **Endpoint**: `/terms/{term-id}/translations`
 - **Method**: GET
 
-### Get Next Word to Test
+### Get Next Word to Review
 
-Retrieves the next word to be tested.
+Retrieves the next word to be reviewed.
 
-- **Endpoint**: `/tests/next-word`
+- **Endpoint**: `/review/next-word`
 - **Method**: GET
 
-### Get Tomorrow's Tests Number
+### Get Tomorrow's Reviews Number
 
-Retrieves the number of tests scheduled for tomorrow.
+Retrieves the number of reviews scheduled for tomorrow.
 
-- **Endpoint**: `/tests/tomorrow-count`
+- **Endpoint**: `/review/tomorrow-count`
 - **Method**: GET
 
 ### Get Phonetic Reading

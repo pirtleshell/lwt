@@ -51,12 +51,6 @@ describe('Calls on GET', function() {
         done();
       });
   });
-  /*
-  it('GET /raw-term/{term-text}/sentences', function(done) {
-    supertest(host)
-      .get(api_path + '/test-term/sentences')
-  });
-  */
 
   it('GET /terms/imported', function(done) {
     supertest(host)
@@ -84,21 +78,21 @@ describe('Calls on GET', function() {
       .expect(200, done)
   });
 
-  /*
-  it('GET /tests/{text-id}/next-word', function(done) {
+  
+  it('GET /review/next-word', function(done) {
     supertest(host)
-      .get(api_path + '/tests/1/next-word')
-      .expect('Content-Type', 'application/json')
+      .get(api_path + '/review/next-word')
+      //.expect('Content-Type', 'application/json')
       .expect(200, done)
   });
 
-  it('GET /tests/{text-id}/tomorrow-tests-count', function(done) {
+  it('GET /review/tomorrow-count', function(done) {
     supertest(host)
-      .get(api_path + '/tests/1/tomorrow-tests-count')
-      .expect('Content-Type', 'application/json')
+      .get(api_path + '/review/tomorrow-count')
+      //.expect('Content-Type', 'application/json')
       .expect(200, done)
   });
-  */
+  
 
   it('GET /texts/{text-id}/phonetic-reading', function(done) {
     supertest(host)
