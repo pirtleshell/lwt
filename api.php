@@ -58,7 +58,7 @@ function endpoint_exits($method, $requestUri) {
         //'texts/(?<text-id>\d+)/reading-position' => ['POST'],
 
         'texts-statistics' => ['GET'],
-        //'texts/(?<text-id>\d+)/statistics' => ['GET'],
+        //'texts-statistics/(?<texts-ids>[\d,]+)' => ['GET'],
         
         //'translations/(?<term-id>\d+)' => ['POST'],
         'translations' => ['POST'],
@@ -66,7 +66,7 @@ function endpoint_exits($method, $requestUri) {
 
         'version' => ['GET'], 
 
-        'regexp/test' => ['POST'],
+        // 'regexp/test' => ['POST'], as of LWT 2.9.0, no usage was found
     ];
 
 

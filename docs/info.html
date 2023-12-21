@@ -1881,65 +1881,75 @@ short text creation/edition, long text creation and text check
 <li>REST API, the new <code>api.php</code> is intended to continue developing itself
 as a REST API. It features the following interaction:
 <ul>
-<li>On GET, <code>action_type</code> can be:
+<li>On GET, the endpoints are:
 <ul>
 <li>
-<code>version</code>: the REST API version and release date.</li>
+<code>/media-paths</code>: the list of audio and video files in the media folder.</li>
 <li>
-<code>test_next_word</code>: next word to test.</li>
+<code>/sentences-with-term</code>: sentences containing a term.</li>
 <li>
-<code>tomorrow_tests_number</code>: number of tests for the next day.</li>
+<code>/similar-terms</code>: terms similar to a given one.</li>
 <li>
-<code>phonetic_reading</code>: phonetic reading of a text.</li>
+<code>/theme-path</code>: the path for a media using theme.</li>
 <li>
-<code>theme_path</code>: theming path for a file.</li>
-<li>
-<code>texts_statistics</code>: various words statistics for each text.</li>
-<li>
-<code>media_paths</code>: paths of files and folders in the <code>/media</code> folder.</li>
-<li>
-<code>example_sentences</code>: list of sentences containing a word.</li>
-<li>
-<code>imported_terms</code>: list of imported terms through terms upload.</li>
-<li>
-<code>similar_terms</code>: similar terms to a given term.</li>
-<li>
-<code>term_translations</code>: get the list of term translations to edit it's
-annotation.</li>
-</ul>
-</li>
-<li>On POST, <code>action</code> can be:
+<code>/terms</code>
 <ul>
 <li>
-<code>reading_position</code>: <code>action_type</code> set to <code>text</code> of <code>audio</code> change
-the reading position for a text or its audio.</li>
+<code>/imported</code>: imported terms.</li>
 <li>
-<code>change_translation</code>, with values for <code>action_type</code> set to:
-<ul>
-<li>
-<code>add</code>: add a translation for a new word.</li>
-<li>
-<code>update</code>: edit the translation of an existing word.</li>
+<code>/{term-id}/translations</code>: translations for a term.</li>
 </ul>
 </li>
 <li>
-<code>term_status</code>, with values for <code>action_type</code> set to:
+<code>/tests</code>
 <ul>
 <li>
-<code>increment</code>: increment or decrement the status of a term by one unit.</li>
+<code>/next-word</code>: next word to test.</li>
 <li>
-<code>set</code>: set the status of a term.</li>
+<code>/tomorrow-count</code>: number of test for the next day.</li>
 </ul>
 </li>
-<li>For any other value, set <code>action_type</code> to:
+<li>
+<code>/texts/{text-id}/phonetic-reading</code>: phonetic reading for a term or sentence.</li>
+<li>
+<code>/texts-statistices/{texts-ids}/statistics</code>: statistics on texts.</li>
+<li>
+<code>/version</code>: REST API version.</li>
+</ul>
+</li>
+<li>On POST, the endpoints are:
 <ul>
 <li>
-<code>regexp</code>: test if the regular expression is correctly recognized
-(no more usage in code base?).</li>
+<code>/settings</code>: save settings.</li>
 <li>
-<code>set_annotation</code>: change the annotation value for a term.</li>
+<code>/terms/{term-id}/status</code>, followed by either:
+<ul>
 <li>
-<code>save_setting</code>: save a setting.</li>
+<code>/down</code>: decrement status of a term by one unit.</li>
+<li>
+<code>/up</code>: increment status of a term by one unit.</li>
+<li>
+<code>/set/{new-status}</code>: set the status of a term.</li>
+</ul>
+</li>
+<li>
+<code>/texts/{text-id}</code> followed by:
+<ul>
+<li>
+<code>/annotation</code>: change the text annotation</li>
+<li>
+<code>/audio-position</code>: change <code>audio</code> position.</li>
+<li>
+<code>/reading-position</code>: change the reading position.</li>
+</ul>
+</li>
+<li>
+<code>/translations</code> followed by:
+<ul>
+<li>
+<code>/new</code>: add a translation for a new word.</li>
+<li>
+<code>/{term-id}</code>: update the translation of an existing word.</li>
 </ul>
 </li>
 </ul>
@@ -2011,37 +2021,37 @@ character as a word (e. g.: Chinese). Big thanks to <a href="https://github.com/
 <li>Legacy AJAX API. The following AJAX interactions are now deprecated in favor to the new REST API (at <code>api.php</code>):
 <ul>
 <li>
-<code>inc/ajax_show_similar_terms.php</code>, use <code>action_type=similar_terms</code> on GET, same arguments.</li>
+<code>inc/ajax_show_similar_terms.php</code>, use <code>/similar-terms</code> on GET, same arguments.</li>
 <li>
-<code>inc/ajax_add_term_transl.php</code>, use <code>action=change_translation</code>, with
-<code>action_type=add</code> or <code>action_type=update</code>. The arguments were also changed.</li>
+<code>inc/ajax_add_term_transl.php</code>, use <code>/translations</code>, with
+<code>/new</code> or <code>/{term-id}</code>. The arguments were also changed.</li>
 <li>
-<code>inc/ajax_check_regexp.php</code> should be accessed through <code>action_type=check_regexp</code>. Argument <code>regex</code> is now <code>regexp</code>, on post only.</li>
+<code>inc/ajax_check_regexp.php</code> should no longer be used and will be removed.</li>
 <li>
-<code>inc/ajax_chg_term_status.php</code> should be accessed through <code>action=term_status</code> and <code>action_type=increment</code>. Argument <code>data</code> is now <code>status_up</code>, on post only.</li>
+<code>inc/ajax_chg_term_status.php</code> should be accessed through <code>/terms/{term-id}/status</code>. Argument <code>data</code> is now part of the URL, on post only.</li>
 <li>
-<code>inc/ajax_get_phonetic.php</code> should be accessed through <code>action_type=phonetic_reading</code>, same arguments.</li>
+<code>inc/ajax_get_phonetic.php</code> should be accessed through <code>/texts/{text-id}/phonetic-reading</code>, same arguments.</li>
 <li>
-<code>inc/ajax_get_theme.php</code> should be accessed through <code>action_type=theme_path</code>. Argument <code>filepath</code> is now <code>path</code>.</li>
+<code>inc/ajax_get_theme.php</code> should be accessed through <code>/settings/theme-path</code>. Argument <code>filepath</code> is now <code>path</code>.</li>
 <li>
-<code>inc/ajax_save_setting.php</code> should be accessed through <code>action_type=save_setting</code>, same arguments.</li>
+<code>inc/ajax_save_setting.php</code> should be accessed through <code>/settings</code>, same arguments.</li>
 <li>
-<code>inc/ajax_save_text_position.php</code> should be accessed through <code>action=reading_position</code>, arguments changed.</li>
+<code>inc/ajax_save_text_position.php</code> should be accessed through <code>/texts/{text-id}/reading-position</code>, arguments changed.</li>
 <li>
-<code>inc/ajax_word_counts.php</code> should be accessed through <code>action_type=texts_statistics</code>, on GET. Argument <code>id</code> is now <code>texts_id</code>.</li>
+<code>inc/ajax_word_counts.php</code> should be accessed through <code>/texts-statistics/{texts-ids}</code>, on GET. Argument <code>id</code> is now <code>{texts-ids}</code>.</li>
 <li>
-<code>inc/ajax_update_media_select.php</code> should be accessed through <code>action_type=media_paths</code>.</li>
+<code>inc/ajax_update_media_select.php</code> should be accessed through <code>/media-paths</code>.</li>
 <li>
-<code>inc/ajax_show_sentences.php</code> should be accessed through <code>action_type=example_sentences</code>, on GET. Argument <code>lang</code> is now <code>lid</code>, <code>word</code> is <code>word_lc</code> and <code>woid</code> is <code>wid</code>, <code>ctl</code> is no longer required.</li>
+<code>inc/ajax_show_sentences.php</code> should be accessed through <code>/sentences-with-term</code>, on GET. Argument <code>lang</code> is now <code>lid</code>, <code>word</code> is <code>word_lc</code> and <code>woid</code> is <code>wid</code>, <code>ctl</code> is no longer required.</li>
 <li>
-<code>inc/ajax_show_imported_terms.php</code> should be accessed through <code>action_type=imported_terms</code>, same arguments.</li>
+<code>inc/ajax_show_imported_terms.php</code> should be accessed through <code>/terms/imported</code>, same arguments.</li>
 <li>
-<code>inc/ajax_save_impr_text.php</code> should be accessed through <code>action_type=set_annotation</code>, <code>id</code> is now <code>tid</code>.</li>
+<code>inc/ajax_save_impr_text.php</code> should be accessed through <code>/texts/{text-id}/annotation</code>, <code>id</code> is now <code>{text-id}</code>.</li>
 <li>
 <code>inc/ajax_edit_impr_text.php</code>:
 <ul>
 <li>On display, using <code>word=""</code> is now deprecated as the page loads in pure PHP.</li>
-<li>On term edition, should be accessed through <code>action_type=term_translations</code>, <code>id</code> is now <code>text_id</code> and <code>word</code> becomes <code>text_lc</code>.</li>
+<li>On term edition, should be accessed through <code>/terms/{term-id}/translations</code>, <code>id</code> is now <code>text_id</code> and <code>word</code> becomes <code>text_lc</code>.</li>
 </ul>
 </li>
 </ul>

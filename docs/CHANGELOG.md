@@ -23,33 +23,33 @@ short text creation/edition, long text creation and text check
   * The timer continues instead of reseting.
 * REST API, the new ``api.php`` is intended to continue developing itself
 as a REST API. It features the following interaction:
-  * On GET, ``action_type`` can be:
-    * ``version``: the REST API version and release date.
-    * ``test_next_word``: next word to test.
-    * ``tomorrow_tests_number``: number of tests for the next day.
-    * ``phonetic_reading``: phonetic reading of a text.
-    * ``theme_path``: theming path for a file.
-    * ``texts_statistics``: various words statistics for each text.
-    * ``media_paths``: paths of files and folders in the ``/media`` folder.
-    * ``example_sentences``: list of sentences containing a word.
-    * ``imported_terms``: list of imported terms through terms upload.
-    * ``similar_terms``: similar terms to a given term.
-    * ``term_translations``: get the list of term translations to edit it's
-    annotation.
-  * On POST, ``action`` can be:
-    * ``reading_position``: ``action_type`` set to ``text`` of ``audio`` change
-    the reading position for a text or its audio.
-    * ``change_translation``, with values for ``action_type`` set to:
-      * ``add``: add a translation for a new word.
-      * ``update``: edit the translation of an existing word.
-    * ``term_status``, with values for ``action_type`` set to:
-      * ``increment``: increment or decrement the status of a term by one unit.
-      * ``set``: set the status of a term.
-    * For any other value, set ``action_type`` to:
-      * ``regexp``: test if the regular expression is correctly recognized
-      (no more usage in code base?).
-      * ``set_annotation``: change the annotation value for a term.
-      * ``save_setting``: save a setting.
+  * On GET, the endpoints are:
+    * `/media-paths`: the list of audio and video files in the media folder.
+    * `/sentences-with-term`: sentences containing a term.
+    * `/similar-terms`: terms similar to a given one.
+    * `/theme-path`: the path for a media using theme.
+    * `/terms`
+      * `/imported`: imported terms.
+      * `/{term-id}/translations`: translations for a term.
+    * `/tests`
+      * `/next-word`: next word to test.
+      * `/tomorrow-count`: number of test for the next day.
+    * `/texts/{text-id}/phonetic-reading`: phonetic reading for a term or sentence.
+    * `/texts-statistices/{texts-ids}/statistics`: statistics on texts.
+    * `/version`: REST API version.
+  * On POST, the endpoints are:
+    * `/settings`: save settings.
+    * `/terms/{term-id}/status`, followed by either:
+      * `/down`: decrement status of a term by one unit.
+      * `/up`: increment status of a term by one unit.
+      * `/set/{new-status}`: set the status of a term.
+    * `/texts/{text-id}` followed by:
+      * `/annotation`: change the text annotation
+      * `/audio-position`: change `audio` position.
+      * `/reading-position`: change the reading position.
+    * `/translations` followed by:
+      * `/new`: add a translation for a new word.
+      * `/{term-id}`: update the translation of an existing word.
 * Similar terms mark the word edit form as edited only if something was
 actually changed.
 * You can now specify a socket for your database through ``$socket`` in
@@ -102,23 +102,23 @@ character as a word (e. g.: Chinese). Big thanks to [@hangug-eo](https://github.
 ### Deprecated
 
 * Legacy AJAX API. The following AJAX interactions are now deprecated in favor to the new REST API (at ``api.php``):
-  * ``inc/ajax_show_similar_terms.php``, use ``action_type=similar_terms`` on GET, same arguments.
-  * ``inc/ajax_add_term_transl.php``, use ``action=change_translation``, with
-  ``action_type=add`` or ``action_type=update``. The arguments were also changed.
-  * ``inc/ajax_check_regexp.php`` should be accessed through ``action_type=check_regexp``. Argument ``regex`` is now ``regexp``, on post only.
-  * ``inc/ajax_chg_term_status.php`` should be accessed through ``action=term_status`` and ``action_type=increment``. Argument ``data`` is now ``status_up``, on post only.
-  * ``inc/ajax_get_phonetic.php`` should be accessed through ``action_type=phonetic_reading``, same arguments.
-  * ``inc/ajax_get_theme.php`` should be accessed through ``action_type=theme_path``. Argument ``filepath`` is now ``path``.
-  * ``inc/ajax_save_setting.php`` should be accessed through ``action_type=save_setting``, same arguments.
-  * ``inc/ajax_save_text_position.php`` should be accessed through ``action=reading_position``, arguments changed.
-  * ``inc/ajax_word_counts.php`` should be accessed through ``action_type=texts_statistics``, on GET. Argument ``id`` is now ``texts_id``.
-  * ``inc/ajax_update_media_select.php`` should be accessed through ``action_type=media_paths``.
-  * ``inc/ajax_show_sentences.php`` should be accessed through ``action_type=example_sentences``, on GET. Argument ``lang`` is now ``lid``, ``word`` is ``word_lc`` and ``woid`` is ``wid``, ``ctl`` is no longer required.
-  * ``inc/ajax_show_imported_terms.php`` should be accessed through ``action_type=imported_terms``, same arguments.
-  * ``inc/ajax_save_impr_text.php`` should be accessed through ``action_type=set_annotation``, ``id`` is now ``tid``.
+  * ``inc/ajax_show_similar_terms.php``, use ``/similar-terms`` on GET, same arguments.
+  * ``inc/ajax_add_term_transl.php``, use ``/translations``, with
+  ``/new`` or ``/{term-id}``. The arguments were also changed.
+  * ``inc/ajax_check_regexp.php`` should no longer be used and will be removed.
+  * ``inc/ajax_chg_term_status.php`` should be accessed through ``/terms/{term-id}/status``. Argument ``data`` is now part of the URL, on post only.
+  * ``inc/ajax_get_phonetic.php`` should be accessed through ``/texts/{text-id}/phonetic-reading``, same arguments.
+  * ``inc/ajax_get_theme.php`` should be accessed through ``/settings/theme-path``. Argument ``filepath`` is now ``path``.
+  * ``inc/ajax_save_setting.php`` should be accessed through ``/settings``, same arguments.
+  * ``inc/ajax_save_text_position.php`` should be accessed through ``/texts/{text-id}/reading-position``, arguments changed.
+  * ``inc/ajax_word_counts.php`` should be accessed through ``/texts-statistics/{texts-ids}``, on GET. Argument ``id`` is now ``{texts-ids}``.
+  * ``inc/ajax_update_media_select.php`` should be accessed through ``/media-paths``.
+  * ``inc/ajax_show_sentences.php`` should be accessed through ``/sentences-with-term``, on GET. Argument ``lang`` is now ``lid``, ``word`` is ``word_lc`` and ``woid`` is ``wid``, ``ctl`` is no longer required.
+  * ``inc/ajax_show_imported_terms.php`` should be accessed through ``/terms/imported``, same arguments.
+  * ``inc/ajax_save_impr_text.php`` should be accessed through ``/texts/{text-id}/annotation``, ``id`` is now ``{text-id}``.
   * ``inc/ajax_edit_impr_text.php``:
     * On display, using ``word=""`` is now deprecated as the page loads in pure PHP.
-    * On term edition, should be accessed through ``action_type=term_translations``, ``id`` is now ``text_id`` and ``word`` becomes ``text_lc``.
+    * On term edition, should be accessed through ``/terms/{term-id}/translations``, ``id`` is now ``text_id`` and ``word`` becomes ``text_lc``.
 
 ## 2.8.1-fork (April 14 2023)
 
