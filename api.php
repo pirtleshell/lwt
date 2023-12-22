@@ -314,7 +314,7 @@ function imported_terms($get_req)
 /**
  * Translations for a term to choose an annotation.
  * 
- * @param array $get_req Get request with fields "text_id".
+ * @param array $get_req Get request with fields "text_id" and "term_lc".
  */
 function term_translations($get_req)
 {
@@ -472,7 +472,7 @@ function update_translation($post_req)
         (int)$post_req['term_id'], trim($post_req['translation'])
     );
     $raw_answer = array();
-    if ($result == "") {
+    if (str_starts_with($result, "Error")) {
         $raw_answer["error"] = $result;
     } else {
         $raw_answer["update"] = $result;
@@ -494,7 +494,10 @@ function add_translation($post_req)
         $text, (int)$post_req['lg_id'], trim($post_req['translation'])
     );
     $raw_answer = array();
-    if ($result == mb_strtolower($text, 'UTF-8')) {
+    if (is_array($result)) {
+        $raw_answer["term_id"] = $result[0];
+        $raw_answer["term_lc"] = $result[1];
+    } else if ($result == mb_strtolower($text, 'UTF-8')) {
         $raw_answer["add"] = $result;
     } else {
         $raw_answer["error"] = $result;
@@ -694,20 +697,20 @@ function main_enpoint($method, $requestUri) {
                 }
                 break;
             case 'translations':
-                if (!ctype_digit($endpoint_fragments[1])) {
+                if (ctype_digit($endpoint_fragments[1])) {
+                    $_POST["term_id"] = (int) $endpoint_fragments[1];
+                    $answer = update_translation($_POST);
+                    send_response(200, $answer);
+                } else if ($endpoint_fragments[1] == 'new') {
+                    $answer = add_translation($_POST);
+                    send_response(200, $answer);
+                } else {
                     send_response(
                         404, 
                         ['error' => 'Term ID (Integer) Expected, Got ' . 
                         $endpoint_fragments[1]]
                     );
                 }
-                $_POST["term_id"] = (int) $endpoint_fragments[1];
-                $answer = update_translation($_POST);
-                send_response(200, $answer);
-                break;
-            case 'translations/new':
-                $answer = add_translation($_POST);
-                send_response(200, $answer);
                 break;
             default:
                 send_response(

@@ -78,12 +78,15 @@ function do_ajax_save_impr_text(textid,elem_name,form_data){const idwait='#wait'
 alert('Saving your changes failed, please reload the page and try again! '+'Error message: "'+data.error+'".');},"json")}
 function changeImprAnnText(){$(this).prev('input:radio').attr('checked','checked');const textid=$('#editimprtextdata').attr('data_id');const elem_name=$(this).attr('name');const form_data=JSON.stringify($('form').serializeObject());do_ajax_save_impr_text(textid,elem_name,form_data)}
 function changeImprAnnRadio(){const textid=$('#editimprtextdata').attr('data_id');const elem_name=$(this).attr('name');const form_data=JSON.stringify($('form').serializeObject());do_ajax_save_impr_text(textid,elem_name,form_data)}
-function addTermTranslation(wordid,txid,word,lang){const translation=$(txid).val().trim();const pagepos=$(document).scrollTop();if(translation==''||translation=='*'){alert('Text Field is empty or = \'*\'!');return}
-let request={translation:translation,};let failure,action_type,endpoint;if(wordid===0){action_type="add";endpoint="new";request.term_text=word;request.lg_id=lang;failure="Adding translation to term failed!"}else{action_type="update";endpoint=parseInt(wordid,10);failure="Updating translation of term failed!"}
-request.action_type=action_type;failure+="Please reload page and try again."
-$.post('api.php/v1/translations/'+endpoint,request,function(d){if(d==''){alert(failure);return}
+function updateTermTranslation(wordid,txid){const translation=$(txid).val().trim();const pagepos=$(document).scrollTop();if(translation==''||translation=='*'){alert('Text Field is empty or = \'*\'!');return}
+let request={translation:translation,};const failure="Updating translation of term failed!"+"Please reload page and try again.";$.post('api.php/v1/translations/'+wordid,request,function(d){if(d==''){alert(failure);return}
 if("error" in d){alert(failure+"\n"+d.error);return}
-do_ajax_edit_impr_text(pagepos,d[action_type])},"json")}
+do_ajax_edit_impr_text(pagepos,d.update,wordid)},"json")}
+function addTermTranslation(txid,word,lang){const translation=$(txid).val().trim();const pagepos=$(document).scrollTop();if(translation==''||translation=='*'){alert('Text Field is empty or = \'*\'!');return}
+const failure="Adding translation to term failed!"+"Please reload page and try again."
+$.post('api.php/v1/translations/new',{translation:translation,term_text:word,lg_id:lang},function(d){if(d==''){alert(failure);return}
+if("error" in d){alert(failure+"\n"+d.error);return}
+do_ajax_edit_impr_text(pagepos,d.add,d.word_id)},"json")}
 function changeTableTestStatus(wordid,up){const status_change=up?'up':'down';const wid=parseInt(wordid,10);$.post('api.php/v1/terms/'+wid+'/status/'+status_change,{},function(data){if(data==""||"error" in data){return}
 $('#STAT'+wordid).html(data.increment)},"json")}
 function check(){let count=0;$('.notempty').each(function(_n){if($(this).val().trim()=='')count++});if(count>0){alert('ERROR\n\n'+count+' field(s) - marked with * - must not be empty!');return!1}
@@ -224,17 +227,17 @@ $(`#editlink${trans_data.ann_index}`).html(edit_word_link);let translations_list
   &nbsp;`;if(widset){translations_list+=`<img class="click" src="icn/plus-button.png" 
     title="Save another translation to existent term" 
     alt="Save another translation to existent term" 
-    onclick="addTermTranslation(${trans_data.wid}, `+`'#tx${trans_data.ann_index}', '',${trans_data.lang_id});" />`}else{translations_list+=`<img class="click" src="icn/plus-button.png" 
+    onclick="updateTermTranslation(${trans_data.wid}, `+`'#tx${trans_data.ann_index}');" />`}else{translations_list+=`<img class="click" src="icn/plus-button.png" 
     title="Save translation to new term" 
     alt="Save translation to new term" 
-    onclick="addTermTranslation(0, '#tx${trans_data.ann_index}',`+`${trans_data.term_lc},${trans_data.lang_id});" />`}
+    onclick="addTermTranslation('#tx${trans_data.ann_index}',`+`${trans_data.term_lc},${trans_data.lang_id});" />`}
 translations_list+=`&nbsp;&nbsp;
   <span id="wait${trans_data.ann_index}">
       <img src="icn/empty.gif" />
   </span>
   </span>`;$(`#transsel${trans_data.ann_index}`).html(translations_list)}
-function do_ajax_edit_impr_text(pagepos,word){if(word==''){$('#editimprtextdata').html('<img src="icn/waiting2.gif" />');location.reload();return}
-const textid=$('#editimprtextdata').attr('data_id');$.getJSON('api.php/v1/translations',{text_id:textid,term_lc:word},function(data){if("error" in data){alert(data.error)}else{edit_term_ann_translations(data,textid);$.scrollTo(pagepos);$('input.impr-ann-text').on('change',changeImprAnnText);$('input.impr-ann-radio').on('change',changeImprAnnRadio)}})}
+function do_ajax_edit_impr_text(pagepos,word,term_id){if(word==''){$('#editimprtextdata').html('<img src="icn/waiting2.gif" />');location.reload();return}
+const textid=$('#editimprtextdata').attr('data_id');$.getJSON('api.php/v1/terms/'+term_id+'/translations/',{text_id:textid,term_lc:word},function(data){if("error" in data){alert(data.error)}else{edit_term_ann_translations(data,textid);$.scrollTo(pagepos);$('input.impr-ann-text').on('change',changeImprAnnText);$('input.impr-ann-radio').on('change',changeImprAnnRadio)}})}
 function showRightFrames(roUrl,ruUrl){if(roUrl!==undefined){top.frames.ro.location.href=roUrl}
 if(ruUrl!==undefined){top.frames.ru.location.href=ruUrl}
 if($('#frames-r').length){$('#frames-r').animate({right:'5px'});return!0}

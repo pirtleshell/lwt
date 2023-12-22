@@ -161,16 +161,15 @@ function changeImprAnnRadio () {
   do_ajax_save_impr_text(textid, elem_name, form_data);
 }
 
+
 /**
- * Add (new word) or update (existing word) a word translation.
+ * Update a word translation.
  * 
- * @param {int}    wordid Word ID, 0 for new wrod
+ * @param {int}    wordid Word ID
  * @param {string} txid   Text HTML ID or unique HTML selector
- * @param {string} word   Word text
- * @param {int}    lang   Language ID
  * @returns 
  */
-function addTermTranslation(wordid, txid, word, lang) {
+function updateTermTranslation(wordid, txid) {
   const translation = $(txid).val().trim();
   const pagepos = $(document).scrollTop();
   if (translation == '' || translation == '*') {
@@ -178,24 +177,12 @@ function addTermTranslation(wordid, txid, word, lang) {
     return;
   }
   let request = {
-        translation: translation,
+    translation: translation,
   };
-  let failure, action_type, endpoint;
-  if (wordid === 0) {
-    action_type = "add";
-    endpoint = "new";
-    request["term_text"] = word;
-    request["lg_id"] = lang;
-    failure = "Adding translation to term failed!";
-  } else {
-    action_type = "update";
-    endpoint = parseInt(wordid, 10);
-    failure = "Updating translation of term failed!";
-  }
-  request["action_type"] = action_type;
-  failure += "Please reload page and try again."
+  const failure = "Updating translation of term failed!" + 
+  "Please reload page and try again.";
   $.post(
-    'api.php/v1/translations/' + endpoint,
+    'api.php/v1/translations/' + wordid,
     request,
     function (d) {
       if (d == '') {
@@ -206,7 +193,46 @@ function addTermTranslation(wordid, txid, word, lang) {
         alert(failure + "\n" + d.error);
         return;
       }
-      do_ajax_edit_impr_text(pagepos, d[action_type]);
+      do_ajax_edit_impr_text(pagepos, d.update, wordid);
+    },
+    "json"
+  );
+}
+
+/**
+ * Add (new word) a word translation.
+ * 
+ * @param {string} txid   Text HTML ID or unique HTML selector
+ * @param {string} word   Word text
+ * @param {int}    lang   Language ID
+ * @returns 
+ */
+function addTermTranslation(txid, word, lang) {
+  const translation = $(txid).val().trim();
+  const pagepos = $(document).scrollTop();
+  if (translation == '' || translation == '*') {
+    alert('Text Field is empty or = \'*\'!');
+    return;
+  }
+  const failure = "Adding translation to term failed!" +
+  "Please reload page and try again."
+  $.post(
+    'api.php/v1/translations/new',
+    {
+      translation: translation,
+      term_text: word,
+      lg_id: lang
+    },
+    function (d) {
+      if (d == '') {
+        alert(failure);
+        return;
+      }
+      if ("error" in d) {
+        alert(failure + "\n" + d.error);
+        return;
+      }
+      do_ajax_edit_impr_text(pagepos, d.add, d.word_id);
     },
     "json"
   );
@@ -1643,14 +1669,14 @@ function edit_term_ann_translations(trans_data, text_id)
     `<img class="click" src="icn/plus-button.png" 
     title="Save another translation to existent term" 
     alt="Save another translation to existent term" 
-    onclick="addTermTranslation(${trans_data.wid}, ` +
-      `'#tx${trans_data.ann_index}', '',${trans_data.lang_id});" />`; 
+    onclick="updateTermTranslation(${trans_data.wid}, ` +
+      `'#tx${trans_data.ann_index}');" />`; 
   } else { 
     translations_list += 
     `<img class="click" src="icn/plus-button.png" 
     title="Save translation to new term" 
     alt="Save translation to new term" 
-    onclick="addTermTranslation(0, '#tx${trans_data.ann_index}',` +
+    onclick="addTermTranslation('#tx${trans_data.ann_index}',` +
       `${trans_data.term_lc},${trans_data.lang_id});" />`; 
   }
   translations_list += `&nbsp;&nbsp;
@@ -1664,11 +1690,15 @@ function edit_term_ann_translations(trans_data, text_id)
 /**
  * Load the possible translations for a word.
  * 
- * @param {int} pagepos Position to scroll to 
- * @param {string} word Word to get annotations
+ * @param {int}    pagepos Position to scroll to 
+ * @param {string} word    Word in lowercase to get annotations
+ * @param {int}    term_id Term ID
  * @returns 
+ * 
+ * @since 2.9.0 The new parameter $wid is now necessary
  */
-function do_ajax_edit_impr_text(pagepos, word) {
+function do_ajax_edit_impr_text(pagepos, word, term_id) 
+{
   // Special case, on empty word reload the main annotations form
   if (word == '') {
     $('#editimprtextdata').html('<img src="icn/waiting2.gif" />');
@@ -1678,7 +1708,7 @@ function do_ajax_edit_impr_text(pagepos, word) {
   // Load the possible translations for a word
   const textid = $('#editimprtextdata').attr('data_id');
   $.getJSON(
-    'api.php/v1/translations',
+    'api.php/v1/terms/' + term_id + '/translations/',
     {
       text_id: textid, 
       term_lc: word 

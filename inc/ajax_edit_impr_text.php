@@ -87,13 +87,13 @@ function make_trans($i, $wid, $trans, $word, $lang): string
         '<img class="click" src="icn/plus-button.png" 
         title="Save another translation to existent term" 
         alt="Save another translation to existent term" 
-        onclick="addTermTranslation(' . $wid . ', \'#tx' . $i . '\',\'\',' . $lang . ');" />'; 
+        onclick="updateTermTranslation(' . $wid . ', \'#tx' . $i . '\');" />'; 
     } else { 
         $r .= 
         '<img class="click" src="icn/plus-button.png" 
         title="Save translation to new term" 
         alt="Save translation to new term" 
-        onclick="addTermTranslation(0, \'#tx' . $i . '\',' . prepare_textdata_js($word) . ',' . $lang . ');" />'; 
+        onclick="addTermTranslation(\'#tx' . $i . '\',' . prepare_textdata_js($word) . ',' . $lang . ');" />'; 
     }
     $r .= '&nbsp;&nbsp;
     <span id="wait' . $i . '">
@@ -102,6 +102,34 @@ function make_trans($i, $wid, $trans, $word, $lang): string
     </span>';
     return $r;
 }
+
+
+/**
+ * Find the possible translations for a term.
+ * 
+ * @param int $word_id Term ID
+ * 
+ * @return array Return the possible translations.
+ */
+function get_translations($word_id)
+{
+    global $tbpref;
+    $translations = array();
+    $alltrans = get_first_value(
+        "SELECT WoTranslation AS value FROM {$tbpref}words 
+        WHERE WoID = $word_id"
+    );
+    $transarr = preg_split('/[' . get_sepas()  . ']/u', $alltrans);
+    foreach ($transarr as $t) {
+        $tt = trim($t);
+        if ($tt == '*' || $tt == '') { 
+            continue; 
+        }
+        $translations[] = $tt;
+    }
+    return $translations;
+}
+
 
 /**
  * Gather useful data to edit a term annotation on a specific text.
@@ -202,20 +230,7 @@ function get_term_translations($wordlc, $textid)
 
     // Add other translation choices
     if ($wid !== null) {
-        $translations = array();
-        $alltrans = get_first_value(
-            "SELECT WoTranslation AS value FROM {$tbpref}words 
-            WHERE WoID = $wid"
-        );
-        $transarr = preg_split('/[' . get_sepas()  . ']/u', $alltrans);
-        foreach ($transarr as $t) {
-            $tt = trim($t);
-            if ($tt == '*' || $tt == '') { 
-                continue; 
-            }
-            $translations[] = $tt;
-        }
-        $ann_data["translations"] = $translations;
+        $ann_data["translations"] = get_translations($wid);
     }
     return $ann_data;
 }
