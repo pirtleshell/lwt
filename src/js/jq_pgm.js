@@ -125,9 +125,6 @@ function do_ajax_save_impr_text(textid, elem_name, form_data) {
   $.post(
     'api.php/v1/texts/' + textid + '/annotation',
     {
-      action: "",
-      action_type: "set_annotation",
-      tid: textid,
       elem: elem_name,
       data: form_data
     },
@@ -226,12 +223,7 @@ function changeTableTestStatus (wordid, up) {
   const wid = parseInt(wordid, 10);
   $.post(
     'api.php/v1/terms/' + wid + '/status/' + status_change,
-    {
-      action: "term_status",
-      action_type: "increment",
-      wid: wid,
-      status_up: (up ? 1 : 0) 
-    }, 
+    {}, 
     function (data) {
       if (data == "" || "error" in data) {
         return;
@@ -1291,10 +1283,7 @@ function do_ajax_update_media_select () {
   $('#mediaSelectLoadingImg').css("display", "inherit");
   $.getJSON(
     'api.php/v1/media-path',
-    {
-      action: "query",
-      action_type: "media_paths"
-    },
+    {},
     media_select_receive_data
   );
 }
@@ -1437,8 +1426,6 @@ function do_ajax_word_counts () {
   $.getJSON(
     'api.php/v1/texts-statistics',
     {
-      action: "query",
-      action_type: "texts_statistics",
       texts_id: t
     },
     function (data) {
@@ -1693,8 +1680,6 @@ function do_ajax_edit_impr_text(pagepos, word) {
   $.getJSON(
     'api.php/v1/translations',
     {
-      action: "query",
-      action_type: "term_translations",
       text_id: textid, 
       term_lc: word 
     },

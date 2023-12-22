@@ -206,8 +206,6 @@ async function getPhoneticTextAsync(text, lang) {
     return $.getJSON(
         'api.php/v1/phonetic-reading',
         {
-            action: "query",
-            action_type: "phonetic_reading",
             text: text, 
             lang: lang 
         }

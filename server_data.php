@@ -198,10 +198,7 @@ function display_content()
 
     $.getJSON(
         "api.php/v1/version",
-        {
-            action: "query",
-            action_type: "version"
-        },
+        {},
         handle_api_version_answer
     );
 </script>

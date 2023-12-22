@@ -688,8 +688,6 @@ function showImportedTerms(last_update, rtl, count, page) {
         $.getJSON(
             "api.php/v1/terms/imported",
             {
-                action: "query",
-                action_type: "imported_terms",
                 last_update: last_update,
                 count: count,
                 page: page
