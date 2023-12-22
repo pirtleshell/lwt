@@ -45,23 +45,42 @@ For more information, please refer to [http://unlicense.org/].
 	<link rel="apple-touch-icon" sizes="114x114" href="../img/apple-touch-icon-114x114.png" />
 	<link rel="apple-touch-startup-image" href="../img/apple-touch-startup.png" />
 	<style type="text/css">
-	@import url(../css/styles.css);
+		@import url(../css/styles.css);
+		.hidden {display:none;}
 	</style>
 	<script type="text/javascript" src="../js/jquery.js"></script>  
 	<script type="text/javascript" src="../js/floating.js"></script>
-		<script type="text/javascript">
-	$.ajax(
-		{
-			type: 'POST',
-			url:'inc/ajax_get_theme.php',
-			async: false, 
-			data: { file:'../css/styles.css' }, 
-			success: function (data) {
-				if (data.match(/styles.css$/g)) {
-					$('style').text( "@import url(" + data + ");" );
+	<script type="text/javascript">
+		/**
+		 * Perform an AJAX query to get the current theme style sheet.
+		 * 
+		 * @since 2.9.0 Function is modified to use JSON with the REST API.
+		 */
+		function ajaxGetTheme () {
+			$.getJSON(
+				'../api.php/v1/settings/theme-path',
+				{
+					path: '../css/styles.css' 
+				},
+				function (data) {
+					if ("error" in data)
+						return;
+					const path = data["theme_path"].trim();
+					if (path.endsWith("styles.css")) {
+						$('style').html(
+							"@import url(../" + path + ");"
+						);
+					}
 				}
+			)
+			.always(function () {
+				$('html').show();
+			});
 		}
-	});
+
+		$('html').addClass('hidden');
+
+		$(document).ready(ajaxGetTheme);
 	</script>
 
 	<title> 
