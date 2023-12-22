@@ -179,8 +179,6 @@ function getPhoneticText(text, lang) {
         {
             async: false,
             data: {
-                action: "query",
-                action_type: "phonetic_reading",
                 text: text,
                 lang: lang 
             },

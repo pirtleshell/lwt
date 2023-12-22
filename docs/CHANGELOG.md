@@ -108,7 +108,7 @@ character as a word (e. g.: Chinese). Big thanks to [@hangug-eo](https://github.
   ``/new`` or ``/{term-id}``. The arguments were also changed. `lang` becomes `lg_id`, `text` is `term_text`.
   * ``inc/ajax_check_regexp.php`` should no longer be used and will be removed.
   * ``inc/ajax_chg_term_status.php`` should be accessed through ``/terms/{term-id}/status``. Argument ``data`` is now part of the URL, on post only.
-  * ``inc/ajax_get_phonetic.php`` should be accessed through ``/texts/{text-id}/phonetic-reading``, same arguments.
+  * ``inc/ajax_get_phonetic.php`` should be accessed through ``/phonetic-reading``, same arguments.
   * ``inc/ajax_get_theme.php`` should be accessed through ``/settings/theme-path``. Argument ``filepath`` is now ``path``.
   * ``inc/ajax_save_setting.php`` should be accessed through ``/settings``, `k` becomes `key` and `v` `value`.
   * ``inc/ajax_save_text_position.php`` should be accessed through ``/texts/{text-id}/reading-position``, `tposition` is now `position`.

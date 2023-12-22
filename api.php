@@ -29,6 +29,8 @@ function endpoint_exits($method, $requestUri) {
     $endpoints = [ 
         'media-paths' => ['GET'],
 
+        'phonetic-reading' => ['GET'],
+
         'review/next-word' => ['GET'],
         'review/tomorrow-count' => ['GET'],
 
@@ -49,9 +51,7 @@ function endpoint_exits($method, $requestUri) {
         //'terms/(?<term-id>\d+)/status/up' => ['POST'],
         //'terms/(?<term-id>\d+)/status/(?<new-status>\d+)' => ['POST'],
 
-        'texts' => ['GET', 'POST'],
-        
-        //'texts/phonetic-reading' => ['GET'],
+        'texts' => ['POST'],
         
         //'texts/(?<text-id>\d+)/annotation' => ['POST'],
         //'texts/(?<text-id>\d+)/audio-position' => ['POST'],
@@ -60,8 +60,8 @@ function endpoint_exits($method, $requestUri) {
         'texts-statistics' => ['GET'],
         //'texts-statistics/(?<texts-ids>[\d,]+)' => ['GET'],
         
-        //'translations/(?<term-id>\d+)' => ['POST'],
         'translations' => ['POST'],
+        //'translations/(?<term-id>\d+)' => ['POST'],
         'translations/new' => ['POST'],
 
         'version' => ['GET'], 
@@ -117,6 +117,32 @@ function rest_api_version($get_req)
         "release_date" => "2023-09-01"
     );
 }
+
+/**
+ * List the audio files in the media folder.
+ * 
+ * @param array $get_req Unnused
+ * 
+ * @return string[] Path of media files
+ */
+function media_paths($get_req) 
+{
+    return get_media_paths();
+}
+
+/**
+ * Get the phonetic reading of a word based on it's language.
+ * 
+ * @param array $get_req Array with the fields "text" and "lang" (short language name)
+ * 
+ * @return string JSON-encoded result
+ */
+function get_phonetic_reading($get_req)
+{
+    $data = phonetic_reading($get_req['text'], $get_req['lang']);
+    return array("phonetic_reading" => $data);
+}
+
 
 /**
  * Retun the next word to test as JSON
@@ -199,19 +225,6 @@ function tomorrow_test_count($get_req)
     return $output;
 }
 
-/**
- * Get the phonetic reading of a word based on it's language.
- * 
- * @param array $get_req Array with the fields "text" and "lang" (short language name)
- * 
- * @return string JSON-encoded result
- */
-function get_phonetic_reading($get_req)
-{
-    $data = phonetic_reading($get_req['text'], $get_req['lang']);
-    return array("phonetic_reading" => $data);
-}
-
     
 /**
  * Get the file path using theme.
@@ -233,18 +246,6 @@ function get_theme_path($get_req)
 function get_texts_statistics($get_req)
 {
     return return_textwordcount($get_req["texts_id"]);
-}
-
-/**
- * List the audio files in the media folder.
- * 
- * @param array $get_req Unnused
- * 
- * @return string[] Path of media files
- */
-function media_paths($get_req) 
-{
-    return get_media_paths();
 }
 
 /**
@@ -537,6 +538,10 @@ function main_enpoint($method, $requestUri) {
                 $answer = media_paths($req_param);
                 send_response(200, $answer);
                 break;
+            case 'phonetic-reading':
+                $answer = get_phonetic_reading($req_param);
+                send_response(200, $answer);
+                break; 
             case 'review':
                 switch ($endpoint_fragments[1]) {
                     case 'next-word':
@@ -599,20 +604,6 @@ function main_enpoint($method, $requestUri) {
                         ['error' => 'Endpoint Not Found' . 
                         $endpoint_fragments[1]]
                     );
-                }
-                break;
-            case 'texts':
-                if ($endpoint_fragments[2] == 'phonetic-reading') {
-                    $answer = get_phonetic_reading($req_param);
-                    send_response(200, $answer);
-                } else if (!ctype_digit($endpoint_fragments[1])) {
-                    send_response(
-                        404, 
-                        ['error' => 'Text ID (Integer) Expected, Got ' . 
-                        $endpoint_fragments[1]]
-                    );
-                } else {
-                    send_response(404, ['error' => 'Endpoint Not Found']);
                 }
                 break;
             case 'texts-statistics':

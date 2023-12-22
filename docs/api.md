@@ -32,6 +32,15 @@ Retrieves the media paths to the audio and video files in the media folder.
 - **Method**: GET
 - **Arguments**: None
 
+### Get Phonetic Reading
+
+Retrieves the phonetic reading for any specified term.
+
+- **Endpoint**: `/phonetic-reading`
+- **Method**: GET
+- **Arguments**: `text` and `lang`.
+
+
 ### Get Next Word to Review
 
 Retrieves the next word to be reviewed.
@@ -97,13 +106,6 @@ Retrieves the translations for a specific term.
 - **Method**: GET
 - **Arguments**: `text_id` and `term_lc`
 
-### Get Phonetic Reading
-
-Retrieves the phonetic reading for a specific text.
-
-- **Endpoint**: `/texts/{text-id}/phonetic-reading`
-- **Method**: GET
-- **Arguments**: `text` and `lang`.
 
 ### Get Texts Statistics
 

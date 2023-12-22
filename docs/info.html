@@ -2026,13 +2026,13 @@ character as a word (e. g.: Chinese). Big thanks to <a href="https://github.com/
 <code>inc/ajax_show_similar_terms.php</code>, use <code>/similar-terms</code> on GET, <code>simterms_lgid</code> becomes <code>lg_id</code> and <code>simterms_word</code> <code>term</code>.</li>
 <li>
 <code>inc/ajax_add_term_transl.php</code>, use <code>/translations</code>, with
-<code>/new</code> or <code>/{term-id}</code>. The arguments were also changed. <code>lang</code> becomes <code>lg_id</code>.</li>
+<code>/new</code> or <code>/{term-id}</code>. The arguments were also changed. <code>lang</code> becomes <code>lg_id</code>, <code>text</code> is <code>term_text</code>.</li>
 <li>
 <code>inc/ajax_check_regexp.php</code> should no longer be used and will be removed.</li>
 <li>
 <code>inc/ajax_chg_term_status.php</code> should be accessed through <code>/terms/{term-id}/status</code>. Argument <code>data</code> is now part of the URL, on post only.</li>
 <li>
-<code>inc/ajax_get_phonetic.php</code> should be accessed through <code>/texts/{text-id}/phonetic-reading</code>, same arguments.</li>
+<code>inc/ajax_get_phonetic.php</code> should be accessed through <code>/phonetic-reading</code>, same arguments.</li>
 <li>
 <code>inc/ajax_get_theme.php</code> should be accessed through <code>/settings/theme-path</code>. Argument <code>filepath</code> is now <code>path</code>.</li>
 <li>

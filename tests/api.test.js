@@ -35,6 +35,16 @@ describe('Calls on GET', function() {
       .expect(200, done)
   });
 
+  it('GET /phonetic-reading', function(done) {
+    supertest(host)
+      .get(api_path + '/phonetic-reading')
+      .query({text: 'test', lang: 'en'})
+      .expect('Content-Type', 'application/json')
+      .expect(function(res) {
+        expect(res.body.phonetic_reading).equal('test');
+      })
+      .expect(200, done)
+  });
 
   it('GET /sentences-with-term, normal search', function(done) {
     supertest(host)
@@ -126,13 +136,6 @@ describe('Calls on GET', function() {
       .expect(200, done)
   });
   
-
-  it('GET /texts/{text-id}/phonetic-reading', function(done) {
-    supertest(host)
-      .get(api_path + '/texts/1/phonetic-reading')
-      .expect('Content-Type', 'application/json')
-      .expect(200, done)
-  });
 
   it('GET /texts-statistics', function(done) {
     supertest(host)
