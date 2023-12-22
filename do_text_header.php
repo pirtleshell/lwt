@@ -257,12 +257,7 @@ function save_audio_position($textid): void
     /**
      * Save audio position
      */
-    function saveAudioPosition() {
-        if ($("#jquery_jplayer_1") === null || $("#jquery_jplayer_1").length == 0) {
-            return;
-        }
-        const pos = $("#jquery_jplayer_1").data("jPlayer").status.currentTime;
-        const text_id = parseInt(<?php echo json_encode($textid); ?>, 10);
+    function saveAudioPosition(text_id, pos) {
         $.ajax({
             type: "POST",
             url:'api.php/v1/texts/' + text_id + '/audio-position',
@@ -273,7 +268,20 @@ function save_audio_position($textid): void
         });
     }
 
-    $(window).on('beforeunload', saveAudioPosition);
+    /**
+     * Save text status, for instance audio position
+     */
+    function saveTextStatus() {
+        // Save audio if present 
+        if ($("#jquery_jplayer_1") === null || $("#jquery_jplayer_1").length == 0) {
+            return;
+        }
+        const pos = $("#jquery_jplayer_1").data("jPlayer").status.currentTime;
+        const text_id = parseInt(<?php echo json_encode($textid); ?>, 10);
+        save_audio_position(text_id, pos);
+    }
+
+    $(window).on('beforeunload', saveTextStatus);
 
     // We need to capture the text-to-speach event manually for Chrome
     $(document).ready(function() {

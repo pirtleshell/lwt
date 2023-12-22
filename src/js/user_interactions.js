@@ -140,6 +140,28 @@ function goToLastPosition() {
 
 /**
  * Save the current reading position.
+ * 
+ * @param {int} text_id Text id
+ * @param {int} position Position to save
+ * 
+ * @since 2.9.0-fork
+ */
+function saveReadingPosition(text_id, position) {
+    $.ajax(
+        {
+            type: "POST",
+            url:'api.php/v1/texts/' + text_id + '/reading-position',
+            data: {
+                position: position 
+            }, 
+            async: false // Asynchronous should be safe (2.9.0)
+        }
+    );
+}
+
+
+/**
+ * Save the current reading position.
  * @global {string} TID Text ID
  * 
  * @since 2.0.3-fork
@@ -149,21 +171,12 @@ function saveCurrentPosition() {
     // First position from the top
     const top_pos = $(window).scrollTop() - $('.wsty').not('.hide').eq(0).height();
     $('.wsty').not('.hide').each(function() {
-        if ($(this).offset().top >= top_pos){
+        if ($(this).offset().top >= top_pos) {
             pos = $(this).attr('data_pos');
             return false;
         }
     });
-    $.ajax(
-        {
-            type: "POST",
-            url:'api.php/v1/texts/' + TID + '/reading-position',
-            data: {
-                position: pos 
-            }, 
-            async: false // Asynchronous should be safe (2.9.0)
-        }
-    );
+    saveReadingPosition(text_id, pos);
 }
 
 /**
