@@ -615,11 +615,14 @@ function main_enpoint($method, $requestUri) {
                 break;
             // Add more GET handlers for other endpoints
             default:
-                send_response(404, ['error' => 'Endpoint Not Found']);
+                send_response(
+                    404, 
+                    ['error' => 'Endpoint Not Found: ' . $endpoint_fragments[0]]
+                );
         }
     } elseif ($method === 'POST') {
         // Handle POST request for each endpoint
-        switch ($req_endpoint) {
+        switch ($endpoint_fragments[0]) {
             case 'settings':
                 $answer = save_setting($_POST);
                 send_response(200, $answer);
@@ -707,7 +710,11 @@ function main_enpoint($method, $requestUri) {
                 send_response(200, $answer);
                 break;
             default:
-                send_response(404, ['error' => 'Endpoint Not Found']);
+                send_response(
+                    404, 
+                    ['error' => 'Endpoint Not Found On POST: ' . 
+                    $endpoint_fragments[0]]
+                );
         }
     }
 }
