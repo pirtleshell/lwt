@@ -255,20 +255,6 @@ function save_audio_position($textid): void
 
 <script type="text/javascript">
     /**
-     * Save audio position
-     */
-    function saveAudioPosition(text_id, pos) {
-        $.ajax({
-            type: "POST",
-            url:'api.php/v1/texts/' + text_id + '/audio-position',
-            data: {
-                position: pos
-            }, 
-            async: false // Asynchronous should be safe (2.9.0)
-        });
-    }
-
-    /**
      * Save text status, for instance audio position
      */
     function saveTextStatus() {

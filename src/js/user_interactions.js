@@ -147,36 +147,21 @@ function goToLastPosition() {
  * @since 2.9.0-fork
  */
 function saveReadingPosition(text_id, position) {
-    $.ajax(
-        {
-            type: "POST",
-            url:'api.php/v1/texts/' + text_id + '/reading-position',
-            data: {
-                position: position 
-            }, 
-            async: false // Asynchronous should be safe (2.9.0)
-        }
+    $.post(
+        'api.php/v1/texts/' + text_id + '/reading-position',
+        { position: position }
     );
 }
 
 
 /**
- * Save the current reading position.
- * @global {string} TID Text ID
- * 
- * @since 2.0.3-fork
+ * Save audio position
  */
-function saveCurrentPosition() {
-    let pos = 0;
-    // First position from the top
-    const top_pos = $(window).scrollTop() - $('.wsty').not('.hide').eq(0).height();
-    $('.wsty').not('.hide').each(function() {
-        if ($(this).offset().top >= top_pos) {
-            pos = $(this).attr('data_pos');
-            return false;
-        }
-    });
-    saveReadingPosition(text_id, pos);
+function saveAudioPosition(text_id, pos) {
+    $.post(
+        'api.php/v1/texts/' + text_id + '/audio-position',
+        { position: pos }
+    );
 }
 
 /**

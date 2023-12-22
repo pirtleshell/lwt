@@ -655,6 +655,26 @@ function do_text_text_javascript($var_array): void
         });
     }
 
+
+    /**
+     * Save the current reading position.
+     * @global {string} TID Text ID
+     * 
+     * @since 2.0.3-fork
+     */
+    function saveCurrentPosition() {
+        let pos = 0;
+        // First position from the top
+        const top_pos = $(window).scrollTop() - $('.wsty').not('.hide').eq(0).height();
+        $('.wsty').not('.hide').each(function() {
+            if ($(this).offset().top >= top_pos) {
+                pos = $(this).attr('data_pos');
+                return false;
+            }
+        });
+        saveReadingPosition(text_id, pos);
+    }
+
     $(document).ready(prepareTextInteractions);
     $(document).ready(goToLastPosition);
     $(window).on('beforeunload', saveCurrentPosition);
