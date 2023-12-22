@@ -32,7 +32,8 @@ require_once __DIR__ . '/../src/php/markdown_converter.php';
 		<link rel="apple-touch-icon" sizes="114x114" href="../img/apple-touch-icon-114x114.png" />
 		<link rel="apple-touch-startup-image" href="../img/apple-touch-startup.png" />
 		<style type="text/css">
-		@import url(../css/styles.css);
+			@import url(../css/styles.css);
+			.hidden {display:none;}
 		</style>
 		<script type="text/javascript" src="../js/jquery.js"></script>
  		<script type="text/javascript">
@@ -42,29 +43,25 @@ require_once __DIR__ . '/../src/php/markdown_converter.php';
 			 * @since 2.9.0 Function is modified to use JSON with the REST API.
 			 */
 			function ajaxGetTheme () {
-				$.ajax(
+				$.getJSON(
+					'../api.php/v1/settings/theme-path',
 					{
-						type: 'GET',
-						url: '../api.php/v1/settings/theme-path',
-						async: false, 
-						data: {
-							action: "query",
-							action_type: "theme_path",
-							path: '../css/styles.css' 
-						}, 
-						success: function (data) {
-							if ("error" in data)
-								return;
-							const path = data["theme_path"].trim();
-							if (path.endsWith("styles.css")) {
-								$('style').html(
-									"@import url(../" + path + ");"
-								);
-							}
-						},
-						dataType: "json"
+						path: '../css/styles.css' 
+					},
+					function (data) {
+						if ("error" in data)
+							return;
+						const path = data["theme_path"].trim();
+						if (path.endsWith("styles.css")) {
+							$('style').html(
+								"@import url(../" + path + ");"
+							);
+						}
 					}
-				);
+				)
+				.always(function () {
+					$('html').show();
+				});
 			}
 
 			/**
@@ -78,7 +75,9 @@ require_once __DIR__ . '/../src/php/markdown_converter.php';
 				qm.selectedIndex = 0;
 			}
 
-			ajaxGetTheme();
+			$('html').addClass('hidden');
+
+			$(document).ready(ajaxGetTheme);
 
 		</script>
 		<title>
