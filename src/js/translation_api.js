@@ -9,48 +9,52 @@
  */
 
 function deleteTranslation (){
-	let w = window.parent.frames['ro'];
-	if (w === undefined) 
-		w = window.opener;
-	if ($('[name="WoTranslation"]', w.document).val().trim().length) {
-		$('[name="WoTranslation"]', w.document).val('');
-		w.makeDirty();
+	let frame = window.parent.frames['ro'];
+	if (frame === undefined) 
+		frame = window.opener;
+	if ($('[name="WoTranslation"]', frame.document).val().trim().length) {
+		$('[name="WoTranslation"]', frame.document).val('');
+		frame.makeDirty();
 	}
 }
 
 function addTranslation (s) {
-	let w = window.parent.frames['ro'];
-	if (w === undefined) 
-		w = window.opener;
-	if (w === undefined) {
+	let frame = window.parent.frames['ro'];
+	if (frame === undefined) 
+		frame = window.opener;
+	if (frame === undefined) {
 		alert('Translation can not be copied!');
 		return;
 	}
-	let c = w.document.forms[0].WoTranslation;
-	if (typeof c != 'object') {
-		alert ('Translation can not be copied!');
+	let word_trans = frame.document.forms[0].WoTranslation;
+	if (typeof word_trans != 'object') {
+		alert('Translation can not be copied!');
 		return;
 	}
-	let oldValue = c.value;
+	let oldValue = word_trans.value;
 	if (oldValue.trim() == '') {
-		c.value = s;
-		w.makeDirty();
+		word_trans.value = s;
+		frame.makeDirty();
 	} else {
 		if (oldValue.indexOf(s) == -1) {
-			c.value = oldValue + ' / ' + s;
-			w.makeDirty();
+			word_trans.value = oldValue + ' / ' + s;
+			frame.makeDirty();
 		} else {
 			if (confirm(
-				'"' + s + '" seems already to exist as a translation.\nInsert anyway?'
-				)) { 
-				c.value = oldValue + ' / ' + s;
-				w.makeDirty();
+				'"' + s + '" seems already to exist as a translation.\n' + 
+				'Insert anyway?'
+				)) 
+			{
+				word_trans.value = oldValue + ' / ' + s;
+				frame.makeDirty();
 			}
 		}
 	}
 }
 
 function getGlosbeTranslation(text, lang, dest) {
+	// Note from 2.9.0: make asynchronous if possible
+	// Note: the Glosbe API is closed and may not be open again
 	$.ajax({
 		url: 'http://glosbe.com/gapi/translate?' + $.param({
 			from: lang,
