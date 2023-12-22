@@ -109,7 +109,7 @@ function make_trans($i, $wid, $trans, $word, $lang): string
  * @param string $wordlc Term in lower case
  * @param int    $textid Text ID
  * 
- * @return array Return the useful data to edit a term annotation on a specific text
+ * @return array Return the useful data to edit a term annotation on a specific text.
  */
 function get_term_translations($wordlc, $textid)
 {
@@ -125,6 +125,9 @@ function get_term_translations($wordlc, $textid)
     }
     mysqli_free_result($res);
     
+    /*
+    Unused as of LWT 2.9.0
+
     $textsize = (int)get_first_value(
         "SELECT LgTextSize AS value 
         FROM {$tbpref}languages WHERE LgID = $langid"
@@ -132,7 +135,9 @@ function get_term_translations($wordlc, $textid)
     if ($textsize > 100) { 
         $textsize = intval($textsize * 0.8); 
     }
+    */
     
+    // Get the first annotation containing the input word
     $annotations = preg_split('/[\n]/u', $ann);
     $i = -1;
     foreach (array_values($annotations) as $index => $annotation_line) {
@@ -152,13 +157,20 @@ function get_term_translations($wordlc, $textid)
         $i = $index;
         break;
     }
+
     $ann_data = array();
     if ($i == -1) {
         $ann_data["error"] = "Annotation not found";
         return $ann_data;
     }
+
+    // Get the line conatining the annotation
     $annotation_line = $annotations[$i];
     $vals = preg_split('/[\t]/u', $annotation_line);
+    if ($vals === false) {
+        $ann_data["error"] = "Annotation line is ill-formatted";
+        return $ann_data;
+    }
     $ann_data["term_lc"] = trim($wordlc);
     $ann_data["wid"] = null;
     $ann_data["trans"] = '';
@@ -167,9 +179,9 @@ function get_term_translations($wordlc, $textid)
     // Annotation should be in format "pos   term text   term ID    translation"
     if (count($vals) > 2) {
         // Word exists and has an ID
-        $wid = $vals[2];
-        if (is_numeric($wid)) {
-            $wid = (int)$wid;
+        $wid = null;
+        if (ctype_digit($vals[2])) {
+            $wid = (int)$vals[2];
             $temp_wid = (int)get_first_value(
                 "SELECT COUNT(WoID) AS value 
                 FROM {$tbpref}words 
@@ -178,8 +190,6 @@ function get_term_translations($wordlc, $textid)
             if ($temp_wid < 1) { 
                 $wid = null; 
             }
-        } else {
-            $wid = null;
         }
     }
     if (count($vals) > 3) {
@@ -189,6 +199,7 @@ function get_term_translations($wordlc, $textid)
         $ann_data["wid"] = $wid;
     }
     $ann_data["lang_id"] = $langid;
+
     // Add other translation choices
     if ($wid !== null) {
         $translations = array();
