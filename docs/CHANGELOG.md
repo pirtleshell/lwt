@@ -100,6 +100,8 @@ character as a word (e. g.: Chinese). Big thanks to [@hangug-eo](https://github.
 * The database wizard was not correctly saving the password. This is fixed by
 [@hangug-eo](https://github.com/hangug-eo) in
 [#132](https://github.com/HugoFara/lwt/pull/132).
+* The list of translations of a term was sometimes not found on
+text annotation edition.
 
 ### Deprecated
 

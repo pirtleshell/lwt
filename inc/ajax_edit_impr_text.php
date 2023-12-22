@@ -177,9 +177,9 @@ function get_term_translations($wordlc, $textid)
     $ann_data["ann_index"] = $i;
     $ann_data["term_ord"] = (int)$vals[0];
     // Annotation should be in format "pos   term text   term ID    translation"
+    $wid = null;
     if (count($vals) > 2) {
         // Word exists and has an ID
-        $wid = null;
         if (ctype_digit($vals[2])) {
             $wid = (int)$vals[2];
             $temp_wid = (int)get_first_value(
