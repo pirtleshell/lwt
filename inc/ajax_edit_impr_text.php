@@ -206,32 +206,28 @@ function get_term_translations($wordlc, $textid)
     $ann_data["term_ord"] = (int)$vals[0];
     // Annotation should be in format "pos   term text   term ID    translation"
     $wid = null;
-    if (count($vals) > 2) {
-        // Word exists and has an ID
-        if (ctype_digit($vals[2])) {
-            $wid = (int)$vals[2];
-            $temp_wid = (int)get_first_value(
-                "SELECT COUNT(WoID) AS value 
-                FROM {$tbpref}words 
-                WHERE WoID = $wid"
-            );
-            if ($temp_wid < 1) { 
-                $wid = null; 
-            }
+    // Word exists and has an ID
+    if (count($vals) > 2 && ctype_digit($vals[2])) {
+        $wid = (int)$vals[2];
+        $temp_wid = (int)get_first_value(
+            "SELECT COUNT(WoID) AS value 
+            FROM {$tbpref}words 
+            WHERE WoID = $wid"
+        );
+        if ($temp_wid < 1) { 
+            $wid = null; 
         }
-    }
-    if (count($vals) > 3) {
-        $ann_data["trans"] = $vals[3];
     }
     if ($wid !== null) {
         $ann_data["wid"] = $wid;
-    }
-    $ann_data["lang_id"] = $langid;
-
-    // Add other translation choices
-    if ($wid !== null) {
+        // Add other translation choices
         $ann_data["translations"] = get_translations($wid);
     }
+    // Current translation
+    if (count($vals) > 3) {
+        $ann_data["trans"] = $vals[3];
+    }
+    $ann_data["lang_id"] = $langid;
     return $ann_data;
 }
 

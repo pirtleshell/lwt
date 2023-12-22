@@ -232,7 +232,7 @@ function addTermTranslation(txid, word, lang) {
         alert(failure + "\n" + d.error);
         return;
       }
-      do_ajax_edit_impr_text(pagepos, d.add, d.word_id);
+      do_ajax_edit_impr_text(pagepos, d.add, d.term_id);
     },
     "json"
   );

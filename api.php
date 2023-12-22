@@ -598,7 +598,7 @@ function main_enpoint($method, $requestUri) {
                     ctype_digit($endpoint_fragments[1]) && 
                     $endpoint_fragments[2] == 'translations'
                 ) {
-                    $req_param['text_id'] = $endpoint_fragments[1];
+                    $req_param['term_id'] = $endpoint_fragments[1];
                     $answer = term_translations($req_param);
                     send_response(200, $answer);
                 } else {

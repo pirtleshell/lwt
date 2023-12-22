@@ -86,7 +86,7 @@ function addTermTranslation(txid,word,lang){const translation=$(txid).val().trim
 const failure="Adding translation to term failed!"+"Please reload page and try again."
 $.post('api.php/v1/translations/new',{translation:translation,term_text:word,lg_id:lang},function(d){if(d==''){alert(failure);return}
 if("error" in d){alert(failure+"\n"+d.error);return}
-do_ajax_edit_impr_text(pagepos,d.add,d.word_id)},"json")}
+do_ajax_edit_impr_text(pagepos,d.add,d.term_id)},"json")}
 function changeTableTestStatus(wordid,up){const status_change=up?'up':'down';const wid=parseInt(wordid,10);$.post('api.php/v1/terms/'+wid+'/status/'+status_change,{},function(data){if(data==""||"error" in data){return}
 $('#STAT'+wordid).html(data.increment)},"json")}
 function check(){let count=0;$('.notempty').each(function(_n){if($(this).val().trim()=='')count++});if(count>0){alert('ERROR\n\n'+count+' field(s) - marked with * - must not be empty!');return!1}

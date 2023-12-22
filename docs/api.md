@@ -195,7 +195,7 @@ Adds a new translation for a term.
 
 - **Endpoint**: `/translations/new`
 - **Method**: POST
-- **Arguments**: `text`, `lg_id` and `translation`
+- **Arguments**: `term_text`, `lg_id` and `translation`
 
 ## Response Format
 
