@@ -181,19 +181,19 @@ Sets the status of a term to a new value.
 - **Method**: POST
 - **Arguments**: None
 
-### Update Translation
+### Update Term Translation
 
 Updates an existing translation for a term.
 
-- **Endpoint**: `/translations/{term-id}`
+- **Endpoint**: `/terms/{term-id}/translation`
 - **Method**: POST
 - **Arguments**: `translation`
 
-### Add Translation
+### Add Term Translation
 
 Adds a new translation for a term.
 
-- **Endpoint**: `/translations/new`
+- **Endpoint**: `/terms/new`
 - **Method**: POST
 - **Arguments**: `term_text`, `lg_id` and `translation`
 

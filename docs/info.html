@@ -1923,7 +1923,13 @@ as a REST API. It features the following interaction:
 <li>
 <code>/settings</code>: save settings.</li>
 <li>
-<code>/terms/{term-id}/status</code>, followed by either:
+<code>/terms</code> followed by:
+<ul>
+<li>
+<code>/{term-id}</code> for any term update, in particular:
+<ul>
+<li>
+<code>/status</code>, to change the status, followed by either:
 <ul>
 <li>
 <code>/down</code>: decrement status of a term by one unit.</li>
@@ -1931,6 +1937,14 @@ as a REST API. It features the following interaction:
 <code>/up</code>: increment status of a term by one unit.</li>
 <li>
 <code>/set/{new-status}</code>: set the status of a term.</li>
+</ul>
+</li>
+<li>
+<code>/translation</code>: update the translation of an existing word.</li>
+</ul>
+</li>
+<li>
+<code>/new</code>: add a translation for a new word.</li>
 </ul>
 </li>
 <li>
@@ -1942,15 +1956,6 @@ as a REST API. It features the following interaction:
 <code>/audio-position</code>: change <code>audio</code> position.</li>
 <li>
 <code>/reading-position</code>: change the reading position.</li>
-</ul>
-</li>
-<li>
-<code>/translations</code> followed by:
-<ul>
-<li>
-<code>/new</code>: add a translation for a new word.</li>
-<li>
-<code>/{term-id}</code>: update the translation of an existing word.</li>
 </ul>
 </li>
 </ul>
@@ -2027,8 +2032,12 @@ text annotation edition.</li>
 <li>
 <code>inc/ajax_show_similar_terms.php</code>, use <code>/similar-terms</code> on GET, <code>simterms_lgid</code> becomes <code>lg_id</code> and <code>simterms_word</code> <code>term</code>.</li>
 <li>
-<code>inc/ajax_add_term_transl.php</code>, use <code>/translations</code>, with
-<code>/new</code> or <code>/{term-id}</code>. The arguments were also changed. <code>lang</code> becomes <code>lg_id</code>, <code>text</code> is <code>term_text</code>.</li>
+<code>inc/ajax_add_term_transl.php</code>
+<ul>
+<li>For a new term, use <code>/terms/new</code>. <code>lang</code> becomes <code>lg_id</code>, <code>text</code> is <code>term_text</code>.</li>
+<li>To update an existing term, use <code>/terms/{term-id}/translation</code>. Same arguments.</li>
+</ul>
+</li>
 <li>
 <code>inc/ajax_check_regexp.php</code> should no longer be used and will be removed.</li>
 <li>

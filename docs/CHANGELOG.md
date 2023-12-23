@@ -40,17 +40,18 @@ as a REST API. It features the following interaction:
     * `/version`: REST API version.
   * On POST, the endpoints are:
     * `/settings`: save settings.
-    * `/terms/{term-id}/status`, followed by either:
-      * `/down`: decrement status of a term by one unit.
-      * `/up`: increment status of a term by one unit.
-      * `/set/{new-status}`: set the status of a term.
+    * `/terms` followed by:
+      * `/{term-id}` for any term update, in particular:
+        * `/status`, to change the status, followed by either:
+          * `/down`: decrement status of a term by one unit.
+          * `/up`: increment status of a term by one unit.
+          * `/set/{new-status}`: set the status of a term.
+        * `/translation`: update the translation of an existing word.
+      * `/new`: add a translation for a new word.
     * `/texts/{text-id}` followed by:
       * `/annotation`: change the text annotation
       * `/audio-position`: change `audio` position.
       * `/reading-position`: change the reading position.
-    * `/translations` followed by:
-      * `/new`: add a translation for a new word.
-      * `/{term-id}`: update the translation of an existing word.
 * Similar terms mark the word edit form as edited only if something was
 actually changed.
 * You can now specify a socket for your database through ``$socket`` in
@@ -107,8 +108,9 @@ text annotation edition.
 
 * Legacy AJAX API. The following AJAX interactions are now deprecated in favor to the new REST API (at ``api.php``):
   * ``inc/ajax_show_similar_terms.php``, use ``/similar-terms`` on GET, `simterms_lgid` becomes `lg_id` and `simterms_word` `term`.
-  * ``inc/ajax_add_term_transl.php``, use ``/translations``, with
-  ``/new`` or ``/{term-id}``. The arguments were also changed. `lang` becomes `lg_id`, `text` is `term_text`.
+  * ``inc/ajax_add_term_transl.php``
+    * For a new term, use `/terms/new`. `lang` becomes `lg_id`, `text` is `term_text`.
+    * To update an existing term, use `/terms/{term-id}/translation`. Same arguments.
   * ``inc/ajax_check_regexp.php`` should no longer be used and will be removed.
   * ``inc/ajax_chg_term_status.php`` should be accessed through ``/terms/{term-id}/status``. Argument ``data`` is now part of the URL, on post only.
   * ``inc/ajax_get_phonetic.php`` should be accessed through ``/phonetic-reading``, same arguments.

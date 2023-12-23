@@ -44,7 +44,9 @@ function endpoint_exits($method, $requestUri) {
 
         'terms' => ['GET', 'POST'],
         'terms/imported' => ['GET'],
+        'terms/new' => ['POST'],
 
+        //'terms/(?<term-id>\d+)/translation' => ['POST'],
         //'terms/(?<term-id>\d+)/translations' => ['GET'],
 
         //'terms/(?<term-id>\d+)/status/down' => ['POST'],
@@ -59,10 +61,6 @@ function endpoint_exits($method, $requestUri) {
 
         'texts-statistics' => ['GET'],
         //'texts-statistics/(?<texts-ids>[\d,]+)' => ['GET'],
-        
-        'translations' => ['POST'],
-        //'translations/(?<term-id>\d+)' => ['POST'],
-        'translations/new' => ['POST'],
 
         'version' => ['GET'], 
 
@@ -661,54 +659,52 @@ function main_enpoint($method, $requestUri) {
                 }
                 break;
             case 'terms':
-                if (!ctype_digit($endpoint_fragments[1])) {
-                    send_response(
-                        404, 
-                        ['error' => 'Term ID (Integer) Expected, Got ' . 
-                        $endpoint_fragments[1]]
-                    );
-                }
-                if ($endpoint_fragments[2] != "status") {
-                    send_response(
-                        404, 
-                        ['error' => '"status" Expected, Got ' . 
-                        $endpoint_fragments[2]]
-                    );
-                }
-                $_POST['term_id'] = (int) $endpoint_fragments[1];
-                if ($endpoint_fragments[3] == 'down') {
-                    $_POST['status_up'] = 0;
-                    $answer = increment_term_status($_POST);
-                    send_response(200, $answer);
-                } else if ($endpoint_fragments[3] == 'up') {
-                    $_POST['status_up'] = 1;
-                    $answer = increment_term_status($_POST);
-                    send_response(200, $answer);
-                } else if (ctype_digit($endpoint_fragments[3])) {
-                    $_POST['status'] = (int) $endpoint_fragments[3];
-                    $answer = set_term_status($_POST);
-                    send_response(200, $answer);
-                } else {
-                    send_response(
-                        404, 
-                        ['error' => 'Endpoint Not Found: ' . 
-                        $endpoint_fragments[3]]
-                    );
-                }
-                break;
-            case 'translations':
                 if (ctype_digit($endpoint_fragments[1])) {
-                    $_POST["term_id"] = (int) $endpoint_fragments[1];
-                    $answer = update_translation($_POST);
-                    send_response(200, $answer);
+                    $_POST['term_id'] = (int) $endpoint_fragments[1];
+                    if ($endpoint_fragments[2] == "status") {
+                        if ($endpoint_fragments[3] == 'down') {
+                            $_POST['status_up'] = 0;
+                            $answer = increment_term_status($_POST);
+                            send_response(200, $answer);
+                        } else if ($endpoint_fragments[3] == 'up') {
+                            $_POST['status_up'] = 1;
+                            $answer = increment_term_status($_POST);
+                            send_response(200, $answer);
+                        } else if (ctype_digit($endpoint_fragments[3])) {
+                            $_POST['status'] = (int) $endpoint_fragments[3];
+                            $answer = set_term_status($_POST);
+                            send_response(200, $answer);
+                        } else {
+                            send_response(
+                                404, 
+                                ['error' => 'Endpoint Not Found: ' . 
+                                $endpoint_fragments[3]]
+                            );
+                        }
+                    } else if ($endpoint_fragments[2] == 'translation') {
+                        $answer = update_translation($_POST);
+                        send_response(200, $answer);
+                    } else {
+                        send_response(
+                            404, 
+                            [
+                                'error' => 
+                                '"status" or "translation"' . 
+                                ' Expected, Got ' . $endpoint_fragments[2]
+                            ]
+                        );
+                    }
                 } else if ($endpoint_fragments[1] == 'new') {
                     $answer = add_translation($_POST);
                     send_response(200, $answer);
                 } else {
                     send_response(
                         404, 
-                        ['error' => 'Term ID (Integer) Expected, Got ' . 
-                        $endpoint_fragments[1]]
+                        [
+                            'error' => 
+                            'Term ID (Integer) or "new" Expected,' . 
+                            ' Got ' . $endpoint_fragments[1]
+                        ]
                     );
                 }
                 break;

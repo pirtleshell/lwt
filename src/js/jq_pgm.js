@@ -182,7 +182,7 @@ function updateTermTranslation(wordid, txid) {
   const failure = "Updating translation of term failed!" + 
   "Please reload page and try again.";
   $.post(
-    'api.php/v1/translations/' + wordid,
+    'api.php/v1/terms/' + wordid + '/translation',
     request,
     function (d) {
       if (d == '') {
@@ -217,7 +217,7 @@ function addTermTranslation(txid, word, lang) {
   const failure = "Adding translation to term failed!" +
   "Please reload page and try again."
   $.post(
-    'api.php/v1/translations/new',
+    'api.php/v1/terms/new',
     {
       translation: translation,
       term_text: word,
@@ -1708,7 +1708,7 @@ function do_ajax_edit_impr_text(pagepos, word, term_id)
   // Load the possible translations for a word
   const textid = $('#editimprtextdata').attr('data_id');
   $.getJSON(
-    'api.php/v1/terms/' + term_id + '/translations/',
+    'api.php/v1/terms/' + term_id + '/translations',
     {
       text_id: textid, 
       term_lc: word 
