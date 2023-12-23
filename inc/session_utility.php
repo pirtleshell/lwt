@@ -2104,14 +2104,14 @@ function get_selected($value, $selval)
 /**
  * Create a projection operator do perform word test.
  * 
- * @param int       $key   Type of test. 
+ * @param string    $key   Type of test. 
  *                         - 'words': selection from words
  *                         - 'texts': selection from texts
  *                         - 'lang': selection from language
  *                         - 'text': selection from single text
  * @param array|int $value Object to select.
  * 
- * @return string SQL project necessary
+ * @return string SQL projection necessary
  * 
  * @global string $tbpref
  */

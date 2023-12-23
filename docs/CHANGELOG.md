@@ -126,6 +126,11 @@ text annotation edition.
     * On display, using ``word=""`` is now deprecated as the page loads in pure PHP.
     * On term edition, should be accessed through ``/terms/{term-id}/translations``, ``id`` is now ``text_id`` and ``word`` becomes ``text_lc``.
 
+### Security
+
+* During tests (word review), test data is no longer be send as raw SQL string. 
+SQL in request is still allowed for custom tests (where you write your own test selection).
+
 ## 2.8.1-fork (April 14 2023)
 
 ### Changed in 2.8.1-fork

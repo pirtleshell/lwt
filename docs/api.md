@@ -47,7 +47,7 @@ Retrieves the next word to be reviewed.
 
 - **Endpoint**: `/review/next-word`
 - **Method**: GET
-- **Arguments**: `test_sql`, `word_mode`, `lg_id`, `word_regex`, `type`
+- **Arguments**: `test_key`, `selection`, `word_mode`, `lg_id`, `word_regex`, `type`
 
 ### Get Tomorrow's Reviews Number
 
@@ -55,7 +55,7 @@ Retrieves the number of reviews scheduled for tomorrow.
 
 - **Endpoint**: `/review/tomorrow-count`
 - **Method**: GET
-- **Arguments**: `test_sql`
+- **Arguments**: `test_key` and `selection`
 
 ### Get Sentences Containing New Term
 

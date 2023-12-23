@@ -189,7 +189,7 @@ function get_word_test_ajax($testsql, $word_mode, $lgid, $wordregex, $testtype)
             $sent = "{" . $word_record['WoText'] . "}";
         }
     }
-    list($r, $save) = do_test_get_term_test(
+    list($html_sentence, $save) = do_test_get_term_test(
         $word_record, $sent, $testtype, $word_mode, $wordregex
     );
     $solution = get_test_solution($testtype, $word_record, $word_mode, $save);
@@ -198,7 +198,7 @@ function get_word_test_ajax($testsql, $word_mode, $lgid, $wordregex, $testtype)
         "word_id" => $word_record['WoID'],
         "solution" => $solution,
         "word_text" => $save,
-        "group" => $r 
+        "group" => $html_sentence
     );
 }
 
@@ -206,16 +206,20 @@ function get_word_test_ajax($testsql, $word_mode, $lgid, $wordregex, $testtype)
 /**
  * Return the next word to test.
  * 
- * @param array $get_req Array with the fields {test_sql: string, 
- *                       word_mode: bool, lg_id: int, 
- *                       word_regex: string, type: int}
+ * @param array $get_req Array with the fields {
+ *                          test_key: string, selection: string, word_mode: bool, 
+ *                          lg_id: int, word_regex: string, type: int
+ *                       }
  * 
  * @return string Next word formatted as JSON.
  */
 function word_test_ajax($get_req)
 {
+    $test_sql = do_test_test_get_projection(
+        $get_req['test_key'], $get_req['selection']
+    );
     return get_word_test_ajax(
-        $get_req['test_sql'], $get_req['word_mode'], 
+        $test_sql, $get_req['word_mode'], 
         $get_req['lg_id'], 
         $get_req['word_regex'], $get_req['type']
     );
@@ -224,14 +228,17 @@ function word_test_ajax($get_req)
 /**
  * Return the number of reviews for tomorrow by using the suplied query.
  * 
- * @param array $get_req Array with the field "test_sql"
+ * @param array $get_req Array with the fields "test_key" and "selection" 
  * 
  * @return string JSON-encoded result
  */
 function tomorrow_test_count($get_req) 
 {
+    $test_sql = do_test_test_get_projection(
+        $get_req['test_key'], $get_req['selection']
+    );
     $output = array(
-        "count" => do_test_get_tomorrow_tests_count($get_req['test_sql'])
+        "count" => do_test_get_tomorrow_tests_count($test_sql)
     );
     return $output;
 }

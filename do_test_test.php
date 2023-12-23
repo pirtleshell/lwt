@@ -419,11 +419,11 @@ function get_test_solution($testtype, $wo_record, $nosent, $wo_text)
 /**
  * Preforms the HTML of the test area, to update through AJAX.
  *
- * @param string $selector   Type of test to run.
- * @param string $selection  Items to run the test on.
- * @param int    $totaltests Total number of tests to do.
- * @param int    $count      Number of tests left.
- * @param int    $testtype   Type of test.
+ * @param string    $selector   Type of test to run.
+ * @param array|int $selection  Items to run the test on.
+ * @param int       $totaltests Total number of tests to do.
+ * @param int       $count      Number of tests left.
+ * @param int       $testtype   Type of test.
  *
  * @return int Number of tests left to do.
  *
@@ -475,7 +475,6 @@ function do_test_prepare_ajax_test_area($selector, $selection, $count, $testtype
         {
             const review_data = <?php echo json_encode(array(
                 "total_tests" => $count,
-                "test_sql" => $testsql,
                 "test_key" => $selector,
                 "selection" => $selection,
                 "word_mode" => $nosent,
@@ -485,6 +484,7 @@ function do_test_prepare_ajax_test_area($selector, $selection, $count, $testtype
             )); ?>;
 
             query_next_term(review_data);
+
             // Close any previous tooltip
             cClick();
         }
@@ -893,15 +893,19 @@ function do_test_test_javascript($count)
     * 
     * @param {JSON}   current_test Current test data
     * @param {number} total_tests  Total number of tests for the day
-    * @param {string} test_sql     SQL query for the test
+    * @param {string} test_key     Key identifier for the test to run
+    * @param {string} selection    Selection of data to run the test on
     */
-    function test_query_handler(current_test, total_tests, test_sql)
+    function test_query_handler(current_test, total_tests, test_key, selection)
     {
         if (current_test['word_id'] == 0) {
             do_test_finished(total_tests);
             $.getJSON(
                 'api.php/v1/review/tomorrow-count', 
-                { test_sql: test_sql },
+                { 
+                    test_key: test_key,
+                    selection: selection
+                },
                 function (tomorrow_test) {
                     if (tomorrow_test.count) {
                         $('#tests-tomorrow').css("display", "inherit");
@@ -921,13 +925,16 @@ function do_test_test_javascript($count)
 
     /**
     * Get new term to test through AJAX
+    * 
+    * @param {JSON} review_data Various data on the current test
     */
     function query_next_term(review_data)
     {
         $.getJSON(
             'api.php/v1/review/next-word', 
             {
-                test_sql: review_data.test_sql,
+                test_key: review_data.test_key,
+                selection: review_data.selection,
                 word_mode: review_data.word_mode,
                 lg_id: review_data.lg_id,
                 word_regex: review_data.word_regex,
@@ -935,7 +942,9 @@ function do_test_test_javascript($count)
             }
         )
         .done(function (data) {
-            test_query_handler(data, review_data.count, review_data.test_sql);
+            test_query_handler(
+                data, review_data.count, review_data.test_key, review_data.selection
+            );
         } );
     }
 
@@ -995,8 +1004,8 @@ function do_test_test_content()
 /**
  * Do the main content of a test page.
  * 
- * @param string $selector  Type of test to run
- * @param string $selection Items to run the test on
+ * @param string    $selector  Type of test to run
+ * @param array|int $selection Items to run the test on
  * 
  * @global int $debug Show debug informations
  * 
