@@ -35,14 +35,13 @@ function do_test_get_test_sql($selection, $sess_testsql, $lang, $text)
     if (isset($selection) && isset($sess_testsql)) {
         $testsql = do_test_test_from_selection($selection, $sess_testsql);
     } else if (isset($lang) && is_numeric($lang)) {
-        $testsql = do_test_test_get_projection(2, (int)$lang);
+        $testsql = do_test_test_get_projection('lang', (int)$lang);
     } else if (isset($text) && is_numeric($text)) {
-        $testsql = do_test_test_get_projection(3, (int)$text);
+        $testsql = do_test_test_get_projection('text', (int)$text);
     } else {
         my_die("do_test_test.php called with wrong parameters"); 
     }
     return $testsql;
-
 }
 
 /**
