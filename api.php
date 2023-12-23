@@ -46,8 +46,7 @@ function endpoint_exits($method, $requestUri) {
         'terms/imported' => [ 'GET' ],
         'terms/new' => [ 'POST' ],
 
-        //'terms/(?<term-id>\d+)/translation' => [ 'POST' ],
-        //'terms/(?<term-id>\d+)/translations' => [ 'GET' ],
+        //'terms/(?<term-id>\d+)/translations' => [ 'GET', 'POST' ],
 
         //'terms/(?<term-id>\d+)/status/down' => [ 'POST' ],
         //'terms/(?<term-id>\d+)/status/up' => [ 'POST' ],
@@ -687,7 +686,7 @@ function main_enpoint($method, $requestUri) {
                                 $endpoint_fragments[3]]
                             );
                         }
-                    } else if ($endpoint_fragments[2] == 'translation') {
+                    } else if ($endpoint_fragments[2] == 'translations') {
                         $answer = update_translation($_POST);
                         send_response(200, $answer);
                     } else {
@@ -695,7 +694,7 @@ function main_enpoint($method, $requestUri) {
                             404, 
                             [
                                 'error' => 
-                                '"status" or "translation"' . 
+                                '"status" or "translations"' . 
                                 ' Expected, Got ' . $endpoint_fragments[2]
                             ]
                         );

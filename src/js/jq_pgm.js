@@ -182,7 +182,7 @@ function updateTermTranslation(wordid, txid) {
   const failure = "Updating translation of term failed!" + 
   "Please reload page and try again.";
   $.post(
-    'api.php/v1/terms/' + wordid + '/translation',
+    'api.php/v1/terms/' + wordid + '/translations',
     request,
     function (d) {
       if (d == '') {

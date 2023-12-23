@@ -46,7 +46,7 @@ as a REST API. It features the following interaction:
           * `/down`: decrement status of a term by one unit.
           * `/up`: increment status of a term by one unit.
           * `/set/{new-status}`: set the status of a term.
-        * `/translation`: update the translation of an existing word.
+        * `/translations`: add a translation for an existing word.
       * `/new`: add a translation for a new word.
     * `/texts/{text-id}` followed by:
       * `/annotation`: change the text annotation
@@ -110,7 +110,7 @@ text annotation edition.
   * ``inc/ajax_show_similar_terms.php``, use ``/similar-terms`` on GET, `simterms_lgid` becomes `lg_id` and `simterms_word` `term`.
   * ``inc/ajax_add_term_transl.php``
     * For a new term, use `/terms/new`. `lang` becomes `lg_id`, `text` is `term_text`.
-    * To update an existing term, use `/terms/{term-id}/translation`. Same arguments.
+    * To update an existing term, use `/terms/{term-id}/translations`. Same arguments.
   * ``inc/ajax_check_regexp.php`` should no longer be used and will be removed.
   * ``inc/ajax_chg_term_status.php`` should be accessed through ``/terms/{term-id}/status``. Argument ``data`` is now part of the URL, on post only.
   * ``inc/ajax_get_phonetic.php`` should be accessed through ``/phonetic-reading``, same arguments.

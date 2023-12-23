@@ -76,13 +76,21 @@ function add_new_term_transl($text, $lang, $data)
 function edit_term_transl($wid, $new_trans)
 {
     global $tbpref;
-    $oldtrans = get_first_value(
+    $oldtrans = (string) get_first_value(
         "SELECT WoTranslation AS value 
         FROM {$tbpref}words 
         WHERE WoID = $wid"
     );
     
     $oldtransarr = preg_split('/[' . get_sepas()  . ']/u', $oldtrans);
+    if ($oldtransarr === false) {
+        // Something wrong happened, stop here
+        return (string)get_first_value(
+            "SELECT WoTextLC AS value 
+            FROM {$tbpref}words 
+            WHERE WoID = $wid"
+        );
+    }
     array_walk($oldtransarr, 'trim_value');
     
     if (!in_array($new_trans, $oldtransarr)) {
