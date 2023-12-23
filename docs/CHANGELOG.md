@@ -24,7 +24,7 @@ short text creation/edition, long text creation and text check
 * REST API, the new ``api.php`` is intended to continue developing itself
 as a REST API. It features the following interaction:
   * On GET, the endpoints are:
-    * `/media-paths`: the list of audio and video files in the media folder.
+    * `/media-files`: the list of audio and video files in the media folder.
     * `/sentences-with-term`: sentences containing a new term.
     * `/sentences-with-term/{term-id}`: sentences containing a registred term.
     * `/similar-terms`: terms similar to a given one.
@@ -118,7 +118,7 @@ text annotation edition.
   * ``inc/ajax_save_setting.php`` should be accessed through ``/settings``, `k` becomes `key` and `v` `value`.
   * ``inc/ajax_save_text_position.php`` should be accessed through ``/texts/{text-id}/reading-position``, `tposition` is now `position`.
   * ``inc/ajax_word_counts.php`` should be accessed through ``/texts-statistics/{texts-ids}``, on GET. Argument ``id`` is now ``{texts-ids}``.
-  * ``inc/ajax_update_media_select.php`` should be accessed through ``/media-paths``.
+  * ``inc/ajax_update_media_select.php`` should be accessed through ``/media-files``.
   * ``inc/ajax_show_sentences.php`` should be accessed through ``/sentences-with-term``, on GET. Argument ``lang`` is now ``lg_id``, ``word`` is ``word_lc`` and ``woid`` is ``word_id``, ``ctl`` is no longer required.
   * ``inc/ajax_show_imported_terms.php`` should be accessed through ``/terms/imported``, same arguments.
   * ``inc/ajax_save_impr_text.php`` should be accessed through ``/texts/{text-id}/annotation``, ``id`` is now optional.

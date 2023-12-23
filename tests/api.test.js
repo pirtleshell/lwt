@@ -28,10 +28,13 @@ describe('Random API call', function() {
 
 describe('Calls on GET', function() {
 
-  it('GET /media-paths', function(done) {
+  it('GET /media-files', function(done) {
     supertest(host)
-      .get(api_path + '/media-paths')
+      .get(api_path + '/media-files')
       .expect('Content-Type', 'application/json')
+      .expect(function(res) {
+        expect(res.body.base_path).to.be.a('string');
+      })
       .expect(200, done)
   });
 

@@ -27,7 +27,7 @@ function send_response($status = 200, $data = null) {
 function endpoint_exits($method, $requestUri) {
     // Set up API endpoints
     $endpoints = [ 
-        'media-paths' => [ 'GET' ],
+        'media-files' => [ 'GET' ],
 
         'phonetic-reading' => [ 'GET' ],
 
@@ -116,13 +116,13 @@ function rest_api_version($get_req)
 }
 
 /**
- * List the audio files in the media folder.
+ * List the audio and video files in the media folder.
  * 
  * @param array $get_req Unnused
  * 
  * @return string[] Path of media files
  */
-function media_paths($get_req) 
+function media_files($get_req) 
 {
     return get_media_paths();
 }
@@ -534,8 +534,8 @@ function main_enpoint($method, $requestUri) {
     if ($method === 'GET') {
         // Handle GET request for each endpoint
         switch ($endpoint_fragments[0]) {
-            case 'media-paths':
-                $answer = media_paths($req_param);
+            case 'media-files':
+                $answer = media_files($req_param);
                 send_response(200, $answer);
                 break;
             case 'phonetic-reading':

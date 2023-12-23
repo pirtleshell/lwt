@@ -1308,7 +1308,7 @@ function do_ajax_update_media_select () {
   $('#mediaselect select').css("display", "none");
   $('#mediaSelectLoadingImg').css("display", "inherit");
   $.getJSON(
-    'api.php/v1/media-path',
+    'api.php/v1/media-files',
     {},
     media_select_receive_data
   );
