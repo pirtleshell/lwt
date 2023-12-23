@@ -19,6 +19,51 @@
 require_once 'inc/session_utility.php';
 require_once 'inc/langdefs.php';
 
+/**
+ * Get the SQL string to perform tests.
+ * 
+ * @param bool|null   $selection    Test is of type selection
+ * @param string|null $sess_testsql SQL string for test
+ * @param int|null    $lang         Test is of type language, for the language $lang ID
+ * @param int|null    $text         Testing text with ID $text
+ * 
+ * @return array|never Test identifier as an array(key, value)
+ */
+function do_test_get_identifier($selection, $sess_testsql, $lang, $text)
+{
+    if (isset($selection) && isset($sess_testsql)) {
+        $data_string_array = explode(",", trim($sess_testsql, "()"));
+        $data_int_array = array_map('intval', $data_string_array);
+        switch ((int)$selection) {
+            case 2:
+                return array('words', $data_int_array);
+                break;
+            case 3:
+                return array('texts', $data_int_array);
+                break;
+            default:
+                // Deprecated behavior in 2.9.0, to be removed on 3.0.0
+                $test_sql = $sess_testsql;
+                $cntlang = get_first_value(
+                    "SELECT COUNT(DISTINCT WoLgID) AS value 
+                    FROM $test_sql"
+                );
+                if ($cntlang > 1) {
+                    echo "<p>Sorry - The selected terms are in $cntlang languages," . 
+                    " but tests are only possible in one language at a time.</p>";
+                    exit();
+                }
+                return array('raw_sql', $test_sql);
+                break;
+            }
+    } else if (isset($lang) && is_numeric($lang)) {
+        return array("lang", (int)$lang);
+    } 
+    if (isset($text) && is_numeric($text)) {
+        return array("text", (int)$text);
+    }
+    my_die("do_test_test.php called with wrong parameters"); 
+}
 
 /**
  * Get the SQL string to perform tests.
@@ -32,15 +77,8 @@ require_once 'inc/langdefs.php';
  */
 function do_test_get_test_sql($selection, $sess_testsql, $lang, $text)
 {
-    if (isset($selection) && isset($sess_testsql)) {
-        $testsql = do_test_test_from_selection($selection, $sess_testsql);
-    } else if (isset($lang) && is_numeric($lang)) {
-        $testsql = do_test_test_get_projection('lang', (int)$lang);
-    } else if (isset($text) && is_numeric($text)) {
-        $testsql = do_test_test_get_projection('text', (int)$text);
-    } else {
-        my_die("do_test_test.php called with wrong parameters"); 
-    }
+    $identifier = do_test_get_identifier($selection, $sess_testsql, $lang, $text);
+    $testsql = do_test_test_get_projection($identifier[0], $identifier[1]);
     return $testsql;
 }
 
@@ -50,6 +88,11 @@ function do_test_get_test_sql($selection, $sess_testsql, $lang, $text)
  * @param int $testype Initial test type value
  * 
  * @return int Clamped $testtype
+ *                     - 1: Test type is ..[L2]..
+ *                     - 2: Test type is ..[L1]..
+ *                     - 3: Test type is ..[..]..
+ *                     - 4: Test type is [L2]
+ *                     - 5: Test type is [L1]
  */
 function do_test_get_test_type($testtype)
 {
@@ -376,7 +419,8 @@ function get_test_solution($testtype, $wo_record, $nosent, $wo_text)
 /**
  * Preforms the HTML of the test area, to update through AJAX.
  *
- * @param string $testsql    SQL query of for the words that should be tested.
+ * @param string $selector   Type of test to run.
+ * @param string $selection  Items to run the test on.
  * @param int    $totaltests Total number of tests to do.
  * @param int    $count      Number of tests left.
  * @param int    $testtype   Type of test.
@@ -388,14 +432,17 @@ function get_test_solution($testtype, $wo_record, $nosent, $wo_text)
  *
  * @psalm-return int<0, max>
  */
-function do_test_prepare_ajax_test_area($testsql, $count, $testtype): int
+function do_test_prepare_ajax_test_area($selector, $selection, $count, $testtype): int
 {
     global $tbpref;
+
     $nosent = false;
     if ($testtype > 3) {
         $testtype -= 3;
         $nosent = true;
     }
+    $testsql = do_test_test_get_projection($selector, $selection);
+
 
     echo '<div id="body">';
 
@@ -429,6 +476,8 @@ function do_test_prepare_ajax_test_area($testsql, $count, $testtype): int
             const review_data = <?php echo json_encode(array(
                 "total_tests" => $count,
                 "test_sql" => $testsql,
+                "test_key" => $selector,
+                "selection" => $selection,
                 "word_mode" => $nosent,
                 "lg_id" => $lgid,
                 "word_regex" => (string)$lang['regexword'],
@@ -946,15 +995,19 @@ function do_test_test_content()
 /**
  * Do the main content of a test page.
  * 
+ * @param string $selector  Type of test to run
+ * @param string $selection Items to run the test on
+ * 
  * @global int $debug Show debug informations
  * 
  * @return void
  */
-function do_test_test_content_ajax($test_sql)
+function do_test_test_content_ajax($selector, $selection)
 {
     global $debug;
     
     $testtype = do_test_get_test_type((int)getreq('type'));
+    $test_sql = do_test_test_get_projection($selector, $selection);
     $count = get_first_value(
         "SELECT COUNT(DISTINCT WoID) AS value 
         FROM $test_sql AND WoStatus BETWEEN 1 AND 5 
@@ -968,7 +1021,9 @@ function do_test_test_content_ajax($test_sql)
     }
     $notyettested = (int) $count;
 
-    $total_tests = do_test_prepare_ajax_test_area($test_sql, $notyettested, $testtype);
+    $total_tests = do_test_prepare_ajax_test_area(
+        $selector, $selection, $notyettested, $testtype
+    );
     prepare_test_footer($notyettested);
     do_test_test_javascript($total_tests);
 }
