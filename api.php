@@ -15,16 +15,31 @@ require_once __DIR__ . '/inc/ajax_edit_impr_text.php';
 
 
 /**
- * Send JSON response
+ * Send JSON response and exit.
+ * 
+ * @param int   $status Status code to display
+ * @param mixed $data   Any data to return
+ * 
+ * @return never
  */
-function send_response($status = 200, $data = null) {
+function send_response($status = 200, $data = null) 
+{
     header('Content-Type: application/json');
     http_response_code($status);
     echo json_encode($data);
     exit;
 }
 
-function endpoint_exits($method, $requestUri) {
+/**
+ * Check if an API endpoint exists.
+ * 
+ * @param string $method     Method name (e.g. 'GET' or 'POST')
+ * @param string $requestURI The URI being requested.
+ * 
+ * @return string The first matching endpoint
+ */
+function endpoint_exits($method, $requestUri) 
+{
     // Set up API endpoints
     $endpoints = [ 
         'media-files' => [ 'GET' ],
@@ -522,7 +537,14 @@ function unknown_post_action_type($post_req, $action_exists=false)
     return array("error" => $message); 
 }
 
-
+/**
+ * Main handler for any provided request.
+ * 
+ * @param string $method     Method name (e.g. 'GET' or 'POST')
+ * @param string $requestURI The URI being requested.
+ * 
+ * @return string The first matching endpoint
+ */
 function main_enpoint($method, $requestUri) {
     // Extract requested endpoint from URI
     $req_endpoint = endpoint_exits($method, $requestUri);
