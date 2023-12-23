@@ -123,11 +123,8 @@ function do_ajax_save_impr_text(textid, elem_name, form_data) {
   $(idwait).html('<img src="icn/waiting2.gif" />');
   // elem: "rg2", form_data: {"rg2": "translation"}
   $.post(
-    'inc/ajax.php',
+    'api.php/v1/texts/' + textid + '/annotation',
     {
-      action: "",
-      action_type: "set_annotation",
-      tid: textid,
       elem: elem_name,
       data: form_data
     },
@@ -164,16 +161,15 @@ function changeImprAnnRadio () {
   do_ajax_save_impr_text(textid, elem_name, form_data);
 }
 
+
 /**
- * Add (new word) or update (existing word) a word translation.
+ * Update a word translation.
  * 
- * @param {int}    wordid Word ID, 0 for new wrod
+ * @param {int}    wordid Word ID
  * @param {string} txid   Text HTML ID or unique HTML selector
- * @param {string} word   Word text
- * @param {int}    lang   Language ID
  * @returns 
  */
-function addTermTranslation(wordid, txid, word, lang) {
+function updateTermTranslation(wordid, txid) {
   const translation = $(txid).val().trim();
   const pagepos = $(document).scrollTop();
   if (translation == '' || translation == '*') {
@@ -181,25 +177,12 @@ function addTermTranslation(wordid, txid, word, lang) {
     return;
   }
   let request = {
-        action: "change_translation",
-        translation: translation,
+    translation: translation,
   };
-  let failure;
-  let action_type;
-  if (wordid === 0) {
-    action_type = "add";
-    request["text"] = word;
-    request["lang"] = lang;
-    failure = "Adding translation to term failed!";
-  } else {
-    action_type = "update";
-    request["wordid"] = wordid;
-    failure = "Updating translation of term failed!";
-  }
-  request["action_type"] = action_type;
-  failure += "Please reload page and try again."
+  const failure = "Updating translation of term failed!" + 
+  "Please reload page and try again.";
   $.post(
-    'inc/ajax.php', 
+    'api.php/v1/terms/' + wordid + '/translations',
     request,
     function (d) {
       if (d == '') {
@@ -210,7 +193,46 @@ function addTermTranslation(wordid, txid, word, lang) {
         alert(failure + "\n" + d.error);
         return;
       }
-      do_ajax_edit_impr_text(pagepos, d[action_type]);
+      do_ajax_edit_impr_text(pagepos, d.update, wordid);
+    },
+    "json"
+  );
+}
+
+/**
+ * Add (new word) a word translation.
+ * 
+ * @param {string} txid   Text HTML ID or unique HTML selector
+ * @param {string} word   Word text
+ * @param {int}    lang   Language ID
+ * @returns 
+ */
+function addTermTranslation(txid, word, lang) {
+  const translation = $(txid).val().trim();
+  const pagepos = $(document).scrollTop();
+  if (translation == '' || translation == '*') {
+    alert('Text Field is empty or = \'*\'!');
+    return;
+  }
+  const failure = "Adding translation to term failed!" +
+  "Please reload page and try again."
+  $.post(
+    'api.php/v1/terms/new',
+    {
+      translation: translation,
+      term_text: word,
+      lg_id: lang
+    },
+    function (d) {
+      if (d == '') {
+        alert(failure);
+        return;
+      }
+      if ("error" in d) {
+        alert(failure + "\n" + d.error);
+        return;
+      }
+      do_ajax_edit_impr_text(pagepos, d.add, d.term_id);
     },
     "json"
   );
@@ -223,14 +245,11 @@ function addTermTranslation(wordid, txid, word, lang) {
  * @param {bool}   up     true if status sould be increased, false otherwise
  */
 function changeTableTestStatus (wordid, up) {
+  const status_change = up ? 'up' : 'down';
+  const wid = parseInt(wordid, 10);
   $.post(
-    'inc/ajax.php',
-    {
-      action: "term_status",
-      action_type: "increment",
-      wid: parseInt(wordid, 10),
-      status_up: (up ? 1 : 0) 
-    }, 
+    'api.php/v1/terms/' + wid + '/status/' + status_change,
+    {}, 
     function (data) {
       if (data == "" || "error" in data) {
         return;
@@ -1202,12 +1221,10 @@ function keydown_event_do_text_text (e) {
  */
 function do_ajax_save_setting (k, v) {
   $.post(
-    'inc/ajax.php', 
+    'api.php/v1/settings',
     {
-      action: '',
-      action_type: 'save_setting',
-      k: k,
-      v: v
+      key: k,
+      value: v
     }
   );
 }
@@ -1291,11 +1308,8 @@ function do_ajax_update_media_select () {
   $('#mediaselect select').css("display", "none");
   $('#mediaSelectLoadingImg').css("display", "inherit");
   $.getJSON(
-    'inc/ajax.php',
-    {
-      action: "query",
-      action_type: "media_paths"
-    },
+    'api.php/v1/media-files',
+    {},
     media_select_receive_data
   );
 }
@@ -1336,6 +1350,21 @@ function display_example_sentences(sentences, click_target)
   return outElement;
 }
 
+
+/**
+ * Prepare am HTML element that formats the sentences
+ * 
+ * @param {JSON}   sentences    A list of sentences to display. 
+ * @param {string} click_target The selector for the element that should change value on click
+ * @returns {HTMLElement} A formatted group of sentences
+ */
+function change_example_sentences_zone(sentences, ctl) {
+  $('#exsent-waiting').css("display", "none");
+  $('#exsent-sentences').css("display", "inherit");
+  const new_element = display_example_sentences(sentences, ctl);
+  $('#exsent-sentences').append(new_element);
+}
+
 /**
  * Get and display the sentences containing specific word.
  * 
@@ -1349,39 +1378,65 @@ function do_ajax_show_sentences (lang, word, ctl, woid) {
   $('#exsent-interactable').css("display", "none");
   $('#exsent-waiting').css("display", "inherit");
 
-  $.getJSON(
-    'inc/ajax.php', 
-    { 
-      action: "query",
-      action_type: "example_sentences",
-      lid: lang, 
-      word_lc: word,
-      wid: woid
-    },
-    function (data) {
-      $('#exsent-waiting').css("display", "none");
-      $('#exsent-sentences').css("display", "inherit");
-      const new_element = display_example_sentences(data, ctl);
-      $('#exsent-sentences').append(new_element);
+  if (isInt(woid) && woid != -1) {
+    $.getJSON(
+      'api.php/v1/sentences-with-term/' + woid,
+      {
+        lg_id: lang, 
+        word_lc: word
+      },
+      (data) => change_example_sentences_zone(data, ctl)
+    );
+  } else {
+    let query = { 
+      lg_id: lang, 
+      word_lc: word
+    };
+    if (parseInt(woid, 10) == -1) {
+      query["advanced_search"] = true;
+    }
+    $.getJSON(
+      'api.php/v1/sentences-with-term',
+      query,
+      (data) => change_example_sentences_zone(data, ctl)
+    );
+  }
+}
+
+/**
+ * Send an AJAX request to get similar terms to a term.
+ * 
+ * @param {number} lg_id Language ID
+ * @param {string} word_text Text to match
+ * @returns 
+ */
+function do_ajax_req_sim_terms(lg_id, word_text) {
+  return $.getJSON(
+    'api.php/v1/similar-terms',
+    {
+      "lg_id": lg_id,
+      "term": word_text
     }
   );
 }
 
+/**
+ * Display the terms similar to a specific term with AJAX.
+ */
 function do_ajax_show_similar_terms () {
   $('#simwords').html('<img src="icn/waiting2.gif" />');
-  $.post(
-    'inc/ajax.php',
-    {
-      "action": "similar_terms",
-      "action_type": "similar_terms",
-      "simterms_lgid": $('#langfield').val(),
-      "simterms_word": $('#wordfield').val()
-    },
+  do_ajax_req_sim_terms(
+    parseInt($('#langfield').val(), 10), $('#wordfield').val()
+  )
+  .done(
     function (data) {
       $('#simwords').html(data.similar_terms);
-    },
-    "json"
-  )
+    }
+  ).fail(
+    function (data) {
+      console.log(data);
+    }
+  );
 }
 
 /**
@@ -1395,11 +1450,9 @@ function do_ajax_word_counts () {
   })
   .get().join(',');
   $.getJSON(
-    'inc/ajax.php', 
+    'api.php/v1/texts/statistics',
     {
-      action: "query",
-      action_type: "texts_statistics",
-      texts_id: t 
+      texts_id: t
     },
     function (data) {
       WORDCOUNTS = data;
@@ -1616,14 +1669,14 @@ function edit_term_ann_translations(trans_data, text_id)
     `<img class="click" src="icn/plus-button.png" 
     title="Save another translation to existent term" 
     alt="Save another translation to existent term" 
-    onclick="addTermTranslation(${trans_data.wid}, ` +
-      `'#tx${trans_data.ann_index}', '',${trans_data.lang_id});" />`; 
+    onclick="updateTermTranslation(${trans_data.wid}, ` +
+      `'#tx${trans_data.ann_index}');" />`; 
   } else { 
     translations_list += 
     `<img class="click" src="icn/plus-button.png" 
     title="Save translation to new term" 
     alt="Save translation to new term" 
-    onclick="addTermTranslation(0, '#tx${trans_data.ann_index}',` +
+    onclick="addTermTranslation('#tx${trans_data.ann_index}',` +
       `${trans_data.term_lc},${trans_data.lang_id});" />`; 
   }
   translations_list += `&nbsp;&nbsp;
@@ -1637,11 +1690,15 @@ function edit_term_ann_translations(trans_data, text_id)
 /**
  * Load the possible translations for a word.
  * 
- * @param {int} pagepos Position to scroll to 
- * @param {string} word Word to get annotations
+ * @param {int}    pagepos Position to scroll to 
+ * @param {string} word    Word in lowercase to get annotations
+ * @param {int}    term_id Term ID
  * @returns 
+ * 
+ * @since 2.9.0 The new parameter $wid is now necessary
  */
-function do_ajax_edit_impr_text(pagepos, word) {
+function do_ajax_edit_impr_text(pagepos, word, term_id) 
+{
   // Special case, on empty word reload the main annotations form
   if (word == '') {
     $('#editimprtextdata').html('<img src="icn/waiting2.gif" />');
@@ -1651,10 +1708,8 @@ function do_ajax_edit_impr_text(pagepos, word) {
   // Load the possible translations for a word
   const textid = $('#editimprtextdata').attr('data_id');
   $.getJSON(
-    'inc/ajax.php', 
+    'api.php/v1/terms/' + term_id + '/translations',
     {
-      action: "query",
-      action_type: "term_translations",
       text_id: textid, 
       term_lc: word 
     },

@@ -12,8 +12,8 @@ If the export template is **empty, no terms of this language** will be exported.
 | %w           | Term (Word/Expression) - as raw text.                                                            |
 | %t           | Translation - as raw text.                                                                       |
 | %s           | Sentence, curly braces removed - as raw text.                                                    |
-| %c           | The sentence, but the "{xxx}" parts are replaced by "[...]" (cloze test question) - as raw text. |
-| %d           | The sentence, but the "{xxx}" parts are replaced by "[xxx]" (cloze test solution) - as raw text. |
+| %c           | The sentence, but the "{xxx}" parts are replaced by "[...]" (close review question) - as raw text. |
+| %d           | The sentence, but the "{xxx}" parts are replaced by "[xxx]" (close review solution) - as raw text. |
 | %r           |  Romanization - as raw text. |
 | %a           | Status (1..5, 98, 99) - as raw text. |
 | %k           | Term in lowercase (key) - as raw text. |
@@ -25,10 +25,10 @@ If the export template is **empty, no terms of this language** will be exported.
 | $w           | Term (Word/Expression) - as HTML text.|
 | $t           | Translation - as HTML text.|
 | $s           | Sentence, curly braces removed - as HTML text.|
-| $c           | The sentence, but the "{xxx}" parts are replaced by "[...]" (cloze test question) - as HTML text.|
-| $d           | The sentence, but the "{xxx}" parts are replaced by "[xxx]" (cloze test solution) - as HTML text.|
-| $x           | The sentence in Anki2 cloze test notation: the "{xxx}" parts are replaced by "{{c1::xxx}}" - as HTML text. |
-| $y           | The sentence in Anki2 cloze test notation, with translation: the "{xxx}" parts are replaced by "{{c1::xxx::translation}}" - as HTML text. |
+| $c           | The sentence, but the "{xxx}" parts are replaced by "[...]" (close review question) - as HTML text.|
+| $d           | The sentence, but the "{xxx}" parts are replaced by "[xxx]" (close review solution) - as HTML text.|
+| $x           | The sentence in Anki2 close review notation: the "{xxx}" parts are replaced by "{{c1::xxx}}" - as HTML text. |
+| $y           | The sentence in Anki2 close review notation, with translation: the "{xxx}" parts are replaced by "{{c1::xxx::translation}}" - as HTML text. |
 | $r           | Romanization - as HTML text.|
 | $k           | Term in lowercase (key) - as HTML text. |
 | $z           | Tag List - as HTML text. |

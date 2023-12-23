@@ -197,11 +197,8 @@ function display_content()
     }
 
     $.getJSON(
-        "inc/ajax.php",
-        {
-            action: "query",
-            action_type: "version"
-        },
+        "api.php/v1/version",
+        {},
         handle_api_version_answer
     );
 </script>

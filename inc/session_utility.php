@@ -3636,9 +3636,92 @@ function texttodocount2($textid): string
 }
 
 /**
+ * Return a SQL string to find sentences containing a word.
+ * 
+ * @param string   $wordlc Word to look for in lowercase
+ * @param int      $lid    Language ID
+ * 
+ * @return string Query in SQL format
+ */
+function sentences_containing_word_lc_query($wordlc, $lid)
+{
+    global $tbpref;
+    $mecab_str = null;
+    $res = do_mysqli_query(
+        "SELECT LgRegexpWordCharacters, LgRemoveSpaces 
+        FROM {$tbpref}languages 
+        WHERE LgID = $lid"
+    );
+    $record = mysqli_fetch_assoc($res);
+    mysqli_free_result($res);
+    $removeSpaces = $record["LgRemoveSpaces"];
+    if ('MECAB'== strtoupper(trim($record["LgRegexpWordCharacters"]))) {
+        $mecab_file = sys_get_temp_dir() . "/" . $tbpref . "mecab_to_db.txt";
+        //$mecab_args = ' -F {%m%t\\t -U {%m%t\\t -E \\n ';
+        // For instance, "このラーメン" becomes "この    6    68\nラーメン    7    38"
+        $mecab_args = ' -F %m\\t%t\\t%h\\n -U %m\\t%t\\t%h\\n -E EOP\\t3\\t7\\n ';
+        if (file_exists($mecab_file)) { 
+            unlink($mecab_file); 
+        }
+        $fp = fopen($mecab_file, 'w');
+        fwrite($fp, $wordlc . "\n");
+        fclose($fp);
+        $mecab = get_mecab_path($mecab_args);
+        $handle = popen($mecab . $mecab_file, "r");
+        if (!feof($handle)) {
+            $row = fgets($handle, 256);
+            // Format string removing numbers. 
+            // MeCab tip: 2 = hiragana, 6 = kanji, 7 = katakana
+            $mecab_str = "\t" . preg_replace_callback(
+                '([267]?)\t[0-9]+$', 
+                function ($matches) {
+                    return isset($matches[1]) ? "\t" : "";
+                }, 
+                $row
+            ); 
+        }
+        pclose($handle);
+        unlink($mecab_file);
+        $sql 
+        = "SELECT SeID, SeText, 
+        concat(
+            '\\t',
+            group_concat(Ti2Text ORDER BY Ti2Order asc SEPARATOR '\\t'),
+            '\\t'
+        ) val
+         FROM {$tbpref}sentences, {$tbpref}textitems2
+         WHERE lower(SeText)
+         LIKE " . convert_string_to_sqlsyntax("%$wordlc%") . "
+         AND SeID = Ti2SeID AND SeLgID = $lid AND Ti2WordCount<2
+         GROUP BY SeID HAVING val 
+         LIKE " . convert_string_to_sqlsyntax_notrim_nonull("%$mecab_str%") . "
+         ORDER BY CHAR_LENGTH(SeText), SeText";
+    } else {
+        if ($removeSpaces == 1) {
+            $pattern = convert_string_to_sqlsyntax($wordlc);
+        } else {
+            $pattern = convert_regexp_to_sqlsyntax(
+                '(^|[^' . $record["LgRegexpWordCharacters"] . '])'
+                 . remove_spaces($wordlc, $removeSpaces)
+                 . '([^' . $record["LgRegexpWordCharacters"] . ']|$)'
+            );
+        }
+        $sql 
+        = "SELECT DISTINCT SeID, SeText
+         FROM {$tbpref}sentences
+         WHERE SeText RLIKE $pattern AND SeLgID = $lid
+         ORDER BY CHAR_LENGTH(SeText), SeText";
+    }
+    return $sql;
+}
+
+/**
  * Perform a SQL query to find sentences containing a word.
  * 
- * @param int|null $wid    Word ID
+ * @param int|null $wid    Word ID or mode
+ *                         - null: use $wordlc instead, simple search
+ *                         - -1: use $wordlc with a more complex search
+ *                         - 0 or above: sentences containing $wid
  * @param string   $wordlc Word to look for in lowercase
  * @param int      $lid    Language ID
  * @param int      $limit  Maximum number of sentences to return
@@ -3648,7 +3731,6 @@ function texttodocount2($textid): string
 function sentences_from_word($wid, $wordlc, $lid, $limit=-1)
 {
     global $tbpref;
-    $mecab_str = null;
     if (empty($wid)) {
         $sql = "SELECT DISTINCT SeID, SeText 
         FROM {$tbpref}sentences, {$tbpref}textitems2 
@@ -3656,71 +3738,7 @@ function sentences_from_word($wid, $wordlc, $lid, $limit=-1)
         AND Ti2WoID = 0 AND SeID = Ti2SeID AND SeLgID = $lid 
         ORDER BY CHAR_LENGTH(SeText), SeText";
     } else if ($wid == -1) {
-        $res = do_mysqli_query(
-            "SELECT LgRegexpWordCharacters, LgRemoveSpaces 
-            FROM {$tbpref}languages 
-            WHERE LgID = $lid"
-        );
-        $record = mysqli_fetch_assoc($res);
-        mysqli_free_result($res);
-        $removeSpaces = $record["LgRemoveSpaces"];
-        if ('MECAB'== strtoupper(trim($record["LgRegexpWordCharacters"]))) {
-            $mecab_file = sys_get_temp_dir() . "/" . $tbpref . "mecab_to_db.txt";
-            //$mecab_args = ' -F {%m%t\\t -U {%m%t\\t -E \\n ';
-            // For instance, "このラーメン" becomes "この    6    68\nラーメン    7    38"
-            $mecab_args = ' -F %m\\t%t\\t%h\\n -U %m\\t%t\\t%h\\n -E EOP\\t3\\t7\\n ';
-            if (file_exists($mecab_file)) { 
-                unlink($mecab_file); 
-            }
-            $fp = fopen($mecab_file, 'w');
-            fwrite($fp, $wordlc . "\n");
-            fclose($fp);
-            $mecab = get_mecab_path($mecab_args);
-            $handle = popen($mecab . $mecab_file, "r");
-            if (!feof($handle)) {
-                $row = fgets($handle, 256);
-                // Format string removing numbers. 
-                // MeCab tip: 2 = hiragana, 6 = kanji, 7 = katakana
-                $mecab_str = "\t" . preg_replace_callback(
-                    '([267]?)\t[0-9]+$', 
-                    function ($matches) {
-                        return isset($matches[1]) ? "\t" : "";
-                    }, 
-                    $row
-                ); 
-            }
-            pclose($handle);
-            unlink($mecab_file);
-            $sql 
-            = "SELECT SeID, SeText, 
-            concat(
-                '\\t',
-                group_concat(Ti2Text ORDER BY Ti2Order asc SEPARATOR '\\t'),
-                '\\t'
-            ) val
-             FROM {$tbpref}sentences, {$tbpref}textitems2
-             WHERE lower(SeText)
-             LIKE " . convert_string_to_sqlsyntax("%$wordlc%") . "
-             AND SeID = Ti2SeID AND SeLgID = $lid AND Ti2WordCount<2
-             GROUP BY SeID HAVING val 
-             LIKE " . convert_string_to_sqlsyntax_notrim_nonull("%$mecab_str%") . "
-             ORDER BY CHAR_LENGTH(SeText), SeText";
-        } else {
-            if ($removeSpaces == 1) {
-                $pattern = convert_string_to_sqlsyntax($wordlc);
-            } else {
-                $pattern = convert_regexp_to_sqlsyntax(
-                    '(^|[^' . $record["LgRegexpWordCharacters"] . '])'
-                     . remove_spaces($wordlc, $removeSpaces)
-                     . '([^' . $record["LgRegexpWordCharacters"] . ']|$)'
-                );
-            }
-            $sql 
-            = "SELECT DISTINCT SeID, SeText
-             FROM {$tbpref}sentences
-             WHERE SeText RLIKE $pattern AND SeLgID = $lid
-             ORDER BY CHAR_LENGTH(SeText), SeText";
-        }
+        $sql = sentences_containing_word_lc_query($wordlc, $lid);
     } else {
         $sql 
         = "SELECT DISTINCT SeID, SeText
@@ -3845,12 +3863,16 @@ function getSentence($seid, $wordlc, $mode): array
     return array($se, $sejs);
 }
 
+
 /**
  * Return sentences containing a word.
  * 
  * @param int      $lang   Language ID
  * @param string   $wordlc Word to look for in lowercase
  * @param int|null $wid    Word ID
+ *                         - null: use $wordlc instead, simple search
+ *                         - -1: use $wordlc with a more complex search
+ *                         - 0 or above: find sentences containing $wid
  * @param int|null $mode   Sentences to get: 
  *                         - Up to 1 is 1 sentence, 
  *                         - 2 is previous and current sentence, 

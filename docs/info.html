@@ -16,7 +16,8 @@
 		<link rel="apple-touch-icon" sizes="114x114" href="../img/apple-touch-icon-114x114.png" />
 		<link rel="apple-touch-startup-image" href="../img/apple-touch-startup.png" />
 		<style type="text/css">
-		@import url(../css/styles.css);
+			@import url(../css/styles.css);
+			.hidden {display:none;}
 		</style>
 		<script type="text/javascript" src="../js/jquery.js"></script>
  		<script type="text/javascript">
@@ -26,29 +27,25 @@
 			 * @since 2.9.0 Function is modified to use JSON with the REST API.
 			 */
 			function ajaxGetTheme () {
-				$.ajax(
+				$.getJSON(
+					'../api.php/v1/settings/theme-path',
 					{
-						type: 'GET',
-						url: '../inc/ajax.php',
-						async: false, 
-						data: {
-							action: "query",
-							action_type: "theme_path",
-							path: '../css/styles.css' 
-						}, 
-						success: function (data) {
-							if ("error" in data)
-								return;
-							const path = data["theme_path"].trim();
-							if (path.endsWith("styles.css")) {
-								$('style').html(
-									"@import url(../" + path + ");"
-								);
-							}
-						},
-						dataType: "json"
+						path: '../css/styles.css' 
+					},
+					function (data) {
+						if ("error" in data)
+							return;
+						const path = data["theme_path"].trim();
+						if (path.endsWith("styles.css")) {
+							$('style').html(
+								"@import url(../" + path + ");"
+							);
+						}
 					}
-				);
+				)
+				.always(function () {
+					$('html').show();
+				});
 			}
 
 			/**
@@ -62,7 +59,9 @@
 				qm.selectedIndex = 0;
 			}
 
-			ajaxGetTheme();
+			$('html').addClass('hidden');
+
+			$(document).ready(ajaxGetTheme);
 
 		</script>
 		<title>
@@ -1025,20 +1024,20 @@ Actions: You can edit, update, delete a feed or follow the link to the newsfeed.
 <p><img src="../img/22.jpg" alt="Image"></p>
 <p>[Show All] = OFF (see below): Multi-word terms now hide single words and shorter or overlapping multi-word terms. This makes it easier to concentrate on multi-word terms while displaying them without superscripts, but creation and deletion of multi-word terms can be a bit slow in long texts.</p>
 <p><img src="../img/30.jpg" alt="Image"></p>
-<h3>Test terms</h3>
+<h3>Review terms</h3>
 <p>Tests are only possible if a term has a translation. Terms with status "Ignored" and "Well Known" are never tested, and terms with a positive or zero score are not tested today. In summary, the term score must fall below zero to trigger the test. See also <a href="info.html#termscores">Term scores</a>. Terms that are due today are marked with a red bullet in the term table. Terms that are due tomorrow are marked with a yellow bullet in the term table.</p>
 <p>During a test, a status display (at the bottom of the test frame) shows you the elapsed time "mm:ss", a small bar graph, and the total, not yet tested, wrong and correct terms in this test.</p>
-<p>In the following, L1 denotes you mother tongue (= translations), and L2 the language you want to learn (= the terms (words and expressions).</p>
-<h4>Test terms in a text (L2 -&gt; L1)</h4>
+<p>In the following, L1 denotes you mother tongue (= translations), and L2 the language you want to learn (= the terms, meaning words and expressions).</p>
+<h4>Review terms in a text (L2 -&gt; L1)</h4>
 <p>This is Test #1 or #4: L2 -&gt; L1 (recognition) - to train your ability to recognize a L2 term. You may test within sentence context (Button "..[L2].."), or just the term (Button "[L2]"). You can also use the Keyboard in the test frame, see <a href="info.html#keybind">Key Bindings</a>.</p>
 <p><img src="../img/07.jpg" alt="Image"></p>
-<h4>Test terms in a text (L1 -&gt; L2)</h4>
+<h4>Review terms in a text (L1 -&gt; L2)</h4>
 <p>This is Test #2 or #5: L1 -&gt; L2 (recall) - to train your ability to produce a term from L1. You may test within sentence context (Button "..[L1].."), or just the term (Button "[L1]"). You can also use the Keyboard in the test frame, see <a href="info.html#keybind">Key Bindings</a>.</p>
 <p><img src="../img/11.jpg" alt="Image"></p>
-<h4>Test terms in a text (••• -&gt; L2)</h4>
+<h4>Review terms in a text (••• -&gt; L2)</h4>
 <p>This is test #3: ••• -&gt; L2 (recall) - to train your ability to produce a term only from the sentence context (Button "..[••].."). If you hover over "[•••]", a tooltip displays the translation of the term. You can also use the Keyboard in the test frame, see <a href="info.html#keybind">Key Bindings</a>.</p>
 <p><img src="../img/12.jpg" alt="Image"></p>
-<h4>Test yourself in a table / word list format (Button "Table")</h4>
+<h4>Review yourself in a table / word list format (Button "Table")</h4>
 <p>This is test #6: The selected terms and expressions are presented as a table. You can make invisible either the columns "Term" or "Translation", and you can hide or show the columns "Sentence", "Romanization", "Status" and "Ed" (Edit). To reveal the invisible solution ("Term" or "Translation"), you just click into the empty table cell. You can review or test yourself with or without changing the status by clicking "+" or "-" in the "Status" column. A status in red signifies that the term is due for testing. You can also edit the term by clicking the yellow "Edit" icon. Columns 2 to 6 may also my sorted by clicking on the header row. The initial sort order is according to term score.</p>
 <p><img src="../img/32.jpg" alt="Image"></p>
 <h3>Print a text</h3>
@@ -1425,11 +1424,11 @@ Now execute:
 </tr>
 <tr>
 <td>%c</td>
-<td>The sentence, but the "{xxx}" parts are replaced by "[...]" (cloze test question) - as raw text.</td>
+<td>The sentence, but the "{xxx}" parts are replaced by "[...]" (close review question) - as raw text.</td>
 </tr>
 <tr>
 <td>%d</td>
-<td>The sentence, but the "{xxx}" parts are replaced by "[xxx]" (cloze test solution) - as raw text.</td>
+<td>The sentence, but the "{xxx}" parts are replaced by "[xxx]" (close review solution) - as raw text.</td>
 </tr>
 <tr>
 <td>%r</td>
@@ -1477,19 +1476,19 @@ Now execute:
 </tr>
 <tr>
 <td>$c</td>
-<td>The sentence, but the "{xxx}" parts are replaced by "[...]" (cloze test question) - as HTML text.</td>
+<td>The sentence, but the "{xxx}" parts are replaced by "[...]" (close review question) - as HTML text.</td>
 </tr>
 <tr>
 <td>$d</td>
-<td>The sentence, but the "{xxx}" parts are replaced by "[xxx]" (cloze test solution) - as HTML text.</td>
+<td>The sentence, but the "{xxx}" parts are replaced by "[xxx]" (close review solution) - as HTML text.</td>
 </tr>
 <tr>
 <td>$x</td>
-<td>The sentence in Anki2 cloze test notation: the "{xxx}" parts are replaced by "{{c1::xxx}}" - as HTML text.</td>
+<td>The sentence in Anki2 close review notation: the "{xxx}" parts are replaced by "{{c1::xxx}}" - as HTML text.</td>
 </tr>
 <tr>
 <td>$y</td>
-<td>The sentence in Anki2 cloze test notation, with translation: the "{xxx}" parts are replaced by "{{c1::xxx::translation}}" - as HTML text.</td>
+<td>The sentence in Anki2 close review notation, with translation: the "{xxx}" parts are replaced by "{{c1::xxx::translation}}" - as HTML text.</td>
 </tr>
 <tr>
 <td>$r</td>
@@ -1860,7 +1859,7 @@ ones are marked like "v1.0.0-fork".</p>
 <h4>Added</h4>
 <ul>
 <li>
-<code>langFromDict</code> and <code>targetLangFromDict</code> are now officially coming to the
+<code>langFromDict</code> and <code>targetLangFromDict</code> are now officially going to the
 kernel utility functions.</li>
 <li>Text and title boxes change language according to the text's language for
 short text creation/edition, long text creation and text check
@@ -1878,68 +1877,85 @@ short text creation/edition, long text creation and text check
 <li>The timer continues instead of reseting.</li>
 </ul>
 </li>
-<li>REST API, the new <code>inc/ajax.php</code> is intended to continue developing itself
+<li>REST API, the new <code>api.php</code> is intended to continue developing itself
 as a REST API. It features the following interaction:
 <ul>
-<li>On GET, <code>action_type</code> can be:
+<li>On GET, the endpoints are:
 <ul>
 <li>
-<code>version</code>: the REST API version and release date.</li>
+<code>/media-files</code>: the list of audio and video files in the media folder.</li>
 <li>
-<code>test</code>: next word to test.</li>
+<code>/sentences-with-term</code>: sentences containing a new term.</li>
 <li>
-<code>tomorrow_test_count</code>: number of tests for the next day.</li>
+<code>/sentences-with-term/{term-id}</code>: sentences containing a registred term.</li>
 <li>
-<code>phonetic_reading</code>: phonetic reading of a text.</li>
+<code>/similar-terms</code>: terms similar to a given one.</li>
 <li>
-<code>theme_path</code>: theming path for a file.</li>
+<code>/theme-path</code>: the path for a media using theme.</li>
 <li>
-<code>texts_statistics</code>: various words statistics for each text.</li>
-<li>
-<code>media_paths</code>: paths of files and folders in the <code>/media</code> folder.</li>
-<li>
-<code>example_sentences</code>: list of sentences containing a word.</li>
-<li>
-<code>imported_terms</code>: list of imported terms through terms upload.</li>
-<li>
-<code>term_translations</code>: get the list of term translations to edit it's
-annotation.</li>
-</ul>
-</li>
-<li>On POST, <code>action</code> can be:
+<code>/terms</code>
 <ul>
 <li>
-<code>reading_position</code>: <code>action_type</code> set to <code>text</code> of <code>audio</code> change
-the reading position for a text or its audio.</li>
+<code>/imported</code>: imported terms.</li>
 <li>
-<code>change_translation</code>, with values for <code>action_type</code> set to:
-<ul>
-<li>
-<code>add</code>: add a translation for a new word.</li>
-<li>
-<code>update</code>: edit the translation of an existing word.</li>
+<code>/{term-id}/translations</code>: translations for a term.</li>
 </ul>
 </li>
 <li>
-<code>term_status</code>, with values for <code>action_type</code> set to:
+<code>/review</code>
 <ul>
 <li>
-<code>increment</code>: increment or decrement the status of a term by one unit.</li>
+<code>/next-word</code>: next word to review.</li>
 <li>
-<code>set</code>: set the status of a term.</li>
+<code>/tomorrow-count</code>: number of reviewes for the next day.</li>
 </ul>
 </li>
-<li>For any other value, set <code>action_type</code> to:
+<li>
+<code>/phonetic-reading</code>: phonetic reading for a term or sentence.</li>
+<li>
+<code>/texts/statistics</code>: word statistics on texts.</li>
+<li>
+<code>/version</code>: REST API version.</li>
+</ul>
+</li>
+<li>On POST, the endpoints are:
 <ul>
 <li>
-<code>similar_terms</code>: similar terms to a given term.</li>
+<code>/settings</code>: save a setting.</li>
 <li>
-<code>regexp</code>: test if the regular expression is correctly recognized
-(no more usage in code base?).</li>
+<code>/terms</code> followed by:
+<ul>
 <li>
-<code>set_annotation</code>: change the annotation value for a term.</li>
+<code>/{term-id}</code> for any term update, in particular:
+<ul>
 <li>
-<code>save_setting</code>: save a setting.</li>
+<code>/status</code>, to change the status, followed by either:
+<ul>
+<li>
+<code>/down</code>: decrement status of a term by one unit.</li>
+<li>
+<code>/up</code>: increment status of a term by one unit.</li>
+<li>
+<code>/set/{new-status}</code>: set the status of a term.</li>
+</ul>
+</li>
+<li>
+<code>/translations</code>: add a translation for an existing word.</li>
+</ul>
+</li>
+<li>
+<code>/new</code>: add a translation for a new word.</li>
+</ul>
+</li>
+<li>
+<code>/texts/{text-id}</code> followed by:
+<ul>
+<li>
+<code>/annotation</code>: change the text annotation</li>
+<li>
+<code>/audio-position</code>: change <code>audio</code> position.</li>
+<li>
+<code>/reading-position</code>: change the reading position.</li>
 </ul>
 </li>
 </ul>
@@ -1972,10 +1988,11 @@ about the REST API.</li>
 <ul>
 <li>When reading text, you can click on "Show All" and "Translations" to click the checkbox.</li>
 <li>When changing a word status, the displayed messaged is now more informative: before database change, success message, now: waiting screen, tentative database change, result message (error or success). Under the hood, we are transitionning from pure PHP to AJAX.</li>
+<li>It is faster to exit a text page: audio and reading position saves are now asynchronous.</li>
 </ul>
 </li>
 <li>Annotations "order" are now identical to <code>Ti2Order</code> (in <code>textitems2</code>). It makes management easier, but users may need to reload the annotations once.</li>
-<li>Updated composer dependencies (up-to-date 2023-09-11).</li>
+<li>Updated composer dependencies (up-to-date 2023-11-23).</li>
 </ul>
 <h4>Fixed</h4>
 <ul>
@@ -2005,43 +2022,49 @@ character as a word (e. g.: Chinese). Big thanks to <a href="https://github.com/
 <li>The database wizard was not correctly saving the password. This is fixed by
 <a href="https://github.com/hangug-eo">@hangug-eo</a> in
 <a href="https://github.com/HugoFara/lwt/pull/132">#132</a>.</li>
+<li>The list of translations of a term was sometimes not found on
+text annotation edition.</li>
 </ul>
 <h4>Deprecated</h4>
 <ul>
-<li>Legacy AJAX API. The following AJAX interactions are now deprecated in favor to the new REST API　(at <code>inc/ajax.php</code>):
+<li>Legacy AJAX API. The following AJAX interactions are now deprecated in favor to the new REST API (at <code>api.php</code>):
 <ul>
 <li>
-<code>inc/show_similar_terms.php</code>, use <code>action_type=similar_terms</code>, same arguments.</li>
+<code>inc/ajax_show_similar_terms.php</code>, use <code>/similar-terms</code> on GET, <code>simterms_lgid</code> becomes <code>lg_id</code> and <code>simterms_word</code> <code>term</code>.</li>
 <li>
-<code>inc/ajax_add_term_transl.php</code>, use <code>action=change_translation</code>, with
-<code>action_type=add</code> or <code>action_type=update</code>. The arguments were also changed.</li>
+<code>inc/ajax_add_term_transl.php</code>
+<ul>
+<li>For a new term, use <code>/terms/new</code>. <code>lang</code> becomes <code>lg_id</code>, <code>text</code> is <code>term_text</code>.</li>
+<li>To update an existing term, use <code>/terms/{term-id}/translations</code>. Same arguments.</li>
+</ul>
+</li>
 <li>
-<code>inc/ajax_check_regexp.php</code> should be accessed through <code>action_type=check_regexp</code>. Argument <code>regex</code> is now <code>regexp</code>, on post only.</li>
+<code>inc/ajax_check_regexp.php</code> should no longer be used and will be removed.</li>
 <li>
-<code>inc/ajax_chg_term_status.php</code> should be accessed through <code>action=term_status</code> and <code>action_type=increment</code>. Argument <code>data</code> is now <code>status_up</code>, on post only.</li>
+<code>inc/ajax_chg_term_status.php</code> should be accessed through <code>/terms/{term-id}/status</code>. Argument <code>data</code> is now part of the URL, on post only.</li>
 <li>
-<code>inc/ajax_get_phonetic.php</code> should be accessed through <code>action_type=phonetic_reading</code>, same arguments.</li>
+<code>inc/ajax_get_phonetic.php</code> should be accessed through <code>/phonetic-reading</code>, same arguments.</li>
 <li>
-<code>inc/ajax_get_theme.php</code> should be accessed through <code>action_type=theme_path</code>. Argument <code>filepath</code> is now <code>path</code>.</li>
+<code>inc/ajax_get_theme.php</code> should be accessed through <code>/settings/theme-path</code>. Argument <code>filepath</code> is now <code>path</code>.</li>
 <li>
-<code>inc/ajax_save_setting.php</code> should be accessed through <code>action_type=save_setting</code>, same arguments.</li>
+<code>inc/ajax_save_setting.php</code> should be accessed through <code>/settings</code>, <code>k</code> becomes <code>key</code> and <code>v</code> <code>value</code>.</li>
 <li>
-<code>inc/ajax_save_text_position.php</code> should be accessed through <code>action=reading_position</code>, arguments changed.</li>
+<code>inc/ajax_save_text_position.php</code> should be accessed through <code>/texts/{text-id}/reading-position</code>, <code>tposition</code> is now <code>position</code>.</li>
 <li>
-<code>inc/ajax_word_counts.php</code> should be accessed through <code>action_type=texts_statistics</code>, on GET. Argument <code>id</code> is now <code>texts_id</code>.</li>
+<code>inc/ajax_word_counts.php</code> should be accessed through <code>/texts/statistics</code>, on GET. Argument <code>id</code> is now <code>texts_id</code>.</li>
 <li>
-<code>inc/ajax_update_media_select.php</code> should be accessed through <code>action_type=media_paths</code>.</li>
+<code>inc/ajax_update_media_select.php</code> should be accessed through <code>/media-files</code>.</li>
 <li>
-<code>inc/ajax_show_sentences.php</code> should be accessed through <code>action_type=example_sentences</code>, on GET. Argument <code>lang</code> is now <code>lid</code>, <code>word</code> is <code>word_lc</code> and <code>woid</code> is <code>wid</code>, <code>ctl</code> is no longer required.</li>
+<code>inc/ajax_show_sentences.php</code> should be accessed through <code>/sentences-with-term</code>, on GET. Argument <code>lang</code> is now <code>lg_id</code>, <code>word</code> is <code>word_lc</code> and <code>woid</code> is <code>word_id</code>, <code>ctl</code> is no longer required.</li>
 <li>
-<code>inc/ajax_show_imported_terms.php</code> should be accessed through <code>action_type=imported_terms</code>, same arguments.</li>
+<code>inc/ajax_show_imported_terms.php</code> should be accessed through <code>/terms/imported</code>, same arguments.</li>
 <li>
-<code>inc/ajax_save_impr_text.php</code> should be accessed through <code>action_type=set_annotation</code>, <code>id</code> is now <code>tid</code>.</li>
+<code>inc/ajax_save_impr_text.php</code> should be accessed through <code>/texts/{text-id}/annotation</code>, <code>id</code> is now optional.</li>
 <li>
 <code>inc/ajax_edit_impr_text.php</code>:
 <ul>
 <li>On display, using <code>word=""</code> is now deprecated as the page loads in pure PHP.</li>
-<li>On term edition, should be accessed through <code>action_type=term_translations</code>, <code>id</code> is now <code>text_id</code> and <code>word</code> becomes <code>text_lc</code>.</li>
+<li>On term edition, should be accessed through <code>/terms/{term-id}/translations</code>, <code>id</code> is now <code>text_id</code> and <code>word</code> becomes <code>text_lc</code>.</li>
 </ul>
 </li>
 </ul>

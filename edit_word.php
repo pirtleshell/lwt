@@ -207,7 +207,9 @@ function edit_word_do_operation($translation, $fromAnn)
         ?>
 <script type="text/javascript">
     window.opener.do_ajax_edit_impr_text(
-        <?php echo $fromAnn; ?>, <?php echo prepare_textdata_js($textlc); ?>
+        <?php echo $fromAnn; ?>, 
+        <?php echo prepare_textdata_js($textlc); ?>, 
+        <?php echo $wid; ?>
         );
 </script>
         <?php

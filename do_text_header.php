@@ -255,27 +255,19 @@ function save_audio_position($textid): void
 
 <script type="text/javascript">
     /**
-     * Save audio position
+     * Save text status, for instance audio position
      */
-    function saveAudioPosition() {
+    function saveTextStatus() {
+        // Save audio if present 
         if ($("#jquery_jplayer_1") === null || $("#jquery_jplayer_1").length == 0) {
             return;
         }
-        var pos = $("#jquery_jplayer_1").data("jPlayer").status.currentTime;
-        $.ajax({
-            type: "POST",
-            url:'inc/ajax.php', 
-            data: {
-                action: "reading_position",
-                action_type: "audio",
-                tid: '<?php echo $textid; ?>', 
-                audio_position: pos
-            }, 
-            async: false // Asynchronous should be safe (2.9.0)
-        });
+        const pos = $("#jquery_jplayer_1").data("jPlayer").status.currentTime;
+        const text_id = parseInt(<?php echo json_encode($textid); ?>, 10);
+        save_audio_position(text_id, pos);
     }
 
-    $(window).on('beforeunload', saveAudioPosition);
+    $(window).on('beforeunload', saveTextStatus);
 
     // We need to capture the text-to-speach event manually for Chrome
     $(document).ready(function() {

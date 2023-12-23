@@ -286,7 +286,7 @@ function index_load_warnings()
         },
 
         lwt_version: function(lwt_version) {
-            $.get(
+            $.getJSON(
                 'https://api.github.com/repos/hugofara/lwt/releases/latest'
             ).done(function (data) {
                 const lwt_latest_version = data.tag_name;

@@ -400,7 +400,9 @@ function do_test_prepare_ajax_test_area($testsql, $count, $testtype): int
 
     echo '<div id="body">';
 
-    $lgid = get_first_value("SELECT WoLgID AS value FROM $testsql LIMIT 1");
+    $lgid = (int) get_first_value(
+        "SELECT WoLgID AS value FROM $testsql LIMIT 1"
+    );
     
     $sql = "SELECT LgName, LgDict1URI, LgDict2URI, LgGoogleTranslateURI, LgTextSize, 
     LgRemoveSpaces, LgRegexpWordCharacters, LgRightToLeft 
@@ -421,67 +423,20 @@ function do_test_prepare_ajax_test_area($testsql, $count, $testtype): int
     ?>
     <script type="text/javascript">
         /**
-         * Insert a new word test.
-         */
-        function insert_new_word(word) {
-
-                SOLUTION = word['solution'];
-                WID = word['word_id'];
-
-                $('#term-test').html(word['group']);
-
-                $(document).on('keydown', keydown_event_do_test_test);
-                $('.word')
-                .on('click', word_click_event_do_test_test)
-        }
-
-        /**
-         * Handles an ajax query for word tests.
-         */
-        function test_query_handler(data)
-        {
-            if (data['word_id'] == 0) {
-                do_test_finished(<?php echo json_encode($count); ?>);
-                const options = {
-                    "action": "query", 
-                    "action_type": "tomorrow_test_count",
-                    "test_sql": <?php echo json_encode((string)$testsql); ?>
-                };
-                $.getJSON(
-                    'inc/ajax.php?' + $.param(options)
-                ).done(function (data) {
-                    if (data["test_count"]) {
-                        $('#tests-tomorrow').css("display", "inherit");
-                        $('#tests-tomorrow').text(
-                            "Tomorrow you'll find here " + data["test_count"] + 
-                            ' test' + (data["test_count"] == 1 ? '' : 's') + "!"
-                        );
-                    }
-                });
-            } else {
-                insert_new_word(data);
-            }
-        }
-
-        /**
          * Get a new word test.
          */
         function get_new_word()
         {
-            // Get new word through AJAX
-            const options = {
-                "action": "query", 
-                "action_type": "test",
-                "test_sql": <?php echo json_encode((string)$testsql); ?>,
-                "test_nosent": <?php echo json_encode((string)$nosent); ?>,
-                "test_lgid": <?php echo json_encode((string)$lgid); ?>,
-                "test_wordregex": <?php echo json_encode((string)$lang['regexword']); ?>,
-                "test_type": <?php echo json_encode((string)$testtype); ?>
-            };
-            $.getJSON(
-                'inc/ajax.php?' + $.param(options)
-            ).done(test_query_handler);
+            const review_data = <?php echo json_encode(array(
+                "total_tests" => $count,
+                "test_sql" => $testsql,
+                "word_mode" => $nosent,
+                "lg_id" => $lgid,
+                "word_regex" => (string)$lang['regexword'],
+                "test_type" => $testtype
+            )); ?>;
 
+            query_next_term(review_data);
             // Close any previous tooltip
             cClick();
         }
@@ -831,7 +786,7 @@ function do_test_footer($notyettested, $wrong, $correct)
 /**
  * Prepare JavaScript code for interacting between the different frames.
  * 
- * @param int $count 1 for timer.
+ * @param int $count Total number of tests that were done today
  * 
  * @return void
  */
@@ -839,29 +794,101 @@ function do_test_test_javascript($count)
 {
     ?>
 <script type="text/javascript">
-    const waitTime = <?php 
-    echo json_encode((int)getSettingWithDefault('set-test-edit-frame-waiting-time')) 
-    ?>;
-
     /**
      * Prepare the different frames for a test.
      */
     function prepare_test_frames()
     {
-        window.parent.frames['ru'].location.href='empty.html';
-        if (waitTime <= 0) {
-            window.parent.frames['ro'].location.href='empty.html';
+        const time_data = <?php echo json_encode(array(
+            "wait_time" => (int)getSettingWithDefault('set-test-edit-frame-waiting-time'),
+            "time" => time(),
+            "start_time" => $_SESSION['teststart'],
+            "show_timer" => ($count ? 0 : 1)
+        )) ?>;
+
+        window.parent.frames['ru'].location.href = 'empty.html';
+        if (time_data.wait_time <= 0) {
+            window.parent.frames['ro'].location.href = 'empty.html';
         } else {
             setTimeout(
                 'window.parent.frames["ro"].location.href="empty.html";', 
-                waitTime
+                time_data.wait_time
             );
         }
         new CountUp(
-            <?php echo time(); ?>, 
-            <?php echo $_SESSION['teststart']; ?>, 
-            'timer', <?php echo ($count ? 0 : 1); ?>
+            time_data.time, time_data.start_time, 'timer', time_data.show_timer
         );
+    }
+
+
+    /**
+     * Insert a new word test.
+     * 
+     * @param {number} word_id  Word ID
+     * @param {string} solution Test answer
+     * @param {string} group    
+     */
+    function insert_new_word(word_id, solution, group) {
+
+        SOLUTION = solution;
+        WID = word_id;
+
+        $('#term-test').html(group);
+
+        $(document).on('keydown', keydown_event_do_test_test);
+        $('.word')
+        .on('click', word_click_event_do_test_test)
+    }
+
+    /**
+    * Handles an ajax query for word tests.
+    * 
+    * @param {JSON}   current_test Current test data
+    * @param {number} total_tests  Total number of tests for the day
+    * @param {string} test_sql     SQL query for the test
+    */
+    function test_query_handler(current_test, total_tests, test_sql)
+    {
+        if (current_test['word_id'] == 0) {
+            do_test_finished(total_tests);
+            $.getJSON(
+                'api.php/v1/review/tomorrow-count', 
+                { test_sql: test_sql },
+                function (tomorrow_test) {
+                    if (tomorrow_test.count) {
+                        $('#tests-tomorrow').css("display", "inherit");
+                        $('#tests-tomorrow').text(
+                            "Tomorrow you'll find here " + tomorrow_test.count + 
+                            ' test' + (tomorrow_test.count < 2 ? '' : 's') + "!"
+                        );
+                    }
+                }
+            );
+        } else {
+            insert_new_word(
+                current_test.word_id, current_test.solution, current_test.group
+            );
+        }
+    }
+
+    /**
+    * Get new term to test through AJAX
+    */
+    function query_next_term(review_data)
+    {
+        $.getJSON(
+            'api.php/v1/review/next-word', 
+            {
+                test_sql: review_data.test_sql,
+                word_mode: review_data.word_mode,
+                lg_id: review_data.lg_id,
+                word_regex: review_data.word_regex,
+                type: review_data.type
+            }
+        )
+        .done(function (data) {
+            test_query_handler(data, review_data.count, review_data.test_sql);
+        } );
     }
 
     /**
@@ -942,9 +969,9 @@ function do_test_test_content_ajax($test_sql)
     }
     $notyettested = (int) $count;
 
-    $count2 = do_test_prepare_ajax_test_area($test_sql, $notyettested, $testtype);
+    $total_tests = do_test_prepare_ajax_test_area($test_sql, $notyettested, $testtype);
     prepare_test_footer($notyettested);
-    do_test_test_javascript($count2);
+    do_test_test_javascript($total_tests);
 }
 
 
