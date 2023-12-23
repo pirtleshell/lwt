@@ -538,22 +538,23 @@ function unknown_post_action_type($post_req, $action_exists=false)
 }
 
 /**
- * Main handler for any provided request.
+ * Main handler for any provided request, while answer the result.
  * 
- * @param string $method     Method name (e.g. 'GET' or 'POST')
- * @param string $requestURI The URI being requested.
+ * @param string     $method     Method name (e.g. 'GET' or 'POST')
+ * @param string     $requestURI The URI being requested.
+ * @param array|null $post_param Post arguments, usually equal to $_POST
  * 
- * @return string The first matching endpoint
+ * @return never
  */
-function main_enpoint($method, $requestUri) {
+function request_handler($method, $requestUri, $post_param) {
     // Extract requested endpoint from URI
     $req_endpoint = endpoint_exits($method, $requestUri);
-    parse_str(parse_url($requestUri, PHP_URL_QUERY), $req_param);
     $endpoint_fragments = preg_split("/\//", $req_endpoint);
 
     // Process endpoint request
     if ($method === 'GET') {
         // Handle GET request for each endpoint
+        parse_str(parse_url($requestUri, PHP_URL_QUERY), $req_param);
         switch ($endpoint_fragments[0]) {
             case 'media-files':
                 $answer = media_files($req_param);
@@ -659,7 +660,7 @@ function main_enpoint($method, $requestUri) {
         // Handle POST request for each endpoint
         switch ($endpoint_fragments[0]) {
             case 'settings':
-                $answer = save_setting($_POST);
+                $answer = save_setting($post_param);
                 send_response(200, $answer);
                 break;
             case 'texts':
@@ -670,18 +671,18 @@ function main_enpoint($method, $requestUri) {
                         $endpoint_fragments[1]]
                     );
                 }
-                $_POST["text_id"] = (int) $endpoint_fragments[1];
+                $post_param["text_id"] = (int) $endpoint_fragments[1];
                 switch ($endpoint_fragments[2]) {
                     case 'annotation':
-                        $answer = set_annotation($_POST);
+                        $answer = set_annotation($post_param);
                         send_response(200, $answer);
                         break;
                     case 'audio-position':
-                        $answer = set_audio_position($_POST);
+                        $answer = set_audio_position($post_param);
                         send_response(200, $answer);
                         break;
                     case 'reading-position':
-                        $answer = set_text_position($_POST);
+                        $answer = set_text_position($post_param);
                         send_response(200, $answer);
                         break;
                     default:
@@ -694,19 +695,19 @@ function main_enpoint($method, $requestUri) {
                 break;
             case 'terms':
                 if (ctype_digit($endpoint_fragments[1])) {
-                    $_POST['term_id'] = (int) $endpoint_fragments[1];
+                    $post_param['term_id'] = (int) $endpoint_fragments[1];
                     if ($endpoint_fragments[2] == "status") {
                         if ($endpoint_fragments[3] == 'down') {
-                            $_POST['status_up'] = 0;
-                            $answer = increment_term_status($_POST);
+                            $post_param['status_up'] = 0;
+                            $answer = increment_term_status($post_param);
                             send_response(200, $answer);
                         } else if ($endpoint_fragments[3] == 'up') {
-                            $_POST['status_up'] = 1;
-                            $answer = increment_term_status($_POST);
+                            $post_param['status_up'] = 1;
+                            $answer = increment_term_status($post_param);
                             send_response(200, $answer);
                         } else if (ctype_digit($endpoint_fragments[3])) {
-                            $_POST['status'] = (int) $endpoint_fragments[3];
-                            $answer = set_term_status($_POST);
+                            $post_param['status'] = (int) $endpoint_fragments[3];
+                            $answer = set_term_status($post_param);
                             send_response(200, $answer);
                         } else {
                             send_response(
@@ -716,7 +717,7 @@ function main_enpoint($method, $requestUri) {
                             );
                         }
                     } else if ($endpoint_fragments[2] == 'translations') {
-                        $answer = update_translation($_POST);
+                        $answer = update_translation($post_param);
                         send_response(200, $answer);
                     } else {
                         send_response(
@@ -729,7 +730,7 @@ function main_enpoint($method, $requestUri) {
                         );
                     }
                 } else if ($endpoint_fragments[1] == 'new') {
-                    $answer = add_translation($_POST);
+                    $answer = add_translation($post_param);
                     send_response(200, $answer);
                 } else {
                     send_response(
@@ -757,7 +758,11 @@ function main_enpoint($method, $requestUri) {
 if ($_SERVER['REQUEST_METHOD'] !== 'GET' && $_SERVER['REQUEST_METHOD'] !== 'POST') {
     send_response(405, ['error' => 'Method Not Allowed']);
 } else {
-    main_enpoint($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
+    request_handler(
+        $_SERVER['REQUEST_METHOD'],
+        $_SERVER['REQUEST_URI'], 
+        $_POST
+    );
 }
 
 ?>
