@@ -449,11 +449,11 @@ function do_test_prepare_ajax_test_area($testsql, $count, $testtype): int
                     'api.php/v1/review/tomorrow-count', 
                     options,
                     function (data) {
-                        if (data["count"]) {
+                        if (data.count) {
                             $('#tests-tomorrow').css("display", "inherit");
                             $('#tests-tomorrow').text(
-                                "Tomorrow you'll find here " + data["test_count"] + 
-                                ' test' + (data["test_count"] == 1 ? '' : 's') + "!"
+                                "Tomorrow you'll find here " + data.count + 
+                                ' test' + (data.count < 2 ? '' : 's') + "!"
                             );
                         }
                     }
