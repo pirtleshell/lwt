@@ -422,24 +422,19 @@ function do_test_prepare_ajax_test_area($testsql, $count, $testtype): int
 
     ?>
     <script type="text/javascript">
-        const review_data = <?php echo json_encode(array(
-            "total_tests" => $count,
-            "test_sql" => $testsql,
-            "word_mode" => $nosent,
-            "lg_id" => (int)$lgid,
-            "word_regex" => (string)$lang['regexword'],
-            "test_type" => (string)$testtype
-        )); ?>;
-
         /**
          * Insert a new word test.
+         * 
+         * @param {number} word_id  Word ID
+         * @param {string} solution Test answer
+         * @param {string} group    
          */
-        function insert_new_word(word) {
+        function insert_new_word(word_id, solution, group) {
 
-                SOLUTION = word['solution'];
-                WID = word['word_id'];
+                SOLUTION = solution;
+                WID = word_id;
 
-                $('#term-test').html(word['group']);
+                $('#term-test').html(group);
 
                 $(document).on('keydown', keydown_event_do_test_test);
                 $('.word')
@@ -448,30 +443,52 @@ function do_test_prepare_ajax_test_area($testsql, $count, $testtype): int
 
         /**
          * Handles an ajax query for word tests.
+         * 
+         * @param {JSON}   current_test Current test data
+         * @param {number} total_tests  Total number of tests for the day
+         * @param {string} test_sql     SQL query for the test
          */
-        function test_query_handler(data, total_tests, test_sql)
+        function test_query_handler(current_test, total_tests, test_sql)
         {
-            if (data['word_id'] == 0) {
+            if (current_test['word_id'] == 0) {
                 do_test_finished(total_tests);
-                const options = {
-                    "test_sql": test_sql
-                };
                 $.getJSON(
                     'api.php/v1/review/tomorrow-count', 
-                    options,
-                    function (data) {
-                        if (data.count) {
+                    { test_sql: test_sql },
+                    function (tomorrow_test) {
+                        if (tomorrow_test.count) {
                             $('#tests-tomorrow').css("display", "inherit");
                             $('#tests-tomorrow').text(
-                                "Tomorrow you'll find here " + data.count + 
-                                ' test' + (data.count < 2 ? '' : 's') + "!"
+                                "Tomorrow you'll find here " + tomorrow_test.count + 
+                                ' test' + (tomorrow_test.count < 2 ? '' : 's') + "!"
                             );
                         }
                     }
                 )
             } else {
-                insert_new_word(data);
+                insert_new_word(
+                    current_test.word_id, current_test.solution, current_test.group
+                );
             }
+        }
+
+        /**
+         * Get new term to test through AJAX
+         */
+        function get_next_term(review_data)
+        {
+            $.getJSON(
+                'api.php/v1/review/next-word', 
+                {
+                    test_sql: review_data.test_sql,
+                    word_mode: review_data.word_mode,
+                    lg_id: review_data.lg_id,
+                    word_regex: review_data.word_regex,
+                    type: review_data.type
+                }
+            ).done(function (data) {
+                test_query_handler(data, review_data.count, review_data.test_sql);
+            } );
         }
 
         /**
@@ -479,21 +496,16 @@ function do_test_prepare_ajax_test_area($testsql, $count, $testtype): int
          */
         function get_new_word()
         {
-            // Get new word through AJAX
-            const options = {
-                "test_sql": <?php echo json_encode($testsql); ?>,
-                "word_mode": <?php echo json_encode($nosent); ?>,
-                "lg_id": <?php echo json_encode($lgid); ?>,
-                "word_regex": <?php echo json_encode((string)$lang['regexword']); ?>,
-                "type": <?php echo json_encode($testtype); ?>
-            };
-            $.getJSON(
-                'api.php/v1/review/next-word', 
-                options
-            ).done(function (data) {
-                test_query_handler(data, <?php echo $count; ?>, options.test_sql);
-            } );
+            const review_data = <?php echo json_encode(array(
+                "total_tests" => $count,
+                "test_sql" => $testsql,
+                "word_mode" => $nosent,
+                "lg_id" => $lgid,
+                "word_regex" => (string)$lang['regexword'],
+                "test_type" => $testtype
+            )); ?>;
 
+            get_next_term(review_data);
             // Close any previous tooltip
             cClick();
         }
