@@ -27,44 +27,44 @@ function send_response($status = 200, $data = null) {
 function endpoint_exits($method, $requestUri) {
     // Set up API endpoints
     $endpoints = [ 
-        'media-paths' => ['GET'],
+        'media-paths' => [ 'GET' ],
 
-        'phonetic-reading' => ['GET'],
+        'phonetic-reading' => [ 'GET' ],
 
-        'review/next-word' => ['GET'],
-        'review/tomorrow-count' => ['GET'],
+        'review/next-word' => [ 'GET' ],
+        'review/tomorrow-count' => [ 'GET' ],
 
-        'sentences-with-term' => ['GET'],
-        //'sentences-with-term/(?<term-id>\d+)' => ['GET'],
+        'sentences-with-term' => [ 'GET' ],
+        //'sentences-with-term/(?<term-id>\d+)' => [ 'GET' ],
 
-        'similar-terms' => ['GET'],
+        'similar-terms' => [ 'GET' ],
 
-        'settings' => ['POST'],
-        'settings/theme-path' => ['GET'],
+        'settings' => [ 'POST' ],
+        'settings/theme-path' => [ 'GET' ],
 
-        'terms' => ['GET', 'POST'],
-        'terms/imported' => ['GET'],
-        'terms/new' => ['POST'],
+        'terms' => [ 'GET', 'POST' ],
+        'terms/imported' => [ 'GET' ],
+        'terms/new' => [ 'POST' ],
 
-        //'terms/(?<term-id>\d+)/translation' => ['POST'],
-        //'terms/(?<term-id>\d+)/translations' => ['GET'],
+        //'terms/(?<term-id>\d+)/translation' => [ 'POST' ],
+        //'terms/(?<term-id>\d+)/translations' => [ 'GET' ],
 
-        //'terms/(?<term-id>\d+)/status/down' => ['POST'],
-        //'terms/(?<term-id>\d+)/status/up' => ['POST'],
-        //'terms/(?<term-id>\d+)/status/(?<new-status>\d+)' => ['POST'],
+        //'terms/(?<term-id>\d+)/status/down' => [ 'POST' ],
+        //'terms/(?<term-id>\d+)/status/up' => [ 'POST' ],
+        //'terms/(?<term-id>\d+)/status/(?<new-status>\d+)' => [ 'POST' ],
 
-        'texts' => ['POST'],
+        'texts' => [ 'POST' ],
         
-        //'texts/(?<text-id>\d+)/annotation' => ['POST'],
-        //'texts/(?<text-id>\d+)/audio-position' => ['POST'],
-        //'texts/(?<text-id>\d+)/reading-position' => ['POST'],
+        //'texts/(?<text-id>\d+)/annotation' => [ 'POST' ],
+        //'texts/(?<text-id>\d+)/audio-position' => [ 'POST' ],
+        //'texts/(?<text-id>\d+)/reading-position' => [ 'POST' ],
 
-        'texts-statistics' => ['GET'],
-        //'texts-statistics/(?<texts-ids>[\d,]+)' => ['GET'],
+        'texts-statistics' => [ 'GET' ],
+        //'texts-statistics/(?<texts-ids>[\d,]+)' => [ 'GET' ],
 
-        'version' => ['GET'], 
+        'version' => [ 'GET' ], 
 
-        // 'regexp/test' => ['POST'], as of LWT 2.9.0, no usage was found
+        // 'regexp/test' => [ 'POST' ], as of LWT 2.9.0, no usage was found
     ];
 
 
@@ -592,13 +592,18 @@ function main_enpoint($method, $requestUri) {
                 if ($endpoint_fragments[1] == "imported") {
                     $answer = imported_terms($req_param);
                     send_response(200, $answer);
-                } else if (
-                    ctype_digit($endpoint_fragments[1]) && 
-                    $endpoint_fragments[2] == 'translations'
-                ) {
-                    $req_param['term_id'] = $endpoint_fragments[1];
-                    $answer = term_translations($req_param);
-                    send_response(200, $answer);
+                } else if (ctype_digit($endpoint_fragments[1])) {
+                    if ($endpoint_fragments[2] == 'translations') {
+                        $req_param['term_id'] = $endpoint_fragments[1];
+                        $answer = term_translations($req_param);
+                        send_response(200, $answer);
+                    } else {
+                        send_response(
+                            404, 
+                            ['error' => '"translation" Expected, Got ' . 
+                            $endpoint_fragments[2]]
+                        );
+                    }
                 } else {
                     send_response(
                         404, 
@@ -618,7 +623,8 @@ function main_enpoint($method, $requestUri) {
             default:
                 send_response(
                     404, 
-                    ['error' => 'Endpoint Not Found: ' . $endpoint_fragments[0]]
+                    ['error' => 'Endpoint Not Found: ' . 
+                    $endpoint_fragments[0]]
                 );
         }
     } elseif ($method === 'POST') {
