@@ -786,7 +786,7 @@ function do_test_footer($notyettested, $wrong, $correct)
 /**
  * Prepare JavaScript code for interacting between the different frames.
  * 
- * @param int $count 1 for timer.
+ * @param int $count Total number of tests that were done today
  * 
  * @return void
  */
@@ -799,23 +799,24 @@ function do_test_test_javascript($count)
      */
     function prepare_test_frames()
     {
-        const waitTime = <?php echo json_encode(
-            (int)getSettingWithDefault('set-test-edit-frame-waiting-time')
-        ); ?>;
+        const time_data = <?php echo json_encode(array(
+            "wait_time" => (int)getSettingWithDefault('set-test-edit-frame-waiting-time'),
+            "time" => time(),
+            "start_time" => $_SESSION['teststart'],
+            "show_timer" => ($count ? 0 : 1)
+        )) ?>;
 
-        window.parent.frames['ru'].location.href='empty.html';
-        if (waitTime <= 0) {
-            window.parent.frames['ro'].location.href='empty.html';
+        window.parent.frames['ru'].location.href = 'empty.html';
+        if (time_data.wait_time <= 0) {
+            window.parent.frames['ro'].location.href = 'empty.html';
         } else {
             setTimeout(
                 'window.parent.frames["ro"].location.href="empty.html";', 
-                waitTime
+                time_data.wait_time
             );
         }
         new CountUp(
-            <?php echo time(); ?>, 
-            <?php echo $_SESSION['teststart']; ?>, 
-            'timer', <?php echo ($count ? 0 : 1); ?>
+            time_data.time, time_data.start_time, 'timer', time_data.show_timer
         );
     }
 
@@ -968,9 +969,9 @@ function do_test_test_content_ajax($test_sql)
     }
     $notyettested = (int) $count;
 
-    $count2 = do_test_prepare_ajax_test_area($test_sql, $notyettested, $testtype);
+    $total_tests = do_test_prepare_ajax_test_area($test_sql, $notyettested, $testtype);
     prepare_test_footer($notyettested);
-    do_test_test_javascript($count2);
+    do_test_test_javascript($total_tests);
 }
 
 
