@@ -58,8 +58,7 @@ function endpoint_exits($method, $requestUri) {
         //'texts/(?<text-id>\d+)/audio-position' => [ 'POST' ],
         //'texts/(?<text-id>\d+)/reading-position' => [ 'POST' ],
 
-        'texts-statistics' => [ 'GET' ],
-        //'texts-statistics/(?<texts-ids>[\d,]+)' => [ 'GET' ],
+        'texts/statistics' => [ 'GET' ],
 
         'version' => [ 'GET' ], 
 
@@ -599,7 +598,7 @@ function main_enpoint($method, $requestUri) {
                     } else {
                         send_response(
                             404, 
-                            ['error' => '"translation" Expected, Got ' . 
+                            ['error' => 'Expected "translation", Got ' . 
                             $endpoint_fragments[2]]
                         );
                     }
@@ -611,9 +610,17 @@ function main_enpoint($method, $requestUri) {
                     );
                 }
                 break;
-            case 'texts-statistics':
-                $answer = get_texts_statistics($req_param);
-                send_response(200, $answer);
+            case 'texts':
+                if ($endpoint_fragments[1] == 'statistics') {
+                    $answer = get_texts_statistics($req_param);
+                    send_response(200, $answer);
+                } else {
+                    send_response(
+                        404, 
+                        ['error' => 'Expected "statistics", Got ' . 
+                        $endpoint_fragments[1]]
+                    );
+                }
             case 'version':
                 $answer = rest_api_version($req_param);
                 send_response(200, $answer);

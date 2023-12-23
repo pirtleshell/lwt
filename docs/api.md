@@ -24,11 +24,11 @@ A track of all changes is kept in the [CHANGELOG.md](./CHANGELOG.md).
 
 ## GET API Endpoints
 
-### Get Media Paths
+### Get Media Files Paths
 
-Retrieves the media paths to the audio and video files in the media folder.
+Retrieves the files paths to the audio and video files in the media folder.
 
-- **Endpoint**: `/media-paths`
+- **Endpoint**: `/media-files`
 - **Method**: GET
 - **Arguments**: None
 
@@ -111,7 +111,7 @@ Retrieves the translations for a specific term.
 
 Retrieves statistics for multiple texts.
 
-- **Endpoint**: `/texts-statistics/{texts-ids}`
+- **Endpoint**: `/texts/statistics`
 - **Method**: GET
 - **Arguments**: `texts_id`
 

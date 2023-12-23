@@ -35,11 +35,11 @@ as a REST API. It features the following interaction:
     * `/review`
       * `/next-word`: next word to review.
       * `/tomorrow-count`: number of reviewes for the next day.
-    * `/texts/{text-id}/phonetic-reading`: phonetic reading for a term or sentence.
-    * `/texts-statistices/{texts-ids}/statistics`: statistics on texts.
+    * `/phonetic-reading`: phonetic reading for a term or sentence.
+    * `/texts/statistics`: word statistics on texts.
     * `/version`: REST API version.
   * On POST, the endpoints are:
-    * `/settings`: save settings.
+    * `/settings`: save a setting.
     * `/terms` followed by:
       * `/{term-id}` for any term update, in particular:
         * `/status`, to change the status, followed by either:
@@ -117,7 +117,7 @@ text annotation edition.
   * ``inc/ajax_get_theme.php`` should be accessed through ``/settings/theme-path``. Argument ``filepath`` is now ``path``.
   * ``inc/ajax_save_setting.php`` should be accessed through ``/settings``, `k` becomes `key` and `v` `value`.
   * ``inc/ajax_save_text_position.php`` should be accessed through ``/texts/{text-id}/reading-position``, `tposition` is now `position`.
-  * ``inc/ajax_word_counts.php`` should be accessed through ``/texts-statistics/{texts-ids}``, on GET. Argument ``id`` is now ``{texts-ids}``.
+  * ``inc/ajax_word_counts.php`` should be accessed through ``/texts/statistics``, on GET. Argument `id` is now `texts_id`.
   * ``inc/ajax_update_media_select.php`` should be accessed through ``/media-files``.
   * ``inc/ajax_show_sentences.php`` should be accessed through ``/sentences-with-term``, on GET. Argument ``lang`` is now ``lg_id``, ``word`` is ``word_lc`` and ``woid`` is ``word_id``, ``ctl`` is no longer required.
   * ``inc/ajax_show_imported_terms.php`` should be accessed through ``/terms/imported``, same arguments.

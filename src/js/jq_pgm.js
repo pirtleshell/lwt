@@ -1450,7 +1450,7 @@ function do_ajax_word_counts () {
   })
   .get().join(',');
   $.getJSON(
-    'api.php/v1/texts-statistics',
+    'api.php/v1/texts/statistics',
     {
       texts_id: t
     },

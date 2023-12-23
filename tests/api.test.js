@@ -140,9 +140,9 @@ describe('Calls on GET', function() {
   });
   
 
-  it('GET /texts-statistics', function(done) {
+  it('GET /texts/statistics', function(done) {
     supertest(host)
-      .get(api_path + '/texts-statistics')
+      .get(api_path + '/texts/statistics')
       .query({texts_id: '1,2'})
       .expect(function(res) {
         // with form 
