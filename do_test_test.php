@@ -400,7 +400,9 @@ function do_test_prepare_ajax_test_area($testsql, $count, $testtype): int
 
     echo '<div id="body">';
 
-    $lgid = get_first_value("SELECT WoLgID AS value FROM $testsql LIMIT 1");
+    $lgid = (int) get_first_value(
+        "SELECT WoLgID AS value FROM $testsql LIMIT 1"
+    );
     
     $sql = "SELECT LgName, LgDict1URI, LgDict2URI, LgGoogleTranslateURI, LgTextSize, 
     LgRemoveSpaces, LgRegexpWordCharacters, LgRightToLeft 
@@ -420,6 +422,15 @@ function do_test_prepare_ajax_test_area($testsql, $count, $testtype): int
 
     ?>
     <script type="text/javascript">
+        const review_data = <?php echo json_encode(array(
+            "total_tests" => $count,
+            "test_sql" => $testsql,
+            "word_mode" => $nosent,
+            "lg_id" => (int)$lgid,
+            "word_regex" => (string)$lang['regexword'],
+            "test_type" => (string)$testtype
+        )); ?>;
+
         /**
          * Insert a new word test.
          */
@@ -438,12 +449,12 @@ function do_test_prepare_ajax_test_area($testsql, $count, $testtype): int
         /**
          * Handles an ajax query for word tests.
          */
-        function test_query_handler(data)
+        function test_query_handler(data, total_tests, test_sql)
         {
             if (data['word_id'] == 0) {
-                do_test_finished(<?php echo json_encode($count); ?>);
+                do_test_finished(total_tests);
                 const options = {
-                    "test_sql": <?php echo json_encode((string)$testsql); ?>
+                    "test_sql": test_sql
                 };
                 $.getJSON(
                     'api.php/v1/review/tomorrow-count', 
@@ -470,16 +481,18 @@ function do_test_prepare_ajax_test_area($testsql, $count, $testtype): int
         {
             // Get new word through AJAX
             const options = {
-                "test_sql": <?php echo json_encode((string)$testsql); ?>,
-                "word_mode": <?php echo json_encode((string)$nosent); ?>,
-                "lg_id": <?php echo json_encode((string)$lgid); ?>,
+                "test_sql": <?php echo json_encode($testsql); ?>,
+                "word_mode": <?php echo json_encode($nosent); ?>,
+                "lg_id": <?php echo json_encode($lgid); ?>,
                 "word_regex": <?php echo json_encode((string)$lang['regexword']); ?>,
-                "type": <?php echo json_encode((string)$testtype); ?>
+                "type": <?php echo json_encode($testtype); ?>
             };
             $.getJSON(
                 'api.php/v1/review/next-word', 
                 options
-            ).done(test_query_handler);
+            ).done(function (data) {
+                test_query_handler(data, <?php echo $count; ?>, options.test_sql);
+            } );
 
             // Close any previous tooltip
             cClick();
