@@ -423,75 +423,6 @@ function do_test_prepare_ajax_test_area($testsql, $count, $testtype): int
     ?>
     <script type="text/javascript">
         /**
-         * Insert a new word test.
-         * 
-         * @param {number} word_id  Word ID
-         * @param {string} solution Test answer
-         * @param {string} group    
-         */
-        function insert_new_word(word_id, solution, group) {
-
-                SOLUTION = solution;
-                WID = word_id;
-
-                $('#term-test').html(group);
-
-                $(document).on('keydown', keydown_event_do_test_test);
-                $('.word')
-                .on('click', word_click_event_do_test_test)
-        }
-
-        /**
-         * Handles an ajax query for word tests.
-         * 
-         * @param {JSON}   current_test Current test data
-         * @param {number} total_tests  Total number of tests for the day
-         * @param {string} test_sql     SQL query for the test
-         */
-        function test_query_handler(current_test, total_tests, test_sql)
-        {
-            if (current_test['word_id'] == 0) {
-                do_test_finished(total_tests);
-                $.getJSON(
-                    'api.php/v1/review/tomorrow-count', 
-                    { test_sql: test_sql },
-                    function (tomorrow_test) {
-                        if (tomorrow_test.count) {
-                            $('#tests-tomorrow').css("display", "inherit");
-                            $('#tests-tomorrow').text(
-                                "Tomorrow you'll find here " + tomorrow_test.count + 
-                                ' test' + (tomorrow_test.count < 2 ? '' : 's') + "!"
-                            );
-                        }
-                    }
-                )
-            } else {
-                insert_new_word(
-                    current_test.word_id, current_test.solution, current_test.group
-                );
-            }
-        }
-
-        /**
-         * Get new term to test through AJAX
-         */
-        function get_next_term(review_data)
-        {
-            $.getJSON(
-                'api.php/v1/review/next-word', 
-                {
-                    test_sql: review_data.test_sql,
-                    word_mode: review_data.word_mode,
-                    lg_id: review_data.lg_id,
-                    word_regex: review_data.word_regex,
-                    type: review_data.type
-                }
-            ).done(function (data) {
-                test_query_handler(data, review_data.count, review_data.test_sql);
-            } );
-        }
-
-        /**
          * Get a new word test.
          */
         function get_new_word()
@@ -505,7 +436,7 @@ function do_test_prepare_ajax_test_area($testsql, $count, $testtype): int
                 "test_type" => $testtype
             )); ?>;
 
-            get_next_term(review_data);
+            query_next_term(review_data);
             // Close any previous tooltip
             cClick();
         }
@@ -863,15 +794,15 @@ function do_test_test_javascript($count)
 {
     ?>
 <script type="text/javascript">
-    const waitTime = <?php 
-    echo json_encode((int)getSettingWithDefault('set-test-edit-frame-waiting-time')) 
-    ?>;
-
     /**
      * Prepare the different frames for a test.
      */
     function prepare_test_frames()
     {
+        const waitTime = <?php echo json_encode(
+            (int)getSettingWithDefault('set-test-edit-frame-waiting-time')
+        ); ?>;
+
         window.parent.frames['ru'].location.href='empty.html';
         if (waitTime <= 0) {
             window.parent.frames['ro'].location.href='empty.html';
@@ -886,6 +817,77 @@ function do_test_test_javascript($count)
             <?php echo $_SESSION['teststart']; ?>, 
             'timer', <?php echo ($count ? 0 : 1); ?>
         );
+    }
+
+
+    /**
+     * Insert a new word test.
+     * 
+     * @param {number} word_id  Word ID
+     * @param {string} solution Test answer
+     * @param {string} group    
+     */
+    function insert_new_word(word_id, solution, group) {
+
+        SOLUTION = solution;
+        WID = word_id;
+
+        $('#term-test').html(group);
+
+        $(document).on('keydown', keydown_event_do_test_test);
+        $('.word')
+        .on('click', word_click_event_do_test_test)
+    }
+
+    /**
+    * Handles an ajax query for word tests.
+    * 
+    * @param {JSON}   current_test Current test data
+    * @param {number} total_tests  Total number of tests for the day
+    * @param {string} test_sql     SQL query for the test
+    */
+    function test_query_handler(current_test, total_tests, test_sql)
+    {
+        if (current_test['word_id'] == 0) {
+            do_test_finished(total_tests);
+            $.getJSON(
+                'api.php/v1/review/tomorrow-count', 
+                { test_sql: test_sql },
+                function (tomorrow_test) {
+                    if (tomorrow_test.count) {
+                        $('#tests-tomorrow').css("display", "inherit");
+                        $('#tests-tomorrow').text(
+                            "Tomorrow you'll find here " + tomorrow_test.count + 
+                            ' test' + (tomorrow_test.count < 2 ? '' : 's') + "!"
+                        );
+                    }
+                }
+            );
+        } else {
+            insert_new_word(
+                current_test.word_id, current_test.solution, current_test.group
+            );
+        }
+    }
+
+    /**
+    * Get new term to test through AJAX
+    */
+    function query_next_term(review_data)
+    {
+        $.getJSON(
+            'api.php/v1/review/next-word', 
+            {
+                test_sql: review_data.test_sql,
+                word_mode: review_data.word_mode,
+                lg_id: review_data.lg_id,
+                word_regex: review_data.word_regex,
+                type: review_data.type
+            }
+        )
+        .done(function (data) {
+            test_query_handler(data, review_data.count, review_data.test_sql);
+        } );
     }
 
     /**
