@@ -1616,13 +1616,21 @@ To debug:</p>
 <li>Run <code>npm test</code> to test the API.</li>
 </ol>
 <h3>Improving Documentation</h3>
-<p>To regenerate all documentation, use <code>composer doc</code>.</p>
+<p>To regenerate all PHP and Markdown documentation, use <code>composer doc</code>.
+For the JS documentation, you need NPM. Use <code>./node_modules/.bin/jsdoc -c jsdoc.json</code>.</p>
 <h4>General Documentation</h4>
-<p>The documentation is split across Markdown (<code>.md</code>) files in <code>docs/</code>. Then, those files are requested by <code>info.php</code>. The final version is <code>info.html</code>, which contains all files.</p>
+<p>The documentation is split across Markdown (<code>.md</code>) files in <code>docs/</code>.
+Then, those files are requested by <code>info.php</code>.
+The final version is <code>info.html</code>, which contains all files.</p>
 <p>To regenerate <code>info.hml</code>, run <code>composer info.html</code>.</p>
-<h4>Code Documentation</h4>
-<p>Code documentation (everything under <code>docs/html/</code>) is automatically generated. If you see an error, the PHP code is most likely at fault. However, don't hesitate to signal the issue.</p>
+<h4>PHP Code Documentation</h4>
+<p>Code documentation (everything under <code>docs/html/</code>) is automatically generated.
+If you see an error, the PHP code is most likely at fault.
+However, don't hesitate to signal the issue.</p>
 <p>Currently, the documentation is generated through Doxygen (run <code>doxygen Doxyfile</code> to regenerate it), but this is likely to change.</p>
+<h4>JS Code Documentation</h4>
+<p>Code documentation for JavaScript is available at <code>docs/js/</code> is is generated thourgh JSDoc.
+The JSDoc configuration file is <code>jsdoc.json</code>.</p>
 <h3>New version</h3>
 <p>LWT-fork follows a strict procedure for new versions.
 This section is mainly intended for the maintainers, but feel free to take a peak at it.</p>
@@ -1631,7 +1639,7 @@ This section is mainly intended for the maintainers, but feel free to take a pea
 <li>In the <a href="./CHANGELOG.md">CHANGELOG</a>, add the latest release number and date.</li>
 <li>Update <code>get_version</code> in <code>inc/kernel_utility.php</code> with the release number and date.</li>
 <li>Update <code>PROJECT_NUMBER</code> in <code>Doxyfile</code> to the latest release number.</li>
-<li>Regenerate documentation with <code>composer info.html</code> and <code>composer doc</code>.</li>
+<li>Regenerate documentation with <code>composer doc</code> and <code>./node_modules/.bin/jsdoc -c jsdoc.json</code>.</li>
 <li>Commit your changes, <code>git commit -m "Regenerates documentation for release []."</code>
 </li>
 <li>Add a version tag with annotation <code>git tag -a [release number]</code> and push the changes.</li>
@@ -2152,6 +2160,11 @@ KEY NfUpdate (NfUpdate)
 other versions come from the canonical LWT ("official" branch on Git).
 For git tags, official releases are marked like "v1.0.0", while unofficial
 ones are marked like "v1.0.0-fork".</p>
+<h3>[Unreleased]</h3>
+<h4>Added</h4>
+<ul>
+<li>JavaScript documentation with <a href="https://jsdoc.app/">JSDoc</a>! You will find it under <code>docs/js/</code>.</li>
+</ul>
 <h3>2.9.0-fork (December 24 2023)</h3>
 <h4>Added</h4>
 <ul>

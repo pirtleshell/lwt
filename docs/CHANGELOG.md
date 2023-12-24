@@ -5,6 +5,12 @@ other versions come from the canonical LWT ("official" branch on Git).
 For git tags, official releases are marked like "v1.0.0", while unofficial
 ones are marked like "v1.0.0-fork".
 
+## [Unreleased]
+
+### Added
+
+* JavaScript documentation with [JSDoc](https://jsdoc.app/)! You will find it under `docs/js/`.
+
 ## 2.9.0-fork (December 24 2023)
 
 ### Added
