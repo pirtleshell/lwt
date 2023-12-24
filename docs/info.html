@@ -97,6 +97,7 @@
 			<div>&nbsp;</div>
 			<a href="#contribute">Contribute</a>
 			<a href="#wordpress">WordPress Integration</a>
+			<a href="#api">Public API</a>
 			<a href="#database">Database</a>
 			<a href="#CHANGELOG">Changelog</a>
 		</div>	
@@ -180,6 +181,9 @@
 					</option>
 					<option value="wordpress">
 						WordPress Integration
+					</option>
+					<option value="api">
+						Public API
 					</option>
 					<option value="database">
 						Database Structure
@@ -1601,6 +1605,16 @@ As a consequence:</p>
 <p>You can run it through composer. Use <code>php ./vendor/bin/squizlabs/phpcs.phar [filename]</code> to see style violations on a file. You can fix them using</p>
 <pre><code class="language-bash">php ./vendor/bin/squizlabs/phpcbf.phar [filename]
 </code></pre>
+<h3>Interact with and modify the REST API</h3>
+<p>Starting from 2.9.0-fork, LWT provides a RESTful API. The main handler for the API is <code>api.php</code>.
+You can find a more exhaustive API documentation at <a href="./api.md">api.md</a>.</p>
+<p>If you plan to develop the API, please follow the RESTful standards.
+To debug:</p>
+<ol>
+<li>Install Node and NPM.</li>
+<li>Run <code>npm install</code> in the main LWT folder.</li>
+<li>Run <code>npm test</code> to test the API.</li>
+</ol>
 <h3>Improving Documentation</h3>
 <p>To regenerate all documentation, use <code>composer doc</code>.</p>
 <h4>General Documentation</h4>
@@ -1652,6 +1666,272 @@ If the session cookie does not exist, both above start methods are the same.</li
 The LWT home page has such a link. If you only log out via the links on the WordPress pages, you will still be able to use LWT until the browser is closed. If you want to log out from both WordPress and LWT, use the above link, or click on the link on the LWT home page!</li>
 <li>If you delete a user, you must find out its user number (table "wp_users"). After deleting the user in WordPress, you can delete all LWT tables with table names beginning with the user number plus an underscore "_". You can do this in phpMyAdmin.</li>
 </ol>
+
+			<h2 id="api" name="api">▶ LWT REST API Documentation - <a href="#">[↑]</a></h2>
+<p>This documentation provides an overview of the REST API endpoints available for LWT-community.
+The LWT API allows developers to interact with various features of the application,
+such as retrieving media paths, getting sentences containing a specific term,
+managing settings, and more.</p>
+<h3>Base URL</h3>
+<p>The base URL for all API endpoints is: <code>http://[base_url]/api/v1</code>,
+where <code>base_url</code> is your instance URL (e. g. <code>localhost:8080</code>).</p>
+<h3>Authentication</h3>
+<p>Currently, the LWT API does not require authentication. However, authentication
+might be implemented in the future. Ensure that appropriate security measures are
+implemented on the client-side to protect user data.</p>
+<h3>Versioning</h3>
+<p>The REST API should follow <a href="https://semver.org/">semantic versioning</a>.
+In the API URL, <code>v1</code> indicates "MAJOR version 1", and so on for the future versions.
+A track of all changes is kept in the <a href="./CHANGELOG.md">CHANGELOG.md</a>.</p>
+<h3>GET API Endpoints</h3>
+<h4>Get Media Files Paths</h4>
+<p>Retrieves the files paths to the audio and video files in the media folder.</p>
+<ul>
+<li>
+<strong>Endpoint</strong>: <code>/media-files</code>
+</li>
+<li>
+<strong>Method</strong>: GET</li>
+<li>
+<strong>Arguments</strong>: None</li>
+</ul>
+<h4>Get Phonetic Reading</h4>
+<p>Retrieves the phonetic reading for any specified term.</p>
+<ul>
+<li>
+<strong>Endpoint</strong>: <code>/phonetic-reading</code>
+</li>
+<li>
+<strong>Method</strong>: GET</li>
+<li>
+<strong>Arguments</strong>: <code>text</code> and <code>lang</code>.</li>
+</ul>
+<h4>Get Next Word to Review</h4>
+<p>Retrieves the next word to be reviewed.</p>
+<ul>
+<li>
+<strong>Endpoint</strong>: <code>/review/next-word</code>
+</li>
+<li>
+<strong>Method</strong>: GET</li>
+<li>
+<strong>Arguments</strong>: <code>test_key</code>, <code>selection</code>, <code>word_mode</code>, <code>lg_id</code>, <code>word_regex</code>, <code>type</code>
+</li>
+</ul>
+<h4>Get Tomorrow's Reviews Number</h4>
+<p>Retrieves the number of reviews scheduled for tomorrow.</p>
+<ul>
+<li>
+<strong>Endpoint</strong>: <code>/review/tomorrow-count</code>
+</li>
+<li>
+<strong>Method</strong>: GET</li>
+<li>
+<strong>Arguments</strong>: <code>test_key</code> and <code>selection</code>
+</li>
+</ul>
+<h4>Get Sentences Containing New Term</h4>
+<p>Retrieves sentences that contain the specified term.</p>
+<ul>
+<li>
+<strong>Endpoint</strong>: <code>/sentences-with-term</code>
+</li>
+<li>
+<strong>Method</strong>: GET</li>
+<li>
+<strong>Arguments</strong>: <code>lg_id</code>, <code>word_lc</code>, and <code>advanced_search</code> (optional)</li>
+</ul>
+<h4>Get Sentences Containing Registred Term</h4>
+<p>Retrieves sentences that contain the specified term.</p>
+<ul>
+<li>
+<strong>Endpoint</strong>: <code>/sentences-with-term/{term-id}</code>
+</li>
+<li>
+<strong>Method</strong>: GET</li>
+<li>
+<strong>Arguments</strong>: <code>lg_id</code> and <code>word_lc</code>
+</li>
+</ul>
+<h4>Get Terms Similar to Another</h4>
+<p>Retrieves terms similar to the specified term.</p>
+<ul>
+<li>
+<strong>Endpoint</strong>: <code>/similar-terms</code>
+</li>
+<li>
+<strong>Method</strong>: GET</li>
+<li>
+<strong>Arguments</strong>: <code>lg_id</code> and <code>term</code>
+</li>
+</ul>
+<h4>Get Theme Path</h4>
+<p>Retrieves the path for a file using the user theme.</p>
+<ul>
+<li>
+<strong>Endpoint</strong>: <code>/settings/theme-path</code>
+</li>
+<li>
+<strong>Method</strong>: GET</li>
+<li>
+<strong>Arguments</strong>: <code>path</code>
+</li>
+</ul>
+<h4>Get Imported Terms</h4>
+<p>Retrieves the terms that were imported.</p>
+<ul>
+<li>
+<strong>Endpoint</strong>: <code>/terms/imported</code>
+</li>
+<li>
+<strong>Method</strong>: GET</li>
+<li>
+<strong>Arguments</strong>: <code>last_update</code>, <code>page</code> and <code>count</code>
+</li>
+</ul>
+<h4>Get Term Translations</h4>
+<p>Retrieves the translations for a specific term.</p>
+<ul>
+<li>
+<strong>Endpoint</strong>: <code>/terms/{term-id}/translations</code>
+</li>
+<li>
+<strong>Method</strong>: GET</li>
+<li>
+<strong>Arguments</strong>: <code>text_id</code> and <code>term_lc</code>
+</li>
+</ul>
+<h4>Get Texts Statistics</h4>
+<p>Retrieves statistics for multiple texts.</p>
+<ul>
+<li>
+<strong>Endpoint</strong>: <code>/texts/statistics</code>
+</li>
+<li>
+<strong>Method</strong>: GET</li>
+<li>
+<strong>Arguments</strong>: <code>texts_id</code>
+</li>
+</ul>
+<h4>Get API Version</h4>
+<p>Retrieves the version of the LWT API.</p>
+<ul>
+<li>
+<strong>Endpoint</strong>: <code>/version</code>
+</li>
+<li>
+<strong>Method</strong>: GET</li>
+<li>
+<strong>Arguments</strong>: None</li>
+</ul>
+<h3>POST API Endpoints</h3>
+<h4>Save Setting</h4>
+<p>Saves user settings.</p>
+<ul>
+<li>
+<strong>Endpoint</strong>: <code>/settings</code>
+</li>
+<li>
+<strong>Method</strong>: POST</li>
+<li>
+<strong>Arguments</strong>: <code>key</code> and <code>value</code>
+</li>
+</ul>
+<h4>Set Text Annotation</h4>
+<p>Sets the annotation for a specific text.</p>
+<ul>
+<li>
+<strong>Endpoint</strong>: <code>/texts/{text-id}/annotation</code>
+</li>
+<li>
+<strong>Method</strong>: POST</li>
+<li>
+<strong>Arguments</strong>: <code>elem</code> and <code>data</code>
+</li>
+</ul>
+<h4>Update Audio Position</h4>
+<p>Updates the audio position for a specific text.</p>
+<ul>
+<li>
+<strong>Endpoint</strong>: <code>/texts/{text-id}/audio-position</code>
+</li>
+<li>
+<strong>Method</strong>: POST</li>
+<li>
+<strong>Arguments</strong>: <code>position</code>
+</li>
+</ul>
+<h4>Update Reading Position</h4>
+<p>Updates the reading position for a specific text.</p>
+<ul>
+<li>
+<strong>Endpoint</strong>: <code>/texts/{text-id}/reading-position</code>
+</li>
+<li>
+<strong>Method</strong>: POST</li>
+<li>
+<strong>Arguments</strong>: <code>position</code>
+</li>
+</ul>
+<h4>Decrement Term Status</h4>
+<p>Decrements the status of a term.</p>
+<ul>
+<li>
+<strong>Endpoint</strong>: <code>/terms/{term-id}/status/down</code>
+</li>
+<li>
+<strong>Method</strong>: POST</li>
+<li>
+<strong>Arguments</strong>: None</li>
+</ul>
+<h4>Increment Term Status</h4>
+<p>Increments the status of a term.</p>
+<ul>
+<li>
+<strong>Endpoint</strong>: <code>/terms/{term-id}/status/up</code>
+</li>
+<li>
+<strong>Method</strong>: POST</li>
+<li>
+<strong>Arguments</strong>: None</li>
+</ul>
+<h4>Set Term Status</h4>
+<p>Sets the status of a term to a new value.</p>
+<ul>
+<li>
+<strong>Endpoint</strong>: <code>/terms/{term-id}/status/{new-status}</code>
+</li>
+<li>
+<strong>Method</strong>: POST</li>
+<li>
+<strong>Arguments</strong>: None</li>
+</ul>
+<h4>Update Existing Term Translation</h4>
+<p>Add a translation for an existing term.</p>
+<ul>
+<li>
+<strong>Endpoint</strong>: <code>/terms/{term-id}/translations</code>
+</li>
+<li>
+<strong>Method</strong>: POST</li>
+<li>
+<strong>Arguments</strong>: <code>translation</code>
+</li>
+</ul>
+<h4>Add New Term Translation</h4>
+<p>Adds a new translation for a term.</p>
+<ul>
+<li>
+<strong>Endpoint</strong>: <code>/terms/new</code>
+</li>
+<li>
+<strong>Method</strong>: POST</li>
+<li>
+<strong>Arguments</strong>: <code>term_text</code>, <code>lg_id</code> and <code>translation</code>
+</li>
+</ul>
+<h3>Response Format</h3>
+<p>All API endpoints return responses in JSON format.</p>
 			
 			<h2 id="database" name="database">▶ Database Information - <a href="#">[↑]</a></h2>
 <p>The following seventeen tables are one "LWT table set". The default table set has no table name prefix, so the tables are named just as written below: "settings", "languages", etc.</p>
