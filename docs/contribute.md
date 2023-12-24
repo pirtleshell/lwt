@@ -136,6 +136,24 @@ Code documentation (everything under ``docs/html/``) is automatically generated.
 
 Currently, the documentation is generated through Doxygen (run ``doxygen Doxyfile`` to regenerate it), but this is likely to change.
 
+## New version
+
+LWT-fork follows a strict procedure for new versions. 
+This section is mainly intended for the maintainers, but feel free to take a peak at it.
+
+The steps to publish a new version are:
+
+1. Update the [CHANGELOG](./CHANGELOG.md) 
+    * Add the latest release number and date.
+    * Update the next section (rename "Changed" to "Changed in [previous version]").
+2. Update `get_version` in `inc/kernel_utility.php` with the relsease number and date.
+3. Update `PROJECT_NUMBER` in `Doxyfile` to the latest release number.
+4. Regenerate documentation with `composer info.html` and `composer docs`. 
+5. Commit your changes, `git commit -m "Regenerates documentation for release []."`
+6. Add a version tag with annotation `git tag -a [release number]` and push the changes.
+7. If all the GitHub actions are successfull, write a new release on GitHub linking to the previously created tag.
+8. The new version is live! 
+
 ## Other Ways of Contribution
 
 ### Drop a star on GitHub
@@ -149,5 +167,9 @@ LWT is a non-profitable piece of software, so we won't have much time or money t
 ### Discuss
 
 Either go to the forum of the [official LWT version](https://sourceforge.net/p/learning-with-texts/discussion/), or come and [discuss on the community version](https://github.com/HugoFara/lwt/discussions).
+
+### Support on OpenCollective
+
+LWT is hosted on OpenCollective, you can support the development of the app at <https://opencollective.com/lwt-community>.
 
 Thanks for your interest in contributing!

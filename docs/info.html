@@ -1623,6 +1623,26 @@ To debug:</p>
 <h4>Code Documentation</h4>
 <p>Code documentation (everything under <code>docs/html/</code>) is automatically generated. If you see an error, the PHP code is most likely at fault. However, don't hesitate to signal the issue.</p>
 <p>Currently, the documentation is generated through Doxygen (run <code>doxygen Doxyfile</code> to regenerate it), but this is likely to change.</p>
+<h3>New version</h3>
+<p>LWT-fork follows a strict procedure for new versions.
+This section is mainly intended for the maintainers, but feel free to take a peak at it.</p>
+<p>The steps to publish a new version are:</p>
+<ol>
+<li>Update the <a href="./CHANGELOG.md">CHANGELOG</a>
+<ul>
+<li>Add the latest release number and date.</li>
+<li>Update the next section (rename "Changed" to "Changed in [previous version]").</li>
+</ul>
+</li>
+<li>Update <code>get_version</code> in <code>inc/kernel_utility.php</code> with the relsease number and date.</li>
+<li>Update <code>PROJECT_NUMBER</code> in <code>Doxyfile</code> to the latest release number.</li>
+<li>Regenerate documentation with <code>composer info.html</code> and <code>composer docs</code>.</li>
+<li>Commit your changes, <code>git commit -m "Regenerates documentation for release []."</code>
+</li>
+<li>Add a version tag with annotation <code>git tag -a [release number]</code> and push the changes.</li>
+<li>If all the GitHub actions are successfull, write a new release on GitHub linking to the previously created tag.</li>
+<li>The new version is live!</li>
+</ol>
 <h3>Other Ways of Contribution</h3>
 <h4>Drop a star on GitHub</h4>
 <p>This is an open-source project. It means that anyone can contribute, but nobody gets paid for improving it. Dropping a star, leaving a comment, or posting an issue is <em>essential</em> because the only reward developers get from time spent on LWT is the opportunity to discuss with users.</p>
@@ -1630,6 +1650,8 @@ To debug:</p>
 <p>LWT is a non-profitable piece of software, so we won't have much time or money to advertise it. If you enjoy LWT and want to see it grow, share it!</p>
 <h4>Discuss</h4>
 <p>Either go to the forum of the <a href="https://sourceforge.net/p/learning-with-texts/discussion/">official LWT version</a>, or come and <a href="https://github.com/HugoFara/lwt/discussions">discuss on the community version</a>.</p>
+<h4>Support on OpenCollective</h4>
+<p>LWT is hosted on OpenCollective, you can support the development of the app at <a href="https://opencollective.com/lwt-community">https://opencollective.com/lwt-community</a>.</p>
 <p>Thanks for your interest in contributing!</p>
 
 			<h2 id="wordpress" name="wordpress">▶ Wordpress Integration - <a href="#">[↑]</a></h2>
