@@ -25,6 +25,7 @@ vendor/
 
 composer.phar
 
+# JS unit testing and documentation
 node_modules/
 
 # Editor
@@ -33,3 +34,8 @@ node_modules/
 _*
 # For Mac Users
 .DS_Store
+
+
+# Phive products
+.phive/*
+tools/*
