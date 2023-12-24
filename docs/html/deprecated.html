@@ -22,7 +22,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="lwt_icon.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Learning with Texts - Fork<span id="projectnumber">&#160;2.8.1-fork</span>
+   <div id="projectname">Learning with Texts - Fork<span id="projectnumber">&#160;2.9.0-fork</span>
    </div>
    <div id="projectbrief">Learn foreign languages with texts</div>
   </td>
@@ -75,49 +75,79 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><dl class="reflist">
+<dt>Global <a class="el" href="ajax__add__term__transl_8php.html#a162d57d7c37aa6498ffc1ba4c07c5ef5">do_ajax_add_term_transl</a>  ($wid, $data)</dt>
+<dd><a class="anchor" id="_deprecated000016"></a>Deprecated in 2.9.0 in favor to the REST API.  </dd>
+<dt>Global <a class="el" href="ajax__show__imported__terms_8php.html#afbcf32ac49fef765eadfc6a5144a01aa">do_ajax_show_imported_terms</a>  ($last_update, $currentpage, $recno, $rtl)</dt>
+<dd><a class="anchor" id="_deprecated000023"></a>2.9.0 Use the AJAX API instead.  </dd>
+<dt>Global <a class="el" href="ajax__show__sentences_8php.html#a19e1f8ddf60988d47761218afce8bd44">do_ajax_show_sentences</a>  ($langid, $wid, $word, $ctl)</dt>
+<dd><a class="anchor" id="_deprecated000025"></a>2.9.0 Use the REST API instead.  </dd>
+<dt>Global <a class="el" href="ajax__word__counts_8php.html#a6594f70d3891bb60574ca2fb688708c5">do_ajax_word_counts</a>  ($textid)</dt>
+<dd><a class="anchor" id="_deprecated000028"></a>2.9.0 Use the REST API instead  </dd>
 <dt>Global <a class="el" href="mobile__interactions_8php.html#a6adba33b5151669da078474bc0253c1b">do_frameset_mobile_css</a>  ()</dt>
-<dd><a class="anchor" id="_deprecated000017"></a>Since 2.6.0-fork, the display for mobile changed, making this code useless <br  />
+<dd><a class="anchor" id="_deprecated000031"></a>Since 2.6.0-fork, the display for mobile changed, making this code useless <br  />
   </dd>
 <dt>Global <a class="el" href="mobile__interactions_8php.html#af1cb513d47c034d45ec5058530cd41ba">do_frameset_mobile_js</a>  ($audio=null)</dt>
-<dd><a class="anchor" id="_deprecated000018"></a>Since 2.2.1-fork, we do no longer use frameset  </dd>
+<dd><a class="anchor" id="_deprecated000032"></a>Since 2.2.1-fork, we do no longer use frameset  </dd>
 <dt>Global <a class="el" href="mobile__interactions_8php.html#a7d5e0e85b0cd7c350111cccc45ff19e8">do_frameset_mobile_page_content</a>  ($frame_h_uri, $frame_l_uri, $right_frames)</dt>
-<dd><a class="anchor" id="_deprecated000016"></a>Since 2.2.1-fork, Do not use frames  </dd>
+<dd><a class="anchor" id="_deprecated000030"></a>Since 2.2.1-fork, Do not use frames  </dd>
 <dt>Global <a class="el" href="display__impr__text_8php.html#a325a553e4f8758d3021268d0b35db750">do_mobile_display_impr_text</a>  ($textid, $audio)</dt>
 <dd><a class="anchor" id="_deprecated000001"></a>  </dd>
 <dt>Global <a class="el" href="do__test_8php.html#af95ff7bc0dd82e59d160f504ceaf6fdc">do_test_mobile_page_content</a>  ($property)</dt>
 <dd><a class="anchor" id="_deprecated000002"></a>Use do_frameset_mobile_page_content instead  </dd>
 <dt>Global <a class="el" href="do__test__test_8php.html#a7c4334b196d9bd47151acf0c9ec66f5b">do_test_test_css</a>  ()</dt>
-<dd><a class="anchor" id="_deprecated000003"></a>2.6.0-fork Do not use this function since it was causing wrong display. Will be removed in 3.0.0.  </dd>
+<dd><a class="anchor" id="_deprecated000005"></a>2.6.0-fork Do not use this function since it was causing wrong display. Will be removed in 3.0.0.  </dd>
 <dt>Global <a class="el" href="do__text__text_8php.html#ae58010dca8bdbf061ec2c93823386b0b">do_text_javascript</a>  ($var_array)</dt>
-<dd><a class="anchor" id="_deprecated000014"></a>Use do_text_text_javascript instead.  </dd>
+<dd><a class="anchor" id="_deprecated000015"></a>Use do_text_text_javascript instead.  </dd>
 <dt>Global <a class="el" href="do__text__text_8php.html#aff0e1c7e60b2389153e1165b01fd27e1">echoTerm</a>  ( $actcode, $showAll, $hideuntil, $spanid, $hidetag, $currcharcount, $record)</dt>
-<dd><a class="anchor" id="_deprecated000007"></a>Use echo_term instead.  </dd>
+<dd><a class="anchor" id="_deprecated000008"></a>Use echo_term instead.  </dd>
+<dt>Global <a class="el" href="ajax__show__imported__terms_8php.html#a37b83d29ea67a121f5ce9b0e9f12b0aa">get_imported_terms</a>  ($recno, $currentpage, $last_update)</dt>
+<dd><a class="anchor" id="_deprecated000022"></a>2.9.0 Use imported_terms_header instead  </dd>
 <dt>Global <a class="el" href="index_8php.html#a295283191d11a9150a01d0fb6a84bc5f">get_server_data</a>  ()</dt>
-<dd><a class="anchor" id="_deprecated000022"></a>Use get_server_data_table, will be removed in 3.0.0.  </dd>
+<dd><a class="anchor" id="_deprecated000037"></a>Use get_server_data_table, will be removed in 3.0.0.  </dd>
+<dt>Global <a class="el" href="do__test__test_8php.html#ab5d43bc9e6c0a4d95ea8a583b4742132">get_test_sql</a>  ()</dt>
+<dd><a class="anchor" id="_deprecated000003"></a>2.9.0-fork Use do_test_get_sql instead  </dd>
+<dt>Global <a class="el" href="do__test__test_8php.html#a5b2902b7ce73fac2c5e01f5d7ed1f2ed">get_test_type</a>  ()</dt>
+<dd><a class="anchor" id="_deprecated000004"></a>2.9.0-fork Use do_test_get_test_type instead.  </dd>
 <dt>Global <a class="el" href="do__text__text_8php.html#a57948423b4ea76ea3fe838c93f425ccb">getLanguagesSettings</a>  ($langid)</dt>
-<dd><a class="anchor" id="_deprecated000006"></a>Use get_language_settings instead. </dd>
+<dd><a class="anchor" id="_deprecated000007"></a>Use get_language_settings instead. </dd>
 <dt>Global <a class="el" href="do__text__text_8php.html#a53ff78106923630d0827565967983e7f">getTextData</a>  ($textid)</dt>
-<dd><a class="anchor" id="_deprecated000005"></a>Use get_text_data instead. </dd>
+<dd><a class="anchor" id="_deprecated000006"></a>Use get_text_data instead. </dd>
 <dt>Global <a class="el" href="session__utility_8php.html#ac7d5627dbb5ea1842bb4d6c2435fbaf8">insertExpressionFromMeCab</a>  ($textlc, $lid, $wid, $len, $mode)</dt>
-<dd><a class="anchor" id="_deprecated000019"></a>Use insert_expression_from_mecab instead. </dd>
+<dd><a class="anchor" id="_deprecated000034"></a>Use insert_expression_from_mecab instead. </dd>
+<dt>Namespace <a class="el" href="namespace_lwt.html">Lwt</a>  </dt>
+<dd><p class="startdd"><a class="anchor" id="_deprecated000020"></a>2.9.0 Use AJAX REST API instead. </p>
+<p class="interdd"><a class="anchor" id="_deprecated000027"></a>2.9.0 Use the REST API instead. </p>
+<p class="interdd"><a class="anchor" id="_deprecated000026"></a>Since 2.9.0, it is recommended to use the REST API. </p>
+<p class="interdd"><a class="anchor" id="_deprecated000024"></a>2.9.0 Use the REST API instead. </p>
+<p class="interdd"><a class="anchor" id="_deprecated000021"></a>2.9.0 Use REST API in priority. </p>
+<p class="enddd"><a class="anchor" id="_deprecated000019"></a>Use ajax.php with action_type=get_phonetic instead. Deprecated in 2.9.0.  </p>
+</dd>
+<dt>Global <a class="el" href="ajax__edit__impr__text_8php.html#a6f5fa2945ceef8c101cd46b20a855416">Lwt::Ajax::Improved_Text::edit_term_interaction</a>  ($wordlc, $textid)</dt>
+<dd><a class="anchor" id="_deprecated000017"></a>2.9.0 Use AJAX instead  </dd>
+<dt>Global <a class="el" href="ajax__edit__impr__text_8php.html#a46e63dae67b9dbb66315a4a04bbe03c3">Lwt::Ajax::Improved_Text::make_form</a>  ($textid, $wordlc)</dt>
+<dd><a class="anchor" id="_deprecated000018"></a>2.9.0 Use AJAX instead  </dd>
 <dt>Global <a class="el" href="do__text__text_8php.html#af1d6295c4d9f7b70316dd4af59061fd2">mainWordLoop</a>  ($textid, $showAll)</dt>
-<dd><a class="anchor" id="_deprecated000012"></a>Use main_word_loop instead.  </dd>
+<dd><a class="anchor" id="_deprecated000013"></a>Use main_word_loop instead.  </dd>
+<dt>Global <a class="el" href="upload__words_8php.html#a61545539a192cfd7d8a9b4e47d0b4813">my_str_getcsv</a>  ($input)</dt>
+<dd><a class="anchor" id="_deprecated000038"></a>2.9.0 This function is no longer used and will be removed  </dd>
 <dt>Global <a class="el" href="session__utility_8php.html#a0e4deefa61f330312d63ae92d5d3379a">new_expression_interactable</a>  ($hex, $appendtext, $sid, $len)</dt>
-<dd><a class="anchor" id="_deprecated000020"></a>Use new_expression_interactable2 instead. The new function does not use global JS variables. </dd>
+<dd><a class="anchor" id="_deprecated000035"></a>Use new_expression_interactable2 instead. The new function does not use global JS variables. </dd>
 <dt>Global <a class="el" href="do__text__text_8php.html#ae71caba9eee9a49733ebaa7e3c16a8ed">prepareStyle</a>  ($showLearning, $mode_trans, $textsize, $ann_exists)</dt>
-<dd><a class="anchor" id="_deprecated000013"></a>Use do_text_text_style instead.  </dd>
+<dd><a class="anchor" id="_deprecated000014"></a>Use do_text_text_style instead.  </dd>
 <dt>Global <a class="el" href="session__utility_8php.html#aee9ee100264b8ab008c86fe82c0cbf37">refreshText</a>  ($word, $tid)</dt>
-<dd><a class="anchor" id="_deprecated000021"></a>No longer used, incompatible with new database system.  </dd>
+<dd><a class="anchor" id="_deprecated000036"></a>No longer used, incompatible with new database system.  </dd>
 <dt>Global <a class="el" href="do__text__text_8php.html#aa4a9f5cfb61e7139a6613d96370bf3d4">sentenceParser</a>  ($sid, $old_sid)</dt>
-<dd><a class="anchor" id="_deprecated000009"></a>Use sentence_parser instead.  </dd>
+<dd><a class="anchor" id="_deprecated000010"></a>Use sentence_parser instead.  </dd>
 <dt>Global <a class="el" href="database__connect_8php.html#a82d62f0d7510fc4454deb4ed0f16e9a9">set_word_count</a>  ()</dt>
-<dd><a class="anchor" id="_deprecated000015"></a>Use init_word_count: same effect, but more logical name. Will be removed in version 3.0.0.  </dd>
+<dd><a class="anchor" id="_deprecated000029"></a>Use init_word_count: same effect, but more logical name. Will be removed in version 3.0.0.  </dd>
+<dt>Global <a class="el" href="session__utility_8php.html#a27e9c06c915c3bddabdbe29fd875b835">textwordcount</a>  ($textID)</dt>
+<dd><a class="anchor" id="_deprecated000033"></a>2.9.0 Use return_textwordcount instead.  </dd>
 <dt>Global <a class="el" href="do__text__text_8php.html#ad7b50f19167466747f0ef6b97d155530">word_parser</a>  ($record, $showAll, $currcharcount, $hideuntil)</dt>
-<dd><a class="anchor" id="_deprecated000010"></a>Use item_parser instead (since 2.5.0-fork).  </dd>
+<dd><a class="anchor" id="_deprecated000011"></a>Use item_parser instead (since 2.5.0-fork).  </dd>
 <dt>Global <a class="el" href="do__text__text_8php.html#a23d32e2fd497f2342e314bc1e7729b80">wordParser</a>  ($record, $showAll, $currcharcount, $hideuntil)</dt>
-<dd><a class="anchor" id="_deprecated000011"></a>Use word_parser instead.  </dd>
+<dd><a class="anchor" id="_deprecated000012"></a>Use word_parser instead.  </dd>
 <dt>Global <a class="el" href="do__text__text_8php.html#a4d79df4f1e92552741b4b26acc5bafa2">wordProcessor</a>  ($record, $showAll, $currcharcount)</dt>
-<dd><a class="anchor" id="_deprecated000008"></a>Use sentenceParser and wordParser instead. </dd>
+<dd><a class="anchor" id="_deprecated000009"></a>Use sentenceParser and wordParser instead. </dd>
 </dl>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->

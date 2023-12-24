@@ -22,7 +22,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="lwt_icon.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Learning with Texts - Fork<span id="projectnumber">&#160;2.8.1-fork</span>
+   <div id="projectname">Learning with Texts - Fork<span id="projectnumber">&#160;2.9.0-fork</span>
    </div>
    <div id="projectbrief">Learn foreign languages with texts</div>
   </td>
@@ -92,19 +92,19 @@ Functions</h2></td></tr>
 <tr class="separator:a2f597ef6cd4c9c72a2eabffa518b6c1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ada8d7f0744c4fb18bb380a828abc5449"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="set__test__status_8php.html#ada8d7f0744c4fb18bb380a828abc5449">set_test_status_change_progress</a> ($stchange)</td></tr>
 <tr class="separator:ada8d7f0744c4fb18bb380a828abc5449"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a85a6097399ce921b904282aabef743d1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="set__test__status_8php.html#a85a6097399ce921b904282aabef743d1">do_set_test_status_javascript</a> ($wid, $status, $stchange)</td></tr>
-<tr class="separator:a85a6097399ce921b904282aabef743d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae0958a2295e27b7462cce207f125be2f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="set__test__status_8php.html#ae0958a2295e27b7462cce207f125be2f">do_set_test_status_content</a> ($wid, $status, $oldstatus, $stchange)</td></tr>
-<tr class="separator:ae0958a2295e27b7462cce207f125be2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab202d0e16fa36257d42abe99e3d77d36"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="set__test__status_8php.html#ab202d0e16fa36257d42abe99e3d77d36">do_set_test_status_javascript</a> ( $wid, $status, $stchange, $tests_status=array(), $ajax=false)</td></tr>
+<tr class="separator:ab202d0e16fa36257d42abe99e3d77d36"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb70326a0c03deac05a2587afd11dc9a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="set__test__status_8php.html#afb70326a0c03deac05a2587afd11dc9a">do_set_test_status_content</a> ($wid, $status, $oldstatus, $stchange, $ajax=false)</td></tr>
+<tr class="separator:afb70326a0c03deac05a2587afd11dc9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abbeb7b6d77d8ca3a8e50b7d179aaf402"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="set__test__status_8php.html#abbeb7b6d77d8ca3a8e50b7d179aaf402">start_set_text_status</a> ()</td></tr>
 <tr class="separator:abbeb7b6d77d8ca3a8e50b7d179aaf402"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Change status of term while testing. </p>
-<p>Call: <a class="el" href="set__test__status_8php.html" title="Change status of term while testing.">set_test_status.php</a>?wid=[wordid]&amp;stchange=+1/-1 <a class="el" href="set__test__status_8php.html" title="Change status of term while testing.">set_test_status.php</a>?wid=[wordid]&amp;status=1..5/98/99 </p>
+<p>Call: <a class="el" href="set__test__status_8php.html" title="Change status of term while testing.">set_test_status.php</a>?wid=[wordid]&amp;stchange=+1/-1&amp;[ajax=1] <a class="el" href="set__test__status_8php.html" title="Change status of term while testing.">set_test_status.php</a>?wid=[wordid]&amp;status=1..5/98/99&amp;[ajax=1] </p>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a id="ae0958a2295e27b7462cce207f125be2f" name="ae0958a2295e27b7462cce207f125be2f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae0958a2295e27b7462cce207f125be2f">&#9670;&#160;</a></span>do_set_test_status_content()</h2>
+<a id="afb70326a0c03deac05a2587afd11dc9a" name="afb70326a0c03deac05a2587afd11dc9a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afb70326a0c03deac05a2587afd11dc9a">&#9670;&#160;</a></span>do_set_test_status_content()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -131,7 +131,13 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$stchange</em>&#160;</td>
+          <td class="paramname"><em>$stchange</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$ajax</em> = <code>false</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -206,8 +212,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a85a6097399ce921b904282aabef743d1" name="a85a6097399ce921b904282aabef743d1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a85a6097399ce921b904282aabef743d1">&#9670;&#160;</a></span>do_set_test_status_javascript()</h2>
+<a id="ab202d0e16fa36257d42abe99e3d77d36" name="ab202d0e16fa36257d42abe99e3d77d36"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab202d0e16fa36257d42abe99e3d77d36">&#9670;&#160;</a></span>do_set_test_status_javascript()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -228,7 +234,19 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$stchange</em>&#160;</td>
+          <td class="paramname"><em>$stchange</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$tests_status</em> = <code>array()</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$ajax</em> = <code>false</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -247,6 +265,8 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
+<p>Update remaining words count.</p>
+<p>Get a new word.</p>
 
 </div>
 </div>

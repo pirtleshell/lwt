@@ -14,7 +14,8 @@ var searchData=
   ['print_5ffeed_5fresult_11',['print_feed_result',['../ajax__load__feed_8php.html#a88b565ab6a89b31bf4e5d3d2bfb986a8',1,'ajax_load_feed.php']]],
   ['print_5ffile_5fpath_12',['print_file_path',['../session__utility_8php.html#a0caab76499b93b3291b2c8b2490ea3da',1,'session_utility.php']]],
   ['print_5fsimilar_5fterms_13',['print_similar_terms',['../simterms_8php.html#ae757838966b3688392e9ed28f6721a37',1,'simterms.php']]],
-  ['print_5fterm_5ftest_14',['print_term_test',['../do__test__test_8php.html#aa4dcc9f7101f95be23101b1faa93f777',1,'do_test_test.php']]],
-  ['processdbparam_15',['processDBParam',['../session__utility_8php.html#abbe995764b8c9ba1e0d77061ec9c9f3d',1,'session_utility.php']]],
-  ['processsessparam_16',['processSessParam',['../session__utility_8php.html#a448c3c3758664ea191b594625646cc5c',1,'session_utility.php']]]
+  ['print_5fsimilar_5fterms_5ftabrow_14',['print_similar_terms_tabrow',['../simterms_8php.html#a6a547bbb630f060763d5925acb154e97',1,'simterms.php']]],
+  ['print_5fterm_5ftest_15',['print_term_test',['../do__test__test_8php.html#aa4dcc9f7101f95be23101b1faa93f777',1,'do_test_test.php']]],
+  ['processdbparam_16',['processDBParam',['../session__utility_8php.html#abbe995764b8c9ba1e0d77061ec9c9f3d',1,'session_utility.php']]],
+  ['processsessparam_17',['processSessParam',['../session__utility_8php.html#a448c3c3758664ea191b594625646cc5c',1,'session_utility.php']]]
 ];

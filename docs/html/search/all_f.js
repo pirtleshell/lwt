@@ -16,7 +16,8 @@ var searchData=
   ['print_5ffile_5fpath_13',['print_file_path',['../session__utility_8php.html#a0caab76499b93b3291b2c8b2490ea3da',1,'session_utility.php']]],
   ['print_5fimpr_5ftext_2ephp_14',['print_impr_text.php',['../print__impr__text_8php.html',1,'']]],
   ['print_5fsimilar_5fterms_15',['print_similar_terms',['../simterms_8php.html#ae757838966b3688392e9ed28f6721a37',1,'simterms.php']]],
-  ['print_5fterm_5ftest_16',['print_term_test',['../do__test__test_8php.html#aa4dcc9f7101f95be23101b1faa93f777',1,'do_test_test.php']]],
-  ['processdbparam_17',['processDBParam',['../session__utility_8php.html#abbe995764b8c9ba1e0d77061ec9c9f3d',1,'session_utility.php']]],
-  ['processsessparam_18',['processSessParam',['../session__utility_8php.html#a448c3c3758664ea191b594625646cc5c',1,'session_utility.php']]]
+  ['print_5fsimilar_5fterms_5ftabrow_16',['print_similar_terms_tabrow',['../simterms_8php.html#a6a547bbb630f060763d5925acb154e97',1,'simterms.php']]],
+  ['print_5fterm_5ftest_17',['print_term_test',['../do__test__test_8php.html#aa4dcc9f7101f95be23101b1faa93f777',1,'do_test_test.php']]],
+  ['processdbparam_18',['processDBParam',['../session__utility_8php.html#abbe995764b8c9ba1e0d77061ec9c9f3d',1,'session_utility.php']]],
+  ['processsessparam_19',['processSessParam',['../session__utility_8php.html#a448c3c3758664ea191b594625646cc5c',1,'session_utility.php']]]
 ];

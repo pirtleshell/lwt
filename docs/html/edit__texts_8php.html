@@ -22,7 +22,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="lwt_icon.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Learning with Texts - Fork<span id="projectnumber">&#160;2.8.1-fork</span>
+   <div id="projectname">Learning with Texts - Fork<span id="projectnumber">&#160;2.9.0-fork</span>
    </div>
    <div id="projectbrief">Learn foreign languages with texts</div>
   </td>
@@ -100,6 +100,8 @@ Functions</h2></td></tr>
 <tr class="separator:a2509a19a23c08d39956a442674ee5248"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4a91f2652a2a62229af02d57c3db9dc4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="edit__texts_8php.html#a4a91f2652a2a62229af02d57c3db9dc4">edit_texts_do_operation</a> ($op, $message1, $no_pagestart)</td></tr>
 <tr class="separator:a4a91f2652a2a62229af02d57c3db9dc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e1354225c75077e8fe8a1392e266597"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="edit__texts_8php.html#a3e1354225c75077e8fe8a1392e266597">edit_texts_form</a> ($text, $annotated)</td></tr>
+<tr class="separator:a3e1354225c75077e8fe8a1392e266597"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5a29bf862becb057f6abc687b8bfa668"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="edit__texts_8php.html#a5a29bf862becb057f6abc687b8bfa668">edit_texts_new</a> ($lid)</td></tr>
 <tr class="separator:a5a29bf862becb057f6abc687b8bfa668"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aed448096b71b876e396a550307553208"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="edit__texts_8php.html#aed448096b71b876e396a550307553208">edit_texts_change</a> ($txid)</td></tr>
@@ -166,7 +168,7 @@ Functions</h2></td></tr>
 <p>Create the main window to edit an existing text.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramtype">int</td><td class="paramname">$txid</td><td>Text ID</td></tr>
+    <tr><td class="paramtype">int</td><td class="paramname">$txid</td><td><a class="el" href="class_text.html">Text</a> ID</td></tr>
   </table>
   </dd>
 </dl>
@@ -193,7 +195,7 @@ Functions</h2></td></tr>
 <p>Delete an existing text.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramtype">string</td><td class="paramname">$txid</td><td>Text ID</td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$txid</td><td><a class="el" href="class_text.html">Text</a> ID</td></tr>
   </table>
   </dd>
 </dl>
@@ -345,6 +347,45 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a3e1354225c75077e8fe8a1392e266597" name="a3e1354225c75077e8fe8a1392e266597"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3e1354225c75077e8fe8a1392e266597">&#9670;&#160;</a></span>edit_texts_form()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">edit_texts_form </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$text</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$annotated</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Display the main form for text creation and edition.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype"><a class="el" href="class_text.html">Text</a></td><td class="paramname">$text</td><td><a class="el" href="class_text.html">Text</a> object to edit </td></tr>
+    <tr><td class="paramtype">bool</td><td class="paramname">$annotated</td><td>True if this text has annotations</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
+<p>Change the language of inputs for text and title based on selected language.</p>
+<dl class="section return"><dt>Returns</dt><dd>undefined</dd></dl>
+
+</div>
+</div>
 <a id="a0af8fc20f5fa9bc2df8828e9efb0ac66" name="a0af8fc20f5fa9bc2df8828e9efb0ac66"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0af8fc20f5fa9bc2df8828e9efb0ac66">&#9670;&#160;</a></span>edit_texts_get_wh_query()</h2>
 
@@ -484,7 +525,8 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>void</dd></dl>
+<p>@global string $tbpref </p>
 
 </div>
 </div>

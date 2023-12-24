@@ -22,7 +22,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="lwt_icon.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Learning with Texts - Fork<span id="projectnumber">&#160;2.8.1-fork</span>
+   <div id="projectname">Learning with Texts - Fork<span id="projectnumber">&#160;2.9.0-fork</span>
    </div>
    <div id="projectbrief">Learn foreign languages with texts</div>
   </td>
@@ -138,6 +138,10 @@ Functions</h2></td></tr>
 <tr class="separator:a89ae4a86076d27999a9e7c1c9ece8dc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7738d658657f565df4cac770e6c4b982"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="kernel__utility_8php.html#a7738d658657f565df4cac770e6c4b982">error_message_with_hide</a> ($msg, $noback)</td></tr>
 <tr class="separator:a7738d658657f565df4cac770e6c4b982"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a65a052f74bc59559a235214baeff0b20"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="kernel__utility_8php.html#a65a052f74bc59559a235214baeff0b20">langFromDict</a> ($url)</td></tr>
+<tr class="separator:a65a052f74bc59559a235214baeff0b20"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4423534a2a65f2d97fe87a2381d7b6d4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="kernel__utility_8php.html#a4423534a2a65f2d97fe87a2381d7b6d4">targetLangFromDict</a> ($url)</td></tr>
+<tr class="separator:a4423534a2a65f2d97fe87a2381d7b6d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Core utility functions that do not require a complete session. </p>
@@ -483,6 +487,31 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a65a052f74bc59559a235214baeff0b20" name="a65a052f74bc59559a235214baeff0b20"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a65a052f74bc59559a235214baeff0b20">&#9670;&#160;</a></span>langFromDict()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">langFromDict </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$url</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Get a two-letter language code from dictionary source language.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">string</td><td class="paramname">$url</td><td>Input URL, usually Google Translate or LibreTranslate </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="ac1cd0b4b12e02b4b17f979afdcbd2240" name="ac1cd0b4b12e02b4b17f979afdcbd2240"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac1cd0b4b12e02b4b17f979afdcbd2240">&#9670;&#160;</a></span>make_score_random_insert_update()</h2>
 
@@ -644,7 +673,7 @@ Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramtype">string</td><td class="paramname">$s</td><td>Input string </td></tr>
-    <tr><td class="paramtype">string</td><td class="paramname">$remove</td><td>Do not do anything if empty</td></tr>
+    <tr><td class="paramtype">string&#160;|&#160;bool</td><td class="paramname">$remove</td><td>Do not do anything if empty or false</td></tr>
   </table>
   </dd>
 </dl>
@@ -704,13 +733,38 @@ Functions</h2></td></tr>
 <p>Replace the first occurence of $needle in $haystack by $replace</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramtype">string</td><td class="paramname">$needle</td><td>Text to replace </td></tr>
-    <tr><td class="paramtype">string</td><td class="paramname">$replace</td><td>Text to replace by </td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$needle</td><td><a class="el" href="class_text.html">Text</a> to replace </td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$replace</td><td><a class="el" href="class_text.html">Text</a> to replace by </td></tr>
     <tr><td class="paramtype">string</td><td class="paramname">$haystack</td><td>Input string </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>string String with replaced text </dd></dl>
+
+</div>
+</div>
+<a id="a4423534a2a65f2d97fe87a2381d7b6d4" name="a4423534a2a65f2d97fe87a2381d7b6d4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4423534a2a65f2d97fe87a2381d7b6d4">&#9670;&#160;</a></span>targetLangFromDict()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">targetLangFromDict </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$url</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Get a two-letter language code from dictionary target language</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">string</td><td class="paramname">$url</td><td>Input URL, usually Google Translate or LibreTranslate </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

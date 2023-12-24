@@ -22,7 +22,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="lwt_icon.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Learning with Texts - Fork<span id="projectnumber">&#160;2.8.1-fork</span>
+   <div id="projectname">Learning with Texts - Fork<span id="projectnumber">&#160;2.9.0-fork</span>
    </div>
    <div id="projectbrief">Learn foreign languages with texts</div>
   </td>
@@ -96,6 +96,10 @@ Functions</h2></td></tr>
 <tr class="separator:ae95444187deb18ec23aaae657a69bfcb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aae2fbf960fa44cb2a3b37ec7d34ef249"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ajax__add__term__transl_8php.html#aae2fbf960fa44cb2a3b37ec7d34ef249">edit_term_transl</a> ($wid, $new_trans)</td></tr>
 <tr class="separator:aae2fbf960fa44cb2a3b37ec7d34ef249"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a957cda480993c70ce82a4ef04e1dd028"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ajax__add__term__transl_8php.html#a957cda480993c70ce82a4ef04e1dd028">do_ajax_check_update_translation</a> ($wid, $new_trans)</td></tr>
+<tr class="separator:a957cda480993c70ce82a4ef04e1dd028"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a162d57d7c37aa6498ffc1ba4c07c5ef5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ajax__add__term__transl_8php.html#a162d57d7c37aa6498ffc1ba4c07c5ef5">do_ajax_add_term_transl</a> ($wid, $data)</td></tr>
+<tr class="separator:a162d57d7c37aa6498ffc1ba4c07c5ef5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Add a translation to term. </p>
@@ -141,8 +145,87 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>string Error message if failure, lowercase $text otherwise</dd></dl>
-<p>@global string $tbpref Database table prefix </p>
+<dl class="section return"><dt>Returns</dt><dd>string|array [new word ID, lowercase $text] if success, error message otherwise</dd></dl>
+<p>@global string $tbpref Database table prefix</p>
+<dl class="section since"><dt>Since</dt><dd>2.9.0 Error messages are much more explicit </dd>
+<dd>
+2.9.0 Return an array </dd></dl>
+
+</div>
+</div>
+<a id="a162d57d7c37aa6498ffc1ba4c07c5ef5" name="a162d57d7c37aa6498ffc1ba4c07c5ef5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a162d57d7c37aa6498ffc1ba4c07c5ef5">&#9670;&#160;</a></span>do_ajax_add_term_transl()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">do_ajax_add_term_transl </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$wid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Add or edit a term translation.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">int</td><td class="paramname">$wid</td><td>Word ID </td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$data</td><td>Translation</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>string Database alteration message</dd></dl>
+<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000016">Deprecated:</a></b></dt><dd>Deprecated in 2.9.0 in favor to the REST API. </dd></dl>
+
+</div>
+</div>
+<a id="a957cda480993c70ce82a4ef04e1dd028" name="a957cda480993c70ce82a4ef04e1dd028"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a957cda480993c70ce82a4ef04e1dd028">&#9670;&#160;</a></span>do_ajax_check_update_translation()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">do_ajax_check_update_translation </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$wid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$new_trans</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Edit term translation if it exists.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">int</td><td class="paramname">$wid</td><td>Word ID </td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$new_trans</td><td>New translation</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>string <a class="el" href="class_term.html">Term</a> in lower case, or error message if term does not exist</dd></dl>
+<p>@global string $tbpref </p>
 
 </div>
 </div>
@@ -179,7 +262,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>string WoTextLC, lower version of the word</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>string WoTextLC, lowercase version of the word</dd></dl>
 <p>@global string $tbpref Database table prefix </p>
 
 </div>

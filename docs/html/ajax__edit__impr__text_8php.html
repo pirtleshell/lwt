@@ -22,7 +22,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="lwt_icon.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Learning with Texts - Fork<span id="projectnumber">&#160;2.8.1-fork</span>
+   <div id="projectname">Learning with Texts - Fork<span id="projectnumber">&#160;2.9.0-fork</span>
    </div>
    <div id="projectbrief">Learn foreign languages with texts</div>
   </td>
@@ -94,6 +94,14 @@ Namespaces</h2></td></tr>
 Functions</h2></td></tr>
 <tr class="memitem:a35b4d591810c252fb05abbb0cc735246"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ajax__edit__impr__text_8php.html#a35b4d591810c252fb05abbb0cc735246">make_trans</a> ($i, $wid, $trans, $word, $lang)</td></tr>
 <tr class="separator:a35b4d591810c252fb05abbb0cc735246"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abd9c5830dc5f5c3424cd6b9d72e77552"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ajax__edit__impr__text_8php.html#abd9c5830dc5f5c3424cd6b9d72e77552">get_translations</a> ($word_id)</td></tr>
+<tr class="separator:abd9c5830dc5f5c3424cd6b9d72e77552"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a662fcd11e250f0e45005af134ae2a76b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ajax__edit__impr__text_8php.html#a662fcd11e250f0e45005af134ae2a76b">get_term_translations</a> ($wordlc, $textid)</td></tr>
+<tr class="separator:a662fcd11e250f0e45005af134ae2a76b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f5fa2945ceef8c101cd46b20a855416"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ajax__edit__impr__text_8php.html#a6f5fa2945ceef8c101cd46b20a855416">edit_term_interaction</a> ($wordlc, $textid)</td></tr>
+<tr class="separator:a6f5fa2945ceef8c101cd46b20a855416"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea6c6300b46791f1ec7825e13d85915a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ajax__edit__impr__text_8php.html#aea6c6300b46791f1ec7825e13d85915a">edit_term_form</a> ($textid)</td></tr>
+<tr class="separator:aea6c6300b46791f1ec7825e13d85915a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a46e63dae67b9dbb66315a4a04bbe03c3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ajax__edit__impr__text_8php.html#a46e63dae67b9dbb66315a4a04bbe03c3">make_form</a> ($textid, $wordlc)</td></tr>
 <tr class="separator:a46e63dae67b9dbb66315a4a04bbe03c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3b6e5d2b3be3908a9bf07ac22911a9f3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ajax__edit__impr__text_8php.html#a3b6e5d2b3be3908a9bf07ac22911a9f3">do_ajax_edit_impr_text</a> ($textid, $wordlc)</td></tr>
@@ -131,12 +139,139 @@ Functions</h2></td></tr>
 <p>Do the AJAX modification for editing a printed text.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramtype">int</td><td class="paramname">$textid</td><td>Text ID </td></tr>
+    <tr><td class="paramtype">int</td><td class="paramname">$textid</td><td><a class="el" href="class_text.html">Text</a> ID </td></tr>
     <tr><td class="paramtype">string</td><td class="paramname">$wordlc</td><td>Word lowercase. Can be left empty.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
+
+</div>
+</div>
+<a id="aea6c6300b46791f1ec7825e13d85915a" name="aea6c6300b46791f1ec7825e13d85915a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aea6c6300b46791f1ec7825e13d85915a">&#9670;&#160;</a></span>edit_term_form()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">edit_term_form </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$textid</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Full form for terms edition in a given text.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">int</td><td class="paramname">$textid</td><td><a class="el" href="class_text.html">Text</a> ID.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>string HTML table for all terms </dd></dl>
+
+</div>
+</div>
+<a id="a6f5fa2945ceef8c101cd46b20a855416" name="a6f5fa2945ceef8c101cd46b20a855416"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6f5fa2945ceef8c101cd46b20a855416">&#9670;&#160;</a></span>edit_term_interaction()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">edit_term_interaction </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$wordlc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$textid</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Prepare the HTML content for the interaction with a term</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">string</td><td class="paramname">$wordlc</td><td><a class="el" href="class_term.html">Term</a> in lower case </td></tr>
+    <tr><td class="paramtype">int</td><td class="paramname">$textid</td><td><a class="el" href="class_text.html">Text</a> ID</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>string JS string of the different fields of the term</dd></dl>
+<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000017">Deprecated:</a></b></dt><dd>2.9.0 Use AJAX instead </dd></dl>
+
+</div>
+</div>
+<a id="a662fcd11e250f0e45005af134ae2a76b" name="a662fcd11e250f0e45005af134ae2a76b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a662fcd11e250f0e45005af134ae2a76b">&#9670;&#160;</a></span>get_term_translations()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">get_term_translations </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$wordlc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$textid</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Gather useful data to edit a term annotation on a specific text.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">string</td><td class="paramname">$wordlc</td><td><a class="el" href="class_term.html">Term</a> in lower case </td></tr>
+    <tr><td class="paramtype">int</td><td class="paramname">$textid</td><td><a class="el" href="class_text.html">Text</a> ID</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>array Return the useful data to edit a term annotation on a specific text. </dd></dl>
+
+</div>
+</div>
+<a id="abd9c5830dc5f5c3424cd6b9d72e77552" name="abd9c5830dc5f5c3424cd6b9d72e77552"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abd9c5830dc5f5c3424cd6b9d72e77552">&#9670;&#160;</a></span>get_translations()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">get_translations </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$word_id</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Find the possible translations for a term.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">int</td><td class="paramname">$word_id</td><td><a class="el" href="class_term.html">Term</a> ID</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>array Return the possible translations. </dd></dl>
 
 </div>
 </div>
@@ -168,14 +303,15 @@ Functions</h2></td></tr>
 <p>Prepare the form for printed text.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramtype">int</td><td class="paramname">$textid</td><td>Text ID </td></tr>
+    <tr><td class="paramtype">int</td><td class="paramname">$textid</td><td><a class="el" href="class_text.html">Text</a> ID </td></tr>
     <tr><td class="paramtype">string</td><td class="paramname">$wordlc</td><td>Lowercase word</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>string[] HTML output and JS output</dd></dl>
 <p>@global string $tbpref Database table prefix.</p>
-<p>@psalm-return array{0: string, 1: string} </p>
+<p>@psalm-return array{0: string, 1: string}</p>
+<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000018">Deprecated:</a></b></dt><dd>2.9.0 Use AJAX instead </dd></dl>
 
 </div>
 </div>
@@ -222,13 +358,13 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Make the translation for a word.</p>
+<p>Make the translations choices for a term.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramtype">int</td><td class="paramname">$i</td><td>Index </td></tr>
+    <tr><td class="paramtype">int</td><td class="paramname">$i</td><td>Word unique index in the form </td></tr>
     <tr><td class="paramtype">int&#160;|&#160;null</td><td class="paramname">$wid</td><td>Word ID or null </td></tr>
-    <tr><td class="paramtype">string</td><td class="paramname">$trans</td><td>Translation </td></tr>
-    <tr><td class="paramtype">string</td><td class="paramname">$word</td><td></td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$trans</td><td>Current translation set for the term, may be empty </td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$word</td><td><a class="el" href="class_term.html">Term</a> text </td></tr>
     <tr><td class="paramtype">int</td><td class="paramname">$lang</td><td><a class="el" href="class_language.html">Language</a> ID</td></tr>
   </table>
   </dd>
