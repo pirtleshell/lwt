@@ -124,8 +124,8 @@ function endpoint_exits($method, $requestUri)
 function rest_api_version($get_req)
 {
     return array(
-        "version"      => "0.0.1",
-        "release_date" => "2023-09-01"
+        "version"      => "0.1.0",
+        "release_date" => "2023-12-24"
     );
 }
 
