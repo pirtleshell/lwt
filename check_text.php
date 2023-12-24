@@ -62,7 +62,7 @@ function display_form()
          * Change the language of inputs for text and title based on selected 
          * language.
          * 
-         * @returns undefined
+         * @returns {undefined}
          */
         function change_textboxes_language() {
             const lid = document.getElementById("TxLgID").value;

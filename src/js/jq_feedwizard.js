@@ -1,8 +1,6 @@
 /**
- * \file
- * \brief Control the interactions for making an automated feed wizard.
+ * Control the interactions for making an automated feed wizard.
  * 
- * @package Lwt
  * @author  andreask7 <andreasks7@users.noreply.github.com>
  * @license Unlicense
  * @since   1.6.16-fork

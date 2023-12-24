@@ -574,8 +574,6 @@ function edit_texts_form($text, $annotated)
         /**
          * Change the language of inputs for text and title based on selected 
          * language.
-         * 
-         * @returns undefined
          */
         function change_textboxes_language() {
             const lid = document.getElementById("TxLgID").value;

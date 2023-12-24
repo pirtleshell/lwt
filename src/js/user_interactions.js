@@ -1,8 +1,6 @@
 /**
- * \file
- * \brief General file to control dynamic interactions with the user.
+ * General file to control dynamic interactions with the user.
  * 
- * @package Lwt
  * @author  HugoFara <Hugo.Farajallah@protonmail.com>
  * @license Unlicense <http://unlicense.org/>
  * @since   2.0.3-fork
@@ -115,7 +113,7 @@ function prepareTextInteractions() {
 
 /** 
  * Scroll to a specific reading position
- * @global {int} POS Position to go to
+ * 
  * @since 2.0.3-fork
  */
 function goToLastPosition() {

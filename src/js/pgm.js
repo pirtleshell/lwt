@@ -1,8 +1,6 @@
 /**
- * \file
- * \brief LWT Javascript functions
+ * LWT Javascript functions
  * 
- * @package Lwt
  * @author  andreask7 <andreasks7@users.noreply.github.com>
  * @license Unlicense <http://unlicense.org/>
  * @since   1.6.16-fork
@@ -234,7 +232,7 @@ function run_overlib_multiword (
  * @param {string} sent    Lookup sentence in Google Translate
  * @param {int}    todo    If 1, the user should say if he knows the word.
  * @param {*}      oldstat Old status, unused
- * @returns 
+ * @returns {*} An overlib object
  */
 function run_overlib_test(
   wblink1, wblink2, wblink3, wid, txt, trans, roman, stat, sent, todo, oldstat

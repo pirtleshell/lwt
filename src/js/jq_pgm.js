@@ -1,8 +1,6 @@
 /**
- * \file
- * \brief Interaction between LWT and jQuery
+ * Interaction between LWT and jQuery
  * 
- * @package Lwt
  * @license unlicense
  * @author  andreask7 <andreasks7@users.noreply.github.com>
  * @since   1.6.16-fork
@@ -167,7 +165,6 @@ function changeImprAnnRadio () {
  * 
  * @param {int}    wordid Word ID
  * @param {string} txid   Text HTML ID or unique HTML selector
- * @returns 
  */
 function updateTermTranslation(wordid, txid) {
   const translation = $(txid).val().trim();
@@ -205,7 +202,6 @@ function updateTermTranslation(wordid, txid) {
  * @param {string} txid   Text HTML ID or unique HTML selector
  * @param {string} word   Word text
  * @param {int}    lang   Language ID
- * @returns 
  */
 function addTermTranslation(txid, word, lang) {
   const translation = $(txid).val().trim();
@@ -473,8 +469,6 @@ function noShowAfter3Secs () {
 
 /**
  * Set the focus on an element with the "focus" class.
- * 
- * @returns undefined
  */
 function setTheFocus () {
   $('.setfocus')
@@ -485,7 +479,7 @@ function setTheFocus () {
 /**
  * Prepare a dialog when the user clicks a word during a test.
  * 
- * @returns false
+ * @returns {false}
  */
 function word_click_event_do_test_test () {
   run_overlib_test(
@@ -1408,7 +1402,7 @@ function do_ajax_show_sentences (lang, word, ctl, woid) {
  * 
  * @param {number} lg_id Language ID
  * @param {string} word_text Text to match
- * @returns 
+ * @returns {JSON} Request used
  */
 function do_ajax_req_sim_terms(lg_id, word_text) {
   return $.getJSON(
@@ -1693,7 +1687,6 @@ function edit_term_ann_translations(trans_data, text_id)
  * @param {int}    pagepos Position to scroll to 
  * @param {string} word    Word in lowercase to get annotations
  * @param {int}    term_id Term ID
- * @returns 
  * 
  * @since 2.9.0 The new parameter $wid is now necessary
  */

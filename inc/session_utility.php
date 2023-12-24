@@ -5134,7 +5134,7 @@ function makeAudioPlayer($audio, $offset=0)
     /**
      * Prepare media interactions with jPlayer.
      * 
-     * @returns void 
+     * @returns {void} 
      */
     function prepareMediaInteractions() {
 
