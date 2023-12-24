@@ -234,7 +234,7 @@
 			</h2>
 
 			<p>
-				The current version is 2.8.1-fork (April 14 2023).
+				The current version is 2.9.0-fork (April 14 2023).
 				<br>
 				<a href="#CHANGELOG">View the Changelog.</a>
 			</p>
@@ -1628,13 +1628,8 @@ To debug:</p>
 This section is mainly intended for the maintainers, but feel free to take a peak at it.</p>
 <p>The steps to publish a new version are:</p>
 <ol>
-<li>Update the <a href="./CHANGELOG.md">CHANGELOG</a>
-<ul>
-<li>Add the latest release number and date.</li>
-<li>Update the next section (rename "Changed" to "Changed in [previous version]").</li>
-</ul>
-</li>
-<li>Update <code>get_version</code> in <code>inc/kernel_utility.php</code> with the relsease number and date.</li>
+<li>In the <a href="./CHANGELOG.md">CHANGELOG</a>, add the latest release number and date.</li>
+<li>Update <code>get_version</code> in <code>inc/kernel_utility.php</code> with the release number and date.</li>
 <li>Update <code>PROJECT_NUMBER</code> in <code>Doxyfile</code> to the latest release number.</li>
 <li>Regenerate documentation with <code>composer info.html</code> and <code>composer docs</code>.</li>
 <li>Commit your changes, <code>git commit -m "Regenerates documentation for release []."</code>
@@ -2157,7 +2152,7 @@ KEY NfUpdate (NfUpdate)
 other versions come from the canonical LWT ("official" branch on Git).
 For git tags, official releases are marked like "v1.0.0", while unofficial
 ones are marked like "v1.0.0-fork".</p>
-<h3>[Unreleased]</h3>
+<h3>2.9.0-fork (December 24 2023)</h3>
 <h4>Added</h4>
 <ul>
 <li>
