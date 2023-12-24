@@ -1086,10 +1086,10 @@ function edit_languages_change($lid)
 /**
  * Display the standard page of saved languages.
  * 
- * @param {string} $message An information message to display.
+ * @param string $message An information message to display.
  * 
- * @global {string} $tbpref Database table prefix
- * @global {int}    $debug 1 to display debugging data
+ * @global string $tbpref
+ * @global int    $debug
  * 
  * @return void
  */

@@ -2069,7 +2069,7 @@ function get_last_key()
  *
  * @param mixed $value Some value that can be evaluated as a boolean
  *
- * @return ' checked="checked" '|'' if value is true
+ * @return string ' checked="checked" ' if value is true, '' otherwise
  */
 function get_checked($value): string 
 {
@@ -2085,7 +2085,7 @@ function get_checked($value): string
 /**
  * Return an HTML attribute if $value is equal to $selval.
  * 
- * @return ''|' selected="selected" ' Depending if inputs are equal 
+ * @return string ''|' selected="selected" ' Depending if inputs are equal 
  */
 function get_selected($value, $selval) 
 {

@@ -924,7 +924,7 @@ function edit_texts_other_pages($recno)
  *                                                                   Various information about the text should contain 'TxID' at least.
  * @param string                                        $currentlang 
  *                                                                   Current language ID
- * @param array<int<0, 5>|98|99, array<string, string>> $statuses
+ * @param array{int<0, 5>|98|99, array{string, string}} $statuses
  * List of statuses WITH unknown words (status 0)
  * 
  * @return void
