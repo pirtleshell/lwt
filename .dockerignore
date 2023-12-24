@@ -2,9 +2,11 @@
 .github/*
 docker/*
 docs/*
+node_modules/*
 
 *.md
 .dockerignore
 .git
 .gitignore
 Doxyfile
+media/*

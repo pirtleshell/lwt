@@ -146,7 +146,7 @@ The steps to publish a new version are:
 1. In the [CHANGELOG](./CHANGELOG.md), add the latest release number and date.
 2. Update `get_version` in `inc/kernel_utility.php` with the release number and date.
 3. Update `PROJECT_NUMBER` in `Doxyfile` to the latest release number.
-4. Regenerate documentation with `composer info.html` and `composer docs`. 
+4. Regenerate documentation with `composer info.html` and `composer doc`. 
 5. Commit your changes, `git commit -m "Regenerates documentation for release []."`
 6. Add a version tag with annotation `git tag -a [release number]` and push the changes.
 7. If all the GitHub actions are successfull, write a new release on GitHub linking to the previously created tag.
