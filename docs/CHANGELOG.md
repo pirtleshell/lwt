@@ -20,13 +20,13 @@ short text creation/edition, long text creation and text check
 * Tests (checking if you know words) now use AJAX ([#112](https://github.com/HugoFara/lwt/issues/112)), it has several advantages:
   * Musics play fully
   * Page do not need to reload.
-  * The timer continues instead of reseting.
+  * The timer continues instead of resetting.
 * REST API, the new ``api.php`` is intended to continue developing itself
 as a REST API. It features the following interaction:
   * On GET, the endpoints are:
     * `/media-files`: the list of audio and video files in the media folder.
     * `/sentences-with-term`: sentences containing a new term.
-    * `/sentences-with-term/{term-id}`: sentences containing a registred term.
+    * `/sentences-with-term/{term-id}`: sentences containing a registered term.
     * `/similar-terms`: terms similar to a given one.
     * `/theme-path`: the path for a media using theme.
     * `/terms`
@@ -34,7 +34,7 @@ as a REST API. It features the following interaction:
       * `/{term-id}/translations`: translations for a term.
     * `/review`
       * `/next-word`: next word to review.
-      * `/tomorrow-count`: number of reviewes for the next day.
+      * `/tomorrow-count`: number of reviews for the next day.
     * `/phonetic-reading`: phonetic reading for a term or sentence.
     * `/texts/statistics`: word statistics on texts.
     * `/version`: REST API version.
@@ -67,11 +67,11 @@ about the REST API.
 
 * User Interface Improvements:
   * Prettier UI to navigate between text creation/edition/archive pages.
-  * ``flex-spaced`` now sets the property of ``text-align: center;``. This property was unherited before.
+  * ``flex-spaced`` now sets the property of ``text-align: center;``. This property was inherited before.
   * The long text import page looks a bit nicer.
 * User Experience:
   * When reading text, you can click on "Show All" and "Translations" to click the checkbox.
-  * When changing a word status, the displayed messaged is now more informative: before database change, success message, now: waiting screen, tentative database change, result message (error or success). Under the hood, we are transitionning from pure PHP to AJAX.
+  * When changing a word status, the displayed messaged is now more informative: before database change, success message, now: waiting screen, tentative database change, result message (error or success). Under the hood, we are transitioning from pure PHP to AJAX.
   * It is faster to exit a text page: audio and reading position saves are now asynchronous.
 * Annotations "order" are now identical to ``Ti2Order`` (in ``textitems2``). It makes management easier, but users may need to reload the annotations once.
 * Updated composer dependencies (up-to-date 2023-11-23).
@@ -79,9 +79,9 @@ about the REST API.
 ### Fixed
 
 * When editing an existing text, surrounding spaces are no longer inserted ([#92](https://github.com/HugoFara/lwt/issues/92)).
-* Language code is better detected from translator url when editing an existing language.
+* Language code is better detected from translator URL when editing an existing language.
 * The field "Short Text Import" on long text import and was not redirecting to
-the intendended page. Same goes for "New Text" on "Archived Texts" page.
+the intended page. Same goes for "New Text" on "Archived Texts" page.
 * It was impossible to archive more than one text ([#118](https://github.com/HugoFara/lwt/issues/118)).
 * Testing a word was not changing it's color.
 * A warning was sent 'Undefined array key "query"' when creating a new word ([#121](https://github.com/HugoFara/lwt/issues/121)).
@@ -125,11 +125,15 @@ text annotation edition.
   * ``inc/ajax_edit_impr_text.php``:
     * On display, using ``word=""`` is now deprecated as the page loads in pure PHP.
     * On term edition, should be accessed through ``/terms/{term-id}/translations``, ``id`` is now ``text_id`` and ``word`` becomes ``text_lc``.
-* During a word review (test), a "free" test where the user design there own test SQL is now dprecated and will be removed.
+* During a word review (test), a "free" test where the user design there own test SQL is now deprecated and will be removed.
 
 ### Security
 
 * During tests (word review), test data is no longer be send as raw SQL string, except for "free" test.
+
+### Full Changelog
+
+* [2.8.1...2.9.0](https://github.com/HugoFara/lwt/compare/2.8.1...2.9.0)
 
 ## 2.8.1-fork (April 14 2023)
 

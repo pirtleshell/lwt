@@ -2171,7 +2171,7 @@ short text creation/edition, long text creation and text check
 <ul>
 <li>Musics play fully</li>
 <li>Page do not need to reload.</li>
-<li>The timer continues instead of reseting.</li>
+<li>The timer continues instead of resetting.</li>
 </ul>
 </li>
 <li>REST API, the new <code>api.php</code> is intended to continue developing itself
@@ -2184,7 +2184,7 @@ as a REST API. It features the following interaction:
 <li>
 <code>/sentences-with-term</code>: sentences containing a new term.</li>
 <li>
-<code>/sentences-with-term/{term-id}</code>: sentences containing a registred term.</li>
+<code>/sentences-with-term/{term-id}</code>: sentences containing a registered term.</li>
 <li>
 <code>/similar-terms</code>: terms similar to a given one.</li>
 <li>
@@ -2204,7 +2204,7 @@ as a REST API. It features the following interaction:
 <li>
 <code>/next-word</code>: next word to review.</li>
 <li>
-<code>/tomorrow-count</code>: number of reviewes for the next day.</li>
+<code>/tomorrow-count</code>: number of reviews for the next day.</li>
 </ul>
 </li>
 <li>
@@ -2277,14 +2277,14 @@ about the REST API.</li>
 <ul>
 <li>Prettier UI to navigate between text creation/edition/archive pages.</li>
 <li>
-<code>flex-spaced</code> now sets the property of <code>text-align: center;</code>. This property was unherited before.</li>
+<code>flex-spaced</code> now sets the property of <code>text-align: center;</code>. This property was inherited before.</li>
 <li>The long text import page looks a bit nicer.</li>
 </ul>
 </li>
 <li>User Experience:
 <ul>
 <li>When reading text, you can click on "Show All" and "Translations" to click the checkbox.</li>
-<li>When changing a word status, the displayed messaged is now more informative: before database change, success message, now: waiting screen, tentative database change, result message (error or success). Under the hood, we are transitionning from pure PHP to AJAX.</li>
+<li>When changing a word status, the displayed messaged is now more informative: before database change, success message, now: waiting screen, tentative database change, result message (error or success). Under the hood, we are transitioning from pure PHP to AJAX.</li>
 <li>It is faster to exit a text page: audio and reading position saves are now asynchronous.</li>
 </ul>
 </li>
@@ -2294,9 +2294,9 @@ about the REST API.</li>
 <h4>Fixed</h4>
 <ul>
 <li>When editing an existing text, surrounding spaces are no longer inserted (<a href="https://github.com/HugoFara/lwt/issues/92">#92</a>).</li>
-<li>Language code is better detected from translator url when editing an existing language.</li>
+<li>Language code is better detected from translator URL when editing an existing language.</li>
 <li>The field "Short Text Import" on long text import and was not redirecting to
-the intendended page. Same goes for "New Text" on "Archived Texts" page.</li>
+the intended page. Same goes for "New Text" on "Archived Texts" page.</li>
 <li>It was impossible to archive more than one text (<a href="https://github.com/HugoFara/lwt/issues/118">#118</a>).</li>
 <li>Testing a word was not changing it's color.</li>
 <li>A warning was sent 'Undefined array key "query"' when creating a new word (<a href="https://github.com/HugoFara/lwt/issues/121">#121</a>).</li>
@@ -2366,11 +2366,17 @@ text annotation edition.</li>
 </li>
 </ul>
 </li>
-<li>During a word review (test), a "free" test where the user design there own test SQL is now dprecated and will be removed.</li>
+<li>During a word review (test), a "free" test where the user design there own test SQL is now deprecated and will be removed.</li>
 </ul>
 <h4>Security</h4>
 <ul>
 <li>During tests (word review), test data is no longer be send as raw SQL string, except for "free" test.</li>
+</ul>
+<h4>Full Changelog</h4>
+<ul>
+<li>
+<a href="https://github.com/HugoFara/lwt/compare/2.8.1...2.9.0">2.8.1...2.9.0</a>
+</li>
 </ul>
 <h3>2.8.1-fork (April 14 2023)</h3>
 <h4>Changed in 2.8.1-fork</h4>
