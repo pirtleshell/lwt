@@ -113,6 +113,7 @@ require_once __DIR__ . '/../src/php/markdown_converter.php';
 			<div>&nbsp;</div>
 			<a href="#contribute">Contribute</a>
 			<a href="#wordpress">WordPress Integration</a>
+			<a href="#api">Public API</a>
 			<a href="#database">Database</a>
 			<a href="#CHANGELOG">Changelog</a>
 		</div>	
@@ -197,6 +198,9 @@ require_once __DIR__ . '/../src/php/markdown_converter.php';
 					<option value="wordpress">
 						WordPress Integration
 					</option>
+					<option value="api">
+						Public API
+					</option>
 					<option value="database">
 						Database Structure
 					</option>
@@ -278,6 +282,8 @@ require_once __DIR__ . '/../src/php/markdown_converter.php';
 			<?php echo markdown_integration(__DIR__ . "/contribute.md"); ?>
 
 			<?php echo markdown_integration(__DIR__ . "/wordpress.md"); ?>
+
+			<?php echo markdown_integration(__DIR__ . "/api.md"); ?>
 			
 			<?php echo markdown_integration(__DIR__ . "/database.md"); ?>
 			

@@ -108,6 +108,18 @@ You can run it through composer. Use ``php ./vendor/bin/squizlabs/phpcs.phar [fi
 php ./vendor/bin/squizlabs/phpcbf.phar [filename]
 ```
 
+## Interact with and modify the REST API
+
+Starting from 2.9.0-fork, LWT provides a RESTful API. The main handler for the API is `api.php`.
+You can find a more exhaustive API documentation at [api.md](./api.md).
+
+If you plan to develop the API, please follow the RESTful standards. 
+To debug:
+
+1. Install Node and NPM.
+2. Run `npm install` in the main LWT folder.
+3. Run `npm test` to test the API.
+
 ## Improving Documentation
 
 To regenerate all documentation, use ``composer doc``.

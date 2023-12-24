@@ -2104,14 +2104,14 @@ function get_selected($value, $selval)
 /**
  * Create a projection operator do perform word test.
  * 
- * @param int       $key   Type of test. 
- *                         - 0: word selection
- *                         - 1: text item selection
- *                         - 2: from language
- *                         - 3: from text
+ * @param string    $key   Type of test. 
+ *                         - 'words': selection from words
+ *                         - 'texts': selection from texts
+ *                         - 'lang': selection from language
+ *                         - 'text': selection from single text
  * @param array|int $value Object to select.
  * 
- * @return string Operator
+ * @return string SQL projection necessary
  * 
  * @global string $tbpref
  */
@@ -2120,7 +2120,7 @@ function do_test_test_get_projection($key, $value)
     global $tbpref;
     switch ($key)
     {
-    case 0:
+    case 'word':
         $id_string = implode(",", $value);
         $testsql = " {$tbpref}words WHERE WoID IN ($id_string) ";
         $cntlang = get_first_value(
@@ -2133,7 +2133,7 @@ function do_test_test_get_projection($key, $value)
             exit();
         }
         break;
-    case 1:
+    case 'texts':
         $id_string = implode(",", $value);
         $testsql = " {$tbpref}words, {$tbpref}textitems2 
             WHERE Ti2LgID = WoLgID AND Ti2WoID = WoID AND Ti2TxID IN ($id_string) ";
@@ -2147,10 +2147,10 @@ function do_test_test_get_projection($key, $value)
             exit();
         }
         break;
-    case 2:
+    case 'lang':
         $testsql = " {$tbpref}words WHERE WoLgID = $value ";
         break;
-    case 3:
+    case 'text':
         $testsql = " {$tbpref}words, {$tbpref}textitems2 
             WHERE Ti2LgID = WoLgID AND Ti2WoID = WoID AND Ti2TxID = $value ";
         break;
@@ -2175,10 +2175,10 @@ function do_test_test_from_selection($selection_type, $selection_data)
     $data_int_array = array_map('intval', $data_string_array);
     switch ((int)$selection_type) {
     case 2:
-        $test_sql = do_test_test_get_projection(0, $data_int_array);
+        $test_sql = do_test_test_get_projection('words', $data_int_array);
         break;
     case 3:
-        $test_sql = do_test_test_get_projection(1, $data_int_array);
+        $test_sql = do_test_test_get_projection('texts', $data_int_array);
         break;
     default:
         $test_sql = $selection_data;
