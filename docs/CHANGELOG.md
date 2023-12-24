@@ -125,11 +125,11 @@ text annotation edition.
   * ``inc/ajax_edit_impr_text.php``:
     * On display, using ``word=""`` is now deprecated as the page loads in pure PHP.
     * On term edition, should be accessed through ``/terms/{term-id}/translations``, ``id`` is now ``text_id`` and ``word`` becomes ``text_lc``.
+* During a word review (test), a "free" test where the user design there own test SQL is now dprecated and will be removed.
 
 ### Security
 
-* During tests (word review), test data is no longer be send as raw SQL string. 
-SQL in request is still allowed for custom tests (where you write your own test selection).
+* During tests (word review), test data is no longer be send as raw SQL string, except for "free" test.
 
 ## 2.8.1-fork (April 14 2023)
 
