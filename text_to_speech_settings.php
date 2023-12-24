@@ -4,12 +4,15 @@
  * \file
  * \brief Utility for calling system speech synthesizer
  * 
- * @package Lwt
- * @author  chaosarium <leonluleonlu@gmail.com>
- *          HugoFara <Hugo.Farajallah@protonmail.com>
- * @license Unlicense <http://unlicense.org/>
- * @link    https://hugofara.github.io/lwt/docs/html/text__to__speech__settings_8php.html
- * @since   2.2.2-fork
+ * PHP version 8.1
+ * 
+ * @category User_Interface
+ * @package  Lwt
+ * @author   chaosarium <leonluleonlu@gmail.com>
+ * @author   HugoFara <Hugo.Farajallah@protonmail.com>
+ * @license  Unlicense <http://unlicense.org/>
+ * @link     https://hugofara.github.io/lwt/docs/html/text__to__speech__settings_8php.html
+ * @since    2.2.2-fork
  */
 
 require_once 'inc/session_utility.php';
@@ -137,7 +140,8 @@ function tts_settings_form()
         <tr>
             <td class="td1 right" colspan="4">
                 <input type="button" value="Cancel" 
-                onclick="{resetDirty(); location.href='text_to_speech_settings.php';}" /> 
+                onclick=
+                "{resetDirty(); location.href='text_to_speech_settings.php';}" /> 
                 <input type="submit" name="op" value="Save" />
             </td>
         </tr>
@@ -291,6 +295,8 @@ function tts_settings_full_page($message)
  * Save the text-to-speech settings as cookies.
  *
  * @param array $form Inputs from the main form.
+ * 
+ * @return void
  */
 function tts_save_settings($form): void
 {

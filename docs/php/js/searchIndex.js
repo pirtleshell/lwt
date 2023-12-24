@@ -2803,7 +2803,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Lwt\\Interface\\Server\\Data\\display_content\u0028\u0029",
             "name": "display_content",
-            "summary": "",
+            "summary": "Display\u0020the\u0020main\u0020content\u0020for\u0020the\u0020page.",
             "url": "namespaces/lwt-interface-server-data.html#function_display_content"
         },                {
             "fqsen": "\\do_set_test_status_html\u0028\u0029",
