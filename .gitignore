@@ -39,3 +39,6 @@ _*
 # Phive products
 .phive/*
 tools/*
+
+# phpDocumentor cache
+.phpdoc/*

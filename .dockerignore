@@ -10,6 +10,9 @@ node_modules/*
 .phive/*
 tools/*
 
+# phpDocumentor cache
+.phpdoc/*
+
 *.md
 .dockerignore
 .git

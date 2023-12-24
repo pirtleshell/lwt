@@ -1624,10 +1624,16 @@ Then, those files are requested by <code>info.php</code>.
 The final version is <code>info.html</code>, which contains all files.</p>
 <p>To regenerate <code>info.hml</code>, run <code>composer info.html</code>.</p>
 <h4>PHP Code Documentation</h4>
-<p>Code documentation (everything under <code>docs/html/</code>) is automatically generated.
+<p>Code documentation (everything under <code>docs/html/</code> and <code>docs/php/</code>) is automatically generated.
 If you see an error, the PHP code is most likely at fault.
 However, don't hesitate to signal the issue.</p>
-<p>Currently, the documentation is generated through Doxygen (run <code>doxygen Doxyfile</code> to regenerate it), but this is likely to change.</p>
+<p>Currently, the PHP documentation is generated two times:</p>
+<ul>
+<li>With <a href="https://www.doxygen.nl/index.html">Doxygen</a> (run <code>doxygen Doxyfile</code> to regenerate it),
+it generates documentation for MarkDown and PHP files. It will be removed in LWT 3.0.0.</li>
+<li>Using <a href="https://phpdoc.org/">phpDocumentor</a>. phpDoc generates PHP documentation and is the preferred way to do so.
+You can use it through <code>php tools/phpDocumentor</code> if installed with <a href="https://phar.io/">Phive</a>.</li>
+</ul>
 <h4>JS Code Documentation</h4>
 <p>Code documentation for JavaScript is available at <code>docs/js/</code> is is generated thourgh JSDoc.
 The JSDoc configuration file is <code>jsdoc.json</code>.</p>
@@ -2163,10 +2169,20 @@ ones are marked like "v1.0.0-fork".</p>
 <h3>[Unreleased]</h3>
 <h4>Added</h4>
 <ul>
-<li>JavaScript documentation with <a href="https://jsdoc.app/">JSDoc</a>! You will find it under <code>docs/js/</code>.</li>
+<li>New tools for documentation:
+<ul>
+<li>New JavaScript documentation with <a href="https://jsdoc.app/">JSDoc</a>! You will find it under <code>docs/js/</code>.</li>
+<li>Better PHP documentation using <a href="https://phpdoc.org/">phpDocumentor</a>. The new documentation is at <code>docs/php/</code>
+</li>
+</ul>
+</li>
+</ul>
+<h4>Deprecated</h4>
+<ul>
+<li>PHP documentation using Doxygen (under <code>/docs/html</code>) is now deprecated and will be removed in 3.0.0.</li>
 </ul>
 <h3>2.9.0-fork (December 24 2023)</h3>
-<h4>Added</h4>
+<h4>Added in 2.9.0-fork</h4>
 <ul>
 <li>
 <code>langFromDict</code> and <code>targetLangFromDict</code> are now officially going to the
@@ -2284,7 +2300,7 @@ actually changed.</li>
 <code>server_data.php</code> was reorganized and is more informative with details
 about the REST API.</li>
 </ul>
-<h4>Changed</h4>
+<h4>Changed in 2.9.0-fork</h4>
 <ul>
 <li>User Interface Improvements:
 <ul>
@@ -2304,7 +2320,7 @@ about the REST API.</li>
 <li>Annotations "order" are now identical to <code>Ti2Order</code> (in <code>textitems2</code>). It makes management easier, but users may need to reload the annotations once.</li>
 <li>Updated composer dependencies (up-to-date 2023-11-23).</li>
 </ul>
-<h4>Fixed</h4>
+<h4>Fixed in 2.9.0-fork</h4>
 <ul>
 <li>When editing an existing text, surrounding spaces are no longer inserted (<a href="https://github.com/HugoFara/lwt/issues/92">#92</a>).</li>
 <li>Language code is better detected from translator URL when editing an existing language.</li>
@@ -2335,7 +2351,7 @@ character as a word (e. g.: Chinese). Big thanks to <a href="https://github.com/
 <li>The list of translations of a term was sometimes not found on
 text annotation edition.</li>
 </ul>
-<h4>Deprecated</h4>
+<h4>Deprecated in 2.9.0-fork</h4>
 <ul>
 <li>Legacy AJAX API. The following AJAX interactions are now deprecated in favor to the new REST API (at <code>api.php</code>):
 <ul>
@@ -2381,11 +2397,11 @@ text annotation edition.</li>
 </li>
 <li>During a word review (test), a "free" test where the user design there own test SQL is now deprecated and will be removed.</li>
 </ul>
-<h4>Security</h4>
+<h4>Security in 2.9.0-fork</h4>
 <ul>
 <li>During tests (word review), test data is no longer be send as raw SQL string, except for "free" test.</li>
 </ul>
-<h4>Full Changelog</h4>
+<h4>Full Changelog for 2.9.0-fork</h4>
 <ul>
 <li>
 <a href="https://github.com/HugoFara/lwt/compare/2.8.1...2.9.0">2.8.1...2.9.0</a>

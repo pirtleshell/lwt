@@ -135,11 +135,16 @@ To regenerate ``info.hml``, run ``composer info.html``.
 
 ### PHP Code Documentation
 
-Code documentation (everything under ``docs/html/``) is automatically generated. 
+Code documentation (everything under `docs/html/` and `docs/php/`) is automatically generated. 
 If you see an error, the PHP code is most likely at fault. 
 However, don't hesitate to signal the issue.
 
-Currently, the documentation is generated through Doxygen (run ``doxygen Doxyfile`` to regenerate it), but this is likely to change.
+Currently, the PHP documentation is generated two times:
+
+- With [Doxygen](https://www.doxygen.nl/index.html) (run ``doxygen Doxyfile`` to regenerate it), 
+it generates documentation for MarkDown and PHP files. It will be removed in LWT 3.0.0.
+- Using [phpDocumentor](https://phpdoc.org/). phpDoc generates PHP documentation and is the preferred way to do so. 
+You can use it through `php tools/phpDocumentor` if installed with [Phive](https://phar.io/).
 
 ### JS Code Documentation
 
