@@ -122,19 +122,29 @@ To debug:
 
 ## Improving Documentation
 
-To regenerate all documentation, use ``composer doc``.
+To regenerate all PHP and Markdown documentation, use ``composer doc``. 
+For the JS documentation, you need NPM. Use `./node_modules/.bin/jsdoc -c jsdoc.json`. 
 
 ### General Documentation
 
-The documentation is split across Markdown (``.md``) files in ``docs/``. Then, those files are requested by ``info.php``. The final version is ``info.html``, which contains all files.
+The documentation is split across Markdown (``.md``) files in ``docs/``. 
+Then, those files are requested by ``info.php``. 
+The final version is ``info.html``, which contains all files.
 
 To regenerate ``info.hml``, run ``composer info.html``.
 
-### Code Documentation
+### PHP Code Documentation
 
-Code documentation (everything under ``docs/html/``) is automatically generated. If you see an error, the PHP code is most likely at fault. However, don't hesitate to signal the issue.
+Code documentation (everything under ``docs/html/``) is automatically generated. 
+If you see an error, the PHP code is most likely at fault. 
+However, don't hesitate to signal the issue.
 
 Currently, the documentation is generated through Doxygen (run ``doxygen Doxyfile`` to regenerate it), but this is likely to change.
+
+### JS Code Documentation
+
+Code documentation for JavaScript is available at `docs/js/` is is generated thourgh JSDoc. 
+The JSDoc configuration file is `jsdoc.json`. 
 
 ## New version
 
@@ -146,7 +156,7 @@ The steps to publish a new version are:
 1. In the [CHANGELOG](./CHANGELOG.md), add the latest release number and date.
 2. Update `get_version` in `inc/kernel_utility.php` with the release number and date.
 3. Update `PROJECT_NUMBER` in `Doxyfile` to the latest release number.
-4. Regenerate documentation with `composer info.html` and `composer doc`. 
+4. Regenerate documentation with `composer doc` and `./node_modules/.bin/jsdoc -c jsdoc.json`.
 5. Commit your changes, `git commit -m "Regenerates documentation for release []."`
 6. Add a version tag with annotation `git tag -a [release number]` and push the changes.
 7. If all the GitHub actions are successfull, write a new release on GitHub linking to the previously created tag.
