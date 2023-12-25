@@ -148,7 +148,7 @@ You can use it through `php tools/phpDocumentor` if installed with [Phive](https
 
 ### JS Code Documentation
 
-Code documentation for JavaScript is available at `docs/js/` is is generated thourgh JSDoc. 
+Code documentation for JavaScript is available at `docs/js/` is is generated thourgh [JSDoc](https://jsdoc.app/). 
 The JSDoc configuration file is `jsdoc.json`. 
 
 ## New version
