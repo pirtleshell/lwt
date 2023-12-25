@@ -1645,7 +1645,7 @@ This section is mainly intended for the maintainers, but feel free to take a pea
 <li>In the <a href="./CHANGELOG.md">CHANGELOG</a>, add the latest release number and date.</li>
 <li>Update <code>get_version</code> in <code>inc/kernel_utility.php</code> with the release number and date.</li>
 <li>Update <code>PROJECT_NUMBER</code> in <code>Doxyfile</code> to the latest release number.</li>
-<li>Regenerate documentation with <code>composer doc</code> and <code>./node_modules/.bin/jsdoc -c jsdoc.json</code>.</li>
+<li>Regenerate documentation with <code>composer doc</code>.</li>
 <li>Commit your changes, <code>git commit -m "Regenerates documentation for release []."</code>
 </li>
 <li>Add a version tag with annotation <code>git tag -a [release number]</code> and push the changes.</li>
@@ -2178,7 +2178,7 @@ ones are marked like "v1.0.0-fork".</p>
 </ul>
 <h3>Changed</h3>
 <ul>
-<li>PHP file header docblocks are expanded, notably with a PHP version, package and category name.</li>
+<li>PHP files header docblocks are expanded, notably with a PHP version, package and category name.</li>
 </ul>
 <h4>Deprecated</h4>
 <ul>

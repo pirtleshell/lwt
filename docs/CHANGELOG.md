@@ -15,7 +15,7 @@ ones are marked like "v1.0.0-fork".
 
 ## Changed
 
-* PHP file header docblocks are expanded, notably with a PHP version, package and category name.
+* PHP files header docblocks are expanded, notably with a PHP version, package and category name.
 
 ### Deprecated
 
