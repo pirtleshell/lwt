@@ -3,6 +3,8 @@
  * \file
  * \brief Core utility functions that do not require a complete session.
  * 
+ * PHP version 8.1
+ *
  * @package Lwt
  * @author  HugoFara <hugo.farajallah@protonmail.com>
  * @license Unlicense <http://unlicense.org/>

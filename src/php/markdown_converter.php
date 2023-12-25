@@ -3,7 +3,10 @@
  * \file
  * \brief Simple Mardown to HTML utility file.
  * 
- * @package Lwt
+ * PHP version 8.1
+ *
+ * @category Documentation
+ * @package Lwt_Documentation
  * @author  HugoFara <hugo.farajallah@protonmail.com>
  * @license Unlicense <http://unlicense.org/>
  * @link    https://hugofara.github.io/lwt/docs/html/markdown__converter_8php.html

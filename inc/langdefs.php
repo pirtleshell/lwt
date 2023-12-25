@@ -4,7 +4,10 @@
  * \file
  * \brief Define all the supported languages.
  * 
- * @author LWT Project
+ * PHP version 8.1
+ *
+ * @package Lwt
+ * @author LWT Project <lwt-project@hotmail.com>
  */
 
 /**

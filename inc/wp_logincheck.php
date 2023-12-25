@@ -6,6 +6,8 @@
  * 
  * To be inserted in "connect.inc.php" when LWT used with WordPress
  * 
+ * PHP version 8.1
+ *
  * @package Lwt
  * @author  HugoFara <hugo.farajallah@protonmail.com>
  * @license Unlicense <http://unlicense.org/>

@@ -3,7 +3,10 @@
  * \file
  * \brief LWT Information / Help
  *
- * @package Lwt
+ * PHP version 8.1
+ *
+ * @category Documentation
+ * @package Lwt_Documentation
  * @author  LWT Project <lwt-project@hotmail.com>
  * @license Unlicense <http://unlicense.org/>
  * @link    https://hugofara.github.io/lwt/docs/html/info_8php.html

@@ -5,6 +5,9 @@
  * 
  * Call: save_setting_redirect.php?k=[key]&v=[value]&u=[RedirURI]
  * 
+ * PHP version 8.1
+ *
+ * @package Lwt
  * @since 2.6.0-fork You can omit either u, or (k, v).
  */
 

@@ -3,7 +3,11 @@
  * \file
  * \brief From to import a file from YouTube.
  * 
- * You need a personal YouTube API key. 
+ * You need a personal YouTube API key.
+ * 
+ * PHP version 8.1
+ *
+ * @package Lwt
  */
 
 namespace Lwt\Text_From_Youtube;

@@ -4,6 +4,10 @@
  * \file
  * \brief Connects to the database and check its state.
  * 
+ * PHP version 8.1
+ * 
+ * @category Database
+ * @package Lwt
  * @author https://github.com/HugoFara/ HugoFara
  */
 

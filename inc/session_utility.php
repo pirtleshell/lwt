@@ -7,6 +7,8 @@
  * By requiring this file, you start a session, connect to the 
  * database and declare a lot of useful functions.
  * 
+ * PHP version 8.1
+ *
  * @package Lwt
  * @author  HugoFara <hugo.farajallah@protonmail.com>
  * @license Unlicense <http://unlicense.org/>

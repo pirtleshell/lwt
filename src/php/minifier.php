@@ -6,7 +6,10 @@
  * Use this script to minify JS and CSS files from src/js and src/css to js/ and 
  * css/.
  * 
- * @package Lwt
+ * PHP version 8.1
+ *
+ * @category Documentation
+ * @package Lwt_Documentation
  * @author  HugoFara <hugo.farajallah@protonmail.com>
  * @license Unlicense <http://unlicense.org/>
  * @link    https://hugofara.github.io/lwt/docs/html/minifier_8php.html
