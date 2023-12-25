@@ -21,7 +21,7 @@ require_once 'inc/settings.php';
  */
 define('YT_API_KEY', null);
 
-function do_form_fragment()
+function do_form_fragment(): void
 {
     ?>
 <tr>
@@ -36,7 +36,7 @@ function do_form_fragment()
     <?php
 }
 
-function do_js() 
+function do_js(): void 
 {
     ?>
 <script>

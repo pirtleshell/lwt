@@ -24,8 +24,8 @@
  * @global bool $debug If true adds a red "DEBUG"
  *
  * @return string Version number HTML-formatted
- *
- * @psalm-return '2.5.3-fork (November 06 2022) <span class="red">DEBUG</span>'|'2.5.3-fork (November 06 2022)'
+ * 
+ * @psalm-return '2.9.0-fork (April 14 2023) <span class="red">DEBUG</span>'|'2.9.0-fork (April 14 2023)'
  */
 function get_version(): string 
 {
@@ -515,11 +515,12 @@ function str_replace_first($needle, $replace, $haystack)
 
 /**
  * Convert annotations in a JSON format.
- * 
- * @param  string $ann Annotations.
+ *
+ * @param string $ann Annotations.
+ *
  * @return string A JSON-encoded version of the annotations
  */
-function annotation_to_json($ann) 
+function annotation_to_json($ann): string|false 
 {
     if ($ann == '') {
         return "{}"; 
@@ -532,7 +533,11 @@ function annotation_to_json($ann)
             $arr[intval($vals[0])-1] = array($vals[1], $vals[2], $vals[3]);
         }
     }
-    return json_encode($arr);
+    $json_data = json_encode($arr);
+    if ($json_data === false) {
+        my_die("Unable to format to JSON");
+    }
+    return $json_data;
 }
 
 /**

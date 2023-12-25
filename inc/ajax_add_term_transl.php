@@ -16,19 +16,21 @@ require_once __DIR__ . '/session_utility.php';
 
 /**
  * Add the translation for a new term.
- * 
+ *
  * @param string $text Associated text
  * @param int    $lang Language ID
  * @param string $data Translation
- * 
- * @return string|array [new word ID, lowercase $text] if success, error message otherwise
- * 
+ *
+ * @return (int|string)[]|string [new word ID, lowercase $text] if success, error message otherwise
+ *
  * @global string $tbpref Database table prefix
- * 
+ *
  * @since 2.9.0 Error messages are much more explicit
  * @since 2.9.0 Return an array 
+ *
+ * @psalm-return list{int, string}|string
  */
-function add_new_term_transl($text, $lang, $data) 
+function add_new_term_transl($text, $lang, $data): array|string 
 {
     global $tbpref;
     $textlc = mb_strtolower($text, 'UTF-8');
@@ -152,7 +154,6 @@ function do_ajax_add_term_transl($wid, $data)
 {
     chdir('..');
     // Save data
-    $success = "";
     if ($wid == 0) {
         $status = add_new_term_transl(
             trim($_POST['text']), (int)$_POST['lang'], $data

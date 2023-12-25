@@ -6,8 +6,10 @@ require_once 'session_utility.php';
 
 /**
  * Generate a new token for Google.
- * 
+ *
  * @return int[]|null
+ *
+ * @psalm-return list{int, int}|null
  */
 function regenGoogleTimeToken(): array|null
 {
@@ -43,7 +45,8 @@ function regenGoogleTimeToken(): array|null
         $g, $ma
     );
     if (isset($ma[1][0]) && isset($ma[2][0]) && isset($ma[3][0])) {
-        $tok = strval($ma[3][0]) . "." . strval(intval($ma[1][0]) + intval($ma[2][0]));
+        $tok = strval($ma[3][0]) . "." . 
+        strval(intval($ma[1][0]) + intval($ma[2][0]));
         do_mysqli_query(
             "INSERT INTO _lwtgeneral (LWTKey, LWTValue) 
             VALUES ('GoogleTimeToken', '$tok') 

@@ -17,9 +17,10 @@ require_once __DIR__ . '/session_utility.php';
 
 /**
  * Return the parameters from the URL.
- * 
- * @return array{0: string, 1: string, 2: string} Setting key, setting value 
- *                                                and target URL
+ *
+ * @return string[] Setting key, setting value and target URL
+ *
+ * @psalm-return list{string, string, string}
  */
 function get_parameters(): array 
 {
