@@ -9,7 +9,8 @@
  * 
  * PHP version 8.1
  * 
- * @category User_Interface
+ * @category Helper_Frame
+ * @package Lwt
  */
 
 namespace Lwt\Interface\New_Word;

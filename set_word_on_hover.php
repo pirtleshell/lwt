@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * PHP version 8.1
+ * 
+ * @category Helper_Frame
+ * @package Lwt
+ */
+
 use Lwt\Classes\GoogleTranslate;
 
 require_once 'inc/session_utility.php';

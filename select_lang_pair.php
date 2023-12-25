@@ -8,7 +8,8 @@
  * 
  * PHP version 8.1
  * 
- * @category User_Interface
+ * @category Helper_Frame
+ * @package Lwt
  * @author https://sourceforge.net/projects/lwt/ LWT Project
  * @since  1.5.11
  */

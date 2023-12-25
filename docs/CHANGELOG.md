@@ -11,7 +11,11 @@ ones are marked like "v1.0.0-fork".
 
 * New tools for documentation:
   * New JavaScript documentation with [JSDoc](https://jsdoc.app/)! You will find it under `docs/js/`.
-  * Better PHP documentation using [phpDocumentor](https://phpdoc.org/). The new documentation is at `docs/php/`
+  * Better PHP documentation using [phpDocumentor](https://phpdoc.org/). The new documentation is at `docs/php/`.
+
+## Changed
+
+* PHP file header docblocks are expanded, notably with a PHP version, package and category name.
 
 ### Deprecated
 
