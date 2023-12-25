@@ -14,9 +14,39 @@
  * @license Unlicense <http://unlicense.org/>
  * @link    https://hugofara.github.io/lwt/docs/html/minifier_8php.html
  * @since   2.0.3-fork
+ * @since   2.9.1-fork $jsFiles was replaced by LWT_JS_FILES and $cssFiles by 
+ *                      LWT_CSS_FILES
  */
 require __DIR__ . '/../../vendor/autoload.php';
 use MatthiasMullie\Minify;
+
+
+/**
+ * @var string[] LWT_JS_FILES All the paths of JS files to be minified
+ */
+define(
+    'LWT_JS_FILES', 
+    array(
+        'src/js/audio_controller.js', 'src/js/third_party/countuptimer.js', 
+        'src/js/jq_feedwizard.js', 
+        'src/js/jq_pgm.js', 'src/js/pgm.js', 
+        'src/js/translation_api.js', 'src/js/unloadformcheck.js',
+        'src/js/third_party/sorttable.js', 'src/js/user_interactions.js', 
+    )
+);
+
+/**
+ * @var string[] LWT_CSS_FILES All the paths of CSS files to be minified.
+ */
+define(
+    'LWT_CSS_FILES', 
+    array(
+        'src/css/css_charts.css', 'src/css/feed_wizard.css', 'src/css/gallery.css', 
+        'src/css/jplayer.css', 'src/css/jquery-ui.css', 'src/css/jquery.tagit.css',
+        'src/css/styles.css',
+    )
+);
+
 
 /**
  * Minify a JavaScript file and outputs the result to js/
@@ -56,8 +86,6 @@ function minifyCSS($path, $outputPath)
 
 /**
  * Minify all JavaScript files
- *
- * @global array<string> $jsFiles All the file to be minified
  * 
  * @return string Minified code
  * 
@@ -66,9 +94,8 @@ function minifyCSS($path, $outputPath)
  */
 function minifyAllJS(): string 
 {
-    global $jsFiles;
     $minifier = new Minify\JS();
-    foreach ($jsFiles as $path) {
+    foreach (LWT_JS_FILES as $path) {
         if (file_exists($path)) {
             $minifier->add($path);
         }
@@ -78,9 +105,7 @@ function minifyAllJS(): string
 }
 
 /**
- * Minify all Cascading-Style Sheet files
- * 
- * @global array<string> $cssFiles All the file to be minified
+ * Minify all Cascading-Style Sheet (CSS) files
  * 
  * @return void
  * 
@@ -88,8 +113,7 @@ function minifyAllJS(): string
  */
 function minifyAllCSS() 
 {
-    global $cssFiles;
-    foreach ($cssFiles as $path) {
+    foreach (LWT_CSS_FILES as $path) {
         $name = basename($path);
         if (file_exists($path)) {
             minifyCSS($path, 'css/' . $name);
@@ -159,25 +183,4 @@ function minify_everything()
     regenerateThemes();
 }
 
-/**
- * @var array<string> $jsFiles All the paths of JS files to be minified
- */
-$jsFiles = array(
-    'src/js/audio_controller.js', 'src/js/third_party/countuptimer.js', 
-    'src/js/jq_feedwizard.js', 
-    'src/js/jq_pgm.js', 'src/js/pgm.js', 
-    'src/js/translation_api.js', 'src/js/unloadformcheck.js',
-    'src/js/third_party/sorttable.js', 'src/js/user_interactions.js', 
-);
-
-/**
- * @var array<string> $cssFiles All the paths of CSS files to be minified
- */
-$cssFiles = array(
-    'src/css/css_charts.css', 'src/css/feed_wizard.css', 'src/css/gallery.css', 
-    'src/css/jplayer.css', 'src/css/jquery-ui.css', 'src/css/jquery.tagit.css',
-    'src/css/styles.css',
-
-    // Packages integrated by composer (dev mode)
-);
 ?>
