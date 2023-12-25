@@ -101,7 +101,7 @@ if (isset($_REQUEST['save_feed'])) {
 }
 
 
-function display_new_feed($currentlang)
+function display_new_feed($currentlang): void
 {
     global $tbpref;
     $result = do_mysqli_query(
@@ -203,7 +203,7 @@ $('[type="submit"]').on('click', function(){
     <?php
 }
 
-function edit_feed($currentfeed)
+function edit_feed($currentfeed): void
 {
     global $tbpref;
     $result = do_mysqli_query(
@@ -423,7 +423,7 @@ $('[type="submit"]').on('click', function(){
     <?php 
 }
 
-function multi_load_feed($currentlang)
+function multi_load_feed($currentlang): void
 {
     global $tbpref;
     if(!empty($currentlang)) {
@@ -499,7 +499,7 @@ $( "button" ).on('click', function() {
 
 function display_main_page(
     $currentlang, $currentquery, $currentpage, $currentsort, $wh_query
-) {
+): void {
     global $tbpref, $debug;
     ?>
 

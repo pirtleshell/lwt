@@ -24,6 +24,9 @@ namespace Lwt;
 require_once 'inc/session_utility.php';
 
 
+/**
+ * @return null|string
+ */
 function translator_url($term, $order)
 {
     global $tbpref;
@@ -55,6 +58,9 @@ function translator_url($term, $order)
 }
 
 
+/**
+ * @return void
+ */
 function display_page($type, $term, $order)
 {
     // Translate sentence

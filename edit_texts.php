@@ -143,13 +143,13 @@ function edit_texts_get_wh_tag($currentlang)
  * @param array  $marked     Texts marked.
  * @param string $actiondata Values to insert to the database
  *
- * @return array{0: int, 1: null} Number of rows edited, the second element is always null.
+ * @return (null|string)[] Number of rows edited, the second element is always null.
  *
  * @global string $tbpref Database table prefix
  *
- * @since 2.4.1-fork The second return field is always null 
+ * @since 2.4.1-fork The second return field is always null
  *
- * @psalm-return array{0: string, 1: null}
+ * @psalm-return list{string, null}
  */
 function edit_texts_mark_action($markaction, $marked, $actiondata): array
 {

@@ -23,15 +23,17 @@ require_once 'inc/langdefs.php';
 
 /**
  * Get the SQL string to perform tests.
- * 
+ *
  * @param bool|null   $selection    Test is of type selection
  * @param string|null $sess_testsql SQL string for test
  * @param int|null    $lang         Test is of type language, for the language $lang ID
  * @param int|null    $text         Testing text with ID $text
- * 
- * @return array|never Test identifier as an array(key, value)
+ *
+ * @return (int|int[]|string)[] Test identifier as an array(key, value)
+ *
+ * @psalm-return list{string, int|non-empty-list<int>|string}
  */
-function do_test_get_identifier($selection, $sess_testsql, $lang, $text)
+function do_test_get_identifier($selection, $sess_testsql, $lang, $text): array
 {
     if (isset($selection) && isset($sess_testsql)) {
         $data_string_array = explode(",", trim($sess_testsql, "()"));
@@ -59,10 +61,10 @@ function do_test_get_identifier($selection, $sess_testsql, $lang, $text)
                 break;
             }
     } else if (isset($lang) && is_numeric($lang)) {
-        return array("lang", (int)$lang);
+        return array("lang", $lang);
     } 
     if (isset($text) && is_numeric($text)) {
-        return array("text", (int)$text);
+        return array("text", $text);
     }
     my_die("do_test_test.php called with wrong parameters"); 
 }
@@ -159,14 +161,14 @@ function do_test_test_css()
 
 /**
  * Return the number of test due for tomorrow.
- * 
+ *
  * @param string $testsql Test selection string
- * 
- * @return int tomorrow tests
+ *
+ * @return int Tomorrow tests
  */
-function do_test_get_tomorrow_tests_count($testsql)
+function do_test_get_tomorrow_tests_count($testsql): int
 {
-    return get_first_value(
+    return (int) get_first_value(
         "SELECT COUNT(DISTINCT WoID) AS value 
         FROM $testsql AND WoStatus BETWEEN 1 AND 5 
         AND WoTranslation != '' AND WoTranslation != '*' AND WoTomorrowScore < 0"
@@ -205,23 +207,24 @@ function do_test_test_finished($testsql, $totaltests, $ajax=false)
 
 /**
  * Get a sentence containing the word. 
- * 
+ *
  * The sentence should contain at least 70% of known words.
- * 
+ *
  * @param int    $wid    The word to test.
  * @param string $lang   ID of the language
- * @param string $wordlc 
- * 
+ * @param string $wordlc Word in lowercase
+ *
  * @global string $tbpref Table prefix
- * @global int    $debug  Echo the passage number if 1. 
- * 
- * @return array{0: string|null, 1: int} Sentence with escaped word and not a 0 
- *                                       if sentence was found.
- * 
+ * @global int    $debug  Echo the passage number if 1.
+ *
+ * @return (int|null|string)[] Sentence with escaped word and not a 0 if sentence was found.
+ *
  * @since 2.5.3-fork Properly return sentences with at least 70% of known words.
- *                   Previously, it was supposed to be 100%, but buggy. 
+ *                   Previously, it was supposed to be 100%, but buggy.
+ *
+ * @psalm-return list{null|string, 0|1}
  */
-function do_test_test_sentence($wid, $lang, $wordlc)
+function do_test_test_sentence($wid, $lang, $wordlc): array
 {
     global $debug, $tbpref;
     $num = 0;
@@ -269,16 +272,18 @@ function do_test_test_sentence($wid, $lang, $wordlc)
 
 /**
  * Return the test relative to a word.
- * 
+ *
  * @param array  $wo_record Query from the database regarding a word.
  * @param string $sent      Sentence containing the word.
  * @param int    $testtype  Type of test
  * @param int    $nosent    1 if you want to hide sentences.
  * @param string $regexword Regex to select the desired word.
- * 
- * @return array{0: string, 1: string} HTML-escaped and raw text sentences (or word)
+ *
+ * @return string[] HTML-escaped and raw text sentences (or word)
+ *
+ * @psalm-return list{string, string}
  */
-function do_test_get_term_test($wo_record, $sent, $testtype, $nosent, $regexword)
+function do_test_get_term_test($wo_record, $sent, $testtype, $nosent, $regexword): array
 {
     $wid = $wo_record['WoID'];
     $word = $wo_record['WoText'];
@@ -347,16 +352,16 @@ function do_test_get_term_test($wo_record, $sent, $testtype, $nosent, $regexword
 
 /**
  * Echo the test relative to a word.
- * 
+ *
  * @param array  $wo_record Query from the database regarding a word.
  * @param string $sent      Sentence containing the word.
  * @param int    $testtype  Type of test
  * @param int    $nosent    1 if you want to hide sentences.
  * @param string $regexword Regex to select the desired word.
- * 
- * @return array{0: string, 1: string} HTML-escaped and raw text sentences (or word)
+ *
+ * @return string HTML-escaped and raw text sentences (or word)
  */
-function print_term_test($wo_record, $sent, $testtype, $nosent, $regexword)
+function print_term_test($wo_record, $sent, $testtype, $nosent, $regexword): string
 {
     list($word, $_) =  do_test_get_term_test(
         $wo_record, $sent, $testtype, $nosent, $regexword
@@ -366,12 +371,14 @@ function print_term_test($wo_record, $sent, $testtype, $nosent, $regexword)
 
 /**
  * Find the next word to test.
- * 
+ *
  * @param string $testsql Test selection string
- * 
- * @return array 
+ *
+ * @return (float|int|null|string)[] Empty array
+ *
+ * @psalm-return array<string, float|int|null|string>
  */
-function do_test_get_word($testsql)
+function do_test_get_word($testsql): array
 {
     $pass = 0;
     while ($pass < 2) {

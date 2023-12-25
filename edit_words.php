@@ -579,7 +579,6 @@ if (isset($_REQUEST['allaction'])) {
             where Ti2LgID = WoLgID and Ti2WoID = WoID and Ti2TxID in (' . $currenttext . ')' . $wh_lang . $wh_stat . $wh_query . ' 
             group by WoID ' . $wh_tag;
         }
-        $cnt = 0;
         $id_list = array();
         $res = do_mysqli_query($sql);
         while ($record = mysqli_fetch_assoc($res)) {

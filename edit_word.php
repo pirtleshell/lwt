@@ -27,13 +27,15 @@ require_once 'inc/langdefs.php';
 
 /**
  * Insert a new word to the database
- * 
+ *
  * @param string $textlc      The word to insert, in lowercase
  * @param string $translation Translation of this term
- * 
- * @return array{0: int, 1: string} Word id, and then an insertion message 
+ *
+ * @return (int|string)[] Word id, and then an insertion message
+ *
+ * @psalm-return list{int, string}
  */
-function insert_new_word($textlc, $translation)
+function insert_new_word($textlc, $translation): array
 {
     global $tbpref;
 
@@ -177,6 +179,9 @@ function change_term_display($wid, $translation, $hex): void
 }
 
 // INS/UPD
+/*
+ * @return void
+ */
 function edit_word_do_operation($translation, $fromAnn)
 {
     $hex = null;
@@ -222,6 +227,9 @@ function edit_word_do_operation($translation, $fromAnn)
 }
 
 
+/*
+ * @return void
+ */
 function edit_word_do_form($wid, $text_id, $ord, $fromAnn)
 {
     global $tbpref, $langDefs;
@@ -538,7 +546,7 @@ function edit_word_do_form($wid, $text_id, $ord, $fromAnn)
     }
 }
 
-function do_content()
+function do_content(): void
 {
     // from-recno or empty
     $fromAnn = getreq("fromAnn"); 

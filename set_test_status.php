@@ -46,16 +46,18 @@ function do_set_test_status_html($status, $oldstatus, $newscore, $oldscore)
 
 /**
  * Increment the session progress in learning new words.
- * 
+ *
  * @param int $stchange -1, 0, or 1 if status is rising or not
- * 
- * @return void
+ *
+ * @return int[] Tests data
+ *
+ * @psalm-return array{total: int, wrong: int, correct: int, nottested: int}
  */
-function set_test_status_change_progress($stchange)
+function set_test_status_change_progress($stchange): array
 {
     $totaltests = (int)$_SESSION['testtotal'];
-    $wrong = $_SESSION['testwrong'];
-    $correct = $_SESSION['testcorrect'];
+    $wrong = (int) $_SESSION['testwrong'];
+    $correct = (int) $_SESSION['testcorrect'];
     $notyettested = $totaltests - $correct - $wrong;
     if ($notyettested > 0) {
         if ($stchange >= 0) {

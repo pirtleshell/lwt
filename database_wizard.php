@@ -77,10 +77,10 @@ class Database_Connection
 
     /**
      * Connection a PHP formatted string.
-     * 
+     *
      * @return string PHP string representing connection details
      */
-    public function getAsText()
+    public function getAsText(): string
     {
         return '<?php
 
@@ -125,12 +125,14 @@ function writeToFile($conn)
 function doOperation($op)
 {
     $message = null;
+    $dbname = null;
+    $passwd = null;
+    $server = null;
+    $socket = null;
+    $userid = null;
     if ($op == "Autocomplete") {
-        $server = $_SERVER['SERVER_ADDR'];
-        $userid = $_SERVER['SERVER_NAME']; 
-        $passwd = "";
-        $dbname = "";
-        $socket = "";
+        $_SERVER['SERVER_ADDR'];
+        $_SERVER['SERVER_NAME']; 
     } else if ($op == "Check") {
         //require_once 'inc/database_connect.php';
         $server = getreq("server"); 
@@ -166,11 +168,11 @@ function doOperation($op)
             }
         }
     } else if ($op == "Change") {
-        $server = getreq("server"); 
-        $userid = getreq("userid");
-        $passwd = getreq("passwd");
-        $dbname = getreq("dbname");
-        $socket = getreq("socket");
+        getreq("server"); 
+        getreq("userid");
+        getreq("passwd");
+        getreq("dbname");
+        getreq("socket");
     }
     $conn = new Database_Connection(
         $server, $userid, $passwd, $dbname, $socket

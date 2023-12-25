@@ -22,19 +22,16 @@ require_once 'inc/session_utility.php';
 
 /**
  * Return a lot of different server state variables.
- * 
- * @return array{"db_prefix": string, "db_size": float, "server_soft": string[], 
+ *
+ * @return (false|float|string)[] {"db_prefix": string, "db_size": float, "server_soft": string[], 
  * "apache": string, "php": string, "mysql": string} 
  * Table prefix, database size, server software, apache version, PHP version, MySQL 
  * version
- * 
+ *
  * @global string $tbpref Database table prefix
  * @global string $dbname Database name
  *
- * @psalm-return array{
- *  "db_prefix": string, "db_size": float, "server_soft": non-empty-list<string>, 
- *  "apache": string, "php": false|string, "mysql": string
- * }
+ * @psalm-return array{db_name: string, db_prefix: string, db_size: float, server_soft: string, apache: string, php: false|string, mysql: string}
  */
 function get_server_data_table(): array 
 {

@@ -26,12 +26,12 @@ require_once 'inc/classes/Term.php';
 
 /**
  * Export term data as a JSON dictionnary.
- * 
- * @return string JSON dictionnary. 
+ *
+ * @return string JSON dictionnary.
  */
-function export_term_js_dict($term) 
+function export_term_js_dict($term): string 
 {
-    return json_encode(
+    $raw_answer = json_encode(
         array(
             "woid" => $term->id,
             "text" =>  $term->text,
@@ -42,6 +42,13 @@ function export_term_js_dict($term)
             "status" => $term->status
         )
     );
+    if ($raw_answer === false) {
+        $raw_answer = json_encode(array("error" => "Unable to return data."));
+        if ($raw_answer === false) {
+            my_die("Unable to return data");
+        }
+    }
+    return $raw_answer;
 }
 
 /**

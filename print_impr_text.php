@@ -25,7 +25,7 @@ require_once 'inc/ajax_edit_impr_text.php';
 
 use function Lwt\Ajax\Improved_Text\edit_term_form;
 
-function edit_mode_display($textid, $ann_exists)
+function edit_mode_display($textid, $ann_exists): void
 {
     if (!$ann_exists) {
         // No annotations, try create them
@@ -68,7 +68,7 @@ function edit_mode_display($textid, $ann_exists)
     <?php
 }
 
-function print_mode_display($textid, $langid, $audio, $ann, $title)
+function print_mode_display($textid, $langid, $audio, $ann, $title): void
 {
     global $tbpref;
     $sql = "SELECT LgTextSize, LgRemoveSpaces, LgRightToLeft, LgGoogleTranslateURI 
@@ -146,6 +146,9 @@ function print_mode_display($textid, $langid, $audio, $ann, $title)
 }
 
 
+/**
+ * @return void
+ */
 function do_content()
 {
     global $tbpref;

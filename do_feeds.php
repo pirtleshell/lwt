@@ -18,7 +18,7 @@ namespace Lwt\Interface\Do_Feeds;
 require_once 'inc/session_utility.php';
 
 
-function dummy_function_1()
+function dummy_function_1(): array
 {
     global $tbpref;
     $edit_text = 0;
@@ -319,7 +319,7 @@ $(".hide_message").delay(2500).slideUp(1000);
     return array($edit_text, $message);
 }
 
-function check_errors($message)
+function check_errors($message): void
 {
 
     if (isset($_REQUEST['checked_feeds_save'])) {
@@ -350,7 +350,7 @@ function check_errors($message)
     echo error_message_with_hide($message, 0);
 }
 
-function dummy_function_2($currentlang, $currentfeed)
+function dummy_function_2($currentlang, $currentfeed): void
 {
     global $tbpref, $debug;
     $currentquery = processSessParam("query", "currentrssquery", '', 0);
@@ -619,7 +619,7 @@ $('img.not_found').on('click', function () {
     <?php
 }
 
-function do_page()
+function do_page(): void
 {
     $currentlang = validateLang(
         processDBParam("filterlang", 'currentlanguage', '', 0)

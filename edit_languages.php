@@ -367,10 +367,10 @@ function load_language($lgid)
 
 /**
  * Create the form for a language.
- * 
+ *
  * @param Language $language Language object
  */
-function edit_language_form($language) 
+function edit_language_form($language): void 
 {
     global $langDefs;
     $sourceLg = '';
@@ -875,11 +875,11 @@ function edit_language_form($language)
 
 }
 
-/** 
+/**
  * Returns a dropdown menu of the different languages.
- * 
+ *
  * @param string $currentnativelanguage Default language
- * 
+ *
  * @global mixed $langDefs
  */
 function get_wizard_selectoptions($currentnativelanguage): string 

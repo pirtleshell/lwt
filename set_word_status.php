@@ -48,11 +48,11 @@ function get_word_data($wid)
 
 /**
  * Sent an AJAX request to change a word satus.
- * 
+ *
  * @param string $wid    ID of the word status to change
  * @param string $status New status to set
  */
-function set_word_status_ajax($wid, $status)
+function set_word_status_ajax($wid, $status): void
 {
     ?>
 <script type="text/javascript">

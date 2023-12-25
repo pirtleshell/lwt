@@ -94,7 +94,7 @@ require_once 'inc/session_utility.php';
  * @global string $tbpref       Database table prefix
  * @global string $fixed_tbpref Fixed database table prefix
  *
- * @psalm-return array{0: '<span title="Manage Table Sets" onclick="location.href='table_set_management.php';" class="click">'|'<span>', 1: string, 2: '<span title="Select Table Set" onclick="location.href='start.php';" class="click">'|'<span>'}
+ * @psalm-return list{'<span title="Manage Table Sets" onclick="location.href='table_set_management.php';" class="click">'|'<span>', string, '<span title="Select Table Set" onclick="location.href='start.php';" class="click">'|'<span>'}
  */
 function get_span_groups(): array
 {
@@ -216,15 +216,14 @@ function wordpress_logout_link()
 
 /**
  * Return a lot of different server state variables.
- * 
- * @return array{0: string, 1: float, 2: string[], 3: string, 4: string, 5: string} 
+ *
+ * @return (false|float|string|string[])[] {0: string, 1: float, 2: string[], 3: string, 4: string, 5: string} 
  * Table prefix, database size, server software, apache version, PHP version, MySQL 
  * version
- * 
- * @deprecated Use get_server_data_table, will be removed in 3.0.0. 
  *
- * @psalm-return array{0: string, 1: float, 2: non-empty-list<string>, 3: string, 4: false|string, 5: string}
- * 
+ * @deprecated Use get_server_data_table, will be removed in 3.0.0.
+ *
+ * @psalm-return list{string, float, non-empty-list<string>, string, false|string, string}
  * @global string $tbpref Database table prefix
  * @global string $dbname Database name
  */
