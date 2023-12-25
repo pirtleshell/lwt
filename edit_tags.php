@@ -1,20 +1,24 @@
 <?php
 
-
-/**************************************************************
-Call: edit_tags.php?....
-      ... markaction=[opcode] ... do actions on marked tags
-      ... allaction=[opcode] ... do actions on all tags
-      ... del=[wordid] ... do delete
-      ... op=Save ... do insert new 
-      ... op=Change ... do update
-      ... new=1 ... display new tag screen 
-      ... chg=[wordid] ... display edit screen 
-      ... sort=[sortcode] ... sort 
-      ... page=[pageno] ... page  
-      ... query=[tagtextfilter] ... tag text filter    
-Manage tags
- ***************************************************************/
+/*
+ * Manage tags
+ * 
+ * Call: edit_tags.php?....
+ *  ... markaction=[opcode] ... do actions on marked tags
+ *  ... allaction=[opcode] ... do actions on all tags
+ *  ... del=[wordid] ... do delete
+ *  ... op=Save ... do insert new 
+ *  ... op=Change ... do update
+ *  ... new=1 ... display new tag screen 
+ *  ... chg=[wordid] ... display edit screen 
+ *  ... sort=[sortcode] ... sort 
+ *  ... page=[pageno] ... page  
+ *  ... query=[tagtextfilter] ... tag text filter    
+ * 
+ * PHP version 8.1
+ * 
+ * @category User_Interface
+ */
 
 namespace Lwt\Interface\Edit_Tags;
 

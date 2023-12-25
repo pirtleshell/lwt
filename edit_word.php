@@ -11,6 +11,9 @@
  *  ... tid=[textid]&ord=[textpos]&wid= ... new word  
  *  ... tid=[textid]&ord=[textpos]&wid=[wordid] ... edit word 
  * 
+ * PHP version 8.1
+ * 
+ * @category User_Interface
  * @since  1.0.3
  * @author LWT Project <lwt-project@hotmail.com>
  */

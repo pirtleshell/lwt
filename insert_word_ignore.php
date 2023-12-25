@@ -7,6 +7,9 @@
  * 
  * Call: insert_word_ignore.php?tid=[textid]&ord=[textpos]
  * 
+ * PHP version 8.1
+ * 
+ * @category User_Interface
  * @author LWT Project <lwt-project@hotmail.com>
  * @since  1.0.3
  */

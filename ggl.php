@@ -7,6 +7,8 @@
  * Call: ggl.php?text=[text]&sl=[source language]&tl=[target language] ... translate text
  *     ... sent=[int] ... single sentence mode.
  * 
+ * PHP version 8.1
+ * 
  * @package Lwt
  * @author  LWT Project <lwt-project@hotmail.com>
  * @license Unlicense <http://unlicense.org/>

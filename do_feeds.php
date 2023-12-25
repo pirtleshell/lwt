@@ -3,6 +3,9 @@
  * \file
  * \brief Prepare RSS feeds.
  * 
+ * PHP version 8.1
+ * 
+ * @category User_Interface
  * @package Lwt
  * @author  andreask7 <andreask7@users.noreply.github.com>
  * @license Unlicense <http://unlicense.org/>

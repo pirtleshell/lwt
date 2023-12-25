@@ -6,9 +6,9 @@
  * 
  * Call: database_wizard.php
  * 
- * php version 8.1.0
+ * PHP version 8.1
  * 
- * @category Interface
+ * @category User_Interface
  * @package  Lwt
  * @author   HugoFara <hugo.farajallah@protonmail.com>
  * @license  Unlicense <http://unlicense.org/>

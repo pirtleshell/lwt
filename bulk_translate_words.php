@@ -11,6 +11,9 @@
  *      ... term=[term]   ... Term to translate
  *      ... offset=[pos]  ... An optional offset position
  * 
+ * PHP version 8.1
+ * 
+ * @category User_Interface
  * @package Lwt
  * @author  LWT Project <lwt-project@hotmail.com>
  * @license Unlicense <http://unlicense.org/>

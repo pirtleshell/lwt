@@ -6,6 +6,9 @@
  * 
  * Call: set_text_mode.php?text=[textid]&mode=0/1&showLeaning=0/1
  * 
+ * PHP version 8.1
+ * 
+ * @category User_Interface
  * @author LWT Project <lwt-project@hotmail.com>
  * @since  1.0.3.1
  */

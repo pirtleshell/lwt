@@ -1,19 +1,22 @@
 <?php
 
-
-/***
-Manage archived texts
-
-Call: edit_archivedtexts.php?....
-      ... markaction=[opcode] ... do actions on marked texts
-      ... del=[textid] ... do delete
-      ... unarch=[textid] ... do unarchive
-      ... op=Change ... do update
-      ... chg=[textid] ... display edit screen 
-      ... filterlang=[langid] ... language filter 
-      ... sort=[sortcode] ... sort 
-      ... page=[pageno] ... page  
-      ... query=[titlefilter] ... title filter   
+/*
+ * Manage archived texts
+ * 
+ * Call: edit_archivedtexts.php?....
+ *  ... markaction=[opcode] ... do actions on marked texts
+ *  ... del=[textid] ... do delete
+ *  ... unarch=[textid] ... do unarchive
+ *  ... op=Change ... do update
+ *  ... chg=[textid] ... display edit screen 
+ *  ... filterlang=[langid] ... language filter 
+ *  ... sort=[sortcode] ... sort 
+ *  ... page=[pageno] ... page  
+ *  ... query=[titlefilter] ... title filter
+ * 
+ * PHP version 8.1
+ * 
+ * @category User_Interface
  */
 
 require_once 'inc/session_utility.php';

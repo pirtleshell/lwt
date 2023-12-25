@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * \file
  * \brief Print/Edit an improved annotated text
@@ -9,6 +8,9 @@
  *      ... edit=1 ... edit own annotation 
  *      ... del=1  ... delete own annotation
  * 
+ * PHP version 8.1
+ * 
+ * @category User_Interface
  * @package Lwt
  * @author  LWT Project <lwt-project@hotmail.com>
  * @license Unlicense <http://unlicense.org/>

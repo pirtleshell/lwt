@@ -1,9 +1,12 @@
 <?php
 
-/**************************************************************
-Call: show_word.php?wid=...&ann=...
-Show term
- ***************************************************************/
+/*
+ * Show term
+ * 
+ * Call: show_word.php?wid=...&ann=...
+ * 
+ * PHP version 8.1
+ */
 
 require_once 'inc/session_utility.php';
 

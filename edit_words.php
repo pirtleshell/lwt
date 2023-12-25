@@ -19,7 +19,11 @@
  *  ... text=[textid] ... text filter   
  *  ... tag1=[tagid] ... tag filter 1   
  *  ... tag2=[tagid] ... tag filter 2   
- *  ... tag12=0/1 ... tag1-tag2 OR=0, AND=1  
+ *  ... tag12=0/1 ... tag1-tag2 OR=0, AND=1
+ * 
+ * PHP version 8.1
+ * 
+ * @category User_Interface
  */
 
 require_once 'inc/session_utility.php';

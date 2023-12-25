@@ -1,18 +1,23 @@
 <?php
 
-/**************************************************************
-Call: edit_texttags.php?....
-      ... markaction=[opcode] ... do actions on marked text tags
-      ... allaction=[opcode] ... do actions on all text tags
-      ... del=[wordid] ... do delete
-      ... op=Save ... do insert new 
-      ... op=Change ... do update
-      ... new=1 ... display new text tag screen 
-      ... chg=[wordid] ... display edit screen 
-      ... sort=[sortcode] ... sort 
-      ... page=[pageno] ... page  
-      ... query=[tagtextfilter] ... tag text filter    
-Manage tags
+/*
+ * Manage tags
+ * 
+ * Call: edit_texttags.php?....
+ *  ... markaction=[opcode] ... do actions on marked text tags
+ *  ... allaction=[opcode] ... do actions on all text tags
+ *  ... del=[wordid] ... do delete
+ *  ... op=Save ... do insert new 
+ *  ... op=Change ... do update
+ *  ... new=1 ... display new text tag screen 
+ *  ... chg=[wordid] ... display edit screen 
+ *  ... sort=[sortcode] ... sort 
+ *  ... page=[pageno] ... page  
+ *  ... query=[tagtextfilter] ... tag text filter    
+ * 
+ * PHP version 8.1
+ * 
+ * @category User_Interface
  ***************************************************************/
 
 require_once 'inc/session_utility.php';

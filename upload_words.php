@@ -5,7 +5,11 @@
  * \brief Import terms from file or Text area
  * 
  *  Call: upload_words.php?....
- *      ... op=Import ... do the import 
+ *      ... op=Import ... do the import
+ * 
+ * PHP version 8.1
+ * 
+ * @category User_Interface
  */
 
 require_once 'inc/session_utility.php';

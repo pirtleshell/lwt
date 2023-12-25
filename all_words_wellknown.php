@@ -9,6 +9,9 @@
  *       all_words_wellknown.php?text=[textid]&status=[statusint] 
  *                              (mark with a specific status, normally 98 or 99)
  * 
+ * PHP version 8.1
+ * 
+ * @category User_Interface
  * @package Lwt
  * @author  LWT Project <lwt-project@hotmail.com>
  * @license Unlicense <http://unlicense.org/>

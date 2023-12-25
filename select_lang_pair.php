@@ -6,6 +6,9 @@
  * 
  * Call: select_lang_pair.php
  * 
+ * PHP version 8.1
+ * 
+ * @category User_Interface
  * @author https://sourceforge.net/projects/lwt/ LWT Project
  * @since  1.5.11
  */

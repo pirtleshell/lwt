@@ -9,6 +9,8 @@
  * Call: do_test_test.php?type=[testtype]&selection=1  
  *          (SQL via $_SESSION['testsql'])
  * 
+ * PHP version 8.1
+ * 
  * @package Lwt
  * @author  LWT Project <lwt-project@hotmail.com>
  * @license Unlicense <http://unlicense.org/>

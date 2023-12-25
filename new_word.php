@@ -1,11 +1,16 @@
 <?php
 
-/**************************************************************
-Call: new_word.php?...
-            ... text=[textid]&lang=[langid] ... new term input  
-            ... op=Save ... do the insert
-New word, created while reading or testing
- ***************************************************************/
+/*
+ * New word, created while reading or testing
+ * 
+ * Call: new_word.php?...
+ *      ... text=[textid]&lang=[langid] ... new term input  
+ *      ... op=Save ... do the insert
+ * 
+ * PHP version 8.1
+ * 
+ * @category User_Interface
+ */
 
 namespace Lwt\Interface\New_Word;
 

@@ -1,11 +1,16 @@
 <?php
 
-/**************************************************************
-Call: print_text.php?text=[textid]&...
-            ... ann=[annotationcode] ... ann. filter 
-      ... status=[statuscode] ... status filter   
-Print a text
- ***************************************************************/
+/*
+ * Print a text
+ * 
+ * Call: print_text.php?text=[textid]&...
+ *      ... ann=[annotationcode] ... ann. filter 
+ *      ... status=[statuscode] ... status filter
+ * 
+ * PHP version 8.1
+ * 
+ * @category User_Interface
+ */
 
 require_once 'inc/session_utility.php';
 

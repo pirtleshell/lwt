@@ -7,6 +7,10 @@
  * Call: edit_tword.php?....
  *  ... op=Change ... do update
  *  ... wid=[wordid] ... display edit screen
+ * 
+ * PHP version 8.1
+ * 
+ * @category User_Interface
  */
 
 require_once 'inc/session_utility.php';
