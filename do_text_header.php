@@ -245,12 +245,17 @@ function browser_tts($text, $languageName): void
 /**
  * Save the position of the audio reading for a text.
  *
- * @param string $textid ID of the text
+ * @param string|int $textid ID of the text
  *
  * @since 2.0.4-fork
  */
 function save_audio_position($textid): void
 {
+    if (is_string($textid)) {
+        $textid_int = (int) $textid;
+    } else {
+        $textid_int = $textid;
+    }
     ?>
 
 <script type="text/javascript">
@@ -263,8 +268,8 @@ function save_audio_position($textid): void
             return;
         }
         const pos = $("#jquery_jplayer_1").data("jPlayer").status.currentTime;
-        const text_id = parseInt(<?php echo json_encode($textid); ?>, 10);
-        save_audio_position(text_id, pos);
+        const text_id = <?php echo $textid_int; ?>;
+        saveAudioPosition(text_id, pos);
     }
 
     $(window).on('beforeunload', saveTextStatus);
@@ -302,11 +307,11 @@ function do_text_header_content($textid, $only_body=true): void
     if (!$only_body) {
         pagestart_nobody($title, 'html, body {margin-bottom:0;}');
     }
-    save_audio_position($textid);
+    save_audio_position((int) $textid);
     do_header_row((int) $textid, $record['TxLgID']);
     do_title($title, $record['TxSourceURI']);
     do_settings($textid);
-    makeMediaPlayer($media, $record['TxAudioPosition']);
+    makeMediaPlayer($media, (int) $record['TxAudioPosition']);
     browser_tts($record["TxText"], $record["LgName"]);
     if (!$only_body) {
         pageend();
