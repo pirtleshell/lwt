@@ -24,6 +24,7 @@ ones are marked like "v1.0.0-fork".
 * Since 2.9.0, tests may be unable to run due to a missing key in an AJAX request ("type"). This is fixed.
 * Since 2.9.0, audio position was not saved properly.
 * On `upload_words.php`, "update only empty fields" was broken.
+* Translation were not set by default properly when editing terms translations table.
 
 ### Deprecated
 

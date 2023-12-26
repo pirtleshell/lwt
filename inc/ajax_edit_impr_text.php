@@ -42,17 +42,19 @@ function make_trans($i, $wid, $trans, $word, $lang): string
         );
         $transarr = preg_split('/[' . get_sepas()  . ']/u', $alltrans);
         $set = false;
+        $set_default = true;
         foreach ($transarr as $t) {
             $tt = trim($t);
             if ($tt == '*' || $tt == '') { 
                 continue; 
             }
+            $set_default = false;
             // true if the translation should be checked (this translation is set)
-            $set = $tt == $trans && !$set;
+            $set = $set || $tt == $trans;
             // Add a candidate annotation
             $r .= '<span class="nowrap">
                 <input class="impr-ann-radio" ' . 
-                ($set ? 'checked="checked" ' : '') . 'type="radio" name="rg' . 
+                ($tt == $trans ? 'checked="checked" ' : '') . 'type="radio" name="rg' . 
                 $i . '" value="' . tohtml($tt) . '" /> 
                 &nbsp;' . tohtml($tt) . '
             </span>
@@ -61,9 +63,7 @@ function make_trans($i, $wid, $trans, $word, $lang): string
         ;
     } 
     // Set the empty translation if no translation have been set yet
-    if (!isset($set) || !$set) {
-        $set = true;
-    }
+    $set = $set || $set_default;
     // Empty radio button and text field after the list of translations
     $r .= '<span class="nowrap">
     <input class="impr-ann-radio" type="radio" name="rg' . $i . '" ' . 
