@@ -117,7 +117,7 @@ function get_translations($word_id): array
 {
     global $tbpref;
     $translations = array();
-    $alltrans = get_first_value(
+    $alltrans = (string) get_first_value(
         "SELECT WoTranslation AS value FROM {$tbpref}words 
         WHERE WoID = $word_id"
     );
@@ -285,8 +285,8 @@ function edit_term_form($textid): string
     FROM {$tbpref}texts WHERE TxID = $textid";
     $res = do_mysqli_query($sql);
     $record = mysqli_fetch_assoc($res);
-    $langid = $record['TxLgID'];
-    $ann = $record['TxAnnotatedText'];
+    $langid = (int) $record['TxLgID'];
+    $ann = (string) $record['TxAnnotatedText'];
     if (strlen($ann) > 0) {
         $ann = recreate_save_ann($textid, $ann);
     }
@@ -434,8 +434,8 @@ function make_form($textid, $wordlc): array
     FROM ' . $tbpref . 'texts WHERE TxID = ' . $textid;
     $res = do_mysqli_query($sql);
     $record = mysqli_fetch_assoc($res);
-    $langid = $record['TxLgID'];
-    $ann = $record['TxAnnotatedText'];
+    $langid = (int) $record['TxLgID'];
+    $ann = (string) $record['TxAnnotatedText'];
     if (strlen($ann) > 0) {
         $ann = recreate_save_ann($textid, $ann);
     }
@@ -488,16 +488,20 @@ function make_form($textid, $wordlc): array
             $wid = null;
             $trans = '';
             if (count($vals) > 2) {
-                $wid = $vals[2];
-                if (is_numeric($wid)) {
+                $str_wid = $vals[2];
+                if (is_numeric($str_wid)) {
                     $temp_wid = (int)get_first_value(
                         "SELECT COUNT(WoID) AS value 
-                        FROM " . $tbpref . "words 
-                        WHERE WoID = ". $wid
+                        FROM {$tbpref}words 
+                        WHERE WoID = $str_wid"
                     );
                     if ($temp_wid < 1) { 
                         $wid = null; 
+                    } else {
+                        $wid = (int) $str_wid;
                     }
+                } else {
+                    $wid = null;
                 }
             }
             if (count($vals) > 3) { 

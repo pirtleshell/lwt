@@ -27,8 +27,8 @@ $currentsort = (int) processDBParam("sort", 'currentarchivesort', '1', true);
 
 $currentpage = (int) processSessParam("page", "currentarchivepage", '1', true);
 $currentquery = (string) processSessParam("query", "currentarchivequery", '', false);
-$currentquerymode = processSessParam(
-    "query_mode", "currentarchivequerymode", 'title,text', 0
+$currentquerymode = (string) processSessParam(
+    "query_mode", "currentarchivequerymode", 'title,text', false
 );
 $currentregexmode = getSettingWithDefault("set-regex-mode");
 $currenttag1 = validateArchTextTag(
@@ -72,7 +72,7 @@ if ($currentquery!=='') {
             $wh_query = '';
             unset($_SESSION['currentwordquery']);
             if(isset($_REQUEST['query'])) { 
-                echo '<p id="hide3" style="color:red;text-align:center;">' + 
+                echo '<p id="hide3" style="color:red;text-align:center;">' .
                 '+++ Warning: Invalid Search +++</p>'; 
             }
         }
@@ -377,7 +377,7 @@ if (isset($_REQUEST['chg'])) {
         <tr>
             <td class="td1 right">Tags:</td>
             <td class="td1">
-                <?php echo getArchivedTextTags($_REQUEST['chg']); ?>
+                <?php echo getArchivedTextTags((int) $_REQUEST['chg']); ?>
             </td>
         </tr>
         <tr>

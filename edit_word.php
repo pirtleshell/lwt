@@ -378,7 +378,7 @@ function edit_word_do_form($wid, $text_id, $ord, $fromAnn)
     <tr>
         <td class="td1 right" colspan="2">
             <?php echo createDictLinksInEditWin(
-                $lang, $term, 'document.forms[0].WoSentence', isset($_GET['nodict'])?0:1
+                $lang, $term, 'document.forms[0].WoSentence', !isset($_GET['nodict'])
             ); ?>
         &nbsp; &nbsp; &nbsp; 
         <input type="submit" name="op" value="Save" /></td>

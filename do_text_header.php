@@ -285,8 +285,8 @@ function save_audio_position($textid): void
 /**
  * Main function for displaying header. It will print HTML content.
  *
- * @param string $textid    ID of the requiered text
- * @param bool   $only_body If true, only show the inner body. If false, create a 
+ * @param string|int $textid    ID of the requiered text
+ * @param bool       $only_body If true, only show the inner body. If false, create a 
  *                          complete HTML document.
  *
  * @since 2.0.3-fork
@@ -294,9 +294,10 @@ function save_audio_position($textid): void
 function do_text_header_content($textid, $only_body=true): void
 {
     $record = getData($textid);
-    $title = $record['TxTitle'];
-    $media = $record['TxAudioURI'];
-    if (!isset($media)) { 
+    $title = (string) $record['TxTitle'];
+    if (isset($record['TxAudioURI'])) {
+        $media = (string) $record['TxAudioURI'];
+    } else { 
         $media = '';
     }
     $media = trim($media);
@@ -318,8 +319,4 @@ function do_text_header_content($textid, $only_body=true): void
     }
 }
 
-// Show the content automatically if text is in the request
-if (false && getreq('text')) {
-    do_text_header_content(getreq('text'), false);
-}
 ?>

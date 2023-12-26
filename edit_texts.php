@@ -76,7 +76,7 @@ function edit_texts_get_wh_query($currentquery, $currentquerymode, $currentregex
             $wh_query = '';
             unset($_SESSION['currentwordquery']);
             if (isset($_REQUEST['query'])) { 
-                echo '<p id="hide3" style="color:red;text-align:center;">' + 
+                echo '<p id="hide3" style="color:red;text-align:center;">' . 
                 '+++ Warning: Invalid Search +++</p>'; 
             }
         }
@@ -782,8 +782,8 @@ function edit_texts_change($txid)
 function edit_texts_filters_form($currentlang, $recno, $currentpage, $pages)
 {
     $currentquery = (string) processSessParam("query", "currenttextquery", '', false);
-    $currentquerymode = processSessParam(
-        "query_mode", "currenttextquerymode", 'title,text', 0
+    $currentquerymode = (string) processSessParam(
+        "query_mode", "currenttextquerymode", 'title,text', false
     );
     $currentregexmode = getSettingWithDefault("set-regex-mode");
     $currenttag1 = validateTextTag(
@@ -1171,8 +1171,8 @@ function edit_texts_display($message)
 
     $currentpage = (int) processSessParam("page", "currenttextpage", '1', true);
     $currentquery = (string) processSessParam("query", "currenttextquery", '', false);
-    $currentquerymode = processSessParam(
-        "query_mode", "currenttextquerymode", 'title,text', 0
+    $currentquerymode = (string) processSessParam(
+        "query_mode", "currenttextquerymode", 'title,text', false
     );
     $currentregexmode = getSettingWithDefault("set-regex-mode");
 
@@ -1337,7 +1337,7 @@ function edit_texts_do_page()
         edit_texts_new($currentlang);
     } elseif (isset($_REQUEST['chg'])) {
         // CHG
-        edit_texts_change(getreq('chg'));
+        edit_texts_change((int) getreq('chg'));
     } else {
         // DISPLAY
         edit_texts_display($message);

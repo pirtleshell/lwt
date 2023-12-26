@@ -333,14 +333,14 @@ function load_language($lgid)
         $language->dict2uri = "";
         $language->translator = "";
         $language->exporttemplate = "";
-        $language->textsize = "";
+        $language->textsize = 100;
         $language->charactersubst = "";
         $language->regexpsplitsent = "";
         $language->exceptionsplitsent = "";
         $language->regexpwordchar = "";
-        $language->removespaces = "";
-        $language->spliteachchar = "";
-        $language->rightoleft = "";
+        $language->removespaces = null;
+        $language->spliteachchar = null;
+        $language->rightoleft = null;
     } else {
         // Load data from database
         $sql = "SELECT * FROM {$tbpref}languages WHERE LgID = $lgid";

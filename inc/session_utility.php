@@ -1667,9 +1667,9 @@ function media_paths_search($dir): array
 /**
  * Return the paths for all media files.
  *
- * @return string[] Paths of media files
+ * @return array Paths of media files, in the form array<string, string>
  */
-function get_media_paths()
+function get_media_paths(): array
 {
     $answer = array(
         "base_path" => basename(getcwd())
@@ -1982,14 +1982,14 @@ function get_themes_selectoptions($v): string
 
 
 /**
- * Get a SESSION value and update it if necessary.
+ * Get a session value and update it if necessary.
  * 
- * @param string $reqkey  If in $_REQUEST, update the session with $_REQUEST[$reqkey]
- * @param string $sesskey Field of the session to get or update
- * @param string $default Default value to return
- * @param bool   $isnum   If true, convert the result to an int
+ * @param string      $reqkey  If in $_REQUEST, update the session with $_REQUEST[$reqkey]
+ * @param string      $sesskey Field of the session to get or update
+ * @param string|int  $default Default value to return
+ * @param bool        $isnum   If true, convert the result to an int
  * 
- * @return string|int The string data unless $isnum is specified
+ * @return string|int The required data unless $isnum is specified
  */
 function processSessParam($reqkey, $sesskey, $default, $isnum) 
 {
@@ -2265,7 +2265,7 @@ function get_languages_selectoptions($v, $dt): string
     WHERE LgName<>'' ORDER BY LgName";
     $res = do_mysqli_query($sql);
     $r = '<option value="" ';
-    if (!isset($v) || trim($v) == '') {
+    if (!isset($v) || trim((string) $v) == '') {
         $r .= 'selected="selected"';
     } 
     $r .= ">$dt</option>";
@@ -4085,15 +4085,18 @@ function getLanguageCode($lg_id, $languages_table)
 /**
  * Return a right-to-left direction indication in HTML if language is right-to-left.
  * 
- * @param string|int $lid Language ID
+ * @param string|int|null $lid Language ID
  * 
  * @return string ' dir="rtl" '|''
  */
 function getScriptDirectionTag($lid): string 
 {
     global $tbpref;
+    if (!isset($lid)) {
+        return '';
+    }
     if (is_string($lid)) {
-        if (!isset($lid) || trim($lid) == '' || !is_numeric($lid)) { 
+        if (trim($lid) == '' || !is_numeric($lid)) { 
             return ''; 
         }
         $lg_id = (int) $lid;
@@ -4278,7 +4281,7 @@ function insert_standard_expression($textlc, $lid, $wid, $len, $mode): array
     }
 
     if ($splitEachChar) {
-        $textlc = preg_replace('/([^\s])/u', "$1 ", $textlc);
+        $textlc = (string) preg_replace('/([^\s])/u', "$1 ", $textlc);
     }
     $wis = $textlc;
     $res = do_mysqli_query($sql);

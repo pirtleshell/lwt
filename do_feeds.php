@@ -49,14 +49,14 @@ function dummy_function_1(): array
             'audio' => $row['FlAudio'],
             'text' => $row['FlText']
         );
-        $NfName = $row['NfName'];
-        $nf_id=$row['NfID'];
-        $nf_options=$row['NfOptions'];
-        if (!$nf_tag_name=get_nf_option($nf_options, 'tag')) {
+        $NfName = (string) $row['NfName'];
+        $nf_id = (int) $row['NfID'];
+        $nf_options = $row['NfOptions'];
+        if (!$nf_tag_name = get_nf_option($nf_options, 'tag')) {
             $nf_tag_name = mb_substr($NfName, 0, 20, "utf-8");
         }
-        if (!$nf_max_texts=(int)get_nf_option($nf_options, 'max_texts')) {
-            $nf_max_texts=(int)getSettingWithDefault('set-max-texts-per-feed');
+        if (!$nf_max_texts = (int)get_nf_option($nf_options, 'max_texts')) {
+            $nf_max_texts = (int)getSettingWithDefault('set-max-texts-per-feed');
         }
         $texts = get_text_from_rsslink(
             $doc, $row['NfArticleSectionTags'], $row['NfFilterTags'], 
@@ -578,24 +578,35 @@ function dummy_function_2($currentlang, $currentfeed): void
                     while ($row = mysqli_fetch_assoc($result)) {
                         echo '<tr>';
                         if ($row['TxID']) {
-                            echo '<td class="td1 center"><a href="do_text.php?start=' . $row['TxID'] . '" ><img src="icn/book-open-bookmark.png" title="Read" alt="-" /></a>'; 
+                            echo '<td class="td1 center"><a href="do_text.php?start=' . 
+                            $row['TxID'] . '" >
+                            <img src="icn/book-open-bookmark.png" title="Read" alt="-" /></a>'; 
                         } elseif ($row['AtID']) {
                             echo '<td class="td1 center"><span title="archived"><img src="icn/status-busy.png" alt="-" /></span>';
                         } elseif (!empty($row['FlLink']) && str_starts_with($row['FlLink'], ' ')) {
-                            echo '<td class="td1 center"><img class="not_found" name="' . $row['FlID'] . '" title="download error" src="icn/exclamation-button.png" alt="-" />';
+                            echo '<td class="td1 center">
+                            <img class="not_found" name="' . 
+                            $row['FlID'] . 
+                            '" title="download error" src="icn/exclamation-button.png" alt="-" />';
                         } else {
-                            echo '<td class="td1 center"><input type="checkbox" class="markcheck" name="marked_items[]" value="' . $row['FlID'] . '" />'; 
+                            echo '<td class="td1 center"><input type="checkbox" class="markcheck" name="marked_items[]" value="' . 
+                            $row['FlID'] . '" />'; 
                         }
                         echo '</td>
             <td class="td1 center">
-            <span title="' . htmlentities($row['FlDescription'], ENT_QUOTES, 'UTF-8', false) . '"><b>' . $row['FlTitle'] . '</b></span>';
+            <span title="' . htmlentities($row['FlDescription'], ENT_QUOTES, 'UTF-8', false) . '"><b>' . 
+            $row['FlTitle'] . '</b></span>';
                         if ($row['FlAudio']) {
-                            echo '<a href="' . $row['FlAudio'] . '" onclick="window.open(this.href, \'child\', \'scrollbars,width=650,height=600\'); return false;">  <img src="'; print_file_path('icn/speaker-volume.png'); echo '" alt="-" /></a>';
+                            echo '<a href="' . $row['FlAudio'] . 
+                            '" onclick="window.open(this.href, \'child\', \'scrollbars,width=650,height=600\'); return false;">  
+                            <img src="'; print_file_path('icn/speaker-volume.png'); echo '" alt="-" /></a>';
                         }
                         echo '</td>
             <td class="td1 center" style="vertical-align: middle">';
                         if (!empty($row['FlLink']) && !str_starts_with(trim($row['FlLink']), '#')) {
-                            echo '<a href="' . trim($row['FlLink']) . '"  title="' . trim($row['FlLink']) . '" onclick="window.open(\'' . $row['FlLink'] . '\');return false;"><img src="icn/external.png" alt="-" /></a>'; 
+                            echo '<a href="' . trim((string) $row['FlLink']) . '"  title="' . 
+                            trim($row['FlLink']) . '" onclick="window.open(\'' . $row['FlLink'] . '\');return false;">
+                            <img src="icn/external.png" alt="-" /></a>'; 
                         }
                         echo  '</td><td class="td1 center">' . $row['FlDate'] . '</td></tr>';
                     }

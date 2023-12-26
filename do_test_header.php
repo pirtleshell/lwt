@@ -132,7 +132,7 @@ function get_test_counts($testsql)
 /**
  * Make the header row for tests.
  * 
- * @param string $_p URL property to use
+ * @param mixed $_p URL property to use (unnused), will be removed in LWT 3.0.0
  * 
  * @return void
  */

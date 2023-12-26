@@ -39,7 +39,7 @@ function do_diplay_impr_text_header_data($textid)
 
 
     if (isset($record['TxAudioURI'])) {
-        $audio = trim($record['TxAudioURI']);
+        $audio = trim((string) $record['TxAudioURI']);
     } else {
         $audio = '';
     }

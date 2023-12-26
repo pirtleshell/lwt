@@ -187,8 +187,8 @@ function all_words_wellknown_count_terms($status, $count)
 /**
  * Execute JavaScript to change the display of all words.
  * 
- * @param int $txid       Text ID
- * @param int $javascript JavaScript-formatted string.
+ * @param int    $txid       Text ID
+ * @param string $javascript JavaScript-formatted string.
  * 
  * @return void
  */

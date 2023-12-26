@@ -40,32 +40,20 @@ function get_annotated_text($textid)
  * 
  * @param int $textid Text ID
  * 
- * @return array{0: string, 1: string} Text size, and if this text 
+ * @return array{0: string, 1: bool} Text size, and if this text 
  * is rigth-to-left.
  */
 function get_display_impr_text_text_data($textid)
 {
     global $tbpref;
-
-    /*$sql = 'SELECT TxLgID, TxTitle 
-    FROM ' . $tbpref . 'texts 
-    WHERE TxID = ' . $textid;
+    $sql = "SELECT LgTextSize, LgRightToLeft 
+    FROM {$tbpref}texts 
+    JOIN {$tbpref}languages ON LgID = TxLgID
+    WHERE TxID = $textid";
     $res = do_mysqli_query($sql);
     $record = mysqli_fetch_assoc($res);
-    $langid = $record['TxLgID'];
-    mysqli_free_result($res);
-
-    $sql = 'SELECT LgTextSize, LgRemoveSpaces, LgRightToLeft 
-    FROM ' . $tbpref . 'languages WHERE LgID = ' . $langid;*/
-
-    $sql = 'SELECT LgTextSize, LgRightToLeft 
-    FROM ' . $tbpref . 'texts 
-    JOIN ' . $tbpref . 'languages ON LgID = TxLgID
-    WHERE TxID = ' . $textid;
-    $res = do_mysqli_query($sql);
-    $record = mysqli_fetch_assoc($res);
-    $textsize = $record['LgTextSize'];
-    $rtlScript = $record['LgRightToLeft'];
+    $textsize = (int) $record['LgTextSize'];
+    $rtlScript = (bool) $record['LgRightToLeft'];
     mysqli_free_result($res);
 
     return array($textsize, $rtlScript);

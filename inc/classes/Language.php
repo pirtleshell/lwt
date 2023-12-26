@@ -25,7 +25,7 @@ class Language
      */
     public $id;
     /**
-     * @var int $name Language name.
+     * @var string $name Language name.
      */
     public $name;
     /**
@@ -45,7 +45,7 @@ class Language
      */
     public $exporttemplate;
     /**
-     * @var string $textsize Text size.
+     * @var int $textsize Text size.
      */
     public $textsize;
     /**

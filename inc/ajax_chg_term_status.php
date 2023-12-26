@@ -20,8 +20,8 @@ require_once __DIR__ . '/session_utility.php';
 /**
  * Force a term to get a new status.
  * 
- * @param string $wid    ID of the word to edit
- * @param string $status New status to set
+ * @param string|int $wid    ID of the word to edit
+ * @param string|int $status New status to set
  * 
  * @return string Number of affected rows or error message
  * 

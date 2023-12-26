@@ -36,8 +36,8 @@ $currentsort = (int) processDBParam("sort", 'currentwordsort', '1', true);
 
 $currentpage = (int) processSessParam("page", "currentwordpage", '1', true);
 $currentquery = (string) processSessParam("query", "currentwordquery", '', false);
-$currentquerymode = processSessParam(
-    "query_mode", "currentwordquerymode", 'term,rom,transl', 0
+$currentquerymode = (string) processSessParam(
+    "query_mode", "currentwordquerymode", 'term,rom,transl', false
 );
 $currentregexmode = getSettingWithDefault("set-regex-mode");
 $currentstatus = (string) processSessParam("status", "currentwordstatus", '', false);
@@ -176,7 +176,7 @@ if (isset($_REQUEST['markaction'])) {
             if ($l > 0) {
                 $id_list = array();
                 for ($i = 0; $i < $l; $i++) {
-                    $id_list[] = $_REQUEST['marked'][$i];
+                    $id_list[] = (string) $_REQUEST['marked'][$i];
                 }
                 $list = "(" . implode(",", $id_list) . ")";
                 if ($markaction == 'del') {
@@ -720,7 +720,9 @@ if (isset($_REQUEST['new']) && isset($_REQUEST['lang'])) {
     </tr>
     <tr>
     <td class="td1 right" colspan="2">  &nbsp;
-    <?php echo createDictLinksInEditWin2($_REQUEST['lang'], 'document.forms[\'newword\'].WoSentence', 'document.forms[\'newword\'].WoText'); ?>
+    <?php echo createDictLinksInEditWin2((int) $_REQUEST['lang'], 
+    'document.forms[\'newword\'].WoSentence', 
+    'document.forms[\'newword\'].WoText'); ?>
         &nbsp; &nbsp;
     <input type="button" value="Cancel" onclick="{resetDirty(); location.href='edit_words.php';}" /> 
     <input type="submit" name="op" value="Save" /></td>

@@ -1192,9 +1192,9 @@ function update_default_values($id, $lid, $sql)
 /**
  * Check a text and display statistics about it.
  * 
- * @param string   $sql
- * @param bool     $rtlScript true if language is right-to-left
- * @param string[] $wl        Words lengths
+ * @param string $sql
+ * @param bool   $rtlScript true if language is right-to-left
+ * @param int[]  $wl        Words lengths
  * 
  * @return void
  */
@@ -1414,7 +1414,7 @@ function splitCheckText($text, $lid, $id)
         if ($wl_max < (int)$record['word_count']) { 
             $wl_max = (int)$record['word_count'];
         }
-        $wl[] = (string)$record['word_count'];
+        $wl[] = (int)$record['word_count'];
         $mw_sql .= ' WHEN ' . $record['word_count'] . 
         ' THEN @a' . (intval($record['word_count']) * 2 - 1);
     }

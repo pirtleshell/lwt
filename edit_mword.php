@@ -301,8 +301,8 @@ function edit_mword_update($wid, $tid, $ord)
     if (!$record) {
         my_die("Cannot access Term and Language in edit_mword.php");
     }
-    $term->text = $record['WoText'];
-    $term->lgid = $record['WoLgID'];
+    $term->text = (string) $record['WoText'];
+    $term->lgid = (int) $record['WoLgID'];
     mysqli_free_result($res);
     $term->textlc = mb_strtolower($term->text, 'UTF-8');
     edit_mword_display_change($term, $tid, $ord);
@@ -390,7 +390,10 @@ function edit_mword_display_new($term, $tid, $ord, $len)
         </tr>
         <tr>
             <td class="td1 right" colspan="2">
-                <?php echo createDictLinksInEditWin($term->lgid, $term->text, 'document.forms[0].WoSentence', isset($_GET['nodict'])?0:1); ?>
+                <?php echo createDictLinksInEditWin(
+                    $term->lgid, $term->text, 'document.forms[0].WoSentence', 
+                    !isset($_GET['nodict'])
+                ); ?>
                 &nbsp; &nbsp; &nbsp; 
                 <input type="submit" name="op" value="Save" />
             </td>
