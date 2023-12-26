@@ -574,7 +574,17 @@ function dummy_function_2($currentlang, $currentfeed): void
   <th class="th1 clickable" style="min-width:90px;">Date</th>
   </tr>    
                     <?php
-                        $result = do_mysqli_query("SELECT FlID, FlTitle, FlLink, FlDescription, FlDate, FlAudio,TxID, AtID FROM " . $tbpref . "feedlinks left join " . $tbpref . "texts on TxSourceURI=trim(FlLink) left join " . $tbpref . "archivedtexts on AtSourceURI=trim(FlLink) WHERE FlNfID in ($currentfeed) ".$wh_query." ORDER BY " . $sorts[$currentsort-1] . " ". $limit);
+                        $result = do_mysqli_query(
+                            "SELECT FlID, FlTitle, FlLink, FlDescription, FlDate, 
+                            FlAudio,TxID, AtID 
+                            FROM " . $tbpref . "feedlinks 
+                            left join " . $tbpref . "texts 
+                            on TxSourceURI=trim(FlLink) 
+                            left join " . $tbpref . "archivedtexts 
+                            on AtSourceURI=trim(FlLink) 
+                            WHERE FlNfID in ($currentfeed) ".$wh_query." 
+                            ORDER BY " . $sorts[$currentsort-1] . " ". $limit
+                        );
                     while ($row = mysqli_fetch_assoc($result)) {
                         echo '<tr>';
                         if ($row['TxID']) {
@@ -583,7 +593,7 @@ function dummy_function_2($currentlang, $currentfeed): void
                             <img src="icn/book-open-bookmark.png" title="Read" alt="-" /></a>'; 
                         } elseif ($row['AtID']) {
                             echo '<td class="td1 center"><span title="archived"><img src="icn/status-busy.png" alt="-" /></span>';
-                        } elseif (!empty($row['FlLink']) && str_starts_with($row['FlLink'], ' ')) {
+                        } elseif (!empty($row['FlLink']) && str_starts_with((string) $row['FlLink'], ' ')) {
                             echo '<td class="td1 center">
                             <img class="not_found" name="' . 
                             $row['FlID'] . 
@@ -594,7 +604,7 @@ function dummy_function_2($currentlang, $currentfeed): void
                         }
                         echo '</td>
             <td class="td1 center">
-            <span title="' . htmlentities($row['FlDescription'], ENT_QUOTES, 'UTF-8', false) . '"><b>' . 
+            <span title="' . htmlentities((string) $row['FlDescription'], ENT_QUOTES, 'UTF-8', false) . '"><b>' . 
             $row['FlTitle'] . '</b></span>';
                         if ($row['FlAudio']) {
                             echo '<a href="' . $row['FlAudio'] . 
@@ -603,9 +613,13 @@ function dummy_function_2($currentlang, $currentfeed): void
                         }
                         echo '</td>
             <td class="td1 center" style="vertical-align: middle">';
-                        if (!empty($row['FlLink']) && !str_starts_with(trim($row['FlLink']), '#')) {
+                        if (
+                            !empty($row['FlLink']) && 
+                            !str_starts_with(trim((string) $row['FlLink']), '#')
+                        ) {
                             echo '<a href="' . trim((string) $row['FlLink']) . '"  title="' . 
-                            trim($row['FlLink']) . '" onclick="window.open(\'' . $row['FlLink'] . '\');return false;">
+                            trim((string) $row['FlLink']) . '" onclick="window.open(\'' . 
+                            $row['FlLink'] . '\');return false;">
                             <img src="icn/external.png" alt="-" /></a>'; 
                         }
                         echo  '</td><td class="td1 center">' . $row['FlDate'] . '</td></tr>';

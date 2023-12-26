@@ -336,8 +336,8 @@ function edit_term_form($textid): string
             $wid = null;
             $trans = '';
             if (count($vals) > 2) {
-                $wid = $vals[2];
-                if (is_numeric($wid)) {
+                $str_wid = $vals[2];
+                if (is_numeric($str_wid)) {
                     $temp_wid = (int)get_first_value(
                         "SELECT COUNT(WoID) AS value 
                         FROM {$tbpref}words 
@@ -345,7 +345,11 @@ function edit_term_form($textid): string
                     );
                     if ($temp_wid < 1) { 
                         $wid = null; 
+                    } else {
+                        $wid = (int) $str_wid;
                     }
+                } else {
+                    $wid = null;
                 }
             }
             if (count($vals) > 3) { 

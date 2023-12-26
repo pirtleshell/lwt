@@ -285,7 +285,7 @@ function save_audio_position($textid): void
 /**
  * Main function for displaying header. It will print HTML content.
  *
- * @param string|int $textid    ID of the requiered text
+ * @param string|int $textid    ID of the required text
  * @param bool       $only_body If true, only show the inner body. If false, create a 
  *                          complete HTML document.
  *

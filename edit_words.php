@@ -369,7 +369,7 @@ if (isset($_REQUEST['markaction'])) {
 
 if (isset($_REQUEST['allaction'])) {
     // ALL ACTIONS 
-    $allaction = $_REQUEST['allaction'];
+    $allaction = (string) $_REQUEST['allaction'];
     $actiondata = getreq('data');
     if (
         $allaction == 'delall' || $allaction == 'spl1all' || 
@@ -483,13 +483,15 @@ if (isset($_REQUEST['allaction'])) {
                 $message = runsql('update ' . $tbpref . 'words 
                 set WoText = WoTextLC where WoID = ' . $id, 
                 ""
-            );
-            } elseif ($allaction == 'capall' ) {
+                );
+            } else {
+                // $allaction == 'capall' by default
                 $message = runsql(
                     'update ' . $tbpref . 'words 
                     set WoText = CONCAT(UPPER(LEFT(WoTextLC,1)),SUBSTRING(WoTextLC,2)) 
                     where WoID = ' . $id, 
-                    "");
+                    ""
+                );
             }
             $cnt += (int)$message;
         }

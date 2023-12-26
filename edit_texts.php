@@ -333,7 +333,7 @@ function edit_texts_mark_action($markaction, $marked, $actiondata): array
 /**
  * Delete an existing text.
  *
- * @param string $txid Text ID
+ * @param string|int $txid Text ID
  *
  * @return string Texts, sentences, and text items deleted.
  *
@@ -430,9 +430,9 @@ function edit_texts_archive($txid): string
 /**
  * Do an operation on texts.
  *
- * @param string $op           Operation name
- * @param mixed  $message1     Unnused
- * @param int    $no_pagestart If you don't want a page
+ * @param string   $op           Operation name
+ * @param mixed    $message1     Unnused
+ * @param int|bool $no_pagestart If you don't want a page
  *
  * @return string Edition message (number of rows edited)
  *
@@ -1261,8 +1261,9 @@ function edit_texts_display($message)
         <?php
         return;
     }
+    // TODO: check out the no coherent code on $showCounts 
     $showCounts = getSettingWithDefault('set-show-text-word-counts');
-    if(strlen($showCounts)!=5) { 
+    if (strlen($showCounts) != 5) { 
         $showCounts = "11111"; 
     }
     $sql = "SELECT TxID, TxTitle, LgName, TxAudioURI, TxSourceURI, 
@@ -1334,7 +1335,7 @@ function edit_texts_do_page()
 
     if (isset($_REQUEST['new'])) {
         // NEW
-        edit_texts_new($currentlang);
+        edit_texts_new((int) $currentlang);
     } elseif (isset($_REQUEST['chg'])) {
         // CHG
         edit_texts_change((int) getreq('chg'));

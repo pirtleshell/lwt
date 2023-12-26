@@ -40,7 +40,7 @@ function get_annotated_text($textid)
  * 
  * @param int $textid Text ID
  * 
- * @return array{0: string, 1: bool} Text size, and if this text 
+ * @return array{0: int, 1: bool} Text size, and if this text 
  * is rigth-to-left.
  */
 function get_display_impr_text_text_data($textid)

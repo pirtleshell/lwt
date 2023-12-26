@@ -1233,21 +1233,19 @@ function get_text_from_rsslink($feed_data, $NfArticleSection, $NfFilterTags, $Nf
             $data[$key]['TxSourceURI'] = $feed_data[$key]['link'];
             $context = stream_context_create(array('http' => array('follow_location' => true )));
             $HTMLString = file_get_contents(trim($data[$key]['TxSourceURI']), false, $context);
-            if(!empty($HTMLString)) {
+            if (!empty($HTMLString)) {
                 $encod  = '';
-                if(empty($NfCharset)) {
-                    
-                    $header=get_headers(trim($data[$key]['TxSourceURI']), 1);
-                    foreach($header as $k=>$v){
-                        if(strtolower($k)=='content-type') {
-                            if(is_array($v)) {
-                                $encod=$v[count($v)-1];
-                            }
-                            else{
-                                $encod=$v;
+                if (empty($NfCharset)) {
+                    $header = get_headers(trim($data[$key]['TxSourceURI']), true);
+                    foreach ($header as $k=>$v){
+                        if (strtolower($k) == 'content-type') {
+                            if (is_array($v)) {
+                                $encod = $v[count($v)-1];
+                            } else {
+                                $encod = $v;
                             }
                             $pos = strpos($encod, 'charset=');
-                            if(($pos!==false) && (strpos($encod, 'text/html;')!==false)) {
+                            if (($pos!==false) && (strpos($encod, 'text/html;')!==false)) {
                                 $encod=substr($encod, $pos+8);    
                                 break;
                             } else { 
@@ -4153,7 +4151,7 @@ function insert_expression_from_mecab($text, $lid, $wid, $len): array
         $arr = explode("\t", $row, 4);
         // Not a word (punctuation)
         if (!empty($arr[0]) && $arr[0] != "EOP" 
-            && strpos("2 6 7", $arr[1]) !== false
+            && in_array($arr[1], ["2", "6", "7"])
         ) {
             $parsed_text .= $arr[0] . ' ';
         }
@@ -4177,7 +4175,7 @@ function insert_expression_from_mecab($text, $lid, $wid, $len): array
             $arr = explode("\t", $row, 4);
             // Not a word (punctuation)
             if (!empty($arr[0]) && $arr[0] != "EOP" 
-                && strpos("2 6 7", $arr[1]) !== false
+            && in_array($arr[1], ["2", "6", "7"])
             ) {
                 $parsed_sentence .= $arr[0] . ' ';
             }
@@ -4436,10 +4434,10 @@ function new_expression_interactable2($hex, $appendtext, $wid, $len): void
 /**
  * Alter the database to add a new word
  *
- * @param string $textlc Text in lower case
- * @param string $lid    Language ID
- * @param int    $len    Number of words in the expression
- * @param int    $mode   Function mode
+ * @param string     $textlc Text in lower case
+ * @param string|int $lid    Language ID
+ * @param int        $len    Number of words in the expression
+ * @param int        $mode   Function mode
  *                       - 0: Default mode, do nothing special
  *                       - 1: Runs an expresion inserter interactable 
  *                       - 2: Return the sql output

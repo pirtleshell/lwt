@@ -817,7 +817,7 @@ function parse_japanese_text($text, $id): ?array
                 $term = '¶';
             }
             $term_type = 2;
-        } else if (str_contains('267', $node_type)) {
+        } else if (in_array($node_type, ['2', '6', '7'])) {
             $term_type = 0;
         } else {
             $term_type = 1;
@@ -2320,8 +2320,7 @@ function get_database_prefixes(&$tbpref)
 
     if (!isset($tbpref)) {
         $fixed_tbpref = 0;
-        $p = LWTTableGet("current_table_prefix");
-        $tbpref = isset($p) ? $p : '';
+        $tbpref = LWTTableGet("current_table_prefix");
     } else {
         $fixed_tbpref = 1; 
     }

@@ -751,7 +751,7 @@ function do_test_test_javascript_interaction(
     $wo_record, $wb1, $wb2, $wb3, $testtype, $nosent, $save
 ) {
     do_test_test_interaction_globals($wb1, $wb2, $wb3);
-    $solution = get_test_solution($testtype, $wo_record, $nosent, $save);
+    $solution = get_test_solution($testtype, $wo_record, (bool) $nosent, $save);
     do_test_test_javascript_clickable($wo_record, $solution);
 }
 

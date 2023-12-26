@@ -351,14 +351,14 @@ function load_language($lgid)
         $language->dict2uri = $record["LgDict2URI"];
         $language->translator = $record["LgGoogleTranslateURI"];
         $language->exporttemplate = $record["LgExportTemplate"];
-        $language->textsize = $record["LgTextSize"];
+        $language->textsize = (int) $record["LgTextSize"];
         $language->charactersubst = $record["LgCharacterSubstitutions"];
         $language->regexpsplitsent = $record["LgRegexpSplitSentences"];
         $language->exceptionsplitsent = $record["LgExceptionsSplitSentences"];
         $language->regexpwordchar = $record["LgRegexpWordCharacters"];
-        $language->removespaces = $record["LgRemoveSpaces"];
-        $language->spliteachchar = $record["LgSplitEachChar"];
-        $language->rightoleft = $record["LgRightToLeft"];
+        $language->removespaces = (bool) $record["LgRemoveSpaces"];
+        $language->spliteachchar = (bool) $record["LgSplitEachChar"];
+        $language->rightoleft = (bool) $record["LgRightToLeft"];
         mysqli_free_result($res);
     }
     return $language;
@@ -1183,14 +1183,14 @@ function edit_languages_display($message)
             where WoLgID=' . $lid
         );
         $wordcount = is_numeric($foo) ? (int)$foo : 0;
-        if (is_null($newsfeedcount) || empty($newsfeedcount)) {
+        if (is_null($newsfeedcount)) {
             $nfcount = 0;
         } else if (isset($newsfeedcount[$lid])) {
             $nfcount = (int)$newsfeedcount[$lid];
         } else {
             $nfcount = 0;
         }
-        if (is_null($feedarticlescount) || empty($feedarticlescount)) {
+        if (is_null($feedarticlescount)) {
             $fartcount = 0;
         } else if (isset($feedarticlescount[$lid])) {
             $fartcount = (int)$feedarticlescount[$lid];
