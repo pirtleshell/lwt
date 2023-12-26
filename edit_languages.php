@@ -1093,7 +1093,7 @@ function edit_languages_display($message)
 {
     global $tbpref, $debug;
 
-    echo error_message_with_hide($message, 0);
+    echo error_message_with_hide($message, false);
     
     $current = (int) getSetting('currentlanguage');
     

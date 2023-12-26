@@ -401,7 +401,7 @@ if (isset($_REQUEST['chg'])) {
 } else {
     // DISPLAY
 
-    echo error_message_with_hide($message, 0);
+    echo error_message_with_hide($message, false);
 
     $sql = 'select count(*) as value from (select AtID 
     from (

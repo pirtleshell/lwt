@@ -185,7 +185,7 @@ if (isset($_REQUEST['new'])) {
         $message = substr($message, 0, strlen($message)-18);
         $message = "Error: Text Tag '" . $message . "' already exists. Please go back and correct this!";
     }     
-    echo error_message_with_hide($message, 0);
+    echo error_message_with_hide($message, false);
     
     get_texttags($refresh = 1);   // refresh tags cache
 

@@ -357,7 +357,7 @@ function check_errors($message): void
         unset($_SESSION['feed_loaded']);
 
     }
-    echo error_message_with_hide($message, 0);
+    echo error_message_with_hide($message, false);
 }
 
 function dummy_function_2($currentlang, $currentfeed): void

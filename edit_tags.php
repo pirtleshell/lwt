@@ -205,7 +205,7 @@ if (isset($_REQUEST['new'])) {
         $message = "Error: Term Tag '" . $message .
         "' already exists. Please go back and correct this!";
     }     
-    echo error_message_with_hide($message, 0);
+    echo error_message_with_hide($message, false);
     
     get_tags($refresh = 1);   // refresh tags cache
 

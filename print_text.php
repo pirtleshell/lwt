@@ -275,7 +275,7 @@ while ($record = mysqli_fetch_assoc($res)) {
                 if ($savetrans == '*') { 
                     $savetrans = ''; 
                 }
-                $saverom = trim($record['WoRomanization']);
+                $saverom = trim((string) $record['WoRomanization']);
             }
         }
     }

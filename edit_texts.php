@@ -1185,7 +1185,7 @@ function edit_texts_display($message)
 
     $wh_tag = edit_texts_get_wh_tag($currentlang);
 
-    echo error_message_with_hide($message, 0);
+    echo error_message_with_hide($message, false);
 
     $sql = "SELECT COUNT(*) AS value 
     FROM (

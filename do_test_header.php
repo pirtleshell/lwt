@@ -48,7 +48,7 @@ function get_sql_test_data(&$title, &$p)
     if ($cntlang > 1) {
         $message = 'Error: The selected terms are in ' . $cntlang . ' languages, ' . 
         'but tests are only possible in one language at a time.'; 
-        echo error_message_with_hide($message, 1);
+        echo error_message_with_hide($message, true);
         return '';
     }
     $title .= ' in ' . get_first_value(

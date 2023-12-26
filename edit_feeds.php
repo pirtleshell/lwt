@@ -29,7 +29,7 @@ if (isset($_REQUEST['markaction'])) {
             'delete from ' . $tbpref . 'newsfeeds 
             where NfID in(' . $currentfeed . ')', " / Newsfeed(s) deleted"
         );
-        echo error_message_with_hide($message, 0);
+        echo error_message_with_hide($message, false);
         unset($message);
     }
 
@@ -39,7 +39,7 @@ if (isset($_REQUEST['markaction'])) {
             where FlNfID in(' . $currentfeed . ')', 
             "Article item(s) deleted"
         );
-        echo error_message_with_hide($message, 0);
+        echo error_message_with_hide($message, false);
         unset($message);
         do_mysqli_query(
             'UPDATE ' . $tbpref . 'newsfeeds SET NfUpdate="'.time().'" 
@@ -53,7 +53,7 @@ if (isset($_REQUEST['markaction'])) {
             where FlNfID in (' . $currentfeed . ')', 
             "Article(s) reset"
         );
-        echo error_message_with_hide($message, 0);
+        echo error_message_with_hide($message, false);
         unset($message);
     }
 }

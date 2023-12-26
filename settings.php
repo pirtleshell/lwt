@@ -200,7 +200,7 @@ if (isset($_REQUEST['op'])) {
 
 }
 
-echo error_message_with_hide($message, 1);
+echo error_message_with_hide($message, true);
 
 ?>
 <script type="text/javascript" charset="utf-8">

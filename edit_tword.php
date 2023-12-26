@@ -76,7 +76,7 @@ if (isset($_REQUEST['op'])) {
         pagestart_nobody($titletext);
         echo '<h1>' . $titletext . '</h1>';        
         $message = 'Error: Term in lowercase must be exactly = "' . $textlc . '", please go back and correct this!'; 
-        echo error_message_with_hide($message, 0);
+        echo error_message_with_hide($message, false);
         pageend();
         exit();
     }

@@ -119,7 +119,7 @@ function lowercase_term_not_equal($textlc): void
     $message = 
     'Error: Term in lowercase must be exactly = "' . 
     $textlc . '", please go back and correct this!'; 
-    echo error_message_with_hide($message, 0);
+    echo error_message_with_hide($message, false);
 }
 
 /**

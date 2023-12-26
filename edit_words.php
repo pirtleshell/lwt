@@ -818,7 +818,7 @@ if (isset($_REQUEST['new']) && isset($_REQUEST['lang'])) {
         $message = substr($message, 0, strlen($message)-24);
         $message = "Error: Term '" . $message . "' already exists. Please go back and correct this!";
     }     
-    echo error_message_with_hide($message, 0);
+    echo error_message_with_hide($message, false);
 
     if ($currenttext == '') {
         $sql = 'select count(*) as value from (select WoID from (' . $tbpref . 'words left JOIN ' . $tbpref . 'wordtags ON WoID = WtWoID) where (1=1) ' . $wh_lang . $wh_stat .  $wh_query . ' group by WoID ' . $wh_tag .') as dummy';
