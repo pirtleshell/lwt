@@ -2182,7 +2182,6 @@ function do_test_test_get_projection($key, $value)
         my_die("do_test_test.php called with wrong parameters"); 
         break;
     }
-    return $testsql;
 }
 
 /**
@@ -4115,10 +4114,10 @@ function getScriptDirectionTag($lid): string
 /**
  * Insert an expression to the database using MeCab.
  *
- * @param string $text Text to insert
- * @param string $lid  Language ID
- * @param string $wid  Word ID
- * @param int    $len  Number of words in the expression
+ * @param string     $text Text to insert
+ * @param string|int $lid  Language ID
+ * @param string|int $wid  Word ID
+ * @param int        $len  Number of words in the expression
  *
  * @return string[][] Append text and values to insert to the database
  *
@@ -4235,11 +4234,11 @@ function insertExpressionFromMeCab($textlc, $lid, $wid, $len, $mode): array
 /**
  * Insert an expression without using a tool like MeCab.
  *
- * @param string $textlc Text to insert in lower case
- * @param string $lid    Language ID
- * @param string $wid    Word ID
- * @param int    $len    Number of words in the expression
- * @param mixed  $mode   Unnused
+ * @param string     $textlc Text to insert in lower case
+ * @param string|int $lid    Language ID
+ * @param string|int $wid    Word ID
+ * @param int        $len    Number of words in the expression
+ * @param mixed      $mode   Unnused
  *
  * @return (null|string)[][] Append text, empty and sentence id
  *

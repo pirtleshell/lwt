@@ -22,7 +22,7 @@ require_once 'inc/langdefs.php' ;
 /**
  * Get the text and language data associated with the text.
  *
- * @param string $textid ID of the text
+ * @param string|int $textid ID of the text
  *
  * @global string $tbpref Table name prefix
  *
@@ -127,7 +127,7 @@ function do_title($title, $sourceURI): void
 /**
  * Prepare user settings for this text.
  *
- * @param string $textid Text ID
+ * @param string|int $textid Text ID
  *
  * @since 2.0.4-fork
  */
