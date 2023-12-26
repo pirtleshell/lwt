@@ -691,7 +691,13 @@ function load_feeds($currentfeed): void
                     continue; 
                 }
                 if(time()>($autoupdate + (int) $row['NfUpdate'])) {
-                    $ajax[$cnt]=  "$.ajax({type: 'POST',beforeSend: function(){ $('#feed_" . $row['NfID'] . "').replaceWith( '<div id=\"feed_" . $row['NfID'] . "\" class=\"msgblue\"><p>". addslashes($row['NfName']).": loading</p></div>' );},url:'inc/ajax_load_feed.php', data: { NfID: '".$row['NfID']."', NfSourceURI: '". $row['NfSourceURI']."', NfName: '". addslashes($row['NfName'])."', NfOptions: '". $row['NfOptions']."', cnt: '". $cnt."' },success:function (data) {feedcnt+=1;$('#feedcount').text(feedcnt);$('#feed_" . $row['NfID'] . "').replaceWith( data );}})";
+                    $ajax[$cnt]=  "$.ajax({type: 'POST',beforeSend: function(){ $('#feed_" . 
+                        $row['NfID'] . "').replaceWith( '<div id=\"feed_" . $row['NfID'] . "\" class=\"msgblue\"><p>". 
+                        addslashes((string) $row['NfName']).": loading</p></div>' );},url:'inc/ajax_load_feed.php', data: { NfID: '".
+                            $row['NfID']."', NfSourceURI: '". $row['NfSourceURI']."', NfName: '". addslashes((string) $row['NfName']).
+                            "', NfOptions: '". $row['NfOptions']."', cnt: '". $cnt.
+                            "' },success:function (data) {feedcnt+=1;$('#feedcount').text(feedcnt);$('#feed_" . 
+                                $row['NfID'] . "').replaceWith( data );}})";
                     $cnt+=1;
                     $feeds[$row['NfID']]=$row['NfName'];
                 }
@@ -702,7 +708,13 @@ function load_feeds($currentfeed): void
         $sql="SELECT * FROM " . $tbpref . "newsfeeds WHERE NfID in ($currentfeed)";
         $result = do_mysqli_query($sql);
         while($row = mysqli_fetch_assoc($result)){
-            $ajax[$cnt]=  "$.ajax({type: 'POST',beforeSend: function(){ $('#feed_" . $row['NfID'] . "').replaceWith( '<div id=\"feed_" . $row['NfID'] . "\" class=\"msgblue\"><p>". addslashes($row['NfName']).": loading</p></div>' );},url:'inc/ajax_load_feed.php', data: { NfID: '".$row['NfID']."', NfSourceURI: '". $row['NfSourceURI']."', NfName: '". addslashes($row['NfName'])."', NfOptions: '". $row['NfOptions']."', cnt: '". $cnt."' },success:function (data) {feedcnt+=1;$('#feedcount').text(feedcnt);$('#feed_" . $row['NfID'] . "').replaceWith( data );}})";
+            $ajax[$cnt]=  "$.ajax({type: 'POST',beforeSend: function(){ $('#feed_" . 
+                $row['NfID'] . "').replaceWith( '<div id=\"feed_" . $row['NfID'] . "\" class=\"msgblue\"><p>". 
+                addslashes((string) $row['NfName']).": loading</p></div>' );},url:'inc/ajax_load_feed.php', data: { NfID: '".
+                    $row['NfID']."', NfSourceURI: '". $row['NfSourceURI']."', NfName: '". 
+                    addslashes((string) $row['NfName'])."', NfOptions: '". $row['NfOptions']."', cnt: '". 
+                    $cnt."' },success:function (data) {feedcnt+=1;$('#feedcount').text(feedcnt);$('#feed_" . 
+                        $row['NfID'] . "').replaceWith( data );}})";
             $cnt+=1;
             $feeds[$row['NfID']]=$row['NfName'];
         }
@@ -1498,7 +1510,7 @@ function getPreviousAndNextTextLinks($textid, $url, $onlyann, $add): string
         }
     }
 
-    $currentsort = processDBParam("sort", 'currenttextsort', '1', 1);
+    $currentsort = (int) processDBParam("sort", 'currenttextsort', '1', true);
     $sorts = array('TxTitle','TxID desc','TxID asc');
     $lsorts = count($sorts);
     if ($currentsort < 1) { 
@@ -1598,7 +1610,7 @@ function getprefixes(): array
         )
     );
     while ($row = mysqli_fetch_row($res)) {
-        $prefix[] = substr($row[0], 0, -9); 
+        $prefix[] = substr((string) $row[0], 0, -9); 
     }
     mysqli_free_result($res);
     return $prefix;
@@ -2258,7 +2270,7 @@ function get_languages_selectoptions($v, $dt): string
     } 
     $r .= ">$dt</option>";
     while ($record = mysqli_fetch_assoc($res)) {
-        $d = $record["LgName"];
+        $d = (string) $record["LgName"];
         if (strlen($d) > 30 ) { 
             $d = substr($d, 0, 30) . "..."; 
         }
@@ -2660,7 +2672,7 @@ function get_texts_selectoptions($lang, $v): string
     order by LgName, TxTitle";
     $res = do_mysqli_query($sql);
     while ($record = mysqli_fetch_assoc($res)) {
-        $d = $record["TxTitle"];
+        $d = (string) $record["TxTitle"];
         if (mb_strlen($d, 'UTF-8') > 30 ) { 
             $d = mb_substr($d, 0, 30, 'UTF-8') . "..."; 
         }
@@ -3028,20 +3040,21 @@ function createDictLinksInEditWin2($lang, $sentctljs, $wordctljs): string
     FROM {$tbpref}languages WHERE LgID = $lang";
     $res = do_mysqli_query($sql);
     $record = mysqli_fetch_assoc($res);
-    $wb1 = isset($record['LgDict1URI']) ? $record['LgDict1URI'] : "";
+    $wb1 = isset($record['LgDict1URI']) ? (string) $record['LgDict1URI'] : "";
     if (substr($wb1, 0, 1) == '*') { 
         $wb1 = substr($wb1, 1); 
     }
-    $wb2 = isset($record['LgDict2URI']) ? $record['LgDict2URI'] : "";
+    $wb2 = isset($record['LgDict2URI']) ? (string) $record['LgDict2URI'] : "";
     if (substr($wb2, 0, 1) == '*') {
         $wb2 = substr($wb2, 1); 
     }
     $wb3 = isset($record['LgGoogleTranslateURI']) ? 
-    $record['LgGoogleTranslateURI'] : "";
+    (string) $record['LgGoogleTranslateURI'] : "";
     if (substr($wb3, 0, 1) == '*') {
         $wb3 = substr($wb3, 1); 
     }
     mysqli_free_result($res);
+
     $r = 'Lookup Term: 
     <span class="click" onclick="translateWord2(' . prepare_textdata_js($wb1) .
     ',' . $wordctljs . ');">Dict1</span> ';
@@ -3073,16 +3086,16 @@ function makeDictLinks($lang, $wordctljs): string
     FROM ' . $tbpref . 'languages WHERE LgID = ' . $lang;
     $res = do_mysqli_query($sql);
     $record = mysqli_fetch_assoc($res);
-    $wb1 = isset($record['LgDict1URI']) ? $record['LgDict1URI'] : "";
+    $wb1 = isset($record['LgDict1URI']) ? (string) $record['LgDict1URI'] : "";
     if (substr($wb1, 0, 1) == '*') { 
         $wb1 = substr($wb1, 1); 
     }
-    $wb2 = isset($record['LgDict2URI']) ? $record['LgDict2URI'] : "";
+    $wb2 = isset($record['LgDict2URI']) ? (string) $record['LgDict2URI'] : "";
     if (substr($wb2, 0, 1) == '*') { 
         $wb2 = substr($wb2, 1); 
     }
     $wb3 = isset($record['LgGoogleTranslateURI']) ? 
-    $record['LgGoogleTranslateURI'] : "";
+    (string) $record['LgGoogleTranslateURI'] : "";
     if (substr($wb3, 0, 1) == '*') { 
         $wb3 = substr($wb3, 1); 
     }
@@ -3112,7 +3125,7 @@ function createDictLinksInEditWin3($lang, $sentctljs, $wordctljs): string
     $res = do_mysqli_query($sql);
     $record = mysqli_fetch_assoc($res);
     
-    $wb1 = isset($record['LgDict1URI']) ? $record['LgDict1URI'] : "";
+    $wb1 = isset($record['LgDict1URI']) ? (string) $record['LgDict1URI'] : "";
     $popup = false;
     if (substr($wb1, 0, 1) == '*') {
         $wb1 = substr($wb1, 0, 1);
@@ -3125,7 +3138,7 @@ function createDictLinksInEditWin3($lang, $sentctljs, $wordctljs): string
         $f1 = 'translateWord(' . prepare_textdata_js($wb1); 
     }
         
-    $wb2 = isset($record['LgDict2URI']) ? $record['LgDict2URI'] : "";
+    $wb2 = isset($record['LgDict2URI']) ? (string) $record['LgDict2URI'] : "";
     $popup = false;
     if (substr($wb2, 0, 1) == '*') {
         $wb2 = substr($wb2, 0, 1);
@@ -3139,7 +3152,7 @@ function createDictLinksInEditWin3($lang, $sentctljs, $wordctljs): string
     }
 
     $wb3 = isset($record['LgGoogleTranslateURI']) ? 
-    $record['LgGoogleTranslateURI'] : "";
+    (string) $record['LgGoogleTranslateURI'] : "";
     $popup = false;
     if (substr($wb3, 0, 1) == '*') {
         $wb3 = substr($wb3, 0, 1);
@@ -3262,7 +3275,7 @@ function anki_export($sql)
     $res = do_mysqli_query($sql);
     $x = '';
     while ($record = mysqli_fetch_assoc($res)) {
-        if ('MECAB'== strtoupper(trim($record['LgRegexpWordCharacters']))) {
+        if ('MECAB'== strtoupper(trim((string) $record['LgRegexpWordCharacters']))) {
             $termchar = '一-龥ぁ-ヾ';
         } else {
             $termchar = $record['LgRegexpWordCharacters'];
@@ -3357,7 +3370,7 @@ function flexible_export($sql)
                 '{', '{{c1::', str_replace('}', '::' . $transl . '}}', $sent_raw)
             );
             $status = $record['WoStatus'];
-            $taglist = trim($record['taglist']);
+            $taglist = trim((string) $record['taglist']);
             $xx = repl_tab_nl($record['LgExportTemplate']);    
             $xx = str_replace('%w', $term, $xx);        
             $xx = str_replace('%t', $transl, $xx);        
@@ -3669,7 +3682,7 @@ function sentences_containing_word_lc_query($wordlc, $lid): string
     $record = mysqli_fetch_assoc($res);
     mysqli_free_result($res);
     $removeSpaces = $record["LgRemoveSpaces"];
-    if ('MECAB'== strtoupper(trim($record["LgRegexpWordCharacters"]))) {
+    if ('MECAB'== strtoupper(trim((string) $record["LgRegexpWordCharacters"]))) {
         $mecab_file = sys_get_temp_dir() . "/" . $tbpref . "mecab_to_db.txt";
         //$mecab_args = ' -F {%m%t\\t -U {%m%t\\t -E \\n ';
         // For instance, "このラーメン" becomes "この    6    68\nラーメン    7    38"
@@ -3798,7 +3811,7 @@ function getSentence($seid, $wordlc, $mode): array
     $splitEachChar = (int)$record['LgSplitEachChar'] != 0;
     $txtid = $record["SeTxID"];
     if (($removeSpaces && !$splitEachChar) 
-        || 'MECAB'== strtoupper(trim($record["LgRegexpWordCharacters"]))
+        || 'MECAB'== strtoupper(trim((string) $record["LgRegexpWordCharacters"]))
     ) {
         $text = $record["SeText"];
         $wordlc = '[​]*' . preg_replace('/(.)/u', "$1[​]*", $wordlc);
@@ -4072,20 +4085,25 @@ function getLanguageCode($lg_id, $languages_table)
 /**
  * Return a right-to-left direction indication in HTML if language is right-to-left.
  * 
- * @param int $lid Language ID
+ * @param string|int $lid Language ID
  * 
  * @return string ' dir="rtl" '|''
  */
 function getScriptDirectionTag($lid): string 
 {
     global $tbpref;
-    if (!isset($lid) || trim($lid) == '' || !is_numeric($lid)) { 
-        return ''; 
+    if (is_string($lid)) {
+        if (!isset($lid) || trim($lid) == '' || !is_numeric($lid)) { 
+            return ''; 
+        }
+        $lg_id = (int) $lid;
+    } else {
+        $lg_id = $lid;
     }
     $r = get_first_value(
         "SELECT LgRightToLeft as value 
         from {$tbpref}languages 
-        where LgID = $lid"
+        where LgID = $lg_id"
     );
     if (isset($r) && $r) {
         return ' dir="rtl" ';
@@ -4143,7 +4161,7 @@ function insert_expression_from_mecab($text, $lid, $wid, $len): array
     $sqlarray = array();
     // For each sentence in database containing $text
     while ($record = mysqli_fetch_assoc($res)) {
-        $sent = trim($record['SeText']);
+        $sent = trim((string) $record['SeText']);
         $fp = fopen($db_to_mecab, 'w');
         fwrite($fp, $sent . "\n");
         fclose($fp);

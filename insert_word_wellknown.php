@@ -81,10 +81,10 @@ function insert_word_wellknown_to_database($textid, $word)
 /**
  * Make the well-known word as no longer marked. 
  * 
- * @param string $word   New well-known word
- * @param string $wid    New well-known word ID
- * @param string $hex    Hexadecimal version of the lowercase word.
- * @param string $textid ID of the text.
+ * @param string     $word   New well-known word
+ * @param string|int $wid    New well-known word ID
+ * @param string     $hex    Hexadecimal version of the lowercase word.
+ * @param string|int $textid ID of the text.
  * 
  * @global string $tbpref 
  * 
@@ -116,10 +116,10 @@ function insert_word_wellknown_javascript($word, $wid, $hex, $textid)
 /**
  * Echoes a complete HTML page, with JavaScript content.
  * 
- * @param string $word   New well-known word
- * @param string $wid    New well-known word ID
- * @param string $hex    Hexadecimal version of the lowercase word.
- * @param string $textid ID of the text.
+ * @param string     $word   New well-known word
+ * @param string|int $wid    New well-known word ID
+ * @param string     $hex    Hexadecimal version of the lowercase word.
+ * @param string|int $textid ID of the text.
  * 
  * @return void
  */

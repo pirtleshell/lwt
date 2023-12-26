@@ -304,11 +304,11 @@ function edit_word_do_form($wid, $text_id, $ord, $fromAnn)
             $seid, $termlc, 
             (int) getSettingWithDefault('set-term-sentence-count')
         );
-        $trans_uri = get_first_value(
+        $trans_uri = (string) get_first_value(
             "SELECT LgGoogleTranslateURI AS value FROM {$tbpref}languages 
             WHERE LgID = $lang"
         );
-        $lgname = get_first_value(
+        $lgname = (string) get_first_value(
             "SELECT LgName AS value FROM {$tbpref}languages 
             WHERE LgID = $lang"
         );
@@ -526,7 +526,7 @@ function edit_word_do_form($wid, $text_id, $ord, $fromAnn)
                     echo createDictLinksInEditWin(
                         $lang, $term, 
                         'document.forms[0].WoSentence', 
-                        isset($_GET['nodict']) ? 0 : 1
+                        !isset($_GET['nodict'])
                     );
                 } 
                 ?>

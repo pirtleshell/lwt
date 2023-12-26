@@ -36,7 +36,7 @@ function make_trans($i, $wid, $trans, $word, $lang): string
     $widset = is_numeric($wid);
     $r = "";
     if ($widset) {
-        $alltrans = get_first_value(
+        $alltrans = (string) get_first_value(
             "SELECT WoTranslation AS value FROM {$tbpref}words 
             WHERE WoID = $wid"
         );

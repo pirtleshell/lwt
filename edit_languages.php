@@ -1275,7 +1275,7 @@ function edit_languages_do_page()
     edit_languages_alert_duplicate();
     $message = '';
     if (isset($_REQUEST['refresh'])) {
-        $message = edit_languages_refresh($_REQUEST['refresh']);
+        $message = edit_languages_refresh((int) $_REQUEST['refresh']);
     }
     if (isset($_REQUEST['del'])) {
         $message = edit_languages_delete((int)$_REQUEST['del']);

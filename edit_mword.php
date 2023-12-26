@@ -156,7 +156,7 @@ function edit_mword_do_insert($term)
             convert_string_to_sqlsyntax($term->translation) . ', ' .
             convert_string_to_sqlsyntax(repl_tab_nl($term->sentence)) . ', ' .
             convert_string_to_sqlsyntax($term->roman) . ', ' . 
-            convert_string_to_sqlsyntax($term->wordcount) . ', 
+            $term->wordcount . ', 
             NOW(), ' .  
             make_score_random_insert_update('id') . 
         ')', 
@@ -509,7 +509,10 @@ function edit_mword_display_change($term, $tid, $ord)
         </tr>
         <tr>
             <td class="td1 right" colspan="2">
-                <?php echo createDictLinksInEditWin($term->lgid, $term->text, 'document.forms[0].WoSentence', isset($_GET['nodict'])?0:1); ?>
+                <?php echo createDictLinksInEditWin(
+                    $term->lgid, $term->text, 'document.forms[0].WoSentence', 
+                    !isset($_GET['nodict'])
+                ); ?>
                 &nbsp; &nbsp; &nbsp; 
                 <input type="submit" name="op" value="Change" />
             </td>
@@ -559,7 +562,8 @@ function edit_mword_page()
             // edit_mword.php?tid=..&ord=..&txt=.. for new multi-word 
             pagestart_nobody("New Term: " . getreq('txt'));
             edit_mword_new(
-                getreq('txt'), (int) getreq('tid'), getreq('ord'), getreq('len')
+                getreq('txt'), (int) getreq('tid'), (int) getreq('ord'), 
+                (int) getreq('len')
             );
         } else {
             // edit_mword.php?tid=..&ord=..&wid=.. for multi-word edit.
@@ -568,7 +572,7 @@ function edit_mword_page()
             );
             pagestart_nobody("Edit Term: " . $text);
             edit_mword_update(
-                (int) $str_id, (int) getreq('tid'), getreq('ord')
+                (int) $str_id, (int) getreq('tid'), (int) getreq('ord')
             );
         }
     }

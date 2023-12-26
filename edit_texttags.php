@@ -22,10 +22,10 @@
 
 require_once 'inc/session_utility.php';
 
-$currentsort = processDBParam("sort", 'currenttexttagsort', '1', 1);
+$currentsort = (int) processDBParam("sort", 'currenttexttagsort', '1', true);
 
-$currentpage = processSessParam("page", "currenttexttagpage", '1', 1);
-$currentquery = processSessParam("query", "currenttexttagquery", '', 0);
+$currentpage = (int) processSessParam("page", "currenttexttagpage", '1', true);
+$currentquery = (string) processSessParam("query", "currenttexttagquery", '', false);
 
 $wh_query = convert_string_to_sqlsyntax(str_replace("*", "%", $currentquery));
 $wh_query = ($currentquery != '') ? (' and (T2Text like ' . $wh_query . ' or T2Comment like ' . $wh_query . ')') : '';
@@ -285,7 +285,9 @@ Multi Actions <img src="icn/lightning.png" title="Multi Actions" alt="Multi Acti
 
         <?php
 
-        $sql = 'select T2ID, T2Text, T2Comment from ' . $tbpref . 'tags2 where (1=1) ' . $wh_query . ' order by ' . $sorts[$currentsort-1] . ' ' . $limit;
+        $sql = 'select T2ID, T2Text, T2Comment 
+        from ' . $tbpref . 'tags2 where (1=1) ' . $wh_query . ' 
+        order by ' . $sorts[$currentsort-1] . ' ' . $limit;
         if ($debug) { 
             echo $sql; 
         }
