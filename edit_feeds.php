@@ -6,9 +6,9 @@ require_once 'inc/session_utility.php';
 
 $currentlang = validateLang(processDBParam("filterlang", 'currentlanguage', '', 0));
 $currentsort = processDBParam("sort", 'currentmanagefeedssort', '2', 1);
-$currentquery = processSessParam("query", "currentmanagefeedsquery", '', 0);
-$currentpage = processSessParam("page", "currentmanagefeedspage", '1', 1);
-$currentfeed = processSessParam("selected_feed", "currentmanagefeedsfeed", '', 0);
+$currentquery = (string) processSessParam("query", "currentmanagefeedsquery", '', false);
+$currentpage = (int) processSessParam("page", "currentmanagefeedspage", '1', true);
+$currentfeed = (string) processSessParam("selected_feed", "currentmanagefeedsfeed", '', false);
 $wh_query = convert_string_to_sqlsyntax(str_replace("*", "%", $currentquery));
 $wh_query = ($currentquery != '') ? (' and (NfName like ' . $wh_query . ')') : '';
 

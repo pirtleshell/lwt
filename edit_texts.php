@@ -98,14 +98,14 @@ function edit_texts_get_wh_tag($currentlang)
     $wh_tag1 = null;
     $wh_tag2 = null;
     $currenttag1 = validateTextTag(
-        processSessParam("tag1", "currenttexttag1", '', 0), 
+        (string) processSessParam("tag1", "currenttexttag1", '', false), 
         $currentlang
     );
     $currenttag2 = validateTextTag(
-        processSessParam("tag2", "currenttexttag2", '', 0), 
+        (string) processSessParam("tag2", "currenttexttag2", '', false), 
         $currentlang
     );
-    $currenttag12 = processSessParam("tag12", "currenttexttag12", '', 0);
+    $currenttag12 = (string) processSessParam("tag12", "currenttexttag12", '', false);
     if ($currenttag1 == '' && $currenttag2 == '') {
         return '';
     }
@@ -781,21 +781,21 @@ function edit_texts_change($txid)
  */
 function edit_texts_filters_form($currentlang, $recno, $currentpage, $pages)
 {
-    $currentquery = processSessParam("query", "currenttextquery", '', 0);
+    $currentquery = (string) processSessParam("query", "currenttextquery", '', false);
     $currentquerymode = processSessParam(
         "query_mode", "currenttextquerymode", 'title,text', 0
     );
     $currentregexmode = getSettingWithDefault("set-regex-mode");
     $currenttag1 = validateTextTag(
-        processSessParam("tag1", "currenttexttag1", '', 0), 
+        (string) processSessParam("tag1", "currenttexttag1", '', false), 
         $currentlang
     );
     $currenttag2 = validateTextTag(
-        processSessParam("tag2", "currenttexttag2", '', 0), 
+        (string) processSessParam("tag2", "currenttexttag2", '', false), 
         $currentlang
     );
     $currentsort = processDBParam("sort", 'currenttextsort', '1', 1);
-    $currenttag12 = processSessParam("tag12", "currenttexttag12", '', 0);
+    $currenttag12 = (string) processSessParam("tag12", "currenttexttag12", '', false);
     ?>
 <form name="form1" action="#" onsubmit="document.form1.querybutton.click(); return false;">
     <table class="tab2" cellspacing="0" cellpadding="5">
@@ -899,7 +899,7 @@ function edit_texts_other_pages($recno)
         return;
     }
 
-    $currentpage = processSessParam("page", "currenttextpage", '1', 1);
+    $currentpage = (int) processSessParam("page", "currenttextpage", '1', true);
     if ($currentpage < 1) { 
         $currentpage = 1; 
     }
@@ -1169,8 +1169,8 @@ function edit_texts_display($message)
     );
     $currentsort = processDBParam("sort", 'currenttextsort', '1', 1);
 
-    $currentpage = processSessParam("page", "currenttextpage", '1', 1);
-    $currentquery = processSessParam("query", "currenttextquery", '', 0);
+    $currentpage = (int) processSessParam("page", "currenttextpage", '1', true);
+    $currentquery = (string) processSessParam("query", "currenttextquery", '', false);
     $currentquerymode = processSessParam(
         "query_mode", "currenttextquerymode", 'title,text', 0
     );

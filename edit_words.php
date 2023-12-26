@@ -24,6 +24,7 @@
  * PHP version 8.1
  * 
  * @category User_Interface
+ * @package  Lwt
  */
 
 require_once 'inc/session_utility.php';
@@ -33,23 +34,23 @@ require_once 'inc/start_session.php';
 $currentlang = validateLang(processDBParam("filterlang", 'currentlanguage', '', 0));
 $currentsort = processDBParam("sort", 'currentwordsort', '1', 1);
 
-$currentpage = processSessParam("page", "currentwordpage", '1', 1);
-$currentquery = processSessParam("query", "currentwordquery", '', 0);
+$currentpage = (int) processSessParam("page", "currentwordpage", '1', true);
+$currentquery = (string) processSessParam("query", "currentwordquery", '', false);
 $currentquerymode = processSessParam(
     "query_mode", "currentwordquerymode", 'term,rom,transl', 0
 );
 $currentregexmode = getSettingWithDefault("set-regex-mode");
-$currentstatus = processSessParam("status", "currentwordstatus", '', 0);
-$currenttext = validateText(processSessParam("text", "currentwordtext", '', 0));
-$currenttexttag = processSessParam("texttag", "currentwordtexttag", '', 0);
-$currenttextmode = processSessParam("text_mode", "currentwordtextmode", 0, 0);
+$currentstatus = (string) processSessParam("status", "currentwordstatus", '', false);
+$currenttext = validateText((string) processSessParam("text", "currentwordtext", '', false));
+$currenttexttag = (string) processSessParam("texttag", "currentwordtexttag", '', false);
+$currenttextmode = (string) processSessParam("text_mode", "currentwordtextmode", 0, false);
 $currenttag1 = validateTag(
-    processSessParam("tag1", "currentwordtag1", '', false), $currentlang
+    (string) processSessParam("tag1", "currentwordtag1", '', false), $currentlang
 );
 $currenttag2 = validateTag(
-    processSessParam("tag2", "currentwordtag2", '', false), $currentlang
+    (string) processSessParam("tag2", "currentwordtag2", '', false), $currentlang
 );
-$currenttag12 = processSessParam("tag12", "currentwordtag12", '', false);
+$currenttag12 = (string) processSessParam("tag12", "currentwordtag12", '', false);
 
 $wh_lang = ($currentlang != '') ? (' and WoLgID=' . $currentlang ) : '';
 $wh_stat = '';

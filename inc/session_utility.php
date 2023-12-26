@@ -1443,9 +1443,9 @@ function getPreviousAndNextTextLinks($textid, $url, $onlyann, $add): string
         $wh_lang = ' AND TxLgID=' . $currentlang;
     }
 
-    $currentquery = processSessParam("query", "currenttextquery", '', 0);
-    $currentquerymode = processSessParam(
-        "query_mode", "currenttextquerymode", 'title,text', 0
+    $currentquery = (string) processSessParam("query", "currenttextquery", '', false);
+    $currentquerymode = (string) processSessParam(
+        "query_mode", "currenttextquerymode", 'title,text', false
     );
     $currentregexmode = getSettingWithDefault("set-regex-mode");
     $wh_query = $currentregexmode . 'LIKE ';
@@ -1472,14 +1472,14 @@ function getPreviousAndNextTextLinks($textid, $url, $onlyann, $add): string
     }
 
     $currenttag1 = validateTextTag(
-        processSessParam("tag1", "currenttexttag1", '', 0), 
+        (string) processSessParam("tag1", "currenttexttag1", '', false), 
         $currentlang
     );
     $currenttag2 = validateTextTag(
-        processSessParam("tag2", "currenttexttag2", '', 0), 
+        (string) processSessParam("tag2", "currenttexttag2", '', false), 
         $currentlang
     );
-    $currenttag12 = processSessParam("tag12", "currenttexttag12", '', 0);
+    $currenttag12 = (string) processSessParam("tag12", "currenttexttag12", '', false);
     $wh_tag1 = null;
     $wh_tag2 = null;
     if ($currenttag1 == '' && $currenttag2 == '') {

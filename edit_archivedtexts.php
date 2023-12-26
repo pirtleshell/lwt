@@ -24,21 +24,23 @@ require_once 'inc/session_utility.php';
 $currentlang = validateLang(processDBParam("filterlang", 'currentlanguage', '', 0));
 $currentsort = processDBParam("sort", 'currentarchivesort', '1', 1);
 
-$currentpage = processSessParam("page", "currentarchivepage", '1', 1);
-$currentquery = processSessParam("query", "currentarchivequery", '', 0);
+$currentpage = (int) processSessParam("page", "currentarchivepage", '1', true);
+$currentquery = (string) processSessParam("query", "currentarchivequery", '', false);
 $currentquerymode = processSessParam(
     "query_mode", "currentarchivequerymode", 'title,text', 0
 );
 $currentregexmode = getSettingWithDefault("set-regex-mode");
 $currenttag1 = validateArchTextTag(
-    processSessParam("tag1", "currentarchivetexttag1", '', 0), 
+    (string) processSessParam("tag1", "currentarchivetexttag1", '', false), 
     $currentlang
 );
 $currenttag2 = validateArchTextTag(
-    processSessParam("tag2", "currentarchivetexttag2", '', 0), 
+    (string) processSessParam("tag2", "currentarchivetexttag2", '', false), 
     $currentlang
 );
-$currenttag12 = processSessParam("tag12", "currentarchivetexttag12", '', 0);
+$currenttag12 = (string) processSessParam(
+    "tag12", "currentarchivetexttag12", '', false
+);
 
 $wh_lang = ($currentlang != '') ? (' and AtLgID=' . $currentlang) : '';
 $wh_query = $currentregexmode . 'LIKE ' .  

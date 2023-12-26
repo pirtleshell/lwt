@@ -363,8 +363,10 @@ function check_errors($message): void
 function dummy_function_2($currentlang, $currentfeed): void
 {
     global $tbpref, $debug;
-    $currentquery = processSessParam("query", "currentrssquery", '', 0);
-    $currentquerymode = processSessParam("query_mode", "currentrssquerymode", 'title,desc,text', 0);
+    $currentquery = (string) processSessParam("query", "currentrssquery", '', false);
+    $currentquerymode = (string) processSessParam(
+        "query_mode", "currentrssquerymode", 'title,desc,text', false
+    );
     $currentregexmode = getSettingWithDefault("set-regex-mode");
     $wh_query = $currentregexmode . 'like ' .  convert_string_to_sqlsyntax(
         ($currentregexmode == '') ? 
@@ -394,7 +396,7 @@ function dummy_function_2($currentlang, $currentfeed): void
     } else { 
         $wh_query = ''; 
     }
-    $currentpage = processSessParam("page", "currentrsspage", '1', 1);
+    $currentpage = (int) processSessParam("page", "currentrsspage", '1', true);
     $currentsort = processDBParam("sort", 'currentrsssort', '2', 1);
     ?>
 
@@ -635,7 +637,9 @@ function do_page(): void
         processDBParam("filterlang", 'currentlanguage', '', 0)
     );
     pagestart('My ' . getLanguage($currentlang) . ' Feeds', true);
-    $currentfeed = processSessParam("selected_feed", "currentrssfeed", '', 0);
+    $currentfeed = (string) processSessParam(
+        "selected_feed", "currentrssfeed", '', false
+    );
 
     $edit_text = 0;
     $message = '';
