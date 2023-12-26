@@ -19,7 +19,11 @@
  *  ... text=[textid] ... text filter   
  *  ... tag1=[tagid] ... tag filter 1   
  *  ... tag2=[tagid] ... tag filter 2   
- *  ... tag12=0/1 ... tag1-tag2 OR=0, AND=1  
+ *  ... tag12=0/1 ... tag1-tag2 OR=0, AND=1
+ * 
+ * PHP version 8.1
+ * 
+ * @category User_Interface
  */
 
 require_once 'inc/session_utility.php';
@@ -575,7 +579,6 @@ if (isset($_REQUEST['allaction'])) {
             where Ti2LgID = WoLgID and Ti2WoID = WoID and Ti2TxID in (' . $currenttext . ')' . $wh_lang . $wh_stat . $wh_query . ' 
             group by WoID ' . $wh_tag;
         }
-        $cnt = 0;
         $id_list = array();
         $res = do_mysqli_query($sql);
         while ($record = mysqli_fetch_assoc($res)) {
@@ -666,7 +669,7 @@ if (isset($_REQUEST['allaction'])) {
 
 if (isset($_REQUEST['new']) && isset($_REQUEST['lang'])) {
     // NEW
-    $scrdir = getScriptDirectionTag($_REQUEST['lang']);
+    $scrdir = getScriptDirectionTag((int) $_REQUEST['lang']);
     
     ?>
 

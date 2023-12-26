@@ -1,12 +1,15 @@
 <?php
 
-
 /**
  * \file 
  * \brief Ignore single word (new term with status 98)
  * 
  * Call: insert_word_ignore.php?tid=[textid]&ord=[textpos]
  * 
+ * PHP version 8.1
+ * 
+ * @category Helper_Frame
+ * @package Lwt
  * @author LWT Project <lwt-project@hotmail.com>
  * @since  1.0.3
  */

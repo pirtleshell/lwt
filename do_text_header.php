@@ -6,6 +6,8 @@
  * 
  * Call: do_text_header.php?text=[textid]
  * 
+ * PHP version 8.1
+ * 
  * @package Lwt
  * @author  LWT Project <lwt-project@hotmail.com>
  * @license Unlicense <http://unlicense.org/>
@@ -168,23 +170,21 @@ function do_settings($textid): void
  * @param string $text         Text to read
  * @param string $languageName Full name of the language (i. e.: "English")
  *
- * @global array $langDefs Definition of all languages. Normally $langDefs[$languageName][1] -> $languageCode
- *
+ * @global string $tbpref
+ * 
  * @since 2.0.3-fork
+ * @since 2.9.1-fork Function may work even when the language name was manually changed.
  */
 function browser_tts($text, $languageName): void
 {
-    global $langDefs;
-
-    /** 
-     * @var string $languageCode BCP 47 convention (i. e.: en-US) is suggested.
-     * Two-letter language code is enough (i. e. "en") 
-     */
-    $languageCode = $langDefs[$languageName][1];
-    /**
-    * @var string $phoneticText 
-    * Phonetic reading for this text 
-    */
+    global $tbpref;
+    $lg_id = (int) get_first_value(
+        "SELECT LgID as value 
+        FROM {$tbpref}languages 
+        WHERE LgName = " . convert_string_to_sqlsyntax($languageName)
+    );
+    $languageCode = getLanguageCode($lg_id, LWT_LANGUAGES_ARRAY);
+    // Phonetic reading for this text
     $phoneticText = phonetic_reading($text, $languageCode);
     ?>
 <script type="text/javascript">

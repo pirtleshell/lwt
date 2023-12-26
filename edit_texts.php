@@ -20,6 +20,9 @@
  *     ... page=[pageno] ... page
  *     ... query=[titlefilter] ... title filter
  * 
+ * PHP version 8.1
+ * 
+ * @category User_Interface
  * @package Lwt
  * @author  LWT Project <lwt-project@hotmail.com>
  * @license Unlicense <http://unlicense.org/>
@@ -140,13 +143,13 @@ function edit_texts_get_wh_tag($currentlang)
  * @param array  $marked     Texts marked.
  * @param string $actiondata Values to insert to the database
  *
- * @return array{0: int, 1: null} Number of rows edited, the second element is always null.
+ * @return (null|string)[] Number of rows edited, the second element is always null.
  *
  * @global string $tbpref Database table prefix
  *
- * @since 2.4.1-fork The second return field is always null 
+ * @since 2.4.1-fork The second return field is always null
  *
- * @psalm-return array{0: string, 1: null}
+ * @psalm-return list{string, null}
  */
 function edit_texts_mark_action($markaction, $marked, $actiondata): array
 {
@@ -574,8 +577,6 @@ function edit_texts_form($text, $annotated)
         /**
          * Change the language of inputs for text and title based on selected 
          * language.
-         * 
-         * @returns undefined
          */
         function change_textboxes_language() {
             const lid = document.getElementById("TxLgID").value;
@@ -926,7 +927,7 @@ function edit_texts_other_pages($recno)
  *                                                                   Various information about the text should contain 'TxID' at least.
  * @param string                                        $currentlang 
  *                                                                   Current language ID
- * @param array<int<0, 5>|98|99, array<string, string>> $statuses
+ * @param array{int<0, 5>|98|99, array{string, string}} $statuses
  * List of statuses WITH unknown words (status 0)
  * 
  * @return void

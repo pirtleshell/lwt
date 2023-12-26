@@ -1,8 +1,6 @@
 /**
- * \file
- * \brief Standard JS interface to get translations
+ * Standard JS interface to get translations
  * 
- * @package Lwt
  * @author  andreask7 <andreasks7@users.noreply.github.com>
  * @license Unlicense <http://unlicense.org/>
  * @since   1.6.16-fork

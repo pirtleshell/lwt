@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * \file
  * \brief Print/Edit an improved annotated text
@@ -9,6 +8,9 @@
  *      ... edit=1 ... edit own annotation 
  *      ... del=1  ... delete own annotation
  * 
+ * PHP version 8.1
+ * 
+ * @category User_Interface
  * @package Lwt
  * @author  LWT Project <lwt-project@hotmail.com>
  * @license Unlicense <http://unlicense.org/>
@@ -23,7 +25,7 @@ require_once 'inc/ajax_edit_impr_text.php';
 
 use function Lwt\Ajax\Improved_Text\edit_term_form;
 
-function edit_mode_display($textid, $ann_exists)
+function edit_mode_display($textid, $ann_exists): void
 {
     if (!$ann_exists) {
         // No annotations, try create them
@@ -66,7 +68,7 @@ function edit_mode_display($textid, $ann_exists)
     <?php
 }
 
-function print_mode_display($textid, $langid, $audio, $ann, $title)
+function print_mode_display($textid, $langid, $audio, $ann, $title): void
 {
     global $tbpref;
     $sql = "SELECT LgTextSize, LgRemoveSpaces, LgRightToLeft, LgGoogleTranslateURI 
@@ -144,6 +146,9 @@ function print_mode_display($textid, $langid, $audio, $ann, $title)
 }
 
 
+/**
+ * @return void
+ */
 function do_content()
 {
     global $tbpref;

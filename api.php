@@ -92,7 +92,7 @@ function endpoint_exits($method, $requestUri)
     }
     // endpoint without prepending URL, like 'version'
     $req_endpoint = rtrim(str_replace($matches[1], '', $uri_query), '/');
-    $methods_allowed = null; 
+    $methods_allowed = array(); 
     if (array_key_exists($req_endpoint, $endpoints)) {
         $methods_allowed = $endpoints[$req_endpoint];
     } else { 
@@ -116,12 +116,14 @@ function endpoint_exits($method, $requestUri)
 
 /**
  * Return the API version.
- * 
+ *
  * @param array $get_req GET request, unnused
- * 
- * @return string JSON-encoded version
+ *
+ * @return string[] JSON-encoded version
+ *
+ * @psalm-return array{version: '0.1.0', release_date: '2023-12-24'}
  */
-function rest_api_version($get_req)
+function rest_api_version($get_req): array
 {
     return array(
         "version"      => "0.1.0",
@@ -143,12 +145,14 @@ function media_files($get_req)
 
 /**
  * Get the phonetic reading of a word based on it's language.
- * 
+ *
  * @param array $get_req Array with the fields "text" and "lang" (short language name)
- * 
- * @return string JSON-encoded result
+ *
+ * @return string[] JSON-encoded result
+ *
+ * @psalm-return array{phonetic_reading: string}
  */
-function get_phonetic_reading($get_req)
+function get_phonetic_reading($get_req): array
 {
     $data = phonetic_reading($get_req['text'], $get_req['lang']);
     return array("phonetic_reading" => $data);
@@ -157,16 +161,18 @@ function get_phonetic_reading($get_req)
 
 /**
  * Retun the next word to test as JSON
- * 
+ *
  * @param string $testsql   SQL projection query
  * @param bool   $word_mode    Test is in word mode
  * @param int    $lgid      Language ID
  * @param string $wordregex Word selection regular expression
  * @param int    $testtype  Test type
- * 
- * @return array Next word formatted as an array.
+ *
+ * @return (int|mixed|string)[] Next word formatted as an array.
+ *
+ * @psalm-return array{word_id: 0|mixed, solution?: string, word_text: string, group: string}
  */
-function get_word_test_ajax($testsql, $word_mode, $lgid, $wordregex, $testtype)
+function get_word_test_ajax($testsql, $word_mode, $lgid, $wordregex, $testtype): array
 {
     $word_record = do_test_get_word($testsql);
     if (empty($word_record)) {
@@ -177,7 +183,6 @@ function get_word_test_ajax($testsql, $word_mode, $lgid, $wordregex, $testtype)
         );
         return $output;
     }
-    $sent = repl_tab_nl($word_record['WoSentence']);
     if ($word_mode) {
         $sent = "{" . $word_record['WoText'] . "}";
     } else {
@@ -205,15 +210,15 @@ function get_word_test_ajax($testsql, $word_mode, $lgid, $wordregex, $testtype)
 
 /**
  * Return the next word to test.
- * 
+ *
  * @param array $get_req Array with the fields {
  *                          test_key: string, selection: string, word_mode: bool, 
  *                          lg_id: int, word_regex: string, type: int
  *                       }
- * 
- * @return string Next word formatted as JSON.
+ *
+ * @return array Next word formatted as JSON.
  */
-function word_test_ajax($get_req)
+function word_test_ajax($get_req): array
 {
     $test_sql = do_test_test_get_projection(
         $get_req['test_key'], $get_req['selection']
@@ -227,12 +232,14 @@ function word_test_ajax($get_req)
 
 /**
  * Return the number of reviews for tomorrow by using the suplied query.
- * 
- * @param array $get_req Array with the fields "test_key" and "selection" 
- * 
- * @return string JSON-encoded result
+ *
+ * @param array $get_req Array with the fields "test_key" and "selection"
+ *
+ * @return array JSON-encoded result
+ *
+ * @psalm-return array{count: int}
  */
-function tomorrow_test_count($get_req) 
+function tomorrow_test_count($get_req): array 
 {
     $test_sql = do_test_test_get_projection(
         $get_req['test_key'], $get_req['selection']
@@ -246,32 +253,34 @@ function tomorrow_test_count($get_req)
     
 /**
  * Get the file path using theme.
- * 
+ *
  * @param array $get_req Get request with field "path", relative filepath using theme.
- * 
- * @return string JSON-encoded result
+ *
+ * @return array JSON-encoded result
+ *
+ * @psalm-return array{theme_path: string}
  */
-function get_theme_path($get_req)
+function get_theme_path($get_req): array
 {
     return array("theme_path" => get_file_path($get_req['path']));
 }
 
 /**
  * Return statistics about a group of text.
- * 
+ *
  * @param array $get_req Get request with field "texts_id", texts ID.
  */
-function get_texts_statistics($get_req)
+function get_texts_statistics($get_req): array
 {
     return return_textwordcount($get_req["texts_id"]);
 }
 
 /**
  * Sentences containing an input word.
- * 
+ *
  * @param array $get_req Get request with fields "lg_id", "word_lc" and "word_id".
  */
-function sentences_with_registred_term($get_req)
+function sentences_with_registred_term($get_req): array
 {
     return sentences_with_word(
         (int) $get_req["lg_id"],
@@ -282,10 +291,10 @@ function sentences_with_registred_term($get_req)
 
 /**
  * Return the example sentences containing an input word.
- * 
+ *
  * @param array $get_req Get request with fields "lg_id" and "advanced_search" (optional).
  */
-function sentences_with_new_term($get_req)
+function sentences_with_new_term($get_req): array
 {
     $advanced = null;
     if (array_key_exists("advanced_search", $get_req)) {
@@ -300,12 +309,14 @@ function sentences_with_new_term($get_req)
 
 /**
  * Get terms similar to a given term.
- * 
+ *
  * @param array $get_req Get request with fields "lg_id" and "term".
- * 
- * @return string Similar terms in HTML format.
+ *
+ * @return array Similar terms in HTML format.
+ *
+ * @psalm-return array{similar_terms: string}
  */
-function similar_terms($get_req) 
+function similar_terms($get_req): array 
 {
     return array("similar_terms" => print_similar_terms(
         (int)$get_req["lg_id"], 
@@ -331,10 +342,10 @@ function imported_terms($get_req)
 
 /**
  * Translations for a term to choose an annotation.
- * 
+ *
  * @param array $get_req Get request with fields "text_id" and "term_lc".
  */
-function term_translations($get_req)
+function term_translations($get_req): array
 {
     return \Lwt\Ajax\Improved_Text\get_term_translations(
         (string)$get_req["term_lc"], (int)$get_req["text_id"]
@@ -344,14 +355,16 @@ function term_translations($get_req)
 
 /**
  * Error message when the provided action_type does not match anything known.
- * 
+ *
  * @param array $post_req GET request used
  * @param bool  $action_exists Set to true if the action is recognized but not 
  * the action_type
- * 
- * @return string JSON-encoded error message.
+ *
+ * @return array JSON-encoded error message.
+ *
+ * @psalm-return array{error: string}
  */
-function unknown_get_action_type($get_req, $action_exists=false)
+function unknown_get_action_type($get_req, $action_exists=false): array
 {
     if ($action_exists) {
         $message = 'action_type with value "' . $get_req["action_type"] . 
@@ -367,10 +380,12 @@ function unknown_get_action_type($get_req, $action_exists=false)
 
 /**
  * Save a setting to the database.
- * 
+ *
  * @param array $post_req Array with the fields "key" (setting name) and "value"
- * 
+ *
  * @return string[] Setting save status
+ *
+ * @psalm-return array{error?: string, message?: string}
  */
 function save_setting($post_req): array
 {
@@ -386,12 +401,14 @@ function save_setting($post_req): array
 
 /**
  * Save the annotation for a term.
- * 
+ *
  * @param array $post_req Post request with keys "text_id", "elem" and "data".
- * 
- * @return string JSON-encoded result
+ *
+ * @return string[] JSON-encoded result
+ *
+ * @psalm-return array{save_impr_text?: string, error?: string}
  */
-function set_annotation($post_req)
+function set_annotation($post_req): array
 {
     $result = save_impr_text(
         (int)$post_req["text_id"], $post_req['elem'], 
@@ -408,12 +425,14 @@ function set_annotation($post_req)
 
 /**
  * Set audio position.
- * 
+ *
  * @param array $post_req Array with the fields "text_id" (int) and "position"
- * 
- * @return string
+ *
+ * @return string[] Success message
+ *
+ * @psalm-return array{audio: 'Audio position set'}
  */
-function set_audio_position($post_req) 
+function set_audio_position($post_req): array 
 {
     save_audio_position(
         (int)$post_req["text_id"], (int)$post_req["position"]
@@ -425,12 +444,14 @@ function set_audio_position($post_req)
 
 /**
  * Set text reading position.
- * 
+ *
  * @param array $post_req Array with the fields "text_id" (int) and "position"
- * 
- * @return string
+ *
+ * @return string[] Success message
+ *
+ * @psalm-return array{text: 'Reading position set'}
  */
-function set_text_position($post_req) 
+function set_text_position($post_req): array 
 {
     save_text_position(
         (int)$post_req["text_id"], (int)$post_req["position"]
@@ -441,10 +462,14 @@ function set_text_position($post_req)
 
 /**
  * Change the status of a term by one unit.
- * 
+ *
  * @param array $post_req Array with the fields "term_id" (int) and "status_up" (1 or 0)
+ *
+ * @return string[] Status message
+ *
+ * @psalm-return array{increment?: string, error?: ''}
  */
-function increment_term_status($post_req)
+function increment_term_status($post_req): array
 {
     $result = ajax_increment_term_status(
         (int)$post_req['term_id'], (bool)$post_req['status_up']
@@ -461,10 +486,14 @@ function increment_term_status($post_req)
 
 /**
  * Set the status of a term.
- * 
+ *
  * @param array $post_req Array with the fields "term_id" (int) and "status" (0-5|98|99)
+ *
+ * @return (int|string)[]
+ *
+ * @psalm-return array{error?: string, set?: int}
  */
-function set_term_status($post_req)
+function set_term_status($post_req): array
 {
     $result = set_word_status((int)$post_req['term_id'], (int)$post_req['status']);
     $raw_answer = array();
@@ -479,12 +508,14 @@ function set_term_status($post_req)
 
 /**
  * Edit the translation of an existing term.
- * 
+ *
  * @param array $post_req Array with the fields "term_id" (int) and "translation".
- * 
- * @return string Term in lower case, or "" if term does not exist
+ *
+ * @return string[] Term in lower case, or "" if term does not exist
+ *
+ * @psalm-return array{update?: string, error?: string}
  */
-function update_translation($post_req)
+function update_translation($post_req): array
 {
     $result = do_ajax_check_update_translation(
         (int)$post_req['term_id'], trim($post_req['translation'])
@@ -500,12 +531,14 @@ function update_translation($post_req)
 
 /**
  * Create the translation for a new term.
- * 
+ *
  * @param array $post_req Array with the fields "term_text", "lg_id" (int) and "translation".
- * 
- * @return string Error message in case of failure, lowercase term otherwise
+ *
+ * @return (int|string)[] Error message in case of failure, lowercase term otherwise
+ *
+ * @psalm-return array{error?: string, add?: string, term_id?: mixed, term_lc?: mixed}
  */
-function add_translation($post_req)
+function add_translation($post_req): array
 {
     $text = trim($post_req['term_text']);
     $result = add_new_term_transl(
@@ -513,8 +546,8 @@ function add_translation($post_req)
     );
     $raw_answer = array();
     if (is_array($result)) {
-        $raw_answer["term_id"] = $result[0];
-        $raw_answer["term_lc"] = $result[1];
+        $raw_answer["term_id"] = (int) $result[0];
+        $raw_answer["term_lc"] = (string) $result[1];
     } else if ($result == mb_strtolower($text, 'UTF-8')) {
         $raw_answer["add"] = $result;
     } else {
@@ -525,14 +558,16 @@ function add_translation($post_req)
 
 /**
  * Notify of an error on POST method.
- * 
+ *
  * @param array $post_req POST request used
  * @param bool  $action_exists Set to true if the action is recognized but not 
  * the action_type
- * 
- * @return string JSON-encoded error message
+ *
+ * @return string[] JSON-encoded error message
+ *
+ * @psalm-return array{error: string}
  */
-function unknown_post_action_type($post_req, $action_exists=false)
+function unknown_post_action_type($post_req, $action_exists=false): array
 {
     if ($action_exists) {
         $message = 'action_type with value "' . $post_req["action_type"] . 
@@ -591,7 +626,7 @@ function request_handler($method, $requestUri, $post_param) {
                 break;
             case 'sentences-with-term':
                 if (ctype_digit($endpoint_fragments[1])) {
-                    $get_req['word_id'] = (int) $endpoint_fragments[1];
+                    $req_param['word_id'] = (int) $endpoint_fragments[1];
                     $answer = sentences_with_registred_term($req_param);
                 } else {
                     $answer = sentences_with_new_term($req_param);

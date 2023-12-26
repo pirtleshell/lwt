@@ -11,6 +11,9 @@
  * Call: do_test.php?type=table for a table of words
  * Call: do_test.php?type=[1-5] for a test of words.
  * 
+ * PHP version 8.1
+ * 
+ * @category User_Interface
  * @package Lwt
  * @author  LWT Project <lwt-project@hotmail.com>
  * @license Unlicense <http://unlicense.org/>

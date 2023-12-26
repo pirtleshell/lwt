@@ -8,6 +8,8 @@
  * Call: do_test_test.php?text=[textid]
  * Call: do_test_test.php?&selection=1 (SQL via $_SESSION['testsql'])
  * 
+ * PHP version 8.1
+ * 
  * @package Lwt
  * @author  LWT Project <lwt-project@hotmail.com>
  * @license Unlicense <http://unlicense.org/>
@@ -76,7 +78,7 @@ function do_test_table_language_settings($testsql)
 /**
  * @return int[]
  *
- * @psalm-return array{0: 0|1, 1: 0|1, 2: 0|1, 3: 0|1, 4: 0|1, 5: 0|1}
+ * @psalm-return list{0|1, 0|1, 0|1, 0|1, 0|1, 0|1}
  */
 function get_test_table_settings(): array 
 {

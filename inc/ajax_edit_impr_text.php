@@ -106,12 +106,14 @@ function make_trans($i, $wid, $trans, $word, $lang): string
 
 /**
  * Find the possible translations for a term.
- * 
+ *
  * @param int $word_id Term ID
- * 
- * @return array Return the possible translations.
+ *
+ * @return string[] Return the possible translations.
+ *
+ * @psalm-return list<non-empty-string>
  */
-function get_translations($word_id)
+function get_translations($word_id): array
 {
     global $tbpref;
     $translations = array();
@@ -133,13 +135,15 @@ function get_translations($word_id)
 
 /**
  * Gather useful data to edit a term annotation on a specific text.
- * 
+ *
  * @param string $wordlc Term in lower case
  * @param int    $textid Text ID
- * 
- * @return array Return the useful data to edit a term annotation on a specific text.
+ *
+ * @return (array|int|null|string)[] Return the useful data to edit a term annotation on a specific text.
+ *
+ * @psalm-return array{term_lc?: string, wid?: int|null, trans?: string, ann_index?: int<0, max>, term_ord?: int, translations?: array, lang_id?: int, error?: 'Annotation line is ill-formatted'|'Annotation not found'}
  */
-function get_term_translations($wordlc, $textid)
+function get_term_translations($wordlc, $textid): array
 {
     global $tbpref;
     $sql = "SELECT TxLgID, TxAnnotatedText 
@@ -233,15 +237,15 @@ function get_term_translations($wordlc, $textid)
 
 /**
  * Prepare the HTML content for the interaction with a term
- * 
+ *
  * @param string $wordlc Term in lower case
  * @param int    $textid Text ID
- * 
+ *
  * @return string JS string of the different fields of the term
- * 
+ *
  * @deprecated 2.9.0 Use AJAX instead
  */
-function edit_term_interaction($wordlc, $textid)
+function edit_term_interaction($wordlc, $textid): string
 {
     $rr = "";
     $trans_data = get_term_translations($wordlc, $textid);
@@ -269,12 +273,12 @@ function edit_term_interaction($wordlc, $textid)
 
 /**
  * Full form for terms edition in a given text.
- * 
+ *
  * @param int $textid Text ID.
- * 
+ *
  * @return string HTML table for all terms
  */
-function edit_term_form($textid)
+function edit_term_form($textid): string
 {
     global $tbpref;
     $sql = "SELECT TxLgID, TxAnnotatedText 
@@ -420,8 +424,7 @@ function edit_term_form($textid)
  *
  * @global string $tbpref Database table prefix.
  *
- * @psalm-return array{0: string, 1: string}
- * 
+ * @psalm-return list{string, string}
  * @deprecated 2.9.0 Use AJAX instead 
  */
 function make_form($textid, $wordlc): array

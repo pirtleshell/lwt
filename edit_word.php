@@ -11,8 +11,12 @@
  *  ... tid=[textid]&ord=[textpos]&wid= ... new word  
  *  ... tid=[textid]&ord=[textpos]&wid=[wordid] ... edit word 
  * 
- * @since  1.0.3
+ * PHP version 8.1
+ * 
+ * @category Helper_Frame
+ * @package Lwt
  * @author LWT Project <lwt-project@hotmail.com>
+ * @since  1.0.3
  */
 
 namespace Lwt\Interface\Edit_Word;
@@ -23,13 +27,15 @@ require_once 'inc/langdefs.php';
 
 /**
  * Insert a new word to the database
- * 
+ *
  * @param string $textlc      The word to insert, in lowercase
  * @param string $translation Translation of this term
- * 
- * @return array{0: int, 1: string} Word id, and then an insertion message 
+ *
+ * @return (int|string)[] Word id, and then an insertion message
+ *
+ * @psalm-return list{int, string}
  */
-function insert_new_word($textlc, $translation)
+function insert_new_word($textlc, $translation): array
 {
     global $tbpref;
 
@@ -173,6 +179,9 @@ function change_term_display($wid, $translation, $hex): void
 }
 
 // INS/UPD
+/*
+ * @return void
+ */
 function edit_word_do_operation($translation, $fromAnn)
 {
     $hex = null;
@@ -218,9 +227,12 @@ function edit_word_do_operation($translation, $fromAnn)
 }
 
 
+/**
+ * @return void
+ */
 function edit_word_do_form($wid, $text_id, $ord, $fromAnn)
 {
-    global $tbpref, $langDefs;
+    global $tbpref;
     $lang = null;
     $term = null;
     
@@ -237,8 +249,8 @@ function edit_word_do_form($wid, $text_id, $ord, $fromAnn)
         if ($record === null) {
             my_die("Cannot access Term and Language in edit_word.php");
         }
-        $term = $record['Ti2Text'];
-        $lang = $record['Ti2LgID'];
+        $term = (string) $record['Ti2Text'];
+        $lang = (int) $record['Ti2LgID'];
         mysqli_free_result($res);
         
         $termlc = mb_strtolower($term, 'UTF-8');
@@ -262,8 +274,8 @@ function edit_word_do_form($wid, $text_id, $ord, $fromAnn)
         if (!$record) {
             my_die("Cannot access Term and Language in edit_word.php");
         }
-        $term = $record['WoText'];
-        $lang = $record['WoLgID'];
+        $term = (string) $record['WoText'];
+        $lang = (int) $record['WoLgID'];
         mysqli_free_result($res);
         $termlc = mb_strtolower($term, 'UTF-8');
         $new = false;
@@ -300,8 +312,8 @@ function edit_word_do_form($wid, $text_id, $ord, $fromAnn)
             "SELECT LgName AS value FROM {$tbpref}languages 
             WHERE LgID = $lang"
         );
-        $lang_short = array_key_exists($lgname, $langDefs) ? 
-        $langDefs[$lgname][1] : ''
+        $lang_short = array_key_exists($lgname, LWT_LANGUAGES_ARRAY) ? 
+        LWT_LANGUAGES_ARRAY[$lgname][1] : ''
             
         ?>
     
@@ -534,7 +546,7 @@ function edit_word_do_form($wid, $text_id, $ord, $fromAnn)
     }
 }
 
-function do_content()
+function do_content(): void
 {
     // from-recno or empty
     $fromAnn = getreq("fromAnn"); 

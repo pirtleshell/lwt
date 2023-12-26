@@ -6,6 +6,10 @@
  * 
  * Call: insert_word_wellknown.php?tid=[textid]&ord=[textpos]
  * 
+ * PHP version 8.1
+ * 
+ * @category Helper_Frame
+ * @package Lwt
  * @author LWT Project <lwt-project@hotmail.com>
  * @since  1.0.3
  */

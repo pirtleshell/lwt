@@ -5,7 +5,11 @@
  * \brief Import terms from file or Text area
  * 
  *  Call: upload_words.php?....
- *      ... op=Import ... do the import 
+ *      ... op=Import ... do the import
+ * 
+ * PHP version 8.1
+ * 
+ * @category User_Interface
  */
 
 require_once 'inc/session_utility.php';
@@ -33,7 +37,8 @@ function my_str_getcsv($input)
 
 function upload_words_import_simple(
     $lang, $fields, $columns, $tabs, $file_name, $status
-) {
+): void 
+{
     global $tbpref;
     $removeSpaces = get_first_value(
         "SELECT LgRemoveSpaces AS value FROM {$tbpref}languages WHERE LgID=$lang"
@@ -114,7 +119,8 @@ function upload_words_import_simple(
 
 function upload_words_import_complete(
     $lang, $fields, $columns, $tabs, $file_name, $status, $overwrite
-) { 
+): void
+{
     global $tbpref;
     $removeSpaces = get_first_value(
         "SELECT LgRemoveSpaces AS value FROM {$tbpref}languages WHERE LgID=$lang"
@@ -425,7 +431,7 @@ function upload_words_import_complete(
 
 }
 
-function upload_words_handle_multiwords($lang, $last_update)
+function upload_words_handle_multiwords($lang, $last_update): void
 {
     global $tbpref;
     $mwords = get_first_value(
@@ -480,21 +486,21 @@ function upload_words_handle_multiwords($lang, $last_update)
 
 /**
  * Import terms to the database.
- * 
+ *
  * @param array              $fields   Fields indexes
  * @param string             $tabs     Columns separator
  * @param bool               $file_upl If the input text is an uploaded file
  * @param array<int, string> $col      Columns names
  * @param int                $lang     Language ID
- * 
+ *
  * @return string Last word update timestamp
- * 
+ *
  * @global string $tbpref Database table prefix
  */
-function upload_words_import_terms($fields, $tabs, $file_upl, $col, $lang): string
+function upload_words_import_terms($fields, $tabs, $file_upl, $col, $lang): float|int|string|null
 {
     global $tbpref;
-    $last_update = get_first_value(
+    $last_update = (string) get_first_value(
         "SELECT max(WoStatusChanged) AS value FROM {$tbpref}words"
     );
     $overwrite = $_REQUEST["Over"];
@@ -541,7 +547,7 @@ function upload_words_import_terms($fields, $tabs, $file_upl, $col, $lang): stri
     return $last_update;
 }
 
-function display_imported_terms($last_update, $rtl)
+function display_imported_terms($last_update, $rtl): void
 {
     global $tbpref;
     $recno = (int)get_first_value(

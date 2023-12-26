@@ -1,12 +1,16 @@
 <?php
 
-/**************************************************************
+/*
  * Preferences / Settings 
  * 
  * Call: settings.php?....
  *      ... op=Save ... do save 
- *      ... op=Reset ... do reset to defaults 
- ***************************************************************/
+ *      ... op=Reset ... do reset to defaults
+ * 
+ * PHP version 8.1
+ * 
+ * @category User_Interface
+ */
 
 namespace Lwt\Interface\Settings;
 

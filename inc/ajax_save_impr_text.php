@@ -81,12 +81,14 @@ function do_ajax_save_impr_text($textid, $elem, $data): string
 
 /**
  * Save a text with improved annotations.
- * 
+ *
  * @param int    $textid Text ID
  * @param string $elem   Element to select
  * @param mixed  $data   Data element
- * 
+ *
  * @return string[] Result as array, with answer on "error" or "success"
+ *
+ * @psalm-return array{error?: string, success?: 'OK'}
  */
 function save_impr_text($textid, $elem, $data): array 
 {

@@ -9,11 +9,28 @@ ones are marked like "v1.0.0-fork".
 
 ### Added
 
-* JavaScript documentation with [JSDoc](https://jsdoc.app/)! You will find it under `docs/js/`.
+* New tools for documentation:
+  * New JavaScript documentation with [JSDoc](https://jsdoc.app/)! You will find it under `docs/js/`.
+  * Better PHP documentation using [phpDocumentor](https://phpdoc.org/). The new documentation is at `docs/php/`.
+* New constant `LWT_LANGUAGES_ARRAY`, that replaces `$langDefs` (in `inc/langdefs.php`). Part of [#163](https://github.com/HugoFara/lwt/issues/163). 
+
+### Changed
+
+* PHP files header docblocks are expanded, notably with a PHP version, package and category name.
+
+### Fixed
+
+* Fixes [#113](https://github.com/HugoFara/lwt/issues/113): changing a language name was making text-to-speech unusable and may prompt a warning.
+* Since 2.9.0, tests may be unable to run due to a missing key in an AJAX request ("type"). This is fixed.
+
+### Deprecated
+
+* PHP documentation using Doxygen (under `/docs/html`) is now deprecated and will be removed in 3.0.0.
+* Using `$langDefs` is deprecated in favor of `LWT_LANGUAGES_ARRAY` ([#163](https://github.com/HugoFara/lwt/issues/163)).
 
 ## 2.9.0-fork (December 24 2023)
 
-### Added
+### Added in 2.9.0-fork
 
 * ``langFromDict`` and ``targetLangFromDict`` are now officially going to the
 kernel utility functions.
@@ -69,7 +86,7 @@ actually changed.
 * ``server_data.php`` was reorganized and is more informative with details
 about the REST API.
 
-### Changed
+### Changed in 2.9.0-fork
 
 * User Interface Improvements:
   * Prettier UI to navigate between text creation/edition/archive pages.
@@ -82,7 +99,7 @@ about the REST API.
 * Annotations "order" are now identical to ``Ti2Order`` (in ``textitems2``). It makes management easier, but users may need to reload the annotations once.
 * Updated composer dependencies (up-to-date 2023-11-23).
 
-### Fixed
+### Fixed in 2.9.0-fork
 
 * When editing an existing text, surrounding spaces are no longer inserted ([#92](https://github.com/HugoFara/lwt/issues/92)).
 * Language code is better detected from translator URL when editing an existing language.
@@ -110,7 +127,7 @@ character as a word (e. g.: Chinese). Big thanks to [@hangug-eo](https://github.
 * The list of translations of a term was sometimes not found on
 text annotation edition.
 
-### Deprecated
+### Deprecated in 2.9.0-fork
 
 * Legacy AJAX API. The following AJAX interactions are now deprecated in favor to the new REST API (at ``api.php``):
   * ``inc/ajax_show_similar_terms.php``, use ``/similar-terms`` on GET, `simterms_lgid` becomes `lg_id` and `simterms_word` `term`.
@@ -133,11 +150,11 @@ text annotation edition.
     * On term edition, should be accessed through ``/terms/{term-id}/translations``, ``id`` is now ``text_id`` and ``word`` becomes ``text_lc``.
 * During a word review (test), a "free" test where the user design there own test SQL is now deprecated and will be removed.
 
-### Security
+### Security in 2.9.0-fork
 
 * During tests (word review), test data is no longer be send as raw SQL string, except for "free" test.
 
-### Full Changelog
+### Full Changelog for 2.9.0-fork
 
 * [2.8.1...2.9.0](https://github.com/HugoFara/lwt/compare/2.8.1...2.9.0)
 

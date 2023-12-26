@@ -1,6 +1,5 @@
 /**
- * \file
- * \brief All the function to make an audio controller in do_text_header.php
+ * All the function to make an audio controller in do_text_header.php
  * 
  * @license Unlicense
  */

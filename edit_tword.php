@@ -7,6 +7,11 @@
  * Call: edit_tword.php?....
  *  ... op=Change ... do update
  *  ... wid=[wordid] ... display edit screen
+ * 
+ * PHP version 8.1
+ * 
+ * @category Helper_Frame
+ * @package Lwt
  */
 
 require_once 'inc/session_utility.php';
@@ -139,9 +144,9 @@ else {  // if (! isset($_REQUEST['op']))
     $sql = 'select WoText, WoLgID, WoTranslation, WoSentence, WoRomanization, WoStatus from ' . $tbpref . 'words where WoID = ' . $wid;
     $res = do_mysqli_query($sql);
     $record = mysqli_fetch_assoc($res);
-    if ($record ) {
-        $term = $record['WoText'];
-        $lang = $record['WoLgID'];
+    if ($record) {
+        $term = (string) $record['WoText'];
+        $lang = (int) $record['WoLgID'];
         $transl = repl_tab_nl($record['WoTranslation']);
         if($transl == '*') { 
             $transl=''; 
@@ -154,7 +159,7 @@ else {  // if (! isset($_REQUEST['op']))
     }
     mysqli_free_result($res);
     
-    $termlc =    mb_strtolower($term, 'UTF-8');
+    $termlc = mb_strtolower($term, 'UTF-8');
     $titletext = "Edit Term: " . tohtml($term);
     pagestart_nobody($titletext);
     $scrdir = getScriptDirectionTag($lang);

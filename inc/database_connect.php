@@ -4,6 +4,10 @@
  * \file
  * \brief Connects to the database and check its state.
  * 
+ * PHP version 8.1
+ * 
+ * @category Database
+ * @package Lwt
  * @author https://github.com/HugoFara/ HugoFara
  */
 
@@ -121,7 +125,7 @@ function prepare_textdata_js($s): string
  * @param string $data Input string
  *
  * @return string Properly escaped and trimmed string. "NULL" if the input string is empty.
- * 
+ *
  * @global $DBDONNECTION
  */
 function convert_string_to_sqlsyntax($data): string 
@@ -848,15 +852,15 @@ function parse_japanese_text($text, $id): ?array
 
 /**
  * Insert a processed text in the data in pure SQL way.
- * 
+ *
  * @param string $text Preprocessed text to insert
  * @param int    $id   Text ID
  * 
- * @return null
+ * @return void
  * 
  * @global string $tbpref Database table prefix
  */
-function save_processed_text_with_sql($text, $id)
+function save_processed_text_with_sql($text, $id): void
 {
     global $tbpref;
     $file_name = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $tbpref . "tmpti.txt";

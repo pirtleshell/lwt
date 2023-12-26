@@ -10,6 +10,9 @@
  *              ... tid=[textid]&ord=[textpos]&wid=[wordid] ... edit  
  *              ... tid=[textid]&ord=[textpos]&txt=[word] ... new or edit
  * 
+ * PHP version 8.1
+ * 
+ * @category Helper_Frame
  * @package Lwt
  * @author  LWT Project <lwt-project@hotmail.com>
  * @license Unlicense <http://unlicense.org/>
@@ -23,12 +26,12 @@ require_once 'inc/classes/Term.php';
 
 /**
  * Export term data as a JSON dictionnary.
- * 
- * @return string JSON dictionnary. 
+ *
+ * @return string JSON dictionnary.
  */
-function export_term_js_dict($term) 
+function export_term_js_dict($term): string 
 {
-    return json_encode(
+    $raw_answer = json_encode(
         array(
             "woid" => $term->id,
             "text" =>  $term->text,
@@ -39,6 +42,13 @@ function export_term_js_dict($term)
             "status" => $term->status
         )
     );
+    if ($raw_answer === false) {
+        $raw_answer = json_encode(array("error" => "Unable to return data."));
+        if ($raw_answer === false) {
+            my_die("Unable to return data");
+        }
+    }
+    return $raw_answer;
 }
 
 /**

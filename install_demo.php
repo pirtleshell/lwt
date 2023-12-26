@@ -1,9 +1,12 @@
 <?php
 
-/**************************************************************
-Call: install_demo.php
-Install LWT Demo Database
- ***************************************************************/
+/*
+ * Install LWT Demo Database
+ * 
+ * Call: install_demo.php
+ * 
+ * PHP version 8.1
+ */
 
 require_once 'inc/session_utility.php';
 

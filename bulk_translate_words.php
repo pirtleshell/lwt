@@ -11,6 +11,9 @@
  *      ... term=[term]   ... Term to translate
  *      ... offset=[pos]  ... An optional offset position
  * 
+ * PHP version 8.1
+ * 
+ * @category Helper_Frame
  * @package Lwt
  * @author  LWT Project <lwt-project@hotmail.com>
  * @license Unlicense <http://unlicense.org/>
@@ -21,7 +24,7 @@
 require_once 'inc/session_utility.php';
 
 
-function bulk_save_terms($terms, $tid, $cleanUp)
+function bulk_save_terms($terms, $tid, $cleanUp): void
 {
     global $tbpref;
     $sqlarr = array();
@@ -115,7 +118,7 @@ function bulk_save_terms($terms, $tid, $cleanUp)
 }
 
 
-function bulk_do_content($tid, $sl, $tl, $pos) 
+function bulk_do_content($tid, $sl, $tl, $pos): void 
 {
     global $tbpref;
     $cnt = 0;

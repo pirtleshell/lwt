@@ -1,9 +1,14 @@
 <?php
 
-/**************************************************************
-Call: table_set_management.php
-Analyse DB tables, and manage Table Sets
- ***************************************************************/
+/*
+ * Analyse DB tables, and manage Table Sets
+ * 
+ * Call: table_set_management.php
+ * 
+ * PHP version 8.1
+ * 
+ * @category User_Interface
+ */
 
 require_once 'inc/session_utility.php';
 

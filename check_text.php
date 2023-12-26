@@ -7,6 +7,9 @@
  * Call: check_text.php?...
  *      op=Check ... do the check
  * 
+ * PHP version 8.1
+ * 
+ * @category User_Interface
  * @package Lwt
  * @author  LWT Project <lwt-project@hotmail.com>
  * @license Unlicense <http://unlicense.org/>
@@ -62,7 +65,7 @@ function display_form()
          * Change the language of inputs for text and title based on selected 
          * language.
          * 
-         * @returns undefined
+         * @returns {undefined}
          */
         function change_textboxes_language() {
             const lid = document.getElementById("TxLgID").value;

@@ -6,6 +6,8 @@
  * 
  * Call: do_text_text.php?text=[textid]
  * 
+ * PHP version 8.1
+ * 
  * @package Lwt
  * @author  LWT Project <lwt-project@hotmail.com>
  * @license Unlicense <http://unlicense.org/>
@@ -726,12 +728,10 @@ function do_text_text_content($textid, $only_body=true): void
     $showLearning = getSettingZeroOrOne('showlearningtranslations', 1);
     
     /**
-     * @var int $mode_trans 
      * Annotation position between 0 and 4
      */
     $mode_trans = (int) getSettingWithDefault('set-text-frame-annotation-position');
     /**
-     * @var bool $ruby 
      * Ruby annotations
      */
     $ruby = $mode_trans==2 || $mode_trans==4;

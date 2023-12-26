@@ -1,20 +1,24 @@
 <?php
 
-
-/**************************************************************
-Call: edit_tags.php?....
-      ... markaction=[opcode] ... do actions on marked tags
-      ... allaction=[opcode] ... do actions on all tags
-      ... del=[wordid] ... do delete
-      ... op=Save ... do insert new 
-      ... op=Change ... do update
-      ... new=1 ... display new tag screen 
-      ... chg=[wordid] ... display edit screen 
-      ... sort=[sortcode] ... sort 
-      ... page=[pageno] ... page  
-      ... query=[tagtextfilter] ... tag text filter    
-Manage tags
- ***************************************************************/
+/*
+ * Manage tags
+ * 
+ * Call: edit_tags.php?....
+ *  ... markaction=[opcode] ... do actions on marked tags
+ *  ... allaction=[opcode] ... do actions on all tags
+ *  ... del=[wordid] ... do delete
+ *  ... op=Save ... do insert new 
+ *  ... op=Change ... do update
+ *  ... new=1 ... display new tag screen 
+ *  ... chg=[wordid] ... display edit screen 
+ *  ... sort=[sortcode] ... sort 
+ *  ... page=[pageno] ... page  
+ *  ... query=[tagtextfilter] ... tag text filter    
+ * 
+ * PHP version 8.1
+ * 
+ * @category User_Interface
+ */
 
 namespace Lwt\Interface\Edit_Tags;
 
@@ -40,14 +44,25 @@ if (isset($_REQUEST['markaction'])) {
     if (isset($_REQUEST['marked'])) {
         if (is_array($_REQUEST['marked'])) {
             $l = count($_REQUEST['marked']);
-            if ($l > 0 ) {
+            if ($l > 0) {
                 $list = "(" . $_REQUEST['marked'][0];
-                for ($i=1; $i<$l; $i++) { $list .= "," . $_REQUEST['marked'][$i]; 
+                for ($i=1; $i<$l; $i++) {
+                    $list .= "," . $_REQUEST['marked'][$i]; 
                 }
                 $list .= ")";
                 if ($markaction == 'del') {
-                    $message = runsql('delete from ' . $tbpref . 'tags where TgID in ' . $list, "Deleted");
-                    runsql("DELETE " . $tbpref . "wordtags FROM (" . $tbpref . "wordtags LEFT JOIN " . $tbpref . "tags on WtTgID = TgID) WHERE TgID IS NULL", '');
+                    $message = runsql(
+                        'delete from ' . $tbpref . 'tags 
+                        where TgID in ' . $list, 
+                        "Deleted"
+                    );
+                    runsql(
+                        "DELETE " . $tbpref . "wordtags FROM (
+                            " . $tbpref . "wordtags LEFT JOIN " . $tbpref . "tags 
+                            on WtTgID = TgID
+                        ) WHERE TgID IS NULL",
+                        ''
+                    );
                     adjust_autoincr('tags', 'TgID');
                 }
             }
@@ -185,9 +200,10 @@ if (isset($_REQUEST['new'])) {
     if (substr($message, 0, 24) == "Error: Duplicate entry '"  
         && substr($message, -18) == "' for key 'TgText'"
     ) {
-        $message = substr($message, 24);    
+        $message = substr($message, 24);
         $message = substr($message, 0, strlen($message)-18);
-        $message = "Error: Term Tag '" . $message . "' already exists. Please go back and correct this!";
+        $message = "Error: Term Tag '" . $message .
+        "' already exists. Please go back and correct this!";
     }     
     echo error_message_with_hide($message, 0);
     
