@@ -333,14 +333,14 @@ function load_language($lgid)
         $language->dict2uri = "";
         $language->translator = "";
         $language->exporttemplate = "";
-        $language->textsize = "";
+        $language->textsize = 100;
         $language->charactersubst = "";
         $language->regexpsplitsent = "";
         $language->exceptionsplitsent = "";
         $language->regexpwordchar = "";
-        $language->removespaces = "";
-        $language->spliteachchar = "";
-        $language->rightoleft = "";
+        $language->removespaces = null;
+        $language->spliteachchar = null;
+        $language->rightoleft = null;
     } else {
         // Load data from database
         $sql = "SELECT * FROM {$tbpref}languages WHERE LgID = $lgid";
@@ -351,14 +351,14 @@ function load_language($lgid)
         $language->dict2uri = $record["LgDict2URI"];
         $language->translator = $record["LgGoogleTranslateURI"];
         $language->exporttemplate = $record["LgExportTemplate"];
-        $language->textsize = $record["LgTextSize"];
+        $language->textsize = (int) $record["LgTextSize"];
         $language->charactersubst = $record["LgCharacterSubstitutions"];
         $language->regexpsplitsent = $record["LgRegexpSplitSentences"];
         $language->exceptionsplitsent = $record["LgExceptionsSplitSentences"];
         $language->regexpwordchar = $record["LgRegexpWordCharacters"];
-        $language->removespaces = $record["LgRemoveSpaces"];
-        $language->spliteachchar = $record["LgSplitEachChar"];
-        $language->rightoleft = $record["LgRightToLeft"];
+        $language->removespaces = (bool) $record["LgRemoveSpaces"];
+        $language->spliteachchar = (bool) $record["LgSplitEachChar"];
+        $language->rightoleft = (bool) $record["LgRightToLeft"];
         mysqli_free_result($res);
     }
     return $language;
@@ -604,7 +604,7 @@ function edit_language_form($language): void
             input_box.value = input_box.value.substring(1);
             popup = true;
         }
-        popup |= (new URL(input_box.value)).searchParams.has("lwt_popup");
+        popup = popup || (new URL(input_box.value)).searchParams.has("lwt_popup");
         target.checked = popup;
     }
 
@@ -1093,7 +1093,7 @@ function edit_languages_display($message)
 {
     global $tbpref, $debug;
 
-    echo error_message_with_hide($message, 0);
+    echo error_message_with_hide($message, false);
     
     $current = (int) getSetting('currentlanguage');
     
@@ -1183,14 +1183,14 @@ function edit_languages_display($message)
             where WoLgID=' . $lid
         );
         $wordcount = is_numeric($foo) ? (int)$foo : 0;
-        if (is_null($newsfeedcount) || empty($newsfeedcount)) {
+        if (is_null($newsfeedcount)) {
             $nfcount = 0;
         } else if (isset($newsfeedcount[$lid])) {
             $nfcount = (int)$newsfeedcount[$lid];
         } else {
             $nfcount = 0;
         }
-        if (is_null($feedarticlescount) || empty($feedarticlescount)) {
+        if (is_null($feedarticlescount)) {
             $fartcount = 0;
         } else if (isset($feedarticlescount[$lid])) {
             $fartcount = (int)$feedarticlescount[$lid];
@@ -1275,7 +1275,7 @@ function edit_languages_do_page()
     edit_languages_alert_duplicate();
     $message = '';
     if (isset($_REQUEST['refresh'])) {
-        $message = edit_languages_refresh($_REQUEST['refresh']);
+        $message = edit_languages_refresh((int) $_REQUEST['refresh']);
     }
     if (isset($_REQUEST['del'])) {
         $message = edit_languages_delete((int)$_REQUEST['del']);

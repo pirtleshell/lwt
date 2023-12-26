@@ -146,7 +146,7 @@ function select_imported_terms($last_update, $offset, $max_terms): array
     GROUP BY WoID 
     LIMIT $offset, $max_terms";
     $res = do_mysqli_query($sql);
-    $records = mysqli_fetch_all($res, MYSQLI_ASSOC);
+    $records = mysqli_fetch_all($res);
     mysqli_free_result($res);
     return $records;
 }
@@ -173,7 +173,7 @@ function show_imported_terms($last_update, $limit, $rtl)
     <?php
     preg_match('/.+(\d+)\s*,\s*(\d+)/', $limit, $matches);
     $rows = select_imported_terms($last_update, $matches[1], $matches[2]);
-    foreach ($rows as $record) {
+    foreach ($rows as $_key => $record) {
         echo '<tr>
             <td class="td1">
                 <span' . ($rtl ? ' dir="rtl" ' : '') . '>' . 

@@ -4,11 +4,11 @@ namespace Lwt\Interface\Edit_Feeds;
 
 require_once 'inc/session_utility.php';
 
-$currentlang = validateLang(processDBParam("filterlang", 'currentlanguage', '', 0));
-$currentsort = processDBParam("sort", 'currentmanagefeedssort', '2', 1);
-$currentquery = processSessParam("query", "currentmanagefeedsquery", '', 0);
-$currentpage = processSessParam("page", "currentmanagefeedspage", '1', 1);
-$currentfeed = processSessParam("selected_feed", "currentmanagefeedsfeed", '', 0);
+$currentlang = validateLang((string) processDBParam("filterlang", 'currentlanguage', '', false));
+$currentsort = (int) processDBParam("sort", 'currentmanagefeedssort', '2', true);
+$currentquery = (string) processSessParam("query", "currentmanagefeedsquery", '', false);
+$currentpage = (int) processSessParam("page", "currentmanagefeedspage", '1', true);
+$currentfeed = (string) processSessParam("selected_feed", "currentmanagefeedsfeed", '', false);
 $wh_query = convert_string_to_sqlsyntax(str_replace("*", "%", $currentquery));
 $wh_query = ($currentquery != '') ? (' and (NfName like ' . $wh_query . ')') : '';
 
@@ -29,7 +29,7 @@ if (isset($_REQUEST['markaction'])) {
             'delete from ' . $tbpref . 'newsfeeds 
             where NfID in(' . $currentfeed . ')', " / Newsfeed(s) deleted"
         );
-        echo error_message_with_hide($message, 0);
+        echo error_message_with_hide($message, false);
         unset($message);
     }
 
@@ -39,7 +39,7 @@ if (isset($_REQUEST['markaction'])) {
             where FlNfID in(' . $currentfeed . ')', 
             "Article item(s) deleted"
         );
-        echo error_message_with_hide($message, 0);
+        echo error_message_with_hide($message, false);
         unset($message);
         do_mysqli_query(
             'UPDATE ' . $tbpref . 'newsfeeds SET NfUpdate="'.time().'" 
@@ -53,7 +53,7 @@ if (isset($_REQUEST['markaction'])) {
             where FlNfID in (' . $currentfeed . ')', 
             "Article(s) reset"
         );
-        echo error_message_with_hide($message, 0);
+        echo error_message_with_hide($message, false);
         unset($message);
     }
 }

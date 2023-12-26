@@ -24,7 +24,7 @@ require_once 'inc/langdefs.php';
 /**
  * Get the SQL string to perform tests.
  *
- * @param bool|null   $selection    Test is of type selection
+ * @param int|null   $selection    Test is of type selection
  * @param string|null $sess_testsql SQL string for test
  * @param int|null    $lang         Test is of type language, for the language $lang ID
  * @param int|null    $text         Testing text with ID $text
@@ -211,7 +211,7 @@ function do_test_test_finished($testsql, $totaltests, $ajax=false)
  * The sentence should contain at least 70% of known words.
  *
  * @param int    $wid    The word to test.
- * @param string $lang   ID of the language
+ * @param mixed  $lang   ID of the language, will be removed in PHP 3.0.0
  * @param string $wordlc Word in lowercase
  *
  * @global string $tbpref Table prefix
@@ -273,11 +273,11 @@ function do_test_test_sentence($wid, $lang, $wordlc): array
 /**
  * Return the test relative to a word.
  *
- * @param array  $wo_record Query from the database regarding a word.
- * @param string $sent      Sentence containing the word.
- * @param int    $testtype  Type of test
- * @param int    $nosent    1 if you want to hide sentences.
- * @param string $regexword Regex to select the desired word.
+ * @param array    $wo_record Query from the database regarding a word.
+ * @param string   $sent      Sentence containing the word.
+ * @param int      $testtype  Type of test
+ * @param bool|int $nosent    1 or true if you want to hide sentences.
+ * @param string   $regexword Regex to select the desired word.
  *
  * @return string[] HTML-escaped and raw text sentences (or word)
  *
@@ -751,7 +751,7 @@ function do_test_test_javascript_interaction(
     $wo_record, $wb1, $wb2, $wb3, $testtype, $nosent, $save
 ) {
     do_test_test_interaction_globals($wb1, $wb2, $wb3);
-    $solution = get_test_solution($testtype, $wo_record, $nosent, $save);
+    $solution = get_test_solution($testtype, $wo_record, (bool) $nosent, $save);
     do_test_test_javascript_clickable($wo_record, $solution);
 }
 

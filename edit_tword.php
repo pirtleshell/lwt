@@ -76,7 +76,7 @@ if (isset($_REQUEST['op'])) {
         pagestart_nobody($titletext);
         echo '<h1>' . $titletext . '</h1>';        
         $message = 'Error: Term in lowercase must be exactly = "' . $textlc . '", please go back and correct this!'; 
-        echo error_message_with_hide($message, 0);
+        echo error_message_with_hide($message, false);
         pageend();
         exit();
     }
@@ -111,7 +111,7 @@ var context = window.parent.document;
 var woid = <?php echo prepare_textdata_js($wid); ?>;
 if(window.parent.location.href.includes('type=table')) {
     // Table Test
-    $('#STAT' + woid, context).html(<?php echo prepare_textdata_js(make_status_controls_test_table(1, $_REQUEST["WoStatus"], $wid)); ?>);
+    $('#STAT' + woid, context).html(<?php echo prepare_textdata_js(make_status_controls_test_table(1, (int) $_REQUEST["WoStatus"], $wid)); ?>);
     $('#TERM' + woid, context).html(<?php echo prepare_textdata_js(tohtml($_REQUEST["WoText"])); ?>);
     $('#TRAN' + woid, context).html(<?php echo prepare_textdata_js(tohtml($translation)); ?>);
     $('#ROMA' + woid, context).html(<?php echo prepare_textdata_js(tohtml($_REQUEST["WoRomanization"])); ?>);
@@ -210,7 +210,7 @@ else {  // if (! isset($_REQUEST['op']))
     </tr>
     <tr>
         <td class="td1 right" colspan="2">
-            <?php echo createDictLinksInEditWin($lang, $term, 'document.forms[0].WoSentence', 1); ?>
+            <?php echo createDictLinksInEditWin($lang, $term, 'document.forms[0].WoSentence', true); ?>
             &nbsp; &nbsp; &nbsp; 
             <input type="submit" name="op" value="Change" />
         </td>

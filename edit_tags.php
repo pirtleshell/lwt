@@ -18,16 +18,17 @@
  * PHP version 8.1
  * 
  * @category User_Interface
+ * @package Lwt
  */
 
 namespace Lwt\Interface\Edit_Tags;
 
 require_once 'inc/session_utility.php';
 
-$currentsort = processDBParam("sort", 'currenttagsort', '1', 1);
+$currentsort = (int) processDBParam("sort", 'currenttagsort', '1', true);
 
-$currentpage = processSessParam("page", "currenttagpage", '1', 1);
-$currentquery = processSessParam("query", "currenttagquery", '', 0);
+$currentpage = (int) processSessParam("page", "currenttagpage", '1', true);
+$currentquery = (string) processSessParam("query", "currenttagquery", '', false);
 
 $wh_query = convert_string_to_sqlsyntax(str_replace("*", "%", $currentquery));
 $wh_query = ($currentquery != '') ? (' and (TgText like ' . $wh_query . ' or TgComment like ' . $wh_query . ')') : '';
@@ -205,7 +206,7 @@ if (isset($_REQUEST['new'])) {
         $message = "Error: Term Tag '" . $message .
         "' already exists. Please go back and correct this!";
     }     
-    echo error_message_with_hide($message, 0);
+    echo error_message_with_hide($message, false);
     
     get_tags($refresh = 1);   // refresh tags cache
 

@@ -933,7 +933,7 @@ function createTheDictLink (u, w, t, b) {
   }
   try {
     let final_url = new URL(url);
-    popup |= final_url.searchParams.has('lwt_popup');
+    popup = popup || final_url.searchParams.has('lwt_popup');
   } catch (err) {
     if (!(err instanceof TypeError)) {
       throw err;
@@ -977,7 +977,7 @@ function createSentLookupLink (torder, txid, url, txt) {
   }
   try {
     let final_url = new URL(url);
-    popup |= final_url.searchParams.has('lwt_popup');
+    popup = popup || final_url.searchParams.has('lwt_popup');
     external = true;
   } catch (err) {
     if (!(err instanceof TypeError)) {

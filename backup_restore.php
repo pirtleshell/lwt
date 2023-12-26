@@ -337,7 +337,7 @@ if (isset($_REQUEST['restore'])) {
 
 pagestart('Backup/Restore/Empty Database', true);
 
-echo error_message_with_hide($message, 1);
+echo error_message_with_hide($message, true);
 
 if ($tbpref == '') { 
     $prefinfo = "(Default Table Set)"; 

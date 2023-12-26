@@ -122,9 +122,9 @@ if ($annplcmnt == '') {
 $sql = 'select TxLgID, TxTitle, TxSourceURI from ' . $tbpref . 'texts where TxID = ' . $textid;
 $res = do_mysqli_query($sql);
 $record = mysqli_fetch_assoc($res);
-$title = $record['TxTitle'];
-$sourceURI = $record['TxSourceURI'];
-$langid = $record['TxLgID'];
+$title = (string) $record['TxTitle'];
+$sourceURI = (string) $record['TxSourceURI'];
+$langid = (int) $record['TxLgID'];
 mysqli_free_result($res);
 
 $sql = 'select LgTextSize, LgRemoveSpaces, LgRightToLeft from ' . $tbpref . 'languages where LgID = ' . $langid;
@@ -167,7 +167,7 @@ pagestart_nobody('Print');
 </div>
 <h1>PRINT ▶ <?php 
 echo tohtml($title); 
-(isset($sourceURI) && substr(trim($sourceURI), 0, 1)!='#' ? 
+(isset($record['TxSourceURI']) && substr(trim($sourceURI), 0, 1)!='#' ? 
 ' <a href="' . $sourceURI . '" target="_blank">
 <img src="'.get_file_path('icn/chain.png').'" title="Text Source" alt="Text Source" /></a>' : 
 '') ?></h1>
@@ -275,7 +275,7 @@ while ($record = mysqli_fetch_assoc($res)) {
                 if ($savetrans == '*') { 
                     $savetrans = ''; 
                 }
-                $saverom = trim($record['WoRomanization']);
+                $saverom = trim((string) $record['WoRomanization']);
             }
         }
     }

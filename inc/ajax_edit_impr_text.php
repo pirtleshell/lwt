@@ -36,23 +36,25 @@ function make_trans($i, $wid, $trans, $word, $lang): string
     $widset = is_numeric($wid);
     $r = "";
     if ($widset) {
-        $alltrans = get_first_value(
+        $alltrans = (string) get_first_value(
             "SELECT WoTranslation AS value FROM {$tbpref}words 
             WHERE WoID = $wid"
         );
         $transarr = preg_split('/[' . get_sepas()  . ']/u', $alltrans);
         $set = false;
+        $set_default = true;
         foreach ($transarr as $t) {
             $tt = trim($t);
             if ($tt == '*' || $tt == '') { 
                 continue; 
             }
+            $set_default = false;
             // true if the translation should be checked (this translation is set)
-            $set = $tt == $trans && !$set;
+            $set = $set || $tt == $trans;
             // Add a candidate annotation
             $r .= '<span class="nowrap">
                 <input class="impr-ann-radio" ' . 
-                ($set ? 'checked="checked" ' : '') . 'type="radio" name="rg' . 
+                ($tt == $trans ? 'checked="checked" ' : '') . 'type="radio" name="rg' . 
                 $i . '" value="' . tohtml($tt) . '" /> 
                 &nbsp;' . tohtml($tt) . '
             </span>
@@ -61,9 +63,7 @@ function make_trans($i, $wid, $trans, $word, $lang): string
         ;
     } 
     // Set the empty translation if no translation have been set yet
-    if (!isset($set) || !$set) {
-        $set = true;
-    }
+    $set = $set || $set_default;
     // Empty radio button and text field after the list of translations
     $r .= '<span class="nowrap">
     <input class="impr-ann-radio" type="radio" name="rg' . $i . '" ' . 
@@ -117,7 +117,7 @@ function get_translations($word_id): array
 {
     global $tbpref;
     $translations = array();
-    $alltrans = get_first_value(
+    $alltrans = (string) get_first_value(
         "SELECT WoTranslation AS value FROM {$tbpref}words 
         WHERE WoID = $word_id"
     );
@@ -285,8 +285,8 @@ function edit_term_form($textid): string
     FROM {$tbpref}texts WHERE TxID = $textid";
     $res = do_mysqli_query($sql);
     $record = mysqli_fetch_assoc($res);
-    $langid = $record['TxLgID'];
-    $ann = $record['TxAnnotatedText'];
+    $langid = (int) $record['TxLgID'];
+    $ann = (string) $record['TxAnnotatedText'];
     if (strlen($ann) > 0) {
         $ann = recreate_save_ann($textid, $ann);
     }
@@ -336,8 +336,8 @@ function edit_term_form($textid): string
             $wid = null;
             $trans = '';
             if (count($vals) > 2) {
-                $wid = $vals[2];
-                if (is_numeric($wid)) {
+                $str_wid = $vals[2];
+                if (is_numeric($str_wid)) {
                     $temp_wid = (int)get_first_value(
                         "SELECT COUNT(WoID) AS value 
                         FROM {$tbpref}words 
@@ -345,7 +345,11 @@ function edit_term_form($textid): string
                     );
                     if ($temp_wid < 1) { 
                         $wid = null; 
+                    } else {
+                        $wid = (int) $str_wid;
                     }
+                } else {
+                    $wid = null;
                 }
             }
             if (count($vals) > 3) { 
@@ -434,8 +438,8 @@ function make_form($textid, $wordlc): array
     FROM ' . $tbpref . 'texts WHERE TxID = ' . $textid;
     $res = do_mysqli_query($sql);
     $record = mysqli_fetch_assoc($res);
-    $langid = $record['TxLgID'];
-    $ann = $record['TxAnnotatedText'];
+    $langid = (int) $record['TxLgID'];
+    $ann = (string) $record['TxAnnotatedText'];
     if (strlen($ann) > 0) {
         $ann = recreate_save_ann($textid, $ann);
     }
@@ -488,16 +492,20 @@ function make_form($textid, $wordlc): array
             $wid = null;
             $trans = '';
             if (count($vals) > 2) {
-                $wid = $vals[2];
-                if (is_numeric($wid)) {
+                $str_wid = $vals[2];
+                if (is_numeric($str_wid)) {
                     $temp_wid = (int)get_first_value(
                         "SELECT COUNT(WoID) AS value 
-                        FROM " . $tbpref . "words 
-                        WHERE WoID = ". $wid
+                        FROM {$tbpref}words 
+                        WHERE WoID = $str_wid"
                     );
                     if ($temp_wid < 1) { 
                         $wid = null; 
+                    } else {
+                        $wid = (int) $str_wid;
                     }
+                } else {
+                    $wid = null;
                 }
             }
             if (count($vals) > 3) { 

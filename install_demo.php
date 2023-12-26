@@ -43,7 +43,7 @@ if (isset($_REQUEST['install'])) {
 
 pagestart('Install LWT Demo Database', true);
 
-echo error_message_with_hide($message, 1);
+echo error_message_with_hide($message, true);
 
 $langcnt = get_first_value("SELECT COUNT(*) AS value FROM {$tbpref}languages");
 

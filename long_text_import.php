@@ -66,7 +66,7 @@ function long_text_check($max_input_vars): void
 
     if ($data == "") {
         $message = "Error: No text specified!";
-        echo error_message_with_hide($message, 0);
+        echo error_message_with_hide($message, false);
     } else {
         $sent_array = splitCheckText($data, $langid, -2);
         $texts = array();
@@ -97,7 +97,7 @@ function long_text_check($max_input_vars): void
             $message = "Error: Too many texts (" . $textcount . " > " . 
             ($max_input_vars-20) . 
             "). You must increase 'Maximum Sentences per Text'!";
-            echo error_message_with_hide($message, 0);
+            echo error_message_with_hide($message, false);
         } else {
 
             ?>
@@ -207,7 +207,7 @@ function long_text_save(): void
         $message = $imported . " Text(s) imported!";
     }
     
-    echo error_message_with_hide($message, 0);
+    echo error_message_with_hide($message, false);
 
     ?>        
  <p>&nbsp;<br /><input type="button" value="Show Texts" onclick="location.href='edit_texts.php';" /></p>

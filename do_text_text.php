@@ -20,7 +20,7 @@ require_once 'inc/session_utility.php';
 /**
  * Get the record for this text in the database.
  *
- * @param string $textid ID of the text
+ * @param string|int $textid ID of the text
  * 
  * @return array{TxLgID: int, TxTitle: string, TxAnnotatedText: string, 
  * TxPosition: int}|false|null Record corresponding to this text.
@@ -270,10 +270,7 @@ function wordProcessor($record, $showAll, $currcharcount): int
     $cnt = 1;
     $sid = 0;
 
-    if ($sid != $record['Ti2SeID']) {
-        if ($sid != 0) {
-            echo '</span>';
-        }
+    if ($sid != (int) $record['Ti2SeID']) {
         $sid = $record['Ti2SeID'];
         echo '<span id="sent_', $sid, '">';
     }
@@ -702,8 +699,8 @@ function do_text_javascript($var_array): void
 /**
  * Main function for displaying sentences. It will print HTML content.
  *
- * @param string $textid    ID of the requiered text
- * @param bool   $only_body If true, only show the inner body. If false, create a complete HTML document.
+ * @param string|int $textid    ID of the requiered text
+ * @param bool       $only_body If true, only show the inner body. If false, create a complete HTML document.
  */
 function do_text_text_content($textid, $only_body=true): void
 {
@@ -711,7 +708,7 @@ function do_text_text_content($textid, $only_body=true): void
     $record = get_text_data($textid);
     $title = $record['TxTitle'];
     $langid = (int)$record['TxLgID'];
-    $ann = $record['TxAnnotatedText'];
+    $ann = (string) $record['TxAnnotatedText'];
     $pos = $record['TxPosition'];
     
     // Language settings
@@ -790,8 +787,10 @@ function do_text_text_content($textid, $only_body=true): void
     flush();
 }
 
-// This code runs when calling this script, be careful!
-if (false && isset($_REQUEST['text'])) {
+/*
+ * Uncoment to use as a page, deprecated behavior in LWT-fork, will be removed in 3.0.0 
+if (isset($_REQUEST['text'])) {
     do_text_text_content($_REQUEST['text'], false);
 }
+*/
 ?>

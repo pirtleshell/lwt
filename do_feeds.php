@@ -49,14 +49,14 @@ function dummy_function_1(): array
             'audio' => $row['FlAudio'],
             'text' => $row['FlText']
         );
-        $NfName = $row['NfName'];
-        $nf_id=$row['NfID'];
-        $nf_options=$row['NfOptions'];
-        if (!$nf_tag_name=get_nf_option($nf_options, 'tag')) {
+        $NfName = (string) $row['NfName'];
+        $nf_id = (int) $row['NfID'];
+        $nf_options = $row['NfOptions'];
+        if (!$nf_tag_name = get_nf_option($nf_options, 'tag')) {
             $nf_tag_name = mb_substr($NfName, 0, 20, "utf-8");
         }
-        if (!$nf_max_texts=(int)get_nf_option($nf_options, 'max_texts')) {
-            $nf_max_texts=(int)getSettingWithDefault('set-max-texts-per-feed');
+        if (!$nf_max_texts = (int)get_nf_option($nf_options, 'max_texts')) {
+            $nf_max_texts = (int)getSettingWithDefault('set-max-texts-per-feed');
         }
         $texts = get_text_from_rsslink(
             $doc, $row['NfArticleSectionTags'], $row['NfFilterTags'], 
@@ -357,14 +357,16 @@ function check_errors($message): void
         unset($_SESSION['feed_loaded']);
 
     }
-    echo error_message_with_hide($message, 0);
+    echo error_message_with_hide($message, false);
 }
 
 function dummy_function_2($currentlang, $currentfeed): void
 {
     global $tbpref, $debug;
-    $currentquery = processSessParam("query", "currentrssquery", '', 0);
-    $currentquerymode = processSessParam("query_mode", "currentrssquerymode", 'title,desc,text', 0);
+    $currentquery = (string) processSessParam("query", "currentrssquery", '', false);
+    $currentquerymode = (string) processSessParam(
+        "query_mode", "currentrssquerymode", 'title,desc,text', false
+    );
     $currentregexmode = getSettingWithDefault("set-regex-mode");
     $wh_query = $currentregexmode . 'like ' .  convert_string_to_sqlsyntax(
         ($currentregexmode == '') ? 
@@ -394,8 +396,8 @@ function dummy_function_2($currentlang, $currentfeed): void
     } else { 
         $wh_query = ''; 
     }
-    $currentpage = processSessParam("page", "currentrsspage", '1', 1);
-    $currentsort = processDBParam("sort", 'currentrsssort', '2', 1);
+    $currentpage = (int) processSessParam("page", "currentrsspage", '1', true);
+    $currentsort = (int) processDBParam("sort", 'currentrsssort', '2', true);
     ?>
 
 <div class="flex-spaced">
@@ -572,28 +574,53 @@ function dummy_function_2($currentlang, $currentfeed): void
   <th class="th1 clickable" style="min-width:90px;">Date</th>
   </tr>    
                     <?php
-                        $result = do_mysqli_query("SELECT FlID, FlTitle, FlLink, FlDescription, FlDate, FlAudio,TxID, AtID FROM " . $tbpref . "feedlinks left join " . $tbpref . "texts on TxSourceURI=trim(FlLink) left join " . $tbpref . "archivedtexts on AtSourceURI=trim(FlLink) WHERE FlNfID in ($currentfeed) ".$wh_query." ORDER BY " . $sorts[$currentsort-1] . " ". $limit);
+                        $result = do_mysqli_query(
+                            "SELECT FlID, FlTitle, FlLink, FlDescription, FlDate, 
+                            FlAudio,TxID, AtID 
+                            FROM " . $tbpref . "feedlinks 
+                            left join " . $tbpref . "texts 
+                            on TxSourceURI=trim(FlLink) 
+                            left join " . $tbpref . "archivedtexts 
+                            on AtSourceURI=trim(FlLink) 
+                            WHERE FlNfID in ($currentfeed) ".$wh_query." 
+                            ORDER BY " . $sorts[$currentsort-1] . " ". $limit
+                        );
                     while ($row = mysqli_fetch_assoc($result)) {
                         echo '<tr>';
                         if ($row['TxID']) {
-                            echo '<td class="td1 center"><a href="do_text.php?start=' . $row['TxID'] . '" ><img src="icn/book-open-bookmark.png" title="Read" alt="-" /></a>'; 
+                            echo '<td class="td1 center"><a href="do_text.php?start=' . 
+                            $row['TxID'] . '" >
+                            <img src="icn/book-open-bookmark.png" title="Read" alt="-" /></a>'; 
                         } elseif ($row['AtID']) {
                             echo '<td class="td1 center"><span title="archived"><img src="icn/status-busy.png" alt="-" /></span>';
-                        } elseif (!empty($row['FlLink']) && str_starts_with($row['FlLink'], ' ')) {
-                            echo '<td class="td1 center"><img class="not_found" name="' . $row['FlID'] . '" title="download error" src="icn/exclamation-button.png" alt="-" />';
+                        } elseif (!empty($row['FlLink']) && str_starts_with((string) $row['FlLink'], ' ')) {
+                            echo '<td class="td1 center">
+                            <img class="not_found" name="' . 
+                            $row['FlID'] . 
+                            '" title="download error" src="icn/exclamation-button.png" alt="-" />';
                         } else {
-                            echo '<td class="td1 center"><input type="checkbox" class="markcheck" name="marked_items[]" value="' . $row['FlID'] . '" />'; 
+                            echo '<td class="td1 center"><input type="checkbox" class="markcheck" name="marked_items[]" value="' . 
+                            $row['FlID'] . '" />'; 
                         }
                         echo '</td>
             <td class="td1 center">
-            <span title="' . htmlentities($row['FlDescription'], ENT_QUOTES, 'UTF-8', false) . '"><b>' . $row['FlTitle'] . '</b></span>';
+            <span title="' . htmlentities((string) $row['FlDescription'], ENT_QUOTES, 'UTF-8', false) . '"><b>' . 
+            $row['FlTitle'] . '</b></span>';
                         if ($row['FlAudio']) {
-                            echo '<a href="' . $row['FlAudio'] . '" onclick="window.open(this.href, \'child\', \'scrollbars,width=650,height=600\'); return false;">  <img src="'; print_file_path('icn/speaker-volume.png'); echo '" alt="-" /></a>';
+                            echo '<a href="' . $row['FlAudio'] . 
+                            '" onclick="window.open(this.href, \'child\', \'scrollbars,width=650,height=600\'); return false;">  
+                            <img src="'; print_file_path('icn/speaker-volume.png'); echo '" alt="-" /></a>';
                         }
                         echo '</td>
             <td class="td1 center" style="vertical-align: middle">';
-                        if (!empty($row['FlLink']) && !str_starts_with(trim($row['FlLink']), '#')) {
-                            echo '<a href="' . trim($row['FlLink']) . '"  title="' . trim($row['FlLink']) . '" onclick="window.open(\'' . $row['FlLink'] . '\');return false;"><img src="icn/external.png" alt="-" /></a>'; 
+                        if (
+                            !empty($row['FlLink']) && 
+                            !str_starts_with(trim((string) $row['FlLink']), '#')
+                        ) {
+                            echo '<a href="' . trim((string) $row['FlLink']) . '"  title="' . 
+                            trim((string) $row['FlLink']) . '" onclick="window.open(\'' . 
+                            $row['FlLink'] . '\');return false;">
+                            <img src="icn/external.png" alt="-" /></a>'; 
                         }
                         echo  '</td><td class="td1 center">' . $row['FlDate'] . '</td></tr>';
                     }
@@ -632,10 +659,12 @@ $('img.not_found').on('click', function () {
 function do_page(): void
 {
     $currentlang = validateLang(
-        processDBParam("filterlang", 'currentlanguage', '', 0)
+        (string) processDBParam("filterlang", 'currentlanguage', '', false)
     );
     pagestart('My ' . getLanguage($currentlang) . ' Feeds', true);
-    $currentfeed = processSessParam("selected_feed", "currentrssfeed", '', 0);
+    $currentfeed = (string) processSessParam(
+        "selected_feed", "currentrssfeed", '', false
+    );
 
     $edit_text = 0;
     $message = '';

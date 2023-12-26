@@ -354,7 +354,7 @@ function upload_words_import_complete(
         }
         if ($overwrite==2) { 
             $sql .= " ON DUPLICATE KEY UPDATE {$tbpref}words.WoTranslation = case 
-                when {$tbpref}words.WoTranslation = "*" then tw.WoTranslation 
+                when {$tbpref}words.WoTranslation = \"*\" then tw.WoTranslation 
                 else {$tbpref}words.WoTranslation 
             end, 
             {$tbpref}words.WoRomanization = case 
@@ -366,7 +366,7 @@ function upload_words_import_complete(
                 else {$tbpref}words.WoSentence 
             end, 
             {$tbpref}words.WoStatusChanged = case 
-                when {$tbpref}words.WoSentence IS NULL or {$tbpref}words.WoRomanization IS NULL or {$tbpref}words.WoTranslation = "*" then tw.WoStatusChanged 
+                when {$tbpref}words.WoSentence IS NULL or {$tbpref}words.WoRomanization IS NULL or {$tbpref}words.WoTranslation = \"*\" then tw.WoStatusChanged 
                 else {$tbpref}words.WoStatusChanged 
             end";
         }
@@ -503,8 +503,8 @@ function upload_words_import_terms($fields, $tabs, $file_upl, $col, $lang): floa
     $last_update = (string) get_first_value(
         "SELECT max(WoStatusChanged) AS value FROM {$tbpref}words"
     );
-    $overwrite = $_REQUEST["Over"];
-    $status = $_REQUEST["WoStatus"];
+    $overwrite = (int) $_REQUEST["Over"];
+    $status = (int) $_REQUEST["WoStatus"];
     $columns = '(' . rtrim(implode(',', $col), ',') . ')';
     $temp_tabs = $tabs;
     if ($temp_tabs == 'h') {
@@ -896,7 +896,7 @@ function upload_words_import(): void
 {
     global $tbpref;
     $tabs = $_REQUEST["Tab"];
-    $lang = $_REQUEST["LgID"];
+    $lang = (int) $_REQUEST["LgID"];
     $sql = "SELECT * FROM {$tbpref}languages WHERE LgID=$lang";
     $res = do_mysqli_query($sql);
     $record = mysqli_fetch_assoc($res);
@@ -1188,7 +1188,7 @@ if (isset($_REQUEST['op'])) {
     } else {
         // $_REQUEST['op'] == 'Import'
         $message = 'Error: Wrong Operation: ' . $_REQUEST['op'];
-        echo error_message_with_hide($message, 0);
+        echo error_message_with_hide($message, false);
     }
 } else {
     upload_words_display();

@@ -24,32 +24,33 @@
  * PHP version 8.1
  * 
  * @category User_Interface
+ * @package  Lwt
  */
 
 require_once 'inc/session_utility.php';
 require_once 'inc/simterms.php';
 require_once 'inc/start_session.php';
 
-$currentlang = validateLang(processDBParam("filterlang", 'currentlanguage', '', 0));
-$currentsort = processDBParam("sort", 'currentwordsort', '1', 1);
+$currentlang = validateLang((string) processDBParam("filterlang", 'currentlanguage', '', false));
+$currentsort = (int) processDBParam("sort", 'currentwordsort', '1', true);
 
-$currentpage = processSessParam("page", "currentwordpage", '1', 1);
-$currentquery = processSessParam("query", "currentwordquery", '', 0);
-$currentquerymode = processSessParam(
-    "query_mode", "currentwordquerymode", 'term,rom,transl', 0
+$currentpage = (int) processSessParam("page", "currentwordpage", '1', true);
+$currentquery = (string) processSessParam("query", "currentwordquery", '', false);
+$currentquerymode = (string) processSessParam(
+    "query_mode", "currentwordquerymode", 'term,rom,transl', false
 );
 $currentregexmode = getSettingWithDefault("set-regex-mode");
-$currentstatus = processSessParam("status", "currentwordstatus", '', 0);
-$currenttext = validateText(processSessParam("text", "currentwordtext", '', 0));
-$currenttexttag = processSessParam("texttag", "currentwordtexttag", '', 0);
-$currenttextmode = processSessParam("text_mode", "currentwordtextmode", 0, 0);
+$currentstatus = (string) processSessParam("status", "currentwordstatus", '', false);
+$currenttext = validateText((string) processSessParam("text", "currentwordtext", '', false));
+$currenttexttag = (string) processSessParam("texttag", "currentwordtexttag", '', false);
+$currenttextmode = (string) processSessParam("text_mode", "currentwordtextmode", 0, false);
 $currenttag1 = validateTag(
-    processSessParam("tag1", "currentwordtag1", '', false), $currentlang
+    (string) processSessParam("tag1", "currentwordtag1", '', false), $currentlang
 );
 $currenttag2 = validateTag(
-    processSessParam("tag2", "currentwordtag2", '', false), $currentlang
+    (string) processSessParam("tag2", "currentwordtag2", '', false), $currentlang
 );
-$currenttag12 = processSessParam("tag12", "currentwordtag12", '', false);
+$currenttag12 = (string) processSessParam("tag12", "currentwordtag12", '', false);
 
 $wh_lang = ($currentlang != '') ? (' and WoLgID=' . $currentlang ) : '';
 $wh_stat = '';
@@ -175,7 +176,7 @@ if (isset($_REQUEST['markaction'])) {
             if ($l > 0) {
                 $id_list = array();
                 for ($i = 0; $i < $l; $i++) {
-                    $id_list[] = $_REQUEST['marked'][$i];
+                    $id_list[] = (string) $_REQUEST['marked'][$i];
                 }
                 $list = "(" . implode(",", $id_list) . ")";
                 if ($markaction == 'del') {
@@ -368,7 +369,7 @@ if (isset($_REQUEST['markaction'])) {
 
 if (isset($_REQUEST['allaction'])) {
     // ALL ACTIONS 
-    $allaction = $_REQUEST['allaction'];
+    $allaction = (string) $_REQUEST['allaction'];
     $actiondata = getreq('data');
     if (
         $allaction == 'delall' || $allaction == 'spl1all' || 
@@ -482,13 +483,15 @@ if (isset($_REQUEST['allaction'])) {
                 $message = runsql('update ' . $tbpref . 'words 
                 set WoText = WoTextLC where WoID = ' . $id, 
                 ""
-            );
-            } elseif ($allaction == 'capall' ) {
+                );
+            } else {
+                // $allaction == 'capall' by default
                 $message = runsql(
                     'update ' . $tbpref . 'words 
                     set WoText = CONCAT(UPPER(LEFT(WoTextLC,1)),SUBSTRING(WoTextLC,2)) 
                     where WoID = ' . $id, 
-                    "");
+                    ""
+                );
             }
             $cnt += (int)$message;
         }
@@ -719,7 +722,9 @@ if (isset($_REQUEST['new']) && isset($_REQUEST['lang'])) {
     </tr>
     <tr>
     <td class="td1 right" colspan="2">  &nbsp;
-    <?php echo createDictLinksInEditWin2($_REQUEST['lang'], 'document.forms[\'newword\'].WoSentence', 'document.forms[\'newword\'].WoText'); ?>
+    <?php echo createDictLinksInEditWin2((int) $_REQUEST['lang'], 
+    'document.forms[\'newword\'].WoSentence', 
+    'document.forms[\'newword\'].WoText'); ?>
         &nbsp; &nbsp;
     <input type="button" value="Cancel" onclick="{resetDirty(); location.href='edit_words.php';}" /> 
     <input type="submit" name="op" value="Save" /></td>
@@ -818,7 +823,7 @@ if (isset($_REQUEST['new']) && isset($_REQUEST['lang'])) {
         $message = substr($message, 0, strlen($message)-24);
         $message = "Error: Term '" . $message . "' already exists. Please go back and correct this!";
     }     
-    echo error_message_with_hide($message, 0);
+    echo error_message_with_hide($message, false);
 
     if ($currenttext == '') {
         $sql = 'select count(*) as value from (select WoID from (' . $tbpref . 'words left JOIN ' . $tbpref . 'wordtags ON WoID = WtWoID) where (1=1) ' . $wh_lang . $wh_stat .  $wh_query . ' group by WoID ' . $wh_tag .') as dummy';
@@ -996,9 +1001,31 @@ if ($currentsort == 7) {
     if ($currenttext != '') {
         $sql = ''; 
     } else {
-        $sql = 'select WoID, 0 AS textswordcount, WoText, WoTranslation, WoRomanization, WoSentence, ifnull(WoSentence,\'\') like concat(\'%{\',WoText,\'}%\') as SentOK, WoStatus, LgName, LgRightToLeft, LgGoogleTranslateURI, DATEDIFF( NOW( ) , WoStatusChanged ) AS Days, WoTodayScore AS Score, WoTomorrowScore AS Score2, ifnull(concat(\'[\',group_concat(distinct TgText order by TgText separator \', \'),\']\'),\'\') as taglist, WoTextLC, WoTodayScore from ((' . $tbpref . 'words left JOIN ' . $tbpref . 'wordtags ON WoID = WtWoID) left join ' . $tbpref . 'tags on TgID = WtTgID), ' . $tbpref . 'languages where WoLgID = LgID and WoID NOT IN (SELECT DISTINCT Ti2WoID from ' . $tbpref . 'textitems2 where Ti2LgID = LgID) ' . $wh_lang . $wh_stat .  $wh_query . ' group by WoID ' . $wh_tag . ' UNION '; 
+        $sql = 'select WoID, 0 AS textswordcount, WoText, WoTranslation, 
+        WoRomanization, WoSentence, 
+        ifnull(WoSentence,\'\') like concat(\'%{\',WoText,\'}%\') as SentOK, 
+        WoStatus, LgName, LgRightToLeft, LgGoogleTranslateURI, 
+        DATEDIFF( NOW( ) , WoStatusChanged ) AS Days, WoTodayScore AS Score, 
+        WoTomorrowScore AS Score2, 
+        ifnull(concat(\'[\',group_concat(distinct TgText order by TgText separator \', \'),\']\'),\'\') as taglist, 
+        WoTextLC, WoTodayScore 
+        from ((' . $tbpref . 'words left JOIN ' . $tbpref . 'wordtags ON WoID = WtWoID) 
+        left join ' . $tbpref . 'tags on TgID = WtTgID), ' . $tbpref . 'languages 
+        where WoLgID = LgID and WoID NOT IN (SELECT DISTINCT Ti2WoID 
+        from ' . $tbpref . 'textitems2 where Ti2LgID = LgID) ' . $wh_lang . $wh_stat .  $wh_query . ' 
+        group by WoID ' . $wh_tag . ' UNION '; 
     }
-    $sql .= 'select WoID, count(WoID) AS textswordcount, WoText, WoTranslation, WoRomanization, WoSentence, ifnull(WoSentence,\'\') like concat(\'%{\',WoText,\'}%\') as SentOK, WoStatus, LgName, LgRightToLeft, LgGoogleTranslateURI, DATEDIFF( NOW( ) , WoStatusChanged ) AS Days, WoTodayScore AS Score, WoTomorrowScore AS Score2, ifnull(concat(\'[\',group_concat(distinct TgText order by TgText separator \', \'),\']\'),\'\') as taglist, WoTextLC, WoTodayScore from ((' . $tbpref . 'words left JOIN ' . $tbpref . 'wordtags ON WoID = WtWoID) left join ' . $tbpref . 'tags on TgID = WtTgID), ' . $tbpref . 'languages, ' . $tbpref . 'textitems2 where Ti2LgID = WoLgID and Ti2WoID = WoID and WoLgID = LgID ';
+    $sql .= 'select WoID, count(WoID) AS textswordcount, WoText, WoTranslation, 
+    WoRomanization, WoSentence, 
+    ifnull(WoSentence,\'\') like concat(\'%{\',WoText,\'}%\') as SentOK, 
+    WoStatus, LgName, LgRightToLeft, LgGoogleTranslateURI, 
+    DATEDIFF( NOW( ) , WoStatusChanged ) AS Days, WoTodayScore AS Score, 
+    WoTomorrowScore AS Score2, 
+    ifnull(concat(\'[\',group_concat(distinct TgText order by TgText separator \', \'),\']\'),\'\') as taglist, 
+    WoTextLC, WoTodayScore 
+    from ((' . $tbpref . 'words left JOIN ' . $tbpref . 'wordtags ON WoID = WtWoID) 
+    left join ' . $tbpref . 'tags on TgID = WtTgID), ' . $tbpref . 'languages, ' . $tbpref . 'textitems2 
+    where Ti2LgID = WoLgID and Ti2WoID = WoID and WoLgID = LgID ';
     if ($currenttext != '') { 
         $sql .= 'and Ti2TxID in (' . $currenttext . ')' . ' '; 
     }
@@ -1006,12 +1033,45 @@ if ($currentsort == 7) {
 } else {
     if ($currenttext == '') {
         if ($wh_tag=='') {
-            $sql = 'select WoID, WoText, WoTranslation, WoRomanization, WoSentence,  SentOK, WoStatus, LgName, LgRightToLeft, LgGoogleTranslateURI,  Days, WoTodayScore AS Score, WoTomorrowScore AS Score2, ifnull(concat(\'[\',group_concat(distinct TgText order by TgText separator \', \'),\']\'),\'\') as taglist from (select WoID, WoTextLC, WoText, WoTranslation, WoRomanization, WoSentence, ifnull(WoSentence,\'\') like concat(\'%{\',WoText,\'}%\') as SentOK, WoStatus, LgName, LgRightToLeft, LgGoogleTranslateURI, DATEDIFF( NOW( ) , WoStatusChanged ) AS Days, WoTodayScore, WoTomorrowScore from ' . $tbpref . 'words, ' . $tbpref . 'languages where WoLgID = LgID ' . $wh_lang . $wh_stat .  $wh_query . ' group by WoID order by ' . $sorts[$currentsort-1] . ' ' . $limit . ') AS AA left JOIN ' . $tbpref . 'wordtags ON WoID = WtWoID left join ' . $tbpref . 'tags on TgID = WtTgID group by WoID order by ' . $sorts[$currentsort-1]; 
+            $sql = 'select WoID, WoText, WoTranslation, WoRomanization, WoSentence, 
+            SentOK, WoStatus, LgName, LgRightToLeft, LgGoogleTranslateURI,  Days, 
+            WoTodayScore AS Score, WoTomorrowScore AS Score2, 
+            ifnull(concat(\'[\',group_concat(distinct TgText order by TgText separator \', \'),\']\'),\'\') as taglist 
+            from (select WoID, WoTextLC, WoText, WoTranslation, WoRomanization, 
+            WoSentence, 
+            ifnull(WoSentence,\'\') like concat(\'%{\',WoText,\'}%\') as SentOK, 
+            WoStatus, LgName, LgRightToLeft, LgGoogleTranslateURI, 
+            DATEDIFF( NOW( ) , WoStatusChanged ) AS Days, WoTodayScore, 
+            WoTomorrowScore 
+            from ' . $tbpref . 'words, ' . $tbpref . 'languages 
+            where WoLgID = LgID ' . $wh_lang . $wh_stat .  $wh_query . ' 
+            group by WoID 
+            order by ' . $sorts[$currentsort-1] . ' ' . $limit . ') AS AA 
+            left JOIN ' . $tbpref . 'wordtags ON WoID = WtWoID 
+            left join ' . $tbpref . 'tags on TgID = WtTgID 
+            group by WoID 
+            order by ' . $sorts[$currentsort-1]; 
         } else { 
-            $sql = 'select WoID, WoText, WoTranslation, WoRomanization, WoSentence, ifnull(WoSentence,\'\') like concat(\'%{\',WoText,\'}%\') as SentOK, WoStatus, LgName, LgRightToLeft, LgGoogleTranslateURI, DATEDIFF( NOW( ) , WoStatusChanged ) AS Days, WoTodayScore AS Score, WoTomorrowScore AS Score2, ifnull(concat(\'[\',group_concat(distinct TgText order by TgText separator \', \'),\']\'),\'\') as taglist from ((' . $tbpref . 'words left JOIN ' . $tbpref . 'wordtags ON WoID = WtWoID) left join ' . $tbpref . 'tags on TgID = WtTgID), ' . $tbpref . 'languages where WoLgID = LgID ' . $wh_lang . $wh_stat .  $wh_query . ' group by WoID ' . $wh_tag . ' order by ' . $sorts[$currentsort-1] . ' ' . $limit; 
+            $sql = 'select WoID, WoText, WoTranslation, WoRomanization, WoSentence, 
+            ifnull(WoSentence,\'\') like concat(\'%{\',WoText,\'}%\') as SentOK, 
+            WoStatus, LgName, LgRightToLeft, LgGoogleTranslateURI, 
+            DATEDIFF( NOW( ) , WoStatusChanged ) AS Days, WoTodayScore AS Score, 
+            WoTomorrowScore AS Score2, 
+            ifnull(concat(\'[\',group_concat(distinct TgText order by TgText separator \', \'),\']\'),\'\') as taglist from ((' . $tbpref . 'words left JOIN ' . $tbpref . 'wordtags ON WoID = WtWoID) left join ' . $tbpref . 'tags on TgID = WtTgID), ' . $tbpref . 'languages where WoLgID = LgID ' . $wh_lang . $wh_stat .  $wh_query . ' group by WoID ' . $wh_tag . ' order by ' . $sorts[$currentsort-1] . ' ' . $limit; 
         }
     } else {
-        $sql = 'select distinct WoID, WoText, WoTranslation, WoRomanization, WoSentence, ifnull(WoSentence,\'\') like \'%{%}%\' as SentOK, WoStatus, LgName, LgRightToLeft, LgGoogleTranslateURI, DATEDIFF( NOW( ) , WoStatusChanged ) AS Days, WoTodayScore AS Score, WoTomorrowScore AS Score2, ifnull(concat(\'[\',group_concat(distinct TgText order by TgText separator \', \'),\']\'),\'\') as taglist from ((' . $tbpref . 'words left JOIN ' . $tbpref . 'wordtags ON WoID = WtWoID) left join ' . $tbpref . 'tags on TgID = WtTgID), ' . $tbpref . 'languages, ' . $tbpref . 'textitems2 where Ti2LgID = WoLgID and Ti2WoID = WoID and Ti2TxID in (' . $currenttext . ') and WoLgID = LgID ' . $wh_lang . $wh_stat . $wh_query . ' group by WoID ' . $wh_tag . ' order by ' . $sorts[$currentsort-1] . ' ' . $limit;
+        $sql = 'select distinct WoID, WoText, WoTranslation, WoRomanization, 
+        WoSentence, ifnull(WoSentence,\'\') like \'%{%}%\' as SentOK, WoStatus, 
+        LgName, LgRightToLeft, LgGoogleTranslateURI, 
+        DATEDIFF( NOW( ) , WoStatusChanged ) AS Days, WoTodayScore AS Score, 
+        WoTomorrowScore AS Score2, 
+        ifnull(concat(\'[\',group_concat(distinct TgText order by TgText separator \', \'),\']\'),\'\') as taglist 
+        from ((' . $tbpref . 'words 
+        left JOIN ' . $tbpref . 'wordtags ON WoID = WtWoID) 
+        left join ' . $tbpref . 'tags on TgID = WtTgID), ' . $tbpref . 'languages, ' . $tbpref . 'textitems2 
+        where Ti2LgID = WoLgID and Ti2WoID = WoID and Ti2TxID in (' . $currenttext . ') and WoLgID = LgID ' . $wh_lang . $wh_stat . $wh_query . ' 
+        group by WoID ' . $wh_tag . ' 
+        order by ' . $sorts[$currentsort-1] . ' ' . $limit;
     }
 }
 
@@ -1038,7 +1098,11 @@ while ($record = mysqli_fetch_assoc($res)) {
         echo '<td class="td1 center">' . tohtml($record['LgName']) . '</td>'; 
     }
     echo '<td class="td1"><span';
-    if(!empty($record['LgGoogleTranslateURI']) && strpos($record['LgGoogleTranslateURI'], '&sl=') !== false) { echo ' class="tts_' . preg_replace('/.*[?&]sl=([a-zA-Z\-]*)(&.*)*$/', '$1', $record['LgGoogleTranslateURI']) . '"'; 
+    if (
+        !empty($record['LgGoogleTranslateURI']) && strpos((string) $record['LgGoogleTranslateURI'], '&sl=') !== false
+    ) { 
+            echo ' class="tts_' . preg_replace('/.*[?&]sl=([a-zA-Z\-]*)(&.*)*$/', '$1', $record['LgGoogleTranslateURI']) . 
+            '"'; 
     }
     echo ($record['LgRightToLeft'] ? ' dir="rtl" ' : '') . '>' . tohtml($record['WoText']) . '</span>' . ($record['WoRomanization'] != '' ? (' / <span id="roman' . $record['WoID'] . '" class="edit_area clickedit">' . tohtml(repl_tab_nl($record['WoRomanization'])) . '</span>') : (' / <span id="roman' . $record['WoID'] . '" class="edit_area clickedit">*</span>')) . '</td>';
     echo '<td class="td1"><span id="trans' . $record['WoID'] . '" class="edit_area clickedit">' . tohtml(repl_tab_nl($record['WoTranslation'])) . '</span> <span class="smallgray2">' . tohtml($record['taglist']) . '</span></td>';

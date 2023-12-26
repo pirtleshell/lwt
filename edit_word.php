@@ -119,7 +119,7 @@ function lowercase_term_not_equal($textlc): void
     $message = 
     'Error: Term in lowercase must be exactly = "' . 
     $textlc . '", please go back and correct this!'; 
-    echo error_message_with_hide($message, 0);
+    echo error_message_with_hide($message, false);
 }
 
 /**
@@ -304,11 +304,11 @@ function edit_word_do_form($wid, $text_id, $ord, $fromAnn)
             $seid, $termlc, 
             (int) getSettingWithDefault('set-term-sentence-count')
         );
-        $trans_uri = get_first_value(
+        $trans_uri = (string) get_first_value(
             "SELECT LgGoogleTranslateURI AS value FROM {$tbpref}languages 
             WHERE LgID = $lang"
         );
-        $lgname = get_first_value(
+        $lgname = (string) get_first_value(
             "SELECT LgName AS value FROM {$tbpref}languages 
             WHERE LgID = $lang"
         );
@@ -378,7 +378,7 @@ function edit_word_do_form($wid, $text_id, $ord, $fromAnn)
     <tr>
         <td class="td1 right" colspan="2">
             <?php echo createDictLinksInEditWin(
-                $lang, $term, 'document.forms[0].WoSentence', isset($_GET['nodict'])?0:1
+                $lang, $term, 'document.forms[0].WoSentence', !isset($_GET['nodict'])
             ); ?>
         &nbsp; &nbsp; &nbsp; 
         <input type="submit" name="op" value="Save" /></td>
@@ -526,7 +526,7 @@ function edit_word_do_form($wid, $text_id, $ord, $fromAnn)
                     echo createDictLinksInEditWin(
                         $lang, $term, 
                         'document.forms[0].WoSentence', 
-                        isset($_GET['nodict']) ? 0 : 1
+                        !isset($_GET['nodict'])
                     );
                 } 
                 ?>

@@ -31,10 +31,25 @@ require_once 'inc/kernel_utility.php';
  */
 class Database_Connection
 {
+    /**
+     * @var string Server name
+     */
     public string $server;
+    /**
+     * @var string $userid User ID
+     */
     public string $userid;
+    /**
+     * @var string $passwd Password for this user
+     */
     public string $passwd;
+    /**
+     * @var string $dbname Database name
+     */
     public string $dbname;
+    /**
+     * @var string $socket Socket to use
+     */
     public string $socket;
 
     /**
@@ -193,7 +208,7 @@ function doOperation($op)
  */
 function displayForm($conn, $error_message=null)
 {
-    pagestart_kernel_nobody("Database Connection Wizard", true);
+    pagestart_kernel_nobody("Database Connection Wizard");
     if ($error_message != null) {
         echo $error_message;
     }
