@@ -235,7 +235,7 @@ function tts_js()
         );
         $('#rate').val(getCookie('tts[' + CURRENT_LANGUAGE + 'Rate]'));
         $('#pitch').val(getCookie('tts[' + CURRENT_LANGUAGE + 'Pitch]'));
-        $('#request').val(getCookie('tts[' + CURRENT_LANGUAGE + 'Request'));
+        $('#request').val(getCookie('tts[' + CURRENT_LANGUAGE + 'Request]'));
     }
 
     /**
