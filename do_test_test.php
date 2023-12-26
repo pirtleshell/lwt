@@ -489,7 +489,7 @@ function do_test_prepare_ajax_test_area($selector, $selection, $count, $testtype
                 "word_mode" => $nosent,
                 "lg_id" => $lgid,
                 "word_regex" => (string)$lang['regexword'],
-                "test_type" => $testtype
+                "type" => $testtype
             )); ?>;
 
             query_next_term(review_data);
