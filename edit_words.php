@@ -669,7 +669,7 @@ if (isset($_REQUEST['allaction'])) {
 
 if (isset($_REQUEST['new']) && isset($_REQUEST['lang'])) {
     // NEW
-    $scrdir = getScriptDirectionTag($_REQUEST['lang']);
+    $scrdir = getScriptDirectionTag((int) $_REQUEST['lang']);
     
     ?>
 

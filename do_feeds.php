@@ -113,19 +113,29 @@ function dummy_function_1(): array
     <tr>
         <td class="td1 right">Text:</td>
         <td class="td1">
-            <textarea <?php echo getScriptDirectionTag($row['NfLgID']); ?> name="feed[<?php echo $count; ?>][TxText]" class="notempty checkbytes" cols="60" rows="20"><?php echo tohtml($text['TxText']); ?></textarea> <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
+            <textarea 
+            <?php echo getScriptDirectionTag((int) $row['NfLgID']); ?> 
+            name="feed[<?php echo $count; ?>][TxText]" class="notempty checkbytes" 
+            cols="60" rows="20"
+            ><?php echo tohtml($text['TxText']); ?></textarea>
+            <img src="icn/status-busy.png" title="Field must not be empty" 
+            alt="Field must not be empty" />
         </td>
     </tr>
     <tr>
         <td class="td1 right">Source URI:</td>
         <td class="td1">
-            <input type="text" class="checkurl" name="feed[<?php echo $count; ?>][TxSourceURI]" value="<?php echo $text['TxSourceURI']; ?>" maxlength="1000" size="60" />
+            <input type="text" class="checkurl" 
+            name="feed[<?php echo $count; ?>][TxSourceURI]" 
+            value="<?php echo $text['TxSourceURI']; ?>" maxlength="1000" 
+            size="60" />
         </td>
     </tr>
     <tr>
         <td class="td1 right">Tags:</td>
         <td class="td1">
-            <ul name="feed[<?php echo $count; ?>][TagList][]" style="width:340px;margin-top:0px;margin-bottom:0px;margin-left:2px;">
+            <ul name="feed[<?php echo $count; ?>][TagList][]" 
+            style="width:340px;margin-top:0px;margin-bottom:0px;margin-left:2px;">
                 <li>
                     <?php echo $nf_tag_name; ?>
                 </li>

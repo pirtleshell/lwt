@@ -249,8 +249,8 @@ function edit_word_do_form($wid, $text_id, $ord, $fromAnn)
         if ($record === null) {
             my_die("Cannot access Term and Language in edit_word.php");
         }
-        $term = $record['Ti2Text'];
-        $lang = $record['Ti2LgID'];
+        $term = (string) $record['Ti2Text'];
+        $lang = (int) $record['Ti2LgID'];
         mysqli_free_result($res);
         
         $termlc = mb_strtolower($term, 'UTF-8');
@@ -274,8 +274,8 @@ function edit_word_do_form($wid, $text_id, $ord, $fromAnn)
         if (!$record) {
             my_die("Cannot access Term and Language in edit_word.php");
         }
-        $term = $record['WoText'];
-        $lang = $record['WoLgID'];
+        $term = (string) $record['WoText'];
+        $lang = (int) $record['WoLgID'];
         mysqli_free_result($res);
         $termlc = mb_strtolower($term, 'UTF-8');
         $new = false;

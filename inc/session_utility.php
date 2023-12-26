@@ -3993,7 +3993,7 @@ function get_languages(): array
 {
     global $tbpref;
     $langs = array();
-    $sql = "SELECT LgID, LgName FROM " . $tbpref . "languages WHERE LgName<>''";
+    $sql = "SELECT LgID, LgName FROM {$tbpref}languages WHERE LgName<>''";
     $res = do_mysqli_query($sql);
     while ($record = mysqli_fetch_assoc($res)) {
         $langs[(string)$record['LgName']] = (int)$record['LgID'];
@@ -4016,10 +4016,11 @@ function getLanguage($lid)
     if (!isset($lid) || trim($lid) == '' || !is_numeric($lid)) { 
         return ''; 
     }
+    $lg_id = (int) $lid;
     $r = get_first_value(
         "SELECT LgName AS value 
-        FROM " . $tbpref . "languages 
-        WHERE LgID='" . $lid . "'"
+        FROM {$tbpref}languages 
+        WHERE LgID = $lg_id"
     );
     if (isset($r)) { 
         return (string)$r; 
@@ -4027,29 +4028,26 @@ function getLanguage($lid)
     return '';
 }
 
-// -------------------------------------------------------------
-
+/**
+ * Return a right-to-left direction indication in HTML if language is right-to-left.
+ * 
+ * @param int $lid Language ID
+ * 
+ * @return string ' dir="rtl" '|''
+ */
 function getScriptDirectionTag($lid): string 
 {
     global $tbpref;
-    if (!isset($lid) ) { 
-        return ''; 
-    }
-    if (trim($lid) == '' ) { 
-        return ''; 
-    }
-    if (!is_numeric($lid) ) {
+    if (!isset($lid) || trim($lid) == '' || !is_numeric($lid)) { 
         return ''; 
     }
     $r = get_first_value(
-        "select LgRightToLeft as value 
-        from " . $tbpref . "languages 
-        where LgID='" . $lid . "'"
+        "SELECT LgRightToLeft as value 
+        from {$tbpref}languages 
+        where LgID = $lid"
     );
-    if (isset($r) ) {
-        if ($r) { 
-            return ' dir="rtl" '; 
-        } 
+    if (isset($r) && $r) {
+        return ' dir="rtl" ';
     }
     return '';
 }

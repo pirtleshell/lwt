@@ -31,7 +31,7 @@ if ($record = mysqli_fetch_assoc($res)) {
     
     $tags = getWordTagList($wid, '', 0, 0);
     $rom = $record['WoRomanization'];
-    $scrdir = getScriptDirectionTag($record['WoLgID']);
+    $scrdir = getScriptDirectionTag((int) $record['WoLgID']);
 
     ?>
 
