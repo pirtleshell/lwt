@@ -12,6 +12,7 @@ ones are marked like "v1.0.0-fork".
 * New tools for documentation:
   * New JavaScript documentation with [JSDoc](https://jsdoc.app/)! You will find it under `docs/js/`.
   * Better PHP documentation using [phpDocumentor](https://phpdoc.org/). The new documentation is at `docs/php/`.
+* New constant `LWT_LANG_DEFS`, that replaces `$langDefs` (in `inc/langdefs.php`). Part of [#163](https://github.com/HugoFara/lwt/issues/163). 
 
 ## Changed
 
@@ -20,6 +21,7 @@ ones are marked like "v1.0.0-fork".
 ### Deprecated
 
 * PHP documentation using Doxygen (under `/docs/html`) is now deprecated and will be removed in 3.0.0.
+* Using `$langDefs` is deprecated in favor of `LWT_LANG_DEFS` ([#163](https://github.com/HugoFara/lwt/issues/163)).
 
 ## 2.9.0-fork (December 24 2023)
 
