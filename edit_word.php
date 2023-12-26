@@ -227,12 +227,12 @@ function edit_word_do_operation($translation, $fromAnn)
 }
 
 
-/*
+/**
  * @return void
  */
 function edit_word_do_form($wid, $text_id, $ord, $fromAnn)
 {
-    global $tbpref, $langDefs;
+    global $tbpref;
     $lang = null;
     $term = null;
     
@@ -312,8 +312,8 @@ function edit_word_do_form($wid, $text_id, $ord, $fromAnn)
             "SELECT LgName AS value FROM {$tbpref}languages 
             WHERE LgID = $lang"
         );
-        $lang_short = array_key_exists($lgname, $langDefs) ? 
-        $langDefs[$lgname][1] : ''
+        $lang_short = array_key_exists($lgname, LWT_LANGUAGES_ARRAY) ? 
+        LWT_LANGUAGES_ARRAY[$lgname][1] : ''
             
         ?>
     

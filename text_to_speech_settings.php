@@ -24,11 +24,18 @@ require_once 'inc/langdefs.php';
  * @param string $language Language name, for instance "English"
  * 
  * @return string Two-letter language name
+ * 
+ * @ðeprecated Since 2.9.1-fork, use getLanguageCode
  */
 function get_language_code($language)
 {
-    global $langDefs;
-    return $langDefs[$language][1];
+    global $tbpref;
+    $lg_id = (int) get_first_value(
+        "SELECT LgID as value 
+        FROM {$tbpref}languages 
+        WHERE LgName = " . convert_string_to_sqlsyntax($language)
+    );
+    return getLanguageCode($lg_id, LWT_LANGUAGES_ARRAY);
 }
 
 /**
@@ -43,10 +50,9 @@ function get_language_code($language)
  */
 function language_id_from_code($code)
 {
-    global $langDefs;
     $trimmed = substr($code, 0, 2);
     foreach (get_languages() as $language => $language_id) {
-        $elem = $langDefs[$language];
+        $elem = LWT_LANGUAGES_ARRAY[$language];
         if ($elem[0] == $trimmed) {
             return $language_id;
         }
@@ -57,15 +63,13 @@ function language_id_from_code($code)
 /**
  * String to population a SELECT tag.
  * 
- * @return string HTML-formatted string
- * 
- * @global array $langDefs List of all languages.
+ * @return string HTML-formatted string.
  */
 function tts_language_options()
 {
     $output = '';
     foreach (get_languages() as $language => $language_id) {
-        $languageCode = get_language_code($language);
+        $languageCode = getLanguageCode($language_id, LWT_LANGUAGES_ARRAY);
         $output .= '<option value="' . $languageCode . '">' . 
         $language . 
         '</option>';
@@ -177,12 +181,11 @@ function tts_demo()
 function tts_js()
 {
     $lid = (int) getSetting('currentlanguage');
-    $current_language = getLanguage((string) $lid);
     ?>
 <script type="text/javascript" charset="utf-8">
     /** @var Current language being learnt. */
     const CURRENT_LANGUAGE = <?php 
-    echo json_encode(get_language_code($current_language)); 
+    echo json_encode(getLanguageCode($lid, LWT_LANGUAGES_ARRAY)); 
     ?>;
 
     /**

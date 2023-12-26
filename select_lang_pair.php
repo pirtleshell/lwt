@@ -17,12 +17,13 @@
 require_once 'inc/session_utility.php';
 require_once 'inc/langdefs.php';
 
-/// Returns a dropdown menu of the different languages
+/**
+ * Returns a dropdown menu of the different languages
+ */
 function get_wizard_selectoptions($v): string 
 {
-    global $langDefs;
     $r = "<option value=\"\"" . get_selected($v, "") . ">[Choose...]</option>";
-    $keys = array_keys($langDefs);
+    $keys = array_keys(LWT_LANGUAGES_ARRAY);
     foreach ($keys as $item) {
         $r .= "<option value=\"" . $item . "\"" . get_selected($v, $item) . ">" . $item . "</option>";
     }
@@ -38,7 +39,7 @@ $currentnativelanguage = getSetting('currentnativelanguage');
 <script type="text/javascript">
     //<![CDATA[
 
-    const LANGDEFS = <?php echo json_encode($langDefs); ?>;
+    const LANGDEFS = <?php echo json_encode(LWT_LANGUAGES_ARRAY); ?>;
 
     /// Execute the wizard
     function wizard_go() {
