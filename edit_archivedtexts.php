@@ -17,12 +17,13 @@
  * PHP version 8.1
  * 
  * @category User_Interface
+ * @package Lwt
  */
 
 require_once 'inc/session_utility.php';
 
-$currentlang = validateLang(processDBParam("filterlang", 'currentlanguage', '', 0));
-$currentsort = processDBParam("sort", 'currentarchivesort', '1', 1);
+$currentlang = validateLang((string) processDBParam("filterlang", 'currentlanguage', '', false));
+$currentsort = (int) processDBParam("sort", 'currentarchivesort', '1', true);
 
 $currentpage = (int) processSessParam("page", "currentarchivepage", '1', true);
 $currentquery = (string) processSessParam("query", "currentarchivequery", '', false);

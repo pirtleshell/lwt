@@ -397,7 +397,7 @@ function dummy_function_2($currentlang, $currentfeed): void
         $wh_query = ''; 
     }
     $currentpage = (int) processSessParam("page", "currentrsspage", '1', true);
-    $currentsort = processDBParam("sort", 'currentrsssort', '2', 1);
+    $currentsort = (int) processDBParam("sort", 'currentrsssort', '2', true);
     ?>
 
 <div class="flex-spaced">
@@ -634,7 +634,7 @@ $('img.not_found').on('click', function () {
 function do_page(): void
 {
     $currentlang = validateLang(
-        processDBParam("filterlang", 'currentlanguage', '', 0)
+        (string) processDBParam("filterlang", 'currentlanguage', '', false)
     );
     pagestart('My ' . getLanguage($currentlang) . ' Feeds', true);
     $currentfeed = (string) processSessParam(

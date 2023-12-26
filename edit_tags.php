@@ -18,13 +18,14 @@
  * PHP version 8.1
  * 
  * @category User_Interface
+ * @package Lwt
  */
 
 namespace Lwt\Interface\Edit_Tags;
 
 require_once 'inc/session_utility.php';
 
-$currentsort = processDBParam("sort", 'currenttagsort', '1', 1);
+$currentsort = (int) processDBParam("sort", 'currenttagsort', '1', true);
 
 $currentpage = (int) processSessParam("page", "currenttagpage", '1', true);
 $currentquery = (string) processSessParam("query", "currenttagquery", '', false);

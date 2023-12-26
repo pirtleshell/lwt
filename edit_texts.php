@@ -446,7 +446,7 @@ function edit_texts_do_operation($op, $message1, $no_pagestart): string
     if (strlen(prepare_textdata($_REQUEST['TxText'])) > 65000) {
         $message = "Error: Text too long, must be below 65000 Bytes";
         $currentlang = (int) validateLang(
-            processDBParam("filterlang", 'currentlanguage', '', 0)
+            (string) processDBParam("filterlang", 'currentlanguage', '', false)
         );
         if ($no_pagestart) { 
             pagestart('My ' . getLanguage($currentlang) . ' Texts', true); 
@@ -794,7 +794,7 @@ function edit_texts_filters_form($currentlang, $recno, $currentpage, $pages)
         (string) processSessParam("tag2", "currenttexttag2", '', false), 
         $currentlang
     );
-    $currentsort = processDBParam("sort", 'currenttextsort', '1', 1);
+    $currentsort = (int) processDBParam("sort", 'currenttextsort', '1', true);
     $currenttag12 = (string) processSessParam("tag12", "currenttexttag12", '', false);
     ?>
 <form name="form1" action="#" onsubmit="document.form1.querybutton.click(); return false;">
@@ -1165,9 +1165,9 @@ function edit_texts_display($message)
     // Page, Sort, etc.
 
     $currentlang = validateLang(
-        processDBParam("filterlang", 'currentlanguage', '', 0)
+        (string) processDBParam("filterlang", 'currentlanguage', '', false)
     );
-    $currentsort = processDBParam("sort", 'currenttextsort', '1', 1);
+    $currentsort = (int) processDBParam("sort", 'currenttextsort', '1', true);
 
     $currentpage = (int) processSessParam("page", "currenttextpage", '1', true);
     $currentquery = (string) processSessParam("query", "currenttextquery", '', false);
@@ -1301,7 +1301,7 @@ function edit_texts_display($message)
 function edit_texts_do_page()
 {
     $currentlang = validateLang(
-        processDBParam("filterlang", 'currentlanguage', '', 0)
+        (string) processDBParam("filterlang", 'currentlanguage', '', false)
     );
     $no_pagestart = getreq('markaction') == 'test' || 
     getreq('markaction') == 'deltag' || 

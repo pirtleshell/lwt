@@ -31,8 +31,8 @@ require_once 'inc/session_utility.php';
 require_once 'inc/simterms.php';
 require_once 'inc/start_session.php';
 
-$currentlang = validateLang(processDBParam("filterlang", 'currentlanguage', '', 0));
-$currentsort = processDBParam("sort", 'currentwordsort', '1', 1);
+$currentlang = validateLang((string) processDBParam("filterlang", 'currentlanguage', '', false));
+$currentsort = (int) processDBParam("sort", 'currentwordsort', '1', true);
 
 $currentpage = (int) processSessParam("page", "currentwordpage", '1', true);
 $currentquery = (string) processSessParam("query", "currentwordquery", '', false);

@@ -1436,7 +1436,7 @@ function getPreviousAndNextTextLinks($textid, $url, $onlyann, $add): string
 {
     global $tbpref;
     $currentlang = validateLang(
-        processDBParam("filterlang", 'currentlanguage', '', 0)
+        (string) processDBParam("filterlang", 'currentlanguage', '', false)
     );
     $wh_lang = '';
     if ($currentlang != '') {

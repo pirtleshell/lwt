@@ -4,8 +4,8 @@ namespace Lwt\Interface\Edit_Feeds;
 
 require_once 'inc/session_utility.php';
 
-$currentlang = validateLang(processDBParam("filterlang", 'currentlanguage', '', 0));
-$currentsort = processDBParam("sort", 'currentmanagefeedssort', '2', 1);
+$currentlang = validateLang((string) processDBParam("filterlang", 'currentlanguage', '', false));
+$currentsort = (int) processDBParam("sort", 'currentmanagefeedssort', '2', true);
 $currentquery = (string) processSessParam("query", "currentmanagefeedsquery", '', false);
 $currentpage = (int) processSessParam("page", "currentmanagefeedspage", '1', true);
 $currentfeed = (string) processSessParam("selected_feed", "currentmanagefeedsfeed", '', false);
