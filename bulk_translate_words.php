@@ -194,7 +194,7 @@ function bulk_do_content($tid, $sl, $tl, $pos): void
                 }
                 try {
                     let final_url = new URL(dict_link);
-                    popup |= final_url.searchParams.has("lwt_popup");
+                    popup = popup || final_url.searchParams.has("lwt_popup");
                 } catch (err) {
                     if (!(err instanceof TypeError)) {
                         throw err;

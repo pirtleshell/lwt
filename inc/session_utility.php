@@ -2936,7 +2936,7 @@ function makeOpenDictStr($url, $txt): string
         $query = parse_url($url, PHP_URL_QUERY);
         if ($query !== false && $query !== null) {
             parse_str($query, $url_query);
-            $popup |= array_key_exists('lwt_popup', $url_query);
+            $popup = $popup || array_key_exists('lwt_popup', $url_query);
         }
     }
     if ($popup) {
@@ -2966,7 +2966,7 @@ function makeOpenDictStrJS($url): string
         $query = parse_url($url, PHP_URL_QUERY);
         if ($query !== false && $query !== null) {
             parse_str($query, $url_query);
-            $popup |= array_key_exists('lwt_popup', $url_query);
+            $popup = $popup || array_key_exists('lwt_popup', $url_query);
         }
         if ($popup) {
             $r = "owin(" . prepare_textdata_js($url) . ");\n";
@@ -3009,7 +3009,7 @@ function makeOpenDictStrDynSent($url, $sentctljs, $txt): string
         $parsed_url = parse_url($prefix . $url);
     }
     parse_str($parsed_url['query'], $url_query);
-    $popup |= array_key_exists('lwt_popup', $url_query);
+    $popup = $popup || array_key_exists('lwt_popup', $url_query);
     if (str_starts_with($url, "ggl.php")  
         || str_ends_with($parsed_url['path'], "/ggl.php")
     ) {
@@ -3061,8 +3061,8 @@ function createDictLinksInEditWin2($lang, $sentctljs, $wordctljs): string
         prepare_textdata_js($wb2) . ',' . $wordctljs . ');">Dict2</span> '; 
     }
     if ($wb3 != "") {
-        $sent_mode = substr($wb3, 0, 7) == 'ggl.php';
-        $sent_mode |= str_ends_with(parse_url($wb3, PHP_URL_PATH), '/ggl.php');
+        $sent_mode = substr($wb3, 0, 7) == 'ggl.php' || 
+        str_ends_with(parse_url($wb3, PHP_URL_PATH), '/ggl.php');
         $r .= '<span class="click" onclick="translateWord2(' . 
         prepare_textdata_js($wb3) . ',' . $wordctljs . ');">Translator</span>
          | <span class="click" onclick="translateSentence2(' . 
@@ -3129,7 +3129,7 @@ function createDictLinksInEditWin3($lang, $sentctljs, $wordctljs): string
         $wb1 = substr($wb1, 0, 1);
         $popup = true;
     }
-    $popup |= str_contains($wb1, "lwt_popup=");
+    $popup = $popup || str_contains($wb1, "lwt_popup=");
     if ($popup) {
         $f1 = 'translateWord2(' . prepare_textdata_js($wb1); 
     } else { 
@@ -3142,7 +3142,7 @@ function createDictLinksInEditWin3($lang, $sentctljs, $wordctljs): string
         $wb2 = substr($wb2, 0, 1);
         $popup = true;
     }
-    $popup |= str_contains($wb2, "lwt_popup=");
+    $popup = $popup || str_contains($wb2, "lwt_popup=");
     if ($popup) {
         $f2 = 'translateWord2(' . prepare_textdata_js($wb2); 
     } else { 
@@ -3163,7 +3163,7 @@ function createDictLinksInEditWin3($lang, $sentctljs, $wordctljs): string
     }
     if (array_key_exists('query', $parsed_url)) {
         parse_str($parsed_url['query'], $url_query);
-        $popup |= array_key_exists('lwt_popup', $url_query);
+        $popup = $popup || array_key_exists('lwt_popup', $url_query);
     }
     if ($popup) {
         $f3 = 'translateWord2(' . prepare_textdata_js($wb3);

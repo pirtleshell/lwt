@@ -1,6 +1,5 @@
 /**
- * \file
- * \brief All the function to make an audio controller in do_text_header.php
+ * All the function to make an audio controller in do_text_header.php
  * 
  * @license Unlicense
  */
@@ -19,10 +18,8 @@ function click_slower(){var val=($("#playbackrate :selected").val());if(val>5){v
 function click_faster(){var val=($("#playbackrate :selected").val());if(val<15){val++;$("#playbackrate").val(val);set_new_playbackrate()}};function CountUp(server_now,server_start,id,dontrun){if(server_now<server_start)server_start=server_now;this.beginSecs=Math.floor(((new Date()).getTime())/1000)-server_now+server_start;this.dontrun=dontrun;this.update(id)}
 CountUp.prototype.update=function(id){var nowSecs=Math.floor(((new Date()).getTime())/1000);var sec=nowSecs-this.beginSecs;var min=Math.floor(sec/60);sec=sec-min*60;var hr=Math.floor(min/60);min=min-hr*60;var r='';if(hr>0){r+=hr<10?("0"+hr):hr;r+=":"}
 r+=min<10?("0"+min):min;r+=":";r+=sec<10?("0"+sec):sec;document.getElementById(id).innerHTML=r;if(this.dontrun)return;var self=this;setTimeout(function(){self.update(id)},1000)};/**
- * \file
- * \brief Control the interactions for making an automated feed wizard.
+ * Control the interactions for making an automated feed wizard.
  * 
- * @package Lwt
  * @author  andreask7 <andreasks7@users.noreply.github.com>
  * @license Unlicense
  * @since   1.6.16-fork
@@ -57,10 +54,8 @@ $('#lwt_sel').append('<li style=\'text-align: left\'><img class=\'delete_selecti
 $(this).prop('disabled',!0);$('#mark_action').empty();$('<option/>').val('').text('[Click On Text]').appendTo('#mark_action');$('#lwt_last').css('margin-top',$('#lwt_header').height());return!1});$(document).on('click','#next',function(){$('#article_tags,#filter_tags').val($('#lwt_sel').html()).prop('disabled',!1);var html=$('#lwt_sel li').map(function(){return $(this).text()}).get().join(' | ');$('input[name=\'html\']').val(html);var val=$('input[name=\'step\']').val();if(val==2){$('input[name=\'html\']').attr('name','article_selector')
 $('select[name=\'NfArticleSection\'] option').each(function(){art_sec=$('#lwt_sel li').map(function(){return $(this).text()}).get().join(' | ');$(this).val(art_sec)})}
 $('input[name=\'step\']').val(++val);document.lwt_form1.submit();return!1});$(document).on('change','#host_status',function(){var host_status=$(this).val();var current_host=$('input[name=\'host_name\']').val();$('select[name=\'selected_feed\'] option').each(function(){var opt_str=$(this).text();var host_name=opt_str.replace(/[▸\-][0-9\s]*[★☆\-][\s]*host:/,'');if(host_name.trim()==current_host.trim()){$(this).text(opt_str.replace(/([▸\-][0-9\s]*?)\s[★☆\-]\s(.*)/,'$1 '+host_status.trim()+' $2'))}});return!1});/**
- * \file
- * \brief Interaction between LWT and jQuery
+ * Interaction between LWT and jQuery
  * 
- * @package Lwt
  * @license unlicense
  * @author  andreask7 <andreasks7@users.noreply.github.com>
  * @since   1.6.16-fork
@@ -258,10 +253,8 @@ if(typeof $(this).attr('id')==='undefined'){$(this).attr('id','rb_'+z++)}
 $(this).after('<label class="wrap_radio" for="'+$(this).attr('id')+'"><span></span></label>')});$('.button-file').on('click',function(){$(this).next('input[type="file"]').trigger('click');return!1});$('input.impr-ann-text').on('change',changeImprAnnText);$('input.impr-ann-radio').on('change',changeImprAnnRadio);$('form.validate').on('submit',check);$('input.markcheck').on('click',markClick);$('.confirmdelete').on('click',confirmDelete);$('textarea.textarea-noreturn').on('keydown',textareaKeydown);$('#frames-r').resizable({handles:"w",stop:function(_event,ui){$('#frames-l').css('width',ui.position.left-20);do_ajax_save_setting('set-text-l-framewidth-percent',Math.round($('#frames-l').width()/$(window).width()*100))}});$('#termtags').tagit({beforeTagAdded:function(_event,ui){return!containsCharacterOutsideBasicMultilingualPlane(ui.tag.text())},availableTags:TAGS,fieldName:'TermTags[TagList][]'});$('#texttags').tagit({beforeTagAdded:function(_event,ui){return!containsCharacterOutsideBasicMultilingualPlane(ui.tag.text())},availableTags:TEXTTAGS,fieldName:'TextTags[TagList][]'});markClick();setTheFocus();if($('#simwords').length>0&&$('#langfield').length>0&&$('#wordfield').length>0){$('#wordfield').on('blur',do_ajax_show_similar_terms);do_ajax_show_similar_terms()}
 window.setTimeout(noShowAfter3Secs,3000)}
 $(window).on('load',wrapRadioButtons);$(document).ready(prepareMainAreas);/**
- * \file
- * \brief LWT Javascript functions
+ * LWT Javascript functions
  * 
- * @package Lwt
  * @author  andreask7 <andreasks7@users.noreply.github.com>
  * @license Unlicense <http://unlicense.org/>
  * @since   1.6.16-fork
@@ -355,12 +348,12 @@ const enc=url.substring(pos+term_elem[0].length,pos2-pos-term_elem[0].length).tr
 return output}
 function createTheDictLink(u,w,t,b){let url=u.trim();let popup=!1;const trm=w.trim();const txt=t.trim();const txtbefore=b.trim();let r='';if(url==''||txt==''){return r}
 if(url.startsWith('*')){url=url.substring(1);popup=!0}
-try{let final_url=new URL(url);popup|=final_url.searchParams.has('lwt_popup')}catch(err){if(!(err instanceof TypeError)){throw err}}
+try{let final_url=new URL(url);popup=popup||final_url.searchParams.has('lwt_popup')}catch(err){if(!(err instanceof TypeError)){throw err}}
 if(popup){r=' '+txtbefore+' <span class="click" onclick="owin(\''+createTheDictUrl(url,escape_apostrophes(trm))+'\');">'+txt+'</span> '}else{r=' '+txtbefore+' <a href="'+createTheDictUrl(url,trm)+'" target="ru" onclick="showRightFrames();">'+txt+'</a> '}
 return r}
 function createSentLookupLink(torder,txid,url,txt){url=url.trim();txt=txt.trim();let r='';let popup=!1;let external=!1;const target_url='trans.php?x=1&i='+torder+'&t='+txid;if(url==''||txt==''){return r}
 if(url.startsWith('*')){url=url.substring(1);popup=!0}
-try{let final_url=new URL(url);popup|=final_url.searchParams.has('lwt_popup');external=!0}catch(err){if(!(err instanceof TypeError)){throw err}}
+try{let final_url=new URL(url);popup=popup||final_url.searchParams.has('lwt_popup');external=!0}catch(err){if(!(err instanceof TypeError)){throw err}}
 if(popup){return' <span class="click" onclick="owin(\''+target_url+'\');">'+txt+'</span> '}
 if(external){return' <a href="'+target_url+'" target="ru" onclick="showRightFrames();">'+txt+'</a> '}
 return r}
@@ -388,10 +381,8 @@ function deleteCookie(name,path,domain){if(getCookie(name)){document.cookie=name
 function iknowall(t){const answer=confirm('Are you sure?');if(answer){showRightFrames('all_words_wellknown.php?text='+t)}}
 function check_table_prefix(p){const re=/^[_a-zA-Z0-9]*$/;const r=p.length<=20&&p.length>0&&p.match(re);if(!r){alert('Table Set Name (= Table Prefix) must'+'\ncontain 1 to 20 characters (only 0-9, a-z, A-Z and _).'+'\nPlease correct your input.')}
 return r};/**
- * \file
- * \brief Standard JS interface to get translations
+ * Standard JS interface to get translations
  * 
- * @package Lwt
  * @author  andreask7 <andreasks7@users.noreply.github.com>
  * @license Unlicense <http://unlicense.org/>
  * @since   1.6.16-fork
@@ -408,10 +399,8 @@ async function getLibreTranslateTranslationBase(text,lang,dest,key="",url="http:
 async function getLibreTranslateTranslation(libre_url,text,lang,dest){const search_params=libre_url.searchParams;if(search_params.get("lwt_translator")!="libretranslate"){throw 'Translation API not supported: '+search_params.get("lwt_translator")+"!"}
 let translator_ajax;if(search_params.get("lwt_translator_ajax")){translator_ajax=decodeURIComponent(search_params.get("lwt_translator_ajax"))}else{translator_ajax=libre_url.toString().replace(libre_url.search,'')+"translate"}
 return getLibreTranslateTranslationBase(text,lang,dest,key=search_params.get("lwt_key"),translator_ajax)};/**
- * \file
- * \brief Check for unsaved changes when unloading window.
+ * Check for unsaved changes when unloading window.
  * 
- * @package Lwt
  * @license unlicense
  * @author  andreask7 <andreasks7@users.noreply.github.com>
  * @since   1.6.16-fork
@@ -454,10 +443,8 @@ return returnValue};function fixEvent(event){event.preventDefault=fixEvent.preve
 if(!Array.forEach){Array.forEach=function(array,block,context){for(var i=0;i<array.length;i++){block.call(context,array[i],i,array)}}}
 Function.prototype.forEach=function(object,block,context){for(var key in object){if(typeof this.prototype[key]=="undefined"){block.call(context,object[key],key,object)}}};String.forEach=function(string,block,context){Array.forEach(string.split(""),function(chr,index){block.call(context,chr,index,string)})};var forEach=function(object,block,context){if(object){var resolve=Object;if(object instanceof Function){resolve=Function}else if(object.forEach instanceof Function){object.forEach(block,context);return}else if(typeof object=="string"){resolve=String}else if(typeof object.length=="number"){resolve=Array}
 resolve.forEach(object,block,context)}};/**
- * \file
- * \brief General file to control dynamic interactions with the user.
+ * General file to control dynamic interactions with the user.
  * 
- * @package Lwt
  * @author  HugoFara <Hugo.Farajallah@protonmail.com>
  * @license Unlicense <http://unlicense.org/>
  * @since   2.0.3-fork

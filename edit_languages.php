@@ -604,7 +604,7 @@ function edit_language_form($language): void
             input_box.value = input_box.value.substring(1);
             popup = true;
         }
-        popup |= (new URL(input_box.value)).searchParams.has("lwt_popup");
+        popup = popup || (new URL(input_box.value)).searchParams.has("lwt_popup");
         target.checked = popup;
     }
 
