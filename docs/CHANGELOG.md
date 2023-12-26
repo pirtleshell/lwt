@@ -17,6 +17,7 @@ ones are marked like "v1.0.0-fork".
 ### Changed
 
 * PHP files header docblocks are expanded, notably with a PHP version, package and category name.
+* Japanese number are now parsed by MeCab. Big thanks to [@ProgramComputer](https://github.com/ProgramComputer) for his pull request [#149](https://github.com/HugoFara/lwt/pull/149)!
 
 ### Fixed
 
