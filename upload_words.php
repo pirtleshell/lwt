@@ -354,7 +354,7 @@ function upload_words_import_complete(
         }
         if ($overwrite==2) { 
             $sql .= " ON DUPLICATE KEY UPDATE {$tbpref}words.WoTranslation = case 
-                when {$tbpref}words.WoTranslation = "*" then tw.WoTranslation 
+                when {$tbpref}words.WoTranslation = \"*\" then tw.WoTranslation 
                 else {$tbpref}words.WoTranslation 
             end, 
             {$tbpref}words.WoRomanization = case 
@@ -503,8 +503,8 @@ function upload_words_import_terms($fields, $tabs, $file_upl, $col, $lang): floa
     $last_update = (string) get_first_value(
         "SELECT max(WoStatusChanged) AS value FROM {$tbpref}words"
     );
-    $overwrite = $_REQUEST["Over"];
-    $status = $_REQUEST["WoStatus"];
+    $overwrite = (int) $_REQUEST["Over"];
+    $status = (int) $_REQUEST["WoStatus"];
     $columns = '(' . rtrim(implode(',', $col), ',') . ')';
     $temp_tabs = $tabs;
     if ($temp_tabs == 'h') {
