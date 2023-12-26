@@ -699,21 +699,11 @@ function do_test_test_interaction_globals($wb1, $wb2, $wb3)
  * @param string $save      Word or sentence to use for the test
  * 
  * @return void
- * 
- * @global string $tbpref  Database table prefix
- * @global string $angDefs Languages definition array
  */
 function do_test_test_javascript_clickable($wo_record, $solution)
 {
-    global $tbpref, $langDefs;
-
     $wid = $wo_record['WoID'];
-    $lang = get_first_value(
-        'SELECT LgName AS value FROM ' . $tbpref . 'languages
-        WHERE LgID = ' . $wo_record['WoLgID'] . '
-        LIMIT 1'        
-    );
-    $abbr = $langDefs[$lang][1];
+    $abbr = getLanguageCode($wo_record['WoLgID'], LWT_LANGUAGES_ARRAY);
     $phoneticText = phonetic_reading($wo_record['WoText'], $abbr);
     ?>
 <script type="text/javascript">

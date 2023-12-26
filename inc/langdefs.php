@@ -8,7 +8,7 @@
  *
  * @package Lwt
  * @author LWT Project <lwt-project@hotmail.com>
- * @since 2.9.1 Use LWT_LANG_DEFS instead of $langDefs
+ * @since 2.9.1 Use LWT_LANGUAGES_ARRAY instead of $langDefs
  */
 
 /**
@@ -19,7 +19,7 @@
  *  "sentSplRegExp", makeCharacterWord, removeSpaces, rightToLeft)
  */
 define(
-    'LWT_LANG_DEFS',
+    'LWT_LANGUAGES_ARRAY',
     array(
         "Afrikaans" => array(
             "af", "af", false, 
@@ -300,9 +300,9 @@ define(
 );
 
 /**
- * @var array $langDefs Old name for LWT_LANG_DEFS.
+ * @var array $langDefs Old name for LWT_LANGUAGES_ARRAY.
  * 
  * @deprecated 2.9.1-fork, will be removed in 3.0.0
  */
-$langDefs = LWT_LANG_DEFS;
+$langDefs = LWT_LANGUAGES_ARRAY;
 ?>

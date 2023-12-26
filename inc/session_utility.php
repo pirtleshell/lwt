@@ -4006,17 +4006,21 @@ function get_languages(): array
 /**
  * Get language name from its ID 
  * 
- * @param  string $lid Language ID
+ * @param  string|int $lid Language ID
+ * 
  * @return string Language name
  * @global string $tbpref Table name prefix
  */ 
 function getLanguage($lid) 
 {
     global $tbpref;
-    if (!isset($lid) || trim($lid) == '' || !is_numeric($lid)) { 
-        return ''; 
+    if (is_int($lid)) {
+        $lg_id = $lid;
+    } else if (isset($lid) && trim($lid) != '' && ctype_digit($lid)) { 
+        $lg_id = (int) $lid;
+    } else {
+        return '';
     }
-    $lg_id = (int) $lid;
     $r = get_first_value(
         "SELECT LgName AS value 
         FROM {$tbpref}languages 
@@ -4024,6 +4028,43 @@ function getLanguage($lid)
     );
     if (isset($r)) { 
         return (string)$r; 
+    }
+    return '';
+}
+
+
+/**
+ * Try to get language code from its ID 
+ * 
+ * @param int   $lg_id           Language ID
+ * @param array $languages_table Table of languages, usually LWT_LANGUAGES_ARRAY
+ * 
+ * @return string If found, two-letter code (e. g. BCP 47) or four-letters for the langugae. '' otherwise.
+ * 
+ * @global string $tbpref 
+ */ 
+function getLanguageCode($lg_id, $languages_table) 
+{
+    global $tbpref;
+    $query = "SELECT LgName, LgGoogleTranslateURI
+    FROM {$tbpref}languages
+    WHERE LgID = $lg_id";
+
+    $res = do_mysqli_query($query);
+    $record = mysqli_fetch_assoc($res);
+    mysqli_free_result($res);
+    $lg_name = (string) $record["LgName"];
+    $translator_uri = (string) $record["LgGoogleTranslateURI"];
+
+    // If we are using a standard language name, use it
+    if (array_key_exists($lg_name, $languages_table)) {
+        return $languages_table[$lg_name][1];
+    } 
+
+    // Otherwise, use the translator URL
+    $lgFromDict = langFromDict($translator_uri); 
+    if ($lgFromDict != '') {
+        return $lgFromDict;
     }
     return '';
 }
