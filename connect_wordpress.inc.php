@@ -4,6 +4,8 @@
  * \file
  * \brief DB variables when LWT is integrated with WordPress.
  * 
+ * PHP version 8.1
+ * 
  * @author https://sourceforge.net/projects/lwt/ LWT Project
  * @since  1.5.5
  */

@@ -7,6 +7,8 @@
  * Call: ggl.php?text=[text]&sl=[source language]&tl=[target language] ... translate text
  *     ... sent=[int] ... single sentence mode.
  * 
+ * PHP version 8.1
+ * 
  * @package Lwt
  * @author  LWT Project <lwt-project@hotmail.com>
  * @license Unlicense <http://unlicense.org/>
@@ -32,7 +34,7 @@ use function Lwt\Includes\getGoogleTimeToken;
  * 
  * @return void
  */
-function translate_sentence($text, $translation)
+function translate_sentence($text, $translation): void
 {
     ?>
     <h2>Sentence Translation</h2>
@@ -54,7 +56,7 @@ function translate_sentence($text, $translation)
  * 
  * @return void
  */
-function translate_term($text, $file, $sl, $tl)
+function translate_term($text, $file, $sl, $tl): void
 {
     ?>
 <h2 title="Translate with Google Translate">
@@ -112,7 +114,7 @@ function translate_term($text, $file, $sl, $tl)
  * 
  * @return void
  */
-function translate_text($text, $sl, $tl, $sentence_mode)
+function translate_text($text, $sl, $tl, $sentence_mode): void
 {
     $file = GoogleTranslate::staticTranslate(
         $text, $sl, $tl, getGoogleTimeToken()
@@ -146,7 +148,7 @@ function translate_text($text, $sl, $tl, $sentence_mode)
  * 
  * @return void
  */
-function do_content($text)
+function do_content($text): void
 {
     header('Pragma: no-cache');
     header('Expires: 0');

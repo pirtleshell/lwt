@@ -22,7 +22,6 @@ final class KernelUtilityTest extends TestCase
     public function testGetVersionNumber(): void 
     {
         $version = get_version_number();
-        $this->assertIsString($version);
         $this->assertTrue(str_starts_with($version, 'v'));
         $this->assertSame(10, strlen($version));
     }

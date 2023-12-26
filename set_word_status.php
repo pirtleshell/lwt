@@ -7,6 +7,9 @@
  * Call: set_word_status.php?...
  *      ... tid=[textid]&wid=[wordid]&status=1..5/98/99
  * 
+ * PHP version 8.1
+ * 
+ * @category Helper_Frame
  * @package Lwt
  * @author  LWT Project <lwt-project@hotmail.com>
  * @license Unlicense <http://unlicense.org/>
@@ -45,24 +48,19 @@ function get_word_data($wid)
 
 /**
  * Sent an AJAX request to change a word satus.
- * 
+ *
  * @param string $wid    ID of the word status to change
  * @param string $status New status to set
  */
-function set_word_status_ajax($wid, $status)
+function set_word_status_ajax($wid, $status): void
 {
     ?>
 <script type="text/javascript">
-    const wordid = <?php echo $wid; ?>;
-    const status = <?php echo $status; ?>;
+    const wordid = parseInt(<?php echo $wid; ?>, 10);
+    const status = parseInt(<?php echo $status; ?>, 10);
     $.post(
-        'inc/ajax.php',
-        {
-            action: "term_status",
-            action_type: "set",
-            wid: wordid,
-            status: status 
-        }, 
+        'api.php/v1/' + wordid + '/status/' + status,
+        {}, 
         function (data) {
             if (data == "" || "error" in data) {
                 word_update_error();

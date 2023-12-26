@@ -3,6 +3,8 @@
  * \file
  * \brief Start a PHP session.
  * 
+ * PHP version 8.1
+ *
  * @package Lwt
  * @author  HugoFara <hugo.farajallah@protonmail.com>
  * @license Unlicense <http://unlicense.org/>

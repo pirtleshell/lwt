@@ -16,18 +16,21 @@ require_once __DIR__ . '/session_utility.php';
 
 /**
  * Add the translation for a new term.
- * 
+ *
  * @param string $text Associated text
  * @param int    $lang Language ID
  * @param string $data Translation
- * 
- * @return string Error message if failure, lowercase $text otherwise
- * 
+ *
+ * @return (int|string)[]|string [new word ID, lowercase $text] if success, error message otherwise
+ *
  * @global string $tbpref Database table prefix
- * 
+ *
  * @since 2.9.0 Error messages are much more explicit
+ * @since 2.9.0 Return an array 
+ *
+ * @psalm-return list{int, string}|string
  */
-function add_new_term_transl($text, $lang, $data) 
+function add_new_term_transl($text, $lang, $data): array|string 
 {
     global $tbpref;
     $textlc = mb_strtolower($text, 'UTF-8');
@@ -59,7 +62,7 @@ function add_new_term_transl($text, $lang, $data)
         WHERE Ti2LgID = $lang AND LOWER(Ti2Text) = " . 
         convert_string_to_sqlsyntax_notrim_nonull($textlc)
     );
-    return $textlc;
+    return array($wid, $textlc);
 }
 
 /**
@@ -68,20 +71,28 @@ function add_new_term_transl($text, $lang, $data)
  * @param int    $wid       Word ID
  * @param string $new_trans New translation
  * 
- * @return string WoTextLC, lower version of the word
+ * @return string WoTextLC, lowercase version of the word
  * 
  * @global string $tbpref Database table prefix
  */
 function edit_term_transl($wid, $new_trans)
 {
     global $tbpref;
-    $oldtrans = get_first_value(
+    $oldtrans = (string) get_first_value(
         "SELECT WoTranslation AS value 
         FROM {$tbpref}words 
         WHERE WoID = $wid"
     );
     
     $oldtransarr = preg_split('/[' . get_sepas()  . ']/u', $oldtrans);
+    if ($oldtransarr === false) {
+        // Something wrong happened, stop here
+        return (string)get_first_value(
+            "SELECT WoTextLC AS value 
+            FROM {$tbpref}words 
+            WHERE WoID = $wid"
+        );
+    }
     array_walk($oldtransarr, 'trim_value');
     
     if (!in_array($new_trans, $oldtransarr)) {
@@ -111,7 +122,7 @@ function edit_term_transl($wid, $new_trans)
  * @param int    $wid       Word ID
  * @param string $new_trans New translation
  * 
- * @return string Term in lower case, or "" if term does not exist
+ * @return string Term in lower case, or error message if term does not exist
  * 
  * @global string $tbpref
  */
@@ -126,7 +137,7 @@ function do_ajax_check_update_translation($wid, $new_trans)
     if ($cnt_words == 1) {
         return edit_term_transl($wid, $new_trans);
     }
-    return "";
+    return "Error: " . $cnt_words . " word ID found!";
 }
 
 /**
@@ -143,11 +154,15 @@ function do_ajax_add_term_transl($wid, $data)
 {
     chdir('..');
     // Save data
-    $success = "";
     if ($wid == 0) {
-        $success = add_new_term_transl(
+        $status = add_new_term_transl(
             trim($_POST['text']), (int)$_POST['lang'], $data
         );
+        if (is_array($status)) {
+            $success = $status[1];
+        } else {
+            $success = $status;
+        }
     } else {
         $success = do_ajax_check_update_translation($wid, $data);
     }

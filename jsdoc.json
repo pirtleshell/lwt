@@ -1,0 +1,27 @@
+{
+    "plugins": [],
+    "recurseDepth": 10,
+    "source": {
+        "include": ["src/js"],
+        "includePattern": ".+\\.js$",
+        "excludePattern": "(^|\\/|\\\\)_",
+        "includeSource": false
+    },
+    "sourceType": "script",
+    "tags": {
+        "allowUnknownTags": true,
+        "dictionaries": ["jsdoc","closure"]
+    },
+    "templates": {
+        "cleverLinks": false,
+        "monospaceLinks": false
+    },
+    "opts": {
+        "template": "templates/default", 
+        "encoding": "utf8",
+        "destination": "docs/js/", 
+        "recurse": false,
+        "readme": "./README.md"
+    }
+}
+

@@ -6,6 +6,8 @@
  * 
  * Call: do_text_text.php?text=[textid]
  * 
+ * PHP version 8.1
+ * 
  * @package Lwt
  * @author  LWT Project <lwt-project@hotmail.com>
  * @license Unlicense <http://unlicense.org/>
@@ -18,7 +20,7 @@ require_once 'inc/session_utility.php';
 /**
  * Get the record for this text in the database.
  *
- * @param string $textid ID of the text
+ * @param string|int $textid ID of the text
  * 
  * @return array{TxLgID: int, TxTitle: string, TxAnnotatedText: string, 
  * TxPosition: int}|false|null Record corresponding to this text.
@@ -268,10 +270,7 @@ function wordProcessor($record, $showAll, $currcharcount): int
     $cnt = 1;
     $sid = 0;
 
-    if ($sid != $record['Ti2SeID']) {
-        if ($sid != 0) {
-            echo '</span>';
-        }
+    if ($sid != (int) $record['Ti2SeID']) {
         $sid = $record['Ti2SeID'];
         echo '<span id="sent_', $sid, '">';
     }
@@ -655,6 +654,26 @@ function do_text_text_javascript($var_array): void
         });
     }
 
+
+    /**
+     * Save the current reading position.
+     * @global {string} TID Text ID
+     * 
+     * @since 2.0.3-fork
+     */
+    function saveCurrentPosition() {
+        let pos = 0;
+        // First position from the top
+        const top_pos = $(window).scrollTop() - $('.wsty').not('.hide').eq(0).height();
+        $('.wsty').not('.hide').each(function() {
+            if ($(this).offset().top >= top_pos) {
+                pos = $(this).attr('data_pos');
+                return false;
+            }
+        });
+        saveReadingPosition(text_id, pos);
+    }
+
     $(document).ready(prepareTextInteractions);
     $(document).ready(goToLastPosition);
     $(window).on('beforeunload', saveCurrentPosition);
@@ -680,8 +699,8 @@ function do_text_javascript($var_array): void
 /**
  * Main function for displaying sentences. It will print HTML content.
  *
- * @param string $textid    ID of the requiered text
- * @param bool   $only_body If true, only show the inner body. If false, create a complete HTML document.
+ * @param string|int $textid    ID of the requiered text
+ * @param bool       $only_body If true, only show the inner body. If false, create a complete HTML document.
  */
 function do_text_text_content($textid, $only_body=true): void
 {
@@ -689,7 +708,7 @@ function do_text_text_content($textid, $only_body=true): void
     $record = get_text_data($textid);
     $title = $record['TxTitle'];
     $langid = (int)$record['TxLgID'];
-    $ann = $record['TxAnnotatedText'];
+    $ann = (string) $record['TxAnnotatedText'];
     $pos = $record['TxPosition'];
     
     // Language settings
@@ -706,12 +725,10 @@ function do_text_text_content($textid, $only_body=true): void
     $showLearning = getSettingZeroOrOne('showlearningtranslations', 1);
     
     /**
-     * @var int $mode_trans 
      * Annotation position between 0 and 4
      */
     $mode_trans = (int) getSettingWithDefault('set-text-frame-annotation-position');
     /**
-     * @var bool $ruby 
      * Ruby annotations
      */
     $ruby = $mode_trans==2 || $mode_trans==4;
@@ -770,8 +787,10 @@ function do_text_text_content($textid, $only_body=true): void
     flush();
 }
 
-// This code runs when calling this script, be careful!
-if (false && isset($_REQUEST['text'])) {
+/*
+ * Uncoment to use as a page, deprecated behavior in LWT-fork, will be removed in 3.0.0 
+if (isset($_REQUEST['text'])) {
     do_text_text_content($_REQUEST['text'], false);
 }
+*/
 ?>

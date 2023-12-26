@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * \file
  * \brief Print/Edit an improved annotated text
@@ -9,6 +8,9 @@
  *      ... edit=1 ... edit own annotation 
  *      ... del=1  ... delete own annotation
  * 
+ * PHP version 8.1
+ * 
+ * @category User_Interface
  * @package Lwt
  * @author  LWT Project <lwt-project@hotmail.com>
  * @license Unlicense <http://unlicense.org/>
@@ -23,7 +25,7 @@ require_once 'inc/ajax_edit_impr_text.php';
 
 use function Lwt\Ajax\Improved_Text\edit_term_form;
 
-function edit_mode_display($textid, $ann_exists)
+function edit_mode_display($textid, $ann_exists): void
 {
     if (!$ann_exists) {
         // No annotations, try create them
@@ -66,7 +68,7 @@ function edit_mode_display($textid, $ann_exists)
     <?php
 }
 
-function print_mode_display($textid, $langid, $audio, $ann, $title)
+function print_mode_display($textid, $langid, $audio, $ann, $title): void
 {
     global $tbpref;
     $sql = "SELECT LgTextSize, LgRemoveSpaces, LgRightToLeft, LgGoogleTranslateURI 
@@ -144,6 +146,9 @@ function print_mode_display($textid, $langid, $audio, $ann, $title)
 }
 
 
+/**
+ * @return void
+ */
 function do_content()
 {
     global $tbpref;
@@ -152,7 +157,7 @@ function do_content()
     $editmode = ($editmode == '' ? 0 : (int)$editmode);
     $delmode = getreq('del');
     $delmode = ($delmode == '' ? 0 : (int)$delmode);
-    $ann = get_first_value(
+    $ann = (string) get_first_value(
         "SELECT TxAnnotatedText AS value FROM {$tbpref}texts 
         WHERE TxID = $textid"
     );
@@ -192,12 +197,13 @@ function do_content()
     from {$tbpref}texts where TxID = $textid";
     $res = do_mysqli_query($sql);
     $record = mysqli_fetch_assoc($res);
-    $title = $record['TxTitle'];
-    $sourceURI = $record['TxSourceURI'];
-    $langid = $record['TxLgID'];
-    $audio = $record['TxAudioURI'];
-    if (!isset($audio)) { 
-        $audio = ''; 
+    $title = (string) $record['TxTitle'];
+    $sourceURI = (string) $record['TxSourceURI'];
+    $langid = (int) $record['TxLgID'];
+    if (isset($record['TxAudioURI'])) { 
+        $audio = (string) $record['TxAudioURI'];
+    } else {
+        $audio = '';
     }
     $audio = trim($audio);
     mysqli_free_result($res);
@@ -237,7 +243,7 @@ function do_content()
         </div>
     </div>
     <h1>ANN.TEXT ▶ <?php echo tohtml($title) . 
-    (isset($sourceURI) && substr(trim($sourceURI), 0, 1) != '#' ? 
+    (isset($record['TxSourceURI']) && substr(trim($sourceURI), 0, 1) != '#' ? 
     ' <a href="<?php echo $sourceURI; ?>" target="_blank">
         <img src="'.get_file_path('icn/chain.png') . 
         '" title="Text Source" alt="Text Source" />

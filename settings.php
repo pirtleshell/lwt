@@ -1,12 +1,16 @@
 <?php
 
-/**************************************************************
+/*
  * Preferences / Settings 
  * 
  * Call: settings.php?....
  *      ... op=Save ... do save 
- *      ... op=Reset ... do reset to defaults 
- ***************************************************************/
+ *      ... op=Reset ... do reset to defaults
+ * 
+ * PHP version 8.1
+ * 
+ * @category User_Interface
+ */
 
 namespace Lwt\Interface\Settings;
 
@@ -196,7 +200,7 @@ if (isset($_REQUEST['op'])) {
 
 }
 
-echo error_message_with_hide($message, 1);
+echo error_message_with_hide($message, true);
 
 ?>
 <script type="text/javascript" charset="utf-8">

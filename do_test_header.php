@@ -9,6 +9,9 @@
  * Call: do_test_header.php?selection=1  
  *      (SQL via $_SESSION['testsql'])
  * 
+ * PHP version 8.1
+ * 
+ * @category User_Interface
  * @package Lwt
  * @author  LWT Project <lwt-project@hotmail.com>
  * @license Unlicense <http://unlicense.org/>
@@ -45,7 +48,7 @@ function get_sql_test_data(&$title, &$p)
     if ($cntlang > 1) {
         $message = 'Error: The selected terms are in ' . $cntlang . ' languages, ' . 
         'but tests are only possible in one language at a time.'; 
-        echo error_message_with_hide($message, 1);
+        echo error_message_with_hide($message, true);
         return '';
     }
     $title .= ' in ' . get_first_value(
@@ -129,7 +132,7 @@ function get_test_counts($testsql)
 /**
  * Make the header row for tests.
  * 
- * @param string $_p URL property to use
+ * @param mixed $_p URL property to use (unnused), will be removed in LWT 3.0.0
  * 
  * @return void
  */

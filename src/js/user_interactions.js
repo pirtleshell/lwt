@@ -1,8 +1,6 @@
 /**
- * \file
- * \brief General file to control dynamic interactions with the user.
+ * General file to control dynamic interactions with the user.
  * 
- * @package Lwt
  * @author  HugoFara <Hugo.Farajallah@protonmail.com>
  * @license Unlicense <http://unlicense.org/>
  * @since   2.0.3-fork
@@ -115,7 +113,7 @@ function prepareTextInteractions() {
 
 /** 
  * Scroll to a specific reading position
- * @global {int} POS Position to go to
+ * 
  * @since 2.0.3-fork
  */
 function goToLastPosition() {
@@ -140,32 +138,27 @@ function goToLastPosition() {
 
 /**
  * Save the current reading position.
- * @global {string} TID Text ID
  * 
- * @since 2.0.3-fork
+ * @param {int} text_id Text id
+ * @param {int} position Position to save
+ * 
+ * @since 2.9.0-fork
  */
-function saveCurrentPosition() {
-    let pos = 0;
-    // First position from the top
-    const top_pos = $(window).scrollTop() - $('.wsty').not('.hide').eq(0).height();
-    $('.wsty').not('.hide').each(function() {
-        if ($(this).offset().top >= top_pos){
-            pos = $(this).attr('data_pos');
-            return false;
-        }
-    });
-    $.ajax(
-        {
-            type: "POST",
-            url:'inc/ajax.php',
-            data: {
-                action: "reading_position",
-                action_type: "text",
-                tid: TID,
-                tposition: pos 
-            }, 
-            async: false // Asynchronous should be safe (2.9.0)
-        }
+function saveReadingPosition(text_id, position) {
+    $.post(
+        'api.php/v1/texts/' + text_id + '/reading-position',
+        { position: position }
+    );
+}
+
+
+/**
+ * Save audio position
+ */
+function saveAudioPosition(text_id, pos) {
+    $.post(
+        'api.php/v1/texts/' + text_id + '/audio-position',
+        { position: pos }
     );
 }
 
@@ -178,12 +171,10 @@ function saveCurrentPosition() {
 function getPhoneticText(text, lang) {
     let phoneticText;
     $.ajax(
-        'inc/ajax.php',
+        'api.php/v1/phonetic-reading',
         {
             async: false,
             data: {
-                action: "query",
-                action_type: "phonetic_reading",
                 text: text,
                 lang: lang 
             },
@@ -207,10 +198,8 @@ function getPhoneticText(text, lang) {
  */
 async function getPhoneticTextAsync(text, lang) {
     return $.getJSON(
-        'inc/ajax.php',
+        'api.php/v1/phonetic-reading',
         {
-            action: "query",
-            action_type: "phonetic_reading",
             text: text, 
             lang: lang 
         }

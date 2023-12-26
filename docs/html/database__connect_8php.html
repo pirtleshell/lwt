@@ -22,7 +22,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="lwt_icon.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Learning with Texts - Fork<span id="projectnumber">&#160;2.8.1-fork</span>
+   <div id="projectname">Learning with Texts - Fork<span id="projectnumber">&#160;2.9.0-fork</span>
    </div>
    <div id="projectbrief">Learn foreign languages with texts</div>
   </td>
@@ -168,15 +168,14 @@ Functions</h2></td></tr>
 <tr class="separator:aee77a1d03a5cce20d89d97a88d587dd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a960bf3f2e9821f403140330ac38c27de"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="database__connect_8php.html#a960bf3f2e9821f403140330ac38c27de">check_update_db</a> ($debug, $tbpref, $dbname)</td></tr>
 <tr class="separator:a960bf3f2e9821f403140330ac38c27de"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6e362f15877268f0dcff6be0c499f493"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="database__connect_8php.html#a6e362f15877268f0dcff6be0c499f493">connect_to_database</a> ($server, $userid, $passwd, $dbname)</td></tr>
-<tr class="separator:a6e362f15877268f0dcff6be0c499f493"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5fc245713710da589afbff1bc8a369c2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="database__connect_8php.html#a5fc245713710da589afbff1bc8a369c2">connect_to_database</a> ($server, $userid, $passwd, $dbname, $socket=&quot;&quot;)</td></tr>
+<tr class="separator:a5fc245713710da589afbff1bc8a369c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1f4a496e6b66c98af300e5e9005eedb7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="database__connect_8php.html#a1f4a496e6b66c98af300e5e9005eedb7">get_database_prefixes</a> (&amp;$tbpref)</td></tr>
 <tr class="separator:a1f4a496e6b66c98af300e5e9005eedb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a84c3eb1bab9d7e3b2366f90cf9beec1c"><td class="memItemLeft" align="right" valign="top"><a id="a84c3eb1bab9d7e3b2366f90cf9beec1c" name="a84c3eb1bab9d7e3b2366f90cf9beec1c"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>$DBCONNECTION</b> = <a class="el" href="database__connect_8php.html#a6e362f15877268f0dcff6be0c499f493">connect_to_database</a>($server, $userid, $passwd, $dbname)</td></tr>
+<tr class="memitem:a84c3eb1bab9d7e3b2366f90cf9beec1c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="database__connect_8php.html#a84c3eb1bab9d7e3b2366f90cf9beec1c">$DBCONNECTION</a></td></tr>
 <tr class="separator:a84c3eb1bab9d7e3b2366f90cf9beec1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad2071c730b3755cc900bc31a4479bebf"><td class="memItemLeft" align="right" valign="top"><a id="ad2071c730b3755cc900bc31a4479bebf" name="ad2071c730b3755cc900bc31a4479bebf"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>$tbpref</b> = null</td></tr>
@@ -336,7 +335,7 @@ Variables</h2></td></tr>
 <p>Check a text that contains expressions.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramtype">int</td><td class="paramname">$id</td><td>Text ID </td></tr>
+    <tr><td class="paramtype">int</td><td class="paramname">$id</td><td><a class="el" href="class_text.html">Text</a> ID </td></tr>
     <tr><td class="paramtype">int</td><td class="paramname">$lid</td><td><a class="el" href="class_language.html">Language</a> ID </td></tr>
     <tr><td class="paramtype">int[]</td><td class="paramname">$wl</td><td>Word length </td></tr>
     <tr><td class="paramtype">int</td><td class="paramname">$wl_max</td><td>Maximum word length </td></tr>
@@ -386,8 +385,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a6e362f15877268f0dcff6be0c499f493" name="a6e362f15877268f0dcff6be0c499f493"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6e362f15877268f0dcff6be0c499f493">&#9670;&#160;</a></span>connect_to_database()</h2>
+<a id="a5fc245713710da589afbff1bc8a369c2" name="a5fc245713710da589afbff1bc8a369c2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5fc245713710da589afbff1bc8a369c2">&#9670;&#160;</a></span>connect_to_database()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -414,7 +413,13 @@ Variables</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$dbname</em>&#160;</td>
+          <td class="paramname"><em>$dbname</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$socket</em> = <code>&quot;&quot;</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -424,11 +429,23 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Make the connection to the database.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">string</td><td class="paramname">$server</td><td>Server name </td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$userid</td><td>Database user ID </td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$passwd</td><td>User password </td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$dbname</td><td>Database name </td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$socket</td><td>Database socket</td></tr>
+  </table>
+  </dd>
+</dl>
 <dl class="section return"><dt>Returns</dt><dd>mysqli Connection to the database</dd></dl>
 <p>@psalm-suppress UndefinedDocblockClass</p>
 <dl class="section since"><dt>Since</dt><dd>2.6.0-fork Use mysqli_init and mysql_real_connect instead of deprecated mysql_connect </dd>
 <dd>
-2.6.0-fork Tries to allow local infiles for the connection. </dd></dl>
+2.6.0-fork Tries to allow local infiles for the connection. </dd>
+<dd>
+2.9.0 Can accept a $socket as an optional argument </dd></dl>
 
 </div>
 </div>
@@ -454,7 +471,8 @@ Variables</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>string Properly escaped and trimmed string. "NULL" if the input string is empty. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>string Properly escaped and trimmed string. "NULL" if the input string is empty.</dd></dl>
+<p>@global $DBDONNECTION </p>
 
 </div>
 </div>
@@ -747,8 +765,8 @@ Variables</h2></td></tr>
 <p>Parse a Japanese text using MeCab and add it to the database.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramtype">string</td><td class="paramname">$text</td><td>Text to parse. </td></tr>
-    <tr><td class="paramtype">int</td><td class="paramname">$id</td><td>Text ID. If $id = -1 print results, if $id = -2 return splitted texts</td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$text</td><td><a class="el" href="class_text.html">Text</a> to parse. </td></tr>
+    <tr><td class="paramtype">int</td><td class="paramname">$id</td><td><a class="el" href="class_text.html">Text</a> ID. If $id = -1 print results, if $id = -2 return splitted texts</td></tr>
   </table>
   </dd>
 </dl>
@@ -795,8 +813,8 @@ Variables</h2></td></tr>
 <p>Parse a text using the default tools. It is a not-japanese text.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramtype">string</td><td class="paramname">$text</td><td>Text to parse </td></tr>
-    <tr><td class="paramtype">int</td><td class="paramname">$id</td><td>Text ID. If $id == -2, only split the text. </td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$text</td><td><a class="el" href="class_text.html">Text</a> to parse </td></tr>
+    <tr><td class="paramtype">int</td><td class="paramname">$id</td><td><a class="el" href="class_text.html">Text</a> ID. If $id == -2, only split the text. </td></tr>
     <tr><td class="paramtype">int</td><td class="paramname">$lid</td><td><a class="el" href="class_language.html">Language</a> ID.</td></tr>
   </table>
   </dd>
@@ -842,8 +860,8 @@ Variables</h2></td></tr>
 <p>Pre-parse the input text before a definitive parsing by a specialized parser.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramtype">string</td><td class="paramname">$text</td><td>Text to parse </td></tr>
-    <tr><td class="paramtype">int</td><td class="paramname">$id</td><td>Text ID </td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$text</td><td><a class="el" href="class_text.html">Text</a> to parse </td></tr>
+    <tr><td class="paramtype">int</td><td class="paramname">$id</td><td><a class="el" href="class_text.html">Text</a> ID </td></tr>
     <tr><td class="paramtype">int</td><td class="paramname">$lid</td><td><a class="el" href="class_language.html">Language</a> ID</td></tr>
   </table>
   </dd>
@@ -972,7 +990,7 @@ Variables</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramtype">string</td><td class="paramname">$text</td><td>Preprocessed text to insert </td></tr>
-    <tr><td class="paramtype">int</td><td class="paramname">$id</td><td>Text ID</td></tr>
+    <tr><td class="paramtype">int</td><td class="paramname">$id</td><td><a class="el" href="class_text.html">Text</a> ID</td></tr>
   </table>
   </dd>
 </dl>
@@ -1015,7 +1033,8 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 <p>@global string $tbpref Table name prefix</p>
-<dl class="section return"><dt>Returns</dt><dd>string Error or success message </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>string Success message (starts by "OK: "), or error message</dd></dl>
+<dl class="section since"><dt>Since</dt><dd>2.9.0 Success message starts by "OK: " </dd></dl>
 
 </div>
 </div>
@@ -1037,7 +1056,7 @@ Variables</h2></td></tr>
 <p>Only terms with a word count set to 0 are changed.</p>
 <dl class="section return"><dt>Returns</dt><dd>void</dd></dl>
 <p>@global string $tbpref Database table prefix</p>
-<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000015">Deprecated:</a></b></dt><dd>Use init_word_count: same effect, but more logical name. Will be removed in version 3.0.0. </dd></dl>
+<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000029">Deprecated:</a></b></dt><dd>Use init_word_count: same effect, but more logical name. Will be removed in version 3.0.0. </dd></dl>
 
 </div>
 </div>
@@ -1075,7 +1094,7 @@ Variables</h2></td></tr>
 <p>Parse the input text.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramtype">string</td><td class="paramname">$text</td><td>Text to parse </td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$text</td><td><a class="el" href="class_text.html">Text</a> to parse </td></tr>
     <tr><td class="paramtype">string&#160;|&#160;int</td><td class="paramname">$lid</td><td><a class="el" href="class_language.html">Language</a> ID (LgID from languages table) </td></tr>
     <tr><td class="paramtype">int</td><td class="paramname">$id</td><td>References whether the text is new to the database $id = -1 =&gt; Check, return protocol $id = -2 =&gt; Only return sentence array $id = TextID =&gt; Split: insert sentences/textitems entries in DB</td></tr>
   </table>
@@ -1231,13 +1250,32 @@ Variables</h2></td></tr>
 <p>Validate a text ID</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramtype">string</td><td class="paramname">$currenttext</td><td>Text ID to validate</td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$currenttext</td><td><a class="el" href="class_text.html">Text</a> ID to validate</td></tr>
   </table>
   </dd>
 </dl>
 <p>@global string '' if the text is not valid, $currenttext otherwise</p>
 <p>@global string $tbpref Table name prefix </p>
 
+</div>
+</div>
+<h2 class="groupheader">Variable Documentation</h2>
+<a id="a84c3eb1bab9d7e3b2366f90cf9beec1c" name="a84c3eb1bab9d7e3b2366f90cf9beec1c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a84c3eb1bab9d7e3b2366f90cf9beec1c">&#9670;&#160;</a></span>$DBCONNECTION</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">$DBCONNECTION</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">= <a class="code hl_function" href="database__connect_8php.html#a5fc245713710da589afbff1bc8a369c2">connect_to_database</a>(</div>
+<div class="line">    $server, $userid, $passwd, $dbname, $socket ?? <span class="stringliteral">&quot;&quot;</span></div>
+<div class="line">)</div>
+<div class="ttc" id="adatabase__connect_8php_html_a5fc245713710da589afbff1bc8a369c2"><div class="ttname"><a href="database__connect_8php.html#a5fc245713710da589afbff1bc8a369c2">connect_to_database</a></div><div class="ttdeci">connect_to_database($server, $userid, $passwd, $dbname, $socket=&quot;&quot;)</div><div class="ttdef"><b>Definition:</b> database_connect.php:2223</div></div>
+</div><!-- fragment -->
 </div>
 </div>
 </div><!-- contents -->

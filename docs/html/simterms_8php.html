@@ -22,7 +22,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="lwt_icon.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Learning with Texts - Fork<span id="projectnumber">&#160;2.8.1-fork</span>
+   <div id="projectname">Learning with Texts - Fork<span id="projectnumber">&#160;2.9.0-fork</span>
    </div>
    <div id="projectbrief">Learn foreign languages with texts</div>
   </td>
@@ -100,15 +100,54 @@ Functions</h2></td></tr>
 <tr class="separator:ae46b4cebef8103df92f8b029364fd972"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae959b3a4c1fdfdf471d6ab452239c6cc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="simterms_8php.html#ae959b3a4c1fdfdf471d6ab452239c6cc">get_similar_terms</a> ( $lang_id, $compared_term, $max_count, $min_ranking)</td></tr>
 <tr class="separator:ae959b3a4c1fdfdf471d6ab452239c6cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7a3566cb47580799cb1fe4208f01a640"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="simterms_8php.html#a7a3566cb47580799cb1fe4208f01a640">format_term</a> ($termid, $compare)</td></tr>
+<tr class="separator:a7a3566cb47580799cb1fe4208f01a640"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae757838966b3688392e9ed28f6721a37"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="simterms_8php.html#ae757838966b3688392e9ed28f6721a37">print_similar_terms</a> ($lang_id, $compared_term)</td></tr>
 <tr class="separator:ae757838966b3688392e9ed28f6721a37"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6a547bbb630f060763d5925acb154e97"><td class="memItemLeft" align="right" valign="top"><a id="a6a547bbb630f060763d5925acb154e97" name="a6a547bbb630f060763d5925acb154e97"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>print_similar_terms_tabrow</b> ()</td></tr>
+<tr class="memitem:a6a547bbb630f060763d5925acb154e97"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="simterms_8php.html#a6a547bbb630f060763d5925acb154e97">print_similar_terms_tabrow</a> ()</td></tr>
 <tr class="separator:a6a547bbb630f060763d5925acb154e97"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>PHP Utility Functions to calculate similar terms of a term. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
+<a id="a7a3566cb47580799cb1fe4208f01a640" name="a7a3566cb47580799cb1fe4208f01a640"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7a3566cb47580799cb1fe4208f01a640">&#9670;&#160;</a></span>format_term()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">format_term </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$termid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$compare</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Prepare a field with a similar term to copy.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">int</td><td class="paramname">$termid</td><td>Initial term ID </td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$compare</td><td>Similar term to copy.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>string HTNL-formatted string with the similar term displayed.</dd></dl>
+<p>@global string $tbpref </p>
+
+</div>
+</div>
 <a id="ae959b3a4c1fdfdf471d6ab452239c6cc" name="ae959b3a4c1fdfdf471d6ab452239c6cc"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae959b3a4c1fdfdf471d6ab452239c6cc">&#9670;&#160;</a></span>get_similar_terms()</h2>
 
@@ -147,6 +186,15 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>For a language $lang_id and a term $compared_term (UTF-8). If string is already in database, it will be excluded in results.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">int</td><td class="paramname">$lang_id</td><td><a class="el" href="class_language.html">Language</a> ID </td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$compared_term</td><td><a class="el" href="class_term.html">Term</a> to compare with </td></tr>
+    <tr><td class="paramtype">int</td><td class="paramname">$max_count</td><td>Maximum number of terms to display </td></tr>
+    <tr><td class="paramtype">float</td><td class="paramname">$min_ranking</td><td>For terms to match</td></tr>
+  </table>
+  </dd>
+</dl>
 <dl class="section return"><dt>Returns</dt><dd>int[] All $max_count wordids with a similarity ranking &gt; $min_ranking, sorted decending</dd></dl>
 <p>@psalm-return array&lt;positive-int, int&gt; </p>
 
@@ -178,6 +226,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Similarity ranking of two UTF-8 strings $str1 and $str2</p>
+<p>Source <a href="http://www.catalysoft.com/articles/StrikeAMatch.html">http://www.catalysoft.com/articles/StrikeAMatch.html</a> Source <a href="http://stackoverflow.com/questions/653157">http://stackoverflow.com/questions/653157</a></p>
 <dl class="section return"><dt>Returns</dt><dd>float SimilarityRanking </dd></dl>
 
 </div>
@@ -227,7 +276,32 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Get <a class="el" href="class_term.html">Term</a> and translation of terms in termid array (calculated in function get_similar_terms(...)) as string for echo </p>
+<p>Get <a class="el" href="class_term.html">Term</a> and translation of terms in termid array (calculated in function get_similar_terms(...)) as string for echo</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">int</td><td class="paramname">$lang_id</td><td><a class="el" href="class_language.html">Language</a> ID </td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$compared_term</td><td>Similar term we compare to </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a6a547bbb630f060763d5925acb154e97" name="a6a547bbb630f060763d5925acb154e97"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6a547bbb630f060763d5925acb154e97">&#9670;&#160;</a></span>print_similar_terms_tabrow()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">print_similar_terms_tabrow </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Print a row for similar terms if the feature is enabled. </p>
 
 </div>
 </div>

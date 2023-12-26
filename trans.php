@@ -9,6 +9,9 @@
  * Call 2: trans.php?x=2&t=[text]&i=[dictURI]
  *         translates text t with dict via dict-url i
  * 
+ * PHP version 8.1
+ * 
+ * @category User_Interface
  * @package Lwt
  * @author  LWT Project <lwt-project@hotmail.com>
  * @license Unlicense <http://unlicense.org/>
@@ -21,6 +24,9 @@ namespace Lwt;
 require_once 'inc/session_utility.php';
 
 
+/**
+ * @return null|string
+ */
 function translator_url($term, $order)
 {
     global $tbpref;
@@ -32,7 +38,7 @@ function translator_url($term, $order)
     if ($record) {
         $satz = $record['SeText'];
         $trans = isset($record['LgGoogleTranslateURI']) ? 
-        $record['LgGoogleTranslateURI'] : "";
+        (string) $record['LgGoogleTranslateURI'] : "";
         if (substr($trans, 0, 1) == '*') { 
             $trans = substr($trans, 1); 
         }
@@ -52,6 +58,9 @@ function translator_url($term, $order)
 }
 
 
+/**
+ * @return void
+ */
 function display_page($type, $term, $order)
 {
     // Translate sentence

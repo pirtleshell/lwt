@@ -3,6 +3,8 @@
  * \file
  * \brief Core utility functions that do not require a complete session.
  * 
+ * PHP version 8.1
+ *
  * @package Lwt
  * @author  HugoFara <hugo.farajallah@protonmail.com>
  * @license Unlicense <http://unlicense.org/>
@@ -22,13 +24,15 @@
  * @global bool $debug If true adds a red "DEBUG"
  *
  * @return string Version number HTML-formatted
- *
- * @psalm-return '2.5.3-fork (November 06 2022) <span class="red">DEBUG</span>'|'2.5.3-fork (November 06 2022)'
+ * 
+ * @psalm-return '2.9.0-fork (April 14 2023) <span class="red">DEBUG</span>'|'2.9.0-fork (April 14 2023)'
  */
 function get_version(): string 
 {
     global $debug;
-    $version = '2.8.1-fork (April 14 2023)'; 
+    $release_number = '2.9.0-fork';
+    $release_date = 'April 14 2023';
+    $version = "$release_number ($release_date)"; 
     if ($debug) {
         $version .= ' <span class="red">DEBUG</span>';
     }
@@ -468,8 +472,8 @@ function echodebug($var,$text): void
 /**
  * Return an associative array of all possible statuses 
  * 
- * @return array<int<1, 5>|98|99, array<string, string>> 
- * Statues, keys are 1, 2, 3, 4, 5, 98, 99. 
+ * @return array<int<1, 5>|98|99, array{string, string}> 
+ * Statuses, keys are 1, 2, 3, 4, 5, 98, 99. 
  * Values are associative arrays of keys abbr and name 
  */  
 function get_statuses() 
@@ -511,11 +515,12 @@ function str_replace_first($needle, $replace, $haystack)
 
 /**
  * Convert annotations in a JSON format.
- * 
- * @param  string $ann Annotations.
+ *
+ * @param string $ann Annotations.
+ *
  * @return string A JSON-encoded version of the annotations
  */
-function annotation_to_json($ann) 
+function annotation_to_json($ann): string|false 
 {
     if ($ann == '') {
         return "{}"; 
@@ -528,7 +533,11 @@ function annotation_to_json($ann)
             $arr[intval($vals[0])-1] = array($vals[1], $vals[2], $vals[3]);
         }
     }
-    return json_encode($arr);
+    $json_data = json_encode($arr);
+    if ($json_data === false) {
+        my_die("Unable to format to JSON");
+    }
+    return $json_data;
 }
 
 /**

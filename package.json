@@ -1,0 +1,40 @@
+{
+  "name": "lwt",
+  "version": "1.0.0",
+  "description": "NPM package for hugofara/LWT, a fork of LWT",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "mocha tests/*.test.js"
+  },
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HugoFara/lwt.git"
+  },
+  "keywords": [
+    "lwt",
+    "language",
+    "learning",
+    "spaced-repetition",
+    "system",
+    "web",
+    "reader"
+  ],
+  "author": "lang-learn-guy, hugofara",
+  "license": "Unlicense",
+  "bugs": {
+    "url": "https://github.com/HugoFara/lwt/issues"
+  },
+  "homepage": "https://github.com/HugoFara/lwt#readme",
+  "devDependencies": {
+    "chai": "^4.3.10",
+    "jsdoc": "^4.0.2",
+    "mocha": "^10.2.0",
+    "superagent": "^8.1.2",
+    "supertest": "^6.3.3"
+  }
+}

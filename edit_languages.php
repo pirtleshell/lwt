@@ -12,6 +12,9 @@
  *      ... new=1 ... display new lang. screen 
  *      ... chg=[langid] ... display edit screen 
  * 
+ * PHP version 8.1
+ * 
+ * @category User_Interface
  * @package Lwt
  * @author  LWT Project <lwt-project@hotmail.com>
  * @license Unlicense <http://unlicense.org/>
@@ -330,14 +333,14 @@ function load_language($lgid)
         $language->dict2uri = "";
         $language->translator = "";
         $language->exporttemplate = "";
-        $language->textsize = "";
+        $language->textsize = 100;
         $language->charactersubst = "";
         $language->regexpsplitsent = "";
         $language->exceptionsplitsent = "";
         $language->regexpwordchar = "";
-        $language->removespaces = "";
-        $language->spliteachchar = "";
-        $language->rightoleft = "";
+        $language->removespaces = null;
+        $language->spliteachchar = null;
+        $language->rightoleft = null;
     } else {
         // Load data from database
         $sql = "SELECT * FROM {$tbpref}languages WHERE LgID = $lgid";
@@ -348,14 +351,14 @@ function load_language($lgid)
         $language->dict2uri = $record["LgDict2URI"];
         $language->translator = $record["LgGoogleTranslateURI"];
         $language->exporttemplate = $record["LgExportTemplate"];
-        $language->textsize = $record["LgTextSize"];
+        $language->textsize = (int) $record["LgTextSize"];
         $language->charactersubst = $record["LgCharacterSubstitutions"];
         $language->regexpsplitsent = $record["LgRegexpSplitSentences"];
         $language->exceptionsplitsent = $record["LgExceptionsSplitSentences"];
         $language->regexpwordchar = $record["LgRegexpWordCharacters"];
-        $language->removespaces = $record["LgRemoveSpaces"];
-        $language->spliteachchar = $record["LgSplitEachChar"];
-        $language->rightoleft = $record["LgRightToLeft"];
+        $language->removespaces = (bool) $record["LgRemoveSpaces"];
+        $language->spliteachchar = (bool) $record["LgSplitEachChar"];
+        $language->rightoleft = (bool) $record["LgRightToLeft"];
         mysqli_free_result($res);
     }
     return $language;
@@ -364,21 +367,20 @@ function load_language($lgid)
 
 /**
  * Create the form for a language.
- * 
+ *
  * @param Language $language Language object
  */
-function edit_language_form($language) 
+function edit_language_form($language): void 
 {
-    global $langDefs;
     $sourceLg = '';
     $targetLg = '';
     $currentnativelanguage = getSetting('currentnativelanguage'); 
-    if (array_key_exists($currentnativelanguage, $langDefs)) {
-        $targetLg = $langDefs[$currentnativelanguage][1];
+    if (array_key_exists($currentnativelanguage, LWT_LANGUAGES_ARRAY)) {
+        $targetLg = LWT_LANGUAGES_ARRAY[$currentnativelanguage][1];
     }
     if ($language->name) {
-        if (array_key_exists($language->name, $langDefs)) {
-            $sourceLg = $langDefs[$language->name][1];
+        if (array_key_exists($language->name, LWT_LANGUAGES_ARRAY)) {
+            $sourceLg = LWT_LANGUAGES_ARRAY[$language->name][1];
         }
         $lgFromDict = langFromDict($language->translator); 
         if ($lgFromDict != '' && $lgFromDict != $sourceLg) {
@@ -602,7 +604,7 @@ function edit_language_form($language)
             input_box.value = input_box.value.substring(1);
             popup = true;
         }
-        popup |= (new URL(input_box.value)).searchParams.has("lwt_popup");
+        popup = popup || (new URL(input_box.value)).searchParams.has("lwt_popup");
         target.checked = popup;
     }
 
@@ -872,19 +874,16 @@ function edit_language_form($language)
 
 }
 
-/** 
+/**
  * Returns a dropdown menu of the different languages.
- * 
+ *
  * @param string $currentnativelanguage Default language
- * 
- * @global mixed $langDefs
  */
 function get_wizard_selectoptions($currentnativelanguage): string 
 {
-    global $langDefs;
     $r = "<option value=\"\"" . get_selected($currentnativelanguage, "") . 
     ">[Choose...]</option>";
-    $keys = array_keys($langDefs);
+    $keys = array_keys(LWT_LANGUAGES_ARRAY);
     foreach ($keys as $item) {
         $r .= "<option value=\"" . $item . "\"" . 
         get_selected($currentnativelanguage, $item) . ">" . $item . "</option>";
@@ -899,8 +898,6 @@ function get_wizard_selectoptions($currentnativelanguage): string
  */
 function edit_languages_new() 
 {
-    global $langDefs;
-
     $currentnativelanguage = getSetting('currentnativelanguage');
     ?>
     <h2>
@@ -912,7 +909,7 @@ function edit_languages_new()
 
     <script type="text/javascript" charset="utf-8">
 
-        const LANGDEFS = <?php echo json_encode($langDefs); ?>;
+        const LANGDEFS = <?php echo json_encode(LWT_LANGUAGES_ARRAY); ?>;
 
         /**
          * Main variable for the language selection wizard. 
@@ -1050,17 +1047,16 @@ function edit_languages_new()
  * @return void
  * 
  * @global string $tbpref
- * @global array $langDefs 
  */
 function edit_languages_change($lid)
 {
-    global $tbpref, $langDefs;
+    global $tbpref;
     $sql = "SELECT * FROM {$tbpref}languages WHERE LgID = $lid";
     $res = do_mysqli_query($sql);
     if (mysqli_fetch_assoc($res)) {
         ?>
     <script type="text/javascript" charset="utf-8">
-        const LANGDEFS = <?php echo json_encode($langDefs); ?>;
+        const LANGDEFS = <?php echo json_encode(LWT_LANGUAGES_ARRAY); ?>;
 
         $(document).ready(ask_before_exiting);
     </script>
@@ -1086,10 +1082,10 @@ function edit_languages_change($lid)
 /**
  * Display the standard page of saved languages.
  * 
- * @param {string} $message An information message to display.
+ * @param string $message An information message to display.
  * 
- * @global {string} $tbpref Database table prefix
- * @global {int}    $debug 1 to display debugging data
+ * @global string $tbpref
+ * @global int    $debug
  * 
  * @return void
  */
@@ -1097,7 +1093,7 @@ function edit_languages_display($message)
 {
     global $tbpref, $debug;
 
-    echo error_message_with_hide($message, 0);
+    echo error_message_with_hide($message, false);
     
     $current = (int) getSetting('currentlanguage');
     
@@ -1187,14 +1183,14 @@ function edit_languages_display($message)
             where WoLgID=' . $lid
         );
         $wordcount = is_numeric($foo) ? (int)$foo : 0;
-        if (is_null($newsfeedcount) || empty($newsfeedcount)) {
+        if (is_null($newsfeedcount)) {
             $nfcount = 0;
         } else if (isset($newsfeedcount[$lid])) {
             $nfcount = (int)$newsfeedcount[$lid];
         } else {
             $nfcount = 0;
         }
-        if (is_null($feedarticlescount) || empty($feedarticlescount)) {
+        if (is_null($feedarticlescount)) {
             $fartcount = 0;
         } else if (isset($feedarticlescount[$lid])) {
             $fartcount = (int)$feedarticlescount[$lid];
@@ -1279,7 +1275,7 @@ function edit_languages_do_page()
     edit_languages_alert_duplicate();
     $message = '';
     if (isset($_REQUEST['refresh'])) {
-        $message = edit_languages_refresh($_REQUEST['refresh']);
+        $message = edit_languages_refresh((int) $_REQUEST['refresh']);
     }
     if (isset($_REQUEST['del'])) {
         $message = edit_languages_delete((int)$_REQUEST['del']);

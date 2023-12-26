@@ -107,7 +107,7 @@ function imported_terms_header($recno, $currentpage, $last_update, $maxperpage=1
  * @param string $last_update Last update
  *
  * @return string SQL-formatted query to limit the number of results
- * 
+ *
  * @deprecated 2.9.0 Use imported_terms_header instead
  */
 function get_imported_terms($recno, $currentpage, $last_update): string
@@ -120,7 +120,12 @@ function get_imported_terms($recno, $currentpage, $last_update): string
 }
 
 
-function select_imported_terms($last_update, $offset, $max_terms)
+/**
+ * @return (float|int|null|string)[][]
+ *
+ * @psalm-return list<list<float|int|null|string>>
+ */
+function select_imported_terms($last_update, $offset, $max_terms): array
 {
     global $tbpref;
     $sql = "SELECT WoID, WoText, WoTranslation, WoRomanization, WoSentence, 
@@ -141,7 +146,7 @@ function select_imported_terms($last_update, $offset, $max_terms)
     GROUP BY WoID 
     LIMIT $offset, $max_terms";
     $res = do_mysqli_query($sql);
-    $records = mysqli_fetch_all($res, MYSQLI_ASSOC);
+    $records = mysqli_fetch_all($res);
     mysqli_free_result($res);
     return $records;
 }
@@ -168,7 +173,7 @@ function show_imported_terms($last_update, $limit, $rtl)
     <?php
     preg_match('/.+(\d+)\s*,\s*(\d+)/', $limit, $matches);
     $rows = select_imported_terms($last_update, $matches[1], $matches[2]);
-    foreach ($rows as $record) {
+    foreach ($rows as $_key => $record) {
         echo '<tr>
             <td class="td1">
                 <span' . ($rtl ? ' dir="rtl" ' : '') . '>' . 
@@ -249,14 +254,16 @@ function do_ajax_show_imported_terms($last_update, $currentpage, $recno, $rtl)
 
 /**
  * Return the list of imported terms of pages information.
- * 
+ *
  * @param string $last_update Terms import time
  * @param int    $currentpage Current page number
  * @param int    $recno       Number of imported terms
- * 
- * @return array 
+ *
+ * @return ((int|mixed)[]|mixed)[]
+ *
+ * @psalm-return array{navigation: array{current_page: mixed, total_pages: int}, terms: mixed}
  */
-function imported_terms_list($last_update, $currentpage, $recno)
+function imported_terms_list($last_update, $currentpage, $recno): array
 {
     $maxperpage = 100;
     $currentpage = limit_current_page($currentpage, $recno, $maxperpage);

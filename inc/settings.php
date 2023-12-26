@@ -3,6 +3,8 @@
  * \file
  * \brief Proceed to the general settings.
  * 
+ * PHP version 8.1
+ *
  * @package Lwt
  * @author  HugoFara <hugo.farajallah@protonmail.com>
  * @license Unlicense <http://unlicense.org/>

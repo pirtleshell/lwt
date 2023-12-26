@@ -1,26 +1,32 @@
 <?php
 
-/**************************************************************
-Call: edit_texttags.php?....
-      ... markaction=[opcode] ... do actions on marked text tags
-      ... allaction=[opcode] ... do actions on all text tags
-      ... del=[wordid] ... do delete
-      ... op=Save ... do insert new 
-      ... op=Change ... do update
-      ... new=1 ... display new text tag screen 
-      ... chg=[wordid] ... display edit screen 
-      ... sort=[sortcode] ... sort 
-      ... page=[pageno] ... page  
-      ... query=[tagtextfilter] ... tag text filter    
-Manage tags
- ***************************************************************/
+/*
+ * Manage tags
+ * 
+ * Call: edit_texttags.php?....
+ *  ... markaction=[opcode] ... do actions on marked text tags
+ *  ... allaction=[opcode] ... do actions on all text tags
+ *  ... del=[wordid] ... do delete
+ *  ... op=Save ... do insert new 
+ *  ... op=Change ... do update
+ *  ... new=1 ... display new text tag screen 
+ *  ... chg=[wordid] ... display edit screen 
+ *  ... sort=[sortcode] ... sort 
+ *  ... page=[pageno] ... page  
+ *  ... query=[tagtextfilter] ... tag text filter    
+ * 
+ * PHP version 8.1
+ * 
+ * @category User_Interface
+ * @package Lwt
+ */
 
 require_once 'inc/session_utility.php';
 
-$currentsort = processDBParam("sort", 'currenttexttagsort', '1', 1);
+$currentsort = (int) processDBParam("sort", 'currenttexttagsort', '1', true);
 
-$currentpage = processSessParam("page", "currenttexttagpage", '1', 1);
-$currentquery = processSessParam("query", "currenttexttagquery", '', 0);
+$currentpage = (int) processSessParam("page", "currenttexttagpage", '1', true);
+$currentquery = (string) (string) processSessParam("query", "currenttexttagquery", '', false);
 
 $wh_query = convert_string_to_sqlsyntax(str_replace("*", "%", $currentquery));
 $wh_query = ($currentquery != '') ? (' and (T2Text like ' . $wh_query . ' or T2Comment like ' . $wh_query . ')') : '';
@@ -180,7 +186,7 @@ if (isset($_REQUEST['new'])) {
         $message = substr($message, 0, strlen($message)-18);
         $message = "Error: Text Tag '" . $message . "' already exists. Please go back and correct this!";
     }     
-    echo error_message_with_hide($message, 0);
+    echo error_message_with_hide($message, false);
     
     get_texttags($refresh = 1);   // refresh tags cache
 
@@ -280,7 +286,9 @@ Multi Actions <img src="icn/lightning.png" title="Multi Actions" alt="Multi Acti
 
         <?php
 
-        $sql = 'select T2ID, T2Text, T2Comment from ' . $tbpref . 'tags2 where (1=1) ' . $wh_query . ' order by ' . $sorts[$currentsort-1] . ' ' . $limit;
+        $sql = 'select T2ID, T2Text, T2Comment 
+        from ' . $tbpref . 'tags2 where (1=1) ' . $wh_query . ' 
+        order by ' . $sorts[$currentsort-1] . ' ' . $limit;
         if ($debug) { 
             echo $sql; 
         }

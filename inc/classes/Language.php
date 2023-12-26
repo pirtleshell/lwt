@@ -4,6 +4,8 @@
  * \file
  * \brief Define the Language class
  * 
+ * PHP version 8.1
+ *
  * @package Lwt
  * @author  HugoFara <hugo.farajallah@protonmail.com>
  * @license Unlicense <http://unlicense.org/>
@@ -23,27 +25,27 @@ class Language
      */
     public $id;
     /**
-     * @var int $name Language name.
+     * @var string $name Language name.
      */
     public $name;
     /**
-     * @var int $dict1uri Language ID.
+     * @var string $dict1uri URI for the first dictionary.
      */
     public $dict1uri;
     /**
-     * @var string $dict2uri Associated text.
+     * @var string $dict2uri URI for the second dictionary.
      */
     public $dict2uri;
     /**
-     * @var string $translator Associated text in lower case.
+     * @var string $translator Translator URI.
      */
     public $translator;
     /**
-     * @var int $exporttemplate Term status.
+     * @var string $exporttemplate Export template.
      */
     public $exporttemplate;
     /**
-     * @var string $textsize Term translation.
+     * @var int $textsize Text size.
      */
     public $textsize;
     /**

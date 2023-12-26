@@ -7,6 +7,8 @@
  * By requiring this file, you start a session, connect to the 
  * database and declare a lot of useful functions.
  * 
+ * PHP version 8.1
+ *
  * @package Lwt
  * @author  HugoFara <hugo.farajallah@protonmail.com>
  * @license Unlicense <http://unlicense.org/>
@@ -689,7 +691,13 @@ function load_feeds($currentfeed): void
                     continue; 
                 }
                 if(time()>($autoupdate + (int) $row['NfUpdate'])) {
-                    $ajax[$cnt]=  "$.ajax({type: 'POST',beforeSend: function(){ $('#feed_" . $row['NfID'] . "').replaceWith( '<div id=\"feed_" . $row['NfID'] . "\" class=\"msgblue\"><p>". addslashes($row['NfName']).": loading</p></div>' );},url:'inc/ajax_load_feed.php', data: { NfID: '".$row['NfID']."', NfSourceURI: '". $row['NfSourceURI']."', NfName: '". addslashes($row['NfName'])."', NfOptions: '". $row['NfOptions']."', cnt: '". $cnt."' },success:function (data) {feedcnt+=1;$('#feedcount').text(feedcnt);$('#feed_" . $row['NfID'] . "').replaceWith( data );}})";
+                    $ajax[$cnt]=  "$.ajax({type: 'POST',beforeSend: function(){ $('#feed_" . 
+                        $row['NfID'] . "').replaceWith( '<div id=\"feed_" . $row['NfID'] . "\" class=\"msgblue\"><p>". 
+                        addslashes((string) $row['NfName']).": loading</p></div>' );},url:'inc/ajax_load_feed.php', data: { NfID: '".
+                            $row['NfID']."', NfSourceURI: '". $row['NfSourceURI']."', NfName: '". addslashes((string) $row['NfName']).
+                            "', NfOptions: '". $row['NfOptions']."', cnt: '". $cnt.
+                            "' },success:function (data) {feedcnt+=1;$('#feedcount').text(feedcnt);$('#feed_" . 
+                                $row['NfID'] . "').replaceWith( data );}})";
                     $cnt+=1;
                     $feeds[$row['NfID']]=$row['NfName'];
                 }
@@ -700,7 +708,13 @@ function load_feeds($currentfeed): void
         $sql="SELECT * FROM " . $tbpref . "newsfeeds WHERE NfID in ($currentfeed)";
         $result = do_mysqli_query($sql);
         while($row = mysqli_fetch_assoc($result)){
-            $ajax[$cnt]=  "$.ajax({type: 'POST',beforeSend: function(){ $('#feed_" . $row['NfID'] . "').replaceWith( '<div id=\"feed_" . $row['NfID'] . "\" class=\"msgblue\"><p>". addslashes($row['NfName']).": loading</p></div>' );},url:'inc/ajax_load_feed.php', data: { NfID: '".$row['NfID']."', NfSourceURI: '". $row['NfSourceURI']."', NfName: '". addslashes($row['NfName'])."', NfOptions: '". $row['NfOptions']."', cnt: '". $cnt."' },success:function (data) {feedcnt+=1;$('#feedcount').text(feedcnt);$('#feed_" . $row['NfID'] . "').replaceWith( data );}})";
+            $ajax[$cnt]=  "$.ajax({type: 'POST',beforeSend: function(){ $('#feed_" . 
+                $row['NfID'] . "').replaceWith( '<div id=\"feed_" . $row['NfID'] . "\" class=\"msgblue\"><p>". 
+                addslashes((string) $row['NfName']).": loading</p></div>' );},url:'inc/ajax_load_feed.php', data: { NfID: '".
+                    $row['NfID']."', NfSourceURI: '". $row['NfSourceURI']."', NfName: '". 
+                    addslashes((string) $row['NfName'])."', NfOptions: '". $row['NfOptions']."', cnt: '". 
+                    $cnt."' },success:function (data) {feedcnt+=1;$('#feedcount').text(feedcnt);$('#feed_" . 
+                        $row['NfID'] . "').replaceWith( data );}})";
             $cnt+=1;
             $feeds[$row['NfID']]=$row['NfName'];
         }
@@ -915,12 +929,11 @@ function get_nf_option($str,$option)
     return null;
 }
 
-// -------------------------------------------------------------
 
 /**
- * @return ((false|mixed|null|string)[]|null|string)[]|false
+ * @return ((false|null|string)[]|null|string)[]|false
  *
- * @psalm-return array<'feed_text'|'feed_title'|int, array{title: null|string, desc: null|string, link: string, encoded?: false|string, description?: false|string, content?: false|string, text?: mixed}|null|string>|false
+ * @psalm-return array{feed_title: null|string,...}|false
  */
 function get_links_from_new_feed($NfSourceURI): array|false
 {
@@ -1140,7 +1153,7 @@ function get_links_from_rss($NfSourceURI,$NfArticleSection): array|false
 /**
  * @return (array|mixed|null|string)[][]|null|string
  *
- * @psalm-return array<array{TxTitle: mixed, TxAudioURI?: mixed|null, TxText?: string, TxSourceURI?: mixed|string, message?: string, link?: non-empty-list<mixed>}>|null|string
+ * @psalm-return array<array{TxTitle: mixed, TxAudioURI: mixed|null, TxText: string, TxSourceURI: mixed|string, message?: string, link?: list{mixed,...}}>|null|string
  */
 function get_text_from_rsslink($feed_data, $NfArticleSection, $NfFilterTags, $NfCharset=null): array|string|null
 {
@@ -1220,21 +1233,19 @@ function get_text_from_rsslink($feed_data, $NfArticleSection, $NfFilterTags, $Nf
             $data[$key]['TxSourceURI'] = $feed_data[$key]['link'];
             $context = stream_context_create(array('http' => array('follow_location' => true )));
             $HTMLString = file_get_contents(trim($data[$key]['TxSourceURI']), false, $context);
-            if(!empty($HTMLString)) {
+            if (!empty($HTMLString)) {
                 $encod  = '';
-                if(empty($NfCharset)) {
-                    
-                    $header=get_headers(trim($data[$key]['TxSourceURI']), 1);
-                    foreach($header as $k=>$v){
-                        if(strtolower($k)=='content-type') {
-                            if(is_array($v)) {
-                                $encod=$v[count($v)-1];
-                            }
-                            else{
-                                $encod=$v;
+                if (empty($NfCharset)) {
+                    $header = get_headers(trim($data[$key]['TxSourceURI']), true);
+                    foreach ($header as $k=>$v){
+                        if (strtolower($k) == 'content-type') {
+                            if (is_array($v)) {
+                                $encod = $v[count($v)-1];
+                            } else {
+                                $encod = $v;
                             }
                             $pos = strpos($encod, 'charset=');
-                            if(($pos!==false) && (strpos($encod, 'text/html;')!==false)) {
+                            if (($pos!==false) && (strpos($encod, 'text/html;')!==false)) {
                                 $encod=substr($encod, $pos+8);    
                                 break;
                             } else { 
@@ -1423,16 +1434,16 @@ function getPreviousAndNextTextLinks($textid, $url, $onlyann, $add): string
 {
     global $tbpref;
     $currentlang = validateLang(
-        processDBParam("filterlang", 'currentlanguage', '', 0)
+        (string) processDBParam("filterlang", 'currentlanguage', '', false)
     );
     $wh_lang = '';
     if ($currentlang != '') {
         $wh_lang = ' AND TxLgID=' . $currentlang;
     }
 
-    $currentquery = processSessParam("query", "currenttextquery", '', 0);
-    $currentquerymode = processSessParam(
-        "query_mode", "currenttextquerymode", 'title,text', 0
+    $currentquery = (string) processSessParam("query", "currenttextquery", '', false);
+    $currentquerymode = (string) processSessParam(
+        "query_mode", "currenttextquerymode", 'title,text', false
     );
     $currentregexmode = getSettingWithDefault("set-regex-mode");
     $wh_query = $currentregexmode . 'LIKE ';
@@ -1459,14 +1470,14 @@ function getPreviousAndNextTextLinks($textid, $url, $onlyann, $add): string
     }
 
     $currenttag1 = validateTextTag(
-        processSessParam("tag1", "currenttexttag1", '', 0), 
+        (string) processSessParam("tag1", "currenttexttag1", '', false), 
         $currentlang
     );
     $currenttag2 = validateTextTag(
-        processSessParam("tag2", "currenttexttag2", '', 0), 
+        (string) processSessParam("tag2", "currenttexttag2", '', false), 
         $currentlang
     );
-    $currenttag12 = processSessParam("tag12", "currenttexttag12", '', 0);
+    $currenttag12 = (string) processSessParam("tag12", "currenttexttag12", '', false);
     $wh_tag1 = null;
     $wh_tag2 = null;
     if ($currenttag1 == '' && $currenttag2 == '') {
@@ -1497,7 +1508,7 @@ function getPreviousAndNextTextLinks($textid, $url, $onlyann, $add): string
         }
     }
 
-    $currentsort = processDBParam("sort", 'currenttextsort', '1', 1);
+    $currentsort = (int) processDBParam("sort", 'currenttextsort', '1', true);
     $sorts = array('TxTitle','TxID desc','TxID asc');
     $lsorts = count($sorts);
     if ($currentsort < 1) { 
@@ -1597,7 +1608,7 @@ function getprefixes(): array
         )
     );
     while ($row = mysqli_fetch_row($res)) {
-        $prefix[] = substr($row[0], 0, -9); 
+        $prefix[] = substr((string) $row[0], 0, -9); 
     }
     mysqli_free_result($res);
     return $prefix;
@@ -1609,9 +1620,11 @@ function getprefixes(): array
  *
  * @param string $dir Directory to search into.
  *
- * @return array All paths found (matching files and folders) in "paths" and folders in "folders".
+ * @return array[] All paths found (matching files and folders) in "paths" and folders in "folders".
+ *
+ * @psalm-return array{paths: array, folders: array}
  */
-function media_paths_search($dir)
+function media_paths_search($dir): array
 {
     $is_windows = str_starts_with(strtoupper(PHP_OS), "WIN");
     $mediadir = scandir($dir);
@@ -1652,9 +1665,9 @@ function media_paths_search($dir)
 /**
  * Return the paths for all media files.
  *
- * @return string[] Paths of media files
+ * @return array Paths of media files, in the form array<string, string>
  */
-function get_media_paths()
+function get_media_paths(): array
 {
     $answer = array(
         "base_path" => basename(getcwd())
@@ -1759,17 +1772,23 @@ function get_playbackrate_selectoptions($v): string
 
 
 
-// -------------------------------------------------------------
-
-function remove_soft_hyphens($str): string 
+/**
+ * @return string|string[]
+ *
+ * @psalm-return array<string>|string
+ */
+function remove_soft_hyphens($str): array|string 
 {
     return str_replace('­', '', $str);  // first '..' contains Softhyphen 0xC2 0xAD
 }
 
 
-// -------------------------------------------------------------
-
-function replace_supp_unicode_planes_char($s): ?string 
+/**
+ * @return null|string|string[]
+ *
+ * @psalm-return array<string>|null|string
+ */
+function replace_supp_unicode_planes_char($s): array|string|null 
 {
     return preg_replace('/[\x{10000}-\x{10FFFF}]/u', "\xE2\x96\x88", $s); 
     /* U+2588 = UTF8: E2 96 88 = FULL BLOCK = ⬛︎  */ 
@@ -1961,14 +1980,14 @@ function get_themes_selectoptions($v): string
 
 
 /**
- * Get a SESSION value and update it if necessary.
+ * Get a session value and update it if necessary.
  * 
- * @param string $reqkey  If in $_REQUEST, update the session with $_REQUEST[$reqkey]
- * @param string $sesskey Field of the session to get or update
- * @param string $default Default value to return
- * @param bool   $isnum   If true, convert the result to an int
+ * @param string      $reqkey  If in $_REQUEST, update the session with $_REQUEST[$reqkey]
+ * @param string      $sesskey Field of the session to get or update
+ * @param string|int  $default Default value to return
+ * @param bool        $isnum   If true, convert the result to an int
  * 
- * @return string|int The string data unless $isnum is specified
+ * @return string|int The required data unless $isnum is specified
  */
 function processSessParam($reqkey, $sesskey, $default, $isnum) 
 {
@@ -2069,7 +2088,9 @@ function get_last_key()
  *
  * @param mixed $value Some value that can be evaluated as a boolean
  *
- * @return ' checked="checked" '|'' if value is true
+ * @return string ' checked="checked" ' if value is true, '' otherwise
+ *
+ * @psalm-return ' checked="checked" '|''
  */
 function get_checked($value): string 
 {
@@ -2084,10 +2105,12 @@ function get_checked($value): string
 
 /**
  * Return an HTML attribute if $value is equal to $selval.
- * 
- * @return ''|' selected="selected" ' Depending if inputs are equal 
+ *
+ * @return string ''|' selected="selected" ' Depending if inputs are equal
+ *
+ * @psalm-return ' selected="selected" '|''
  */
-function get_selected($value, $selval) 
+function get_selected($value, $selval): string 
 {
     if (!isset($value)) { 
         return ''; 
@@ -2104,23 +2127,24 @@ function get_selected($value, $selval)
 /**
  * Create a projection operator do perform word test.
  * 
- * @param int       $key   Type of test. 
- *                         - 0: word selection
- *                         - 1: text item selection
- *                         - 2: from language
- *                         - 3: from text
+ * @param string    $key   Type of test. 
+ *                         - 'words': selection from words
+ *                         - 'texts': selection from texts
+ *                         - 'lang': selection from language
+ *                         - 'text': selection from single text
  * @param array|int $value Object to select.
  * 
- * @return string Operator
+ * @return string SQL projection necessary
  * 
  * @global string $tbpref
  */
 function do_test_test_get_projection($key, $value)
 {
     global $tbpref;
+    $testsql = null;
     switch ($key)
     {
-    case 0:
+    case 'word':
         $id_string = implode(",", $value);
         $testsql = " {$tbpref}words WHERE WoID IN ($id_string) ";
         $cntlang = get_first_value(
@@ -2133,7 +2157,7 @@ function do_test_test_get_projection($key, $value)
             exit();
         }
         break;
-    case 1:
+    case 'texts':
         $id_string = implode(",", $value);
         $testsql = " {$tbpref}words, {$tbpref}textitems2 
             WHERE Ti2LgID = WoLgID AND Ti2WoID = WoID AND Ti2TxID IN ($id_string) ";
@@ -2147,10 +2171,10 @@ function do_test_test_get_projection($key, $value)
             exit();
         }
         break;
-    case 2:
+    case 'lang':
         $testsql = " {$tbpref}words WHERE WoLgID = $value ";
         break;
-    case 3:
+    case 'text':
         $testsql = " {$tbpref}words, {$tbpref}textitems2 
             WHERE Ti2LgID = WoLgID AND Ti2WoID = WoID AND Ti2TxID = $value ";
         break;
@@ -2158,7 +2182,6 @@ function do_test_test_get_projection($key, $value)
         my_die("do_test_test.php called with wrong parameters"); 
         break;
     }
-    return $testsql;
 }
 
 /**
@@ -2175,10 +2198,10 @@ function do_test_test_from_selection($selection_type, $selection_data)
     $data_int_array = array_map('intval', $data_string_array);
     switch ((int)$selection_type) {
     case 2:
-        $test_sql = do_test_test_get_projection(0, $data_int_array);
+        $test_sql = do_test_test_get_projection('words', $data_int_array);
         break;
     case 3:
-        $test_sql = do_test_test_get_projection(1, $data_int_array);
+        $test_sql = do_test_test_get_projection('texts', $data_int_array);
         break;
     default:
         $test_sql = $selection_data;
@@ -2228,7 +2251,7 @@ function make_status_controls_test_table($score, $status, $wordid): string
 
 /**
  * Return options as HTML code to insert in a language select.
- * 
+ *
  * @param string|int|null $v  Selected language ID
  * @param string          $dt Default value to display
  */
@@ -2239,12 +2262,12 @@ function get_languages_selectoptions($v, $dt): string
     WHERE LgName<>'' ORDER BY LgName";
     $res = do_mysqli_query($sql);
     $r = '<option value="" ';
-    if (!isset($v) || trim($v) == '') {
+    if (!isset($v) || trim((string) $v) == '') {
         $r .= 'selected="selected"';
     } 
     $r .= ">$dt</option>";
     while ($record = mysqli_fetch_assoc($res)) {
-        $d = $record["LgName"];
+        $d = (string) $record["LgName"];
         if (strlen($d) > 30 ) { 
             $d = substr($d, 0, 30) . "..."; 
         }
@@ -2646,7 +2669,7 @@ function get_texts_selectoptions($lang, $v): string
     order by LgName, TxTitle";
     $res = do_mysqli_query($sql);
     while ($record = mysqli_fetch_assoc($res)) {
-        $d = $record["TxTitle"];
+        $d = (string) $record["TxTitle"];
         if (mb_strlen($d, 'UTF-8') > 30 ) { 
             $d = mb_substr($d, 0, 30, 'UTF-8') . "..."; 
         }
@@ -2843,15 +2866,15 @@ function createTheDictLink($u, $t)
 
 /**
  * Returns dictionnary links formatted as HTML.
- * 
+ *
  * @param int    $lang      Language ID
  * @param string $word  
  * @param string $sentctljs 
  * @param bool   $openfirst True if we should open right frames with translation
  *                          first
- * 
+ *
  * @return string HTML-formatted interface
- * 
+ *
  * @global string $tbpref Database table prefix
  */
 function createDictLinksInEditWin($lang, $word, $sentctljs, $openfirst): string 
@@ -2912,7 +2935,7 @@ function makeOpenDictStr($url, $txt): string
         $query = parse_url($url, PHP_URL_QUERY);
         if ($query !== false && $query !== null) {
             parse_str($query, $url_query);
-            $popup |= array_key_exists('lwt_popup', $url_query);
+            $popup = $popup || array_key_exists('lwt_popup', $url_query);
         }
     }
     if ($popup) {
@@ -2942,7 +2965,7 @@ function makeOpenDictStrJS($url): string
         $query = parse_url($url, PHP_URL_QUERY);
         if ($query !== false && $query !== null) {
             parse_str($query, $url_query);
-            $popup |= array_key_exists('lwt_popup', $url_query);
+            $popup = $popup || array_key_exists('lwt_popup', $url_query);
         }
         if ($popup) {
             $r = "owin(" . prepare_textdata_js($url) . ");\n";
@@ -2980,13 +3003,12 @@ function makeOpenDictStrDynSent($url, $sentctljs, $txt): string
         $popup = true;
     }
     $parsed_url = parse_url($url);
-    $prefix = '';
     if ($parsed_url === false) {
         $prefix = 'http://';
         $parsed_url = parse_url($prefix . $url);
     }
     parse_str($parsed_url['query'], $url_query);
-    $popup |= array_key_exists('lwt_popup', $url_query);
+    $popup = $popup || array_key_exists('lwt_popup', $url_query);
     if (str_starts_with($url, "ggl.php")  
         || str_ends_with($parsed_url['path'], "/ggl.php")
     ) {
@@ -2999,13 +3021,13 @@ function makeOpenDictStrDynSent($url, $sentctljs, $txt): string
 
 /**
  * Returns dictionnary links formatted as HTML.
- * 
+ *
  * @param int    $lang      Language ID
  * @param string $sentctljs 
- * @param string $wordctljs  
- * 
- * @return string HTM+-formatted interface
- * 
+ * @param string $wordctljs
+ *
+ * @return string HTML formatted interface
+ *
  * @global string $tbpref Database table prefix
  */
 function createDictLinksInEditWin2($lang, $sentctljs, $wordctljs): string 
@@ -3015,20 +3037,21 @@ function createDictLinksInEditWin2($lang, $sentctljs, $wordctljs): string
     FROM {$tbpref}languages WHERE LgID = $lang";
     $res = do_mysqli_query($sql);
     $record = mysqli_fetch_assoc($res);
-    $wb1 = isset($record['LgDict1URI']) ? $record['LgDict1URI'] : "";
+    $wb1 = isset($record['LgDict1URI']) ? (string) $record['LgDict1URI'] : "";
     if (substr($wb1, 0, 1) == '*') { 
         $wb1 = substr($wb1, 1); 
     }
-    $wb2 = isset($record['LgDict2URI']) ? $record['LgDict2URI'] : "";
+    $wb2 = isset($record['LgDict2URI']) ? (string) $record['LgDict2URI'] : "";
     if (substr($wb2, 0, 1) == '*') {
         $wb2 = substr($wb2, 1); 
     }
     $wb3 = isset($record['LgGoogleTranslateURI']) ? 
-    $record['LgGoogleTranslateURI'] : "";
+    (string) $record['LgGoogleTranslateURI'] : "";
     if (substr($wb3, 0, 1) == '*') {
         $wb3 = substr($wb3, 1); 
     }
     mysqli_free_result($res);
+
     $r = 'Lookup Term: 
     <span class="click" onclick="translateWord2(' . prepare_textdata_js($wb1) .
     ',' . $wordctljs . ');">Dict1</span> ';
@@ -3037,8 +3060,8 @@ function createDictLinksInEditWin2($lang, $sentctljs, $wordctljs): string
         prepare_textdata_js($wb2) . ',' . $wordctljs . ');">Dict2</span> '; 
     }
     if ($wb3 != "") {
-        $sent_mode = substr($wb3, 0, 7) == 'ggl.php';
-        $sent_mode |= str_ends_with(parse_url($wb3, PHP_URL_PATH), '/ggl.php');
+        $sent_mode = substr($wb3, 0, 7) == 'ggl.php' || 
+        str_ends_with(parse_url($wb3, PHP_URL_PATH), '/ggl.php');
         $r .= '<span class="click" onclick="translateWord2(' . 
         prepare_textdata_js($wb3) . ',' . $wordctljs . ');">Translator</span>
          | <span class="click" onclick="translateSentence2(' . 
@@ -3060,16 +3083,16 @@ function makeDictLinks($lang, $wordctljs): string
     FROM ' . $tbpref . 'languages WHERE LgID = ' . $lang;
     $res = do_mysqli_query($sql);
     $record = mysqli_fetch_assoc($res);
-    $wb1 = isset($record['LgDict1URI']) ? $record['LgDict1URI'] : "";
+    $wb1 = isset($record['LgDict1URI']) ? (string) $record['LgDict1URI'] : "";
     if (substr($wb1, 0, 1) == '*') { 
         $wb1 = substr($wb1, 1); 
     }
-    $wb2 = isset($record['LgDict2URI']) ? $record['LgDict2URI'] : "";
+    $wb2 = isset($record['LgDict2URI']) ? (string) $record['LgDict2URI'] : "";
     if (substr($wb2, 0, 1) == '*') { 
         $wb2 = substr($wb2, 1); 
     }
     $wb3 = isset($record['LgGoogleTranslateURI']) ? 
-    $record['LgGoogleTranslateURI'] : "";
+    (string) $record['LgGoogleTranslateURI'] : "";
     if (substr($wb3, 0, 1) == '*') { 
         $wb3 = substr($wb3, 1); 
     }
@@ -3099,26 +3122,26 @@ function createDictLinksInEditWin3($lang, $sentctljs, $wordctljs): string
     $res = do_mysqli_query($sql);
     $record = mysqli_fetch_assoc($res);
     
-    $wb1 = isset($record['LgDict1URI']) ? $record['LgDict1URI'] : "";
+    $wb1 = isset($record['LgDict1URI']) ? (string) $record['LgDict1URI'] : "";
     $popup = false;
     if (substr($wb1, 0, 1) == '*') {
         $wb1 = substr($wb1, 0, 1);
         $popup = true;
     }
-    $popup |= str_contains($wb1, "lwt_popup=");
+    $popup = $popup || str_contains($wb1, "lwt_popup=");
     if ($popup) {
         $f1 = 'translateWord2(' . prepare_textdata_js($wb1); 
     } else { 
         $f1 = 'translateWord(' . prepare_textdata_js($wb1); 
     }
         
-    $wb2 = isset($record['LgDict2URI']) ? $record['LgDict2URI'] : "";
+    $wb2 = isset($record['LgDict2URI']) ? (string) $record['LgDict2URI'] : "";
     $popup = false;
     if (substr($wb2, 0, 1) == '*') {
         $wb2 = substr($wb2, 0, 1);
         $popup = true;
     }
-    $popup |= str_contains($wb2, "lwt_popup=");
+    $popup = $popup || str_contains($wb2, "lwt_popup=");
     if ($popup) {
         $f2 = 'translateWord2(' . prepare_textdata_js($wb2); 
     } else { 
@@ -3126,21 +3149,20 @@ function createDictLinksInEditWin3($lang, $sentctljs, $wordctljs): string
     }
 
     $wb3 = isset($record['LgGoogleTranslateURI']) ? 
-    $record['LgGoogleTranslateURI'] : "";
+    (string) $record['LgGoogleTranslateURI'] : "";
     $popup = false;
     if (substr($wb3, 0, 1) == '*') {
         $wb3 = substr($wb3, 0, 1);
         $popup = true;
     }
     $parsed_url = parse_url($wb3);
-    $prefix = '';
     if ($wb3 != '' && $parsed_url === false) {
         $prefix = 'http://';
         $parsed_url = parse_url($prefix . $wb3);
     }
     if (array_key_exists('query', $parsed_url)) {
         parse_str($parsed_url['query'], $url_query);
-        $popup |= array_key_exists('lwt_popup', $url_query);
+        $popup = $popup || array_key_exists('lwt_popup', $url_query);
     }
     if ($popup) {
         $f3 = 'translateWord2(' . prepare_textdata_js($wb3);
@@ -3250,7 +3272,7 @@ function anki_export($sql)
     $res = do_mysqli_query($sql);
     $x = '';
     while ($record = mysqli_fetch_assoc($res)) {
-        if ('MECAB'== strtoupper(trim($record['LgRegexpWordCharacters']))) {
+        if ('MECAB'== strtoupper(trim((string) $record['LgRegexpWordCharacters']))) {
             $termchar = '一-龥ぁ-ヾ';
         } else {
             $termchar = $record['LgRegexpWordCharacters'];
@@ -3345,7 +3367,7 @@ function flexible_export($sql)
                 '{', '{{c1::', str_replace('}', '::' . $transl . '}}', $sent_raw)
             );
             $status = $record['WoStatus'];
-            $taglist = trim($record['taglist']);
+            $taglist = trim((string) $record['taglist']);
             $xx = repl_tab_nl($record['LgExportTemplate']);    
             $xx = str_replace('%w', $term, $xx);        
             $xx = str_replace('%t', $transl, $xx);        
@@ -3469,8 +3491,10 @@ function mask_term_in_sentence($s,$regexword): string
  * @param string $texts_id Texts ID separated by comma
  *
  * @global string $tbpref Table name prefix
- * 
- * @return array Statistics under the form of an array
+ *
+ * @return ((float|int|null|string)[]|float|int|null|string)[][] Statistics under the form of an array
+ *
+ * @psalm-return array{total: array<float|int|string, float|int|null|string>, expr: array<float|int|string, float|int|null|string>, stat: array<float|int|string, array<float|int|string, float|int|null|string>>, totalu: array<float|int|string, float|int|null|string>, expru: array<float|int|string, float|int|null|string>, statu: array<float|int|string, array<float|int|string, float|int|null|string>>}
  */
 function return_textwordcount($texts_id): array
 {
@@ -3538,10 +3562,10 @@ function return_textwordcount($texts_id): array
  * @param string $textID Text IDs separated by comma
  *
  * @global string $tbpref Table name prefix
- * 
+ *
  * @deprecated 2.9.0 Use return_textwordcount instead.
  */
-function textwordcount($textID)
+function textwordcount($textID): void
 {
     echo json_encode(return_textwordcount($textID));
 }
@@ -3568,7 +3592,7 @@ function texttodocount($text): string
  * @return string HTML result
  *
  * @global string $tbpref Database table prefix
- * 
+ *
  * @since 2.7.0-fork Adapted to use LibreTranslate dictionary as well.
  */
 function texttodocount2($textid): string
@@ -3636,19 +3660,101 @@ function texttodocount2($textid): string
 }
 
 /**
- * Perform a SQL query to find sentences containing a word.
- * 
- * @param int|null $wid    Word ID
+ * Return a SQL string to find sentences containing a word.
+ *
  * @param string   $wordlc Word to look for in lowercase
  * @param int      $lid    Language ID
- * @param int      $limit  Maximum number of sentences to return
- * 
- * @return mysqli_result Query
+ *
+ * @return string Query in SQL format
  */
-function sentences_from_word($wid, $wordlc, $lid, $limit=-1)
+function sentences_containing_word_lc_query($wordlc, $lid): string
 {
     global $tbpref;
     $mecab_str = null;
+    $res = do_mysqli_query(
+        "SELECT LgRegexpWordCharacters, LgRemoveSpaces 
+        FROM {$tbpref}languages 
+        WHERE LgID = $lid"
+    );
+    $record = mysqli_fetch_assoc($res);
+    mysqli_free_result($res);
+    $removeSpaces = $record["LgRemoveSpaces"];
+    if ('MECAB'== strtoupper(trim((string) $record["LgRegexpWordCharacters"]))) {
+        $mecab_file = sys_get_temp_dir() . "/" . $tbpref . "mecab_to_db.txt";
+        //$mecab_args = ' -F {%m%t\\t -U {%m%t\\t -E \\n ';
+        // For instance, "このラーメン" becomes "この    6    68\nラーメン    7    38"
+        $mecab_args = ' -F %m\\t%t\\t%h\\n -U %m\\t%t\\t%h\\n -E EOP\\t3\\t7\\n ';
+        if (file_exists($mecab_file)) { 
+            unlink($mecab_file); 
+        }
+        $fp = fopen($mecab_file, 'w');
+        fwrite($fp, $wordlc . "\n");
+        fclose($fp);
+        $mecab = get_mecab_path($mecab_args);
+        $handle = popen($mecab . $mecab_file, "r");
+        if (!feof($handle)) {
+            $row = fgets($handle, 256);
+            // Format string removing numbers. 
+            // MeCab tip: 2 = hiragana, 6 = kanji, 7 = katakana
+            $mecab_str = "\t" . preg_replace_callback(
+                '([267]?)\t[0-9]+$', 
+                function ($matches) {
+                    return isset($matches[1]) ? "\t" : "";
+                }, 
+                $row
+            ); 
+        }
+        pclose($handle);
+        unlink($mecab_file);
+        $sql 
+        = "SELECT SeID, SeText, 
+        concat(
+            '\\t',
+            group_concat(Ti2Text ORDER BY Ti2Order asc SEPARATOR '\\t'),
+            '\\t'
+        ) val
+         FROM {$tbpref}sentences, {$tbpref}textitems2
+         WHERE lower(SeText)
+         LIKE " . convert_string_to_sqlsyntax("%$wordlc%") . "
+         AND SeID = Ti2SeID AND SeLgID = $lid AND Ti2WordCount<2
+         GROUP BY SeID HAVING val 
+         LIKE " . convert_string_to_sqlsyntax_notrim_nonull("%$mecab_str%") . "
+         ORDER BY CHAR_LENGTH(SeText), SeText";
+    } else {
+        if ($removeSpaces == 1) {
+            $pattern = convert_string_to_sqlsyntax($wordlc);
+        } else {
+            $pattern = convert_regexp_to_sqlsyntax(
+                '(^|[^' . $record["LgRegexpWordCharacters"] . '])'
+                 . remove_spaces($wordlc, $removeSpaces)
+                 . '([^' . $record["LgRegexpWordCharacters"] . ']|$)'
+            );
+        }
+        $sql 
+        = "SELECT DISTINCT SeID, SeText
+         FROM {$tbpref}sentences
+         WHERE SeText RLIKE $pattern AND SeLgID = $lid
+         ORDER BY CHAR_LENGTH(SeText), SeText";
+    }
+    return $sql;
+}
+
+/**
+ * Perform a SQL query to find sentences containing a word.
+ *
+ * @param int|null $wid    Word ID or mode
+ *                         - null: use $wordlc instead, simple search
+ *                         - -1: use $wordlc with a more complex search
+ *                         - 0 or above: sentences containing $wid
+ * @param string   $wordlc Word to look for in lowercase
+ * @param int      $lid    Language ID
+ * @param int      $limit  Maximum number of sentences to return
+ *
+ * @return mysqli_result|true Query
+ */
+function sentences_from_word($wid, $wordlc, $lid, $limit=-1): bool|mysqli_result
+{
+    global $tbpref;
     if (empty($wid)) {
         $sql = "SELECT DISTINCT SeID, SeText 
         FROM {$tbpref}sentences, {$tbpref}textitems2 
@@ -3656,71 +3762,7 @@ function sentences_from_word($wid, $wordlc, $lid, $limit=-1)
         AND Ti2WoID = 0 AND SeID = Ti2SeID AND SeLgID = $lid 
         ORDER BY CHAR_LENGTH(SeText), SeText";
     } else if ($wid == -1) {
-        $res = do_mysqli_query(
-            "SELECT LgRegexpWordCharacters, LgRemoveSpaces 
-            FROM {$tbpref}languages 
-            WHERE LgID = $lid"
-        );
-        $record = mysqli_fetch_assoc($res);
-        mysqli_free_result($res);
-        $removeSpaces = $record["LgRemoveSpaces"];
-        if ('MECAB'== strtoupper(trim($record["LgRegexpWordCharacters"]))) {
-            $mecab_file = sys_get_temp_dir() . "/" . $tbpref . "mecab_to_db.txt";
-            //$mecab_args = ' -F {%m%t\\t -U {%m%t\\t -E \\n ';
-            // For instance, "このラーメン" becomes "この    6    68\nラーメン    7    38"
-            $mecab_args = ' -F %m\\t%t\\t%h\\n -U %m\\t%t\\t%h\\n -E EOP\\t3\\t7\\n ';
-            if (file_exists($mecab_file)) { 
-                unlink($mecab_file); 
-            }
-            $fp = fopen($mecab_file, 'w');
-            fwrite($fp, $wordlc . "\n");
-            fclose($fp);
-            $mecab = get_mecab_path($mecab_args);
-            $handle = popen($mecab . $mecab_file, "r");
-            if (!feof($handle)) {
-                $row = fgets($handle, 256);
-                // Format string removing numbers. 
-                // MeCab tip: 2 = hiragana, 6 = kanji, 7 = katakana
-                $mecab_str = "\t" . preg_replace_callback(
-                    '([267]?)\t[0-9]+$', 
-                    function ($matches) {
-                        return isset($matches[1]) ? "\t" : "";
-                    }, 
-                    $row
-                ); 
-            }
-            pclose($handle);
-            unlink($mecab_file);
-            $sql 
-            = "SELECT SeID, SeText, 
-            concat(
-                '\\t',
-                group_concat(Ti2Text ORDER BY Ti2Order asc SEPARATOR '\\t'),
-                '\\t'
-            ) val
-             FROM {$tbpref}sentences, {$tbpref}textitems2
-             WHERE lower(SeText)
-             LIKE " . convert_string_to_sqlsyntax("%$wordlc%") . "
-             AND SeID = Ti2SeID AND SeLgID = $lid AND Ti2WordCount<2
-             GROUP BY SeID HAVING val 
-             LIKE " . convert_string_to_sqlsyntax_notrim_nonull("%$mecab_str%") . "
-             ORDER BY CHAR_LENGTH(SeText), SeText";
-        } else {
-            if ($removeSpaces == 1) {
-                $pattern = convert_string_to_sqlsyntax($wordlc);
-            } else {
-                $pattern = convert_regexp_to_sqlsyntax(
-                    '(^|[^' . $record["LgRegexpWordCharacters"] . '])'
-                     . remove_spaces($wordlc, $removeSpaces)
-                     . '([^' . $record["LgRegexpWordCharacters"] . ']|$)'
-                );
-            }
-            $sql 
-            = "SELECT DISTINCT SeID, SeText
-             FROM {$tbpref}sentences
-             WHERE SeText RLIKE $pattern AND SeLgID = $lid
-             ORDER BY CHAR_LENGTH(SeText), SeText";
-        }
+        $sql = sentences_containing_word_lc_query($wordlc, $lid);
     } else {
         $sql 
         = "SELECT DISTINCT SeID, SeText
@@ -3736,16 +3778,18 @@ function sentences_from_word($wid, $wordlc, $lid, $limit=-1)
 
 /**
  * Format the sentence(s) $seid containing $wordlc highlighting $wordlc.
- * 
+ *
  * @param int    $seid   Sentence ID
  * @param string $wordlc Term text in lower case
  * @param int    $mode   * Up to 1: return only the current sentence
  *                       * Above 1: return previous sentence and current sentence 
  *                       * Above 2: return previous, current and next sentence
- *  
- * @return array{0: string, 1: string} [0]=html, word in bold, [1]=text, word in {}
- * 
+ *
+ * @return string[] [0]=html, word in bold, [1]=text, word in {}
+ *
  * @global string $tbpref Database table prefix.
+ *
+ * @psalm-return list{string, string}
  */
 function getSentence($seid, $wordlc, $mode): array 
 {
@@ -3764,7 +3808,7 @@ function getSentence($seid, $wordlc, $mode): array
     $splitEachChar = (int)$record['LgSplitEachChar'] != 0;
     $txtid = $record["SeTxID"];
     if (($removeSpaces && !$splitEachChar) 
-        || 'MECAB'== strtoupper(trim($record["LgRegexpWordCharacters"]))
+        || 'MECAB'== strtoupper(trim((string) $record["LgRegexpWordCharacters"]))
     ) {
         $text = $record["SeText"];
         $wordlc = '[​]*' . preg_replace('/(.)/u', "$1[​]*", $wordlc);
@@ -3845,19 +3889,25 @@ function getSentence($seid, $wordlc, $mode): array
     return array($se, $sejs);
 }
 
+
 /**
  * Return sentences containing a word.
- * 
+ *
  * @param int      $lang   Language ID
  * @param string   $wordlc Word to look for in lowercase
  * @param int|null $wid    Word ID
+ *                         - null: use $wordlc instead, simple search
+ *                         - -1: use $wordlc with a more complex search
+ *                         - 0 or above: find sentences containing $wid
  * @param int|null $mode   Sentences to get: 
  *                         - Up to 1 is 1 sentence, 
  *                         - 2 is previous and current sentence, 
  *                         - 3 is previous, current and next one
  * @param int      $limit  Maximum number of sentences to return
- * 
- * @return array Array of sentences found
+ *
+ * @return string[][] Array of sentences found
+ *
+ * @psalm-return list{0?: array{0: string, 1: string},...}
  */
 function sentences_with_word($lang, $wordlc, $wid, $mode=0, $limit=20): array 
 {
@@ -3883,7 +3933,7 @@ function sentences_with_word($lang, $wordlc, $wid, $mode=0, $limit=20): array
 /**
  * Prepare the area to for examples sentences of a word.
  */
-function example_sentences_area($lang, $termlc, $selector, $wid)
+function example_sentences_area($lang, $termlc, $selector, $wid): void
 {
     ?>
 <div id="exsent">
@@ -3953,7 +4003,7 @@ function get_languages(): array
 {
     global $tbpref;
     $langs = array();
-    $sql = "SELECT LgID, LgName FROM " . $tbpref . "languages WHERE LgName<>''";
+    $sql = "SELECT LgID, LgName FROM {$tbpref}languages WHERE LgName<>''";
     $res = do_mysqli_query($sql);
     while ($record = mysqli_fetch_assoc($res)) {
         $langs[(string)$record['LgName']] = (int)$record['LgID'];
@@ -3966,20 +4016,25 @@ function get_languages(): array
 /**
  * Get language name from its ID 
  * 
- * @param  string $lid Language ID
+ * @param  string|int $lid Language ID
+ * 
  * @return string Language name
  * @global string $tbpref Table name prefix
  */ 
 function getLanguage($lid) 
 {
     global $tbpref;
-    if (!isset($lid) || trim($lid) == '' || !is_numeric($lid)) { 
-        return ''; 
+    if (is_int($lid)) {
+        $lg_id = $lid;
+    } else if (isset($lid) && trim($lid) != '' && ctype_digit($lid)) { 
+        $lg_id = (int) $lid;
+    } else {
+        return '';
     }
     $r = get_first_value(
         "SELECT LgName AS value 
-        FROM " . $tbpref . "languages 
-        WHERE LgID='" . $lid . "'"
+        FROM {$tbpref}languages 
+        WHERE LgID = $lg_id"
     );
     if (isset($r)) { 
         return (string)$r; 
@@ -3987,29 +4042,71 @@ function getLanguage($lid)
     return '';
 }
 
-// -------------------------------------------------------------
 
+/**
+ * Try to get language code from its ID 
+ * 
+ * @param int   $lg_id           Language ID
+ * @param array $languages_table Table of languages, usually LWT_LANGUAGES_ARRAY
+ * 
+ * @return string If found, two-letter code (e. g. BCP 47) or four-letters for the langugae. '' otherwise.
+ * 
+ * @global string $tbpref 
+ */ 
+function getLanguageCode($lg_id, $languages_table) 
+{
+    global $tbpref;
+    $query = "SELECT LgName, LgGoogleTranslateURI
+    FROM {$tbpref}languages
+    WHERE LgID = $lg_id";
+
+    $res = do_mysqli_query($query);
+    $record = mysqli_fetch_assoc($res);
+    mysqli_free_result($res);
+    $lg_name = (string) $record["LgName"];
+    $translator_uri = (string) $record["LgGoogleTranslateURI"];
+
+    // If we are using a standard language name, use it
+    if (array_key_exists($lg_name, $languages_table)) {
+        return $languages_table[$lg_name][1];
+    } 
+
+    // Otherwise, use the translator URL
+    $lgFromDict = langFromDict($translator_uri); 
+    if ($lgFromDict != '') {
+        return $lgFromDict;
+    }
+    return '';
+}
+
+/**
+ * Return a right-to-left direction indication in HTML if language is right-to-left.
+ * 
+ * @param string|int|null $lid Language ID
+ * 
+ * @return string ' dir="rtl" '|''
+ */
 function getScriptDirectionTag($lid): string 
 {
     global $tbpref;
-    if (!isset($lid) ) { 
-        return ''; 
+    if (!isset($lid)) {
+        return '';
     }
-    if (trim($lid) == '' ) { 
-        return ''; 
-    }
-    if (!is_numeric($lid) ) {
-        return ''; 
+    if (is_string($lid)) {
+        if (trim($lid) == '' || !is_numeric($lid)) { 
+            return ''; 
+        }
+        $lg_id = (int) $lid;
+    } else {
+        $lg_id = $lid;
     }
     $r = get_first_value(
-        "select LgRightToLeft as value 
-        from " . $tbpref . "languages 
-        where LgID='" . $lid . "'"
+        "SELECT LgRightToLeft as value 
+        from {$tbpref}languages 
+        where LgID = $lg_id"
     );
-    if (isset($r) ) {
-        if ($r) { 
-            return ' dir="rtl" '; 
-        } 
+    if (isset($r) && $r) {
+        return ' dir="rtl" ';
     }
     return '';
 }
@@ -4017,10 +4114,10 @@ function getScriptDirectionTag($lid): string
 /**
  * Insert an expression to the database using MeCab.
  *
- * @param string $text Text to insert
- * @param string $lid  Language ID
- * @param string $wid  Word ID
- * @param int    $len  Number of words in the expression
+ * @param string     $text Text to insert
+ * @param string|int $lid  Language ID
+ * @param string|int $wid  Word ID
+ * @param int        $len  Number of words in the expression
  *
  * @return string[][] Append text and values to insert to the database
  *
@@ -4028,7 +4125,7 @@ function getScriptDirectionTag($lid): string
  *
  * @global string $tbpref Table name prefix
  *
- * @psalm-return array{0: array<int, string>, 1: list<string>}
+ * @psalm-return list{array<int, string>, list{0?: string,...}}
  */
 function insert_expression_from_mecab($text, $lid, $wid, $len): array
 {
@@ -4053,7 +4150,7 @@ function insert_expression_from_mecab($text, $lid, $wid, $len): array
         $arr = explode("\t", $row, 4);
         // Not a word (punctuation)
         if (!empty($arr[0]) && $arr[0] != "EOP" 
-            && strpos("2 6 7", $arr[1]) !== false
+            && in_array($arr[1], ["2", "6", "7"])
         ) {
             $parsed_text .= $arr[0] . ' ';
         }
@@ -4064,7 +4161,7 @@ function insert_expression_from_mecab($text, $lid, $wid, $len): array
     $sqlarray = array();
     // For each sentence in database containing $text
     while ($record = mysqli_fetch_assoc($res)) {
-        $sent = trim($record['SeText']);
+        $sent = trim((string) $record['SeText']);
         $fp = fopen($db_to_mecab, 'w');
         fwrite($fp, $sent . "\n");
         fclose($fp);
@@ -4077,7 +4174,7 @@ function insert_expression_from_mecab($text, $lid, $wid, $len): array
             $arr = explode("\t", $row, 4);
             // Not a word (punctuation)
             if (!empty($arr[0]) && $arr[0] != "EOP" 
-                && strpos("2 6 7", $arr[1]) !== false
+            && in_array($arr[1], ["2", "6", "7"])
             ) {
                 $parsed_sentence .= $arr[0] . ' ';
             }
@@ -4137,11 +4234,11 @@ function insertExpressionFromMeCab($textlc, $lid, $wid, $len, $mode): array
 /**
  * Insert an expression without using a tool like MeCab.
  *
- * @param string $textlc Text to insert in lower case
- * @param string $lid    Language ID
- * @param string $wid    Word ID
- * @param int    $len    Number of words in the expression
- * @param mixed  $mode   Unnused
+ * @param string     $textlc Text to insert in lower case
+ * @param string|int $lid    Language ID
+ * @param string|int $wid    Word ID
+ * @param int        $len    Number of words in the expression
+ * @param mixed      $mode   Unnused
  *
  * @return (null|string)[][] Append text, empty and sentence id
  *
@@ -4150,7 +4247,7 @@ function insertExpressionFromMeCab($textlc, $lid, $wid, $len, $mode): array
  *
  * @global string $tbpref Table name prefix
  *
- * @psalm-return array{0: array<int, null|string>, 1: array<empty, empty>, 2: list<string>}
+ * @psalm-return list{array<int, null|string>, array<never, never>, list{0?: string,...}}
  */
 function insert_standard_expression($textlc, $lid, $wid, $len, $mode): array
 {
@@ -4181,7 +4278,7 @@ function insert_standard_expression($textlc, $lid, $wid, $len, $mode): array
     }
 
     if ($splitEachChar) {
-        $textlc = preg_replace('/([^\s])/u', "$1 ", $textlc);
+        $textlc = (string) preg_replace('/([^\s])/u', "$1 ", $textlc);
     }
     $wis = $textlc;
     $res = do_mysqli_query($sql);
@@ -4336,10 +4433,10 @@ function new_expression_interactable2($hex, $appendtext, $wid, $len): void
 /**
  * Alter the database to add a new word
  *
- * @param string $textlc Text in lower case
- * @param string $lid    Language ID
- * @param int    $len    Number of words in the expression
- * @param int    $mode   Function mode
+ * @param string     $textlc Text in lower case
+ * @param string|int $lid    Language ID
+ * @param int        $len    Number of words in the expression
+ * @param int        $mode   Function mode
  *                       - 0: Default mode, do nothing special
  *                       - 1: Runs an expresion inserter interactable 
  *                       - 2: Return the sql output
@@ -4348,7 +4445,7 @@ function new_expression_interactable2($hex, $appendtext, $wid, $len): void
  *
  * @global string $tbpref Table name prefix
  */
-function insertExpressions($textlc, $lid, $wid, $len, $mode): string|null 
+function insertExpressions($textlc, $lid, $wid, $len, $mode): null|string 
 {
     global $tbpref;
     $regexp = (string)get_first_value(
@@ -4568,13 +4665,8 @@ function create_ann($textid): string
     ) 
     WHERE Ti2TxID = $textid
     ORDER BY Ti2Order ASC, Ti2WordCount DESC";
-    $savenonterm = '';
-    $saveterm = '';
-    $savetrans = '';
-    $savewordid = '';
     $until = 0;
     $res = do_mysqli_query($sql);
-    $order = null;
     // For each term (includes blanks)
     while ($record = mysqli_fetch_assoc($res)) {
         $actcode = (int)$record['Code'];
@@ -4846,7 +4938,6 @@ function makeMediaPlayer($path, $offset=0)
         return;
     }
     /**
-    * @var string $extension 
     * File extension (if exists) 
     */
     $extension = substr($path, -4);
@@ -5112,7 +5203,7 @@ function makeAudioPlayer($audio, $offset=0)
     /**
      * Prepare media interactions with jPlayer.
      * 
-     * @returns void 
+     * @returns {void} 
      */
     function prepareMediaInteractions() {
 

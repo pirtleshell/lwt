@@ -1,10 +1,23 @@
 # Folder that shoud not be included in the image
+
 .github/*
 docker/*
+# Documentation
 docs/*
+# NPM, for debugging only
+node_modules/*
+# Phive products
+.phive/*
+tools/*
+
+# phpDocumentor cache
+.phpdoc/*
 
 *.md
 .dockerignore
 .git
 .gitignore
+# MarkDown and PHP documentation generation
 Doxyfile
+# Media files for LWT
+media/*

@@ -31,7 +31,9 @@
         "info.html": "@php docs/info.php > docs/info.html",
         "doc": [
             "@info.html",
-            "doxygen Doxyfile"
+            "doxygen Doxyfile",
+            "./node_modules/.bin/jsdoc -c jsdoc.json",
+            "php tools/phpDocumentor"
         ],
         "minify": "php -r \"require 'src/php/minifier.php';minify_everything();\"",
         "no-minify": [

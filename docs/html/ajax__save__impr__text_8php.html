@@ -22,7 +22,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="lwt_icon.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Learning with Texts - Fork<span id="projectnumber">&#160;2.8.1-fork</span>
+   <div id="projectname">Learning with Texts - Fork<span id="projectnumber">&#160;2.9.0-fork</span>
    </div>
    <div id="projectbrief">Learn foreign languages with texts</div>
   </td>
@@ -96,6 +96,8 @@ Functions</h2></td></tr>
 <tr class="separator:a9454e4c3830647ed5883c046cbf4471b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ada38a6c391f4fbd98e435c3c80801161"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ajax__save__impr__text_8php.html#ada38a6c391f4fbd98e435c3c80801161">do_ajax_save_impr_text</a> ($textid, $elem, $data)</td></tr>
 <tr class="separator:ada38a6c391f4fbd98e435c3c80801161"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c55eb07eeaff73cbfd59ab8e88d4f35"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ajax__save__impr__text_8php.html#a3c55eb07eeaff73cbfd59ab8e88d4f35">save_impr_text</a> ($textid, $elem, $data)</td></tr>
+<tr class="separator:a3c55eb07eeaff73cbfd59ab8e88d4f35"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Save Improved Annotation. </p>
@@ -135,14 +137,57 @@ Functions</h2></td></tr>
 <p>Save a printed text.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramtype">int</td><td class="paramname">$textid</td><td>Text ID </td></tr>
+    <tr><td class="paramtype">int</td><td class="paramname">$textid</td><td><a class="el" href="class_text.html">Text</a> ID </td></tr>
     <tr><td class="paramtype">string</td><td class="paramname">$elem</td><td>Element to edit </td></tr>
     <tr><td class="paramtype">mixed</td><td class="paramname">$data</td><td>JSON data</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>string Success string</dd></dl>
-<p>@psalm-return 'NOTOK'|'OK' </p>
+<dl class="section return"><dt>Returns</dt><dd>string Success string </dd></dl>
+
+</div>
+</div>
+<a id="a3c55eb07eeaff73cbfd59ab8e88d4f35" name="a3c55eb07eeaff73cbfd59ab8e88d4f35"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3c55eb07eeaff73cbfd59ab8e88d4f35">&#9670;&#160;</a></span>save_impr_text()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">save_impr_text </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$textid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$elem</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Save a text with improved annotations.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">int</td><td class="paramname">$textid</td><td><a class="el" href="class_text.html">Text</a> ID </td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$elem</td><td>Element to select </td></tr>
+    <tr><td class="paramtype">mixed</td><td class="paramname">$data</td><td>Data element</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>string[] Result as array, with answer on "error" or "success" </dd></dl>
 
 </div>
 </div>
@@ -180,15 +225,14 @@ Functions</h2></td></tr>
 <p>Save data from printed text.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramtype">int</td><td class="paramname">$textid</td><td>Text ID </td></tr>
+    <tr><td class="paramtype">int</td><td class="paramname">$textid</td><td><a class="el" href="class_text.html">Text</a> ID </td></tr>
     <tr><td class="paramtype">int</td><td class="paramname">$line</td><td>Line number to save </td></tr>
-    <tr><td class="paramtype">string</td><td class="paramname">$val</td><td></td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$val</td><td>Proposed new annotation for the term</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>string Success string</dd></dl>
-<p>@global string $tbpref Database table prefix.</p>
-<p>@psalm-return 'NOTOK'|'OK' </p>
+<dl class="section return"><dt>Returns</dt><dd>string Error message, or "OK" if success.</dd></dl>
+<p>@global string $tbpref Database table prefix. </p>
 
 </div>
 </div>

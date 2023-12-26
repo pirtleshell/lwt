@@ -12,6 +12,9 @@
  *      ...action=4&lang=[langid]&text=[textid]&sent=[sentid] ... Terms of a sentence
  *      ...action=5&lang=[langid]&text=[textid]&sent=[sentid] ... Terms of a sentence (next sent)
  * 
+ * PHP version 8.1
+ * 
+ * @category User_Interface
  * @package Lwt
  * @author  LWT Project <lwt-project@hotmail.com>
  * @license Unlicense <http://unlicense.org/>
@@ -85,8 +88,12 @@ if (isset($_REQUEST["action"])) {  // Action
     
         $lang = $_REQUEST["lang"];
         $text = $_REQUEST["text"];
-        $texttitle = get_first_value('select TxTitle as value from ' . $tbpref . 'texts where TxID = ' . $text);
-        $textaudio = get_first_value('select TxAudioURI as value from ' . $tbpref . 'texts where TxID = ' . $text);
+        $texttitle = (string) get_first_value(
+            'select TxTitle as value from ' . $tbpref . 'texts where TxID = ' . $text
+        );
+        $textaudio = (string) get_first_value(
+            'select TxAudioURI as value from ' . $tbpref . 'texts where TxID = ' . $text
+        );
         $sql = 'select SeID, SeText from ' . $tbpref . 'sentences where SeTxID = ' . $text . ' order by SeOrder';
         $res = do_mysqli_query($sql);
 
@@ -116,7 +123,7 @@ if (isset($_REQUEST["action"])) {  // Action
         <?php
         
         while ($record = mysqli_fetch_assoc($res)) {
-            if (trim($record["SeText"]) != '¶') {
+            if (trim((string) $record["SeText"]) != '¶') {
                 echo '<li><a href="mobile.php?action=4&amp;lang=' . 
                 $lang . '&amp;text=' . $text . 
                 '&amp;sent=' . $record["SeID"] . '">' .
@@ -208,12 +215,12 @@ if (isset($_REQUEST["action"])) {  // Action
                 $savestat = '';
                 $until = $order;
             }
-            if ($record['TiIsNotWord'] != 0 && trim($record['TiText']) != '') {
+            if ($record['TiIsNotWord'] != 0 && trim((string) $record['TiText']) != '') {
                 echo '<li>' . tohtml($record['TiText']) . '</li>';
             }
             else {
                 $until = $order + 2 * ($actcode-1);                
-                $saveterm = $record['TiText'];
+                $saveterm = (string) $record['TiText'];
                 $savetrans = '';
                 if(isset($record['WoID'])) {
                     $savetrans = $record['WoTranslation'];
@@ -222,7 +229,7 @@ if (isset($_REQUEST["action"])) {  // Action
                 }
                 $saverom = trim(
                     isset($record['WoRomanization']) ?
-                    $record['WoRomanization'] : ""
+                    (string) $record['WoRomanization'] : ""
                 );
                 $savestat = $record['WoStatus'];
             }

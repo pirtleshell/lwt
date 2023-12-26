@@ -22,7 +22,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="lwt_icon.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Learning with Texts - Fork<span id="projectnumber">&#160;2.8.1-fork</span>
+   <div id="projectname">Learning with Texts - Fork<span id="projectnumber">&#160;2.9.0-fork</span>
    </div>
    <div id="projectbrief">Learn foreign languages with texts</div>
   </td>
@@ -82,7 +82,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Change term status (Table Test)  
+<p>Change term status (Table Test).  
 <a href="#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
@@ -92,17 +92,61 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a3c8244e6e3c6154a02c60d20eb7d6833"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ajax__chg__term__status_8php.html#a3c8244e6e3c6154a02c60d20eb7d6833">set_word_status</a> ($wid, $status)</td></tr>
+<tr class="separator:a3c8244e6e3c6154a02c60d20eb7d6833"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6297bba60b0f4ec38a6415afda73e92b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ajax__chg__term__status_8php.html#a6297bba60b0f4ec38a6415afda73e92b">get_new_status</a> ($oldstatus, $up)</td></tr>
 <tr class="separator:a6297bba60b0f4ec38a6415afda73e92b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeb875bfdb5f0c40515cd8e0d3a3490c7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ajax__chg__term__status_8php.html#aeb875bfdb5f0c40515cd8e0d3a3490c7">update_word_status</a> ($wid, $currstatus)</td></tr>
 <tr class="separator:aeb875bfdb5f0c40515cd8e0d3a3490c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0a9f8775501a61d789606c5da1536ced"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ajax__chg__term__status_8php.html#a0a9f8775501a61d789606c5da1536ced">ajax_increment_term_status</a> ($wid, $up)</td></tr>
+<tr class="separator:a0a9f8775501a61d789606c5da1536ced"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5c28255da72bc7d61ad78b37a5eb478c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ajax__chg__term__status_8php.html#a5c28255da72bc7d61ad78b37a5eb478c">do_ajax_chg_term_status</a> ($wid, $up)</td></tr>
 <tr class="separator:a5c28255da72bc7d61ad78b37a5eb478c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Change term status (Table Test) </p>
-<p>Call: <a class="el" href="ajax__chg__term__status_8php.html" title="Change term status (Table Test)">inc/ajax_chg_term_status.php</a>?id=[wordID]&amp;data=[translation] </p>
+<div class="textblock"><p>Change term status (Table Test). </p>
+<p>value-difference should be either 1 or -1.</p>
+<p>Call: <a class="el" href="ajax__chg__term__status_8php.html" title="Change term status (Table Test).">inc/ajax_chg_term_status.php</a>?id=[wordID]&amp;data=[value-difference] </p>
 </div><h2 class="groupheader">Function Documentation</h2>
+<a id="a0a9f8775501a61d789606c5da1536ced" name="a0a9f8775501a61d789606c5da1536ced"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0a9f8775501a61d789606c5da1536ced">&#9670;&#160;</a></span>ajax_increment_term_status()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">ajax_increment_term_status </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$wid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$up</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Do a word status change.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">int</td><td class="paramname">$wid</td><td>Word ID </td></tr>
+    <tr><td class="paramtype">bool</td><td class="paramname">$up</td><td>Should the status be incremeted or decremented</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>string HTML-formatted string for increments</dd></dl>
+<p>@global string $tbpref Database table prefix.</p>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000001">Todo:</a></b></dt><dd>2.9.0 Dirty PHP implementation, needs further refactoring </dd></dl>
+
+</div>
+</div>
 <a id="a5c28255da72bc7d61ad78b37a5eb478c" name="a5c28255da72bc7d61ad78b37a5eb478c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5c28255da72bc7d61ad78b37a5eb478c">&#9670;&#160;</a></span>do_ajax_chg_term_status()</h2>
 
@@ -137,7 +181,8 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>void</dd></dl>
-<p>@global string $tbpref Database table prefix. </p>
+<p>@global string $tbpref Database table prefix.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="ajax__chg__term__status_8php.html#a0a9f8775501a61d789606c5da1536ced">ajax_increment_term_status</a> Return values instead of printing. </dd></dl>
 
 </div>
 </div>
@@ -178,6 +223,44 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a3c8244e6e3c6154a02c60d20eb7d6833" name="a3c8244e6e3c6154a02c60d20eb7d6833"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3c8244e6e3c6154a02c60d20eb7d6833">&#9670;&#160;</a></span>set_word_status()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">set_word_status </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$wid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$status</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Force a term to get a new status.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">string</td><td class="paramname">$wid</td><td>ID of the word to edit </td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$status</td><td>New status to set</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>string Number of affected rows or error message</dd></dl>
+<p>@global string $tbpref </p>
+
+</div>
+</div>
 <a id="aeb875bfdb5f0c40515cd8e0d3a3490c7" name="aeb875bfdb5f0c40515cd8e0d3a3490c7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aeb875bfdb5f0c40515cd8e0d3a3490c7">&#9670;&#160;</a></span>update_word_status()</h2>
 
@@ -203,7 +286,7 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Save the new word status to the database.</p>
+<p>Save the new word status to the database, return the controls.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramtype">int</td><td class="paramname">$wid</td><td>Word ID </td></tr>

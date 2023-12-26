@@ -5,14 +5,21 @@
  * \brief Defines GoogleTranslate class for word translation
  * 
  * Usage:
- * use Lwt\Classes\GoogleTranslte;
+ * use Lwt\Classes\GoogleTranslate;
+ * 
  * require_once( 'GoogleTranslate.php' );
  * $translations = GoogleTranslate::staticTranslate('Hello','en','de');
- * if(!$translations) echo 'Error: No translation found!';
+ * 
+ * if(!$translations) 
+ *      echo 'Error: No translation found!';
  * else
- * foreach($translations as $transl){
- * echo $transl, '<br />';
- * }
+ *      foreach($translations as $transl){
+ *          echo $transl, '<br />';
+ *      }
+ * 
+ * PHP version 8.1
+ *
+ * @package Lwt
  */
 
 namespace Lwt\Classes;

@@ -10,8 +10,9 @@
  *  ... backup=xxx ... do backup 
  * ... empty=xxx ... do truncate
  * 
- * php version 8.1.12
+ * PHP version 8.1
  * 
+ * @category User_Interface
  * @package Lwt
  * @author  LWT Project <lwt-project@hotmail.com>
  * @license Unlicense <http://unlicense.org/>
@@ -336,7 +337,7 @@ if (isset($_REQUEST['restore'])) {
 
 pagestart('Backup/Restore/Empty Database', true);
 
-echo error_message_with_hide($message, 1);
+echo error_message_with_hide($message, true);
 
 if ($tbpref == '') { 
     $prefinfo = "(Default Table Set)"; 

@@ -15,6 +15,8 @@
  * To properly log out from both WordPress and LWT, use:
  * http://...path-to-wp-blog.../lwt/wp_lwt_stop.php
  * 
+ * PHP version 8.1
+ * 
  * @package Lwt
  * @author  LWT Project <lwt-project@hotmail.com>
  * @license Unlicense <http://unlicense.org/>

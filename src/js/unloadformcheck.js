@@ -1,8 +1,6 @@
 /**
- * \file
- * \brief Check for unsaved changes when unloading window.
+ * Check for unsaved changes when unloading window.
  * 
- * @package Lwt
  * @license unlicense
  * @author  andreask7 <andreasks7@users.noreply.github.com>
  * @since   1.6.16-fork

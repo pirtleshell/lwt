@@ -22,7 +22,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="lwt_icon.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Learning with Texts - Fork<span id="projectnumber">&#160;2.8.1-fork</span>
+   <div id="projectname">Learning with Texts - Fork<span id="projectnumber">&#160;2.9.0-fork</span>
    </div>
    <div id="projectbrief">Learn foreign languages with texts</div>
   </td>
@@ -92,12 +92,22 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a89bdcd500de49ad653f56109abe64347"><td class="memItemLeft" align="right" valign="top"><a id="a89bdcd500de49ad653f56109abe64347" name="a89bdcd500de49ad653f56109abe64347"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>limit_current_page</b> ($currentpage, $recno, $maxperpage)</td></tr>
+<tr class="separator:a89bdcd500de49ad653f56109abe64347"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a90ad979fa054993e654fa18a77d9f344"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ajax__show__imported__terms_8php.html#a90ad979fa054993e654fa18a77d9f344">imported_terms_header</a> ($recno, $currentpage, $last_update, $maxperpage=100)</td></tr>
+<tr class="separator:a90ad979fa054993e654fa18a77d9f344"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a37b83d29ea67a121f5ce9b0e9f12b0aa"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ajax__show__imported__terms_8php.html#a37b83d29ea67a121f5ce9b0e9f12b0aa">get_imported_terms</a> ($recno, $currentpage, $last_update)</td></tr>
 <tr class="separator:a37b83d29ea67a121f5ce9b0e9f12b0aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad999521f7af55ae45734619e89f5d8d4"><td class="memItemLeft" align="right" valign="top"><a id="ad999521f7af55ae45734619e89f5d8d4" name="ad999521f7af55ae45734619e89f5d8d4"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>select_imported_terms</b> ($last_update, $offset, $max_terms)</td></tr>
+<tr class="separator:ad999521f7af55ae45734619e89f5d8d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afa912e01ec930bdf3029b68fceefa52c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ajax__show__imported__terms_8php.html#afa912e01ec930bdf3029b68fceefa52c">show_imported_terms</a> ($last_update, $limit, $rtl)</td></tr>
 <tr class="separator:afa912e01ec930bdf3029b68fceefa52c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afbcf32ac49fef765eadfc6a5144a01aa"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ajax__show__imported__terms_8php.html#afbcf32ac49fef765eadfc6a5144a01aa">do_ajax_show_imported_terms</a> ($last_update, $currentpage, $recno, $rtl)</td></tr>
 <tr class="separator:afbcf32ac49fef765eadfc6a5144a01aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf46fed6294216fcda2982ddf62287b5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ajax__show__imported__terms_8php.html#adf46fed6294216fcda2982ddf62287b5">imported_terms_list</a> ($last_update, $currentpage, $recno)</td></tr>
+<tr class="separator:adf46fed6294216fcda2982ddf62287b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Launch an AJAX query to show imported terms. </p>
@@ -150,7 +160,8 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>void</dd></dl>
+<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000023">Deprecated:</a></b></dt><dd>2.9.0 Use the AJAX API instead. </dd></dl>
 
 </div>
 </div>
@@ -185,7 +196,7 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Get the list of imported terms and start the display.</p>
+<p>Prepare the page to display imported terms.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramtype">int</td><td class="paramname">$recno</td><td>Record number </td></tr>
@@ -194,7 +205,103 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>string SQL-formatted query to limit the number of results </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>string SQL-formatted query to limit the number of results</dd></dl>
+<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000022">Deprecated:</a></b></dt><dd>2.9.0 Use imported_terms_header instead </dd></dl>
+
+</div>
+</div>
+<a id="a90ad979fa054993e654fa18a77d9f344" name="a90ad979fa054993e654fa18a77d9f344"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a90ad979fa054993e654fa18a77d9f344">&#9670;&#160;</a></span>imported_terms_header()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">imported_terms_header </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$recno</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$currentpage</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$last_update</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$maxperpage</em> = <code>100</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Prepare the page to display imported terms.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">int</td><td class="paramname">$recno</td><td>Record number </td></tr>
+    <tr><td class="paramtype">int</td><td class="paramname">$currentpage</td><td>Current page </td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$last_update</td><td>Last update </td></tr>
+    <tr><td class="paramtype">int</td><td class="paramname">$maxperpage</td><td>Maximum number of terms per page</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
+
+</div>
+</div>
+<a id="adf46fed6294216fcda2982ddf62287b5" name="adf46fed6294216fcda2982ddf62287b5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adf46fed6294216fcda2982ddf62287b5">&#9670;&#160;</a></span>imported_terms_list()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">imported_terms_list </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$last_update</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$currentpage</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$recno</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Return the list of imported terms of pages information.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">string</td><td class="paramname">$last_update</td><td>Terms import time </td></tr>
+    <tr><td class="paramtype">int</td><td class="paramname">$currentpage</td><td>Current page number </td></tr>
+    <tr><td class="paramtype">int</td><td class="paramname">$recno</td><td>Number of imported terms</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>array </dd></dl>
 
 </div>
 </div>

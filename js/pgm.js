@@ -1,6 +1,5 @@
 /**
- * \file
- * \brief All the function to make an audio controller in do_text_header.php
+ * All the function to make an audio controller in do_text_header.php
  * 
  * @license Unlicense
  */
@@ -19,10 +18,8 @@ function click_slower(){var val=($("#playbackrate :selected").val());if(val>5){v
 function click_faster(){var val=($("#playbackrate :selected").val());if(val<15){val++;$("#playbackrate").val(val);set_new_playbackrate()}};function CountUp(server_now,server_start,id,dontrun){if(server_now<server_start)server_start=server_now;this.beginSecs=Math.floor(((new Date()).getTime())/1000)-server_now+server_start;this.dontrun=dontrun;this.update(id)}
 CountUp.prototype.update=function(id){var nowSecs=Math.floor(((new Date()).getTime())/1000);var sec=nowSecs-this.beginSecs;var min=Math.floor(sec/60);sec=sec-min*60;var hr=Math.floor(min/60);min=min-hr*60;var r='';if(hr>0){r+=hr<10?("0"+hr):hr;r+=":"}
 r+=min<10?("0"+min):min;r+=":";r+=sec<10?("0"+sec):sec;document.getElementById(id).innerHTML=r;if(this.dontrun)return;var self=this;setTimeout(function(){self.update(id)},1000)};/**
- * \file
- * \brief Control the interactions for making an automated feed wizard.
+ * Control the interactions for making an automated feed wizard.
  * 
- * @package Lwt
  * @author  andreask7 <andreasks7@users.noreply.github.com>
  * @license Unlicense
  * @since   1.6.16-fork
@@ -56,11 +53,9 @@ return!1});$(document).on('click','#get_button,#filter_button',function(){$('*')
 $('#lwt_sel').append('<li style=\'text-align: left\'><img class=\'delete_selection\' src=\'icn/cross.png\'  title=\'Delete Selection\' alt=\''+$('#mark_action').val()+'\' /> '+$('#mark_action').val().replace('Â§','/')+'</li>')}
 $(this).prop('disabled',!0);$('#mark_action').empty();$('<option/>').val('').text('[Click On Text]').appendTo('#mark_action');$('#lwt_last').css('margin-top',$('#lwt_header').height());return!1});$(document).on('click','#next',function(){$('#article_tags,#filter_tags').val($('#lwt_sel').html()).prop('disabled',!1);var html=$('#lwt_sel li').map(function(){return $(this).text()}).get().join(' | ');$('input[name=\'html\']').val(html);var val=$('input[name=\'step\']').val();if(val==2){$('input[name=\'html\']').attr('name','article_selector')
 $('select[name=\'NfArticleSection\'] option').each(function(){art_sec=$('#lwt_sel li').map(function(){return $(this).text()}).get().join(' | ');$(this).val(art_sec)})}
-$('input[name=\'step\']').val(++val);document.lwt_form1.submit();return!1});$(document).on('change','#host_status',function(){var host_status=$(this).val();var current_host=$('input[name=\'host_name\']').val();$('select[name=\'selected_feed\'] option').each(function(){var opt_str=$(this).text();var host_name=opt_str.replace(/[â¸\-][0-9\s]*[ââ\-][\s]*host:/,'');if(host_name.trim()==current_host.trim()){$(this).text(opt_str.replace(/([â¸\-][0-9\s]*?)\s[ââ\-]\s(.*)/,'$1 '+host_status.trim()+' $2'))}});return!1});/**
- * \file
- * \brief Interaction between LWT and jQuery
+$('input[name=\'step\']').val(++val);document.lwt_form1.submit();return!1});$(document).on('change','#host_status',function(){var host_status=$(this).val();var current_host=$('input[name=\'host_name\']').val();$('select[name=\'selected_feed\'] option').each(function(){var opt_str=$(this).text();var host_name=opt_str.replace(/[▸\-][0-9\s]*[★☆\-][\s]*host:/,'');if(host_name.trim()==current_host.trim()){$(this).text(opt_str.replace(/([▸\-][0-9\s]*?)\s[★☆\-]\s(.*)/,'$1 '+host_status.trim()+' $2'))}});return!1});/**
+ * Interaction between LWT and jQuery
  * 
- * @package Lwt
  * @license unlicense
  * @author  andreask7 <andreasks7@users.noreply.github.com>
  * @since   1.6.16-fork
@@ -74,17 +69,20 @@ function alertFirstCharacterOutsideBasicMultilingualPlane(s,info){if(!containsCh
 const match=/[\uD800-\uDFFF]/.exec(s);alert('ERROR\n\nText "'+info+'" contains invalid character(s) '+'(in the Unicode Supplementary Multilingual Planes, > U+FFFF) like emojis '+'or very rare characters.\n\nFirst invalid character: "'+s.substring(match.index,match.index+2)+'" at position '+(match.index+1)+'.\n\n'+'More info: https://en.wikipedia.org/wiki/Plane_(Unicode)\n\n'+'Please remove this/these character(s) and try again.');return 1}
 function getUTF8Length(s){return(new Blob([String(s)])).size}
 function scrollToAnchor(aid){document.location.href='#'+aid}
-function do_ajax_save_impr_text(textid,elem_name,form_data){const idwait='#wait'+elem_name.substring(2);$(idwait).html('<img src="icn/waiting2.gif" />');$.post('inc/ajax.php',{action:"",action_type:"set_annotation",tid:textid,elem:elem_name,data:form_data},function(data){$(idwait).html('<img src="icn/empty.gif" />');if("error" in data)
+function do_ajax_save_impr_text(textid,elem_name,form_data){const idwait='#wait'+elem_name.substring(2);$(idwait).html('<img src="icn/waiting2.gif" />');$.post('api.php/v1/texts/'+textid+'/annotation',{elem:elem_name,data:form_data},function(data){$(idwait).html('<img src="icn/empty.gif" />');if("error" in data)
 alert('Saving your changes failed, please reload the page and try again! '+'Error message: "'+data.error+'".');},"json")}
 function changeImprAnnText(){$(this).prev('input:radio').attr('checked','checked');const textid=$('#editimprtextdata').attr('data_id');const elem_name=$(this).attr('name');const form_data=JSON.stringify($('form').serializeObject());do_ajax_save_impr_text(textid,elem_name,form_data)}
 function changeImprAnnRadio(){const textid=$('#editimprtextdata').attr('data_id');const elem_name=$(this).attr('name');const form_data=JSON.stringify($('form').serializeObject());do_ajax_save_impr_text(textid,elem_name,form_data)}
-function addTermTranslation(wordid,txid,word,lang){const translation=$(txid).val().trim();const pagepos=$(document).scrollTop();if(translation==''||translation=='*'){alert('Text Field is empty or = \'*\'!');return}
-let request={action:"change_translation",translation:translation,};let failure;let action_type;if(wordid===0){action_type="add";request.text=word;request.lang=lang;failure="Adding translation to term failed!"}else{action_type="update";request.wordid=wordid;failure="Updating translation of term failed!"}
-request.action_type=action_type;failure+="Please reload page and try again."
-$.post('inc/ajax.php',request,function(d){if(d==''){alert(failure);return}
+function updateTermTranslation(wordid,txid){const translation=$(txid).val().trim();const pagepos=$(document).scrollTop();if(translation==''||translation=='*'){alert('Text Field is empty or = \'*\'!');return}
+let request={translation:translation,};const failure="Updating translation of term failed!"+"Please reload page and try again.";$.post('api.php/v1/terms/'+wordid+'/translations',request,function(d){if(d==''){alert(failure);return}
 if("error" in d){alert(failure+"\n"+d.error);return}
-do_ajax_edit_impr_text(pagepos,d[action_type])},"json")}
-function changeTableTestStatus(wordid,up){$.post('inc/ajax.php',{action:"term_status",action_type:"increment",wid:parseInt(wordid,10),status_up:(up?1:0)},function(data){if(data==""||"error" in data){return}
+do_ajax_edit_impr_text(pagepos,d.update,wordid)},"json")}
+function addTermTranslation(txid,word,lang){const translation=$(txid).val().trim();const pagepos=$(document).scrollTop();if(translation==''||translation=='*'){alert('Text Field is empty or = \'*\'!');return}
+const failure="Adding translation to term failed!"+"Please reload page and try again."
+$.post('api.php/v1/terms/new',{translation:translation,term_text:word,lg_id:lang},function(d){if(d==''){alert(failure);return}
+if("error" in d){alert(failure+"\n"+d.error);return}
+do_ajax_edit_impr_text(pagepos,d.add,d.term_id)},"json")}
+function changeTableTestStatus(wordid,up){const status_change=up?'up':'down';const wid=parseInt(wordid,10);$.post('api.php/v1/terms/'+wid+'/status/'+status_change,{},function(data){if(data==""||"error" in data){return}
 $('#STAT'+wordid).html(data.increment)},"json")}
 function check(){let count=0;$('.notempty').each(function(_n){if($(this).val().trim()=='')count++});if(count>0){alert('ERROR\n\n'+count+' field(s) - marked with * - must not be empty!');return!1}
 count=0;$('input.checkurl').each(function(_n){if($(this).val().trim().length>0){if(($(this).val().trim().indexOf('http://')!=0)&&($(this).val().trim().indexOf('https://')!=0)&&($(this).val().trim().indexOf('#')!=0)){alert('ERROR\n\nField "'+$(this).attr('data_info')+'" must start with "http://" or "https://" if not empty.');count++}}});$('input.checkregexp').each(function(_n){const regexp=$(this).val().trim();if(regexp.length>0){$.ajax({type:'POST',url:'inc/ajax.php',data:{action:"",action_type:"check_regexp",regex:regexp},async:!1}).always(function(data){if(data!=''){alert(data);count++}})}});$('input[class*="max_int_"]').each(function(_n){const maxvalue=parseInt($(this).attr('class').replace(/.*maxint_([0-9]+).*/,'$1'));if($(this).val().trim().length>0){if($(this).val()>maxvalue){alert('ERROR\n\n Max Value of Field "'+$(this).attr('data_info')+'" is '+maxvalue);count++}}});$('input.checkdicturl').each(function(_n){const translate_input=$(this).val().trim();if(translate_input.length>0){let refinned=translate_input;if(translate_input.startsWith('*')){refinned=translate_input.substring(1)}
@@ -166,7 +164,7 @@ if(popup){owin(createTheDictUrl(target_url,txt))}else{showRightFrames(undefined,
 if(e.which==69||e.which==71){let url='';if(curr.hasClass('mword')){url='edit_mword.php?wid='+wid+'&len='+curr.attr('data_code')+'&tid='+TID+'&ord='+ord+dict}else if(stat=='0'){url='edit_word.php?wid=&tid='+TID+'&ord='+ord+dict}else{url='edit_word.php?wid='+wid+'&tid='+TID+'&ord='+ord+dict}
 showRightFrames(url);return!1}
 return!0}
-function do_ajax_save_setting(k,v){$.post('inc/ajax.php',{action:'',action_type:'save_setting',k:k,v:v})}
+function do_ajax_save_setting(k,v){$.post('api.php/v1/settings',{key:k,value:v})}
 function quick_select_to_input(select_elem,input_elem){let val=select_elem.options[select_elem.selectedIndex].value;if(val!='')
 input_elem.value=val;select_elem.value=''}
 function select_media_path(paths,folders,base_path){let options=[],temp_option=document.createElement('option');temp_option.value="";temp_option.text="[Choose...]";options.push(temp_option);for(let i=0;i<paths.length;i++){temp_option=document.createElement('option')
@@ -176,12 +174,15 @@ return options}
 function media_select_receive_data(data){$('#mediaSelectLoadingImg').css("display","none");if(data.error!==undefined){let msg;if(data.error=="not_a_directory"){msg='[Error: "../'+data.base_path+'/media" exists, but it is not a directory.]'}else if(data.error=="does_not_exist"){msg='[Directory "../'+data.base_path+'/media" does not yet exist.]'}else{msg="[Unknown error!]"}
 $('#mediaSelectErrorMessage').text(msg);$('#mediaSelectErrorMessage').css("display","inherit")}else{const options=select_media_path(data.paths,data.folders,data.base_path);$('#mediaselect select').empty();for(let i=0;i<options.length;i++){$('#mediaselect select').append(options[i])}
 $('#mediaselect select').css("display","inherit")}}
-function do_ajax_update_media_select(){$('#mediaSelectErrorMessage').css("display","none");$('#mediaselect select').css("display","none");$('#mediaSelectLoadingImg').css("display","inherit");$.getJSON('inc/ajax.php',{action:"query",action_type:"media_paths"},media_select_receive_data)}
+function do_ajax_update_media_select(){$('#mediaSelectErrorMessage').css("display","none");$('#mediaselect select').css("display","none");$('#mediaSelectLoadingImg').css("display","inherit");$.getJSON('api.php/v1/media-files',{},media_select_receive_data)}
 function display_example_sentences(sentences,click_target){let img,clickable,parentDiv;const outElement=document.createElement("div");for(let i=0;i<sentences.length;i++){img=document.createElement("img");img.src="icn/tick-button.png";img.title="Choose";clickable=document.createElement('span');clickable.classList.add("click");clickable.setAttribute("onclick","{"+click_target+".value = '"+sentences[i][1].replaceAll("'","\\'")+"';makeDirty();}");clickable.appendChild(img);parentDiv=document.createElement("div");parentDiv.appendChild(clickable);parentDiv.innerHTML+="&nbsp; "+sentences[i][0];outElement.appendChild(parentDiv)}
 return outElement}
-function do_ajax_show_sentences(lang,word,ctl,woid){$('#exsent-interactable').css("display","none");$('#exsent-waiting').css("display","inherit");$.getJSON('inc/ajax.php',{action:"query",action_type:"example_sentences",lid:lang,word_lc:word,wid:woid},function(data){$('#exsent-waiting').css("display","none");$('#exsent-sentences').css("display","inherit");const new_element=display_example_sentences(data,ctl);$('#exsent-sentences').append(new_element)})}
-function do_ajax_show_similar_terms(){$('#simwords').html('<img src="icn/waiting2.gif" />');$.post('inc/ajax.php',{"action":"similar_terms","action_type":"similar_terms","simterms_lgid":$('#langfield').val(),"simterms_word":$('#wordfield').val()},function(data){$('#simwords').html(data.similar_terms)},"json")}
-function do_ajax_word_counts(){const t=$('.markcheck').map(function(){return $(this).val()}).get().join(',');$.getJSON('inc/ajax.php',{action:"query",action_type:"texts_statistics",texts_id:t},function(data){WORDCOUNTS=data;word_count_click();$('.barchart').removeClass('hide')})}
+function change_example_sentences_zone(sentences,ctl){$('#exsent-waiting').css("display","none");$('#exsent-sentences').css("display","inherit");const new_element=display_example_sentences(sentences,ctl);$('#exsent-sentences').append(new_element)}
+function do_ajax_show_sentences(lang,word,ctl,woid){$('#exsent-interactable').css("display","none");$('#exsent-waiting').css("display","inherit");if(isInt(woid)&&woid!=-1){$.getJSON('api.php/v1/sentences-with-term/'+woid,{lg_id:lang,word_lc:word},(data)=>change_example_sentences_zone(data,ctl))}else{let query={lg_id:lang,word_lc:word};if(parseInt(woid,10)==-1){query.advanced_search=!0}
+$.getJSON('api.php/v1/sentences-with-term',query,(data)=>change_example_sentences_zone(data,ctl))}}
+function do_ajax_req_sim_terms(lg_id,word_text){return $.getJSON('api.php/v1/similar-terms',{"lg_id":lg_id,"term":word_text})}
+function do_ajax_show_similar_terms(){$('#simwords').html('<img src="icn/waiting2.gif" />');do_ajax_req_sim_terms(parseInt($('#langfield').val(),10),$('#wordfield').val()).done(function(data){$('#simwords').html(data.similar_terms)}).fail(function(data){console.log(data)})}
+function do_ajax_word_counts(){const t=$('.markcheck').map(function(){return $(this).val()}).get().join(',');$.getJSON('api.php/v1/texts/statistics',{texts_id:t},function(data){WORDCOUNTS=data;word_count_click();$('.barchart').removeClass('hide')})}
 function set_barchart_item(){const id=$(this).find('span').first().attr('id').split('_')[2];let v;if(SUW&16){v=parseInt(WORDCOUNTS.expru[id]||0,10)+parseInt(WORDCOUNTS.totalu[id],10)}else{v=parseInt(WORDCOUNTS.expr[id]||0,10)+parseInt(WORDCOUNTS.total[id],10)}
 $(this).children('li').each(function(){let cat_word_count=parseInt($(this).children('span').text(),10);cat_word_count+=1;v+=1;const h=25-Math.log(cat_word_count)/Math.log(v)*25;$(this).css('border-top-width',h+'px')})}
 function set_word_counts(){$.each(WORDCOUNTS.totalu,function(key,value){let knownu,known,todo,stat0;knownu=known=todo=stat0=0;const expr=WORDCOUNTS.expru[key]?parseInt((SUW&2)?WORDCOUNTS.expru[key]:WORDCOUNTS.expr[key]):0;if(!WORDCOUNTS.stat[key]){WORDCOUNTS.statu[key]=WORDCOUNTS.stat[key]=[]}
@@ -221,17 +222,17 @@ $(`#editlink${trans_data.ann_index}`).html(edit_word_link);let translations_list
   &nbsp;`;if(widset){translations_list+=`<img class="click" src="icn/plus-button.png" 
     title="Save another translation to existent term" 
     alt="Save another translation to existent term" 
-    onclick="addTermTranslation(${trans_data.wid}, `+`'#tx${trans_data.ann_index}', '',${trans_data.lang_id});" />`}else{translations_list+=`<img class="click" src="icn/plus-button.png" 
+    onclick="updateTermTranslation(${trans_data.wid}, `+`'#tx${trans_data.ann_index}');" />`}else{translations_list+=`<img class="click" src="icn/plus-button.png" 
     title="Save translation to new term" 
     alt="Save translation to new term" 
-    onclick="addTermTranslation(0, '#tx${trans_data.ann_index}',`+`${trans_data.term_lc},${trans_data.lang_id});" />`}
+    onclick="addTermTranslation('#tx${trans_data.ann_index}',`+`${trans_data.term_lc},${trans_data.lang_id});" />`}
 translations_list+=`&nbsp;&nbsp;
   <span id="wait${trans_data.ann_index}">
       <img src="icn/empty.gif" />
   </span>
   </span>`;$(`#transsel${trans_data.ann_index}`).html(translations_list)}
-function do_ajax_edit_impr_text(pagepos,word){if(word==''){$('#editimprtextdata').html('<img src="icn/waiting2.gif" />');location.reload();return}
-const textid=$('#editimprtextdata').attr('data_id');$.getJSON('inc/ajax.php',{action:"query",action_type:"term_translations",text_id:textid,term_lc:word},function(data){if("error" in data){alert(data.error)}else{edit_term_ann_translations(data,textid);$.scrollTo(pagepos);$('input.impr-ann-text').on('change',changeImprAnnText);$('input.impr-ann-radio').on('change',changeImprAnnRadio)}})}
+function do_ajax_edit_impr_text(pagepos,word,term_id){if(word==''){$('#editimprtextdata').html('<img src="icn/waiting2.gif" />');location.reload();return}
+const textid=$('#editimprtextdata').attr('data_id');$.getJSON('api.php/v1/terms/'+term_id+'/translations',{text_id:textid,term_lc:word},function(data){if("error" in data){alert(data.error)}else{edit_term_ann_translations(data,textid);$.scrollTo(pagepos);$('input.impr-ann-text').on('change',changeImprAnnText);$('input.impr-ann-radio').on('change',changeImprAnnRadio)}})}
 function showRightFrames(roUrl,ruUrl){if(roUrl!==undefined){top.frames.ro.location.href=roUrl}
 if(ruUrl!==undefined){top.frames.ru.location.href=ruUrl}
 if($('#frames-r').length){$('#frames-r').animate({right:'5px'});return!0}
@@ -252,10 +253,8 @@ if(typeof $(this).attr('id')==='undefined'){$(this).attr('id','rb_'+z++)}
 $(this).after('<label class="wrap_radio" for="'+$(this).attr('id')+'"><span></span></label>')});$('.button-file').on('click',function(){$(this).next('input[type="file"]').trigger('click');return!1});$('input.impr-ann-text').on('change',changeImprAnnText);$('input.impr-ann-radio').on('change',changeImprAnnRadio);$('form.validate').on('submit',check);$('input.markcheck').on('click',markClick);$('.confirmdelete').on('click',confirmDelete);$('textarea.textarea-noreturn').on('keydown',textareaKeydown);$('#frames-r').resizable({handles:"w",stop:function(_event,ui){$('#frames-l').css('width',ui.position.left-20);do_ajax_save_setting('set-text-l-framewidth-percent',Math.round($('#frames-l').width()/$(window).width()*100))}});$('#termtags').tagit({beforeTagAdded:function(_event,ui){return!containsCharacterOutsideBasicMultilingualPlane(ui.tag.text())},availableTags:TAGS,fieldName:'TermTags[TagList][]'});$('#texttags').tagit({beforeTagAdded:function(_event,ui){return!containsCharacterOutsideBasicMultilingualPlane(ui.tag.text())},availableTags:TEXTTAGS,fieldName:'TextTags[TagList][]'});markClick();setTheFocus();if($('#simwords').length>0&&$('#langfield').length>0&&$('#wordfield').length>0){$('#wordfield').on('blur',do_ajax_show_similar_terms);do_ajax_show_similar_terms()}
 window.setTimeout(noShowAfter3Secs,3000)}
 $(window).on('load',wrapRadioButtons);$(document).ready(prepareMainAreas);/**
- * \file
- * \brief LWT Javascript functions
+ * LWT Javascript functions
  * 
- * @package Lwt
  * @author  andreask7 <andreasks7@users.noreply.github.com>
  * @license Unlicense <http://unlicense.org/>
  * @since   1.6.16-fork
@@ -349,12 +348,12 @@ const enc=url.substring(pos+term_elem[0].length,pos2-pos-term_elem[0].length).tr
 return output}
 function createTheDictLink(u,w,t,b){let url=u.trim();let popup=!1;const trm=w.trim();const txt=t.trim();const txtbefore=b.trim();let r='';if(url==''||txt==''){return r}
 if(url.startsWith('*')){url=url.substring(1);popup=!0}
-try{let final_url=new URL(url);popup|=final_url.searchParams.has('lwt_popup')}catch(err){if(!(err instanceof TypeError)){throw err}}
+try{let final_url=new URL(url);popup=popup||final_url.searchParams.has('lwt_popup')}catch(err){if(!(err instanceof TypeError)){throw err}}
 if(popup){r=' '+txtbefore+' <span class="click" onclick="owin(\''+createTheDictUrl(url,escape_apostrophes(trm))+'\');">'+txt+'</span> '}else{r=' '+txtbefore+' <a href="'+createTheDictUrl(url,trm)+'" target="ru" onclick="showRightFrames();">'+txt+'</a> '}
 return r}
 function createSentLookupLink(torder,txid,url,txt){url=url.trim();txt=txt.trim();let r='';let popup=!1;let external=!1;const target_url='trans.php?x=1&i='+torder+'&t='+txid;if(url==''||txt==''){return r}
 if(url.startsWith('*')){url=url.substring(1);popup=!0}
-try{let final_url=new URL(url);popup|=final_url.searchParams.has('lwt_popup');external=!0}catch(err){if(!(err instanceof TypeError)){throw err}}
+try{let final_url=new URL(url);popup=popup||final_url.searchParams.has('lwt_popup');external=!0}catch(err){if(!(err instanceof TypeError)){throw err}}
 if(popup){return' <span class="click" onclick="owin(\''+target_url+'\');">'+txt+'</span> '}
 if(external){return' <a href="'+target_url+'" target="ru" onclick="showRightFrames();">'+txt+'</a> '}
 return r}
@@ -382,30 +381,26 @@ function deleteCookie(name,path,domain){if(getCookie(name)){document.cookie=name
 function iknowall(t){const answer=confirm('Are you sure?');if(answer){showRightFrames('all_words_wellknown.php?text='+t)}}
 function check_table_prefix(p){const re=/^[_a-zA-Z0-9]*$/;const r=p.length<=20&&p.length>0&&p.match(re);if(!r){alert('Table Set Name (= Table Prefix) must'+'\ncontain 1 to 20 characters (only 0-9, a-z, A-Z and _).'+'\nPlease correct your input.')}
 return r};/**
- * \file
- * \brief Standard JS interface to get translations
+ * Standard JS interface to get translations
  * 
- * @package Lwt
  * @author  andreask7 <andreasks7@users.noreply.github.com>
  * @license Unlicense <http://unlicense.org/>
  * @since   1.6.16-fork
  */
-function deleteTranslation(){let w=window.parent.frames.ro;if(w===undefined)
-w=window.opener;if($('[name="WoTranslation"]',w.document).val().trim().length){$('[name="WoTranslation"]',w.document).val('');w.makeDirty()}}
-function addTranslation(s){let w=window.parent.frames.ro;if(w===undefined)
-w=window.opener;if(w===undefined){alert('Translation can not be copied!');return}
-let c=w.document.forms[0].WoTranslation;if(typeof c!='object'){alert('Translation can not be copied!');return}
-let oldValue=c.value;if(oldValue.trim()==''){c.value=s;w.makeDirty()}else{if(oldValue.indexOf(s)==-1){c.value=oldValue+' / '+s;w.makeDirty()}else{if(confirm('"'+s+'" seems already to exist as a translation.\nInsert anyway?')){c.value=oldValue+' / '+s;w.makeDirty()}}}}
+function deleteTranslation(){let frame=window.parent.frames.ro;if(frame===undefined)
+frame=window.opener;if($('[name="WoTranslation"]',frame.document).val().trim().length){$('[name="WoTranslation"]',frame.document).val('');frame.makeDirty()}}
+function addTranslation(s){let frame=window.parent.frames.ro;if(frame===undefined)
+frame=window.opener;if(frame===undefined){alert('Translation can not be copied!');return}
+let word_trans=frame.document.forms[0].WoTranslation;if(typeof word_trans!='object'){alert('Translation can not be copied!');return}
+let oldValue=word_trans.value;if(oldValue.trim()==''){word_trans.value=s;frame.makeDirty()}else{if(oldValue.indexOf(s)==-1){word_trans.value=oldValue+' / '+s;frame.makeDirty()}else{if(confirm('"'+s+'" seems already to exist as a translation.\n'+'Insert anyway?')){word_trans.value=oldValue+' / '+s;frame.makeDirty()}}}}
 function getGlosbeTranslation(text,lang,dest){$.ajax({url:'http://glosbe.com/gapi/translate?'+$.param({from:lang,dest:dest,format:"json",phrase:text,callback:"?"}),type:"GET",dataType:'jsonp',jsonp:'getTranslationFromGlosbeApi',jsonpCallback:'getTranslationFromGlosbeApi',async:'true'})}
 function getTranslationFromGlosbeApi(data){try{$.each(data.tuc,function(i,rows){if(rows.phrase){$('#translations').append('<span class="click" onclick="addTranslation(\''+rows.phrase.text+'\');">'+'<img src="icn/tick-button.png" title="Copy" alt="Copy" />'+' &nbsp; '+rows.phrase.text+'</span><br />')}else if(rows.meanings){$('#translations').append('<span class="click" onclick="addTranslation('+"'("+rows.meanings[0].text+")'"+');">'+'<img src="icn/tick-button.png" title="Copy" alt="Copy" />'+' &nbsp; '+"("+rows.meanings[0].text+")"+'</span><br />')}});if(!data.tuc.length){$('#translations').before('<p>No translations found ('+data.from+'-'+data.dest+').</p>');if(data.dest!='en'&&data.from!='en'){$('#translations').attr('id','no_trans').after('<hr /><p>&nbsp;</p><h3><a href="http://glosbe.com/'+data.from+'/en/'+data.phrase+'">Glosbe Dictionary ('+data.from+'-en):  &nbsp; <span class="red2">'+data.phrase+'</span></a></h3>&nbsp;<p id="translations"></p>');getGlosbeTranslation(data.phrase,data.from,'en')}else $('#translations').after('<hr />')}else $('#translations').after('<p>&nbsp;<br/>'+data.tuc.length+' translation'+(data.tuc.length==1?'':'s')+' retrieved via <a href="http://glosbe.com/a-api" target="_blank">'+'Glosbe API</a>.</p><hr />')}catch(err){$('#translations').text('Retrieval error. Possible reason: There is a limit of Glosbe API '+'calls that may be done from one IP address in a fixed period of time,'+' to prevent from abuse.').after('<hr />')}}
 async function getLibreTranslateTranslationBase(text,lang,dest,key="",url="http://localhost:5000/translate"){const res=await fetch(url,{method:"POST",body:JSON.stringify({q:text,source:lang,target:dest,format:"text",api_key:key}),headers:{"Content-Type":"application/json"}});const data=await res.json();return data.translatedText}
 async function getLibreTranslateTranslation(libre_url,text,lang,dest){const search_params=libre_url.searchParams;if(search_params.get("lwt_translator")!="libretranslate"){throw 'Translation API not supported: '+search_params.get("lwt_translator")+"!"}
 let translator_ajax;if(search_params.get("lwt_translator_ajax")){translator_ajax=decodeURIComponent(search_params.get("lwt_translator_ajax"))}else{translator_ajax=libre_url.toString().replace(libre_url.search,'')+"translate"}
 return getLibreTranslateTranslationBase(text,lang,dest,key=search_params.get("lwt_key"),translator_ajax)};/**
- * \file
- * \brief Check for unsaved changes when unloading window.
+ * Check for unsaved changes when unloading window.
  * 
- * @package Lwt
  * @license unlicense
  * @author  andreask7 <andreasks7@users.noreply.github.com>
  * @since   1.6.16-fork
@@ -448,10 +443,8 @@ return returnValue};function fixEvent(event){event.preventDefault=fixEvent.preve
 if(!Array.forEach){Array.forEach=function(array,block,context){for(var i=0;i<array.length;i++){block.call(context,array[i],i,array)}}}
 Function.prototype.forEach=function(object,block,context){for(var key in object){if(typeof this.prototype[key]=="undefined"){block.call(context,object[key],key,object)}}};String.forEach=function(string,block,context){Array.forEach(string.split(""),function(chr,index){block.call(context,chr,index,string)})};var forEach=function(object,block,context){if(object){var resolve=Object;if(object instanceof Function){resolve=Function}else if(object.forEach instanceof Function){object.forEach(block,context);return}else if(typeof object=="string"){resolve=String}else if(typeof object.length=="number"){resolve=Array}
 resolve.forEach(object,block,context)}};/**
- * \file
- * \brief General file to control dynamic interactions with the user.
+ * General file to control dynamic interactions with the user.
  * 
- * @package Lwt
  * @author  HugoFara <Hugo.Farajallah@protonmail.com>
  * @license Unlicense <http://unlicense.org/>
  * @since   2.0.3-fork
@@ -464,9 +457,10 @@ $(i,context).before('<span id="ID-'+key+'-'+length+'"'+attrs+'>'+text[key]+'</sp
 function prepareTextInteractions(){$('.word').each(word_each_do_text_text);$('.mword').each(mword_each_do_text_text);$('.word').on('click',word_click_event_do_text_text);$('#thetext').on('selectstart','span',!1).on('mousedown','.wsty',{annotation:ANNOTATIONS_MODE},mword_drag_n_drop_select);$('#thetext').on('click','.mword',mword_click_event_do_text_text);$('.word').on('dblclick',word_dblclick_event_do_text_text);$('#thetext').on('dblclick','.mword',word_dblclick_event_do_text_text);$(document).on('keydown',keydown_event_do_text_text);$('#thetext').hoverIntent({over:word_hover_over,out:word_hover_out,interval:150,selector:".wsty,.mwsty"})}
 function goToLastPosition(){const lookPos=POS;let pos=0;if(lookPos>0){let posObj=$(".wsty[data_pos="+lookPos+"]").not(".hide").eq(0);if(posObj.attr("data_pos")===undefined){pos=$(".wsty").not(".hide").filter(function(){return $(this).attr("data_pos")<=lookPos}).eq(-1)}}
 $(document).scrollTo(pos);focus();setTimeout(overlib,10);setTimeout(cClick,100)}
-function saveCurrentPosition(){let pos=0;const top_pos=$(window).scrollTop()-$('.wsty').not('.hide').eq(0).height();$('.wsty').not('.hide').each(function(){if($(this).offset().top>=top_pos){pos=$(this).attr('data_pos');return!1}});$.ajax({type:"POST",url:'inc/ajax.php',data:{action:"reading_position",action_type:"text",tid:TID,tposition:pos},async:!1})}
-function getPhoneticText(text,lang){let phoneticText;$.ajax('inc/ajax.php',{async:!1,data:{action:"query",action_type:"phonetic_reading",text:text,lang:lang},dataType:"json",type:"GET",}).done(function(data){phoneticText=data.phonetic_reading});return phoneticText}
-async function getPhoneticTextAsync(text,lang){return $.getJSON('inc/ajax.php',{action:"query",action_type:"phonetic_reading",text:text,lang:lang})}
+function saveReadingPosition(text_id,position){$.post('api.php/v1/texts/'+text_id+'/reading-position',{position:position})}
+function saveAudioPosition(text_id,pos){$.post('api.php/v1/texts/'+text_id+'/audio-position',{position:pos})}
+function getPhoneticText(text,lang){let phoneticText;$.ajax('api.php/v1/phonetic-reading',{async:!1,data:{text:text,lang:lang},dataType:"json",type:"GET",}).done(function(data){phoneticText=data.phonetic_reading});return phoneticText}
+async function getPhoneticTextAsync(text,lang){return $.getJSON('api.php/v1/phonetic-reading',{text:text,lang:lang})}
 function deepReplace(obj,searchString,replaceVar){for(let key in obj){if(typeof obj[key]==='object'){deepReplace(obj[key],searchString,replaceVar)}else if(typeof obj[key]==='string'&&obj[key].includes(searchString)){obj[key]=obj[key].replace(searchString,replaceVar)}}}
 function findDataString(obj){for(const key in obj){if(obj.hasOwnProperty(key)){if(typeof obj[key]==='string'&&obj[key].startsWith('data:')){return obj[key]}else if(typeof obj[key]==='object'){const result=findDataString(obj[key]);if(result){return result}}}}
 return null}

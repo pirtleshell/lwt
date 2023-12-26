@@ -108,21 +108,64 @@ You can run it through composer. Use ``php ./vendor/bin/squizlabs/phpcs.phar [fi
 php ./vendor/bin/squizlabs/phpcbf.phar [filename]
 ```
 
+## Interact with and modify the REST API
+
+Starting from 2.9.0-fork, LWT provides a RESTful API. The main handler for the API is `api.php`.
+You can find a more exhaustive API documentation at [api.md](./api.md).
+
+If you plan to develop the API, please follow the RESTful standards. 
+To debug:
+
+1. Install Node and NPM.
+2. Run `npm install` in the main LWT folder.
+3. Run `npm test` to test the API.
+
 ## Improving Documentation
 
-To regenerate all documentation, use ``composer doc``.
+To regenerate all PHP and Markdown documentation, use ``composer doc``. 
+For the JS documentation, you need NPM. Use `./node_modules/.bin/jsdoc -c jsdoc.json`. 
 
 ### General Documentation
 
-The documentation is split across Markdown (``.md``) files in ``docs/``. Then, those files are requested by ``info.php``. The final version is ``info.html``, which contains all files.
+The documentation is split across Markdown (``.md``) files in ``docs/``. 
+Then, those files are requested by ``info.php``. 
+The final version is ``info.html``, which contains all files.
 
 To regenerate ``info.hml``, run ``composer info.html``.
 
-### Code Documentation
+### PHP Code Documentation
 
-Code documentation (everything under ``docs/html/``) is automatically generated. If you see an error, the PHP code is most likely at fault. However, don't hesitate to signal the issue.
+Code documentation (everything under `docs/html/` and `docs/php/`) is automatically generated. 
+If you see an error, the PHP code is most likely at fault. 
+However, don't hesitate to signal the issue.
 
-Currently, the documentation is generated through Doxygen (run ``doxygen Doxyfile`` to regenerate it), but this is likely to change.
+Currently, the PHP documentation is generated two times:
+
+- With [Doxygen](https://www.doxygen.nl/index.html) (run ``doxygen Doxyfile`` to regenerate it), 
+it generates documentation for MarkDown and PHP files. It will be removed in LWT 3.0.0.
+- Using [phpDocumentor](https://phpdoc.org/). phpDoc generates PHP documentation and is the preferred way to do so. 
+You can use it through `php tools/phpDocumentor` if installed with [Phive](https://phar.io/).
+
+### JS Code Documentation
+
+Code documentation for JavaScript is available at `docs/js/` is is generated thourgh [JSDoc](https://jsdoc.app/). 
+The JSDoc configuration file is `jsdoc.json`. 
+
+## New version
+
+LWT-fork follows a strict procedure for new versions. 
+This section is mainly intended for the maintainers, but feel free to take a peak at it.
+
+The steps to publish a new version are:
+
+1. In the [CHANGELOG](./CHANGELOG.md), add the latest release number and date.
+2. Update `get_version` in `inc/kernel_utility.php` with the release number and date.
+3. Update `PROJECT_NUMBER` in `Doxyfile` to the latest release number.
+4. Regenerate documentation with `composer doc`.
+5. Commit your changes, `git commit -m "Regenerates documentation for release []."`
+6. Add a version tag with annotation `git tag -a [release number]` and push the changes.
+7. If all the GitHub actions are successfull, write a new release on GitHub linking to the previously created tag.
+8. The new version is live! 
 
 ## Other Ways of Contribution
 
@@ -137,5 +180,9 @@ LWT is a non-profitable piece of software, so we won't have much time or money t
 ### Discuss
 
 Either go to the forum of the [official LWT version](https://sourceforge.net/p/learning-with-texts/discussion/), or come and [discuss on the community version](https://github.com/HugoFara/lwt/discussions).
+
+### Support on OpenCollective
+
+LWT is hosted on OpenCollective, you can support the development of the app at <https://opencollective.com/lwt-community>.
 
 Thanks for your interest in contributing!

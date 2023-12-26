@@ -5,6 +5,8 @@
  * 
  * Call: display_impr_text_header.php?text=[textid]
  * 
+ * PHP version 8.1
+ * 
  * @package Lwt
  * @author  LWT Project <lwt-project@hotmail.com>
  * @license Unlicense <http://unlicense.org/>
@@ -37,7 +39,7 @@ function do_diplay_impr_text_header_data($textid)
 
 
     if (isset($record['TxAudioURI'])) {
-        $audio = trim($record['TxAudioURI']);
+        $audio = trim((string) $record['TxAudioURI']);
     } else {
         $audio = '';
     }

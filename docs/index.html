@@ -45,23 +45,42 @@ For more information, please refer to [http://unlicense.org/].
 	<link rel="apple-touch-icon" sizes="114x114" href="../img/apple-touch-icon-114x114.png" />
 	<link rel="apple-touch-startup-image" href="../img/apple-touch-startup.png" />
 	<style type="text/css">
-	@import url(../css/styles.css);
+		@import url(../css/styles.css);
+		.hidden {display:none;}
 	</style>
 	<script type="text/javascript" src="../js/jquery.js"></script>  
 	<script type="text/javascript" src="../js/floating.js"></script>
-		<script type="text/javascript">
-	$.ajax(
-		{
-			type: 'POST',
-			url:'inc/ajax_get_theme.php',
-			async: false, 
-			data: { file:'../css/styles.css' }, 
-			success: function (data) {
-				if (data.match(/styles.css$/g)) {
-					$('style').text( "@import url(" + data + ");" );
+	<script type="text/javascript">
+		/**
+		 * Perform an AJAX query to get the current theme style sheet.
+		 * 
+		 * @since 2.9.0 Function is modified to use JSON with the REST API.
+		 */
+		function ajaxGetTheme () {
+			$.getJSON(
+				'../api.php/v1/settings/theme-path',
+				{
+					path: '../css/styles.css' 
+				},
+				function (data) {
+					if ("error" in data)
+						return;
+					const path = data["theme_path"].trim();
+					if (path.endsWith("styles.css")) {
+						$('style').html(
+							"@import url(../" + path + ");"
+						);
+					}
 				}
+			)
+			.always(function () {
+				$('html').show();
+			});
 		}
-	});
+
+		$('html').addClass('hidden');
+
+		$(document).ready(ajaxGetTheme);
 	</script>
 
 	<title> 
@@ -69,10 +88,33 @@ For more information, please refer to [http://unlicense.org/].
 	</title> 
 </head>
 <body>
-	<p>Welcome to Learning with Texts documentation pages!<br />Documentation is splitted in different parts due to the diversity of the sources.</p>
+	<p>
+		Welcome to Learning with Texts documentation pages!
+		<br />
+		Documentation is splitted in different parts due to the diversity of the sources.
+	</p>
 	<ul>
-		<li>General Documentation is <a href="./info.html">here</a>.</li>
-    	<li>Please see the Code Documentation <a href="html/index.html">here</a>.</li>
-    	<li>If you are viewing this file in a running LWT Server, you can <a href="../index.php">return to the LWT App</a>.</li>
+		<li>
+			The General Documentation and Explanations are at <a href="./info.html">info.html</a>.
+		</li>
+    	<li>
+			Please see the PHP Documentation at <a href="php/index.html">php/index.html</a>, 
+			it is generated with <a href="https://phpdoc.org/">phpDocumentor</a>.
+		</li>
+    	<li>
+			Please see the JS Documentation at <a href="js/index.html">js/index.html</a>, 
+			it is generated with <a href="https://jsdoc.app/">JSDoc</a>.
+		</li>
+    	<li>
+			There also a Doxygen Documentation at <a href="html/index.html">html/index.html</a>. 
+			It contains both a PHP documentation (will be removed in a future version)
+		</li>
     </ul>
+	<p>
+		Feel free to reach me on <a href="https://github.com/hugofara/lwt">GitHub</a> 
+		or the Discord for any documentation issue, question, or anything.
+		<br /> 
+		If you are viewing this file in a running LWT Server, 
+		you can <a href="../index.php">return to the LWT App</a>.
+	</p>
 </body>

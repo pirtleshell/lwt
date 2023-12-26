@@ -10,6 +10,9 @@
  *              ... tid=[textid]&ord=[textpos]&wid=[wordid] ... edit  
  *              ... tid=[textid]&ord=[textpos]&txt=[word] ... new or edit
  * 
+ * PHP version 8.1
+ * 
+ * @category Helper_Frame
  * @package Lwt
  * @author  LWT Project <lwt-project@hotmail.com>
  * @license Unlicense <http://unlicense.org/>
@@ -23,12 +26,12 @@ require_once 'inc/classes/Term.php';
 
 /**
  * Export term data as a JSON dictionnary.
- * 
- * @return string JSON dictionnary. 
+ *
+ * @return string JSON dictionnary.
  */
-function export_term_js_dict($term) 
+function export_term_js_dict($term): string 
 {
-    return json_encode(
+    $raw_answer = json_encode(
         array(
             "woid" => $term->id,
             "text" =>  $term->text,
@@ -39,6 +42,13 @@ function export_term_js_dict($term)
             "status" => $term->status
         )
     );
+    if ($raw_answer === false) {
+        $raw_answer = json_encode(array("error" => "Unable to return data."));
+        if ($raw_answer === false) {
+            my_die("Unable to return data");
+        }
+    }
+    return $raw_answer;
 }
 
 /**
@@ -60,7 +70,7 @@ function edit_mword_prepare_term()
         echo '<h1>' . $titletext . '</h1>';
         $message = 'Error: Term in lowercase must be exactly = "' . $textlc . 
         '", please go back and correct this!';
-        echo error_message_with_hide($message, 0);
+        echo error_message_with_hide($message, false);
         pageend();
         exit();
     }
@@ -146,7 +156,7 @@ function edit_mword_do_insert($term)
             convert_string_to_sqlsyntax($term->translation) . ', ' .
             convert_string_to_sqlsyntax(repl_tab_nl($term->sentence)) . ', ' .
             convert_string_to_sqlsyntax($term->roman) . ', ' . 
-            convert_string_to_sqlsyntax($term->wordcount) . ', 
+            $term->wordcount . ', 
             NOW(), ' .  
             make_score_random_insert_update('id') . 
         ')', 
@@ -291,8 +301,8 @@ function edit_mword_update($wid, $tid, $ord)
     if (!$record) {
         my_die("Cannot access Term and Language in edit_mword.php");
     }
-    $term->text = $record['WoText'];
-    $term->lgid = $record['WoLgID'];
+    $term->text = (string) $record['WoText'];
+    $term->lgid = (int) $record['WoLgID'];
     mysqli_free_result($res);
     $term->textlc = mb_strtolower($term->text, 'UTF-8');
     edit_mword_display_change($term, $tid, $ord);
@@ -380,7 +390,10 @@ function edit_mword_display_new($term, $tid, $ord, $len)
         </tr>
         <tr>
             <td class="td1 right" colspan="2">
-                <?php echo createDictLinksInEditWin($term->lgid, $term->text, 'document.forms[0].WoSentence', isset($_GET['nodict'])?0:1); ?>
+                <?php echo createDictLinksInEditWin(
+                    $term->lgid, $term->text, 'document.forms[0].WoSentence', 
+                    !isset($_GET['nodict'])
+                ); ?>
                 &nbsp; &nbsp; &nbsp; 
                 <input type="submit" name="op" value="Save" />
             </td>
@@ -499,7 +512,10 @@ function edit_mword_display_change($term, $tid, $ord)
         </tr>
         <tr>
             <td class="td1 right" colspan="2">
-                <?php echo createDictLinksInEditWin($term->lgid, $term->text, 'document.forms[0].WoSentence', isset($_GET['nodict'])?0:1); ?>
+                <?php echo createDictLinksInEditWin(
+                    $term->lgid, $term->text, 'document.forms[0].WoSentence', 
+                    !isset($_GET['nodict'])
+                ); ?>
                 &nbsp; &nbsp; &nbsp; 
                 <input type="submit" name="op" value="Change" />
             </td>
@@ -549,7 +565,8 @@ function edit_mword_page()
             // edit_mword.php?tid=..&ord=..&txt=.. for new multi-word 
             pagestart_nobody("New Term: " . getreq('txt'));
             edit_mword_new(
-                getreq('txt'), (int) getreq('tid'), getreq('ord'), getreq('len')
+                getreq('txt'), (int) getreq('tid'), (int) getreq('ord'), 
+                (int) getreq('len')
             );
         } else {
             // edit_mword.php?tid=..&ord=..&wid=.. for multi-word edit.
@@ -558,7 +575,7 @@ function edit_mword_page()
             );
             pagestart_nobody("Edit Term: " . $text);
             edit_mword_update(
-                (int) $str_id, (int) getreq('tid'), getreq('ord')
+                (int) $str_id, (int) getreq('tid'), (int) getreq('ord')
             );
         }
     }

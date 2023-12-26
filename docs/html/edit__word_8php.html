@@ -22,7 +22,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="lwt_icon.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Learning with Texts - Fork<span id="projectnumber">&#160;2.8.1-fork</span>
+   <div id="projectname">Learning with Texts - Fork<span id="projectnumber">&#160;2.9.0-fork</span>
    </div>
    <div id="projectbrief">Learn foreign languages with texts</div>
   </td>
@@ -72,8 +72,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#func-members">Functions</a> &#124;
-<a href="#var-members">Variables</a>  </div>
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">edit_word.php File Reference</div></div>
 </div><!--header-->
 <div class="contents">
@@ -94,23 +93,15 @@ Functions</h2></td></tr>
 <tr class="memitem:aff0a37a6cc14613856844058f7f07f2c"><td class="memItemLeft" align="right" valign="top"><a id="aff0a37a6cc14613856844058f7f07f2c" name="aff0a37a6cc14613856844058f7f07f2c"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>edit_word_do_operation</b> ($translation, $fromAnn)</td></tr>
 <tr class="separator:aff0a37a6cc14613856844058f7f07f2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaad21b4cd7e6fcde4aa09a438d54605e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="edit__word_8php.html#aaad21b4cd7e6fcde4aa09a438d54605e">edit_word_do_form</a> ($fromAnn)</td></tr>
-<tr class="separator:aaad21b4cd7e6fcde4aa09a438d54605e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:ab532864a04ddf7f1964806d6f1755ef6"><td class="memItemLeft" align="right" valign="top"><a id="ab532864a04ddf7f1964806d6f1755ef6" name="ab532864a04ddf7f1964806d6f1755ef6"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>$translation_raw</b> = <a class="el" href="session__utility_8php.html#a90041847911a29c74820f432a2ed1663">repl_tab_nl</a>(<a class="el" href="kernel__utility_8php.html#ac115eb0ce0c99aef0bc68dc184a491d6">getreq</a>(&quot;WoTranslation&quot;))</td></tr>
-<tr class="separator:ab532864a04ddf7f1964806d6f1755ef6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9af791c89a65404f1f6fa3ee4b93ec1d"><td class="memItemLeft" align="right" valign="top">if($translation_raw=='')&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="edit__word_8php.html#a9af791c89a65404f1f6fa3ee4b93ec1d">else</a></td></tr>
-<tr class="separator:a9af791c89a65404f1f6fa3ee4b93ec1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a56ffa26b39863329b79a64ef560538df"><td class="memItemLeft" align="right" valign="top"><a id="a56ffa26b39863329b79a64ef560538df" name="a56ffa26b39863329b79a64ef560538df"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>$fromAnn</b> = <a class="el" href="kernel__utility_8php.html#ac115eb0ce0c99aef0bc68dc184a491d6">getreq</a>(&quot;fromAnn&quot;)</td></tr>
-<tr class="separator:a56ffa26b39863329b79a64ef560538df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a33a1bad624f8db2367a370f835f1f506"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="edit__word_8php.html#a33a1bad624f8db2367a370f835f1f506">edit_word_do_form</a> ($wid, $text_id, $ord, $fromAnn)</td></tr>
+<tr class="separator:a33a1bad624f8db2367a370f835f1f506"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a746e59f94aa1a1b579dfeea3d49c2639"><td class="memItemLeft" align="right" valign="top"><a id="a746e59f94aa1a1b579dfeea3d49c2639" name="a746e59f94aa1a1b579dfeea3d49c2639"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>do_content</b> ()</td></tr>
+<tr class="separator:a746e59f94aa1a1b579dfeea3d49c2639"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Create or edit single word. </p>
-<p>Call: <a class="el" href="edit__word_8php.html" title="Create or edit single word.">edit_word.php</a>?.... ... op=Save ... do insert new ... op=Change ... do update ... fromAnn=recno ... calling from impr. annotation editing ... tid=[textid]&amp;ord=[textpos]&amp;wid= ... new word <br  />
+<p>Call: <a class="el" href="edit__word_8php.html" title="Create or edit single word.">edit_word.php</a>?.... ... op=Save ... do insert new ... op=Change ... do update ... fromAnn=recno&amp;tid=[textid]&amp;ord=[textpos] ... calling from impr. annotation editing ... tid=[textid]&amp;ord=[textpos]&amp;wid= ... new word <br  />
  ... tid=[textid]&amp;ord=[textpos]&amp;wid=[wordid] ... edit word</p>
 <dl class="section since"><dt>Since</dt><dd>1.0.3 </dd></dl>
 <dl class="section author"><dt>Author</dt><dd>LWT Project <a href="#" onclick="location.href='mai'+'lto:'+'lwt'+'-p'+'roj'+'ec'+'t@h'+'ot'+'mai'+'l.'+'com'; return false;">lwt-p<span class="obfuscator">.nosp@m.</span>roje<span class="obfuscator">.nosp@m.</span>ct@ho<span class="obfuscator">.nosp@m.</span>tmai<span class="obfuscator">.nosp@m.</span>l.com</a> </dd></dl>
@@ -176,8 +167,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="aaad21b4cd7e6fcde4aa09a438d54605e" name="aaad21b4cd7e6fcde4aa09a438d54605e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaad21b4cd7e6fcde4aa09a438d54605e">&#9670;&#160;</a></span>edit_word_do_form()</h2>
+<a id="a33a1bad624f8db2367a370f835f1f506" name="a33a1bad624f8db2367a370f835f1f506"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a33a1bad624f8db2367a370f835f1f506">&#9670;&#160;</a></span>edit_word_do_form()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -186,8 +177,30 @@ Variables</h2></td></tr>
           <td class="memname">edit_word_do_form </td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>$fromAnn</em></td><td>)</td>
+          <td class="paramname"><em>$wid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$text_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$ord</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$fromAnn</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -256,23 +269,6 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-</div>
-</div>
-<h2 class="groupheader">Variable Documentation</h2>
-<a id="a9af791c89a65404f1f6fa3ee4b93ec1d" name="a9af791c89a65404f1f6fa3ee4b93ec1d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9af791c89a65404f1f6fa3ee4b93ec1d">&#9670;&#160;</a></span>else</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">if (isset( $_REQUEST[ 'op'])) else</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">{ </div>
-<div class="line">    $translation = $translation_raw</div>
-</div><!-- fragment -->
 </div>
 </div>
 </div><!-- contents -->

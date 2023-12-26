@@ -28,7 +28,7 @@ require_once __DIR__ . '/session_utility.php';
 function save_impr_text_data($textid, $line, $val): string
 {
     global $tbpref;
-    $ann = get_first_value(
+    $ann = (string) get_first_value(
         "SELECT TxAnnotatedText AS value 
         FROM {$tbpref}texts 
         WHERE TxID = $textid"
@@ -81,12 +81,14 @@ function do_ajax_save_impr_text($textid, $elem, $data): string
 
 /**
  * Save a text with improved annotations.
- * 
+ *
  * @param int    $textid Text ID
  * @param string $elem   Element to select
  * @param mixed  $data   Data element
- * 
+ *
  * @return string[] Result as array, with answer on "error" or "success"
+ *
+ * @psalm-return array{error?: string, success?: 'OK'}
  */
 function save_impr_text($textid, $elem, $data): array 
 {

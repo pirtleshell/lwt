@@ -36,23 +36,25 @@ function make_trans($i, $wid, $trans, $word, $lang): string
     $widset = is_numeric($wid);
     $r = "";
     if ($widset) {
-        $alltrans = get_first_value(
+        $alltrans = (string) get_first_value(
             "SELECT WoTranslation AS value FROM {$tbpref}words 
             WHERE WoID = $wid"
         );
         $transarr = preg_split('/[' . get_sepas()  . ']/u', $alltrans);
         $set = false;
+        $set_default = true;
         foreach ($transarr as $t) {
             $tt = trim($t);
             if ($tt == '*' || $tt == '') { 
                 continue; 
             }
+            $set_default = false;
             // true if the translation should be checked (this translation is set)
-            $set = $tt == $trans && !$set;
+            $set = $set || $tt == $trans;
             // Add a candidate annotation
             $r .= '<span class="nowrap">
                 <input class="impr-ann-radio" ' . 
-                ($set ? 'checked="checked" ' : '') . 'type="radio" name="rg' . 
+                ($tt == $trans ? 'checked="checked" ' : '') . 'type="radio" name="rg' . 
                 $i . '" value="' . tohtml($tt) . '" /> 
                 &nbsp;' . tohtml($tt) . '
             </span>
@@ -61,9 +63,7 @@ function make_trans($i, $wid, $trans, $word, $lang): string
         ;
     } 
     // Set the empty translation if no translation have been set yet
-    if (!isset($set) || !$set) {
-        $set = true;
-    }
+    $set = $set || $set_default;
     // Empty radio button and text field after the list of translations
     $r .= '<span class="nowrap">
     <input class="impr-ann-radio" type="radio" name="rg' . $i . '" ' . 
@@ -87,13 +87,13 @@ function make_trans($i, $wid, $trans, $word, $lang): string
         '<img class="click" src="icn/plus-button.png" 
         title="Save another translation to existent term" 
         alt="Save another translation to existent term" 
-        onclick="addTermTranslation(' . $wid . ', \'#tx' . $i . '\',\'\',' . $lang . ');" />'; 
+        onclick="updateTermTranslation(' . $wid . ', \'#tx' . $i . '\');" />'; 
     } else { 
         $r .= 
         '<img class="click" src="icn/plus-button.png" 
         title="Save translation to new term" 
         alt="Save translation to new term" 
-        onclick="addTermTranslation(0, \'#tx' . $i . '\',' . prepare_textdata_js($word) . ',' . $lang . ');" />'; 
+        onclick="addTermTranslation(\'#tx' . $i . '\',' . prepare_textdata_js($word) . ',' . $lang . ');" />'; 
     }
     $r .= '&nbsp;&nbsp;
     <span id="wait' . $i . '">
@@ -103,15 +103,47 @@ function make_trans($i, $wid, $trans, $word, $lang): string
     return $r;
 }
 
+
+/**
+ * Find the possible translations for a term.
+ *
+ * @param int $word_id Term ID
+ *
+ * @return string[] Return the possible translations.
+ *
+ * @psalm-return list<non-empty-string>
+ */
+function get_translations($word_id): array
+{
+    global $tbpref;
+    $translations = array();
+    $alltrans = (string) get_first_value(
+        "SELECT WoTranslation AS value FROM {$tbpref}words 
+        WHERE WoID = $word_id"
+    );
+    $transarr = preg_split('/[' . get_sepas()  . ']/u', $alltrans);
+    foreach ($transarr as $t) {
+        $tt = trim($t);
+        if ($tt == '*' || $tt == '') { 
+            continue; 
+        }
+        $translations[] = $tt;
+    }
+    return $translations;
+}
+
+
 /**
  * Gather useful data to edit a term annotation on a specific text.
- * 
+ *
  * @param string $wordlc Term in lower case
  * @param int    $textid Text ID
- * 
- * @return array Return the useful data to edit a term annotation on a specific text
+ *
+ * @return (array|int|null|string)[] Return the useful data to edit a term annotation on a specific text.
+ *
+ * @psalm-return array{term_lc?: string, wid?: int|null, trans?: string, ann_index?: int<0, max>, term_ord?: int, translations?: array, lang_id?: int, error?: 'Annotation line is ill-formatted'|'Annotation not found'}
  */
-function get_term_translations($wordlc, $textid)
+function get_term_translations($wordlc, $textid): array
 {
     global $tbpref;
     $sql = "SELECT TxLgID, TxAnnotatedText 
@@ -125,6 +157,9 @@ function get_term_translations($wordlc, $textid)
     }
     mysqli_free_result($res);
     
+    /*
+    Unused as of LWT 2.9.0
+
     $textsize = (int)get_first_value(
         "SELECT LgTextSize AS value 
         FROM {$tbpref}languages WHERE LgID = $langid"
@@ -132,7 +167,9 @@ function get_term_translations($wordlc, $textid)
     if ($textsize > 100) { 
         $textsize = intval($textsize * 0.8); 
     }
+    */
     
+    // Get the first annotation containing the input word
     $annotations = preg_split('/[\n]/u', $ann);
     $i = -1;
     foreach (array_values($annotations) as $index => $annotation_line) {
@@ -152,74 +189,63 @@ function get_term_translations($wordlc, $textid)
         $i = $index;
         break;
     }
+
     $ann_data = array();
     if ($i == -1) {
         $ann_data["error"] = "Annotation not found";
         return $ann_data;
     }
+
+    // Get the line conatining the annotation
     $annotation_line = $annotations[$i];
     $vals = preg_split('/[\t]/u', $annotation_line);
+    if ($vals === false) {
+        $ann_data["error"] = "Annotation line is ill-formatted";
+        return $ann_data;
+    }
     $ann_data["term_lc"] = trim($wordlc);
     $ann_data["wid"] = null;
     $ann_data["trans"] = '';
     $ann_data["ann_index"] = $i;
     $ann_data["term_ord"] = (int)$vals[0];
     // Annotation should be in format "pos   term text   term ID    translation"
-    if (count($vals) > 2) {
-        // Word exists and has an ID
-        $wid = $vals[2];
-        if (is_numeric($wid)) {
-            $wid = (int)$wid;
-            $temp_wid = (int)get_first_value(
-                "SELECT COUNT(WoID) AS value 
-                FROM {$tbpref}words 
-                WHERE WoID = $wid"
-            );
-            if ($temp_wid < 1) { 
-                $wid = null; 
-            }
-        } else {
-            $wid = null;
+    $wid = null;
+    // Word exists and has an ID
+    if (count($vals) > 2 && ctype_digit($vals[2])) {
+        $wid = (int)$vals[2];
+        $temp_wid = (int)get_first_value(
+            "SELECT COUNT(WoID) AS value 
+            FROM {$tbpref}words 
+            WHERE WoID = $wid"
+        );
+        if ($temp_wid < 1) { 
+            $wid = null; 
         }
-    }
-    if (count($vals) > 3) {
-        $ann_data["trans"] = $vals[3];
     }
     if ($wid !== null) {
         $ann_data["wid"] = $wid;
+        // Add other translation choices
+        $ann_data["translations"] = get_translations($wid);
+    }
+    // Current translation
+    if (count($vals) > 3) {
+        $ann_data["trans"] = $vals[3];
     }
     $ann_data["lang_id"] = $langid;
-    // Add other translation choices
-    if ($wid !== null) {
-        $translations = array();
-        $alltrans = get_first_value(
-            "SELECT WoTranslation AS value FROM {$tbpref}words 
-            WHERE WoID = $wid"
-        );
-        $transarr = preg_split('/[' . get_sepas()  . ']/u', $alltrans);
-        foreach ($transarr as $t) {
-            $tt = trim($t);
-            if ($tt == '*' || $tt == '') { 
-                continue; 
-            }
-            $translations[] = $tt;
-        }
-        $ann_data["translations"] = $translations;
-    }
     return $ann_data;
 }
 
 /**
  * Prepare the HTML content for the interaction with a term
- * 
+ *
  * @param string $wordlc Term in lower case
  * @param int    $textid Text ID
- * 
+ *
  * @return string JS string of the different fields of the term
- * 
+ *
  * @deprecated 2.9.0 Use AJAX instead
  */
-function edit_term_interaction($wordlc, $textid)
+function edit_term_interaction($wordlc, $textid): string
 {
     $rr = "";
     $trans_data = get_term_translations($wordlc, $textid);
@@ -247,20 +273,20 @@ function edit_term_interaction($wordlc, $textid)
 
 /**
  * Full form for terms edition in a given text.
- * 
+ *
  * @param int $textid Text ID.
- * 
+ *
  * @return string HTML table for all terms
  */
-function edit_term_form($textid)
+function edit_term_form($textid): string
 {
     global $tbpref;
     $sql = "SELECT TxLgID, TxAnnotatedText 
     FROM {$tbpref}texts WHERE TxID = $textid";
     $res = do_mysqli_query($sql);
     $record = mysqli_fetch_assoc($res);
-    $langid = $record['TxLgID'];
-    $ann = $record['TxAnnotatedText'];
+    $langid = (int) $record['TxLgID'];
+    $ann = (string) $record['TxAnnotatedText'];
     if (strlen($ann) > 0) {
         $ann = recreate_save_ann($textid, $ann);
     }
@@ -310,8 +336,8 @@ function edit_term_form($textid)
             $wid = null;
             $trans = '';
             if (count($vals) > 2) {
-                $wid = $vals[2];
-                if (is_numeric($wid)) {
+                $str_wid = $vals[2];
+                if (is_numeric($str_wid)) {
                     $temp_wid = (int)get_first_value(
                         "SELECT COUNT(WoID) AS value 
                         FROM {$tbpref}words 
@@ -319,7 +345,11 @@ function edit_term_form($textid)
                     );
                     if ($temp_wid < 1) { 
                         $wid = null; 
+                    } else {
+                        $wid = (int) $str_wid;
                     }
+                } else {
+                    $wid = null;
                 }
             }
             if (count($vals) > 3) { 
@@ -398,8 +428,7 @@ function edit_term_form($textid)
  *
  * @global string $tbpref Database table prefix.
  *
- * @psalm-return array{0: string, 1: string}
- * 
+ * @psalm-return list{string, string}
  * @deprecated 2.9.0 Use AJAX instead 
  */
 function make_form($textid, $wordlc): array
@@ -409,8 +438,8 @@ function make_form($textid, $wordlc): array
     FROM ' . $tbpref . 'texts WHERE TxID = ' . $textid;
     $res = do_mysqli_query($sql);
     $record = mysqli_fetch_assoc($res);
-    $langid = $record['TxLgID'];
-    $ann = $record['TxAnnotatedText'];
+    $langid = (int) $record['TxLgID'];
+    $ann = (string) $record['TxAnnotatedText'];
     if (strlen($ann) > 0) {
         $ann = recreate_save_ann($textid, $ann);
     }
@@ -463,16 +492,20 @@ function make_form($textid, $wordlc): array
             $wid = null;
             $trans = '';
             if (count($vals) > 2) {
-                $wid = $vals[2];
-                if (is_numeric($wid)) {
+                $str_wid = $vals[2];
+                if (is_numeric($str_wid)) {
                     $temp_wid = (int)get_first_value(
                         "SELECT COUNT(WoID) AS value 
-                        FROM " . $tbpref . "words 
-                        WHERE WoID = ". $wid
+                        FROM {$tbpref}words 
+                        WHERE WoID = $str_wid"
                     );
                     if ($temp_wid < 1) { 
                         $wid = null; 
+                    } else {
+                        $wid = (int) $str_wid;
                     }
+                } else {
+                    $wid = null;
                 }
             }
             if (count($vals) > 3) { 

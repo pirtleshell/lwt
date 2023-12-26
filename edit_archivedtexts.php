@@ -1,41 +1,47 @@
 <?php
 
-
-/***
-Manage archived texts
-
-Call: edit_archivedtexts.php?....
-      ... markaction=[opcode] ... do actions on marked texts
-      ... del=[textid] ... do delete
-      ... unarch=[textid] ... do unarchive
-      ... op=Change ... do update
-      ... chg=[textid] ... display edit screen 
-      ... filterlang=[langid] ... language filter 
-      ... sort=[sortcode] ... sort 
-      ... page=[pageno] ... page  
-      ... query=[titlefilter] ... title filter   
+/*
+ * Manage archived texts
+ * 
+ * Call: edit_archivedtexts.php?....
+ *  ... markaction=[opcode] ... do actions on marked texts
+ *  ... del=[textid] ... do delete
+ *  ... unarch=[textid] ... do unarchive
+ *  ... op=Change ... do update
+ *  ... chg=[textid] ... display edit screen 
+ *  ... filterlang=[langid] ... language filter 
+ *  ... sort=[sortcode] ... sort 
+ *  ... page=[pageno] ... page  
+ *  ... query=[titlefilter] ... title filter
+ * 
+ * PHP version 8.1
+ * 
+ * @category User_Interface
+ * @package Lwt
  */
 
 require_once 'inc/session_utility.php';
 
-$currentlang = validateLang(processDBParam("filterlang", 'currentlanguage', '', 0));
-$currentsort = processDBParam("sort", 'currentarchivesort', '1', 1);
+$currentlang = validateLang((string) processDBParam("filterlang", 'currentlanguage', '', false));
+$currentsort = (int) processDBParam("sort", 'currentarchivesort', '1', true);
 
-$currentpage = processSessParam("page", "currentarchivepage", '1', 1);
-$currentquery = processSessParam("query", "currentarchivequery", '', 0);
-$currentquerymode = processSessParam(
-    "query_mode", "currentarchivequerymode", 'title,text', 0
+$currentpage = (int) processSessParam("page", "currentarchivepage", '1', true);
+$currentquery = (string) processSessParam("query", "currentarchivequery", '', false);
+$currentquerymode = (string) processSessParam(
+    "query_mode", "currentarchivequerymode", 'title,text', false
 );
 $currentregexmode = getSettingWithDefault("set-regex-mode");
 $currenttag1 = validateArchTextTag(
-    processSessParam("tag1", "currentarchivetexttag1", '', 0), 
+    (string) processSessParam("tag1", "currentarchivetexttag1", '', false), 
     $currentlang
 );
 $currenttag2 = validateArchTextTag(
-    processSessParam("tag2", "currentarchivetexttag2", '', 0), 
+    (string) processSessParam("tag2", "currentarchivetexttag2", '', false), 
     $currentlang
 );
-$currenttag12 = processSessParam("tag12", "currentarchivetexttag12", '', 0);
+$currenttag12 = (string) processSessParam(
+    "tag12", "currentarchivetexttag12", '', false
+);
 
 $wh_lang = ($currentlang != '') ? (' and AtLgID=' . $currentlang) : '';
 $wh_query = $currentregexmode . 'LIKE ' .  
@@ -66,7 +72,7 @@ if ($currentquery!=='') {
             $wh_query = '';
             unset($_SESSION['currentwordquery']);
             if(isset($_REQUEST['query'])) { 
-                echo '<p id="hide3" style="color:red;text-align:center;">' + 
+                echo '<p id="hide3" style="color:red;text-align:center;">' .
                 '+++ Warning: Invalid Search +++</p>'; 
             }
         }
@@ -371,7 +377,7 @@ if (isset($_REQUEST['chg'])) {
         <tr>
             <td class="td1 right">Tags:</td>
             <td class="td1">
-                <?php echo getArchivedTextTags($_REQUEST['chg']); ?>
+                <?php echo getArchivedTextTags((int) $_REQUEST['chg']); ?>
             </td>
         </tr>
         <tr>
@@ -398,7 +404,7 @@ if (isset($_REQUEST['chg'])) {
 } else {
     // DISPLAY
 
-    echo error_message_with_hide($message, 0);
+    echo error_message_with_hide($message, false);
 
     $sql = 'select count(*) as value from (select AtID 
     from (

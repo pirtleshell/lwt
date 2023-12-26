@@ -6,6 +6,8 @@
  * 
  * Call: do_text_header.php?text=[textid]
  * 
+ * PHP version 8.1
+ * 
  * @package Lwt
  * @author  LWT Project <lwt-project@hotmail.com>
  * @license Unlicense <http://unlicense.org/>
@@ -20,7 +22,7 @@ require_once 'inc/langdefs.php' ;
 /**
  * Get the text and language data associated with the text.
  *
- * @param string $textid ID of the text
+ * @param string|int $textid ID of the text
  *
  * @global string $tbpref Table name prefix
  *
@@ -125,7 +127,7 @@ function do_title($title, $sourceURI): void
 /**
  * Prepare user settings for this text.
  *
- * @param string $textid Text ID
+ * @param string|int $textid Text ID
  *
  * @since 2.0.4-fork
  */
@@ -168,23 +170,21 @@ function do_settings($textid): void
  * @param string $text         Text to read
  * @param string $languageName Full name of the language (i. e.: "English")
  *
- * @global array $langDefs Definition of all languages. Normally $langDefs[$languageName][1] -> $languageCode
- *
+ * @global string $tbpref
+ * 
  * @since 2.0.3-fork
+ * @since 2.9.1-fork Function may work even when the language name was manually changed.
  */
 function browser_tts($text, $languageName): void
 {
-    global $langDefs;
-
-    /** 
-     * @var string $languageCode BCP 47 convention (i. e.: en-US) is suggested.
-     * Two-letter language code is enough (i. e. "en") 
-     */
-    $languageCode = $langDefs[$languageName][1];
-    /**
-    * @var string $phoneticText 
-    * Phonetic reading for this text 
-    */
+    global $tbpref;
+    $lg_id = (int) get_first_value(
+        "SELECT LgID as value 
+        FROM {$tbpref}languages 
+        WHERE LgName = " . convert_string_to_sqlsyntax($languageName)
+    );
+    $languageCode = getLanguageCode($lg_id, LWT_LANGUAGES_ARRAY);
+    // Phonetic reading for this text
     $phoneticText = phonetic_reading($text, $languageCode);
     ?>
 <script type="text/javascript">
@@ -245,37 +245,34 @@ function browser_tts($text, $languageName): void
 /**
  * Save the position of the audio reading for a text.
  *
- * @param string $textid ID of the text
+ * @param string|int $textid ID of the text
  *
  * @since 2.0.4-fork
  */
 function save_audio_position($textid): void
 {
+    if (is_string($textid)) {
+        $textid_int = (int) $textid;
+    } else {
+        $textid_int = $textid;
+    }
     ?>
 
 <script type="text/javascript">
     /**
-     * Save audio position
+     * Save text status, for instance audio position
      */
-    function saveAudioPosition() {
+    function saveTextStatus() {
+        // Save audio if present 
         if ($("#jquery_jplayer_1") === null || $("#jquery_jplayer_1").length == 0) {
             return;
         }
-        var pos = $("#jquery_jplayer_1").data("jPlayer").status.currentTime;
-        $.ajax({
-            type: "POST",
-            url:'inc/ajax.php', 
-            data: {
-                action: "reading_position",
-                action_type: "audio",
-                tid: '<?php echo $textid; ?>', 
-                audio_position: pos
-            }, 
-            async: false // Asynchronous should be safe (2.9.0)
-        });
+        const pos = $("#jquery_jplayer_1").data("jPlayer").status.currentTime;
+        const text_id = <?php echo $textid_int; ?>;
+        saveAudioPosition(text_id, pos);
     }
 
-    $(window).on('beforeunload', saveAudioPosition);
+    $(window).on('beforeunload', saveTextStatus);
 
     // We need to capture the text-to-speach event manually for Chrome
     $(document).ready(function() {
@@ -288,8 +285,8 @@ function save_audio_position($textid): void
 /**
  * Main function for displaying header. It will print HTML content.
  *
- * @param string $textid    ID of the requiered text
- * @param bool   $only_body If true, only show the inner body. If false, create a 
+ * @param string|int $textid    ID of the required text
+ * @param bool       $only_body If true, only show the inner body. If false, create a 
  *                          complete HTML document.
  *
  * @since 2.0.3-fork
@@ -297,9 +294,10 @@ function save_audio_position($textid): void
 function do_text_header_content($textid, $only_body=true): void
 {
     $record = getData($textid);
-    $title = $record['TxTitle'];
-    $media = $record['TxAudioURI'];
-    if (!isset($media)) { 
+    $title = (string) $record['TxTitle'];
+    if (isset($record['TxAudioURI'])) {
+        $media = (string) $record['TxAudioURI'];
+    } else { 
         $media = '';
     }
     $media = trim($media);
@@ -310,19 +308,15 @@ function do_text_header_content($textid, $only_body=true): void
     if (!$only_body) {
         pagestart_nobody($title, 'html, body {margin-bottom:0;}');
     }
-    save_audio_position($textid);
+    save_audio_position((int) $textid);
     do_header_row((int) $textid, $record['TxLgID']);
     do_title($title, $record['TxSourceURI']);
     do_settings($textid);
-    makeMediaPlayer($media, $record['TxAudioPosition']);
+    makeMediaPlayer($media, (int) $record['TxAudioPosition']);
     browser_tts($record["TxText"], $record["LgName"]);
     if (!$only_body) {
         pageend();
     }
 }
 
-// Show the content automatically if text is in the request
-if (false && getreq('text')) {
-    do_text_header_content(getreq('text'), false);
-}
 ?>

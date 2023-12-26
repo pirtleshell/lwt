@@ -1,9 +1,14 @@
 <?php
 
-/**************************************************************
-Call: statistics.php
-Display statistics
- ***************************************************************/
+/*
+ * Display statistics
+ * 
+ * Call: statistics.php
+ * 
+ * PHP version 8.1
+ * 
+ * @category User_Interface
+ */
 
 namespace Lwt\Interface\Statistics;
 

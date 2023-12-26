@@ -22,7 +22,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="lwt_icon.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Learning with Texts - Fork<span id="projectnumber">&#160;2.8.1-fork</span>
+   <div id="projectname">Learning with Texts - Fork<span id="projectnumber">&#160;2.9.0-fork</span>
    </div>
    <div id="projectbrief">Learn foreign languages with texts</div>
   </td>
@@ -73,12 +73,13 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#namespaces">Namespaces</a> &#124;
+<a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">check_text.php File Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>Check (parse &amp; split) a Text (into sentences/words)  
+<p>Check (parse &amp; split) a <a class="el" href="class_text.html">Text</a> (into sentences/words)  
 <a href="#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
@@ -86,16 +87,100 @@ Namespaces</h2></td></tr>
 <tr class="memitem:namespace_lwt"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_lwt.html">Lwt</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ac88e530fa829260b0fb5a1460d2bbc3c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="check__text_8php.html#ac88e530fa829260b0fb5a1460d2bbc3c">do_operation</a> ($text, $lgid)</td></tr>
+<tr class="separator:ac88e530fa829260b0fb5a1460d2bbc3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2920939de4f85e348ae543485dacce3e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="check__text_8php.html#a2920939de4f85e348ae543485dacce3e">display_form</a> ()</td></tr>
+<tr class="separator:a2920939de4f85e348ae543485dacce3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a9af791c89a65404f1f6fa3ee4b93ec1d"><td class="memItemLeft" align="right" valign="top"><a id="a9af791c89a65404f1f6fa3ee4b93ec1d" name="a9af791c89a65404f1f6fa3ee4b93ec1d"></a>
-if(isset($_REQUEST['op']))&#160;</td><td class="memItemRight" valign="bottom"><b>else</b> {</td></tr>
+<tr class="memitem:a9af791c89a65404f1f6fa3ee4b93ec1d"><td class="memItemLeft" align="right" valign="top">if(isset($_REQUEST['op']))&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="check__text_8php.html#a9af791c89a65404f1f6fa3ee4b93ec1d">else</a></td></tr>
 <tr class="separator:a9af791c89a65404f1f6fa3ee4b93ec1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Check (parse &amp; split) a Text (into sentences/words) </p>
+<div class="textblock"><p>Check (parse &amp; split) a <a class="el" href="class_text.html">Text</a> (into sentences/words) </p>
 <p>Call: <a class="el" href="check__text_8php.html" title="Check (parse &amp; split) a Text (into sentences/words)">check_text.php</a>?... op=Check ... do the check </p>
-</div></div><!-- contents -->
+</div><h2 class="groupheader">Function Documentation</h2>
+<a id="a2920939de4f85e348ae543485dacce3e" name="a2920939de4f85e348ae543485dacce3e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2920939de4f85e348ae543485dacce3e">&#9670;&#160;</a></span>display_form()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">display_form </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Display the main form for the check text page.</p>
+<p>@global string $tbpref</p>
+<dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
+<p>Change the language of inputs for text and title based on selected language.</p>
+<dl class="section return"><dt>Returns</dt><dd>undefined</dd></dl>
+
+</div>
+</div>
+<a id="ac88e530fa829260b0fb5a1460d2bbc3c" name="ac88e530fa829260b0fb5a1460d2bbc3c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac88e530fa829260b0fb5a1460d2bbc3c">&#9670;&#160;</a></span>do_operation()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">do_operation </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$text</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$lgid</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Do the check text operation.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">string</td><td class="paramname">$text</td><td><a class="el" href="class_text.html">Text</a> to check. </td></tr>
+    <tr><td class="paramtype">int</td><td class="paramname">$lgid</td><td><a class="el" href="class_language.html">Language</a> ID.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
+
+</div>
+</div>
+<h2 class="groupheader">Variable Documentation</h2>
+<a id="a9af791c89a65404f1f6fa3ee4b93ec1d" name="a9af791c89a65404f1f6fa3ee4b93ec1d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9af791c89a65404f1f6fa3ee4b93ec1d">&#9670;&#160;</a></span>else</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">if (isset( $_REQUEST[ 'op'])) else</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">{</div>
+<div class="line">    <a class="code hl_function" href="check__text_8php.html#a2920939de4f85e348ae543485dacce3e">display_form</a>()</div>
+<div class="ttc" id="acheck__text_8php_html_a2920939de4f85e348ae543485dacce3e"><div class="ttname"><a href="check__text_8php.html#a2920939de4f85e348ae543485dacce3e">Lwt\Interface\Check_Text\display_form</a></div><div class="ttdeci">display_form()</div><div class="ttdef"><b>Definition:</b> check_text.php:47</div></div>
+</div><!-- fragment -->
+</div>
+</div>
+</div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.6

@@ -11,6 +11,9 @@
  * Call: do_test.php?type=table for a table of words
  * Call: do_test.php?type=[1-5] for a test of words.
  * 
+ * PHP version 8.1
+ * 
+ * @category User_Interface
  * @package Lwt
  * @author  LWT Project <lwt-project@hotmail.com>
  * @license Unlicense <http://unlicense.org/>
@@ -134,11 +137,11 @@ function do_test_mobile_page($property=null)
         if (getreq('type') == 'table') {
             do_test_table();
         } else {
-            $test_sql = do_test_get_test_sql(
+            $identifier = do_test_get_identifier(
                 $_REQUEST['selection'] ?? null, $_SESSION['testsql'] ?? null, 
                 $_REQUEST['lang'] ?? null, $_REQUEST['text'] ?? null
             );
-            do_test_test_content_ajax($test_sql);
+            do_test_test_content_ajax($identifier[0], $identifier[1]);
         }
         ?>
     </div>
@@ -191,11 +194,11 @@ function do_test_desktop_page($property=null)
         if (getreq('type') == 'table') {
             do_test_table();
         } else {
-            $test_sql = do_test_get_test_sql(
+            $identifier = do_test_get_identifier(
                 $_REQUEST['selection'] ?? null, $_SESSION['testsql'] ?? null, 
                 $_REQUEST['lang'] ?? null, $_REQUEST['text'] ?? null
             );
-            do_test_test_content_ajax($test_sql);
+            do_test_test_content_ajax($identifier[0], $identifier[1]);
         }
         ?>
     </div>

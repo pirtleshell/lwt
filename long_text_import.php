@@ -7,6 +7,9 @@
  * Call: long_text_import.php?...
  *                          op=...
  * 
+ * PHP version 8.1
+ * 
+ * @category User_Interface
  * @package Lwt
  * @author  LWT Project <lwt-project@hotmail.com>
  * @license Unlicense <http://unlicense.org/>
@@ -26,11 +29,11 @@ require_once 'inc/session_utility.php';
 function long_text_check($max_input_vars): void
 {
         
-    $langid = $_REQUEST["LgID"];
-    $title = $_REQUEST["TxTitle"];
-    $paragraph_handling = (int)$_REQUEST["paragraph_handling"];
-    $maxsent = $_REQUEST["maxsent"];
-    $source_uri = $_REQUEST["TxSourceURI"];
+    $langid = (int) $_REQUEST["LgID"];
+    $title = (string) $_REQUEST["TxTitle"];
+    $paragraph_handling = (int) $_REQUEST["paragraph_handling"];
+    $maxsent = (int) $_REQUEST["maxsent"];
+    $source_uri = (string) $_REQUEST["TxSourceURI"];
     $texttags = null;
     if (isset($_REQUEST["TextTags"])) {
         $texttags = json_encode($_REQUEST["TextTags"]);
@@ -63,7 +66,7 @@ function long_text_check($max_input_vars): void
 
     if ($data == "") {
         $message = "Error: No text specified!";
-        echo error_message_with_hide($message, 0);
+        echo error_message_with_hide($message, false);
     } else {
         $sent_array = splitCheckText($data, $langid, -2);
         $texts = array();
@@ -94,7 +97,7 @@ function long_text_check($max_input_vars): void
             $message = "Error: Too many texts (" . $textcount . " > " . 
             ($max_input_vars-20) . 
             "). You must increase 'Maximum Sentences per Text'!";
-            echo error_message_with_hide($message, 0);
+            echo error_message_with_hide($message, false);
         } else {
 
             ?>
@@ -139,7 +142,9 @@ function long_text_check($max_input_vars): void
             Length:<br /><?php echo $bytes; ?><br />Bytes
         </td>
         <td class="td1">
-            <textarea readonly="readonly" <?php echo getScriptDirectionTag($langid); ?> name="text[<?php echo $textno; ?>]" cols="60" rows="10">
+            <textarea readonly="readonly" 
+            <?php echo getScriptDirectionTag($langid); ?> 
+            name="text[<?php echo $textno; ?>]" cols="60" rows="10">
                     <?php echo $textstring; ?>
             </textarea>
         </td>
@@ -202,7 +207,7 @@ function long_text_save(): void
         $message = $imported . " Text(s) imported!";
     }
     
-    echo error_message_with_hide($message, 0);
+    echo error_message_with_hide($message, false);
 
     ?>        
  <p>&nbsp;<br /><input type="button" value="Show Texts" onclick="location.href='edit_texts.php';" /></p>

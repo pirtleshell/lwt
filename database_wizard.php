@@ -6,9 +6,9 @@
  * 
  * Call: database_wizard.php
  * 
- * php version 8.1.0
+ * PHP version 8.1
  * 
- * @category Interface
+ * @category User_Interface
  * @package  Lwt
  * @author   HugoFara <hugo.farajallah@protonmail.com>
  * @license  Unlicense <http://unlicense.org/>
@@ -31,10 +31,25 @@ require_once 'inc/kernel_utility.php';
  */
 class Database_Connection
 {
+    /**
+     * @var string Server name
+     */
     public string $server;
+    /**
+     * @var string $userid User ID
+     */
     public string $userid;
+    /**
+     * @var string $passwd Password for this user
+     */
     public string $passwd;
+    /**
+     * @var string $dbname Database name
+     */
     public string $dbname;
+    /**
+     * @var string $socket Socket to use
+     */
     public string $socket;
 
     /**
@@ -77,10 +92,10 @@ class Database_Connection
 
     /**
      * Connection a PHP formatted string.
-     * 
+     *
      * @return string PHP string representing connection details
      */
-    public function getAsText()
+    public function getAsText(): string
     {
         return '<?php
 
@@ -125,12 +140,14 @@ function writeToFile($conn)
 function doOperation($op)
 {
     $message = null;
+    $dbname = null;
+    $passwd = null;
+    $server = null;
+    $socket = null;
+    $userid = null;
     if ($op == "Autocomplete") {
-        $server = $_SERVER['SERVER_ADDR'];
-        $userid = $_SERVER['SERVER_NAME']; 
-        $passwd = "";
-        $dbname = "";
-        $socket = "";
+        $_SERVER['SERVER_ADDR'];
+        $_SERVER['SERVER_NAME']; 
     } else if ($op == "Check") {
         //require_once 'inc/database_connect.php';
         $server = getreq("server"); 
@@ -166,11 +183,11 @@ function doOperation($op)
             }
         }
     } else if ($op == "Change") {
-        $server = getreq("server"); 
-        $userid = getreq("userid");
-        $passwd = getreq("passwd");
-        $dbname = getreq("dbname");
-        $socket = getreq("socket");
+        getreq("server"); 
+        getreq("userid");
+        getreq("passwd");
+        getreq("dbname");
+        getreq("socket");
     }
     $conn = new Database_Connection(
         $server, $userid, $passwd, $dbname, $socket
@@ -191,7 +208,7 @@ function doOperation($op)
  */
 function displayForm($conn, $error_message=null)
 {
-    pagestart_kernel_nobody("Database Connection Wizard", true);
+    pagestart_kernel_nobody("Database Connection Wizard");
     if ($error_message != null) {
         echo $error_message;
     }

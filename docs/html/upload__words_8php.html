@@ -22,7 +22,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="lwt_icon.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Learning with Texts - Fork<span id="projectnumber">&#160;2.8.1-fork</span>
+   <div id="projectname">Learning with Texts - Fork<span id="projectnumber">&#160;2.9.0-fork</span>
    </div>
    <div id="projectbrief">Learn foreign languages with texts</div>
   </td>
@@ -78,15 +78,26 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Import terms from file or Text area.  
+<p>Import terms from file or <a class="el" href="class_text.html">Text</a> area.  
 <a href="#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a61545539a192cfd7d8a9b4e47d0b4813"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="upload__words_8php.html#a61545539a192cfd7d8a9b4e47d0b4813">my_str_getcsv</a> ($input)</td></tr>
 <tr class="separator:a61545539a192cfd7d8a9b4e47d0b4813"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ee2c9b9f076de9ac386da7104797fbd"><td class="memItemLeft" align="right" valign="top"><a id="a3ee2c9b9f076de9ac386da7104797fbd" name="a3ee2c9b9f076de9ac386da7104797fbd"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>upload_words_import_simple</b> ( $lang, $fields, $columns, $tabs, $file_name, $status)</td></tr>
+<tr class="separator:a3ee2c9b9f076de9ac386da7104797fbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c017ff4ebcbde2ca472fa9982847a57"><td class="memItemLeft" align="right" valign="top"><a id="a9c017ff4ebcbde2ca472fa9982847a57" name="a9c017ff4ebcbde2ca472fa9982847a57"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>upload_words_import_complete</b> ( $lang, $fields, $columns, $tabs, $file_name, $status, $overwrite)</td></tr>
+<tr class="separator:a9c017ff4ebcbde2ca472fa9982847a57"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6165bafd97e9a6c4e8c9636bd84b5e4a"><td class="memItemLeft" align="right" valign="top"><a id="a6165bafd97e9a6c4e8c9636bd84b5e4a" name="a6165bafd97e9a6c4e8c9636bd84b5e4a"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>upload_words_handle_multiwords</b> ($lang, $last_update)</td></tr>
+<tr class="separator:a6165bafd97e9a6c4e8c9636bd84b5e4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2e235fca427e76a3e70f2aa2ed156652"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="upload__words_8php.html#a2e235fca427e76a3e70f2aa2ed156652">upload_words_import_terms</a> ($fields, $tabs, $file_upl, $col, $lang)</td></tr>
 <tr class="separator:a2e235fca427e76a3e70f2aa2ed156652"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7f7766c2daf99b2e85a4e86593134068"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="upload__words_8php.html#a7f7766c2daf99b2e85a4e86593134068">display_imported_terms</a> ($last_update, $rtl)</td></tr>
+<tr class="separator:a7f7766c2daf99b2e85a4e86593134068"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a24232747e3b16cc87c51434342d00c24"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="upload__words_8php.html#a24232747e3b16cc87c51434342d00c24">upload_words_import_tags</a> ($fields, $tabs, $file_upl)</td></tr>
 <tr class="separator:a24232747e3b16cc87c51434342d00c24"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a49aa13623696cfd6b1541544c64a459f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="upload__words_8php.html#a49aa13623696cfd6b1541544c64a459f">upload_words_import</a> ()</td></tr>
@@ -100,9 +111,74 @@ Variables</h2></td></tr>
 <tr class="separator:a9af791c89a65404f1f6fa3ee4b93ec1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Import terms from file or Text area. </p>
+<div class="textblock"><p>Import terms from file or <a class="el" href="class_text.html">Text</a> area. </p>
 <p>Call: <a class="el" href="upload__words_8php.html" title="Import terms from file or Text area.">upload_words.php</a>?.... ... op=Import ... do the import </p>
 </div><h2 class="groupheader">Function Documentation</h2>
+<a id="a7f7766c2daf99b2e85a4e86593134068" name="a7f7766c2daf99b2e85a4e86593134068"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7f7766c2daf99b2e85a4e86593134068">&#9670;&#160;</a></span>display_imported_terms()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">display_imported_terms </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$last_update</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$rtl</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Navigation header for the imported terms.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">{JSON}</td><td>data Data object for navigation. </td></tr>
+    <tr><td class="paramname">{string}</td><td>last_update Terms import timestamp for SQL </td></tr>
+    <tr><td class="paramname">{bool}</td><td>rtl If text is right-to-left</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>Create the rows with the imported terms.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">{JSON}</td><td>data Data object containing terms. </td></tr>
+    <tr><td class="paramname">{bool}</td><td>rtl If text is right-to-left.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>{string} HTML-formated rows to display</dd></dl>
+<p>Display page content based on raw server answer.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">{JSON}</td><td>data Data object for navigation. </td></tr>
+    <tr><td class="paramname">{string}</td><td>last_update Terms import timestamp for SQL </td></tr>
+    <tr><td class="paramname">{bool}</td><td>rtl If text is right-to-left</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>Show the terms imported.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">{string}</td><td>last_update Last update date in SQL compatible format </td></tr>
+    <tr><td class="paramname">{bool}</td><td>rtl If text is right-to-left </td></tr>
+    <tr><td class="paramname">{int}</td><td>count Number of terms imported </td></tr>
+    <tr><td class="paramname">{int}</td><td>page Current page number</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a61545539a192cfd7d8a9b4e47d0b4813" name="a61545539a192cfd7d8a9b4e47d0b4813"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a61545539a192cfd7d8a9b4e47d0b4813">&#9670;&#160;</a></span>my_str_getcsv()</h2>
 
@@ -126,7 +202,8 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>(null|string)[]|false|null</dd></dl>
-<p>@psalm-return false|non-empty-list&lt;null|string&gt;|null </p>
+<p>@psalm-return false|non-empty-list&lt;null|string&gt;|null</p>
+<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000038">Deprecated:</a></b></dt><dd>2.9.0 This function is no longer used and will be removed </dd></dl>
 
 </div>
 </div>
@@ -269,7 +346,7 @@ Variables</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>void</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>string Last word update timestamp</dd></dl>
 <p>@global string $tbpref Database table prefix </p>
 
 </div>
@@ -288,7 +365,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
 <div class="line">    <a class="code hl_function" href="upload__words_8php.html#a81ec76ce1786cd85859763198f443ab3">upload_words_display</a>()</div>
-<div class="ttc" id="aupload__words_8php_html_a81ec76ce1786cd85859763198f443ab3"><div class="ttname"><a href="upload__words_8php.html#a81ec76ce1786cd85859763198f443ab3">upload_words_display</a></div><div class="ttdeci">upload_words_display()</div><div class="ttdef"><b>Definition:</b> upload_words.php:721</div></div>
+<div class="ttc" id="aupload__words_8php_html_a81ec76ce1786cd85859763198f443ab3"><div class="ttname"><a href="upload__words_8php.html#a81ec76ce1786cd85859763198f443ab3">upload_words_display</a></div><div class="ttdeci">upload_words_display()</div><div class="ttdef"><b>Definition:</b> upload_words.php:968</div></div>
 </div><!-- fragment -->
 </div>
 </div>

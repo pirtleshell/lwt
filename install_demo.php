@@ -1,9 +1,12 @@
 <?php
 
-/**************************************************************
-Call: install_demo.php
-Install LWT Demo Database
- ***************************************************************/
+/*
+ * Install LWT Demo Database
+ * 
+ * Call: install_demo.php
+ * 
+ * PHP version 8.1
+ */
 
 require_once 'inc/session_utility.php';
 
@@ -40,7 +43,7 @@ if (isset($_REQUEST['install'])) {
 
 pagestart('Install LWT Demo Database', true);
 
-echo error_message_with_hide($message, 1);
+echo error_message_with_hide($message, true);
 
 $langcnt = get_first_value("SELECT COUNT(*) AS value FROM {$tbpref}languages");
 

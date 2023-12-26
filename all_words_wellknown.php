@@ -9,6 +9,9 @@
  *       all_words_wellknown.php?text=[textid]&status=[statusint] 
  *                              (mark with a specific status, normally 98 or 99)
  * 
+ * PHP version 8.1
+ * 
+ * @category Helper_Frame
  * @package Lwt
  * @author  LWT Project <lwt-project@hotmail.com>
  * @license Unlicense <http://unlicense.org/>
@@ -47,12 +50,12 @@ function all_words_wellknown_get_words($txid)
  * @param string $termlc Same as $term, but in lowercase.
  * @param int    $langid Language ID
  *
- * @return (int|string)[] Number of rows edited and a javascript query.
+ * @return array [int, string] Number of rows edited and a javascript query.
  *
  * @since 2.5.3-fork Do not crash when echoing an error
  * @since 2.5.3-fork Do not crash when a word is already registred to the database
  *
- * @psalm-return array{0: int, 1: string}
+ * @psalm-return list{int, string}
  */
 function all_words_wellknown_process_word($status, $term, $termlc, $langid): array
 {
@@ -109,11 +112,11 @@ function all_words_wellknown_process_word($status, $term, $termlc, $langid): arr
  * @param int $txid   Text ID
  * @param int $status New status to apply to all words.
  *
- * @return (int|string)[] Number of edited words, and JavaScript query to change their display
+ * @return array [int, string] Number of edited words, and JavaScript query to change their display
  *
  * @since 2.5.3-fork Use 'let' instead of 'var' in returned JS
  *
- * @psalm-return array{0: int, 1: string}
+ * @psalm-return list{int, string}
  */
 function all_words_wellknown_main_loop($txid, $status): array
 {
@@ -184,8 +187,8 @@ function all_words_wellknown_count_terms($status, $count)
 /**
  * Execute JavaScript to change the display of all words.
  * 
- * @param int $txid       Text ID
- * @param int $javascript JavaScript-formatted string.
+ * @param int    $txid       Text ID
+ * @param string $javascript JavaScript-formatted string.
  * 
  * @return void
  */

@@ -22,7 +22,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="lwt_icon.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Learning with Texts - Fork<span id="projectnumber">&#160;2.8.1-fork</span>
+   <div id="projectname">Learning with Texts - Fork<span id="projectnumber">&#160;2.9.0-fork</span>
    </div>
    <div id="projectbrief">Learn foreign languages with texts</div>
   </td>
@@ -152,7 +152,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>void</dd></dl>
-<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000014">Deprecated:</a></b></dt><dd>Use do_text_text_javascript instead. </dd></dl>
+<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000015">Deprecated:</a></b></dt><dd>Use do_text_text_javascript instead. </dd></dl>
 
 </div>
 </div>
@@ -180,6 +180,8 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
 <p>Map global variables as a JSON object</p>
+<p>Save the current reading position. @global {string} TID <a class="el" href="class_text.html">Text</a> ID</p>
+<dl class="section since"><dt>Since</dt><dd>2.0.3-fork</dd></dl>
 
 </div>
 </div>
@@ -225,7 +227,7 @@ Functions</h2></td></tr>
   <table class="params">
     <tr><td class="paramtype">int</td><td class="paramname">$showLearning</td><td>1 to show learning translations </td></tr>
     <tr><td class="paramtype"></td><td class="paramname">int&lt;1,4&gt;</td><td>$mode_trans Annotation position </td></tr>
-    <tr><td class="paramtype">int</td><td class="paramname">$textsize</td><td>Text font size </td></tr>
+    <tr><td class="paramtype">int</td><td class="paramname">$textsize</td><td><a class="el" href="class_text.html">Text</a> font size </td></tr>
     <tr><td class="paramtype">bool</td><td class="paramname">$ann_exist</td><td>Does annotations exist for this text</td></tr>
   </table>
   </dd>
@@ -375,7 +377,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section since"><dt>Since</dt><dd>2.2.1 Return 0 instead of a new value for $hideuntil</dd></dl>
-<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000007">Deprecated:</a></b></dt><dd>Use echo_term instead. </dd></dl>
+<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000008">Deprecated:</a></b></dt><dd>Use echo_term instead. </dd></dl>
 
 </div>
 </div>
@@ -459,7 +461,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>array{LgName: string, LgDict1URI: string, LgDict2URI: string, LgGoogleTranslateURI: string, LgTextSize: int, LgRemoveSpaces: int, LgRightToLeft: int}|false|null Record corresponding to this language.</dd></dl>
 <p>@global string $tbpref Table name prefix</p>
-<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000006">Deprecated:</a></b></dt><dd>Use get_language_settings instead.</dd></dl>
+<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000007">Deprecated:</a></b></dt><dd>Use get_language_settings instead.</dd></dl>
 <p>@psalm-return array&lt;string, float|int|null|string&gt;|false|null </p>
 
 </div>
@@ -488,7 +490,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>array{TxLgID: int, TxTitle: string, TxAnnotatedText: string, TxPosition: int}|false|null Record corresponding to this text.</dd></dl>
 <p>@global string $tbpref Table name prefix</p>
-<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000005">Deprecated:</a></b></dt><dd>Use get_text_data instead.</dd></dl>
+<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000006">Deprecated:</a></b></dt><dd>Use get_text_data instead.</dd></dl>
 <p>@psalm-return array&lt;string, float|int|null|string&gt;|false|null </p>
 
 </div>
@@ -539,7 +541,7 @@ Functions</h2></td></tr>
 <p>Process each text item (can be punction, term, etc...)</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramtype">array</td><td class="paramname">$record</td><td>Text item information </td></tr>
+    <tr><td class="paramtype">array</td><td class="paramname">$record</td><td><a class="el" href="class_text.html">Text</a> item information </td></tr>
     <tr><td class="paramtype">0&#160;|&#160;1</td><td class="paramname">$showAll</td><td>Show all words or not </td></tr>
     <tr><td class="paramtype">int</td><td class="paramname">$currcharcount</td><td>Current number of caracters </td></tr>
     <tr><td class="paramtype">bool</td><td class="paramname">$hide</td><td>Should some item be hidden, depends on $showAll </td></tr>
@@ -627,7 +629,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>void</dd></dl>
 <p>@global string $tbpref Table name prefix</p>
-<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000012">Deprecated:</a></b></dt><dd>Use main_word_loop instead. </dd></dl>
+<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000013">Deprecated:</a></b></dt><dd>Use main_word_loop instead. </dd></dl>
 
 </div>
 </div>
@@ -673,13 +675,13 @@ Functions</h2></td></tr>
   <table class="params">
     <tr><td class="paramtype">int</td><td class="paramname">$showLearning</td><td>1 to show learning translations </td></tr>
     <tr><td class="paramtype"></td><td class="paramname">int&lt;1,4&gt;</td><td>$mode_trans Annotation position </td></tr>
-    <tr><td class="paramtype">int</td><td class="paramname">$textsize</td><td>Text font size </td></tr>
+    <tr><td class="paramtype">int</td><td class="paramname">$textsize</td><td><a class="el" href="class_text.html">Text</a> font size </td></tr>
     <tr><td class="paramtype">bool</td><td class="paramname">$ann_exist</td><td>Does annotations exist for this text</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>void</dd></dl>
-<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000013">Deprecated:</a></b></dt><dd>Use do_text_text_style instead. </dd></dl>
+<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000014">Deprecated:</a></b></dt><dd>Use do_text_text_style instead. </dd></dl>
 
 </div>
 </div>
@@ -754,7 +756,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>int Sentence ID</dd></dl>
-<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000009">Deprecated:</a></b></dt><dd>Use sentence_parser instead. </dd></dl>
+<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000010">Deprecated:</a></b></dt><dd>Use sentence_parser instead. </dd></dl>
 
 </div>
 </div>
@@ -806,7 +808,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>int New value for $hideuntil</dd></dl>
-<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000010">Deprecated:</a></b></dt><dd>Use item_parser instead (since 2.5.0-fork). </dd></dl>
+<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000011">Deprecated:</a></b></dt><dd>Use item_parser instead (since 2.5.0-fork). </dd></dl>
 
 </div>
 </div>
@@ -860,7 +862,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>int New value for $hideuntil</dd></dl>
-<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000011">Deprecated:</a></b></dt><dd>Use word_parser instead. </dd></dl>
+<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000012">Deprecated:</a></b></dt><dd>Use word_parser instead. </dd></dl>
 
 </div>
 </div>
@@ -905,7 +907,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>int New number of caracters</dd></dl>
-<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000008">Deprecated:</a></b></dt><dd>Use sentenceParser and wordParser instead. </dd></dl>
+<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000009">Deprecated:</a></b></dt><dd>Use sentenceParser and wordParser instead. </dd></dl>
 
 </div>
 </div>
