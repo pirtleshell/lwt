@@ -35,6 +35,7 @@ Thanks to 아르노 for signalling the bug on Discord!
 * The go slower/faster feature on audio was broken 
 ([#138](https://github.com/HugoFara/lwt/issues/138)), as functions `click_slower` 
 and `click_faster` were declared two times in `src/js/audio_controller.js`.
+* When opening a text, text position was not saved and a `text_id is unknown` error was triggered. 
 
 ### Deprecated
 

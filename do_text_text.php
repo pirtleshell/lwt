@@ -633,11 +633,11 @@ function do_text_text_javascript($var_array): void
     //<![CDATA[
 
     /// Map global variables as a JSON object
-    const vars = <?php echo json_encode($var_array); ?>;
+    const new_globals = <?php echo json_encode($var_array); ?>;
 
     // Set global variables
-    for (const key in vars) {
-        window[key] = vars[key];
+    for (const key in new_globals) {
+        window[key] = new_globals[key];
     }
     LANG = getLangFromDict(WBLINK3);
     TEXTPOS = -1;
@@ -668,10 +668,10 @@ function do_text_text_javascript($var_array): void
         $('.wsty').not('.hide').each(function() {
             if ($(this).offset().top >= top_pos) {
                 pos = $(this).attr('data_pos');
-                return false;
+                return;
             }
         });
-        saveReadingPosition(text_id, pos);
+        saveReadingPosition(TID, pos);
     }
 
     $(document).ready(prepareTextInteractions);
