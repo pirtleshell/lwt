@@ -145,6 +145,7 @@ Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Core utility functions that do not require a complete session. </p>
+<p>PHP version 8.1 </p>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a id="ad7032b1f81635b990de6f210394d26b9" name="ad7032b1f81635b990de6f210394d26b9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad7032b1f81635b990de6f210394d26b9">&#9670;&#160;</a></span>annotation_to_json()</h2>
@@ -164,7 +165,7 @@ Functions</h2></td></tr>
 <p>Convert annotations in a JSON format.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramtype">string</td><td class="paramname">$ann</td><td>Annotations. </td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$ann</td><td>Annotations.</td></tr>
   </table>
   </dd>
 </dl>
@@ -363,7 +364,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Return an associative array of all possible statuses</p>
-<dl class="section return"><dt>Returns</dt><dd>array&lt;int&lt;1, 5&gt;|98|99, array&lt;string, string&gt;&gt; Statues, keys are 1, 2, 3, 4, 5, 98, 99. Values are associative arrays of keys abbr and name </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>array&lt;int&lt;1, 5&gt;|98|99, array{string, string}&gt; Statuses, keys are 1, 2, 3, 4, 5, 98, 99. Values are associative arrays of keys abbr and name </dd></dl>
 
 </div>
 </div>
@@ -385,7 +386,7 @@ Functions</h2></td></tr>
 <p>Version is hardcoded in this function. For instance 1.6.31 (October 03 2016)</p>
 <p>@global bool $debug If true adds a red "DEBUG"</p>
 <dl class="section return"><dt>Returns</dt><dd>string Version number HTML-formatted</dd></dl>
-<p>@psalm-return '2.5.3-fork (November 06 2022) <span class="red">DEBUG</span>'|'2.5.3-fork (November 06 2022)' </p>
+<p>@psalm-return '2.9.0-fork (April 14 2023) <span class="red">DEBUG</span>'|'2.9.0-fork (April 14 2023)' </p>
 
 </div>
 </div>

@@ -138,7 +138,8 @@ Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Show test frame. </p>
 <p>Call: <a class="el" href="do__test__test_8php.html" title="Show test frame.">do_test_test.php</a>?type=[testtype]&amp;lang=[langid] Call: <a class="el" href="do__test__test_8php.html" title="Show test frame.">do_test_test.php</a>?type=[testtype]&amp;text=[textid] Call: <a class="el" href="do__test__test_8php.html" title="Show test frame.">do_test_test.php</a>?type=[testtype]&amp;selection=1 <br  />
- (SQL via $_SESSION['testsql']) </p>
+ (SQL via $_SESSION['testsql'])</p>
+<p>PHP version 8.1 </p>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a id="a7969c45405f1b03afa5c5e28e492f974" name="a7969c45405f1b03afa5c5e28e492f974"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7969c45405f1b03afa5c5e28e492f974">&#9670;&#160;</a></span>do_test_footer()</h2>
@@ -224,14 +225,15 @@ Functions</h2></td></tr>
 <p>Get the SQL string to perform tests.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramtype">bool&#160;|&#160;null</td><td class="paramname">$selection</td><td>Test is of type selection </td></tr>
+    <tr><td class="paramtype">int&#160;|&#160;null</td><td class="paramname">$selection</td><td>Test is of type selection </td></tr>
     <tr><td class="paramtype">string&#160;|&#160;null</td><td class="paramname">$sess_testsql</td><td>SQL string for test </td></tr>
     <tr><td class="paramtype">int&#160;|&#160;null</td><td class="paramname">$lang</td><td>Test is of type language, for the language $lang ID </td></tr>
     <tr><td class="paramtype">int&#160;|&#160;null</td><td class="paramname">$text</td><td>Testing text with ID $text</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>array|never Test identifier as an array(key, value) </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>(int|int[]|string)[] Test identifier as an array(key, value)</dd></dl>
+<p>@psalm-return list{string, int|non-empty-list&lt;int&gt;|string} </p>
 
 </div>
 </div>
@@ -284,12 +286,13 @@ Functions</h2></td></tr>
     <tr><td class="paramtype">array</td><td class="paramname">$wo_record</td><td>Query from the database regarding a word. </td></tr>
     <tr><td class="paramtype">string</td><td class="paramname">$sent</td><td>Sentence containing the word. </td></tr>
     <tr><td class="paramtype">int</td><td class="paramname">$testtype</td><td>Type of test </td></tr>
-    <tr><td class="paramtype">int</td><td class="paramname">$nosent</td><td>1 if you want to hide sentences. </td></tr>
+    <tr><td class="paramtype">bool&#160;|&#160;int</td><td class="paramname">$nosent</td><td>1 or true if you want to hide sentences. </td></tr>
     <tr><td class="paramtype">string</td><td class="paramname">$regexword</td><td>Regex to select the desired word.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>array{0: string, 1: string} HTML-escaped and raw text sentences (or word) </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>string[] HTML-escaped and raw text sentences (or word)</dd></dl>
+<p>@psalm-return list{string, string} </p>
 
 </div>
 </div>
@@ -399,7 +402,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>int tomorrow tests </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>int Tomorrow tests </dd></dl>
 
 </div>
 </div>
@@ -425,7 +428,8 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>array </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>(float|int|null|string)[] Empty array</dd></dl>
+<p>@psalm-return array&lt;string, float|int|null|string&gt; </p>
 
 </div>
 </div>
@@ -748,8 +752,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>void</dd></dl>
-<p>@global string $tbpref Database table prefix @global string $angDefs Languages definition array </p>
+<dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
 <p>Read the word aloud</p>
 
 </div>
@@ -863,14 +866,15 @@ Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramtype">int</td><td class="paramname">$wid</td><td>The word to test. </td></tr>
-    <tr><td class="paramtype">string</td><td class="paramname">$lang</td><td>ID of the language </td></tr>
-    <tr><td class="paramtype">string</td><td class="paramname">$wordlc</td><td></td></tr>
+    <tr><td class="paramtype">mixed</td><td class="paramname">$lang</td><td>ID of the language, will be removed in PHP 3.0.0 </td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$wordlc</td><td>Word in lowercase</td></tr>
   </table>
   </dd>
 </dl>
 <p>@global string $tbpref Table prefix @global int $debug Echo the passage number if 1.</p>
-<dl class="section return"><dt>Returns</dt><dd>array{0: string|null, 1: int} Sentence with escaped word and not a 0 if sentence was found.</dd></dl>
-<dl class="section since"><dt>Since</dt><dd>2.5.3-fork Properly return sentences with at least 70% of known words. Previously, it was supposed to be 100%, but buggy. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>(int|null|string)[] Sentence with escaped word and not a 0 if sentence was found.</dd></dl>
+<dl class="section since"><dt>Since</dt><dd>2.5.3-fork Properly return sentences with at least 70% of known words. Previously, it was supposed to be 100%, but buggy.</dd></dl>
+<p>@psalm-return list{null|string, 0|1} </p>
 
 </div>
 </div>
@@ -1100,7 +1104,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>array{0: string, 1: string} HTML-escaped and raw text sentences (or word) </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>string HTML-escaped and raw text sentences (or word) </dd></dl>
 
 </div>
 </div>

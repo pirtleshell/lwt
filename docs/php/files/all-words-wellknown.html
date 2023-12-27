@@ -92,6 +92,12 @@
                                     <h4 class="phpdocumentor-sidebar__root-namespace">
     <a href="packages/Lwt.html" class="">Lwt</a>
 </h4>
+    <ul class="phpdocumentor-list">
+                    <li>
+                <a href="packages/Lwt-Documentation.html" class="">Documentation</a>
+                
+            </li>
+            </ul>
 
                         </section>
             
@@ -123,6 +129,7 @@
 (mark all words as well-known)
 all_words_wellknown.php?text=[textid]&amp;status=[statusint]
 (mark with a specific status, normally 98 or 99)</p>
+<p>PHP version 8.1</p>
 </section>
 
 
@@ -133,6 +140,15 @@ all_words_wellknown.php?text=[textid]&amp;status=[statusint]
     </h5>
     <dl class="phpdocumentor-tag-list">
                                     <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">category</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                                
+                                                 <section class="phpdocumentor-description"><p>Helper_Frame</p>
+</section>
+
+                                    </dd>
+                                                <dt class="phpdocumentor-tag-list__entry">
                     <span class="phpdocumentor-tag__name">author</span>
                 </dt>
                 <dd class="phpdocumentor-tag-list__definition">
@@ -201,14 +217,14 @@ all_words_wellknown.php?text=[textid]&amp;status=[statusint]
             <dt class="phpdocumentor-table-of-contents__entry -function -">
     <a href="namespaces/default.html#function_all_words_wellknown_process_word">all_words_wellknown_process_word()</a>
     <span>
-                                &nbsp;: array&lt;string|int, int|string&gt;    </span>
+                                &nbsp;: array&lt;string|int, mixed&gt;    </span>
 </dt>
 <dd>For each word, add the word to the database.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -function -">
     <a href="namespaces/default.html#function_all_words_wellknown_main_loop">all_words_wellknown_main_loop()</a>
     <span>
-                                &nbsp;: array&lt;string|int, int|string&gt;    </span>
+                                &nbsp;: array&lt;string|int, mixed&gt;    </span>
 </dt>
 <dd>Main processing loop to mark all words of a text with a new status.</dd>
 
@@ -261,7 +277,7 @@ all_words_wellknown.php?text=[textid]&amp;status=[statusint]
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="all_words_wellknown.php"><a href="files/all-words-wellknown.html">all_words_wellknown.php</a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">28</span>
+    <span class="phpdocumentor-element-found-in__line">31</span>
 
     </aside>
 
@@ -306,7 +322,7 @@ all_words_wellknown.php?text=[textid]&amp;status=[statusint]
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="all_words_wellknown.php"><a href="files/all-words-wellknown.html">all_words_wellknown.php</a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">57</span>
+    <span class="phpdocumentor-element-found-in__line">60</span>
 
     </aside>
 
@@ -314,7 +330,7 @@ all_words_wellknown.php?text=[textid]&amp;status=[statusint]
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility"></span>
-                    <span class="phpdocumentor-signature__name">all_words_wellknown_process_word</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$status</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$term</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$termlc</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$langid</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, int|string&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">all_words_wellknown_process_word</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$status</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$term</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$termlc</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$langid</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
 
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -389,7 +405,7 @@ all_words_wellknown.php?text=[textid]&amp;status=[statusint]
                 </dt>
                 <dd class="phpdocumentor-tag-list__definition">
                                                                                 
-                                                 <section class="phpdocumentor-description"><p>array{0: int, 1: string}</p>
+                                                 <section class="phpdocumentor-description"><p>list{int, string}</p>
 </section>
 
                                     </dd>
@@ -397,9 +413,9 @@ all_words_wellknown.php?text=[textid]&amp;status=[statusint]
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">array&lt;string|int, int|string&gt;</span>
+        <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span>
                     &mdash;
-                <section class="phpdocumentor-description"><p>Number of rows edited and a javascript query.</p>
+                <section class="phpdocumentor-description"><p>[int, string] Number of rows edited and a javascript query.</p>
 </section>
 
             </section>
@@ -414,7 +430,7 @@ all_words_wellknown.php?text=[textid]&amp;status=[statusint]
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="all_words_wellknown.php"><a href="files/all-words-wellknown.html">all_words_wellknown.php</a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">118</span>
+    <span class="phpdocumentor-element-found-in__line">121</span>
 
     </aside>
 
@@ -422,7 +438,7 @@ all_words_wellknown.php?text=[textid]&amp;status=[statusint]
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility"></span>
-                    <span class="phpdocumentor-signature__name">all_words_wellknown_main_loop</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$txid</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$status</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, int|string&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">all_words_wellknown_main_loop</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$txid</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$status</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
 
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -469,7 +485,7 @@ all_words_wellknown.php?text=[textid]&amp;status=[statusint]
                 </dt>
                 <dd class="phpdocumentor-tag-list__definition">
                                                                                 
-                                                 <section class="phpdocumentor-description"><p>array{0: int, 1: string}</p>
+                                                 <section class="phpdocumentor-description"><p>list{int, string}</p>
 </section>
 
                                     </dd>
@@ -477,9 +493,9 @@ all_words_wellknown.php?text=[textid]&amp;status=[statusint]
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">array&lt;string|int, int|string&gt;</span>
+        <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span>
                     &mdash;
-                <section class="phpdocumentor-description"><p>Number of edited words, and JavaScript query to change their display</p>
+                <section class="phpdocumentor-description"><p>[int, string] Number of edited words, and JavaScript query to change their display</p>
 </section>
 
             </section>
@@ -494,7 +510,7 @@ all_words_wellknown.php?text=[textid]&amp;status=[statusint]
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="all_words_wellknown.php"><a href="files/all-words-wellknown.html">all_words_wellknown.php</a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">160</span>
+    <span class="phpdocumentor-element-found-in__line">163</span>
 
     </aside>
 
@@ -557,7 +573,7 @@ all_words_wellknown.php?text=[textid]&amp;status=[statusint]
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="all_words_wellknown.php"><a href="files/all-words-wellknown.html">all_words_wellknown.php</a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">192</span>
+    <span class="phpdocumentor-element-found-in__line">195</span>
 
     </aside>
 
@@ -565,7 +581,7 @@ all_words_wellknown.php?text=[textid]&amp;status=[statusint]
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility"></span>
-                    <span class="phpdocumentor-signature__name">all_words_wellknown_javascript</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$txid</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$javascript</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+                    <span class="phpdocumentor-signature__name">all_words_wellknown_javascript</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$txid</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$javascript</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
 
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -581,7 +597,7 @@ all_words_wellknown.php?text=[textid]&amp;status=[statusint]
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-signature__argument__name">$javascript</span>
-                : <span class="phpdocumentor-signature__argument__return-type">int</span>
+                : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>JavaScript-formatted string.</p>
@@ -603,7 +619,7 @@ all_words_wellknown.php?text=[textid]&amp;status=[statusint]
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="all_words_wellknown.php"><a href="files/all-words-wellknown.html">all_words_wellknown.php</a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">215</span>
+    <span class="phpdocumentor-element-found-in__line">218</span>
 
     </aside>
 
@@ -649,7 +665,7 @@ all_words_wellknown.php?text=[textid]&amp;status=[statusint]
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="all_words_wellknown.php"><a href="files/all-words-wellknown.html">all_words_wellknown.php</a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">230</span>
+    <span class="phpdocumentor-element-found-in__line">233</span>
 
     </aside>
 

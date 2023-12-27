@@ -101,7 +101,8 @@ Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Change status of term while testing. </p>
-<p>Call: <a class="el" href="set__test__status_8php.html" title="Change status of term while testing.">set_test_status.php</a>?wid=[wordid]&amp;stchange=+1/-1&amp;[ajax=1] <a class="el" href="set__test__status_8php.html" title="Change status of term while testing.">set_test_status.php</a>?wid=[wordid]&amp;status=1..5/98/99&amp;[ajax=1] </p>
+<p>Call: <a class="el" href="set__test__status_8php.html" title="Change status of term while testing.">set_test_status.php</a>?wid=[wordid]&amp;stchange=+1/-1&amp;[ajax=1] <a class="el" href="set__test__status_8php.html" title="Change status of term while testing.">set_test_status.php</a>?wid=[wordid]&amp;status=1..5/98/99&amp;[ajax=1]</p>
+<p>PHP version 8.1 </p>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a id="afb70326a0c03deac05a2587afd11dc9a" name="afb70326a0c03deac05a2587afd11dc9a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afb70326a0c03deac05a2587afd11dc9a">&#9670;&#160;</a></span>do_set_test_status_content()</h2>
@@ -292,7 +293,8 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>int[] Tests data</dd></dl>
+<p>@psalm-return array{total: int, wrong: int, correct: int, nottested: int} </p>
 
 </div>
 </div>
