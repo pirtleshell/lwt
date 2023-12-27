@@ -92,6 +92,12 @@
                                     <h4 class="phpdocumentor-sidebar__root-namespace">
     <a href="packages/Lwt.html" class="">Lwt</a>
 </h4>
+    <ul class="phpdocumentor-list">
+                    <li>
+                <a href="packages/Lwt-Documentation.html" class="">Documentation</a>
+                
+            </li>
+            </ul>
 
                         </section>
             
@@ -123,6 +129,7 @@
 Call: do_test_test.php?type=[testtype]&amp;text=[textid]
 Call: do_test_test.php?type=[testtype]&amp;selection=1
 (SQL via $_SESSION['testsql'])</p>
+<p>PHP version 8.1</p>
 </section>
 
 
@@ -194,7 +201,7 @@ Call: do_test_test.php?type=[testtype]&amp;selection=1
             <dt class="phpdocumentor-table-of-contents__entry -function -">
     <a href="namespaces/default.html#function_do_test_get_identifier">do_test_get_identifier()</a>
     <span>
-                                &nbsp;: array&lt;string|int, mixed&gt;|never    </span>
+                                &nbsp;: array&lt;string|int, int|array&lt;string|int, int&gt;|string&gt;    </span>
 </dt>
 <dd>Get the SQL string to perform tests.</dd>
 
@@ -250,28 +257,28 @@ Call: do_test_test.php?type=[testtype]&amp;selection=1
             <dt class="phpdocumentor-table-of-contents__entry -function -">
     <a href="namespaces/default.html#function_do_test_test_sentence">do_test_test_sentence()</a>
     <span>
-                                &nbsp;: array{0: string|null, 1: int}    </span>
+                                &nbsp;: array&lt;string|int, int|null|string&gt;    </span>
 </dt>
 <dd>Get a sentence containing the word.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -function -">
     <a href="namespaces/default.html#function_do_test_get_term_test">do_test_get_term_test()</a>
     <span>
-                                &nbsp;: array{0: string, 1: string}    </span>
+                                &nbsp;: array&lt;string|int, string&gt;    </span>
 </dt>
 <dd>Return the test relative to a word.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -function -">
     <a href="namespaces/default.html#function_print_term_test">print_term_test()</a>
     <span>
-                                &nbsp;: array{0: string, 1: string}    </span>
+                                &nbsp;: string    </span>
 </dt>
 <dd>Echo the test relative to a word.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -function -">
     <a href="namespaces/default.html#function_do_test_get_word">do_test_get_word()</a>
     <span>
-                                &nbsp;: array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: array&lt;string|int, float|int|null|string&gt;    </span>
 </dt>
 <dd>Find the next word to test.</dd>
 
@@ -373,7 +380,7 @@ Call: do_test_test.php?type=[testtype]&amp;selection=1
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="do_test_test.php"><a href="files/do-test-test.html">do_test_test.php</a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">32</span>
+    <span class="phpdocumentor-element-found-in__line">36</span>
 
     </aside>
 
@@ -381,14 +388,14 @@ Call: do_test_test.php?type=[testtype]&amp;selection=1
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility"></span>
-                    <span class="phpdocumentor-signature__name">do_test_get_identifier</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">bool|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$selection</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$sess_testsql</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">int|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$lang</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">int|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$text</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;|never</span></code>
+                    <span class="phpdocumentor-signature__name">do_test_get_identifier</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">int|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$selection</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$sess_testsql</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">int|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$lang</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">int|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$text</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, int|array&lt;string|int, int&gt;|string&gt;</span></code>
 
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-signature__argument__name">$selection</span>
-                : <span class="phpdocumentor-signature__argument__return-type">bool|null</span>
+                : <span class="phpdocumentor-signature__argument__return-type">int|null</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Test is of type selection</p>
@@ -425,10 +432,26 @@ Call: do_test_test.php?type=[testtype]&amp;selection=1
             </dl>
 
     
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="namespaces/default.html#function_do_test_get_identifier#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">psalm-return</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                                
+                                                 <section class="phpdocumentor-description"><p>list{string, int|non-empty-list<int>|string}</p>
+</section>
+
+                                    </dd>
+                                            </dl>
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;|never</span>
+        <span class="phpdocumentor-signature__response_type">array&lt;string|int, int|array&lt;string|int, int&gt;|string&gt;</span>
                     &mdash;
                 <section class="phpdocumentor-description"><p>Test identifier as an array(key, value)</p>
 </section>
@@ -445,7 +468,7 @@ Call: do_test_test.php?type=[testtype]&amp;selection=1
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="do_test_test.php"><a href="files/do-test-test.html">do_test_test.php</a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">78</span>
+    <span class="phpdocumentor-element-found-in__line">82</span>
 
     </aside>
 
@@ -517,7 +540,7 @@ Call: do_test_test.php?type=[testtype]&amp;selection=1
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="do_test_test.php"><a href="files/do-test-test.html">do_test_test.php</a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">97</span>
+    <span class="phpdocumentor-element-found-in__line">101</span>
 
     </aside>
 
@@ -567,7 +590,7 @@ Call: do_test_test.php?type=[testtype]&amp;selection=1
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="do_test_test.php"><a href="files/do-test-test.html">do_test_test.php</a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">117</span>
+    <span class="phpdocumentor-element-found-in__line">121</span>
 
     </aside>
 
@@ -626,7 +649,7 @@ Call: do_test_test.php?type=[testtype]&amp;selection=1
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="do_test_test.php"><a href="files/do-test-test.html">do_test_test.php</a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">132</span>
+    <span class="phpdocumentor-element-found-in__line">136</span>
 
     </aside>
 
@@ -676,7 +699,7 @@ Call: do_test_test.php?type=[testtype]&amp;selection=1
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="do_test_test.php"><a href="files/do-test-test.html">do_test_test.php</a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">145</span>
+    <span class="phpdocumentor-element-found-in__line">149</span>
 
     </aside>
 
@@ -719,7 +742,7 @@ display. Will be removed in 3.0.0.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="do_test_test.php"><a href="files/do-test-test.html">do_test_test.php</a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">165</span>
+    <span class="phpdocumentor-element-found-in__line">169</span>
 
     </aside>
 
@@ -749,7 +772,7 @@ display. Will be removed in 3.0.0.</p>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
         <span class="phpdocumentor-signature__response_type">int</span>
                     &mdash;
-                <section class="phpdocumentor-description"><p>tomorrow tests</p>
+                <section class="phpdocumentor-description"><p>Tomorrow tests</p>
 </section>
 
             </section>
@@ -764,7 +787,7 @@ display. Will be removed in 3.0.0.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="do_test_test.php"><a href="files/do-test-test.html">do_test_test.php</a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">183</span>
+    <span class="phpdocumentor-element-found-in__line">187</span>
 
     </aside>
 
@@ -819,7 +842,7 @@ display. Will be removed in 3.0.0.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="do_test_test.php"><a href="files/do-test-test.html">do_test_test.php</a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">222</span>
+    <span class="phpdocumentor-element-found-in__line">227</span>
 
     </aside>
 
@@ -827,7 +850,7 @@ display. Will be removed in 3.0.0.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility"></span>
-                    <span class="phpdocumentor-signature__name">do_test_test_sentence</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$wid</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$lang</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$wordlc</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array{0: string|null, 1: int}</span></code>
+                    <span class="phpdocumentor-signature__name">do_test_test_sentence</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$wid</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$lang</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$wordlc</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, int|null|string&gt;</span></code>
 
         <section class="phpdocumentor-description"><p>The sentence should contain at least 70% of known words.</p>
 </section>
@@ -845,10 +868,10 @@ display. Will be removed in 3.0.0.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-signature__argument__name">$lang</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string</span>
+                : <span class="phpdocumentor-signature__argument__return-type">mixed</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>ID of the language</p>
+                    <section class="phpdocumentor-description"><p>ID of the language, will be removed in PHP 3.0.0</p>
 </section>
 
             </dd>
@@ -857,7 +880,9 @@ display. Will be removed in 3.0.0.</p>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                
+                    <section class="phpdocumentor-description"><p>Word in lowercase</p>
+</section>
+
             </dd>
             </dl>
 
@@ -897,14 +922,22 @@ Previously, it was supposed to be 100%, but buggy.</p>
 </section>
 
                                     </dd>
+                                                <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">psalm-return</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                                
+                                                 <section class="phpdocumentor-description"><p>list{null|string, 0|1}</p>
+</section>
+
+                                    </dd>
                                             </dl>
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">array{0: string|null, 1: int}</span>
+        <span class="phpdocumentor-signature__response_type">array&lt;string|int, int|null|string&gt;</span>
                     &mdash;
-                <section class="phpdocumentor-description"><p>Sentence with escaped word and not a 0
-if sentence was found.</p>
+                <section class="phpdocumentor-description"><p>Sentence with escaped word and not a 0 if sentence was found.</p>
 </section>
 
             </section>
@@ -919,7 +952,7 @@ if sentence was found.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="do_test_test.php"><a href="files/do-test-test.html">do_test_test.php</a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">279</span>
+    <span class="phpdocumentor-element-found-in__line">286</span>
 
     </aside>
 
@@ -927,7 +960,7 @@ if sentence was found.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility"></span>
-                    <span class="phpdocumentor-signature__name">do_test_get_term_test</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$wo_record</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$sent</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$testtype</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$nosent</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$regexword</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array{0: string, 1: string}</span></code>
+                    <span class="phpdocumentor-signature__name">do_test_get_term_test</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$wo_record</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$sent</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$testtype</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">bool|int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$nosent</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$regexword</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, string&gt;</span></code>
 
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -961,10 +994,10 @@ if sentence was found.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-signature__argument__name">$nosent</span>
-                : <span class="phpdocumentor-signature__argument__return-type">int</span>
+                : <span class="phpdocumentor-signature__argument__return-type">bool|int</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>1 if you want to hide sentences.</p>
+                    <section class="phpdocumentor-description"><p>1 or true if you want to hide sentences.</p>
 </section>
 
             </dd>
@@ -980,10 +1013,26 @@ if sentence was found.</p>
             </dl>
 
     
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="namespaces/default.html#function_do_test_get_term_test#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">psalm-return</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                                
+                                                 <section class="phpdocumentor-description"><p>list{string, string}</p>
+</section>
+
+                                    </dd>
+                                            </dl>
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">array{0: string, 1: string}</span>
+        <span class="phpdocumentor-signature__response_type">array&lt;string|int, string&gt;</span>
                     &mdash;
                 <section class="phpdocumentor-description"><p>HTML-escaped and raw text sentences (or word)</p>
 </section>
@@ -1000,7 +1049,7 @@ if sentence was found.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="do_test_test.php"><a href="files/do-test-test.html">do_test_test.php</a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">357</span>
+    <span class="phpdocumentor-element-found-in__line">364</span>
 
     </aside>
 
@@ -1008,7 +1057,7 @@ if sentence was found.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility"></span>
-                    <span class="phpdocumentor-signature__name">print_term_test</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$wo_record</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$sent</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$testtype</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$nosent</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$regexword</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array{0: string, 1: string}</span></code>
+                    <span class="phpdocumentor-signature__name">print_term_test</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$wo_record</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$sent</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$testtype</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$nosent</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$regexword</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
 
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -1064,7 +1113,7 @@ if sentence was found.</p>
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">array{0: string, 1: string}</span>
+        <span class="phpdocumentor-signature__response_type">string</span>
                     &mdash;
                 <section class="phpdocumentor-description"><p>HTML-escaped and raw text sentences (or word)</p>
 </section>
@@ -1081,7 +1130,7 @@ if sentence was found.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="do_test_test.php"><a href="files/do-test-test.html">do_test_test.php</a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">372</span>
+    <span class="phpdocumentor-element-found-in__line">381</span>
 
     </aside>
 
@@ -1089,7 +1138,7 @@ if sentence was found.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility"></span>
-                    <span class="phpdocumentor-signature__name">do_test_get_word</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$testsql</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">do_test_get_word</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$testsql</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, float|int|null|string&gt;</span></code>
 
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -1106,10 +1155,30 @@ if sentence was found.</p>
             </dl>
 
     
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="namespaces/default.html#function_do_test_get_word#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">psalm-return</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                                
+                                                 <section class="phpdocumentor-description"><p>array&lt;string, float|int|null|string&gt;</p>
+</section>
+
+                                    </dd>
+                                            </dl>
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">array&lt;string|int, float|int|null|string&gt;</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>Empty array</p>
+</section>
+
             </section>
 
 </article>
@@ -1122,7 +1191,7 @@ if sentence was found.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="do_test_test.php"><a href="files/do-test-test.html">do_test_test.php</a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">408</span>
+    <span class="phpdocumentor-element-found-in__line">417</span>
 
     </aside>
 
@@ -1194,7 +1263,7 @@ if sentence was found.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="do_test_test.php"><a href="files/do-test-test.html">do_test_test.php</a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">435</span>
+    <span class="phpdocumentor-element-found-in__line">444</span>
 
     </aside>
 
@@ -1300,7 +1369,7 @@ if sentence was found.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="do_test_test.php"><a href="files/do-test-test.html">do_test_test.php</a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">525</span>
+    <span class="phpdocumentor-element-found-in__line">534</span>
 
     </aside>
 
@@ -1406,7 +1475,7 @@ if sentence was found.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="do_test_test.php"><a href="files/do-test-test.html">do_test_test.php</a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">663</span>
+    <span class="phpdocumentor-element-found-in__line">672</span>
 
     </aside>
 
@@ -1486,7 +1555,7 @@ if sentence was found.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="do_test_test.php"><a href="files/do-test-test.html">do_test_test.php</a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">697</span>
+    <span class="phpdocumentor-element-found-in__line">703</span>
 
     </aside>
 
@@ -1519,31 +1588,6 @@ if sentence was found.</p>
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
-        Tags
-        <a href="namespaces/default.html#function_do_test_test_javascript_clickable#tags" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h5>
-    <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">global</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                
-                                                 <section class="phpdocumentor-description"><p>string $tbpref  Database table prefix</p>
-</section>
-
-                                    </dd>
-                            <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">global</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                
-                                                 <section class="phpdocumentor-description"><p>string $angDefs Languages definition array</p>
-</section>
-
-                                    </dd>
-                                            </dl>
 
     
 </article>
@@ -1556,7 +1600,7 @@ if sentence was found.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="do_test_test.php"><a href="files/do-test-test.html">do_test_test.php</a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">751</span>
+    <span class="phpdocumentor-element-found-in__line">750</span>
 
     </aside>
 
@@ -1673,7 +1717,7 @@ if sentence was found.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="do_test_test.php"><a href="files/do-test-test.html">do_test_test.php</a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">766</span>
+    <span class="phpdocumentor-element-found-in__line">765</span>
 
     </aside>
 
@@ -1710,7 +1754,7 @@ if sentence was found.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="do_test_test.php"><a href="files/do-test-test.html">do_test_test.php</a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">782</span>
+    <span class="phpdocumentor-element-found-in__line">781</span>
 
     </aside>
 
@@ -1765,7 +1809,7 @@ if sentence was found.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="do_test_test.php"><a href="files/do-test-test.html">do_test_test.php</a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">841</span>
+    <span class="phpdocumentor-element-found-in__line">840</span>
 
     </aside>
 
@@ -1802,7 +1846,7 @@ if sentence was found.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="do_test_test.php"><a href="files/do-test-test.html">do_test_test.php</a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">977</span>
+    <span class="phpdocumentor-element-found-in__line">976</span>
 
     </aside>
 
@@ -1843,7 +1887,7 @@ if sentence was found.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="do_test_test.php"><a href="files/do-test-test.html">do_test_test.php</a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1014</span>
+    <span class="phpdocumentor-element-found-in__line">1013</span>
 
     </aside>
 

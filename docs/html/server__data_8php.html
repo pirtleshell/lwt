@@ -90,15 +90,33 @@ Namespaces</h2></td></tr>
 Functions</h2></td></tr>
 <tr class="memitem:aaf45ee3fcb4b5e16708553552874b190"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="server__data_8php.html#aaf45ee3fcb4b5e16708553552874b190">get_server_data_table</a> ()</td></tr>
 <tr class="separator:aaf45ee3fcb4b5e16708553552874b190"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac19fd7462ea3a765e725c65b84c976e7"><td class="memItemLeft" align="right" valign="top"><a id="ac19fd7462ea3a765e725c65b84c976e7" name="ac19fd7462ea3a765e725c65b84c976e7"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>display_content</b> ()</td></tr>
+<tr class="memitem:ac19fd7462ea3a765e725c65b84c976e7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="server__data_8php.html#ac19fd7462ea3a765e725c65b84c976e7">display_content</a> ()</td></tr>
 <tr class="separator:ac19fd7462ea3a765e725c65b84c976e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Useful software data. </p>
 <p>Call: <a class="el" href="server__data_8php.html" title="Useful software data.">server_data.php</a></p>
-<dl class="section version"><dt>Version</dt><dd>php version 8.1.1 </dd></dl>
+<p>PHP version 8.1.1 </p>
 </div><h2 class="groupheader">Function Documentation</h2>
+<a id="ac19fd7462ea3a765e725c65b84c976e7" name="ac19fd7462ea3a765e725c65b84c976e7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac19fd7462ea3a765e725c65b84c976e7">&#9670;&#160;</a></span>display_content()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">display_content </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Display the main content for the page.</p>
+<dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
+
+</div>
+</div>
 <a id="aaf45ee3fcb4b5e16708553552874b190" name="aaf45ee3fcb4b5e16708553552874b190"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aaf45ee3fcb4b5e16708553552874b190">&#9670;&#160;</a></span>get_server_data_table()</h2>
 
@@ -114,9 +132,9 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Return a lot of different server state variables.</p>
-<dl class="section return"><dt>Returns</dt><dd>array{"db_prefix": string, "db_size": float, "server_soft": string[], "apache": string, "php": string, "mysql": string} Table prefix, database size, server software, apache version, PHP version, MySQL version</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>(false|float|string)[] {"db_prefix": string, "db_size": float, "server_soft": string[], "apache": string, "php": string, "mysql": string} Table prefix, database size, server software, apache version, PHP version, MySQL version</dd></dl>
 <p>@global string $tbpref Database table prefix @global string $dbname Database name</p>
-<p>@psalm-return array{ "db_prefix": string, "db_size": float, "server_soft": non-empty-list&lt;string&gt;, "apache": string, "php": false|string, "mysql": string } </p>
+<p>@psalm-return array{db_name: string, db_prefix: string, db_size: float, server_soft: string, apache: string, php: false|string, mysql: string} </p>
 
 </div>
 </div>

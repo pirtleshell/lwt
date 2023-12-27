@@ -74,7 +74,7 @@ $(function() {
   <div class="headertitle"><div class="title">How to Use </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h1><a class="anchor" id="autotoc_md464"></a>
+<div class="textblock"><h1><a class="anchor" id="autotoc_md471"></a>
 Home Screen</h1>
 <p>LWT home screen after installation: <br  />
 </p>
@@ -87,13 +87,13 @@ Home Screen</h1>
 </p>
 <p>This is normal home screen of LWT. You may choose a language here, but you can do this also later. If you you choose a language, the language filter is pre-set to that language in some other screens. The last text you've read or tested is shown, and you may jump directly into reading, testing or printing of this last text. <br  />
 </p>
-<h1><a class="anchor" id="autotoc_md465"></a>
+<h1><a class="anchor" id="autotoc_md472"></a>
 Languages</h1>
 <p>The list of languages. Here you can add a new or edit an existent language. If no texts and no saved terms in a language exist, you can delete a language. If you change a language, all texts may be automatically reparsed to refresh (and correct) the cache of sentences and text items (depends on what language settings you have changed). You can do this also manually by clicking on the yellow flash icon. You can also test all (due) terms of a language or set a language as "current" language. <br  />
 </p>
 <p><img src="../img/02.jpg" alt="Image" class="inline"/> <br  />
 </p>
-<h2><a class="anchor" id="autotoc_md466"></a>
+<h2><a class="anchor" id="autotoc_md473"></a>
 New/Edit Language</h2>
 <p>This is the place to define or edit a language you want to study.</p>
 <p>It is recommended to use the "Language Settings Wizard" first. You only select your native (L1) and study (L2) languages, and let the wizard set all language settings that are marked in yellow. You can always adjust the settings afterwards. <br  />
@@ -115,13 +115,13 @@ New/Edit Language</h2>
 </p>
 <p><b>IMPORTANT:</b> Some dictionaries (including "Google Translate") don't allow to be opened within a frame set. Put an asterisk * in front of the URI (Examples: *<a href="http://mywebdict.com?q=###">http://mywebdict.com?q=###</a> or *&lt;<a href="http://translate.google.com/?ie=UTF-8&sl=..&tl=..&text=###">http://translate.google.com/?ie=UTF-8&amp;sl=..&amp;tl=..&amp;text=###</a>)&gt; to open such a dictionary not within the frame set but in a popup window (please don't forget to deactivate popup window blocking in your browser!). <br  />
 </p>
-<h3><a class="anchor" id="autotoc_md467"></a>
+<h3><a class="anchor" id="autotoc_md474"></a>
 Deprecated Features</h3>
-<h4><a class="anchor" id="autotoc_md468"></a>
+<h4><a class="anchor" id="autotoc_md475"></a>
 Specify Encoding</h4>
 <p><b>This feature has been abandonned, do not use it</b>!</p>
 <p>If the searchword in the three URIs needs to be converted into a different encoding (standard is UTF-8), you could use ###encoding### as a placeholder. Normally you see this right away if terms show up wrongly in the web dictionary. Example: Linguee expects the searchword in ISO-8859-15, not in UTF-8, so you define it this way: "http&amp;#58;&amp;#47;&amp;#47;www.linguee.de/search?direction=auto&amp;query=###ISO-8859-15###". A list of encodings can be found <a href="http://php.net/manual/en/mbstring.supported-encodings.php">here</a>.</p>
-<h4><a class="anchor" id="autotoc_md469"></a>
+<h4><a class="anchor" id="autotoc_md476"></a>
 Glosbe API</h4>
 <p>Glosbe closed there API, this feature does no longer work.</p>
 <p>One dictionary (<a href="http://glosbe.com/">Glosbe</a>) has been closely integrated into LWT via the Glosbe API. To use this dictionary, input the "special" dictionary link "http&amp;#58;&amp;#47;&amp;#47;localhost/lwt/glosbe\_api.php?from=...&amp;dest=...&amp;phrase=lwt\_term" with <em>from</em>: "L2 language code" (the language of your texts) and <em>dest</em>: "L1 language code" (e.g. mother tongue). To find the language codes, open <a href="http://glosbe.com/all-languages">this page</a> to select the "from" (L2) language. On the next page, select the "L2 - L1" language pair. The URL of the next page shows the two language codes, here as an example "French - English": http&amp;#58;&amp;#47;&amp;#47;glosbe.com/**fr**/**en**/. The "from" code is "fr", the "dest" code is "en". Using this dictionary makes the transfer of translation(s) from the Glosbe to LWT very easy: just click on the icon next to the translations to copy them into the LWT edit screen. I recommend to use the LWT-integrated Glosbe dictionary as the "Dictionary 1 URI". Note: I cannot guarantee that the Glosbe API and this special integration will work in the future! glosbe_api.php is just an example how one can integrate a dictionary into LWT. <br  />
@@ -159,25 +159,25 @@ To understand all these options, please study also &lt;a href="info.html::langse
 
 &lt;img src="../img/language_edition.jpg" alt="Image"/&gt;  &lt;br&gt;
 
-@section autotoc_md470 Texts
+@section autotoc_md477 Texts
 
 The list of texts. You can filter this list according to language, title (wildcard = *) or text tag(s) (see also below). The most important links for each text are "Read" and "Test" - that's the place to read, to listen, to save terms and to review and test your terms in sentence context. To see all terms of a text that you have saved, click on the numbers in column "Saved Wo+Ex". To print, archive, edit (and reparse), or to delete a text, click on the icons in column "Actions". There are more actions available, see "Multi Actions".  &lt;br&gt;
 
 &lt;img src="../img/04.jpg" alt="Image"/&gt;  &lt;br&gt;
 
-@subsection autotoc_md471 Multi Actions for marked texts
+@subsection autotoc_md478 Multi Actions for marked texts
 
 You can test the terms of the marked texts, delete or archive the marked texts. "Reparse Texts" rebuilds the sentence and the text item cache for all marked texts. "Set <a class="el" href="class_term.html">Term</a> Sentences" sets a valid sentence (with the term in {..}) for all those saved or imported terms that occur in the text and that do not have a sentence at all or none with {term}. This makes it easy to "create" sentence examples for imported terms.  &lt;br&gt;
 
 &lt;img src="../img/14.jpg" alt="Image"/&gt;  &lt;br&gt;
 
-@section autotoc_md472 Text Tags
+@section autotoc_md479 Text Tags
 
 The list of your text tags. You can manage your text tags here. With text tags, it will be easier to categorize and organize your texts. The tags are case sensitive, have 1 to 20 characters, and must not contain any spaces or commas.  &lt;br&gt;
 
 &lt;img src="../img/25.jpg" alt="Image"/&gt;  &lt;br&gt;
 
-@subsection autotoc_md473 New/Edit Text
+@subsection autotoc_md480 New/Edit Text
 
 This is the screen to input, check or edit a single text. Try to store not too long texts (the maximum length is 65,000 Bytes). If texts are very long (&gt; 1000 words), certain operations (e.g. loading a text for reading, calculation of known/unknown words) may be quite slow. An audio URI and a link to the text source can also be defined. The best place to store your audios is the "media" subdirectory below the installation directory "lwt" (you have to create it yourself, and you have to copy the audio files into this directory; click Refresh if you don't see just copied media). But a cloud webspace service like DropBox is also possible. In the moment there is no possibility to import/upload an audio file within the LWT application. By the way, you can use MP3, WAV, or OGG media files, but be aware that not all browsers and/or operating systems support all media types!
 
@@ -189,22 +189,38 @@ You can also import a longer text into LWT with the possibility to split it up i
 
 &lt;img src="../img/33.jpg" alt="Image"/&gt;  &lt;br&gt;
 
-@section autotoc_md474 Newsfeed
+@section autotoc_md481 Newsfeed
 
-@subsection autotoc_md475 Newsfeed Import
+@subsection autotoc_md482 Newsfeed Import
 
-Here you can download the articles of your newsfeeds (HowTo add a new newsfeed see &lt;a href="info.html::new_feed" &gt;here&lt;/a&gt;). If you've set up multiple newsfeeds for your selected language, the link "update multiple feeds" will appear. By clicking that link you can update one or more feeds at once. If you've selected a newsfeed, a blue circle-arrow will appear as well as the date of your last update. A click on the circle-arrow will update your selected newsfeed. All downloaded articles will be marked by a bookmark-icon instead of the checkbox, so you can access them immediately. If a downloaded article is archived, a red mark will appear. An error may occur, when you try to download an article and the link or the text-section of the article is not found. Then a yellow warning sign appears, which can be removed temporarily by clicking on it or permanently in &lt;a href="info.html::man_feed" &gt;Manage Feeds&lt;/a&gt;. If you hover over an article title, a description of the article will be shown. You can open the article and, if available, the audio in a new window.  &lt;br&gt;
+Here you can download the articles of your newsfeeds (see the section New/Edit Feeds
+for an explanation on how To add a new newsfeed). 
+If you've set up multiple newsfeeds for your selected language, the link 
+"update multiple feeds" will appear. By clicking that link you can update one or 
+more feeds at once. 
+If you've selected a newsfeed, a blue circle-arrow will appear as well as the date 
+of your last update. 
+A click on the circle-arrow will update your selected newsfeed. 
+All downloaded articles will be marked by a bookmark-icon instead of the checkbox, 
+so you can access them immediately. If a downloaded article is archived, 
+a red mark will appear. An error may occur, when you try to download an article and 
+the link or the text-section of the article is not found. 
+Then a yellow warning sign appears, which can be removed temporarily by clicking on 
+it or permanently in "Manage Feeds" (see next section). 
+If you hover over an article title, a description of the article will be shown. 
+You can open the article and, if available, the audio in a new window.  &lt;br&gt;
 
 &lt;img src="../img/37.jpg" alt="Image"/&gt;  &lt;br&gt;
 
-@subsection autotoc_md476 Manage Feeds
+@subsection autotoc_md483 Manage Feeds
 
-Multi Actions for marked newsfeeds: You can update feeds, unset unloadable articles (see &lt;a href="info.html::feed_imp" &gt;my newsfeeds&lt;/a&gt;), delete all articles or delete feeds.  &lt;br&gt;
+Multi Actions for marked newsfeeds: You can update feeds, unset unloadable articles 
+(see &lt;a href="info.html::Newsfeed%20Import" &gt;Newsfeed Import&lt;/a&gt;), delete all articles or delete feeds.  &lt;br&gt;
 Actions: You can edit, update, delete a feed or follow the link to the newsfeed.  &lt;br&gt;
 
 &lt;img src="../img/38.jpg" alt="Image"/&gt;  &lt;br&gt;
 
-@subsection autotoc_md477 New/Edit Feeds
+@subsection autotoc_md484 New/Edit Feeds
 
 Explanations of the input fields
 
@@ -224,7 +240,7 @@ Explanations of the input fields
 
     &lt;img src="../img/41.jpg" alt="Image"/&gt;  &lt;br&gt;
 
-@subsection autotoc_md478 Feed Wizard
+@subsection autotoc_md485 Feed Wizard
 
 Here you can edit or set up a new newsfeed in 4 steps.  &lt;br&gt;
 
@@ -245,9 +261,9 @@ Here you can edit or set up a new newsfeed in 4 steps.  &lt;br&gt;
 
     &lt;img src="../img/40.jpg" alt="Image"/&gt;  &lt;br&gt;
 
-4. The settings are explained in @ref new_feed "New/Edit Feeds".  &lt;br&gt;
+4. The settings are explained in the &lt;a href="info.html::New%2FEdit%20Feeds" &gt;New/Edit Feeds&lt;/a&gt;.  &lt;br&gt;
 
-@section autotoc_md479 Read a Text
+@section autotoc_md486 Read a Text
 
 This is your "working area": Reading (and listening to) a text, saving/editing words and expressions, looking up words, expressions, sentences in external dictionaries or Google Translate. To create an expression, click on the first word. You see "Exp: 2..xx 3..yy 4..zz ...". Just click on the number of words (2..9) of the desired expression you want to save. The dictionary links for multi word expressions are always in the edit frame! You can also use the Keyboard in the text frame, see &lt;a href="info.html::keybind" &gt;Key Bindings&lt;/a&gt;. Double clicking on a word sets the audio position approximately to the text position, if an audio was defined. The other audio controls are self-explanatory: automatic repeat, rewind and move forward n seconds, etc.).  &lt;br&gt;
 
@@ -267,7 +283,7 @@ With the checkbox [Show All] you can switch the display of text:  &lt;br&gt;
 
 &lt;img src="../img/30.jpg" alt="Image"/&gt;  &lt;br&gt;
 
-@section autotoc_md480 Review terms
+@section autotoc_md487 Review terms
 
 Tests are only possible if a term has a translation. Terms with status "Ignored" and "Well Known" are never tested, and terms with a positive or zero score are not tested today. In summary, the term score must fall below zero to trigger the test. See also &lt;a href="info.html::termscores" &gt;Term scores&lt;/a&gt;. Terms that are due today are marked with a red bullet in the term table. Terms that are due tomorrow are marked with a yellow bullet in the term table.  &lt;br&gt;
 
@@ -275,31 +291,31 @@ During a test, a status display (at the bottom of the test frame) shows you the 
 
 In the following, L1 denotes you mother tongue (= translations), and L2 the language you want to learn (= the terms, meaning words and expressions).
 
-@subsection autotoc_md481 Review terms in a text (L2 -&gt; L1)
+@subsection autotoc_md488 Review terms in a text (L2 -&gt; L1)
 
 This is Test #1 or #4: L2 -&gt; L1 (recognition) - to train your ability to recognize a L2 term. You may test within sentence context (Button "..\[L2\].."), or just the term (Button "\[L2\]"). You can also use the Keyboard in the test frame, see &lt;a href="info.html::keybind" &gt;Key Bindings&lt;/a&gt;.  &lt;br&gt;
 
 &lt;img src="../img/07.jpg" alt="Image"/&gt;  &lt;br&gt;
 
-@subsection autotoc_md482 Review terms in a text (L1 -&gt; L2)
+@subsection autotoc_md489 Review terms in a text (L1 -&gt; L2)
 
 This is Test #2 or #5: L1 -&gt; L2 (recall) - to train your ability to produce a term from L1. You may test within sentence context (Button "..\[L1\].."), or just the term (Button "\[L1\]"). You can also use the Keyboard in the test frame, see &lt;a href="info.html::keybind" &gt;Key Bindings&lt;/a&gt;.  &lt;br&gt;
 
 &lt;img src="../img/11.jpg" alt="Image"/&gt;  &lt;br&gt;
 
-@subsection autotoc_md483 Review terms in a text (••• -&gt; L2)
+@subsection autotoc_md490 Review terms in a text (••• -&gt; L2)
 
 This is test #3: ••• -&gt; L2 (recall) - to train your ability to produce a term only from the sentence context (Button "..\[••\].."). If you hover over "\[•••\]", a tooltip displays the translation of the term. You can also use the Keyboard in the test frame, see &lt;a href="info.html::keybind" &gt;Key Bindings&lt;/a&gt;.  &lt;br&gt;
 
 &lt;img src="../img/12.jpg" alt="Image"/&gt;  &lt;br&gt;
 
-@subsection autotoc_md484 Review yourself in a table / word list format (Button "Table")
+@subsection autotoc_md491 Review yourself in a table / word list format (Button "Table")
 
 This is test #6: The selected terms and expressions are presented as a table. You can make invisible either the columns "<a class="el" href="class_term.html">Term</a>" or "Translation", and you can hide or show the columns "Sentence", "Romanization", "Status" and "Ed" (Edit). To reveal the invisible solution ("<a class="el" href="class_term.html">Term</a>" or "Translation"), you just click into the empty table cell. You can review or test yourself with or without changing the status by clicking "+" or "-" in the "Status" column. A status in red signifies that the term is due for testing. You can also edit the term by clicking the yellow "Edit" icon. Columns 2 to 6 may also my sorted by clicking on the header row. The initial sort order is according to term score.  &lt;br&gt;
 
 &lt;img src="../img/32.jpg" alt="Image"/&gt;  &lt;br&gt;
 
-@section autotoc_md485 Print a text
+@section autotoc_md492 Print a text
 
 Here you print a text. Optional: an inline annotation (translation and/or romanization) of terms that are of specified status(es). This screen is also great to just read or study a text.  &lt;br&gt;
 
@@ -311,7 +327,7 @@ Chinese Text with annotation (only Romanization/Pinyin):  &lt;br&gt;
 
 &lt;img src="../img/21.jpg" alt="Image"/&gt;  &lt;br&gt;
 
-@section autotoc_md486 Create, edit, and use an &lt;em&gt;Improved Annotated Text&lt;/em&gt;
+@section autotoc_md493 Create, edit, and use an &lt;em&gt;Improved Annotated Text&lt;/em&gt;
 
 &lt;strong&gt;Motivation:&lt;/strong&gt; Annotated texts (as &lt;a href="<a href="http://en.wikipedia.org/wiki/Interlinear_gloss">http://en.wikipedia.org/wiki/Interlinear_gloss</a>" &gt;interlinear text&lt;/a&gt;) have been used for language learning for a long time. One example are the word-by-word translations in &lt;a href="<a href="http://en.assimil.com/">http://en.assimil.com/</a>" &gt;Assimil&lt;/a&gt; courses. The German &lt;a href="<a href="http://web.archive.org/web/20070223080453/http://195.149.74.241/BIRKENBIHL/PDF/MethodEnglish.pdf">http://web.archive.org/web/20070223080453/http://195.149.74.241/BIRKENBIHL/PDF/MethodEnglish.pdf</a>" &gt;V. F. Birkenbihl&lt;/a&gt; proposes the creation of interlinear word-by-word or &lt;a href="<a href="http://learnanylanguage.wikia.com/wiki/Hyperliteral_translations">http://learnanylanguage.wikia.com/wiki/Hyperliteral_translations</a>" &gt;hyperliteral&lt;/a&gt; translations (calling this creation "decoding") in foreign language learning. Learning Latin or Ancient Greek via interlinear texts is quite old as you can see in &lt;a href="<a href="http://www.youtube.com/watch?v=XnEKnezLXJg">http://www.youtube.com/watch?v=XnEKnezLXJg</a>" &gt;this YouTube video&lt;/a&gt;.  &lt;br&gt;
 
@@ -321,7 +337,7 @@ LWT's old "Print Screen" offers annotations, but it displays ALL translations of
 
 On the Print Screen, click on "Create" an Improved Annotated Text. The system creates a default annotated text.  &lt;br&gt;
 
-@subsection autotoc_md487 Edit Mode
+@subsection autotoc_md494 Edit Mode
 
 &lt;img src="../img/28.jpg" alt="Image"/&gt;  &lt;br&gt;
 
@@ -331,23 +347,23 @@ Within the "Improved Annotated <a class="el" href="class_text.html">Text</a> - E
 
 To leave the Edit mode, click on "Display/Print Mode". You may then print or display (with audio) the text, and work with the text online or offline.  &lt;br&gt;
 
-@subsection autotoc_md488 Print Mode
+@subsection autotoc_md495 Print Mode
 
 &lt;img src="../img/27.jpg" alt="Image"/&gt;  &lt;br&gt;
 
-@subsection autotoc_md489 Display Mode
+@subsection autotoc_md496 Display Mode
 
 With audio player in a separate window. Clicking the "T" or "A" lightbulb icons hides/shows the text or the blue annotations. You may also click on a single term or a single annotation to show or to hide it. This enables you to test yourself or to concentrate on one text only. Romanizations, if available, appear while hovering over a term.  &lt;br&gt;
 
 &lt;img src="../img/29.jpg" alt="Image"/&gt;  &lt;br&gt;
 
-@section autotoc_md490 Terms
+@section autotoc_md497 Terms
 
 The list of your saved words or expressions (= terms). You may filter the list of terms by language, text, status, term/romanization/translation (wildcard * possible) or term tag(s). Different sort orders are possible. You can do "multi actions" only on the marked or on all terms (on all pages!). "Se?" displays a green dot if a valid sentences with {term} exists. "Stat/Days" displays the status and the number of days since the last status change. The score of a term is a rough measure (in percent) how well you know a term. Read more about term scores &lt;a href="info.html::termscores" &gt;here&lt;/a&gt;. Terms with zero score are displayed red and should be tested today.  &lt;br&gt;
 
 &lt;img src="../img/08.jpg" alt="Image"/&gt;  &lt;br&gt;
 
-@subsection autotoc_md491 Multi Actions for marked terms
+@subsection autotoc_md498 Multi Actions for marked terms
 
 Most actions are self-explanatory. "Test Marked Terms" starts a test with all marked terms. You may delete marked terms and change the status of marked terms. "Set Status Date to Today" is some kind of "trick" for vacations, illnesses, etc.  &lt;br&gt;
 
@@ -357,25 +373,25 @@ Most actions are self-explanatory. "Test Marked Terms" starts a test with all ma
 
 &lt;img src="../img/16.jpg" alt="Image"/&gt;  &lt;br&gt;
 
-@subsection autotoc_md492 Multi Actions for all terms on all pages of the current query
+@subsection autotoc_md499 Multi Actions for all terms on all pages of the current query
 
 Explanations see above.  &lt;br&gt;
 
 &lt;img src="../img/17.jpg" alt="Image"/&gt;  &lt;br&gt;
 
-@section autotoc_md493 Term Tags
+@section autotoc_md500 Term Tags
 
 The list of your term tags. You can manage your term tags here. With term tags, it will be easier to categorize and organize your terms. The tags are case sensitive, have 1 to 20 characters, and must not contain any spaces or commas.  &lt;br&gt;
 
 &lt;img src="../img/24.jpg" alt="Image"/&gt;
 
-@section autotoc_md494 Text Archive
+@section autotoc_md501 Text Archive
 
 The list of archived texts. To unarchive, to edit or to delete a text, click on the icon under "Actions". There are also "Multi Actions" available.  &lt;br&gt;
 
 What is the difference between (active) texts and archived texts?  &lt;br&gt;
 
-@subsection autotoc_md495 (Active) texts
+@subsection autotoc_md502 (Active) texts
 
 * They have been parsed and tokenized according to the rules defined for the language.
 * The result is stored in a cache of sentences and text items.
@@ -383,7 +399,7 @@ What is the difference between (active) texts and archived texts?  &lt;br&gt;
 * Reading with term creation/editing and dictionary lookup is possible.
 * Testing of a stored term that occurs in the text, is possible. A terms will be tested within the context of any sentence(s) in all active texts (the number of sentences may be set (1, 2, or 3) as a preference).
 
-@subsection autotoc_md496 Archived texts
+@subsection autotoc_md503 Archived texts
 
 * They are not parsed and tokenized, only the text is stored.
 * Compared with active texts, they don't use much space in the database, because no sentences and no text items are stored.
@@ -396,13 +412,13 @@ Multi Actions for marked archived texts
 
 &lt;img src="../img/15.jpg" alt="Image"/&gt;  &lt;br&gt;
 
-@section autotoc_md497 Statistics
+@section autotoc_md504 Statistics
 
 It's self-explanatory and shows your performance. The numbers in the first table are links, by clicking on them you jump to the table of all terms in that status and language.  &lt;br&gt;
 
 &lt;img src="../img/09.jpg" alt="Image"/&gt;  &lt;br&gt;
 
-@section autotoc_md498 Import Terms
+@section autotoc_md505 Import Terms
 
 Import a list of terms for a language, and set the status for all to a specified value. You can specify a file to upload or type/paste the data directly into the textbox. Format: one term per line, fields (columns) are separated either by comma ("CSV" file, e.g. used in LingQ as export format), TAB ("TSV" file, e.g. copy and paste from a spreadsheet program, not possible if you type in data manually) or # (if you type in data manually). The field/column assignment must be specified on the left.
 
@@ -410,13 +426,13 @@ Important: You must import a term. The translation can be omitted if the status 
 
 &lt;img src="../img/upload_terms.jpg" alt="Image"/&gt;  &lt;br&gt;
 
-@section autotoc_md499 Database
+@section autotoc_md506 Database
 
 This screen offers a possibility to save, restore or empty the LWT database (ONLY the current table set!). This makes it easy to try out new things or just to make regular backups. "Restore" only accepts files that have been created with the "Backup" function above. "Empty Database" deletes the data of all tables (except the settings) of the current table set, and you can start from scratch afterwards. Be careful: you may lose valuable data!  &lt;br&gt;
 
 &lt;img src="../img/18.jpg" alt="Image"/&gt;  &lt;br&gt;
 
-@section autotoc_md500 Settings
+@section autotoc_md507 Settings
 
 In this screen you can adjust the program according to your needs. The geometric properties of the &lt;em&gt;Read Text&lt;/em&gt; and &lt;em&gt;Test&lt;/em&gt; screens can be changed. This is important because different browsers and font sizes may result in an unpleasant viewing experience.
 
@@ -428,7 +444,7 @@ The number of items per page on different screens can be set, and you can decide
 
 &lt;img src="../img/19.jpg" alt="Image"/&gt;  &lt;br&gt;
 
-@section autotoc_md501 Multiple LWT table sets
+@section autotoc_md508 Multiple LWT table sets
 
 &lt;strong&gt;WARNINGS&lt;/strong&gt;:
 

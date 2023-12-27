@@ -105,7 +105,8 @@ Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Setting all unknown words to Well Known (99) </p>
-<p>Call: <a class="el" href="all__words__wellknown_8php.html" title="Setting all unknown words to Well Known (99)">all_words_wellknown.php</a>?text=[textid] (mark all words as well-known) <a class="el" href="all__words__wellknown_8php.html" title="Setting all unknown words to Well Known (99)">all_words_wellknown.php</a>?text=[textid]&amp;status=[statusint] (mark with a specific status, normally 98 or 99) </p>
+<p>Call: <a class="el" href="all__words__wellknown_8php.html" title="Setting all unknown words to Well Known (99)">all_words_wellknown.php</a>?text=[textid] (mark all words as well-known) <a class="el" href="all__words__wellknown_8php.html" title="Setting all unknown words to Well Known (99)">all_words_wellknown.php</a>?text=[textid]&amp;status=[statusint] (mark with a specific status, normally 98 or 99)</p>
+<p>PHP version 8.1 </p>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a id="a892bafeaaaff5f1fff8f32be0dbbbec8" name="a892bafeaaaff5f1fff8f32be0dbbbec8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a892bafeaaaff5f1fff8f32be0dbbbec8">&#9670;&#160;</a></span>all_words_wellknown_content()</h2>
@@ -274,7 +275,7 @@ Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramtype">int</td><td class="paramname">$txid</td><td><a class="el" href="class_text.html">Text</a> ID </td></tr>
-    <tr><td class="paramtype">int</td><td class="paramname">$javascript</td><td>JavaScript-formatted string.</td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$javascript</td><td>JavaScript-formatted string.</td></tr>
   </table>
   </dd>
 </dl>
@@ -315,9 +316,9 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>(int|string)[] Number of edited words, and JavaScript query to change their display</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>array [int, string] Number of edited words, and JavaScript query to change their display</dd></dl>
 <dl class="section since"><dt>Since</dt><dd>2.5.3-fork Use 'let' instead of 'var' in returned JS</dd></dl>
-<p>@psalm-return array{0: int, 1: string} </p>
+<p>@psalm-return list{int, string} </p>
 
 </div>
 </div>
@@ -368,11 +369,11 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>(int|string)[] Number of rows edited and a javascript query.</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>array [int, string] Number of rows edited and a javascript query.</dd></dl>
 <dl class="section since"><dt>Since</dt><dd>2.5.3-fork Do not crash when echoing an error </dd>
 <dd>
 2.5.3-fork Do not crash when a word is already registred to the database</dd></dl>
-<p>@psalm-return array{0: int, 1: string} </p>
+<p>@psalm-return list{int, string} </p>
 
 </div>
 </div>

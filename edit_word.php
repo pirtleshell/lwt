@@ -417,7 +417,7 @@ function edit_word_do_form($wid, $text_id, $ord, $fromAnn)
             const term = $('#wordfield').val();
             getPhoneticTextAsync(term, LANG_SHORT)
             .then(function (phonetic) {
-                newword.WoRomanization.value = phonetic;
+                newword.WoRomanization.value = phonetic["phonetic_reading"];
             });
         }
 

@@ -92,6 +92,12 @@
                                     <h4 class="phpdocumentor-sidebar__root-namespace">
     <a href="packages/Lwt.html" class="">Lwt</a>
 </h4>
+    <ul class="phpdocumentor-list">
+                    <li>
+                <a href="packages/Lwt-Documentation.html" class="">Documentation</a>
+                
+            </li>
+            </ul>
 
                         </section>
             
@@ -201,7 +207,7 @@
             <dt class="phpdocumentor-table-of-contents__entry -function -">
     <a href="namespaces/lwt-interface-server-data.html#function_get_server_data_table">get_server_data_table()</a>
     <span>
-                                &nbsp;: array{db_prefix: string, db_size: float, server_soft: string[], apache: string, php: string, mysql: string}    </span>
+                                &nbsp;: array&lt;string|int, false|float|string&gt;    </span>
 </dt>
 <dd>Return a lot of different server state variables.</dd>
 
@@ -233,7 +239,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="server_data.php"><a href="files/server-data.html">server_data.php</a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">39</span>
+    <span class="phpdocumentor-element-found-in__line">36</span>
 
     </aside>
 
@@ -241,7 +247,7 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility"></span>
-                    <span class="phpdocumentor-signature__name">get_server_data_table</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array{db_prefix: string, db_size: float, server_soft: string[], apache: string, php: string, mysql: string}</span></code>
+                    <span class="phpdocumentor-signature__name">get_server_data_table</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, false|float|string&gt;</span></code>
 
     
     
@@ -275,10 +281,7 @@
                 </dt>
                 <dd class="phpdocumentor-tag-list__definition">
                                                                                 
-                                                 <section class="phpdocumentor-description"><p>array{
-&quot;db_prefix&quot;: string, &quot;db_size&quot;: float, &quot;server_soft&quot;: non-empty-list<string>,
-&quot;apache&quot;: string, &quot;php&quot;: false|string, &quot;mysql&quot;: string
-}</p>
+                                                 <section class="phpdocumentor-description"><p>array{db_name: string, db_prefix: string, db_size: float, server_soft: string, apache: string, php: false|string, mysql: string}</p>
 </section>
 
                                     </dd>
@@ -286,9 +289,11 @@
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">array{db_prefix: string, db_size: float, server_soft: string[], apache: string, php: string, mysql: string}</span>
+        <span class="phpdocumentor-signature__response_type">array&lt;string|int, false|float|string&gt;</span>
                     &mdash;
-                <section class="phpdocumentor-description"><p>Table prefix, database size, server software, apache version, PHP version, MySQL
+                <section class="phpdocumentor-description"><p>{&quot;db_prefix&quot;: string, &quot;db_size&quot;: float, &quot;server_soft&quot;: string[],
+&quot;apache&quot;: string, &quot;php&quot;: string, &quot;mysql&quot;: string}
+Table prefix, database size, server software, apache version, PHP version, MySQL
 version</p>
 </section>
 
@@ -304,7 +309,7 @@ version</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="server_data.php"><a href="files/server-data.html">server_data.php</a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">81</span>
+    <span class="phpdocumentor-element-found-in__line">78</span>
 
     </aside>
 

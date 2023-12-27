@@ -145,11 +145,12 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>string|array [new word ID, lowercase $text] if success, error message otherwise</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>(int|string)[]|string [new word ID, lowercase $text] if success, error message otherwise</dd></dl>
 <p>@global string $tbpref Database table prefix</p>
 <dl class="section since"><dt>Since</dt><dd>2.9.0 Error messages are much more explicit </dd>
 <dd>
-2.9.0 Return an array </dd></dl>
+2.9.0 Return an array</dd></dl>
+<p>@psalm-return list{int, string}|string </p>
 
 </div>
 </div>

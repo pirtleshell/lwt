@@ -628,11 +628,13 @@ function mword_each_do_text_text(_) {
 
 function word_dblclick_event_do_text_text () {
   const t = parseInt($('#totalcharcount').text(), 10);
-  if (t == 0) return;
+  if (t == 0) 
+    return;
   let p = 100 * ($(this).attr('data_pos') - 5) / t;
-  if (p < 0) p = 0;
-  if (typeof (window.parent.frames.h.new_pos) === 'function') { 
-    window.parent.frames.h.new_pos(p); 
+  if (p < 0) 
+    p = 0;
+  if (typeof (window.parent.frames.h.lwt_audio_controller.newPosition) === 'function') { 
+    window.parent.frames.h.lwt_audio_controller.newPosition(p); 
   }
 }
 
@@ -1160,12 +1162,13 @@ function keydown_event_do_text_text (e) {
   if (e.which == 65) { // A : set audio pos.
     let p = curr.attr('data_pos');
     const t = parseInt($('#totalcharcount').text(), 10);
-    if (t == 0) return true;
+    if (t == 0) 
+      return true;
     p = 100 * (p - 5) / t;
     if (p < 0) p = 0;
-    if (typeof (window.parent.frames.h.new_pos) === 'function') { 
-      window.parent.frames.h.new_pos(p); 
-    } else { 
+    if (typeof (window.parent.frames.h.lwt_audio_controller.newPosition) === 'function') { 
+      window.parent.frames.h.lwt_audio_controller.newPosition(p); 
+    } else {
       return true; 
     }
     return false;

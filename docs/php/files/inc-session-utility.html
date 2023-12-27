@@ -92,6 +92,12 @@
                                     <h4 class="phpdocumentor-sidebar__root-namespace">
     <a href="packages/Lwt.html" class="">Lwt</a>
 </h4>
+    <ul class="phpdocumentor-list">
+                    <li>
+                <a href="packages/Lwt-Documentation.html" class="">Documentation</a>
+                
+            </li>
+            </ul>
 
                         </section>
             
@@ -121,6 +127,7 @@
 
     <section class="phpdocumentor-description"><p>By requiring this file, you start a session, connect to the
 database and declare a lot of useful functions.</p>
+<p>PHP version 8.1</p>
 </section>
 
 
@@ -337,7 +344,7 @@ database and declare a lot of useful functions.</p>
             <dt class="phpdocumentor-table-of-contents__entry -function -">
     <a href="namespaces/default.html#function_get_links_from_new_feed">get_links_from_new_feed()</a>
     <span>
-                                &nbsp;: array&lt;string|int, array&lt;string|int, false|mixed|null|string&gt;|null|string&gt;|false    </span>
+                                &nbsp;: array&lt;string|int, array&lt;string|int, false|null|string&gt;|null|string&gt;|false    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -function -">
@@ -376,14 +383,14 @@ database and declare a lot of useful functions.</p>
             <dt class="phpdocumentor-table-of-contents__entry -function -">
     <a href="namespaces/default.html#function_media_paths_search">media_paths_search()</a>
     <span>
-                                &nbsp;: array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: array&lt;string|int, array&lt;string|int, mixed&gt;&gt;    </span>
 </dt>
 <dd>Return the list of media files found in folder, recursively.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -function -">
     <a href="namespaces/default.html#function_get_media_paths">get_media_paths()</a>
     <span>
-                                &nbsp;: array&lt;string|int, string&gt;    </span>
+                                &nbsp;: array&lt;string|int, mixed&gt;    </span>
 </dt>
 <dd>Return the paths for all media files.</dd>
 
@@ -416,13 +423,13 @@ database and declare a lot of useful functions.</p>
             <dt class="phpdocumentor-table-of-contents__entry -function -">
     <a href="namespaces/default.html#function_remove_soft_hyphens">remove_soft_hyphens()</a>
     <span>
-                                &nbsp;: string    </span>
+                                &nbsp;: string|array&lt;string|int, string&gt;    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -function -">
     <a href="namespaces/default.html#function_replace_supp_unicode_planes_char">replace_supp_unicode_planes_char()</a>
     <span>
-                                &nbsp;: string|null    </span>
+                                &nbsp;: null|string|array&lt;string|int, string&gt;    </span>
 </dt>
 
             <dt class="phpdocumentor-table-of-contents__entry -function -">
@@ -506,7 +513,7 @@ file is not found</dd>
     <span>
                                 &nbsp;: string|int    </span>
 </dt>
-<dd>Get a SESSION value and update it if necessary.</dd>
+<dd>Get a session value and update it if necessary.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -function -">
     <a href="namespaces/default.html#function_processDBParam">processDBParam()</a>
@@ -836,14 +843,14 @@ file is not found</dd>
             <dt class="phpdocumentor-table-of-contents__entry -function -">
     <a href="namespaces/default.html#function_return_textwordcount">return_textwordcount()</a>
     <span>
-                                &nbsp;: array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: array&lt;string|int, array&lt;string|int, array&lt;string|int, float|int|null|string&gt;|float|int|null|string&gt;&gt;    </span>
 </dt>
 <dd>Return statistics about a list of text ID.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -function -">
     <a href="namespaces/default.html#function_textwordcount">textwordcount()</a>
     <span>
-                                &nbsp;: mixed    </span>
+                                &nbsp;: void    </span>
 </dt>
 <dd>Compute and echo word statistics about a list of text ID.</dd>
 
@@ -870,28 +877,28 @@ file is not found</dd>
             <dt class="phpdocumentor-table-of-contents__entry -function -">
     <a href="namespaces/default.html#function_sentences_from_word">sentences_from_word()</a>
     <span>
-                                &nbsp;: <abbr title="\mysqli_result">mysqli_result</abbr>    </span>
+                                &nbsp;: <abbr title="\mysqli_result">mysqli_result</abbr>|true    </span>
 </dt>
 <dd>Perform a SQL query to find sentences containing a word.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -function -">
     <a href="namespaces/default.html#function_getSentence">getSentence()</a>
     <span>
-                                &nbsp;: array{0: string, 1: string}    </span>
+                                &nbsp;: array&lt;string|int, string&gt;    </span>
 </dt>
 <dd>Format the sentence(s) $seid containing $wordlc highlighting $wordlc.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -function -">
     <a href="namespaces/default.html#function_sentences_with_word">sentences_with_word()</a>
     <span>
-                                &nbsp;: array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: array&lt;string|int, array&lt;string|int, string&gt;&gt;    </span>
 </dt>
 <dd>Return sentences containing a word.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -function -">
     <a href="namespaces/default.html#function_example_sentences_area">example_sentences_area()</a>
     <span>
-                                &nbsp;: mixed    </span>
+                                &nbsp;: void    </span>
 </dt>
 <dd>Prepare the area to for examples sentences of a word.</dd>
 
@@ -917,10 +924,18 @@ file is not found</dd>
 <dd>Get language name from its ID</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a href="namespaces/default.html#function_getLanguageCode">getLanguageCode()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+<dd>Try to get language code from its ID</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
     <a href="namespaces/default.html#function_getScriptDirectionTag">getScriptDirectionTag()</a>
     <span>
                                 &nbsp;: string    </span>
 </dt>
+<dd>Return a right-to-left direction indication in HTML if language is right-to-left.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -function -">
     <a href="namespaces/default.html#function_insert_expression_from_mecab">insert_expression_from_mecab()</a>
@@ -1100,7 +1115,7 @@ global JavaScript scope.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">29</span>
+    <span class="phpdocumentor-element-found-in__line">31</span>
 
     </aside>
 
@@ -1161,7 +1176,7 @@ global JavaScript scope.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">61</span>
+    <span class="phpdocumentor-element-found-in__line">63</span>
 
     </aside>
 
@@ -1222,7 +1237,7 @@ global JavaScript scope.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">86</span>
+    <span class="phpdocumentor-element-found-in__line">88</span>
 
     </aside>
 
@@ -1260,7 +1275,7 @@ global JavaScript scope.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">102</span>
+    <span class="phpdocumentor-element-found-in__line">104</span>
 
     </aside>
 
@@ -1305,7 +1320,7 @@ global JavaScript scope.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">141</span>
+    <span class="phpdocumentor-element-found-in__line">143</span>
 
     </aside>
 
@@ -1350,7 +1365,7 @@ global JavaScript scope.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">180</span>
+    <span class="phpdocumentor-element-found-in__line">182</span>
 
     </aside>
 
@@ -1395,7 +1410,7 @@ global JavaScript scope.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">216</span>
+    <span class="phpdocumentor-element-found-in__line">218</span>
 
     </aside>
 
@@ -1440,7 +1455,7 @@ global JavaScript scope.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">261</span>
+    <span class="phpdocumentor-element-found-in__line">263</span>
 
     </aside>
 
@@ -1475,7 +1490,7 @@ global JavaScript scope.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">303</span>
+    <span class="phpdocumentor-element-found-in__line">305</span>
 
     </aside>
 
@@ -1526,7 +1541,7 @@ global JavaScript scope.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">349</span>
+    <span class="phpdocumentor-element-found-in__line">351</span>
 
     </aside>
 
@@ -1577,7 +1592,7 @@ global JavaScript scope.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">385</span>
+    <span class="phpdocumentor-element-found-in__line">387</span>
 
     </aside>
 
@@ -1615,7 +1630,7 @@ global JavaScript scope.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">413</span>
+    <span class="phpdocumentor-element-found-in__line">415</span>
 
     </aside>
 
@@ -1676,7 +1691,7 @@ global JavaScript scope.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">442</span>
+    <span class="phpdocumentor-element-found-in__line">444</span>
 
     </aside>
 
@@ -1737,7 +1752,7 @@ global JavaScript scope.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">463</span>
+    <span class="phpdocumentor-element-found-in__line">465</span>
 
     </aside>
 
@@ -1782,7 +1797,7 @@ global JavaScript scope.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">504</span>
+    <span class="phpdocumentor-element-found-in__line">506</span>
 
     </aside>
 
@@ -1827,7 +1842,7 @@ global JavaScript scope.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">543</span>
+    <span class="phpdocumentor-element-found-in__line">545</span>
 
     </aside>
 
@@ -1872,7 +1887,7 @@ global JavaScript scope.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">583</span>
+    <span class="phpdocumentor-element-found-in__line">585</span>
 
     </aside>
 
@@ -1917,7 +1932,7 @@ global JavaScript scope.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">611</span>
+    <span class="phpdocumentor-element-found-in__line">613</span>
 
     </aside>
 
@@ -1962,7 +1977,7 @@ global JavaScript scope.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">639</span>
+    <span class="phpdocumentor-element-found-in__line">641</span>
 
     </aside>
 
@@ -2007,7 +2022,7 @@ global JavaScript scope.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">666</span>
+    <span class="phpdocumentor-element-found-in__line">668</span>
 
     </aside>
 
@@ -2041,7 +2056,7 @@ global JavaScript scope.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">732</span>
+    <span class="phpdocumentor-element-found-in__line">746</span>
 
     </aside>
 
@@ -2079,7 +2094,7 @@ global JavaScript scope.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">864</span>
+    <span class="phpdocumentor-element-found-in__line">878</span>
 
     </aside>
 
@@ -2113,7 +2128,7 @@ global JavaScript scope.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">896</span>
+    <span class="phpdocumentor-element-found-in__line">910</span>
 
     </aside>
 
@@ -2174,14 +2189,14 @@ global JavaScript scope.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">925</span>
+    <span class="phpdocumentor-element-found-in__line">938</span>
 
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility"></span>
-                    <span class="phpdocumentor-signature__name">get_links_from_new_feed</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$NfSourceURI</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, array&lt;string|int, false|mixed|null|string&gt;|null|string&gt;|false</span></code>
+                    <span class="phpdocumentor-signature__name">get_links_from_new_feed</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$NfSourceURI</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, array&lt;string|int, false|null|string&gt;|null|string&gt;|false</span></code>
 
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -2207,7 +2222,7 @@ global JavaScript scope.</dd>
                 </dt>
                 <dd class="phpdocumentor-tag-list__definition">
                                                                                 
-                                                 <section class="phpdocumentor-description"><p>array&lt;'feed_text'|'feed_title'|int, array{title: null|string, desc: null|string, link: string, encoded?: false|string, description?: false|string, content?: false|string, text?: mixed}|null|string&gt;|false</p>
+                                                 <section class="phpdocumentor-description"><p>array{feed_title: null|string,...}|false</p>
 </section>
 
                                     </dd>
@@ -2215,7 +2230,7 @@ global JavaScript scope.</dd>
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">array&lt;string|int, array&lt;string|int, false|mixed|null|string&gt;|null|string&gt;|false</span>
+        <span class="phpdocumentor-signature__response_type">array&lt;string|int, array&lt;string|int, false|null|string&gt;|null|string&gt;|false</span>
             </section>
 
 </article>
@@ -2228,7 +2243,7 @@ global JavaScript scope.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1057</span>
+    <span class="phpdocumentor-element-found-in__line">1070</span>
 
     </aside>
 
@@ -2289,7 +2304,7 @@ global JavaScript scope.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1145</span>
+    <span class="phpdocumentor-element-found-in__line">1158</span>
 
     </aside>
 
@@ -2343,7 +2358,7 @@ global JavaScript scope.</dd>
                 </dt>
                 <dd class="phpdocumentor-tag-list__definition">
                                                                                 
-                                                 <section class="phpdocumentor-description"><p>array&lt;array{TxTitle: mixed, TxAudioURI?: mixed|null, TxText?: string, TxSourceURI?: mixed|string, message?: string, link?: non-empty-list<mixed>}&gt;|null|string</p>
+                                                 <section class="phpdocumentor-description"><p>array&lt;array{TxTitle: mixed, TxAudioURI: mixed|null, TxText: string, TxSourceURI: mixed|string, message?: string, link?: list{mixed,...}}&gt;|null|string</p>
 </section>
 
                                     </dd>
@@ -2364,7 +2379,7 @@ global JavaScript scope.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1422</span>
+    <span class="phpdocumentor-element-found-in__line">1433</span>
 
     </aside>
 
@@ -2436,7 +2451,7 @@ global JavaScript scope.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1576</span>
+    <span class="phpdocumentor-element-found-in__line">1587</span>
 
     </aside>
 
@@ -2478,7 +2493,7 @@ global JavaScript scope.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1589</span>
+    <span class="phpdocumentor-element-found-in__line">1600</span>
 
     </aside>
 
@@ -2527,7 +2542,7 @@ global JavaScript scope.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1614</span>
+    <span class="phpdocumentor-element-found-in__line">1627</span>
 
     </aside>
 
@@ -2535,7 +2550,7 @@ global JavaScript scope.</dd>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility"></span>
-                    <span class="phpdocumentor-signature__name">media_paths_search</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$dir</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">media_paths_search</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$dir</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, array&lt;string|int, mixed&gt;&gt;</span></code>
 
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -2552,10 +2567,26 @@ global JavaScript scope.</dd>
             </dl>
 
     
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="namespaces/default.html#function_media_paths_search#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">psalm-return</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                                
+                                                 <section class="phpdocumentor-description"><p>array{paths: array, folders: array}</p>
+</section>
+
+                                    </dd>
+                                            </dl>
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">array&lt;string|int, array&lt;string|int, mixed&gt;&gt;</span>
                     &mdash;
                 <section class="phpdocumentor-description"><p>All paths found (matching files and folders) in &quot;paths&quot; and folders in &quot;folders&quot;.</p>
 </section>
@@ -2572,7 +2603,7 @@ global JavaScript scope.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1657</span>
+    <span class="phpdocumentor-element-found-in__line">1670</span>
 
     </aside>
 
@@ -2580,7 +2611,7 @@ global JavaScript scope.</dd>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility"></span>
-                    <span class="phpdocumentor-signature__name">get_media_paths</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, string&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">get_media_paths</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
 
     
     
@@ -2588,9 +2619,9 @@ global JavaScript scope.</dd>
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">array&lt;string|int, string&gt;</span>
+        <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span>
                     &mdash;
-                <section class="phpdocumentor-description"><p>Paths of media files</p>
+                <section class="phpdocumentor-description"><p>Paths of media files, in the form array&lt;string, string&gt;</p>
 </section>
 
             </section>
@@ -2605,7 +2636,7 @@ global JavaScript scope.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1681</span>
+    <span class="phpdocumentor-element-found-in__line">1694</span>
 
     </aside>
 
@@ -2650,7 +2681,7 @@ global JavaScript scope.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1703</span>
+    <span class="phpdocumentor-element-found-in__line">1716</span>
 
     </aside>
 
@@ -2695,7 +2726,7 @@ global JavaScript scope.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1730</span>
+    <span class="phpdocumentor-element-found-in__line">1743</span>
 
     </aside>
 
@@ -2733,7 +2764,7 @@ global JavaScript scope.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1745</span>
+    <span class="phpdocumentor-element-found-in__line">1758</span>
 
     </aside>
 
@@ -2771,14 +2802,14 @@ global JavaScript scope.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1764</span>
+    <span class="phpdocumentor-element-found-in__line">1780</span>
 
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility"></span>
-                    <span class="phpdocumentor-signature__name">remove_soft_hyphens</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$str</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+                    <span class="phpdocumentor-signature__name">remove_soft_hyphens</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$str</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string|array&lt;string|int, string&gt;</span></code>
 
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -2793,10 +2824,26 @@ global JavaScript scope.</dd>
             </dl>
 
     
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="namespaces/default.html#function_remove_soft_hyphens#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">psalm-return</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                                
+                                                 <section class="phpdocumentor-description"><p>array<string>|string</p>
+</section>
+
+                                    </dd>
+                                            </dl>
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">string</span>
+        <span class="phpdocumentor-signature__response_type">string|array&lt;string|int, string&gt;</span>
             </section>
 
 </article>
@@ -2809,14 +2856,14 @@ global JavaScript scope.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1772</span>
+    <span class="phpdocumentor-element-found-in__line">1791</span>
 
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility"></span>
-                    <span class="phpdocumentor-signature__name">replace_supp_unicode_planes_char</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$s</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string|null</span></code>
+                    <span class="phpdocumentor-signature__name">replace_supp_unicode_planes_char</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$s</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|string|array&lt;string|int, string&gt;</span></code>
 
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -2831,10 +2878,26 @@ global JavaScript scope.</dd>
             </dl>
 
     
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="namespaces/default.html#function_replace_supp_unicode_planes_char#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">psalm-return</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                                
+                                                 <section class="phpdocumentor-description"><p>array<string>|null|string</p>
+</section>
+
+                                    </dd>
+                                            </dl>
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">string|null</span>
+        <span class="phpdocumentor-signature__response_type">null|string|array&lt;string|int, string&gt;</span>
             </section>
 
 </article>
@@ -2847,7 +2910,7 @@ global JavaScript scope.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1780</span>
+    <span class="phpdocumentor-element-found-in__line">1799</span>
 
     </aside>
 
@@ -2892,7 +2955,7 @@ global JavaScript scope.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1796</span>
+    <span class="phpdocumentor-element-found-in__line">1815</span>
 
     </aside>
 
@@ -2930,7 +2993,7 @@ global JavaScript scope.</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1818</span>
+    <span class="phpdocumentor-element-found-in__line">1837</span>
 
     </aside>
 
@@ -2968,7 +3031,7 @@ file is not found</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1830</span>
+    <span class="phpdocumentor-element-found-in__line">1849</span>
 
     </aside>
 
@@ -3013,7 +3076,7 @@ file is not found</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1842</span>
+    <span class="phpdocumentor-element-found-in__line">1861</span>
 
     </aside>
 
@@ -3037,7 +3100,7 @@ file is not found</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1853</span>
+    <span class="phpdocumentor-element-found-in__line">1872</span>
 
     </aside>
 
@@ -3061,7 +3124,7 @@ file is not found</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1871</span>
+    <span class="phpdocumentor-element-found-in__line">1890</span>
 
     </aside>
 
@@ -3102,7 +3165,7 @@ file is not found</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1887</span>
+    <span class="phpdocumentor-element-found-in__line">1906</span>
 
     </aside>
 
@@ -3140,7 +3203,7 @@ file is not found</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1903</span>
+    <span class="phpdocumentor-element-found-in__line">1922</span>
 
     </aside>
 
@@ -3178,7 +3241,7 @@ file is not found</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1919</span>
+    <span class="phpdocumentor-element-found-in__line">1938</span>
 
     </aside>
 
@@ -3216,7 +3279,7 @@ file is not found</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1935</span>
+    <span class="phpdocumentor-element-found-in__line">1954</span>
 
     </aside>
 
@@ -3254,7 +3317,7 @@ file is not found</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1949</span>
+    <span class="phpdocumentor-element-found-in__line">1968</span>
 
     </aside>
 
@@ -3292,15 +3355,15 @@ file is not found</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1973</span>
+    <span class="phpdocumentor-element-found-in__line">1992</span>
 
     </aside>
 
-        <p class="phpdocumentor-summary">Get a SESSION value and update it if necessary.</p>
+        <p class="phpdocumentor-summary">Get a session value and update it if necessary.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility"></span>
-                    <span class="phpdocumentor-signature__name">processSessParam</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$reqkey</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$sesskey</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$default</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$isnum</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string|int</span></code>
+                    <span class="phpdocumentor-signature__name">processSessParam</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$reqkey</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$sesskey</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string|int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$default</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$isnum</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string|int</span></code>
 
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -3325,7 +3388,7 @@ file is not found</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-signature__argument__name">$default</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string</span>
+                : <span class="phpdocumentor-signature__argument__return-type">string|int</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Default value to return</p>
@@ -3349,7 +3412,7 @@ file is not found</p>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
         <span class="phpdocumentor-signature__response_type">string|int</span>
                     &mdash;
-                <section class="phpdocumentor-description"><p>The string data unless $isnum is specified</p>
+                <section class="phpdocumentor-description"><p>The required data unless $isnum is specified</p>
 </section>
 
             </section>
@@ -3364,7 +3427,7 @@ file is not found</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2001</span>
+    <span class="phpdocumentor-element-found-in__line">2020</span>
 
     </aside>
 
@@ -3436,7 +3499,7 @@ file is not found</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2022</span>
+    <span class="phpdocumentor-element-found-in__line">2041</span>
 
     </aside>
 
@@ -3495,7 +3558,7 @@ file is not found</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2062</span>
+    <span class="phpdocumentor-element-found-in__line">2081</span>
 
     </aside>
 
@@ -3541,7 +3604,7 @@ file is not found</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2074</span>
+    <span class="phpdocumentor-element-found-in__line">2095</span>
 
     </aside>
 
@@ -3566,6 +3629,22 @@ file is not found</p>
             </dl>
 
     
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="namespaces/default.html#function_get_checked#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">psalm-return</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                                
+                                                 <section class="phpdocumentor-description"><p>' checked=&quot;checked&quot; '|''</p>
+</section>
+
+                                    </dd>
+                                            </dl>
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
@@ -3586,7 +3665,7 @@ file is not found</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2090</span>
+    <span class="phpdocumentor-element-found-in__line">2113</span>
 
     </aside>
 
@@ -3616,6 +3695,22 @@ file is not found</p>
             </dl>
 
     
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="namespaces/default.html#function_get_selected#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">psalm-return</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                                
+                                                 <section class="phpdocumentor-description"><p>' selected=&quot;selected&quot; '|''</p>
+</section>
+
+                                    </dd>
+                                            </dl>
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
@@ -3636,7 +3731,7 @@ file is not found</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2118</span>
+    <span class="phpdocumentor-element-found-in__line">2141</span>
 
     </aside>
 
@@ -3712,7 +3807,7 @@ file is not found</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2172</span>
+    <span class="phpdocumentor-element-found-in__line">2195</span>
 
     </aside>
 
@@ -3764,7 +3859,7 @@ file is not found</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2208</span>
+    <span class="phpdocumentor-element-found-in__line">2231</span>
 
     </aside>
 
@@ -3827,7 +3922,7 @@ file is not found</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2235</span>
+    <span class="phpdocumentor-element-found-in__line">2258</span>
 
     </aside>
 
@@ -3877,7 +3972,7 @@ file is not found</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2260</span>
+    <span class="phpdocumentor-element-found-in__line">2283</span>
 
     </aside>
 
@@ -3915,7 +4010,7 @@ file is not found</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2278</span>
+    <span class="phpdocumentor-element-found-in__line">2301</span>
 
     </aside>
 
@@ -3953,7 +4048,7 @@ file is not found</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2298</span>
+    <span class="phpdocumentor-element-found-in__line">2321</span>
 
     </aside>
 
@@ -4012,7 +4107,7 @@ file is not found</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2372</span>
+    <span class="phpdocumentor-element-found-in__line">2395</span>
 
     </aside>
 
@@ -4050,7 +4145,7 @@ file is not found</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2389</span>
+    <span class="phpdocumentor-element-found-in__line">2412</span>
 
     </aside>
 
@@ -4095,7 +4190,7 @@ file is not found</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2401</span>
+    <span class="phpdocumentor-element-found-in__line">2424</span>
 
     </aside>
 
@@ -4133,7 +4228,7 @@ file is not found</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2427</span>
+    <span class="phpdocumentor-element-found-in__line">2450</span>
 
     </aside>
 
@@ -4171,7 +4266,7 @@ file is not found</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2445</span>
+    <span class="phpdocumentor-element-found-in__line">2468</span>
 
     </aside>
 
@@ -4209,7 +4304,7 @@ file is not found</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2462</span>
+    <span class="phpdocumentor-element-found-in__line">2485</span>
 
     </aside>
 
@@ -4247,7 +4342,7 @@ file is not found</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2476</span>
+    <span class="phpdocumentor-element-found-in__line">2499</span>
 
     </aside>
 
@@ -4292,7 +4387,7 @@ file is not found</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2485</span>
+    <span class="phpdocumentor-element-found-in__line">2508</span>
 
     </aside>
 
@@ -4330,7 +4425,7 @@ file is not found</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2493</span>
+    <span class="phpdocumentor-element-found-in__line">2516</span>
 
     </aside>
 
@@ -4368,7 +4463,7 @@ file is not found</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2501</span>
+    <span class="phpdocumentor-element-found-in__line">2524</span>
 
     </aside>
 
@@ -4406,7 +4501,7 @@ file is not found</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2509</span>
+    <span class="phpdocumentor-element-found-in__line">2532</span>
 
     </aside>
 
@@ -4434,7 +4529,7 @@ file is not found</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2542</span>
+    <span class="phpdocumentor-element-found-in__line">2565</span>
 
     </aside>
 
@@ -4462,7 +4557,7 @@ file is not found</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2551</span>
+    <span class="phpdocumentor-element-found-in__line">2574</span>
 
     </aside>
 
@@ -4490,7 +4585,7 @@ file is not found</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2584</span>
+    <span class="phpdocumentor-element-found-in__line">2607</span>
 
     </aside>
 
@@ -4518,7 +4613,7 @@ file is not found</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2592</span>
+    <span class="phpdocumentor-element-found-in__line">2615</span>
 
     </aside>
 
@@ -4546,7 +4641,7 @@ file is not found</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2613</span>
+    <span class="phpdocumentor-element-found-in__line">2636</span>
 
     </aside>
 
@@ -4574,7 +4669,7 @@ file is not found</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2628</span>
+    <span class="phpdocumentor-element-found-in__line">2651</span>
 
     </aside>
 
@@ -4619,7 +4714,7 @@ file is not found</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2666</span>
+    <span class="phpdocumentor-element-found-in__line">2689</span>
 
     </aside>
 
@@ -4675,7 +4770,7 @@ file is not found</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2707</span>
+    <span class="phpdocumentor-element-found-in__line">2730</span>
 
     </aside>
 
@@ -4720,7 +4815,7 @@ file is not found</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2726</span>
+    <span class="phpdocumentor-element-found-in__line">2749</span>
 
     </aside>
 
@@ -4765,7 +4860,7 @@ file is not found</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2754</span>
+    <span class="phpdocumentor-element-found-in__line">2777</span>
 
     </aside>
 
@@ -4813,7 +4908,7 @@ combining 5 and 99 statuses.
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2788</span>
+    <span class="phpdocumentor-element-found-in__line">2811</span>
 
     </aside>
 
@@ -4859,7 +4954,7 @@ combining 5 and 99 statuses.
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2812</span>
+    <span class="phpdocumentor-element-found-in__line">2835</span>
 
     </aside>
 
@@ -4935,7 +5030,7 @@ abandonned since 2.6.0-fork</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2857</span>
+    <span class="phpdocumentor-element-found-in__line">2880</span>
 
     </aside>
 
@@ -5020,7 +5115,7 @@ first</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2900</span>
+    <span class="phpdocumentor-element-found-in__line">2923</span>
 
     </aside>
 
@@ -5078,7 +5173,7 @@ first</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2933</span>
+    <span class="phpdocumentor-element-found-in__line">2956</span>
 
     </aside>
 
@@ -5116,7 +5211,7 @@ first</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2971</span>
+    <span class="phpdocumentor-element-found-in__line">2994</span>
 
     </aside>
 
@@ -5202,7 +5297,7 @@ deprecated.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">3011</span>
+    <span class="phpdocumentor-element-found-in__line">3033</span>
 
     </aside>
 
@@ -5262,7 +5357,7 @@ deprecated.</p>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
         <span class="phpdocumentor-signature__response_type">string</span>
                     &mdash;
-                <section class="phpdocumentor-description"><p>HTM+-formatted interface</p>
+                <section class="phpdocumentor-description"><p>HTML formatted interface</p>
 </section>
 
             </section>
@@ -5277,7 +5372,7 @@ deprecated.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">3056</span>
+    <span class="phpdocumentor-element-found-in__line">3079</span>
 
     </aside>
 
@@ -5322,7 +5417,7 @@ deprecated.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">3094</span>
+    <span class="phpdocumentor-element-found-in__line">3117</span>
 
     </aside>
 
@@ -5374,7 +5469,7 @@ deprecated.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">3184</span>
+    <span class="phpdocumentor-element-found-in__line">3206</span>
 
     </aside>
 
@@ -5444,7 +5539,7 @@ deprecated.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">3200</span>
+    <span class="phpdocumentor-element-found-in__line">3222</span>
 
     </aside>
 
@@ -5482,7 +5577,7 @@ deprecated.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">3221</span>
+    <span class="phpdocumentor-element-found-in__line">3243</span>
 
     </aside>
 
@@ -5523,7 +5618,7 @@ deprecated.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">3247</span>
+    <span class="phpdocumentor-element-found-in__line">3269</span>
 
     </aside>
 
@@ -5561,7 +5656,7 @@ deprecated.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">3293</span>
+    <span class="phpdocumentor-element-found-in__line">3315</span>
 
     </aside>
 
@@ -5599,7 +5694,7 @@ deprecated.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">3323</span>
+    <span class="phpdocumentor-element-found-in__line">3345</span>
 
     </aside>
 
@@ -5637,7 +5732,7 @@ deprecated.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">3393</span>
+    <span class="phpdocumentor-element-found-in__line">3415</span>
 
     </aside>
 
@@ -5675,7 +5770,7 @@ deprecated.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">3423</span>
+    <span class="phpdocumentor-element-found-in__line">3445</span>
 
     </aside>
 
@@ -5722,7 +5817,7 @@ deprecated.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">3433</span>
+    <span class="phpdocumentor-element-found-in__line">3455</span>
 
     </aside>
 
@@ -5767,7 +5862,7 @@ deprecated.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">3475</span>
+    <span class="phpdocumentor-element-found-in__line">3499</span>
 
     </aside>
 
@@ -5775,7 +5870,7 @@ deprecated.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility"></span>
-                    <span class="phpdocumentor-signature__name">return_textwordcount</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$texts_id</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">return_textwordcount</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$texts_id</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, array&lt;string|int, array&lt;string|int, float|int|null|string&gt;|float|int|null|string&gt;&gt;</span></code>
 
         <section class="phpdocumentor-description"><p>It is useful for unknown percent with this fork.</p>
 <p>The echo is an output array{0: int, 1: int, 2: int,
@@ -5813,11 +5908,20 @@ number of unique expressions, unique statistics</p>
 </section>
 
                                     </dd>
+                                                <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">psalm-return</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                                
+                                                 <section class="phpdocumentor-description"><p>array{total: array&lt;float|int|string, float|int|null|string&gt;, expr: array&lt;float|int|string, float|int|null|string&gt;, stat: array&lt;float|int|string, array&lt;float|int|string, float|int|null|string&gt;&gt;, totalu: array&lt;float|int|string, float|int|null|string&gt;, expru: array&lt;float|int|string, float|int|null|string&gt;, statu: array&lt;float|int|string, array&lt;float|int|string, float|int|null|string&gt;&gt;}</p>
+</section>
+
+                                    </dd>
                                             </dl>
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">array&lt;string|int, array&lt;string|int, array&lt;string|int, float|int|null|string&gt;|float|int|null|string&gt;&gt;</span>
                     &mdash;
                 <section class="phpdocumentor-description"><p>Statistics under the form of an array</p>
 </section>
@@ -5834,7 +5938,7 @@ number of unique expressions, unique statistics</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">3544</span>
+    <span class="phpdocumentor-element-found-in__line">3568</span>
 
     </aside>
 
@@ -5842,7 +5946,7 @@ number of unique expressions, unique statistics</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature -deprecated">
     <span class="phpdocumentor-signature__visibility"></span>
-                    <span class="phpdocumentor-signature__name">textwordcount</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$textID</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">textwordcount</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$textID</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
 
         <section class="phpdocumentor-description"><p>It is useful for unknown percent with this fork.</p>
 <p>The echo is an output array{0: int, 1: int, 2: int,
@@ -5903,7 +6007,7 @@ number of unique expressions, unique statistics</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">3551</span>
+    <span class="phpdocumentor-element-found-in__line">3575</span>
 
     </aside>
 
@@ -5941,7 +6045,7 @@ number of unique expressions, unique statistics</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">3574</span>
+    <span class="phpdocumentor-element-found-in__line">3598</span>
 
     </aside>
 
@@ -6012,7 +6116,7 @@ number of unique expressions, unique statistics</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">3646</span>
+    <span class="phpdocumentor-element-found-in__line">3670</span>
 
     </aside>
 
@@ -6066,7 +6170,7 @@ number of unique expressions, unique statistics</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">3731</span>
+    <span class="phpdocumentor-element-found-in__line">3755</span>
 
     </aside>
 
@@ -6074,7 +6178,7 @@ number of unique expressions, unique statistics</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility"></span>
-                    <span class="phpdocumentor-signature__name">sentences_from_word</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">int|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$wid</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$wordlc</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$lid</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$limit</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">-1</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\mysqli_result">mysqli_result</abbr></span></code>
+                    <span class="phpdocumentor-signature__name">sentences_from_word</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">int|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$wid</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$wordlc</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$lid</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$limit</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">-1</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\mysqli_result">mysqli_result</abbr>|true</span></code>
 
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -6126,7 +6230,7 @@ number of unique expressions, unique statistics</p>
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><abbr title="\mysqli_result">mysqli_result</abbr></span>
+        <span class="phpdocumentor-signature__response_type"><abbr title="\mysqli_result">mysqli_result</abbr>|true</span>
                     &mdash;
                 <section class="phpdocumentor-description"><p>Query</p>
 </section>
@@ -6143,7 +6247,7 @@ number of unique expressions, unique statistics</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">3768</span>
+    <span class="phpdocumentor-element-found-in__line">3794</span>
 
     </aside>
 
@@ -6151,7 +6255,7 @@ number of unique expressions, unique statistics</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility"></span>
-                    <span class="phpdocumentor-signature__name">getSentence</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$seid</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$wordlc</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$mode</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array{0: string, 1: string}</span></code>
+                    <span class="phpdocumentor-signature__name">getSentence</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$seid</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$wordlc</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$mode</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, string&gt;</span></code>
 
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -6205,11 +6309,20 @@ number of unique expressions, unique statistics</p>
 </section>
 
                                     </dd>
+                                                <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">psalm-return</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                                
+                                                 <section class="phpdocumentor-description"><p>list{string, string}</p>
+</section>
+
+                                    </dd>
                                             </dl>
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">array{0: string, 1: string}</span>
+        <span class="phpdocumentor-signature__response_type">array&lt;string|int, string&gt;</span>
                     &mdash;
                 <section class="phpdocumentor-description"><p>[0]=html, word in bold, [1]=text, word in }</p>
 </section>
@@ -6226,7 +6339,7 @@ number of unique expressions, unique statistics</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">3884</span>
+    <span class="phpdocumentor-element-found-in__line">3912</span>
 
     </aside>
 
@@ -6234,7 +6347,7 @@ number of unique expressions, unique statistics</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility"></span>
-                    <span class="phpdocumentor-signature__name">sentences_with_word</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$lang</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$wordlc</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">int|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$wid</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">int|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$mode</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$limit</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">20</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">sentences_with_word</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$lang</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$wordlc</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">int|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$wid</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">int|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$mode</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$limit</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">20</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, array&lt;string|int, string&gt;&gt;</span></code>
 
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -6297,10 +6410,26 @@ number of unique expressions, unique statistics</p>
             </dl>
 
     
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="namespaces/default.html#function_sentences_with_word#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">psalm-return</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                                
+                                                 <section class="phpdocumentor-description"><p>list{0?: array{0: string, 1: string},...}</p>
+</section>
+
+                                    </dd>
+                                            </dl>
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__response_type">array&lt;string|int, array&lt;string|int, string&gt;&gt;</span>
                     &mdash;
                 <section class="phpdocumentor-description"><p>Array of sentences found</p>
 </section>
@@ -6317,7 +6446,7 @@ number of unique expressions, unique statistics</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">3908</span>
+    <span class="phpdocumentor-element-found-in__line">3936</span>
 
     </aside>
 
@@ -6325,7 +6454,7 @@ number of unique expressions, unique statistics</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility"></span>
-                    <span class="phpdocumentor-signature__name">example_sentences_area</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$lang</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$termlc</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$selector</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$wid</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">example_sentences_area</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$lang</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$termlc</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$selector</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$wid</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
 
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -6373,7 +6502,7 @@ number of unique expressions, unique statistics</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">3952</span>
+    <span class="phpdocumentor-element-found-in__line">3980</span>
 
     </aside>
 
@@ -6475,7 +6604,7 @@ edited.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">3974</span>
+    <span class="phpdocumentor-element-found-in__line">4002</span>
 
     </aside>
 
@@ -6504,7 +6633,7 @@ edited.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">3995</span>
+    <span class="phpdocumentor-element-found-in__line">4024</span>
 
     </aside>
 
@@ -6512,14 +6641,14 @@ edited.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility"></span>
-                    <span class="phpdocumentor-signature__name">getLanguage</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$lid</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+                    <span class="phpdocumentor-signature__name">getLanguage</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string|int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$lid</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
 
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-signature__argument__name">$lid</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string</span>
+                : <span class="phpdocumentor-signature__argument__return-type">string|int</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Language ID</p>
@@ -6557,6 +6686,76 @@ edited.</p>
 
 </article>
                     <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_getLanguageCode">
+        getLanguageCode()
+        <a href="namespaces/default.html#function_getLanguageCode" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">4056</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Try to get language code from its ID</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">getLanguageCode</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$lg_id</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$languages_table</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$lg_id</span>
+                : <span class="phpdocumentor-signature__argument__return-type">int</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Language ID</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$languages_table</span>
+                : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Table of languages, usually LWT_LANGUAGES_ARRAY</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="namespaces/default.html#function_getLanguageCode#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">global</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                                
+                                                 <section class="phpdocumentor-description"><p>string $tbpref</p>
+</section>
+
+                                    </dd>
+                                            </dl>
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>If found, two-letter code (e. g. BCP 47) or four-letters for the langugae. '' otherwise.</p>
+</section>
+
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - ">
     <h4 class="phpdocumentor-element__name" id="function_getScriptDirectionTag">
         getScriptDirectionTag()
         <a href="namespaces/default.html#function_getScriptDirectionTag" class="headerlink"><i class="fas fa-link"></i></a>
@@ -6565,24 +6764,27 @@ edited.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">4014</span>
+    <span class="phpdocumentor-element-found-in__line">4089</span>
 
     </aside>
 
-    
+        <p class="phpdocumentor-summary">Return a right-to-left direction indication in HTML if language is right-to-left.</p>
+
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility"></span>
-                    <span class="phpdocumentor-signature__name">getScriptDirectionTag</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$lid</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+                    <span class="phpdocumentor-signature__name">getScriptDirectionTag</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string|int|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$lid</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
 
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-signature__argument__name">$lid</span>
-                : <span class="phpdocumentor-signature__argument__return-type">mixed</span>
+                : <span class="phpdocumentor-signature__argument__return-type">string|int|null</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                
+                    <section class="phpdocumentor-description"><p>Language ID</p>
+</section>
+
             </dd>
             </dl>
 
@@ -6591,6 +6793,10 @@ edited.</p>
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
         <span class="phpdocumentor-signature__response_type">string</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>' dir=&quot;rtl&quot; '|''</p>
+</section>
+
             </section>
 
 </article>
@@ -6603,7 +6809,7 @@ edited.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">4055</span>
+    <span class="phpdocumentor-element-found-in__line">4130</span>
 
     </aside>
 
@@ -6611,7 +6817,7 @@ edited.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility"></span>
-                    <span class="phpdocumentor-signature__name">insert_expression_from_mecab</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$text</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$lid</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$wid</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$len</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, array&lt;string|int, string&gt;&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">insert_expression_from_mecab</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$text</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string|int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$lid</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string|int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$wid</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$len</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, array&lt;string|int, string&gt;&gt;</span></code>
 
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -6627,7 +6833,7 @@ edited.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-signature__argument__name">$lid</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string</span>
+                : <span class="phpdocumentor-signature__argument__return-type">string|int</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Language ID</p>
@@ -6636,7 +6842,7 @@ edited.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-signature__argument__name">$wid</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string</span>
+                : <span class="phpdocumentor-signature__argument__return-type">string|int</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Word ID</p>
@@ -6685,7 +6891,7 @@ edited.</p>
                 </dt>
                 <dd class="phpdocumentor-tag-list__definition">
                                                                                 
-                                                 <section class="phpdocumentor-description"><p>array{0: array&lt;int, string&gt;, 1: list<string>}</p>
+                                                 <section class="phpdocumentor-description"><p>list{array&lt;int, string&gt;, list{0?: string,...}}</p>
 </section>
 
                                     </dd>
@@ -6710,7 +6916,7 @@ edited.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">4154</span>
+    <span class="phpdocumentor-element-found-in__line">4229</span>
 
     </aside>
 
@@ -6837,7 +7043,7 @@ The second return argument is always empty array.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">4177</span>
+    <span class="phpdocumentor-element-found-in__line">4252</span>
 
     </aside>
 
@@ -6845,7 +7051,7 @@ The second return argument is always empty array.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility"></span>
-                    <span class="phpdocumentor-signature__name">insert_standard_expression</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$textlc</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$lid</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$wid</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$len</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$mode</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, array&lt;string|int, null|string&gt;&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">insert_standard_expression</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$textlc</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string|int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$lid</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string|int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$wid</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$len</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$mode</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, array&lt;string|int, null|string&gt;&gt;</span></code>
 
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -6861,7 +7067,7 @@ The second return argument is always empty array.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-signature__argument__name">$lid</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string</span>
+                : <span class="phpdocumentor-signature__argument__return-type">string|int</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Language ID</p>
@@ -6870,7 +7076,7 @@ The second return argument is always empty array.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-signature__argument__name">$wid</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string</span>
+                : <span class="phpdocumentor-signature__argument__return-type">string|int</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Word ID</p>
@@ -6938,7 +7144,7 @@ The second return argument is always empty array.</p>
                 </dt>
                 <dd class="phpdocumentor-tag-list__definition">
                                                                                 
-                                                 <section class="phpdocumentor-description"><p>array{0: array&lt;int, null|string&gt;, 1: array&lt;empty, empty&gt;, 2: list<string>}</p>
+                                                 <section class="phpdocumentor-description"><p>list{array&lt;int, null|string&gt;, array&lt;never, never&gt;, list{0?: string,...}}</p>
 </section>
 
                                     </dd>
@@ -6963,7 +7169,7 @@ The second return argument is always empty array.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">4275</span>
+    <span class="phpdocumentor-element-found-in__line">4350</span>
 
     </aside>
 
@@ -7037,7 +7243,7 @@ use global JS variables.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">4310</span>
+    <span class="phpdocumentor-element-found-in__line">4385</span>
 
     </aside>
 
@@ -7117,7 +7323,7 @@ use global JS variables.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">4373</span>
+    <span class="phpdocumentor-element-found-in__line">4448</span>
 
     </aside>
 
@@ -7125,7 +7331,7 @@ use global JS variables.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility"></span>
-                    <span class="phpdocumentor-signature__name">insertExpressions</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$textlc</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$lid</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$wid</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$len</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$mode</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|string</span></code>
+                    <span class="phpdocumentor-signature__name">insertExpressions</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$textlc</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string|int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$lid</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$wid</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$len</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$mode</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|string</span></code>
 
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -7141,7 +7347,7 @@ use global JS variables.</p>
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-signature__argument__name">$lid</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string</span>
+                : <span class="phpdocumentor-signature__argument__return-type">string|int</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Language ID</p>
@@ -7217,7 +7423,7 @@ use global JS variables.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">4438</span>
+    <span class="phpdocumentor-element-found-in__line">4513</span>
 
     </aside>
 
@@ -7335,7 +7541,7 @@ use global JS variables.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">4516</span>
+    <span class="phpdocumentor-element-found-in__line">4591</span>
 
     </aside>
 
@@ -7389,7 +7595,7 @@ use global JS variables.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">4575</span>
+    <span class="phpdocumentor-element-found-in__line">4650</span>
 
     </aside>
 
@@ -7452,7 +7658,7 @@ it was shifted by one index before.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">4634</span>
+    <span class="phpdocumentor-element-found-in__line">4704</span>
 
     </aside>
 
@@ -7486,7 +7692,7 @@ it was shifted by one index before.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">4655</span>
+    <span class="phpdocumentor-element-found-in__line">4725</span>
 
     </aside>
 
@@ -7524,7 +7730,7 @@ it was shifted by one index before.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">4673</span>
+    <span class="phpdocumentor-element-found-in__line">4743</span>
 
     </aside>
 
@@ -7590,7 +7796,7 @@ it was shifted by one index before.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">4688</span>
+    <span class="phpdocumentor-element-found-in__line">4758</span>
 
     </aside>
 
@@ -7628,7 +7834,7 @@ it was shifted by one index before.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">4703</span>
+    <span class="phpdocumentor-element-found-in__line">4773</span>
 
     </aside>
 
@@ -7666,7 +7872,7 @@ it was shifted by one index before.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">4719</span>
+    <span class="phpdocumentor-element-found-in__line">4789</span>
 
     </aside>
 
@@ -7703,7 +7909,7 @@ it was shifted by one index before.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">4736</span>
+    <span class="phpdocumentor-element-found-in__line">4806</span>
 
     </aside>
 
@@ -7777,7 +7983,7 @@ is supported, using MeCab.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">4777</span>
+    <span class="phpdocumentor-element-found-in__line">4847</span>
 
     </aside>
 
@@ -7849,7 +8055,7 @@ is supported, using MeCab.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">4865</span>
+    <span class="phpdocumentor-element-found-in__line">4935</span>
 
     </aside>
 
@@ -7895,7 +8101,7 @@ is supported, using MeCab.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">4889</span>
+    <span class="phpdocumentor-element-found-in__line">4958</span>
 
     </aside>
 
@@ -7941,7 +8147,7 @@ is supported, using MeCab.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">4970</span>
+    <span class="phpdocumentor-element-found-in__line">5039</span>
 
     </aside>
 
@@ -7987,7 +8193,7 @@ is supported, using MeCab.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">5190</span>
+    <span class="phpdocumentor-element-found-in__line">5259</span>
 
     </aside>
 
@@ -8024,7 +8230,7 @@ is supported, using MeCab.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">5220</span>
+    <span class="phpdocumentor-element-found-in__line">5289</span>
 
     </aside>
 
@@ -8096,7 +8302,7 @@ is supported, using MeCab.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/session_utility.php"><a href="files/inc-session-utility.html"><abbr title="inc/session_utility.php">session_utility.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">5246</span>
+    <span class="phpdocumentor-element-found-in__line">5315</span>
 
     </aside>
 
@@ -8342,6 +8548,7 @@ is supported, using MeCab.</p>
                                                     <li><a href="namespaces/default.html#function_get_wordstatus_selectoptions">get_wordstatus_selectoptions()</a></li>
                                                     <li><a href="namespaces/default.html#function_getArchivedTextTags">getArchivedTextTags()</a></li>
                                                     <li><a href="namespaces/default.html#function_getLanguage">getLanguage()</a></li>
+                                                    <li><a href="namespaces/default.html#function_getLanguageCode">getLanguageCode()</a></li>
                                                     <li><a href="namespaces/default.html#function_getprefixes">getprefixes()</a></li>
                                                     <li><a href="namespaces/default.html#function_getPreviousAndNextTextLinks">getPreviousAndNextTextLinks()</a></li>
                                                     <li><a href="namespaces/default.html#function_getScriptDirectionTag">getScriptDirectionTag()</a></li>

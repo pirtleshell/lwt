@@ -10,7 +10,7 @@ two main advantages:
 
 * Much better parsing of Japanese texts than RegExp.
 * Automatic romanization of words.
-* Unables text-to-speech for any character group.
+* Enables text-to-speech for any character group.
 
 ### Installation
 

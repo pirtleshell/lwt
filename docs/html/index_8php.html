@@ -114,7 +114,8 @@ Variables</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>LWT Start screen and main menu. </p>
-<p>Call: <a class="el" href="index_8php.html" title="LWT Start screen and main menu.">index.php</a> </p>
+<p>Call: <a class="el" href="index_8php.html" title="LWT Start screen and main menu.">index.php</a></p>
+<p>PHP version 8.1 </p>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a id="ad1d9c5e5f43a186642a19be205feaf13" name="ad1d9c5e5f43a186642a19be205feaf13"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad1d9c5e5f43a186642a19be205feaf13">&#9670;&#160;</a></span>do_current_text_info()</h2>
@@ -172,10 +173,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Return a lot of different server state variables.</p>
-<dl class="section return"><dt>Returns</dt><dd>array{0: string, 1: float, 2: string[], 3: string, 4: string, 5: string} Table prefix, database size, server software, apache version, PHP version, MySQL version</dd></dl>
-<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000037">Deprecated:</a></b></dt><dd>Use get_server_data_table, will be removed in 3.0.0. </dd></dl>
-<p>@psalm-return array{0: string, 1: float, 2: non-empty-list&lt;string&gt;, 3: string, 4: false|string, 5: string}</p>
-<p>@global string $tbpref Database table prefix @global string $dbname Database name </p>
+<dl class="section return"><dt>Returns</dt><dd>(false|float|string|string[])[] {0: string, 1: float, 2: string[], 3: string, 4: string, 5: string} Table prefix, database size, server software, apache version, PHP version, MySQL version</dd></dl>
+<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000038">Deprecated:</a></b></dt><dd>Use get_server_data_table, will be removed in 3.0.0.</dd></dl>
+<p>@psalm-return list{string, float, non-empty-list&lt;string&gt;, string, false|string, string} @global string $tbpref Database table prefix @global string $dbname Database name </p>
 
 </div>
 </div>
@@ -196,7 +196,7 @@ Variables</h2></td></tr>
 <p>Prepare the different SPAN opening tags</p>
 <dl class="section return"><dt>Returns</dt><dd>string[] 3 different span levels</dd></dl>
 <p>@global string $tbpref Database table prefix @global string $fixed_tbpref Fixed database table prefix</p>
-<p>@psalm-return array{0: '<span title="Manage Table Sets" onclick="location.href=&apos;table_set_management.php&apos;;" class="click">'|'<span>', 1: string, 2: '<span title="Select Table Set" onclick="location.href=&apos;start.php&apos;;" class="click">'|'<span>'} </span></span></span></span></p>
+<p>@psalm-return list{'<span title="Manage Table Sets" onclick="location.href=&apos;table_set_management.php&apos;;" class="click">'|'<span>', string, '<span title="Select Table Set" onclick="location.href=&apos;start.php&apos;;" class="click">'|'<span>'} </span></span></span></span></p>
 
 </div>
 </div>

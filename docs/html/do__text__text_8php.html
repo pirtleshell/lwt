@@ -124,10 +124,13 @@ Functions</h2></td></tr>
 <tr class="separator:a8d0fe1aab0a239f07bc89f43334cb249"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae58010dca8bdbf061ec2c93823386b0b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="do__text__text_8php.html#ae58010dca8bdbf061ec2c93823386b0b">do_text_javascript</a> ($var_array)</td></tr>
 <tr class="separator:ae58010dca8bdbf061ec2c93823386b0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a23a893c955319e9ee56d2043739ba9a4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="do__text__text_8php.html#a23a893c955319e9ee56d2043739ba9a4">do_text_text_content</a> ($textid, $only_body=true)</td></tr>
+<tr class="separator:a23a893c955319e9ee56d2043739ba9a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Show text header frame. </p>
-<p>Call: <a class="el" href="do__text__text_8php.html" title="Show text header frame.">do_text_text.php</a>?text=[textid] </p>
+<p>Call: <a class="el" href="do__text__text_8php.html" title="Show text header frame.">do_text_text.php</a>?text=[textid]</p>
+<p>PHP version 8.1 </p>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a id="ae58010dca8bdbf061ec2c93823386b0b" name="ae58010dca8bdbf061ec2c93823386b0b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae58010dca8bdbf061ec2c93823386b0b">&#9670;&#160;</a></span>do_text_javascript()</h2>
@@ -153,6 +156,44 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>void</dd></dl>
 <dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000015">Deprecated:</a></b></dt><dd>Use do_text_text_javascript instead. </dd></dl>
+
+</div>
+</div>
+<a id="a23a893c955319e9ee56d2043739ba9a4" name="a23a893c955319e9ee56d2043739ba9a4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a23a893c955319e9ee56d2043739ba9a4">&#9670;&#160;</a></span>do_text_text_content()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">do_text_text_content </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$textid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>$only_body</em> = <code>true</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Main function for displaying sentences. It will print HTML content.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">string&#160;|&#160;int</td><td class="paramname">$textid</td><td>ID of the requiered text </td></tr>
+    <tr><td class="paramtype">bool</td><td class="paramname">$only_body</td><td>If true, only show the inner body. If false, create a complete HTML document. </td></tr>
+  </table>
+  </dd>
+</dl>
+<p>Annotation position between 0 and 4</p>
+<p>Ruby annotations</p>
 
 </div>
 </div>
@@ -427,7 +468,7 @@ Functions</h2></td></tr>
 <p>Get the record for this text in the database.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramtype">string</td><td class="paramname">$textid</td><td>ID of the text</td></tr>
+    <tr><td class="paramtype">string&#160;|&#160;int</td><td class="paramname">$textid</td><td>ID of the text</td></tr>
   </table>
   </dd>
 </dl>

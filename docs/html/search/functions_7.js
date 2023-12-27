@@ -1,13 +1,17 @@
 var searchData=
 [
-  ['langfromdict_0',['langFromDict',['../kernel__utility_8php.html#a65a052f74bc59559a235214baeff0b20',1,'kernel_utility.php']]],
-  ['language_5fid_5ffrom_5fcode_1',['language_id_from_code',['../text__to__speech__settings_8php.html#a31b8e8b569f8f75610b3f7a70b330092',1,'text_to_speech_settings.php']]],
-  ['letterpairs_2',['letterPairs',['../simterms_8php.html#a3e3a7c7054ca98a3eb429743b15d534d',1,'simterms.php']]],
-  ['load_5flanguage_3',['load_language',['../edit__languages_8php.html#a2f709d8f0ae540267a6c520c8df76072',1,'edit_languages.php']]],
-  ['long_5ftext_5fcheck_4',['long_text_check',['../long__text__import_8php.html#aa3af65e7bfae8fce2d0dfebf61556338',1,'long_text_import.php']]],
-  ['long_5ftext_5fdisplay_5',['long_text_display',['../long__text__import_8php.html#ad448e989e470b7fca9b9891e56d1438e',1,'long_text_import.php']]],
-  ['long_5ftext_5fdo_5fpage_6',['long_text_do_page',['../long__text__import_8php.html#a61c59c6bcfdb07a2c0b218dc47f26c36',1,'long_text_import.php']]],
-  ['long_5ftext_5fsave_7',['long_text_save',['../long__text__import_8php.html#a40bc78ee69a9da7ada1ae6f33ec1696b',1,'long_text_import.php']]],
-  ['lowercase_5fterm_5fnot_5fequal_8',['lowercase_term_not_equal',['../edit__word_8php.html#a33dc93ccc75abf0d96a2f9ad51258c5f',1,'Lwt::Interface::Edit_Word']]],
-  ['lwttablecheck_9',['LWTTableCheck',['../database__connect_8php.html#aa238ca54e7fb04ab59f8e19e90b8d64f',1,'database_connect.php']]]
+  ['imported_5fterms_5fheader_0',['imported_terms_header',['../ajax__show__imported__terms_8php.html#a90ad979fa054993e654fa18a77d9f344',1,'ajax_show_imported_terms.php']]],
+  ['imported_5fterms_5flist_1',['imported_terms_list',['../ajax__show__imported__terms_8php.html#adf46fed6294216fcda2982ddf62287b5',1,'ajax_show_imported_terms.php']]],
+  ['index_5fdo_5fmain_5fpage_2',['index_do_main_page',['../index_8php.html#a72fd810a716440478fe08dbf02c2302e',1,'index.php']]],
+  ['index_5fload_5fwarnings_3',['index_load_warnings',['../index_8php.html#a454d11d3b7af5eba6988b7c12bb1c575',1,'index.php']]],
+  ['insert_5fexpression_5ffrom_5fmecab_4',['insert_expression_from_mecab',['../session__utility_8php.html#a38009a23aced3408ae12dd51c571a0c4',1,'session_utility.php']]],
+  ['insert_5fnew_5fword_5',['insert_new_word',['../edit__word_8php.html#a97fdafeb75331f1dc3e784919e959090',1,'Lwt::Interface::Edit_Word']]],
+  ['insert_5fstandard_5fexpression_6',['insert_standard_expression',['../session__utility_8php.html#a2bae170fb76cfc1f974f6eb389c59f78',1,'session_utility.php']]],
+  ['insert_5fword_5fignore_5fto_5fdatabase_7',['insert_word_ignore_to_database',['../insert__word__ignore_8php.html#a380aaf8f6650db612e241387f4561041',1,'insert_word_ignore.php']]],
+  ['insert_5fword_5fwellknown_5fjavascript_8',['insert_word_wellknown_javascript',['../insert__word__wellknown_8php.html#a3773318fdd972697565f8cd071746ef4',1,'insert_word_wellknown.php']]],
+  ['insert_5fword_5fwellknown_5fto_5fdatabase_9',['insert_word_wellknown_to_database',['../insert__word__wellknown_8php.html#a19e576d913af3a5d35d840a77aa9e251',1,'insert_word_wellknown.php']]],
+  ['insertexpressionfrommecab_10',['insertExpressionFromMeCab',['../session__utility_8php.html#ac7d5627dbb5ea1842bb4d6c2435fbaf8',1,'session_utility.php']]],
+  ['insertexpressions_11',['insertExpressions',['../session__utility_8php.html#aaf5cd59b8e5a5c380238c3bfc2eec1f5',1,'session_utility.php']]],
+  ['is_5fmobile_12',['is_mobile',['../mobile__interactions_8php.html#a7106057ba2bbe65a6d09124025279339',1,'mobile_interactions.php']]],
+  ['item_5fparser_13',['item_parser',['../do__text__text_8php.html#abd5b8e6973aeafcccd2d81236ea3b554',1,'do_text_text.php']]]
 ];

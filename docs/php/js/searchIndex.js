@@ -823,7 +823,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\get_wizard_selectoptions\u0028\u0029",
             "name": "get_wizard_selectoptions",
-            "summary": "",
+            "summary": "Returns\u0020a\u0020dropdown\u0020menu\u0020of\u0020the\u0020different\u0020languages",
             "url": "namespaces/default.html#function_get_wizard_selectoptions"
         },                {
             "fqsen": "\\edit_languages_new\u0028\u0029",
@@ -1736,145 +1736,10 @@ Search.appendIndex(
             "summary": "Get\u0020the\u0020time\u0020token\u0020to\u0020use\u0020for\u0020Google,\u0020generating\u0020a\u0020new\u0020one\u0020if\u0020necessary.",
             "url": "namespaces/lwt-includes.html#function_getGoogleTimeToken"
         },                {
-            "fqsen": "\\get_version\u0028\u0029",
-            "name": "get_version",
-            "summary": "Return\u0020LWT\u0020version\u0020for\u0020humans",
-            "url": "namespaces/default.html#function_get_version"
-        },                {
-            "fqsen": "\\get_version_number\u0028\u0029",
-            "name": "get_version_number",
-            "summary": "Return\u0020a\u0020machine\u0020readable\u0020version\u0020number.",
-            "url": "namespaces/default.html#function_get_version_number"
-        },                {
-            "fqsen": "\\tohtml\u0028\u0029",
-            "name": "tohtml",
-            "summary": "Escape\u0020special\u0020HTML\u0020characters.",
-            "url": "namespaces/default.html#function_tohtml"
-        },                {
-            "fqsen": "\\showRequest\u0028\u0029",
-            "name": "showRequest",
-            "summary": "Echo\u0020debugging\u0020informations.",
-            "url": "namespaces/default.html#function_showRequest"
-        },                {
-            "fqsen": "\\get_execution_time\u0028\u0029",
-            "name": "get_execution_time",
-            "summary": "Get\u0020the\u0020time\u0020since\u0020the\u0020last\u0020call",
-            "url": "namespaces/default.html#function_get_execution_time"
-        },                {
-            "fqsen": "\\get_setting_data\u0028\u0029",
-            "name": "get_setting_data",
-            "summary": "Reload\u0020\u0024setting_data\u0020if\u0020necessary",
-            "url": "namespaces/default.html#function_get_setting_data"
-        },                {
-            "fqsen": "\\remove_spaces\u0028\u0029",
-            "name": "remove_spaces",
-            "summary": "Remove\u0020all\u0020spaces\u0020from\u0020a\u0020string.",
-            "url": "namespaces/default.html#function_remove_spaces"
-        },                {
-            "fqsen": "\\get_mecab_path\u0028\u0029",
-            "name": "get_mecab_path",
-            "summary": "Returns\u0020path\u0020to\u0020the\u0020MeCab\u0020application.",
-            "url": "namespaces/default.html#function_get_mecab_path"
-        },                {
-            "fqsen": "\\find_latin_sentence_end\u0028\u0029",
-            "name": "find_latin_sentence_end",
-            "summary": "Find\u0020end\u002Dof\u002Dsentence\u0020characters\u0020in\u0020a\u0020sentence\u0020using\u0020latin\u0020alphabet.",
-            "url": "namespaces/default.html#function_find_latin_sentence_end"
-        },                {
-            "fqsen": "\\my_die\u0028\u0029",
-            "name": "my_die",
-            "summary": "Make\u0020the\u0020script\u0020crash\u0020and\u0020prints\u0020an\u0020error\u0020message",
-            "url": "namespaces/default.html#function_my_die"
-        },                {
-            "fqsen": "\\quickMenu\u0028\u0029",
-            "name": "quickMenu",
-            "summary": "Display\u0020the\u0020main\u0020menu\u0020of\u0020navigation\u0020as\u0020a\u0020dropdown",
-            "url": "namespaces/default.html#function_quickMenu"
-        },                {
-            "fqsen": "\\pagestart_kernel_nobody\u0028\u0029",
-            "name": "pagestart_kernel_nobody",
-            "summary": "Start\u0020a\u0020page\u0020without\u0020connecting\u0020to\u0020the\u0020database\u0020with\u0020a\u0020complete\u0020header\u0020and\u0020a\u0020non\u002Dclosed\u0020body.",
-            "url": "namespaces/default.html#function_pagestart_kernel_nobody"
-        },                {
-            "fqsen": "\\pageend\u0028\u0029",
-            "name": "pageend",
-            "summary": "Add\u0020a\u0020closing\u0020body\u0020tag.",
-            "url": "namespaces/default.html#function_pageend"
-        },                {
-            "fqsen": "\\echodebug\u0028\u0029",
-            "name": "echodebug",
-            "summary": "Debug\u0020function\u0020only.",
-            "url": "namespaces/default.html#function_echodebug"
-        },                {
-            "fqsen": "\\get_statuses\u0028\u0029",
-            "name": "get_statuses",
-            "summary": "Return\u0020an\u0020associative\u0020array\u0020of\u0020all\u0020possible\u0020statuses",
-            "url": "namespaces/default.html#function_get_statuses"
-        },                {
-            "fqsen": "\\str_replace_first\u0028\u0029",
-            "name": "str_replace_first",
-            "summary": "Replace\u0020the\u0020first\u0020occurence\u0020of\u0020\u0024needle\u0020in\u0020\u0024haystack\u0020by\u0020\u0024replace",
-            "url": "namespaces/default.html#function_str_replace_first"
-        },                {
-            "fqsen": "\\annotation_to_json\u0028\u0029",
-            "name": "annotation_to_json",
-            "summary": "Convert\u0020annotations\u0020in\u0020a\u0020JSON\u0020format.",
-            "url": "namespaces/default.html#function_annotation_to_json"
-        },                {
-            "fqsen": "\\getreq\u0028\u0029",
-            "name": "getreq",
-            "summary": "Get\u0020a\u0020request\u0020when\u0020possible.\u0020Otherwise,\u0020return\u0020an\u0020empty\u0020string.",
-            "url": "namespaces/default.html#function_getreq"
-        },                {
-            "fqsen": "\\getsess\u0028\u0029",
-            "name": "getsess",
-            "summary": "Get\u0020a\u0020session\u0020variable\u0020when\u0020possible.\u0020Otherwise,\u0020return\u0020an\u0020empty\u0020string.",
-            "url": "namespaces/default.html#function_getsess"
-        },                {
-            "fqsen": "\\url_base\u0028\u0029",
-            "name": "url_base",
-            "summary": "Get\u0020the\u0020base\u0020URL\u0020of\u0020the\u0020application",
-            "url": "namespaces/default.html#function_url_base"
-        },                {
-            "fqsen": "\\make_score_random_insert_update\u0028\u0029",
-            "name": "make_score_random_insert_update",
-            "summary": "Make\u0020a\u0020random\u0020score\u0020for\u0020a\u0020new\u0020word.",
-            "url": "namespaces/default.html#function_make_score_random_insert_update"
-        },                {
-            "fqsen": "\\getsqlscoreformula\u0028\u0029",
-            "name": "getsqlscoreformula",
-            "summary": "SQL\u0020formula\u0020for\u0020computing\u0020score.",
-            "url": "namespaces/default.html#function_getsqlscoreformula"
-        },                {
-            "fqsen": "\\error_message_with_hide\u0028\u0029",
-            "name": "error_message_with_hide",
-            "summary": "Display\u0020a\u0020error\u0020message\u0020vanishing\u0020after\u0020a\u0020few\u0020seconds.",
-            "url": "namespaces/default.html#function_error_message_with_hide"
-        },                {
-            "fqsen": "\\langFromDict\u0028\u0029",
-            "name": "langFromDict",
-            "summary": "Get\u0020a\u0020two\u002Dletter\u0020language\u0020code\u0020from\u0020dictionary\u0020source\u0020language.",
-            "url": "namespaces/default.html#function_langFromDict"
-        },                {
-            "fqsen": "\\targetLangFromDict\u0028\u0029",
-            "name": "targetLangFromDict",
-            "summary": "Get\u0020a\u0020two\u002Dletter\u0020language\u0020code\u0020from\u0020dictionary\u0020target\u0020language",
-            "url": "namespaces/default.html#function_targetLangFromDict"
-        },                {
-            "fqsen": "\\str_starts_with\u0028\u0029",
-            "name": "str_starts_with",
+            "fqsen": "\\LWT_LANGUAGES_ARRAY",
+            "name": "LWT_LANGUAGES_ARRAY",
             "summary": "",
-            "url": "namespaces/default.html#function_str_starts_with"
-        },                {
-            "fqsen": "\\str_ends_with\u0028\u0029",
-            "name": "str_ends_with",
-            "summary": "",
-            "url": "namespaces/default.html#function_str_ends_with"
-        },                {
-            "fqsen": "\\str_contains\u0028\u0029",
-            "name": "str_contains",
-            "summary": "",
-            "url": "namespaces/default.html#function_str_contains"
+            "url": "namespaces/default.html#constant_LWT_LANGUAGES_ARRAY"
         },                {
             "fqsen": "\\is_mobile\u0028\u0029",
             "name": "is_mobile",
@@ -2158,7 +2023,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\processSessParam\u0028\u0029",
             "name": "processSessParam",
-            "summary": "Get\u0020a\u0020SESSION\u0020value\u0020and\u0020update\u0020it\u0020if\u0020necessary.",
+            "summary": "Get\u0020a\u0020session\u0020value\u0020and\u0020update\u0020it\u0020if\u0020necessary.",
             "url": "namespaces/default.html#function_processSessParam"
         },                {
             "fqsen": "\\processDBParam\u0028\u0029",
@@ -2476,9 +2341,14 @@ Search.appendIndex(
             "summary": "Get\u0020language\u0020name\u0020from\u0020its\u0020ID",
             "url": "namespaces/default.html#function_getLanguage"
         },                {
+            "fqsen": "\\getLanguageCode\u0028\u0029",
+            "name": "getLanguageCode",
+            "summary": "Try\u0020to\u0020get\u0020language\u0020code\u0020from\u0020its\u0020ID",
+            "url": "namespaces/default.html#function_getLanguageCode"
+        },                {
             "fqsen": "\\getScriptDirectionTag\u0028\u0029",
             "name": "getScriptDirectionTag",
-            "summary": "",
+            "summary": "Return\u0020a\u0020right\u002Dto\u002Dleft\u0020direction\u0020indication\u0020in\u0020HTML\u0020if\u0020language\u0020is\u0020right\u002Dto\u002Dleft.",
             "url": "namespaces/default.html#function_getScriptDirectionTag"
         },                {
             "fqsen": "\\insert_expression_from_mecab\u0028\u0029",
@@ -2891,6 +2761,16 @@ Search.appendIndex(
             "summary": "Prepapre\u0020the\u0020integration\u0020of\u0020a\u0020Markdown\u0020file\u0020into\u0020info.html.",
             "url": "namespaces/default.html#function_markdown_integration"
         },                {
+            "fqsen": "\\LWT_JS_FILES",
+            "name": "LWT_JS_FILES",
+            "summary": "",
+            "url": "namespaces/default.html#constant_LWT_JS_FILES"
+        },                {
+            "fqsen": "\\LWT_CSS_FILES",
+            "name": "LWT_CSS_FILES",
+            "summary": "",
+            "url": "namespaces/default.html#constant_LWT_CSS_FILES"
+        },                {
             "fqsen": "\\minifyJS\u0028\u0029",
             "name": "minifyJS",
             "summary": "Minify\u0020a\u0020JavaScript\u0020file\u0020and\u0020outputs\u0020the\u0020result\u0020to\u0020js\/",
@@ -2908,7 +2788,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\minifyAllCSS\u0028\u0029",
             "name": "minifyAllCSS",
-            "summary": "Minify\u0020all\u0020Cascading\u002DStyle\u0020Sheet\u0020files",
+            "summary": "Minify\u0020all\u0020Cascading\u002DStyle\u0020Sheet\u0020\u0028CSS\u0029\u0020files",
             "url": "namespaces/default.html#function_minifyAllCSS"
         },                {
             "fqsen": "\\regenerateSingleTheme\u0028\u0029",

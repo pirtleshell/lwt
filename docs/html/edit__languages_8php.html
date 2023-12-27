@@ -115,7 +115,8 @@ Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Manage languages. </p>
-<p>Call: <a class="el" href="edit__languages_8php.html" title="Manage languages.">edit_languages.php</a>?.... ... refresh=[langid] ... reparse all texts in lang ... del=[langid] ... do delete ... op=Save ... do insert new ... op=Change ... do update ... new=1 ... display new lang. screen ... chg=[langid] ... display edit screen </p>
+<p>Call: <a class="el" href="edit__languages_8php.html" title="Manage languages.">edit_languages.php</a>?.... ... refresh=[langid] ... reparse all texts in lang ... del=[langid] ... do delete ... op=Save ... do insert new ... op=Change ... do update ... new=1 ... display new lang. screen ... chg=[langid] ... display edit screen</p>
+<p>PHP version 8.1 </p>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a id="acc9231b5292c57447af032a2cd7691f9" name="acc9231b5292c57447af032a2cd7691f9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#acc9231b5292c57447af032a2cd7691f9">&#9670;&#160;</a></span>edit_language_form()</h2>
@@ -199,7 +200,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>void</dd></dl>
-<p>@global string $tbpref @global array $langDefs </p>
+<p>@global string $tbpref </p>
 
 </div>
 </div>
@@ -248,11 +249,11 @@ Functions</h2></td></tr>
 <p>Display the standard page of saved languages.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">{string}</td><td>$message An information message to display.</td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$message</td><td>An information message to display.</td></tr>
   </table>
   </dd>
 </dl>
-<p>@global {string} $tbpref Database table prefix @global {int} $debug 1 to display debugging data</p>
+<p>@global string $tbpref @global int $debug</p>
 <dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
 
 </div>
@@ -391,11 +392,10 @@ Functions</h2></td></tr>
 <p>Returns a dropdown menu of the different languages.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramtype">string</td><td class="paramname">$currentnativelanguage</td><td>Default language</td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$currentnativelanguage</td><td>Default language </td></tr>
   </table>
   </dd>
 </dl>
-<p>@global mixed $langDefs </p>
 
 </div>
 </div>

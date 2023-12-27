@@ -188,7 +188,7 @@ function edit_languages_op_save(): string
                 convert_string_to_sqlsyntax($_REQUEST["LgDict2URI"]) . ', '.
                 convert_string_to_sqlsyntax($_REQUEST["LgGoogleTranslateURI"]) . ', '.
                 convert_string_to_sqlsyntax($_REQUEST["LgExportTemplate"]) . ', '.
-                $_REQUEST["LgTextSize"] . ', '.
+                convert_string_to_sqlsyntax($_REQUEST["LgTextSize"]) . ', '.
                 convert_string_to_sqlsyntax_notrim_nonull($_REQUEST["LgCharacterSubstitutions"]) . ', '.
                 convert_string_to_sqlsyntax($_REQUEST["LgRegexpSplitSentences"]) . ', '.
                 convert_string_to_sqlsyntax_notrim_nonull($_REQUEST["LgExceptionsSplitSentences"]) . ', '.
@@ -207,7 +207,7 @@ function edit_languages_op_save(): string
             'LgDict2URI = ' . convert_string_to_sqlsyntax($_REQUEST["LgDict2URI"]) . ', ' .
             'LgGoogleTranslateURI = ' . convert_string_to_sqlsyntax($_REQUEST["LgGoogleTranslateURI"]) . ', ' .
             'LgExportTemplate = ' . convert_string_to_sqlsyntax($_REQUEST["LgExportTemplate"]) . ', ' .
-            'LgTextSize = ' . $_REQUEST["LgTextSize"] . ', ' .
+            'LgTextSize = ' . convert_string_to_sqlsyntax($_REQUEST["LgTextSize"]) . ', ' .
             'LgCharacterSubstitutions = ' . convert_string_to_sqlsyntax_notrim_nonull($_REQUEST["LgCharacterSubstitutions"]) . ', ' .
             'LgRegexpSplitSentences = ' . convert_string_to_sqlsyntax($_REQUEST["LgRegexpSplitSentences"]) . ', ' .
             'LgExceptionsSplitSentences = ' . convert_string_to_sqlsyntax_notrim_nonull($_REQUEST["LgExceptionsSplitSentences"]) . ', ' .
@@ -267,7 +267,7 @@ function edit_languages_op_change($lid): string
         'LgDict2URI = ' . convert_string_to_sqlsyntax($_REQUEST["LgDict2URI"]) . ', ' .
         'LgGoogleTranslateURI = ' . convert_string_to_sqlsyntax($_REQUEST["LgGoogleTranslateURI"]) . ', ' .
         'LgExportTemplate = ' . convert_string_to_sqlsyntax($_REQUEST["LgExportTemplate"]) . ', ' .
-        'LgTextSize = ' . $_REQUEST["LgTextSize"] . ', ' .
+        'LgTextSize = ' . convert_string_to_sqlsyntax($_REQUEST["LgTextSize"]) . ', ' .
         'LgCharacterSubstitutions = ' . convert_string_to_sqlsyntax_notrim_nonull($_REQUEST["LgCharacterSubstitutions"]) . ', ' .
         'LgRegexpSplitSentences = ' . convert_string_to_sqlsyntax($_REQUEST["LgRegexpSplitSentences"]) . ', ' .
         'LgExceptionsSplitSentences = ' . convert_string_to_sqlsyntax_notrim_nonull($_REQUEST["LgExceptionsSplitSentences"]) . ', ' .
@@ -642,7 +642,8 @@ function edit_language_form($language): void
      * Check the word splitting method.
      */
     function checkWordChar(method) {
-        document.forms.lg_form.LgRegexpAlt.value = (method == "mecab") ? "mecab" : "regex";
+        const method_option = (method == "mecab") ? "mecab" : "regexp";
+        document.forms.lg_form.LgRegexpAlt.value = method_option;
     }
 
     /**
@@ -755,7 +756,7 @@ function edit_language_form($language): void
     <tr>
         <td class="td1 right">Text Size (%):</td>
         <td class="td1">
-            <input name="LgTextSize" type="number" min="100" max="250" 
+            <input name="LgTextSize" defaultValue="100" type="number" min="100" max="250" 
             value="<?php echo $language->textsize; ?>" step="50" 
             onchange="changeLanguageTextSize(this.value);" class="respinput" />
             <input type="text" class="respinput"

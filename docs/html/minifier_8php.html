@@ -88,7 +88,7 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
 Namespaces</h2></td></tr>
-<tr class="memitem:namespace_lwt"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_lwt.html">Lwt</a></td></tr>
+<tr class="memitem:namespace_lwt___documentation"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_lwt___documentation.html">Lwt_Documentation</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
@@ -110,14 +110,17 @@ Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a85fbbf14f24d33cd97f10a848cad48b8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="minifier_8php.html#a85fbbf14f24d33cd97f10a848cad48b8">$jsFiles</a></td></tr>
-<tr class="separator:a85fbbf14f24d33cd97f10a848cad48b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a97e703767e90a0f6cfa9c627c15bcfe5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="minifier_8php.html#a97e703767e90a0f6cfa9c627c15bcfe5">$cssFiles</a></td></tr>
-<tr class="separator:a97e703767e90a0f6cfa9c627c15bcfe5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7c56e2cec51b020352de93a0888b8ffb"><td class="memItemLeft" align="right" valign="top"><a id="a7c56e2cec51b020352de93a0888b8ffb" name="a7c56e2cec51b020352de93a0888b8ffb"></a>
+const&#160;</td><td class="memItemRight" valign="bottom"><b>LWT_JS_FILES</b> array( 'src/js/audio_controller.js', 'src/js/third_party/countuptimer.js', 'src/js/jq_feedwizard.js', 'src/js/jq_pgm.js', 'src/js/pgm.js', 'src/js/translation_api.js', 'src/js/unloadformcheck.js', 'src/js/third_party/sorttable.js', 'src/js/user_interactions.js', )</td></tr>
+<tr class="separator:a7c56e2cec51b020352de93a0888b8ffb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a871e0789f701cda98576e31ec208acb6"><td class="memItemLeft" align="right" valign="top"><a id="a871e0789f701cda98576e31ec208acb6" name="a871e0789f701cda98576e31ec208acb6"></a>
+const&#160;</td><td class="memItemRight" valign="bottom"><b>LWT_CSS_FILES</b> array( 'src/css/css_charts.css', 'src/css/feed_wizard.css', 'src/css/gallery.css', 'src/css/jplayer.css', 'src/css/jquery-ui.css', 'src/css/jquery.tagit.css', 'src/css/styles.css', )</td></tr>
+<tr class="separator:a871e0789f701cda98576e31ec208acb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>JS and CSS minifier. </p>
-<p>Use this script to minify JS and CSS files from src/js and src/css to js/ and css/. </p>
+<p>Use this script to minify JS and CSS files from src/js and src/css to js/ and css/.</p>
+<p>PHP version 8.1 </p>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a id="abe1041f978619028b76827b49ba2dcbb" name="abe1041f978619028b76827b49ba2dcbb"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#abe1041f978619028b76827b49ba2dcbb">&#9670;&#160;</a></span>minify_everything()</h2>
@@ -152,8 +155,7 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Minify all Cascading-Style Sheet files</p>
-<p>@global array&lt;string&gt; $cssFiles All the file to be minified</p>
+<p>Minify all Cascading-Style Sheet (CSS) files</p>
 <dl class="section return"><dt>Returns</dt><dd>void</dd></dl>
 <dl class="section since"><dt>Since</dt><dd>2.0.3-fork </dd></dl>
 
@@ -174,7 +176,6 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Minify all JavaScript files</p>
-<p>@global array&lt;string&gt; $jsFiles All the file to be minified</p>
 <dl class="section return"><dt>Returns</dt><dd>string Minified code</dd></dl>
 <dl class="section since"><dt>Since</dt><dd>2.0.3-fork </dd>
 <dd>
@@ -313,49 +314,6 @@ Variables</h2></td></tr>
 <p>Nested folders are ignored.</p>
 <dl class="section return"><dt>Returns</dt><dd>void </dd></dl>
 
-</div>
-</div>
-<h2 class="groupheader">Variable Documentation</h2>
-<a id="a97e703767e90a0f6cfa9c627c15bcfe5" name="a97e703767e90a0f6cfa9c627c15bcfe5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a97e703767e90a0f6cfa9c627c15bcfe5">&#9670;&#160;</a></span>$cssFiles</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">$cssFiles</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= array(</div>
-<div class="line">    <span class="stringliteral">&#39;src/css/css_charts.css&#39;</span>, <span class="stringliteral">&#39;src/css/feed_wizard.css&#39;</span>, <span class="stringliteral">&#39;src/css/gallery.css&#39;</span>, </div>
-<div class="line">    <span class="stringliteral">&#39;src/css/jplayer.css&#39;</span>, <span class="stringliteral">&#39;src/css/jquery-ui.css&#39;</span>, <span class="stringliteral">&#39;src/css/jquery.tagit.css&#39;</span>,</div>
-<div class="line">    <span class="stringliteral">&#39;src/css/styles.css&#39;</span>,</div>
-<div class="line"> </div>
-<div class="line">    </div>
-<div class="line">)</div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="a85fbbf14f24d33cd97f10a848cad48b8" name="a85fbbf14f24d33cd97f10a848cad48b8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a85fbbf14f24d33cd97f10a848cad48b8">&#9670;&#160;</a></span>$jsFiles</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">$jsFiles</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= array(</div>
-<div class="line">    <span class="stringliteral">&#39;src/js/audio_controller.js&#39;</span>, <span class="stringliteral">&#39;src/js/third_party/countuptimer.js&#39;</span>, </div>
-<div class="line">    <span class="stringliteral">&#39;src/js/jq_feedwizard.js&#39;</span>, </div>
-<div class="line">    <span class="stringliteral">&#39;src/js/jq_pgm.js&#39;</span>, <span class="stringliteral">&#39;src/js/pgm.js&#39;</span>, </div>
-<div class="line">    <span class="stringliteral">&#39;src/js/translation_api.js&#39;</span>, <span class="stringliteral">&#39;src/js/unloadformcheck.js&#39;</span>,</div>
-<div class="line">    <span class="stringliteral">&#39;src/js/third_party/sorttable.js&#39;</span>, <span class="stringliteral">&#39;src/js/user_interactions.js&#39;</span>, </div>
-<div class="line">)</div>
-</div><!-- fragment -->
 </div>
 </div>
 </div><!-- contents -->
