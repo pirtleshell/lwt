@@ -642,7 +642,8 @@ function edit_language_form($language): void
      * Check the word splitting method.
      */
     function checkWordChar(method) {
-        document.forms.lg_form.LgRegexpAlt.value = (method == "mecab") ? "mecab" : "regex";
+        const method_option = (method == "mecab") ? "mecab" : "regexp";
+        document.forms.lg_form.LgRegexpAlt.value = method_option;
     }
 
     /**

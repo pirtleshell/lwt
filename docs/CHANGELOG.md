@@ -26,6 +26,8 @@ ones are marked like "v1.0.0-fork".
 * Since 2.9.0, audio position was not saved properly.
 * On `upload_words.php`, "update only empty fields" was broken.
 * Translation were not set by default properly when editing terms translations table.
+* The field MeCab was set for japanese even when not asked for. 
+Signalled on PR [#155](https://github.com/HugoFara/lwt/pull/155), thanks to [@ProgramComputer](https://github.com/ProgramComputer).
 
 ### Deprecated
 
