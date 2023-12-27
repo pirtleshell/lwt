@@ -225,23 +225,67 @@ function feed_wizard_select_text(): void
 
     const lwt_helpers = {
         clickCancel: function() {
-            $('#adv').hide();$('#lwt_last').css('margin-top',$('#lwt_header').height());return false;
+            $('#adv').hide();
+            $('#lwt_last').css('margin-top',$('#lwt_header').height());
+            return false;
         },
 
         changeSelectMode: function() {
-            $('*').removeClass('lwt_marked_text');$('*[class=\'\']').removeAttr( 'class' );$('#get_button').prop('disabled', true);$('#mark_action').empty();$('<option/>').val('').text('[Click On Text]').appendTo('#mark_action');return false;
+            $('*').removeClass('lwt_marked_text');
+            $('*[class=\'\']').removeAttr( 'class' );
+            $('#get_button').prop('disabled', true);
+            $('#mark_action').empty();
+            $('<option/>').val('').text('[Click On Text]').appendTo('#mark_action');
+            return false;
         },
 
         changeHideImage: function() {
-            if($(this).val()=='no')$('img').not($('#lwt_header').find('*')).css('display','');else $('img').not($('#lwt_header').find('*')).css('display','none');return false;
+            if($(this).val()=='no')
+                $('img').not($('#lwt_header').find('*')).css('display','');
+            else 
+                $('img').not($('#lwt_header').find('*')).css('display','none');
+            return false;
         },
 
         clickBack: function() {
-            location.href='feed_wizard.php?step=1&amp;select_mode='+encodeURIComponent($('select[name=\'select_mode\']').val())+'&amp;hide_images='+encodeURIComponent($('select[name=\'hide_images\']').val());return false;
+            location.href = 'feed_wizard.php?step=1&amp;select_mode=' + 
+            encodeURIComponent($('select[name=\'select_mode\']').val())+
+            '&amp;hide_images='+
+            encodeURIComponent($('select[name=\'hide_images\']').val());
+            return false;
         },
 
         clickMinMax: function() {
-            $('#lwt_container').toggle();if($('#lwt_container').css('display')=='none'){$('input[name=\'maxim\']').val(0);}else{$('input[name=\'maxim\']').val(1);}$('#lwt_last').css('margin-top',$('#lwt_header').height());return false;
+            $('#lwt_container').toggle();
+            if($('#lwt_container').css('display')=='none') {
+                $('input[name=\'maxim\']').val(0);
+            }else{
+                $('input[name=\'maxim\']').val(1);
+            }
+            $('#lwt_last').css('margin-top',$('#lwt_header').height());
+            return false;
+        },
+
+        changeSelectedFeed: function() {
+            var html = $('#lwt_sel').html();
+            $('input[name=\'html\']').val(html);
+            document.lwt_form1.submit();
+        },
+
+        changeArticleSection: function() {
+            var html = $('#lwt_sel').html();
+            $('input[name=\'html\']').val(html);
+            document.lwt_form1.submit();
+        },
+
+        setMaxim: function() {
+            $('#lwt_container').hide();
+            $('#lwt_last').css('margin-top',$('#lwt_header').height());
+            if($('#lwt_container').css('display')=='none') {
+                $('input[name=\'maxim\']').val(0);
+            } else {
+                $('input[name=\'maxim\']').val(1);
+            }
         }
     }
 </script>
@@ -315,7 +359,7 @@ function feed_wizard_select_text(): void
                 <td class="td1" style="text-align:left">Article Source: </td>
                 <td class="td1" style="text-align:left">
                     <select name="NfArticleSection" 
-                    onchange="{var html = $('#lwt_sel').html();$('input[name=\'html\']').val(html);document.lwt_form1.submit();}">
+                    onchange="lwt_helpers.changeArticleSection">
                         <option value="" <?php 
     if (
         !array_key_exists('feed_text', $_SESSION['wizard']['feed']) || 
@@ -359,7 +403,7 @@ function feed_wizard_select_text(): void
                         <span>
                             <select name="selected_feed" 
                             style="width:250px;max-width:200px;" 
-                            onchange="{var html = $('#lwt_sel').html();$('input[name=\'html\']').val(html);document.lwt_form1.submit();}">
+                            onchange="lwt_helpers.changeSelectedFeed">
                                 <?php
     $current_host='';
     $current_status='';
@@ -461,15 +505,7 @@ function feed_wizard_select_text(): void
     ?>
 <script type="text/javascript">
     if (<?php echo json_encode($_SESSION['wizard']['maxim']==0); ?>) {
-        $(function() {
-            $('#lwt_container').hide();
-            $('#lwt_last').css('margin-top',$('#lwt_header').height());
-            if($('#lwt_container').css('display')=='none') {
-                $('input[name=\'maxim\']').val(0);
-            } else {
-                $('input[name=\'maxim\']').val(1);
-            }
-        });
+        $(lwt_helpers.setMaxim);
     }
 </script>
     <?php
