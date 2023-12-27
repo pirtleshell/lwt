@@ -28,6 +28,7 @@ ones are marked like "v1.0.0-fork".
 * Translation were not set by default properly when editing terms translations table.
 * The field MeCab was set for japanese even when not asked for. 
 Signalled on PR [#155](https://github.com/HugoFara/lwt/pull/155), thanks to [@ProgramComputer](https://github.com/ProgramComputer).
+* Since 2.8.1, japanese word romanization was not displayed any more. Thanks to 아르노 for signalling the bug on Discord!
 
 ### Deprecated
 
