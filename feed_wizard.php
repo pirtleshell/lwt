@@ -535,17 +535,23 @@ function feed_wizard_select_text(): void
         $_SESSION['wizard']['article_tags']='';
         foreach($article_tags as $tag){
             if(substr_compare(trim($tag), "redirect", 0, 8)==0) {
-                $_SESSION['wizard']['redirect']=trim($tag).' | ';
+                $_SESSION['wizard']['redirect'] = trim($tag).' | ';
             }
             else { 
-                $_SESSION['wizard']['article_tags'].='<li style="text-align: left"><img class="delete_selection" src="icn/cross.png" title="Delete Selection" alt="-" />'.$tag.'</li>'; 
+                $_SESSION['wizard']['article_tags'] .= '<li style="text-align: left">
+                <img class="delete_selection" src="icn/cross.png" title="Delete Selection" alt="-" />'
+                . $tag . 
+                '</li>'; 
             }
         }
         $filter_tags=explode('|', str_replace('!?!', '|', $row['NfFilterTags']));
         $_SESSION['wizard']['filter_tags']='';
         foreach($filter_tags as $tag){
             if(trim($tag)!='') {
-                $_SESSION['wizard']['filter_tags'].='<li style="text-align: left"><img class="delete_selection" src="icn/cross.png" title="Delete Selection" alt="-" />'.$tag.'</li>'; 
+                $_SESSION['wizard']['filter_tags'] .= '<li style="text-align: left">
+                <img class="delete_selection" src="icn/cross.png" title="Delete Selection" alt="-" />'
+                . $tag.
+                '</li>'; 
             }
         }
         $_SESSION['wizard']['feed']=get_links_from_new_feed($row['NfSourceURI']);
@@ -556,8 +562,8 @@ function feed_wizard_select_text(): void
         }
         $_SESSION['wizard']['feed']['feed_title']=$row['NfName'];
         $_SESSION['wizard']['options']=$row['NfOptions'];
-        if(empty($_SESSION['wizard']['feed']['feed_text'])) {
-            $_SESSION['wizard']['feed']['feed_text']='';
+        if (empty($_SESSION['wizard']['feed']['feed_text'])) {
+            $_SESSION['wizard']['feed']['feed_text'] = '';
             $_SESSION['wizard']['detected_feed']='Detected: «Webpage Link»';
         }
         $_SESSION['wizard']['lang']=$row['NfLgID'];
@@ -568,7 +574,7 @@ function feed_wizard_select_text(): void
         }
         if($_SESSION['wizard']['feed']['feed_text']!=get_nf_option($_SESSION['wizard']['options'], 'article_source')) {
             $source=get_nf_option($_SESSION['wizard']['options'], 'article_source');
-            $_SESSION['wizard']['feed']['feed_text']=$source;
+            $_SESSION['wizard']['feed']['feed_text'] = $source;
             $feed_len=count($_SESSION['wizard']['feed'])-2;
             for ($i=0;$i<$feed_len;$i++){
                 $_SESSION['wizard']['feed'][$i]['text']=$_SESSION['wizard']['feed'][$i][$source];
@@ -642,16 +648,16 @@ function feed_wizard_select_text(): void
         $host_name=$_REQUEST['host_name'];
         $_SESSION['wizard']['host'][$host_name]=$_REQUEST['host_status'];
     }
-    $feed_len=count($_SESSION['wizard']['feed'])-2;
-    if(isset($_REQUEST['NfName'])) { 
+    $feed_len = count($_SESSION['wizard']['feed'])-2;
+    if (isset($_REQUEST['NfName'])) { 
         $_SESSION['wizard']['feed']['feed_title']=$_REQUEST['NfName']; 
     }
-    if(isset($_REQUEST['NfArticleSection']) && ($_REQUEST['NfArticleSection']!=$_SESSION['wizard']['feed']['feed_text'])) {
-        $_SESSION['wizard']['feed']['feed_text']=$_REQUEST['NfArticleSection'];
-        $source=$_SESSION['wizard']['feed']['feed_text'];
-        for ($i=0;$i<$feed_len;$i++){
-            if($_SESSION['wizard']['feed']['feed_text']!='') {
-                $_SESSION['wizard']['feed'][$i]['text']=$_SESSION['wizard']['feed'][$i][$source];
+    if (isset($_REQUEST['NfArticleSection']) && ($_REQUEST['NfArticleSection'] != $_SESSION['wizard']['feed']['feed_text'])) {
+        $_SESSION['wizard']['feed']['feed_text'] = $_REQUEST['NfArticleSection'];
+        $source = $_SESSION['wizard']['feed']['feed_text'];
+        for ($i = 0; $i < $feed_len; $i++) {
+            if ($_SESSION['wizard']['feed']['feed_text'] != '') {
+                $_SESSION['wizard']['feed'][$i]['text'] = $_SESSION['wizard']['feed'][$i][$source];
             } else { 
                 unset($_SESSION['wizard']['feed'][$i]['text']); 
             }
@@ -747,18 +753,24 @@ function feed_wizard_select_text(): void
                 <td class="td1" style="text-align:left">
                     <select name="NfArticleSection" onchange="{var html = $('#lwt_sel').html();$('input[name=\'html\']').val(html);document.lwt_form1.submit();}">
                         <option value="" <?php 
-    if($_SESSION['wizard']['feed']['feed_text']=='') { 
+    if (
+        !array_key_exists('feed_text', $_SESSION['wizard']['feed']) || 
+        $_SESSION['wizard']['feed']['feed_text'] == ''
+    ) { 
         echo ' selected="selected"'; 
     } 
                         ?>>
                             Webpage Link
                         </option>
                         <?php 
-    $sources=array('description','encoded','content');
-    foreach($sources as $source){ 
-        if(isset($_SESSION['wizard']['feed'][0][$source])) {
+    $sources = array('description','encoded','content');
+    foreach ($sources as $source){ 
+        if (isset($_SESSION['wizard']['feed'][0][$source])) {
             echo '<option value="'.$source.'"';
-            if($_SESSION['wizard']['feed']['feed_text']==$source) { 
+            if (
+                array_key_exists('feed_text', $_SESSION['wizard']['feed']) && 
+                $_SESSION['wizard']['feed']['feed_text'] == $source
+            ) { 
                 echo ' selected="selected"'; 
             } 
             echo '>'. $source .'</option>';
@@ -799,7 +811,14 @@ function feed_wizard_select_text(): void
             $current_host=$feed_host;
             $current_status=$_SESSION['wizard']['host'][$feed_host];
         }
-        echo '>'.((isset($_SESSION['wizard']['feed'][$i]['html'])||$i==$_SESSION['wizard']['selected_feed'])?('▸ '):('- ')).($i+1)  .' '.$_SESSION['wizard']['host'][$feed_host].'&nbsp;host: '.$feed_host.'</option>';
+        echo '>' . 
+        (
+            (
+                isset($_SESSION['wizard']['feed'][$i]['html']) || 
+                $i==$_SESSION['wizard']['selected_feed']
+            ) ? '▸ ' : '- ') .
+        ($i+1)  .' '.$_SESSION['wizard']['host'][$feed_host].'&nbsp;host: '.
+        $feed_host.'</option>';
     }
                                 ?>
                             </select>

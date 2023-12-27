@@ -36,6 +36,8 @@ Thanks to 아르노 for signalling the bug on Discord!
 ([#138](https://github.com/HugoFara/lwt/issues/138)), as functions `click_slower` 
 and `click_faster` were declared two times in `src/js/audio_controller.js`.
 * When opening a text, text position was not saved and a `text_id is unknown` error was triggered. 
+* Do not display an error on step 2 of feed wizard at first initialization 
+([#129](https://github.com/HugoFara/lwt/issues/129)).
 
 ### Deprecated
 
