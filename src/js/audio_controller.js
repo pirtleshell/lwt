@@ -23,7 +23,7 @@ const lwt_audio_controller = {
         do_ajax_save_setting('currentplayerseconds', newval);
     },
 
-    setNewPlaybackrate: function () {
+    setNewPlaybackRate: function () {
         const newval = $("#playbackrate :selected").val();
         do_ajax_save_setting('currentplaybackrate', newval); 
         $("#jquery_jplayer_1").jPlayer("option","playbackRate", newval * 0.1);
@@ -93,26 +93,26 @@ const lwt_audio_controller = {
         }
     },
 
-    clickStdSpeed: function () {
+    setStdSpeed: function () {
         $("#playbackrate").val(10);
-        this.setNewPlaybackRate();
+        lwt_audio_controller.setNewPlaybackRate();
     },
 
-    clickSlower: function () {
+    setSlower: function () {
         let val = $("#playbackrate :selected").val();
         if (val > 5) {
             val--;
             $("#playbackrate").val(val);
-            this.setNewPlaybackRate();
+            lwt_audio_controller.setNewPlaybackRate();
         }
     },
 
-    clickFaster: function () {
+    setFaster: function () {
         let val = $("#playbackrate :selected").val();
         if (val < 15) {
             val++;
             $("#playbackrate").val(val);
-            this.setNewPlaybackRate();
+            lwt_audio_controller.setNewPlaybackRate();
         }
     },
 
@@ -166,13 +166,13 @@ function click_faster() {
 }
 
 function click_stdspeed() {
-    return lwt_audio_controller.clickStdSpeed();
+    return lwt_audio_controller.setStdSpeed();
 }
 
 function click_slower() {
-    return lwt_audio_controller.clickSlower();
+    return lwt_audio_controller.setSlower();
 }
 
 function click_faster() {
-    return lwt_audio_controller.clickFaster();
+    return lwt_audio_controller.setFaster();
 }

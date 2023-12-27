@@ -2200,14 +2200,20 @@ ones are marked like "v1.0.0-fork".</p>
 </ul>
 <h4>Fixed</h4>
 <ul>
-<li>Fixes <a href="https://github.com/HugoFara/lwt/issues/113">#113</a>: changing a language name was making text-to-speech unusable and may prompt a warning.</li>
-<li>Since 2.9.0, tests may be unable to run due to a missing key in an AJAX request ("type"). This is fixed.</li>
+<li>Fixes <a href="https://github.com/HugoFara/lwt/issues/113">#113</a>: changing a language name
+was making text-to-speech unusable and may prompt a warning.</li>
+<li>Since 2.9.0, tests may be unable to run due to a missing key in an AJAX request ("type").</li>
 <li>Since 2.9.0, audio position was not saved properly.</li>
 <li>On <code>upload_words.php</code>, "update only empty fields" was broken.</li>
 <li>Translation were not set by default properly when editing terms translations table.</li>
 <li>The field MeCab was set for japanese even when not asked for.
-Signalled on PR <a href="https://github.com/HugoFara/lwt/pull/155">#155</a>, thanks to <a href="https://github.com/ProgramComputer">@ProgramComputer</a>.</li>
-<li>Since 2.8.1, japanese word romanization was not displayed any more. Thanks to 아르노 for signalling the bug on Discord!</li>
+Signalled on PR <a href="https://github.com/HugoFara/lwt/pull/155">#155</a>, thanks to
+<a href="https://github.com/ProgramComputer">@ProgramComputer</a>.</li>
+<li>Since 2.8.1, japanese word romanization was not displayed any more.
+Thanks to 아르노 for signalling the bug on Discord!</li>
+<li>The go slower/faster feature on audio was broken
+(<a href="https://github.com/HugoFara/lwt/issues/138">#138</a>), as functions <code>click_slower</code>
+and <code>click_faster</code> were declared two times in <code>src/js/audio_controller.js</code>.</li>
 </ul>
 <h4>Deprecated</h4>
 <ul>

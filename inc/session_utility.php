@@ -5184,13 +5184,18 @@ function makeAudioPlayer($audio, $offset=0)
         if ($('#jquery_jplayer_1').data().jPlayer.status.playbackRateEnabled) {
             $("#playbackrateContainer").css("margin-top",".2em")
             .html(
-                `<span id="pbSlower" style="position:absolute;top: 0; left: 0; bottom: 0; right: 50%;" title="Slower" onclick="click_slower();">
+                `<span id="pbSlower" 
+                style="position:absolute;top: 0; left: 0; bottom: 0; right: 50%;" 
+                title="Slower" onclick="lwt_audio_controller.clickSlower();">
                     &nbsp;
                 </span>
-                <span id="pbFaster" style="position:absolute;top: 0; left: 50%; bottom: 0; right: 0;" title="Faster" onclick="click_faster();">
+                <span id="pbFaster" 
+                style="position:absolute;top: 0; left: 50%; bottom: 0; right: 0;" 
+                title="Faster" onclick="lwt_audio_controller.clickFaster();">
                     &nbsp;
                 </span>
-                <span class="ui-widget ui-state-default ui-corner-all" style="padding-left: 0.2em;padding-right: 0.2em;color:grey">
+                <span class="ui-widget ui-state-default ui-corner-all" 
+                style="padding-left: 0.2em;padding-right: 0.2em;color:grey">
                     <span id="playbackSlower" style="padding-right: 0.15em;">≪</span>
                     <span id="pbvalue">1.0</span>
                     <span id="playbackFaster" style="padding-left: 0.15em;">≫</span>
@@ -5228,9 +5233,9 @@ function makeAudioPlayer($audio, $offset=0)
             set_current_playbackrate();
         });
         
-        $("#slower").on('click', click_slower);
-        $("#faster").on('click', click_faster);
-        $("#stdspeed").on('click', click_stdspeed);
+        $("#slower").on('click', lwt_audio_controller.setSlower);
+        $("#faster").on('click', lwt_audio_controller.setFaster);
+        $("#stdspeed").on('click', lwt_audio_controller.setStdSpeed);
         $("#backbutt").on('click', click_back);
         $("#forwbutt").on('click', click_forw);
         $("#do-single").on('click', click_single);
