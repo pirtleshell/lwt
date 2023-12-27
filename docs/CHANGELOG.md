@@ -1217,7 +1217,7 @@ Changes from official LWT version 1.5.20 imported:
 * New Feature: Selecting terms according to a text tag  
 * New Feature: Start a document where you left off (only "Read Text Screen")  
 * New Feature: Improved Search/Query for Words/Texts  
-* New Feature: Automatically import texts from RSS feeds (for more info see: [Newsfeed Import](info.html#feed_imp))  
+* New Feature: Automatically import texts from RSS feeds (for more info see: [Newsfeed Import](info.html#Newsfeed%20Import))  
 * New Setting: Button(s) for "words to do" "IGNORE ALL"/"I KNOW ALL"  
 * New Setting: Theme  
 * New Setting: term/word query with standard/regexp/regexp CS  
