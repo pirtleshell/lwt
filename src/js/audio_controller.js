@@ -39,18 +39,16 @@ const lwt_audio_controller = {
         $("#do-single").addClass('hide');
         $("#do-repeat").removeClass('hide');
         do_ajax_save_setting('currentplayerrepeatmode','0');
-        return false;
     },
 
     clickRepeat: function () {
         $("#jquery_jplayer_1")
-        .on('bind', $.jPlayer.event.ended + ".jp-repeat", function(_event) { 
-            $(this).jPlayer("play"); 
+        .on('bind', $.jPlayer.event.ended + ".jp-repeat", function() {
+            $("#jquery_jplayer_1").jPlayer("play"); 
         });
         $("#do-repeat").addClass('hide');
         $("#do-single").removeClass('hide');
         do_ajax_save_setting('currentplayerrepeatmode','1');
-        return false;
     },
 
     clickBackward: function () {
