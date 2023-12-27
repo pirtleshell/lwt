@@ -5042,7 +5042,7 @@ function makeAudioPlayer($audio, $offset=0)
         return;
     }
     $audio = trim($audio);
-    $repeatMode = getSettingZeroOrOne('currentplayerrepeatmode', 0);
+    $repeatMode = (bool) getSettingZeroOrOne('currentplayerrepeatmode', 0);
     $currentplayerseconds = getSetting('currentplayerseconds');
     if ($currentplayerseconds == '') { 
         $currentplayerseconds = 5; 
@@ -5230,20 +5230,22 @@ function makeAudioPlayer($audio, $offset=0)
         
         $("#jquery_jplayer_1")
         .on('bind', $.jPlayer.event.play, function(event) { 
-            set_current_playbackrate();
+            lwt_audio_controller.setCurrentPlaybackRate();
         });
         
         $("#slower").on('click', lwt_audio_controller.setSlower);
         $("#faster").on('click', lwt_audio_controller.setFaster);
         $("#stdspeed").on('click', lwt_audio_controller.setStdSpeed);
-        $("#backbutt").on('click', click_back);
-        $("#forwbutt").on('click', click_forw);
-        $("#do-single").on('click', click_single);
-        $("#do-repeat").on('click', click_repeat);
-        $("#playbackrate").on('change', set_new_playbackrate);
-        $("#backtime").on('change', set_new_playerseconds);
-        
-        <?php echo ($repeatMode ? "click_repeat();\n" : ''); ?>
+        $("#backbutt").on('click', lwt_audio_controller.clickBackward);
+        $("#forwbutt").on('click', lwt_audio_controller.clickForward);
+        $("#do-single").on('click', lwt_audio_controller.clickSingle);
+        $("#do-repeat").on('click', lwt_audio_controller.clickRepeat);
+        $("#playbackrate").on('change', lwt_audio_controller.setNewPlaybackRate);
+        $("#backtime").on('change', lwt_audio_controller.setNewPlayerSeconds);
+
+        if (<?php echo json_encode($repeatMode); ?>) {
+            lwt_audio_controller.clickRepeat();
+        }
     }
 
     $(document).ready(prepareMediaInteractions);

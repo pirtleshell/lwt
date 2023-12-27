@@ -18,7 +18,7 @@ const lwt_audio_controller = {
         $("#jquery_jplayer_1").jPlayer("playHead", position);
     },
 
-    setNewPlayerseconds: function () {
+    setNewPlayerSeconds: function () {
         const newval = $("#backtime :selected").val();
         do_ajax_save_setting('currentplayerseconds', newval);
     },
@@ -29,7 +29,7 @@ const lwt_audio_controller = {
         $("#jquery_jplayer_1").jPlayer("option","playbackRate", newval * 0.1);
     },
 
-    setCurrentPlaybackrate: function () {
+    setCurrentPlaybackRate: function () {
         const val = $("#playbackrate :selected").val();
         $("#jquery_jplayer_1").jPlayer("option","playbackRate", val * 0.1);
     },
@@ -53,7 +53,7 @@ const lwt_audio_controller = {
         return false;
     },
 
-    clickBack: function () {
+    clickBackward: function () {
         const t = parseInt($("#playTime").text(), 10);
         const b = parseInt($("#backtime").val(), 10);
         let nt = t - b;
@@ -127,52 +127,4 @@ const lwt_audio_controller = {
  */
 function new_pos(p) {
     return lwt_audio_controller.newPosition(p);
-}
-
-function set_new_playerseconds() {
-    return lwt_audio_controller.setNewPlayerseconds();
-}
-
-function set_new_playbackrate() {
-    return lwt_audio_controller.setNewPlaybackrate();
-}
-
-function set_current_playbackrate() {
-    return lwt_audio_controller.setCurrentPlaybackrate();
-}
-
-function click_single() {
-    return lwt_audio_controller.clickSingle();
-}
-
-function click_repeat() {
-    return lwt_audio_controller.clickRepeat();
-}
-
-function click_back() {
-    return lwt_audio_controller.clickBack();
-}
-
-function click_forw() {
-    return lwt_audio_controller.clickForward();
-}
-
-function click_slower() {
-    return lwt_audio_controller.clickSlower();
-}
-
-function click_faster() {
-    return lwt_audio_controller.clickFaster();
-}
-
-function click_stdspeed() {
-    return lwt_audio_controller.setStdSpeed();
-}
-
-function click_slower() {
-    return lwt_audio_controller.setSlower();
-}
-
-function click_faster() {
-    return lwt_audio_controller.setFaster();
 }

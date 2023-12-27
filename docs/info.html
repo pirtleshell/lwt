@@ -2219,6 +2219,7 @@ and <code>click_faster</code> were declared two times in <code>src/js/audio_cont
 <ul>
 <li>PHP documentation using Doxygen (under <code>/docs/html</code>) is now deprecated and will be removed in 3.0.0.</li>
 <li>Using <code>$langDefs</code> is deprecated in favor of <code>LWT_LANGUAGES_ARRAY</code> (<a href="https://github.com/HugoFara/lwt/issues/163">#163</a>).</li>
+<li>Calling the global function <code>new_pos</code> to set audio position is deprecated. Please use <code>lwt_audio_controller.setPosition</code>.</li>
 </ul>
 <h3>2.9.0-fork (December 24 2023)</h3>
 <h4>Added in 2.9.0-fork</h4>
