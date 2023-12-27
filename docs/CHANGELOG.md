@@ -17,6 +17,7 @@ ones are marked like "v1.0.0-fork".
 ### Changed
 
 * PHP files header docblocks are expanded, notably with a PHP version, package and category name.
+* Japanese number are now parsed by MeCab. Big thanks to [@ProgramComputer](https://github.com/ProgramComputer) for his pull request [#149](https://github.com/HugoFara/lwt/pull/149)!
 
 ### Fixed
 
@@ -25,6 +26,9 @@ ones are marked like "v1.0.0-fork".
 * Since 2.9.0, audio position was not saved properly.
 * On `upload_words.php`, "update only empty fields" was broken.
 * Translation were not set by default properly when editing terms translations table.
+* The field MeCab was set for japanese even when not asked for. 
+Signalled on PR [#155](https://github.com/HugoFara/lwt/pull/155), thanks to [@ProgramComputer](https://github.com/ProgramComputer).
+* Since 2.8.1, japanese word romanization was not displayed any more. Thanks to 아르노 for signalling the bug on Discord!
 
 ### Deprecated
 
@@ -1214,7 +1218,7 @@ Changes from official LWT version 1.5.20 imported:
 * New Feature: Selecting terms according to a text tag  
 * New Feature: Start a document where you left off (only "Read Text Screen")  
 * New Feature: Improved Search/Query for Words/Texts  
-* New Feature: Automatically import texts from RSS feeds (for more info see: [Newsfeed Import](info.html#feed_imp))  
+* New Feature: Automatically import texts from RSS feeds (for more info see: [Newsfeed Import](info.html#Newsfeed%20Import))  
 * New Setting: Button(s) for "words to do" "IGNORE ALL"/"I KNOW ALL"  
 * New Setting: Theme  
 * New Setting: term/word query with standard/regexp/regexp CS  

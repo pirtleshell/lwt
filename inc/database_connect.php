@@ -620,8 +620,9 @@ function update_japanese_word_count($japid)
         $row = fgets($handle, 1024);
         $arr = explode("4\t", $row, 2);
         if (!empty($arr[1])) {
+            //TODO Add tests
             $cnt = substr_count(
-                preg_replace('$[^267]\t$u', '', $arr[1]), 
+                preg_replace('$[^2678]\t$u', '', $arr[1]), 
                 "\t"
             );
             if (empty($cnt)) {
@@ -790,6 +791,7 @@ function parse_japanese_text($text, $id): ?array
     );
     $handle = fopen($file_name, 'r');
     $mecabed = fread($handle, filesize($file_name));
+   
     fclose($handle);
     $values = array();
     $order = 0;
@@ -801,6 +803,7 @@ function parse_japanese_text($text, $id): ?array
         );
     }
     $term_type = 0;
+    $last_node_type = 0;
     $count = 0;
     $row = array(0, 0, 0, "", 0);
     foreach (explode(PHP_EOL, $mecabed) as $line) {
@@ -817,22 +820,45 @@ function parse_japanese_text($text, $id): ?array
                 $term = '¶';
             }
             $term_type = 2;
-        } else if (in_array($node_type, ['2', '6', '7'])) {
+        } else if (in_array($node_type, ['2', '6', '7', '8'])) {
             $term_type = 0;
         } else {
             $term_type = 1;
         }
-        $order += (int)(($term_type == 0) && ($last_term_type == 0)) + 
-        (int)!(($term_type == 1) && ($last_term_type == 1));
+     
+        // Increase word order:
+        // Once if the current or the previous term were words
+        // Twice if current or the previous were not of unmanaged type 
+        $order += (int)($term_type == 0 && $last_term_type == 0) + 
+        (int)($term_type != 1 || $last_term_type != 1);
         $row[2] = $order; // TiOrder
         $row[3] = convert_string_to_sqlsyntax_notrim_nonull($term); // TiText
         $row[4] = $term_type == 0 ? 1 : 0; // TiWordCount
-        $values[] = "(" . implode(",", $row) . ")";
+        $values[] = $row;
+        // Special case for kazu (numbers)
+        if ($last_node_type == 8 && $node_type == 8) {
+            $lastKey = array_key_last($values);
+            if ($lastKey !== null) {
+                // Concatenate the previous value with the current term
+                $values[$lastKey-1][3] = convert_string_to_sqlsyntax_notrim_nonull(
+                    str_replace("'", '', $values[$lastKey-1][3]) . $term
+                );
+            }
+            // Remove last element to avoid repetition
+            array_pop($values);
+        }
+        $last_node_type = $node_type;
+    }
+
+    // Add parenthesis around each element
+    $formatted_string = array();
+    foreach ($values as $key => $value) {
+        $formatted_string[$key] =  "(" . implode(",", $value) . ")";
     }
     do_mysqli_query(
         "INSERT INTO temptextitems2 (
             TiSeID, TiCount, TiOrder, TiText, TiWordCount
-        ) VALUES " . implode(',', $values)
+        ) VALUES " . implode(',', $formatted_string)
     );
     // Delete elements TiOrder=@order
     do_mysqli_query("DELETE FROM temptextitems2 WHERE TiOrder=$order");

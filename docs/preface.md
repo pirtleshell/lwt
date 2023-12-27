@@ -14,10 +14,10 @@
 
 ## Contributions by [HugoFara](https://github.com/HugoFara) (GitHub  version maintainer)
 
-I started using LWT in 2021, and continued its development almost instantly. I felt that the core idea was very good, but its implementation seemed unnadapted, and the code was quite obfuscated. While I do not have any official responsibility to LWT (we don't have any kind of official agreement with lang-learn-guy), I am the the *de facto* maintainer of the community version. I dedicated myself to the following points (see the [GitHub post](https://github.com/HugoFara/lwt/discussions/6)):
+I started using LWT in 2021, and continued its development almost instantly. I felt that the core idea was very good, but its implementation seemed unadapted, and the code was quite obfuscated. While I do not have any official responsibility to LWT (we don't have any kind of official agreement with lang-learn-guy), I am the the *de facto* maintainer of the community version. I dedicated myself to the following points (see the [GitHub post](https://github.com/HugoFara/lwt/discussions/6)):
 
 * Make LWT Open Source: document and refactor code
-* Meet the HTML5 standards: the interface was relying on deprecated systmes like frames, making it difficult to use on small screens.
+* Meet the HTML5 standards: the interface was relying on deprecated systems like frames, making it difficult to use on small screens.
 * Simplify users' lives: avoid complex installation or procedures whenever possible.
 
 If you spot any problem, please post any [issue on GitHub](https://github.com/HugoFara/lwt/issues), and we will look at it.

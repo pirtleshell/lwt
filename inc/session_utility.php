@@ -3695,9 +3695,9 @@ function sentences_containing_word_lc_query($wordlc, $lid): string
         if (!feof($handle)) {
             $row = fgets($handle, 256);
             // Format string removing numbers. 
-            // MeCab tip: 2 = hiragana, 6 = kanji, 7 = katakana
+            // MeCab tip: 2 = hiragana, 6 = kanji, 7 = katakana, 8 = kazu
             $mecab_str = "\t" . preg_replace_callback(
-                '([267]?)\t[0-9]+$', 
+                '([2678]?)\t[0-9]+$', 
                 function ($matches) {
                     return isset($matches[1]) ? "\t" : "";
                 }, 

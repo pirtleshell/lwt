@@ -209,10 +209,10 @@
 <li>Thank you for your attention. I hope you will enjoy this application as I do every day.</li>
 </ul>
 <h3>Contributions by HugoFara (GitHub  version maintainer)</h3>
-<p>I started using LWT in 2021, and continued its development almost instantly. I felt that the core idea was very good, but its implementation seemed unnadapted, and the code was quite obfuscated. While I do not have any official responsibility to LWT (we don't have any kind of official agreement with lang-learn-guy), I am the the <em>de facto</em> maintainer of the community version. I dedicated myself to the following points (see the <a href="https://github.com/HugoFara/lwt/discussions/6">GitHub post</a>):</p>
+<p>I started using LWT in 2021, and continued its development almost instantly. I felt that the core idea was very good, but its implementation seemed unadapted, and the code was quite obfuscated. While I do not have any official responsibility to LWT (we don't have any kind of official agreement with lang-learn-guy), I am the the <em>de facto</em> maintainer of the community version. I dedicated myself to the following points (see the <a href="https://github.com/HugoFara/lwt/discussions/6">GitHub post</a>):</p>
 <ul>
 <li>Make LWT Open Source: document and refactor code</li>
-<li>Meet the HTML5 standards: the interface was relying on deprecated systmes like frames, making it difficult to use on small screens.</li>
+<li>Meet the HTML5 standards: the interface was relying on deprecated systems like frames, making it difficult to use on small screens.</li>
 <li>Simplify users' lives: avoid complex installation or procedures whenever possible.</li>
 </ul>
 <p>If you spot any problem, please post any <a href="https://github.com/HugoFara/lwt/issues">issue on GitHub</a>, and we will look at it.</p>
@@ -546,7 +546,7 @@ two main advantages:</p>
 <ul>
 <li>Much better parsing of Japanese texts than RegExp.</li>
 <li>Automatic romanization of words.</li>
-<li>Unables text-to-speech for any character group.</li>
+<li>Enables text-to-speech for any character group.</li>
 </ul>
 <h4>Installation</h4>
 <h4>Standard Installtion</h4>
@@ -652,7 +652,7 @@ workaround is to download a Text-To-Speech (TTS) plugin such as <a href="https:/
 <li>Automatically translate terms with LibreTranslate</li>
 <li>Automatic text to speech</li>
 <li>Automatic spelling for Japanese with MeCab</li>
-<li>Automatically import texts from RSS feeds (for more info see: <a href="info.html#feed_imp">Newsfeed Import</a>)</li>
+<li>Automatically import texts from RSS feeds (for more info see: <a href="info.html#Newsfeed%20Import">Newsfeed Import</a>)</li>
 <li>Longer (&gt; 9 characters) expressions can now be saved (up to 250 characters)</li>
 <li>Improved Search/Query for Words/Texts</li>
 <li>Selecting terms according to a text tag</li>
@@ -952,10 +952,26 @@ that are marked in yellow. You can always adjust the settings afterwards.</p>
 <p><img src="../img/33.jpg" alt="Image"></p>
 <h3>Newsfeed</h3>
 <h4>Newsfeed Import</h4>
-<p>Here you can download the articles of your newsfeeds (HowTo add a new newsfeed see <a href="info.html#new_feed">here</a>). If you've set up multiple newsfeeds for your selected language, the link "update multiple feeds" will appear. By clicking that link you can update one or more feeds at once. If you've selected a newsfeed, a blue circle-arrow will appear as well as the date of your last update. A click on the circle-arrow will update your selected newsfeed. All downloaded articles will be marked by a bookmark-icon instead of the checkbox, so you can access them immediately. If a downloaded article is archived, a red mark will appear. An error may occur, when you try to download an article and the link or the text-section of the article is not found. Then a yellow warning sign appears, which can be removed temporarily by clicking on it or permanently in <a href="info.html#man_feed">Manage Feeds</a>. If you hover over an article title, a description of the article will be shown. You can open the article and, if available, the audio in a new window.</p>
+<p>Here you can download the articles of your newsfeeds (see the section New/Edit Feeds
+for an explanation on how To add a new newsfeed).
+If you've set up multiple newsfeeds for your selected language, the link
+"update multiple feeds" will appear. By clicking that link you can update one or
+more feeds at once.
+If you've selected a newsfeed, a blue circle-arrow will appear as well as the date
+of your last update.
+A click on the circle-arrow will update your selected newsfeed.
+All downloaded articles will be marked by a bookmark-icon instead of the checkbox,
+so you can access them immediately. If a downloaded article is archived,
+a red mark will appear. An error may occur, when you try to download an article and
+the link or the text-section of the article is not found.
+Then a yellow warning sign appears, which can be removed temporarily by clicking on
+it or permanently in "Manage Feeds" (see next section).
+If you hover over an article title, a description of the article will be shown.
+You can open the article and, if available, the audio in a new window.</p>
 <p><img src="../img/37.jpg" alt="Image"></p>
 <h4>Manage Feeds</h4>
-<p>Multi Actions for marked newsfeeds: You can update feeds, unset unloadable articles (see <a href="info.html#feed_imp">my newsfeeds</a>), delete all articles or delete feeds.<br>
+<p>Multi Actions for marked newsfeeds: You can update feeds, unset unloadable articles
+(see <a href="info.html#Newsfeed%20Import">Newsfeed Import</a>), delete all articles or delete feeds.<br>
 Actions: You can edit, update, delete a feed or follow the link to the newsfeed.</p>
 <p><img src="../img/38.jpg" alt="Image"></p>
 <h4>New/Edit Feeds</h4>
@@ -1015,7 +1031,7 @@ Actions: You can edit, update, delete a feed or follow the link to the newsfeed.
 <p><img src="../img/40.jpg" alt="Image"></p>
 </li>
 <li>
-<p>The settings are explained in <a href="#new_feed">New/Edit Feeds</a>.</p>
+<p>The settings are explained in the <a href="info.html#New%2FEdit%20Feeds">New/Edit Feeds</a>.</p>
 </li>
 </ol>
 <h3>Read a Text</h3>
@@ -2180,6 +2196,7 @@ ones are marked like "v1.0.0-fork".</p>
 <h4>Changed</h4>
 <ul>
 <li>PHP files header docblocks are expanded, notably with a PHP version, package and category name.</li>
+<li>Japanese number are now parsed by MeCab. Big thanks to <a href="https://github.com/ProgramComputer">@ProgramComputer</a> for his pull request <a href="https://github.com/HugoFara/lwt/pull/149">#149</a>!</li>
 </ul>
 <h4>Fixed</h4>
 <ul>
@@ -2188,6 +2205,9 @@ ones are marked like "v1.0.0-fork".</p>
 <li>Since 2.9.0, audio position was not saved properly.</li>
 <li>On <code>upload_words.php</code>, "update only empty fields" was broken.</li>
 <li>Translation were not set by default properly when editing terms translations table.</li>
+<li>The field MeCab was set for japanese even when not asked for.
+Signalled on PR <a href="https://github.com/HugoFara/lwt/pull/155">#155</a>, thanks to <a href="https://github.com/ProgramComputer">@ProgramComputer</a>.</li>
+<li>Since 2.8.1, japanese word romanization was not displayed properly. Thanks to 아르노 for signalling the bug on Discord!</li>
 </ul>
 <h4>Deprecated</h4>
 <ul>
@@ -3614,7 +3634,7 @@ mobile compatibility.</p>
 <li>New Feature: Selecting terms according to a text tag</li>
 <li>New Feature: Start a document where you left off (only "Read Text Screen")</li>
 <li>New Feature: Improved Search/Query for Words/Texts</li>
-<li>New Feature: Automatically import texts from RSS feeds (for more info see: <a href="info.html#feed_imp">Newsfeed Import</a>)</li>
+<li>New Feature: Automatically import texts from RSS feeds (for more info see: <a href="info.html#Newsfeed%20Import">Newsfeed Import</a>)</li>
 <li>New Setting: Button(s) for "words to do" "IGNORE ALL"/"I KNOW ALL"</li>
 <li>New Setting: Theme</li>
 <li>New Setting: term/word query with standard/regexp/regexp CS</li>
