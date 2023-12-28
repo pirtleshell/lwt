@@ -4508,7 +4508,7 @@ function insertExpressions($textlc, $lid, $wid, $len, $mode): null|string
  *
  * @since 2.0.3-fork Function was broken
  * @since 2.5.3-fork Function repaired
- * @since 2.7.0-fork $handle should be for an *uncompressed* file.
+ * @since 2.7.0-fork $handle should be an *uncompressed* file.
  * @since 2.9.1-fork It can read SQL with more or less than one instruction a line
  */
 function restore_file($handle, $title): string 
@@ -4517,12 +4517,14 @@ function restore_file($handle, $title): string
     global $debug;
     global $dbname;
     $message = "";
-    $lines = 0;
-    $ok = 0;
-    $errors = 0;
-    $drops = 0;
-    $inserts = 0;
-    $creates = 0;
+    $install_status = array(
+        "queries" => 0,
+        "successes" => 0,
+        "errors" => 0,
+        "drops" => 0,
+        "inserts" => 0,
+        "creates" => 0
+    );
     $start = true;
     $curr_content = '';
     $queries_list = array();
@@ -4538,7 +4540,7 @@ function restore_file($handle, $title): string
             ) {
                 $message = "Error: Invalid $title Restore file " .
                 "(possibly not created by LWT backup)";
-                $errors = 1;
+                $install_status["errors"] = 1;
                 break;
             }
             $start = false;
@@ -4561,46 +4563,51 @@ function restore_file($handle, $title): string
     } // while (! feof($handle))
     fclose($handle);
     // Now run all queries
-    foreach ($queries_list as $query) {
-        $sql_line = trim(
-            str_replace("\r", "", str_replace("\n", "", $query))
-        );
-        if ($sql_line != "") {
-            if (!str_starts_with($query, '-- ')) {
-                $res = mysqli_query(
-                    $GLOBALS['DBCONNECTION'], insert_prefix_in_sql($query)
-                );
-                $lines++;
-                if ($res == false) { 
-                    $errors++; 
-                } else {
-                    $ok++;
-                    if (str_starts_with($query,  "INSERT INTO")) { 
-                        $inserts++; 
-                    } else if (str_starts_with($query, "DROP TABLE")) { 
-                        $drops++;
-                    } else if (str_starts_with($query, "CREATE TABLE")) { 
-                        $creates++;
+    if ($install_status["errors"] == 0) {
+        foreach ($queries_list as $query) {
+            $sql_line = trim(
+                str_replace("\r", "", str_replace("\n", "", $query))
+            );
+            if ($sql_line != "") {
+                if (!str_starts_with($query, '-- ')) {
+                    $res = mysqli_query(
+                        $GLOBALS['DBCONNECTION'], insert_prefix_in_sql($query)
+                    );
+                    $install_status["queries"]++;
+                    if ($res == false) {
+                        $install_status["errors"]++;
+                    } else {
+                        $install_status["successes"]++;
+                        if (str_starts_with($query,  "INSERT INTO")) {
+                            $install_status["inserts"]++;
+                        } else if (str_starts_with($query, "DROP TABLE")) {
+                            $install_status["drops"]++;
+                        } else if (str_starts_with($query, "CREATE TABLE")) { 
+                            $install_status["creates"]++;
+                        }
                     }
                 }
             }
         }
     }
-    if ($errors == 0) {
+    if ($install_status["errors"] == 0) {
         runsql("DROP TABLE IF EXISTS {$tbpref}textitems", '');
         check_update_db($debug, $tbpref, $dbname);
         reparse_all_texts();
         optimizedb();
         get_tags(1);
         get_texttags(1);
-        $message = "Success: $title restored - $lines queries - $ok successful (" . 
-        "$drops/$creates tables dropped/created, $inserts records added), " . 
-        "$errors failed.";
+        $message = "Success: $title restored";
     } else if ($message == "") {
-        $message = "Error: $title NOT restored - $lines queries - $ok successful (" .
-        "$drops/$creates tables dropped/created, $inserts records added), ". 
-        "$errors failed.";
+        $message = "Error: $title NOT restored";
     }
+    $message .= sprintf(
+        " - %d queries - %d successful (%d/%d tables dropped/created, " . 
+        "%d records added), %d failed.", 
+        $install_status["queries"], $install_status["successes"], 
+        $install_status["drops"], $install_status["creates"], 
+        $install_status["inserts"], $install_status["errors"]
+    );
     return $message;
 }
 
