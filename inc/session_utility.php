@@ -2182,6 +2182,7 @@ function do_test_test_get_projection($key, $value)
         my_die("do_test_test.php called with wrong parameters"); 
         break;
     }
+    return $testsql;
 }
 
 /**

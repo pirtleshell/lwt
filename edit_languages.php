@@ -76,11 +76,11 @@ function edit_languages_refresh($lid): string
 {
     global $tbpref;
     $message2 = runsql(
-        'delete from ' . $tbpref . 'sentences where SeLgID = ' . $lid, 
+        "DELETE FROM {$tbpref}sentences where SeLgID = $lid", 
         "Sentences deleted"
     );
     $message3 = runsql(
-        'delete from ' . $tbpref . 'textitems2 where Ti2LgID = ' . $lid, 
+        "DELETE FROM {$tbpref}textitems2 where Ti2LgID = $lid", 
         "Text items deleted"
     );
     adjust_autoincr('sentences', 'SeID');
@@ -97,14 +97,14 @@ function edit_languages_refresh($lid): string
     $message = $message2 . 
     " / " . $message3 . 
     " / Sentences added: " . get_first_value(
-        'select count(*) as value 
-        from ' . $tbpref . 'sentences 
-        where SeLgID = ' . $lid
+        "SELECT count(*) as value 
+        FROM {$tbpref}sentences 
+        where SeLgID = $lid"
     ) . 
     " / Text items added: " . get_first_value(
-        'select count(*) as value 
-        from ' . $tbpref . 'textitems2 
-        where Ti2LgID = ' . $lid
+        "SELECT count(*) as value 
+        FROM {$tbpref}textitems2 
+        where Ti2LgID = $lid"
     );
     return $message;
 }
@@ -124,36 +124,31 @@ function edit_languages_delete($lid): string
 {
     global $tbpref;
     $anztexts = get_first_value(
-        'select count(TxID) as value 
-        from ' . $tbpref . 'texts 
-        where TxLgID = ' . $lid
+        "SELECT count(TxID) as value 
+        FROM {$tbpref}texts 
+        where TxLgID = $lid"
     );
     $anzarchtexts = get_first_value(
-        'select count(AtID) as value 
-        from ' . $tbpref . 'archivedtexts 
-        where AtLgID = ' . $lid
+        "SELECT count(AtID) as value 
+        FROM {$tbpref}archivedtexts 
+        where AtLgID = $lid"
     );
     $anzwords = get_first_value(
-        'select count(WoID) as value 
-        from ' . $tbpref . 'words 
-        where WoLgID = ' . $lid
+        "SELECT count(WoID) as value 
+        FROM {$tbpref}words 
+        where WoLgID = $lid"
     );
     $anzfeeds = get_first_value(
-        'select count(NfID) as value 
-        from ' . $tbpref . 'newsfeeds 
-        where NfLgID = ' . $lid
+        "SELECT count(NfID) as value 
+        FROM {$tbpref}newsfeeds 
+        where NfLgID = $lid"
     );
     if ($anztexts > 0 || $anzarchtexts > 0 || $anzwords > 0 || $anzfeeds > 0) {
         $message = 'You must first delete texts, archived texts, newsfeeds and words with this language!';
     } else {
         $message = runsql(
-            'UPDATE ' . $tbpref . 'languages 
-            SET LgName = "", LgDict1URI = "", LgDict2URI = "", 
-            LgGoogleTranslateURI = "", LgExportTemplate = "", LgTextSize = DEFAULT, 
-            LgCharacterSubstitutions = "", LgRegexpSplitSentences = "", 
-            LgExceptionsSplitSentences = "", LgRegexpWordCharacters = "", 
-            LgRemoveSpaces = DEFAULT, LgSplitEachChar = DEFAULT, 
-            LgRightToLeft = DEFAULT where LgID = ' . $lid, 
+            "DELETE FROM {$tbpref}languages 
+            WHERE LgID = $lid", 
             "Deleted"
         );
     }
@@ -281,11 +276,11 @@ function edit_languages_op_change($lid): string
     
     if ($needReParse) {
         runsql(
-            'delete from ' . $tbpref . 'sentences where SeLgID = ' . $lid, 
+            "DELETE FROM {$tbpref}sentences where SeLgID = $lid", 
             "Sentences deleted"
         );
         runsql(
-            'delete from ' . $tbpref . 'textitems2 where Ti2LgID = ' . $lid, 
+            "DELETE FROM {$tbpref}textitems2 where Ti2LgID = $lid", 
             "Text items deleted"
         );
         adjust_autoincr('sentences', 'SeID');
@@ -1099,9 +1094,9 @@ function edit_languages_display($message)
     $current = (int) getSetting('currentlanguage');
     
     $recno = get_first_value(
-        'SELECT COUNT(*) AS value 
-        FROM ' . $tbpref . 'languages 
-        WHERE LgName<>""'
+        "SELECT COUNT(*) AS value 
+        FROM {$tbpref}languages 
+        WHERE LgName<>''"
     ); 
     
     ?>
@@ -1136,17 +1131,17 @@ function edit_languages_display($message)
 
     <?php
 
-    $sql = 'SELECT LgID, LgName, LgExportTemplate 
-    FROM ' . $tbpref . 'languages 
-    WHERE LgName<>"" ORDER BY LgName';
+    $sql = "SELECT LgID, LgName, LgExportTemplate 
+    FROM {$tbpref}languages 
+    WHERE LgName<>'' ORDER BY LgName";
     if ($debug) { 
         echo $sql; 
     }
     // May be refactored with KISS principle
     $res = do_mysqli_query(
-        'select NfLgID, count(*) as value 
-        from ' . $tbpref . 'newsfeeds 
-        group by NfLgID'
+        "SELECT NfLgID, count(*) as value 
+        FROM {$tbpref}newsfeeds 
+        group by NfLgID"
     );
     $newsfeedcount = null;
     while ($record = mysqli_fetch_assoc($res)) {
@@ -1154,10 +1149,10 @@ function edit_languages_display($message)
     }
     // May be refactored with KISS principle
     $res = do_mysqli_query(
-        'SELECT NfLgID, count(*) AS value 
-        FROM ' . $tbpref . 'newsfeeds, ' . $tbpref . 'feedlinks 
+        "SELECT NfLgID, count(*) AS value 
+        FROM {$tbpref}newsfeeds, {$tbpref}feedlinks 
         WHERE NfID=FlNfID 
-        GROUP BY NfLgID'
+        GROUP BY NfLgID"
     );
     $feedarticlescount = null;
     while ($record = mysqli_fetch_assoc($res)) {
@@ -1167,21 +1162,21 @@ function edit_languages_display($message)
     while ($record = mysqli_fetch_assoc($res)) {
         $lid = (int)$record['LgID'];
         $foo = get_first_value(
-            'select count(TxID) as value 
-            from ' . $tbpref . 'texts 
-            where TxLgID=' . $lid
+            "SELECT count(TxID) as value 
+            FROM {$tbpref}texts 
+            where TxLgID = $lid"
         );
         $textcount = is_numeric($foo) ? (int)$foo : 0;
         $foo = get_first_value(
-            'select count(AtID) as value 
-            from ' . $tbpref . 'archivedtexts 
-            where AtLgID=' . $lid
+            "SELECT count(AtID) as value 
+            FROM {$tbpref}archivedtexts 
+            where AtLgID = $lid"
         );
         $archtextcount = is_numeric($foo) ? (int)$foo : 0;
         $foo = get_first_value(
-            'select count(WoID) as value 
-            from ' . $tbpref . 'words 
-            where WoLgID=' . $lid
+            "SELECT count(WoID) as value 
+            FROM {$tbpref}words 
+            where WoLgID = $lid"
         );
         $wordcount = is_numeric($foo) ? (int)$foo : 0;
         if (is_null($newsfeedcount)) {
