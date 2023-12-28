@@ -215,24 +215,23 @@ function feed_wizard_select_text(): void
 
     filter_Array = [];
     // Prepare the page
-    $(feedwizard_prepare_interaction);
+    $(lwt_feed_wizard.prepareInteractions);
 
     if (<?php echo json_encode($_SESSION['wizard']['hide_images']=='yes'); ?>) {
         $(function () {
             $("img").not($("#lwt_header").find("*")).css("display","none");
         });
     }
-
-    const lwt_helpers = {
+    const lwt_wiz_select_test = {
         clickCancel: function() {
             $('#adv').hide();
-            $('#lwt_last').css('margin-top',$('#lwt_header').height());
+            $('#lwt_last').css('margin-top', $('#lwt_header').height());
             return false;
         },
 
         changeSelectMode: function() {
             $('*').removeClass('lwt_marked_text');
-            $('*[class=\'\']').removeAttr( 'class' );
+            $('*[class=\'\']').removeAttr('class');
             $('#get_button').prop('disabled', true);
             $('#mark_action').empty();
             $('<option/>').val('').text('[Click On Text]').appendTo('#mark_action');
@@ -240,29 +239,29 @@ function feed_wizard_select_text(): void
         },
 
         changeHideImage: function() {
-            if($(this).val()=='no')
-                $('img').not($('#lwt_header').find('*')).css('display','');
-            else 
-                $('img').not($('#lwt_header').find('*')).css('display','none');
+            if ($(this).val() == 'no')
+                $('img').not($('#lwt_header').find('*')).css('display', '');
+            else
+                $('img').not($('#lwt_header').find('*')).css('display', 'none');
             return false;
         },
 
         clickBack: function() {
-            location.href = 'feed_wizard.php?step=1&amp;select_mode=' + 
-            encodeURIComponent($('select[name=\'select_mode\']').val())+
-            '&amp;hide_images='+
-            encodeURIComponent($('select[name=\'hide_images\']').val());
+            location.href = 'feed_wizard.php?step=1&amp;select_mode=' +
+                encodeURIComponent($('select[name=\'select_mode\']').val()) +
+                '&amp;hide_images=' +
+                encodeURIComponent($('select[name=\'hide_images\']').val());
             return false;
         },
 
         clickMinMax: function() {
             $('#lwt_container').toggle();
-            if($('#lwt_container').css('display')=='none') {
+            if ($('#lwt_container').css('display') == 'none') {
                 $('input[name=\'maxim\']').val(0);
-            }else{
+            } else {
                 $('input[name=\'maxim\']').val(1);
             }
-            $('#lwt_last').css('margin-top',$('#lwt_header').height());
+            $('#lwt_last').css('margin-top', $('#lwt_header').height());
             return false;
         },
 
@@ -280,8 +279,8 @@ function feed_wizard_select_text(): void
 
         setMaxim: function() {
             $('#lwt_container').hide();
-            $('#lwt_last').css('margin-top',$('#lwt_header').height());
-            if($('#lwt_container').css('display')=='none') {
+            $('#lwt_last').css('margin-top', $('#lwt_header').height());
+            if ($('#lwt_container').css('display') == 'none') {
                 $('input[name=\'maxim\']').val(0);
             } else {
                 $('input[name=\'maxim\']').val(1);
@@ -292,14 +291,14 @@ function feed_wizard_select_text(): void
 <div id="lwt_header">
     <form name="lwt_form1" class="validate" action="feed_wizard.php" method="post">
         <div id="adv" style="display: none;">
-        <button onclick="lwt_helpers.clickCancel">Cancel</button>
+        <button onclick="lwt_wiz_select_test.clickCancel">Cancel</button>
         <button id="adv_get_button">Get</button>
     </div>
     <div id="settings" style="display: none;">
         <p><b>Feed Wizard | Settings</b></p>
         <div style="margin-left:150px;text-align:left">
             Selection Mode: 
-            <select name="select_mode" onchange="lwt_helpers.changeSelectMode">
+            <select name="select_mode" onchange="lwt_wiz_select_test.changeSelectMode">
                 <option value="0"<?php if($_SESSION['wizard']['select_mode']=='0') { 
                     echo ' selected'; 
                 }?>>Smart Selection</option>
@@ -310,7 +309,7 @@ function feed_wizard_select_text(): void
                     echo ' selected'; 
                 }?>>Advanced Selection</option>
                 </select><br />
-                Hide Images: <select name="hide_images" onchange="lwt_helpers.changeHideImage">
+                Hide Images: <select name="hide_images" onchange="lwt_wiz_select_test.changeHideImage">
                 <option value="yes"<?php if($_SESSION['wizard']['hide_images']=='yes') { 
                     echo ' selected'; 
                 }?>>Yes</option>
@@ -359,7 +358,7 @@ function feed_wizard_select_text(): void
                 <td class="td1" style="text-align:left">Article Source: </td>
                 <td class="td1" style="text-align:left">
                     <select name="NfArticleSection" 
-                    onchange="lwt_helpers.changeArticleSection">
+                    onchange="lwt_wiz_select_test.changeArticleSection">
                         <option value="" <?php 
     if (
         !array_key_exists('feed_text', $_SESSION['wizard']['feed']) || 
@@ -403,7 +402,7 @@ function feed_wizard_select_text(): void
                         <span>
                             <select name="selected_feed" 
                             style="width:250px;max-width:200px;" 
-                            onchange="lwt_helpers.changeSelectedFeed">
+                            onchange="lwt_wiz_select_test.changeSelectedFeed">
                                 <?php
     $current_host='';
     $current_status='';
@@ -471,7 +470,7 @@ function feed_wizard_select_text(): void
                 <td>
                     <span>
                         <input type="button" value="Back" 
-                        onclick="lwt_helpers.clickBack" />
+                        onclick="lwt_wiz_select_test.clickBack" />
                         <button id="next">Next</button>
                     </span>
                 </td>
@@ -479,7 +478,7 @@ function feed_wizard_select_text(): void
             </tr>
         </table>
         <button style="position:absolute;right:10px;top:10px" 
-        onclick="lwt_helpers.clickMinMax">
+        onclick="lwt_wiz_select_test.clickMinMax">
             min/max
         </button>
         <input type="hidden" name="step" value="2" />
@@ -505,7 +504,7 @@ function feed_wizard_select_text(): void
     ?>
 <script type="text/javascript">
     if (<?php echo json_encode($_SESSION['wizard']['maxim']==0); ?>) {
-        $(lwt_helpers.setMaxim);
+        $(lwt_wiz_select_test.setMaxim);
     }
 </script>
     <?php
@@ -579,9 +578,8 @@ function feed_wizard_filter_text(): void
 <script type="text/javascript" src="js/jquery.xpath.min.js" charset="utf-8"></script>
 <script type="text/javascript">
     filter_Array = [];
-
     const lwt_wizard_filter = {
-        updateFilterArray: function(){
+        updateFilterArray: function() {
             articleSection = <?php echo json_encode(
                 (string) $_SESSION['wizard']['article_selector']
             ); ?>;
@@ -591,73 +589,75 @@ function feed_wizard_filter_text(): void
             }
             console.log("Article section: " + articleSection);
             $('#lwt_header')
-            .nextAll()
-            .find('*')
-            .addBack()
-            .not($(document).xpath(articleSection).find('*').addBack())
-            .not($('#lwt_header').find('*').addBack())
-            .each(function(){
-                $(this).addClass('lwt_filtered_text');
-                filter_Array.push(this);
-            });
+                .nextAll()
+                .find('*')
+                .addBack()
+                .not($(document).xpath(articleSection).find('*').addBack())
+                .not($('#lwt_header').find('*').addBack())
+                .each(function() {
+                    $(this).addClass('lwt_filtered_text');
+                    filter_Array.push(this);
+                });
         },
 
         hideImages: function() {
-            $("img").not($("#lwt_header").find("*")).css("display","none");
+            $("img").not($("#lwt_header").find("*")).css("display", "none");
         },
 
-        clickCancel: function () {
+        clickCancel: function() {
             $('#adv').hide();
-            $('#lwt_last').css('margin-top',$('#lwt_header').height());
+            $('#lwt_last').css('margin-top', $('#lwt_header').height());
             return false;
         },
 
-        changeSelectMode: function () {
+        changeSelectMode: function() {
             $('*').removeClass('lwt_marked_text');
-            $('*[class=\'\']').removeAttr( 'class' );
-            $('#get_button').prop('disabled', true);$('#mark_action').empty();
+            $('*[class=\'\']').removeAttr('class');
+            $('#get_button').prop('disabled', true);
+            $('#mark_action').empty();
             $('<option/>').val('').text('[Click On Text]').appendTo('#mark_action');
             return false;
         },
 
         changeHideImages: function() {
-            if($(this).val()=='no')
-                $('img').not($('#lwt_header').find('*')).css('display','');
-            else 
-                $('img').not($('#lwt_header').find('*')).css('display','none');
+            if ($(this).val() == 'no')
+                $('img').not($('#lwt_header').find('*')).css('display', '');
+            else
+                $('img').not($('#lwt_header').find('*')).css('display', 'none');
             return false;
         },
 
         changeSelectedFeed: function() {
-            var html = $('#lwt_sel').html();$('input[name=\'html\']').val(html);
+            const html = $('#lwt_sel').html();
+            $('input[name=\'html\']').val(html);
             document.lwt_form1.submit();
         },
 
-        clickBack: function () {
-            location.href='feed_wizard.php?step=2&amp;article_tags=1&amp;maxim='+ 
-            $('#maxim').val() +'&amp;filter_tags='+
-            encodeURIComponent($('#lwt_sel').html())+'&amp;select_mode='+
-            encodeURIComponent($('select[name=\'select_mode\']').val())+
-            '&amp;hide_images='+
-            encodeURIComponent($('select[name=\'hide_images\']').val());
+        clickBack: function() {
+            location.href = 'feed_wizard.php?step=2&amp;article_tags=1&amp;maxim=' +
+                $('#maxim').val() + '&amp;filter_tags=' +
+                encodeURIComponent($('#lwt_sel').html()) + '&amp;select_mode=' +
+                encodeURIComponent($('select[name=\'select_mode\']').val()) +
+                '&amp;hide_images=' +
+                encodeURIComponent($('select[name=\'hide_images\']').val());
             return false;
         },
 
-        clickMinMax: function () {
+        clickMinMax: function() {
             $('#lwt_container').toggle();
-            if($('#lwt_container').css('display')=='none'){
+            if ($('#lwt_container').css('display') == 'none') {
                 $('input[name=\'maxim\']').val(0);
             } else {
                 $('input[name=\'maxim\']').val(1);
             }
-            $('#lwt_last').css('margin-top',$('#lwt_header').height());
+            $('#lwt_last').css('margin-top', $('#lwt_header').height());
             return false;
         },
 
-        setMaxim: function(){
+        setMaxim: function() {
             $('#lwt_container').hide();
-            $('#lwt_last').css('margin-top',$('#lwt_header').height());
-            if($('#lwt_container').css('display')=='none'){
+            $('#lwt_last').css('margin-top', $('#lwt_header').height());
+            if ($('#lwt_container').css('display') == 'none') {
                 $('input[name=\'maxim\']').val(0);
             } else {
                 $('input[name=\'maxim\']').val(1);
@@ -671,7 +671,7 @@ function feed_wizard_filter_text(): void
     })(jQuery);
 
     // Prepare the page
-    $(feedwizard_prepare_interaction);
+    $(lwt_feed_wizard.prepareInteractions);
 
     if (<?php echo json_encode($_SESSION['wizard']['hide_images']=='yes'); ?>) {
         $(lwt_wizard_filter.hideImages);
