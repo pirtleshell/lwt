@@ -278,7 +278,7 @@ const lwt_feed_wiz_opt_inter = {
 	},
 
 	highlightSelection: function() {
-		var sel_array="";
+		let sel_array="";
 		$('#lwt_sel li').each(function(){
 			if($(this).hasClass('lwt_highlighted_text')){
 				$(document).xpath($(this).text())
@@ -286,7 +286,8 @@ const lwt_feed_wiz_opt_inter = {
 				.addClass('lwt_highlighted_text').find('*').addBack()
 				.addClass('lwt_selected_text');
 			}
-			else sel_array+=$(this).text() + " | ";
+			else 
+				sel_array+=$(this).text() + " | ";
 		});
 		if(sel_array!="")
 			$(document).xpath(sel_array.replace(/ \| $/, '')).find('*')
@@ -298,7 +299,10 @@ const lwt_feed_wiz_opt_inter = {
 
 const lwt_feed_wizard = {
 	prepareInteractions: function () {
-		if ($('#lwt_sel').html()=='' && $('input[name=\'step\']').val()==2)
+		if (
+			$('#lwt_sel').html()=='' && 
+			parseInt($('input[name=\'step\']').val(), 10) == 2
+		)
 			$('#next').prop('disabled', true);
 		else 
 			$('#next').prop('disabled', false);
@@ -344,14 +348,20 @@ const lwt_feed_wizard = {
 		$('*[class=\'\']').removeAttr( 'class' );
 		$('*[style=\'\']').removeAttr( 'style' );
 		$('#lwt_last').css('margin-top',$('#lwt_header').height());
-		if($('#lwt_sel').html()=='' &&  $('input[name=\'step\']').val()==2)
+		if (
+			$('#lwt_sel').html()=='' && 
+			parseInt($('input[name=\'step\']').val(), 10)==2
+		)
 			$('#next').prop('disabled', true);
 		return false;
 	},
 
 	changeXPath: function() {
 		$('#adv_get_button').prop('disabled', false);
-		$(this).parent().find('img').each(function(){if($(this).attr('src')=='icn/exclamation-red.png')$('#adv_get_button').prop('disabled', true);});
+		$(this).parent().find('img').each(function(){
+			if($(this).attr('src')=='icn/exclamation-red.png')
+				$('#adv_get_button').prop('disabled', true);
+		});
 		return false;
 	},
 
@@ -359,7 +369,13 @@ const lwt_feed_wizard = {
 		$('*').removeClass('lwt_filtered_text');
 		$('*[class=\'\']').removeAttr( 'class' );
 		if(typeof $('#adv :radio:checked').val()!='undefined'){
-			$( '#lwt_sel' ).append('<li style=\'text-align: left\'><img class=\'delete_selection\' src=\'icn/cross.png\'  title=\'Delete Selection\' alt=\'\' /> '+ $('#adv :radio:checked').val() + '</li>');
+			$( '#lwt_sel' ).append(
+				'<li style=\'text-align: left\'>' + 
+				'<img class=\'delete_selection\' src=\'icn/cross.png\' ' + 
+				'title=\'Delete Selection\' alt=\'\' /> '+ 
+				$('#adv :radio:checked').val() + 
+				'</li>'
+			);
 			$(document).xpath($('#adv :radio:checked').val()).find('*')
 			.addBack().not($('#lwt_header').find('*').addBack())
 			.addClass('lwt_selected_text');
@@ -440,7 +456,14 @@ const lwt_feed_wizard = {
 			for (var i in filter_Array) {
 				 $(filter_Array[i]).addClass('lwt_filtered_text');
 			}
-			$('#lwt_sel').append('<li style=\'text-align: left\'><img class=\'delete_selection\' src=\'icn/cross.png\'  title=\'Delete Selection\' alt=\''+$('#mark_action').val()+'\' /> '+ $('#mark_action').val().replace('§', '/') + '</li>');
+			$('#lwt_sel').append(
+				'<li style=\'text-align: left\'>' + 
+				'<img class=\'delete_selection\' src=\'icn/cross.png\' ' + 
+				'title=\'Delete Selection\' alt=\''+
+				$('#mark_action').val()+'\' /> '+ 
+				$('#mark_action').val().replace('§', '/') + 
+				'</li>'
+			);
 		}
 		$(this).prop('disabled', true);
 		$('#mark_action').empty();
@@ -452,12 +475,12 @@ const lwt_feed_wizard = {
 	clickNextButton: function() {
 		$('#article_tags,#filter_tags').val($('#lwt_sel').html())
 		.prop('disabled', false);
-		var html = $('#lwt_sel li').map(function(){
+		const html = $('#lwt_sel li').map(function(){
 			return $(this).text();
 		}).get().join(' | ');
 		$('input[name=\'html\']').val(html);
-		var val=$('input[name=\'step\']').val();
-		if(val==2){
+		let val = parseInt($('input[name=\'step\']').val(), 10);
+		if (val == 2){
 			$('input[name=\'html\']').attr('name','article_selector')
 			$('select[name=\'NfArticleSection\'] option').each(function(){
 				art_sec=$('#lwt_sel li').map(function(){
@@ -472,11 +495,11 @@ const lwt_feed_wizard = {
 	},
 
 	changeHostStatus: function(){
-		var host_status=$(this).val();
-		var current_host=$('input[name=\'host_name\']').val();
+		let host_status = $(this).val();
+		let current_host = $('input[name=\'host_name\']').val();
 		$('select[name=\'selected_feed\'] option').each(function(){
-			var opt_str=$(this).text();
-			var host_name=opt_str.replace(/[▸\-][0-9\s]*[★☆\-][\s]*host:/, '');
+			let opt_str=$(this).text();
+			let host_name=opt_str.replace(/[▸\-][0-9\s]*[★☆\-][\s]*host:/, '');
 			if(host_name.trim()==current_host.trim()){
 				$(this).text(
 					opt_str.replace(

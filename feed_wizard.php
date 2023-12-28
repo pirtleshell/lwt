@@ -71,8 +71,7 @@ function feed_wizard_select_text(): void
         foreach($article_tags as $tag){
             if(substr_compare(trim($tag), "redirect", 0, 8)==0) {
                 $_SESSION['wizard']['redirect'] = trim($tag).' | ';
-            }
-            else { 
+            } else { 
                 $_SESSION['wizard']['article_tags'] .= '<li style="text-align: left">
                 <img class="delete_selection" src="icn/cross.png" title="Delete Selection" alt="-" />'
                 . $tag . 
@@ -107,44 +106,47 @@ function feed_wizard_select_text(): void
         } else { 
             $_SESSION['wizard']['detected_feed']='Detected: «Webpage Link»'; 
         }
-        if($_SESSION['wizard']['feed']['feed_text']!=get_nf_option($_SESSION['wizard']['options'], 'article_source')) {
+        if (
+            $_SESSION['wizard']['feed']['feed_text'] != get_nf_option($_SESSION['wizard']['options'], 'article_source')
+        ) {
             $source=get_nf_option($_SESSION['wizard']['options'], 'article_source');
             $_SESSION['wizard']['feed']['feed_text'] = $source;
             $feed_len=count($_SESSION['wizard']['feed'])-2;
             for ($i=0;$i<$feed_len;$i++){
-                $_SESSION['wizard']['feed'][$i]['text']=$_SESSION['wizard']['feed'][$i][$source];
+                $_SESSION['wizard']['feed'][$i]['text'] = $_SESSION['wizard']['feed'][$i][$source];
             }
         }
     } else if (isset($_REQUEST['rss_url'])) {
-        if(!isset($_SESSION['wizard']) || empty($_SESSION['wizard']['feed'])||$_REQUEST['rss_url']!==$_SESSION['wizard']['rss_url']) {
-            $_SESSION['wizard']['feed']=get_links_from_new_feed($_REQUEST['rss_url']);
-            $_SESSION['wizard']['rss_url']=$_REQUEST['rss_url'];
-            if(empty($_SESSION['wizard']['feed'])) {
-                unset($_SESSION['wizard']['feed']);
-                header("Location: feed_wizard.php?step=1&err=1");
-                exit();
-            }
-            if(!isset($_SESSION['wizard']['article_tags'])) {
-                 $_SESSION['wizard']['article_tags']=''; 
-            }
-            if(!isset($_SESSION['wizard']['filter_tags'])) {
-                 $_SESSION['wizard']['filter_tags']=''; 
-            }
-            if(!isset($_SESSION['wizard']['options'])) {
-                 $_SESSION['wizard']['options']='edit_text=1'; 
-            }
-            if(!isset($_SESSION['wizard']['lang'])) {
-                 $_SESSION['wizard']['lang']=''; 
-            }
-            if($_SESSION['wizard']['feed']['feed_text']!='') {
-                $_SESSION['wizard']['detected_feed'] = 'Detected: «'.
-                $_SESSION['wizard']['feed']['feed_text'] .'»';
-            }
-            else { 
-                $_SESSION['wizard']['detected_feed']='Detected: «Webpage Link»'; 
-            }
-        } else {
+        if (
+            isset($_SESSION['wizard']) && !empty($_SESSION['wizard']['feed']) && 
+            $_REQUEST['rss_url'] === $_SESSION['wizard']['rss_url']
+        ) {
             my_die("Something went wrong with the feed wizard!");
+        }
+        $_SESSION['wizard']['feed']=get_links_from_new_feed($_REQUEST['rss_url']);
+        $_SESSION['wizard']['rss_url']=$_REQUEST['rss_url'];
+        if(empty($_SESSION['wizard']['feed'])) {
+            unset($_SESSION['wizard']['feed']);
+            header("Location: feed_wizard.php?step=1&err=1");
+            exit();
+        }
+        if (!isset($_SESSION['wizard']['article_tags'])) {
+            $_SESSION['wizard']['article_tags']=''; 
+        }
+        if (!isset($_SESSION['wizard']['filter_tags'])) {
+            $_SESSION['wizard']['filter_tags']=''; 
+        }
+        if (!isset($_SESSION['wizard']['options'])) {
+            $_SESSION['wizard']['options']='edit_text=1'; 
+        }
+        if (!isset($_SESSION['wizard']['lang'])) {
+            $_SESSION['wizard']['lang']=''; 
+        }
+        if($_SESSION['wizard']['feed']['feed_text']!='') {
+            $_SESSION['wizard']['detected_feed'] = 'Detected: «'.
+            $_SESSION['wizard']['feed']['feed_text'] .'»';
+        } else { 
+            $_SESSION['wizard']['detected_feed']='Detected: «Webpage Link»'; 
         }
     }
     if (isset($_REQUEST['filter_tags'])) { 
@@ -209,9 +211,9 @@ function feed_wizard_select_text(): void
 <script type="text/javascript" src="js/jquery.xpath.min.js" charset="utf-8"></script>
 <script type="text/javascript">
     // Extend jQuery
-    (function($){
-        $.fn.get_adv_xpath = extend_adv_xpath
-    })(jQuery);
+    $(function() {
+        jQuery.fn.get_adv_xpath = extend_adv_xpath
+    });
 
     filter_Array = [];
     // Prepare the page
@@ -666,9 +668,9 @@ function feed_wizard_filter_text(): void
     }
 
     // Extend jQuery
-    (function($){
-        $.fn.get_adv_xpath = extend_adv_xpath
-    })(jQuery);
+    $(function() {
+        jQuery.fn.get_adv_xpath = extend_adv_xpath
+    });
 
     // Prepare the page
     $(lwt_feed_wizard.prepareInteractions);
