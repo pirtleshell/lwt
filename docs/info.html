@@ -2197,6 +2197,7 @@ ones are marked like "v1.0.0-fork".</p>
 <ul>
 <li>PHP files header docblocks are expanded, notably with a PHP version, package and category name.</li>
 <li>Japanese number are now parsed by MeCab. Big thanks to <a href="https://github.com/ProgramComputer">@ProgramComputer</a> for his pull request <a href="https://github.com/HugoFara/lwt/pull/149">#149</a>!</li>
+<li>Removes dead feeds from the demo database, as signalled in <a href="https://github.com/HugoFara/lwt/issues/148">#148</a>.</li>
 </ul>
 <h4>Fixed</h4>
 <ul>
@@ -2217,6 +2218,10 @@ and <code>click_faster</code> were declared two times in <code>src/js/audio_cont
 <li>When opening a text, text position was not saved and a <code>text_id is unknown</code> error was triggered.</li>
 <li>Do not display an error on step 2 of feed wizard at first initialization
 (<a href="https://github.com/HugoFara/lwt/issues/129">#129</a>).</li>
+<li>It was impossible to install the demo database if they was more or less than one instruction a line.
+This is fixed, and the SQL file was made more readable.</li>
+<li>Changes <code>WoStatusChange</code> default value to '1970-01-01 01:00:01', it was impossible
+to install the demo DB out of LWT (related to <a href="https://github.com/HugoFara/lwt/issues/78">#78</a>).</li>
 </ul>
 <h4>Deprecated</h4>
 <ul>
