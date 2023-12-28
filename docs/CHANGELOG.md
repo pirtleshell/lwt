@@ -39,7 +39,9 @@ and `click_faster` were declared two times in `src/js/audio_controller.js`.
 * Do not display an error on step 2 of feed wizard at first initialization 
 ([#129](https://github.com/HugoFara/lwt/issues/129)).
 * It was impossible to install the demo database if they was more or less than one instruction a line.
-This is fixed, and the SQL file was made more readable. 
+This is fixed, and the SQL file was made more readable.
+* Changes `WoStatusChange` default value to '1970-01-01 01:00:01', it was impossible 
+to install the demo DB out of LWT (related to [#78](https://github.com/HugoFara/lwt/issues/78)). 
 
 ### Deprecated
 

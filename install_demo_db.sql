@@ -783,7 +783,7 @@ CREATE TABLE `words` (
   `WoRomanization` varchar(100) DEFAULT NULL, 
   `WoSentence` varchar(1000) DEFAULT NULL, 
   `WoCreated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP, 
-  `WoStatusChanged` timestamp NOT NULL DEFAULT '0000-00-00 00:00:01', 
+  `WoStatusChanged` timestamp NOT NULL DEFAULT '1970-01-01 01:00:01', 
   `WoTodayScore` double NOT NULL DEFAULT '0', 
   `WoTomorrowScore` double NOT NULL DEFAULT '0', 
   `WoRandom` double NOT NULL DEFAULT '0', 
