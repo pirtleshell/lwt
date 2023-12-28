@@ -94,15 +94,7 @@ CREATE TABLE `newsfeeds` (
 INSERT INTO newsfeeds 
 VALUES 
   (
-    1, 9, 'National Geographic News', 
-    'http://feeds.nationalgeographic.com/ng/News/News_Main?format=xml', 
-    '//div[@class="abstract"] | //*[@class[contains(concat(" ",normalize-space(.)," ")," text ")]]/p', 
-    '', 1455048658, 'edit_text=1'
-  );
-INSERT INTO newsfeeds 
-VALUES 
-  (
-    2, 9, 'The Guardian', 'http://www.theguardian.com/theguardian/mainsection/rss', 
+    1, 9, 'The Guardian', 'http://www.theguardian.com/theguardian/mainsection/rss', 
     '//div[@id="article-wrapper"]', 
     '//div[@id="main-content-picture"] | //div[@id="article-wrapper"]/span[@class="trackable-component component-wrapper six-col"]', 
     0, 'edit_text=1'
@@ -110,21 +102,21 @@ VALUES
 INSERT INTO newsfeeds 
 VALUES 
   (
-    3, 1, 'Le Monde', 'http://www.lemonde.fr/rss/une.xml', 
+    2, 1, 'Le Monde', 'http://www.lemonde.fr/rss/une.xml', 
     '//*[@id="articleBody"] | //div[@class="entry-content"]/p', 
     '', 0, 'edit_text=1'
   );
 INSERT INTO newsfeeds 
 VALUES 
   (
-    4, 11, 'Il Corriere', 'http://xml.corriereobjects.it/rss/homepage.xml', 
+    3, 11, 'Il Corriere', 'http://xml.corriereobjects.it/rss/homepage.xml', 
     '//div[@class="contenuto_articolo"]/p | //div[@id="content-to-read"]/p | //blockquote/p | //p[@class="chapter-paragraph"]', 
     '', 0, 'edit_text=1,max_links=200'
   );
 INSERT INTO newsfeeds 
 VALUES 
   (
-    5, 3, 'wissen.de', 'http://feeds.feedburner.com/wissen/wissen_de', 
+    4, 3, 'wissen.de', 'http://feeds.feedburner.com/wissen/wissen_de', 
     '//div[@class="article-content"]', 
     '//div[@class="file file-image file-image-jpeg"] | //em[last()] | //div[@class="imagegallery-wrapper hide"] | //ul[@class="links inline"] | //div[@class="smart-paging-pager"] | //div[@class="field-item even"]/div', 
     0, 'edit_text=1,max_links=500'
@@ -132,7 +124,7 @@ VALUES
 INSERT INTO newsfeeds 
 VALUES 
   (
-    6, 3, 'Der Spiegel', 'http://www.spiegel.de/schlagzeilen/index.rss', 
+    5, 3, 'Der Spiegel', 'http://www.spiegel.de/schlagzeilen/index.rss', 
     '//p[@class="article-intro"] | //div[@class="article-section clearfix"]', 
     '//*[@class[contains(concat(" ",normalize-space(.)," ")," js-module-box-image ")]] |  //*[@class[contains(concat(" ",normalize-space(.)," ")," asset-box ")]] |  //*[@class[contains(concat(" ",normalize-space(.)," ")," htmlartikellistbox ")]] |  //p/i', 
     0, 'edit_text=1,charset=meta'
@@ -140,28 +132,21 @@ VALUES
 INSERT INTO newsfeeds 
 VALUES 
   (
-    7, 3, 'deutsche Welle Nachrichten', 
+    6, 3, 'deutsche Welle Nachrichten', 
     'http://rss.dw-world.de/xml/DKpodcast_lgn_de', 
     '//description', '', 0, 'article_source=description'
   );
 INSERT INTO newsfeeds 
 VALUES 
   (
-    8, 10, 'El Pais', 'http://ep00.epimg.net/rss/elpais/portada.xml', 
+    7, 10, 'El Pais', 'http://ep00.epimg.net/rss/elpais/portada.xml', 
     '//div[@id="cuerpo_noticia"]/p', 
     '', 0, ''
   );
 INSERT INTO newsfeeds 
 VALUES 
   (
-    9, 5, 'Nikkei', 'http://www.zou3.net/php/rss/nikkei2rss.php?head=kurashi', 
-    '//*[@*[contains(.,"cmn-article_text")]]', 
-    '', 0, ''
-  );
-INSERT INTO newsfeeds 
-VALUES 
-  (
-    10, 12, 'RIA Novosti', 'http://ria.ru/export/rss2/index.xml', 
+    8, 12, 'RIA Novosti', 'http://ria.ru/export/rss2/index.xml', 
     '//div[@class="article_lead"] | //*[@*[contains(.,"articleBody")]]/p', 
     '//p[@class="marker-quote3"]', 
     0, 'edit_text=1'
@@ -169,24 +154,7 @@ VALUES
 INSERT INTO newsfeeds 
 VALUES 
   (
-    11, 13, 'Últimas Notícias - Diário Catarinense', 
-    'http://diariocatarinense.feedsportal.com/c/34199/f/620394/index.rss', 
-    '//div[@class="materia-corpo entry-content"] | //div[@class="entry-content"]/p', 
-    '//p/em | //a/strong | //strong/a', 
-    0, 'edit_text=1'
-  );
-INSERT INTO newsfeeds 
-VALUES 
-  (
-    12, 6, 'Hankyoreh', 'http://kr.hani.feedsportal.com/c/34762/f/640633/index.rss', 
-    '//div[@class="article-contents"] | //div[@class="article-text"]', 
-    '//table | //div[@id="hani-popular-new-table"] | //a[@href[contains(.,"@hani.co.kr")]] | //a/b', 
-    1455176479, ''
-  );
-INSERT INTO newsfeeds 
-VALUES 
-  (
-    13, 7, 'ข่าวไทยรัฐออนไลน์', 
+    9, 7, 'ข่าวไทยรัฐออนไลน์', 
     'http://www.thairath.co.th/rss/news.xml', 
     '//div[@class="entry"]/p', '//div[@id="content"]/p[@class="time"]', 
     1455049278, 'edit_text=1'
@@ -194,7 +162,7 @@ VALUES
 INSERT INTO newsfeeds 
 VALUES 
   (
-    14, 14, 'Euronews Arabic', 'http://feeds.feedburner.com/euronews/ar/news/', 
+    10, 14, 'Euronews Arabic', 'http://feeds.feedburner.com/euronews/ar/news/', 
     '//div[@id="article-text"]/p |  //div[@id="articleTranscript"]/p', 
     '//div[@id="article-text"]/p[@class="en-cpy"]', 
     0, ''
@@ -202,22 +170,15 @@ VALUES
 INSERT INTO newsfeeds 
 VALUES 
   (
-    15, 10, 'Spanish Podcast', 'http://www.spanishpodcast.org/podcasts/index.xml', 
+    11, 10, 'Spanish Podcast', 'http://www.spanishpodcast.org/podcasts/index.xml', 
     'redirect://div[@class="figure-content caption"]//a | //div[@class="figure-content caption"]/p | //div/p[@class="MsoNormal"]', 
     '', 0, 'edit_text=1'
   );
 INSERT INTO newsfeeds 
 VALUES 
   (
-    16, 3, 'NachDenkSeiten', 'http://www.nachdenkseiten.de/?feed=audiopodcast', 
+    12, 3, 'NachDenkSeiten', 'http://www.nachdenkseiten.de/?feed=audiopodcast', 
     '//encoded/p', '', 0, 'edit_text=1,article_source=encoded'
-  );
-INSERT INTO newsfeeds 
-VALUES 
-  (
-    17, 2, 'The Chairman''s Bao', 'http://www.thechairmansbao.com/feed/', 
-    '//encoded', '//p[last()]', 1453802401, 
-    'edit_text=1,article_source=encoded'
   );
 DROP 
   TABLE IF EXISTS languages;
