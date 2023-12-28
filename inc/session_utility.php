@@ -4528,11 +4528,7 @@ function restore_file($handle, $title): string
     $start = true;
     $curr_content = '';
     $queries_list = array();
-    while (!feof($handle)) {
-        $stream = fgets($handle);
-        if ($stream === false) {
-            break;
-        }
+    while ($stream = fgets($handle)) {
         // Check file header
         if ($start) {
             if (!str_starts_with($stream, "-- lwt-backup-")  
@@ -4560,7 +4556,11 @@ function restore_file($handle, $title): string
         foreach ($queries as $query) {
             $queries_list[] = trim($query);
         }
-    } // while (! feof($handle))
+    }
+    if (!feof($handle) && $install_status["errors"] == 0) {
+        $message = "Error: cannot read the end of the demo file!";
+        $install_status["errors"] = 1;
+    }
     fclose($handle);
     // Now run all queries
     if ($install_status["errors"] == 0) {
