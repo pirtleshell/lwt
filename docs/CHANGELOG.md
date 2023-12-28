@@ -38,6 +38,8 @@ and `click_faster` were declared two times in `src/js/audio_controller.js`.
 * When opening a text, text position was not saved and a `text_id is unknown` error was triggered. 
 * Do not display an error on step 2 of feed wizard at first initialization 
 ([#129](https://github.com/HugoFara/lwt/issues/129)).
+* It was impossible to install the demo database if they was more or less than one instruction a line.
+This is fixed, and the SQL file was made more readable. 
 
 ### Deprecated
 

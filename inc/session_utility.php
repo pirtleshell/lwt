@@ -4509,6 +4509,7 @@ function insertExpressions($textlc, $lid, $wid, $len, $mode): null|string
  * @since 2.0.3-fork Function was broken
  * @since 2.5.3-fork Function repaired
  * @since 2.7.0-fork $handle should be for an *uncompressed* file.
+ * @since 2.9.1-fork It can read SQL with more or less than one instruction a line
  */
 function restore_file($handle, $title): string 
 {
@@ -4522,45 +4523,69 @@ function restore_file($handle, $title): string
     $drops = 0;
     $inserts = 0;
     $creates = 0;
-    $start = 1;
+    $start = true;
+    $curr_content = '';
+    $queries_list = array();
     while (!feof($handle)) {
+        $stream = fgets($handle);
+        if ($stream === false) {
+            break;
+        }
+        // Check file header
+        if ($start) {
+            if (!str_starts_with($stream, "-- lwt-backup-")  
+                && !str_starts_with($stream, "-- lwt-exp_version-backup-")
+            ) {
+                $message = "Error: Invalid $title Restore file " .
+                "(possibly not created by LWT backup)";
+                $errors = 1;
+                break;
+            }
+            $start = false;
+            continue;
+        }
+        // Skip comments
+        if (str_starts_with($stream, '-- ')) {
+            continue;
+        }
+        // Add stream to accumulator
+        $curr_content .= $stream;
+        // Get queries
+        $queries = explode(';' . PHP_EOL, $curr_content);
+        // Replace line by remainders of the last element (incomplete line)
+        $curr_content = array_pop($queries);
+        //var_dump("queries", $queries);
+        foreach ($queries as $query) {
+            $queries_list[] = trim($query);
+        }
+    } // while (! feof($handle))
+    fclose($handle);
+    // Now run all queries
+    foreach ($queries_list as $query) {
         $sql_line = trim(
-            str_replace("\r", "", str_replace("\n", "", fgets($handle, 99999)))
+            str_replace("\r", "", str_replace("\n", "", $query))
         );
         if ($sql_line != "") {
-            if ($start) {
-                if (strpos($sql_line, "-- lwt-backup-") === false  
-                    && strpos($sql_line, "-- lwt-exp_version-backup-") === false
-                ) {
-                    $message = "Error: Invalid $title Restore file " .
-                    "(possibly not created by LWT backup)";
-                    $errors = 1;
-                    break;
-                }
-                $start = 0;
-                continue;
-            }
-            if (substr($sql_line, 0, 3) !== '-- ') {
+            if (!str_starts_with($query, '-- ')) {
                 $res = mysqli_query(
-                    $GLOBALS['DBCONNECTION'], insert_prefix_in_sql($sql_line)
+                    $GLOBALS['DBCONNECTION'], insert_prefix_in_sql($query)
                 );
                 $lines++;
                 if ($res == false) { 
                     $errors++; 
                 } else {
                     $ok++;
-                    if (substr($sql_line, 0, 11) == "INSERT INTO") { 
+                    if (str_starts_with($query,  "INSERT INTO")) { 
                         $inserts++; 
-                    } else if (substr($sql_line, 0, 10) == "DROP TABLE") { 
+                    } else if (str_starts_with($query, "DROP TABLE")) { 
                         $drops++;
-                    } else if (substr($sql_line, 0, 12) == "CREATE TABLE") { 
+                    } else if (str_starts_with($query, "CREATE TABLE")) { 
                         $creates++;
                     }
                 }
             }
         }
-    } // while (! feof($handle))
-    fclose($handle);
+    }
     if ($errors == 0) {
         runsql("DROP TABLE IF EXISTS {$tbpref}textitems", '');
         check_update_db($debug, $tbpref, $dbname);
