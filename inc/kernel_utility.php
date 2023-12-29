@@ -14,6 +14,15 @@
 
  require __DIR__ . '/settings.php';
 
+/**
+ * @var string Version of this current LWT application.
+ */
+ define('LWT_APP_VERSION', '2.9.1-fork');
+
+ /**
+  * @var string Date of the last published release of LWT 
+  */
+ define('LWT_RELEASE_DATE', "2023-12-29");
 
 /**
  * Return LWT version for humans
@@ -30,9 +39,8 @@
 function get_version(): string 
 {
     global $debug;
-    $release_number = '2.9.1-fork';
-    $release_date = 'December 29 2023';
-    $version = "$release_number ($release_date)"; 
+    $formattedDate = date("F d Y", strtotime(LWT_RELEASE_DATE));
+    $version = LWT_APP_VERSION . " ($formattedDate)"; 
     if ($debug) {
         $version .= ' <span class="red">DEBUG</span>';
     }
@@ -548,11 +556,10 @@ function annotation_to_json($ann): string|false
  */
 function getreq($s) 
 {
-    if (isset($_REQUEST[$s]) ) {
+    if (isset($_REQUEST[$s])) {
         return trim($_REQUEST[$s]);
-    } else {
-        return ''; 
     }
+    return '';
 }
 
 /**

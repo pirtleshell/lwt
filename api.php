@@ -15,6 +15,16 @@ require_once __DIR__ . '/inc/ajax_edit_impr_text.php';
 
 
 /**
+ * @var string Version of this current LWT API.
+ */
+define('LWT_API_VERSION', "0.1.1");
+
+/**
+ * @var string Date of the last released change of the LWT API. 
+ */
+define('LWT_API_RELEASE_DATE', "2023-12-29");
+
+/**
  * Send JSON response and exit.
  * 
  * @param int   $status Status code to display
@@ -126,8 +136,8 @@ function endpoint_exits($method, $requestUri)
 function rest_api_version($get_req): array
 {
     return array(
-        "version"      => "0.1.1",
-        "release_date" => "2023-12-29"
+        "version"      => LWT_API_VERSION,
+        "release_date" => LWT_API_RELEASE_DATE
     );
 }
 
