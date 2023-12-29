@@ -17,6 +17,7 @@ ones are marked like "v1.0.0-fork".
 ### Fixed
 
 * The database wizard was broken since 2.9.0.
+* It was impossible to change a word status on hover since 2.9.1.
 
 ### Deprecated
 
