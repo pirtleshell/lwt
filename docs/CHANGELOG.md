@@ -5,9 +5,11 @@ other versions come from the canonical LWT ("official" branch on Git).
 For git tags, official releases are marked like "v1.0.0", while unofficial
 ones are marked like "v1.0.0-fork".
 
+## [Unreleased] 
+
 ## 2.9.1-fork (December 29 2023)
 
-### Added
+### Added in 2.9.1-fork
 
 * New tools for documentation:
   * New JavaScript documentation with [JSDoc](https://jsdoc.app/)! You will find it under `docs/js/`.
@@ -15,7 +17,7 @@ ones are marked like "v1.0.0-fork".
 * New constant `LWT_LANGUAGES_ARRAY`, that replaces `$langDefs` (in `inc/langdefs.php`). 
 Part of [#163](https://github.com/HugoFara/lwt/issues/163). 
 
-### Changed
+### Changed in 2.9.1-fork
 
 * PHP files header docblocks are expanded, notably with a PHP version, package and category name.
 * Japanese number are now parsed by MeCab. Big thanks to 
@@ -26,7 +28,7 @@ Part of [#163](https://github.com/HugoFara/lwt/issues/163).
 * Patch update to the REST API to 0.1.1: requests on GET with empty payload were 
 resulting in error.
 
-### Fixed
+### Fixed in 2.9.1-fork
 
 * Fixes [#113](https://github.com/HugoFara/lwt/issues/113): changing a language name 
 was making text-to-speech unusable and may prompt a warning.
@@ -58,11 +60,15 @@ resulting in broken path ([#161](https://github.com/HugoFara/lwt/issues/161)).
 PR [#154](https://github.com/HugoFara/lwt/pull/154/files) by 
 [@ProgramComputer](https://github.com/ProgramComputer).
 
-### Deprecated
+### Deprecated in 2.9.1-fork
 
 * PHP documentation using Doxygen (under `docs/html`) is now deprecated and will be removed in 3.0.0.
 * Using `$langDefs` is deprecated in favor of `LWT_LANGUAGES_ARRAY` ([#163](https://github.com/HugoFara/lwt/issues/163)).
 * Calling the global function `new_pos` to set audio position is deprecated. Please use `lwt_audio_controller.setPosition`.
+
+### Full Changelog for 2.9.1-fork
+
+* [2.9.0...2.9.1](https://github.com/HugoFara/lwt/compare/2.9.0...2.9.1)
 
 ## 2.9.0-fork (December 24 2023)
 
