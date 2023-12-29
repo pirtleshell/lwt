@@ -12,13 +12,19 @@ ones are marked like "v1.0.0-fork".
 * New tools for documentation:
   * New JavaScript documentation with [JSDoc](https://jsdoc.app/)! You will find it under `docs/js/`.
   * Better PHP documentation using [phpDocumentor](https://phpdoc.org/). The new documentation is at `docs/php/`.
-* New constant `LWT_LANGUAGES_ARRAY`, that replaces `$langDefs` (in `inc/langdefs.php`). Part of [#163](https://github.com/HugoFara/lwt/issues/163). 
+* New constant `LWT_LANGUAGES_ARRAY`, that replaces `$langDefs` (in `inc/langdefs.php`). 
+Part of [#163](https://github.com/HugoFara/lwt/issues/163). 
 
 ### Changed
 
 * PHP files header docblocks are expanded, notably with a PHP version, package and category name.
-* Japanese number are now parsed by MeCab. Big thanks to [@ProgramComputer](https://github.com/ProgramComputer) for his pull request [#149](https://github.com/HugoFara/lwt/pull/149)!
-* Removes dead feeds from the demo database, as signalled in [#148](https://github.com/HugoFara/lwt/issues/148).
+* Japanese number are now parsed by MeCab. Big thanks to 
+[@ProgramComputer](https://github.com/ProgramComputer) for his pull request 
+[#149](https://github.com/HugoFara/lwt/pull/149)!
+* Removes dead feeds from the demo database, as signalled in 
+[#148](https://github.com/HugoFara/lwt/issues/148).
+* Patch update to the REST API to 0.1.1: requests on GET with empty payload were 
+resulting in error.
 
 ### Fixed
 
@@ -47,6 +53,7 @@ to install the demo DB out of LWT (related to [#78](https://github.com/HugoFara/
 Before it was setting the language to empty values.
 * On media select, the lwt folder name was preppended to the media folder, 
 resulting in broken path ([#161](https://github.com/HugoFara/lwt/issues/161)).
+* With the REST API, requests with an empty query were resulting in an error. 
 
 ### Deprecated
 
