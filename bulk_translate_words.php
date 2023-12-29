@@ -168,6 +168,44 @@ function bulk_do_content($tid, $sl, $tl, $pos): void
     WBLINK3 = '<?php echo $wb3; ?>';
     $('h3,h4,title').addClass('notranslate');
 
+    function clickDictionary() {
+        if ($(this).hasClass( "dict1" )) 
+            WBLINK = WBLINK1;
+        if ($(this).hasClass( "dict2" ))
+            WBLINK = WBLINK2;
+        if ($(this).hasClass( "dict3" ))
+            WBLINK = WBLINK3;
+        let dict_link = WBLINK;
+        let popup;
+        if (dict_link.startsWith('*')) {
+            popup = true;
+            dict_link = dict_link.substring(1);
+        }
+        try {
+            let final_url = new URL(dict_link);
+            popup = popup || final_url.searchParams.has("lwt_popup");
+        } catch (err) {
+            if (!(err instanceof TypeError)) {
+                throw err;
+            }
+        }
+        if (popup) {
+            owin(createTheDictUrl(
+                dict_link, $(this).parent().prev().text()
+                ));
+        } else {
+            window.parent.frames['ru'].location.href = createTheDictUrl(
+                dict_link, $(this).parent().prev().text()
+            );
+        }
+        $('[name="WoTranslation"]')
+        .attr('name',$('[name="WoTranslation"]')
+        .attr('data_name'));
+        const el = $(this).parent().parent().next().children();
+        el.attr('data_name', el.attr('name'));
+        el.attr('name','WoTranslation');
+    }
+
     const bulk_interactions = function() {
         $('[name="form1"]').submit(function() {
             $('[name="WoTranslation"]').attr('name',$('[name="WoTranslation"]')
@@ -179,43 +217,7 @@ function bulk_do_content($tid, $sl, $tl, $pos): void
         $('td').on(
             'click',
             'span.dict1, span.dict2, span.dict3',
-            function() {
-                if ($(this).hasClass( "dict1" )) 
-                    WBLINK = WBLINK1;
-                if ($(this).hasClass( "dict2" ))
-                    WBLINK = WBLINK2;
-                if ($(this).hasClass( "dict3" ))
-                    WBLINK = WBLINK3;
-                let dict_link = WBLINK;
-                let popup;
-                if (dict_link.startsWith('*')) {
-                    popup = true;
-                    dict_link = dict_link.substring(1);
-                }
-                try {
-                    let final_url = new URL(dict_link);
-                    popup = popup || final_url.searchParams.has("lwt_popup");
-                } catch (err) {
-                    if (!(err instanceof TypeError)) {
-                        throw err;
-                    }
-                }
-                if (popup) {
-                    owin(createTheDictUrl(
-                        dict_link, $(this).parent().prev().text()
-                        ));
-                } else {
-                    window.parent.frames['ru'].location.href = createTheDictUrl(
-                        dict_link, $(this).parent().prev().text()
-                    );
-                }
-                $('[name="WoTranslation"]')
-                .attr('name',$('[name="WoTranslation"]')
-                .attr('data_name'));
-                el = $(this).parent().parent().next().children();
-                el.attr('data_name', el.attr('name'));
-                el.attr('name','WoTranslation');
-            }
+            clickDictionary
         ).on(
             'click',
             '.del_trans',
