@@ -127,7 +127,7 @@ else {  // if (! isset($_REQUEST['op']))
     pagestart_nobody('');
     ?>
     <script type="text/javascript">
-        $(document).ready(ask_before_exiting);
+        $(document).ready(lwt_form_check.askBeforeExit);
         $(window).on('beforeunload', function() {
             setTimeout(function() {window.parent.frames['ru'].location.href = 'empty.html';}, 0);
         });

@@ -53,7 +53,7 @@ function setTransRoman(tra, rom) {
     form_changed |= true;
   }
   if (form_changed)
-    makeDirty();
+    lwt_form_check.makeDirty();
 }
 
 /**
@@ -1335,8 +1335,8 @@ function display_example_sentences(sentences, click_target)
     // Doesn't feel the right way to do it
     clickable.setAttribute(
       "onclick", 
-      "{" + 
-      click_target + ".value = '" + sentences[i][1].replaceAll("'", "\\'") +"';makeDirty();}"
+      "{" + click_target + ".value = '" + sentences[i][1].replaceAll("'", "\\'") + 
+      "';lwt_form_check.makeDirty();}"
     );
     clickable.appendChild(img);
     // Create parent

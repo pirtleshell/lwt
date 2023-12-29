@@ -145,7 +145,7 @@ function tts_settings_form()
             <td class="td1 right" colspan="4">
                 <input type="button" value="Cancel" 
                 onclick=
-                "{resetDirty(); location.href='text_to_speech_settings.php';}" /> 
+                "{lwt_form_check.resetDirty(); location.href='text_to_speech_settings.php';}" /> 
                 <input type="submit" name="op" value="Save" />
             </td>
         </tr>

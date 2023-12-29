@@ -2183,9 +2183,18 @@ other versions come from the canonical LWT ("official" branch on Git).
 For git tags, official releases are marked like "v1.0.0", while unofficial
 ones are marked like "v1.0.0-fork".</p>
 <h3>[Unreleased]</h3>
+<h4>Added</h4>
+<ul>
+<li>
+<code>unloadformcheck.js</code> no declares a new object <code>lwt_form_check</code> that contains all the functions needed.</li>
+</ul>
 <h4>Fixed</h4>
 <ul>
 <li>The database wizard was broken since 2.9.0.</li>
+</ul>
+<h4>Deprecated</h4>
+<ul>
+<li>Using any function from <code>unloadformcheck.js</code> without using <code>lwt_form_check</code> is deprecated.</li>
 </ul>
 <h3>2.9.1-fork (December 29 2023)</h3>
 <h4>Added in 2.9.1-fork</h4>

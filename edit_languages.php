@@ -854,7 +854,7 @@ function edit_language_form($language): void
     <tr>
         <td class="td1 right" colspan="2">
             <input type="button" value="Cancel" 
-            onclick="{resetDirty(); location.href='edit_languages.php';}" /> 
+            onclick="{lwt_form_check.resetDirty(); location.href='edit_languages.php';}" /> 
             <?php 
             if ($language->id == 0) {
                 echo '<input type="submit" name="op" value="Save" />';
@@ -979,7 +979,7 @@ function edit_languages_new()
             }
         };
 
-        $(document).ready(ask_before_exiting);
+        $(document).ready(lwt_form_check.askBeforeExit);
     </script>
     <div class="td1 center">
         <div class="center" style="border: 1px solid black;">
@@ -1054,7 +1054,7 @@ function edit_languages_change($lid)
     <script type="text/javascript" charset="utf-8">
         const LANGDEFS = <?php echo json_encode(LWT_LANGUAGES_ARRAY); ?>;
 
-        $(document).ready(ask_before_exiting);
+        $(document).ready(lwt_form_check.askBeforeExit);
     </script>
     <h2>Edit Language 
         <a target="_blank" href="docs/info.html#howtolang">
