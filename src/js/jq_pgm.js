@@ -1248,6 +1248,8 @@ function quick_select_to_input(select_elem, input_elem)
  * @param {string}   base_path Base path for LWT to append
  * 
  * @returns {HTMLOptionElement[]} List of options to append to the select.
+ * 
+ * @since 2.9.1-fork Base path is no longer used
  */
 function select_media_path(paths, folders, base_path)
 {
@@ -1261,7 +1263,7 @@ function select_media_path(paths, folders, base_path)
       temp_option.setAttribute("disabled", "disabled");
       temp_option.text = '-- Directory: ' + paths[i] + '--';
     } else {
-      temp_option.value = base_path + "/" + paths[i];
+      temp_option.value = paths[i];
       temp_option.text = paths[i];
     }
     options.push(temp_option);
