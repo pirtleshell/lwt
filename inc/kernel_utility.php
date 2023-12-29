@@ -25,7 +25,7 @@
  *
  * @return string Version number HTML-formatted
  * 
- * @psalm-return '2.9.1-fork (December 29 2023) <span class="red">DEBUG</span>'|'2.9.1-fork (Decemeber 29 2023)'
+ * @psalm-return '2.9.1-fork (December 29 2023) <span class="red">DEBUG</span>'|'2.9.1-fork (December 29 2023)'
  */
 function get_version(): string 
 {
