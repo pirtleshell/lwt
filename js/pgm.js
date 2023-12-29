@@ -165,7 +165,7 @@ function do_ajax_save_setting(k,v){$.post('api.php/v1/settings',{key:k,value:v})
 function quick_select_to_input(select_elem,input_elem){let val=select_elem.options[select_elem.selectedIndex].value;if(val!='')
 input_elem.value=val;select_elem.value=''}
 function select_media_path(paths,folders,base_path){let options=[],temp_option=document.createElement('option');temp_option.value="";temp_option.text="[Choose...]";options.push(temp_option);for(let i=0;i<paths.length;i++){temp_option=document.createElement('option')
-if(folders.includes(paths[i])){temp_option.setAttribute("disabled","disabled");temp_option.text='-- Directory: '+paths[i]+'--'}else{temp_option.value=base_path+"/"+paths[i];temp_option.text=paths[i]}
+if(folders.includes(paths[i])){temp_option.setAttribute("disabled","disabled");temp_option.text='-- Directory: '+paths[i]+'--'}else{temp_option.value=paths[i];temp_option.text=paths[i]}
 options.push(temp_option)}
 return options}
 function media_select_receive_data(data){$('#mediaSelectLoadingImg').css("display","none");if(data.error!==undefined){let msg;if(data.error=="not_a_directory"){msg='[Error: "../'+data.base_path+'/media" exists, but it is not a directory.]'}else if(data.error=="does_not_exist"){msg='[Directory "../'+data.base_path+'/media" does not yet exist.]'}else{msg="[Unknown error!]"}

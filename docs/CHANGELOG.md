@@ -45,6 +45,8 @@ This is fixed, and the SQL file was made more readable.
 to install the demo DB out of LWT (related to [#78](https://github.com/HugoFara/lwt/issues/78)).
 * Deleting a language deletes the language ([#151](https://github.com/HugoFara/lwt/issues/151)). 
 Before it was setting the language to empty values.
+* On media select, the lwt folder name was preppended to the media folder, 
+resulting in broken path ([#161](https://github.com/HugoFara/lwt/issues/161)).
 
 ### Deprecated
 
