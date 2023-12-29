@@ -140,16 +140,18 @@ function writeToFile($conn)
 function doOperation($op)
 {
     $message = null;
-    $dbname = null;
-    $passwd = null;
     $server = null;
-    $socket = null;
     $userid = null;
+    $passwd = null;
+    $dbname = null;
+    $socket = null;
     if ($op == "Autocomplete") {
-        $_SERVER['SERVER_ADDR'];
-        $_SERVER['SERVER_NAME']; 
+        $server = (string) $_SERVER['SERVER_ADDR'];
+        $userid = "";
+        $passwd = "";
+        $dbname = (string) $_SERVER['SERVER_NAME'];
+        $socket = "";
     } else if ($op == "Check") {
-        //require_once 'inc/database_connect.php';
         $server = getreq("server"); 
         $userid = getreq("userid");
         $passwd = getreq("passwd");
@@ -183,11 +185,11 @@ function doOperation($op)
             }
         }
     } else if ($op == "Change") {
-        getreq("server"); 
-        getreq("userid");
-        getreq("passwd");
-        getreq("dbname");
-        getreq("socket");
+        $server = getreq("server"); 
+        $userid = getreq("userid");
+        $passwd = getreq("passwd");
+        $dbname = getreq("dbname");
+        $socket = getreq("socket");
     }
     $conn = new Database_Connection(
         $server, $userid, $passwd, $dbname, $socket

@@ -7,6 +7,10 @@ ones are marked like "v1.0.0-fork".
 
 ## [Unreleased] 
 
+### Fixed
+
+* The database wizard was broken since 2.9.0.
+
 ## 2.9.1-fork (December 29 2023)
 
 ### Added in 2.9.1-fork
