@@ -26,7 +26,7 @@
  * @package Lwt
  * @author  LWT Project <lwt-project@hotmail.com>
  * @license Unlicense <http://unlicense.org/>
- * @link    https://hugofara.github.io/lwt/docs/html/edit__texts_8php.html
+ * @link    https://hugofara.github.io/lwt/docs/php/files/edit-texts.html
  * @since   1.0.3
  */
 

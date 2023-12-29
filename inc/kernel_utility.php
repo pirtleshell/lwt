@@ -8,7 +8,7 @@
  * @package Lwt
  * @author  HugoFara <hugo.farajallah@protonmail.com>
  * @license Unlicense <http://unlicense.org/>
- * @link    https://hugofara.github.io/lwt/docs/html/kernel__utility_8php.html
+ * @link    https://hugofara.github.io/lwt/docs/php/files/inc-kernel-utility.html
  * @since   2.0.3-fork
  */
 

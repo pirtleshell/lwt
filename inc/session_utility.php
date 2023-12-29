@@ -12,7 +12,7 @@
  * @package Lwt
  * @author  HugoFara <hugo.farajallah@protonmail.com>
  * @license Unlicense <http://unlicense.org/>
- * @link    https://hugofara.github.io/lwt/docs/html/session__utility_8php.html
+ * @link    https://hugofara.github.io/lwt/docs/php/files/inc-session-utility.html
  * @since   2.0.3-fork
  */
 

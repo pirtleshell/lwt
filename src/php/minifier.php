@@ -12,7 +12,7 @@
  * @package Lwt_Documentation
  * @author  HugoFara <hugo.farajallah@protonmail.com>
  * @license Unlicense <http://unlicense.org/>
- * @link    https://hugofara.github.io/lwt/docs/html/minifier_8php.html
+ * @link    https://hugofara.github.io/lwt/docs/php/files/src-php-minifier.html
  * @since   2.0.3-fork
  * @since   2.9.1-fork $jsFiles was replaced by LWT_JS_FILES and $cssFiles by 
  *                      LWT_CSS_FILES

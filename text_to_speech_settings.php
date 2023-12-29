@@ -11,7 +11,7 @@
  * @author   chaosarium <leonluleonlu@gmail.com>
  * @author   HugoFara <Hugo.Farajallah@protonmail.com>
  * @license  Unlicense <http://unlicense.org/>
- * @link     https://hugofara.github.io/lwt/docs/html/text__to__speech__settings_8php.html
+ * @link     https://hugofara.github.io/lwt/docs/php/files/text-to-speech-settings.html
  * @since    2.2.2-fork
  */
 

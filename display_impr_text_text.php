@@ -11,7 +11,7 @@
  * @package Lwt
  * @author  LWT Project <lwt-project@hotmail.com>
  * @license Unlicense <http://unlicense.org/>
- * @link    https://hugofara.github.io/lwt/docs/html/display__impr__text__text_8php.html
+ * @link    https://hugofara.github.io/lwt/docs/php/files/display-impr-text-text.html
  * @since   1.5.0
  */
 

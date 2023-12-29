@@ -8,7 +8,9 @@
  * 
  * @category Database
  * @package Lwt
- * @author https://github.com/HugoFara/ HugoFara
+ * @author HugoFara <hugo.farajallah@protonmail.com>
+ * @license Unlicense <http://unlicense.org/>
+ * @link    https://hugofara.github.io/lwt/docs/php/files/inc-database-connect.html
  */
 
 require_once __DIR__ . "/kernel_utility.php";

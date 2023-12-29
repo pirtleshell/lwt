@@ -12,7 +12,7 @@
  * @package  Lwt
  * @author   HugoFara <hugo.farajallah@protonmail.com>
  * @license  Unlicense <http://unlicense.org/>
- * @link     https://hugofara.github.io/lwt/docs/html/database__wizard_8php.html
+ * @link     https://hugofara.github.io/lwt/docs/php/files/database-wizard.html
  * @since    2.5.0-fork
  */
 
@@ -27,7 +27,7 @@ require_once 'inc/kernel_utility.php';
  * @package  Lwt
  * @author   HugoFara <hugo.farajallah@protonmail.com>
  * @license  Unlicense <http://unlicense.org/>
- * @link     https://hugofara.github.io/lwt/docs/html/database__wizard_8php.html
+ * @link     https://hugofara.github.io/lwt/docs/php/files/database-wizard.html
  */
 class Database_Connection
 {
