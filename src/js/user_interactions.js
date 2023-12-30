@@ -210,9 +210,9 @@ async function getPhoneticTextAsync(text, lang) {
 /**
  * Replace any searchValue on object value by replaceValue with deepth.
  * 
- * @param {dict} obj to search in
- * @param {string} searchValue to find
- * @param {string} replaceValue variable
+ * @param {dict} obj Object to search in
+ * @param {string} searchValue Value to find
+ * @param {string} replaceValue Value to replace with
  * */
 function deepReplace(obj, searchValue, replaceValue) {
     for (let key in obj) {
@@ -232,13 +232,13 @@ function deepReplace(obj, searchValue, replaceValue) {
  * @param {dict}   obj         Object to search in
  * @param {string} searchValue Value to search
  */
-function findDataString(obj, searchValue) {
+function deepFindValue(obj, searchValue) {
     for (const key in obj) {
         if (obj.hasOwnProperty(key)) {
             if (typeof obj[key] === 'string' && obj[key].startsWith(searchValue)) {
                 return obj[key];
             } else if (typeof obj[key] === 'object') {
-                const result = findDataString(obj[key], searchValue);
+                const result = deepFindValue(obj[key], searchValue);
                 if (result) {
                     return result;
                 }
@@ -305,7 +305,7 @@ function findDataString(obj, searchValue) {
         fetch(fetchRequest.input, fetchRequest.options)
         .then(response => response.json())
         .then(data => {
-            const encodeString = findDataString(data, 'data:')
+            const encodeString = deepFindValue(data, 'data:')
             const utter = new Audio(encodeString)
             utter.play()
         })

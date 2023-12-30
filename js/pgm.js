@@ -463,7 +463,7 @@ function saveAudioPosition(text_id,pos){$.post('api.php/v1/texts/'+text_id+'/aud
 function getPhoneticText(text,lang){let phoneticText;$.ajax('api.php/v1/phonetic-reading',{async:!1,data:{text:text,lang:lang},dataType:"json",type:"GET",}).done(function(data){phoneticText=data.phonetic_reading});return phoneticText}
 async function getPhoneticTextAsync(text,lang){return $.getJSON('api.php/v1/phonetic-reading',{text:text,lang:lang})}
 function deepReplace(obj,searchValue,replaceValue){for(let key in obj){if(typeof obj[key]==='object'){deepReplace(obj[key],searchValue,replaceValue)}else if(typeof obj[key]==='string'&&obj[key].includes(searchValue)){obj[key]=obj[key].replace(searchValue,replaceValue)}}}
-function findDataString(obj,searchValue){for(const key in obj){if(obj.hasOwnProperty(key)){if(typeof obj[key]==='string'&&obj[key].startsWith(searchValue)){return obj[key]}else if(typeof obj[key]==='object'){const result=findDataString(obj[key],searchValue);if(result){return result}}}}
+function deepFindValue(obj,searchValue){for(const key in obj){if(obj.hasOwnProperty(key)){if(typeof obj[key]==='string'&&obj[key].startsWith(searchValue)){return obj[key]}else if(typeof obj[key]==='object'){const result=deepFindValue(obj[key],searchValue);if(result){return result}}}}
 return null}
 function readRawTextAloud(text,lang,rate,pitch,voice){let msg=new SpeechSynthesisUtterance();const trimmed=lang.substring(0,2);const prefix='tts['+trimmed;msg.text=text;if(lang){msg.lang=lang}
 const useVoice=voice||getCookie(prefix+'Voice]');if(useVoice){const voices=window.speechSynthesis.getVoices();for(let i=0;i<voices.length;i++){if(voices[i].name===useVoice){msg.voice=voices[i]}}}
@@ -472,7 +472,7 @@ if(pitch){msg.pitch=pitch}else if(getCookie(prefix+'Pitch]')){msg.pitch=parseInt
 if(getCookie(prefix+'Request]')!=""&&JSON.parse(getCookie(prefix+'Request]'))!==null){let fetchRequest=JSON.parse(getCookie(prefix+'Request]'));deepReplace(fetchRequest,'lwt_term',text)
 deepReplace(fetchRequest,'lwt_lang',lang)
 fetchRequest.options.body=JSON.stringify(fetchRequest.options.body)
-fetch(fetchRequest.input,fetchRequest.options).then(response=>response.json()).then(data=>{const encodeString=findDataString(data,'data:')
+fetch(fetchRequest.input,fetchRequest.options).then(response=>response.json()).then(data=>{const encodeString=deepFindValue(data,'data:')
 const utter=new Audio(encodeString)
 utter.play()}).catch(error=>{console.error(error)})}else{window.speechSynthesis.speak(msg)}
 return msg}
