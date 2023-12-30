@@ -761,6 +761,7 @@ function do_text_text_content($textid, $only_body=true): void
         'TID' => $textid,
         'ADDFILTER' => makeStatusClassFilter((int)$visit_status),
         'JQ_TOOLTIP' => getSettingWithDefault('set-tooltip-mode') == 2 ? 1 : 0,
+        'HTS' => getSettingWithDefault('set-hts'),
         // Add new globals
         'ANNOTATIONS_MODE' => $mode_trans,
         'POS' => $pos

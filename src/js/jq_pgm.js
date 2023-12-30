@@ -29,6 +29,7 @@ RTL = 0;
 ANN_ARRAY = {};
 DELIMITER = '';
 JQ_TOOLTIP = 0;
+HTS = 0;
 
 /**************************************************************
 LWT jQuery functions
@@ -714,6 +715,10 @@ function mword_click_event_do_text_text () {
       $(this).attr('data_wid'), status, $(this).attr('data_code'), ann
     );
   }
+  if (HTS == 2) { 
+    const lg = getLangFromDict(WBLINK3);
+    readTextAloud($(this).text(), lg);
+    }
   return false;
 }
 
@@ -875,6 +880,10 @@ function word_hover_over () {
     if (JQ_TOOLTIP) {
       $(this).trigger('mouseover');
     }
+    if (HTS == 3) { 
+      const lg = getLangFromDict(WBLINK3);
+      readTextAloud($(this).text(), lg);
+      }
   }
 }
 
