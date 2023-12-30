@@ -5,7 +5,13 @@ other versions come from the canonical LWT ("official" branch on Git).
 For git tags, official releases are marked like "v1.0.0", while unofficial
 ones are marked like "v1.0.0-fork".
 
-## [Unreleased] 
+## [Unreleased]
+
+### Added
+
+* Word reading can be allowed on hover or on click. 
+Pull request [#147](https://github.com/HugoFara/lwt/pull/147) by 
+[@ProgramComputer](https://github.com/ProgramComputer).
 
 ### Fixed
 

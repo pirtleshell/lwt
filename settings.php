@@ -111,10 +111,11 @@ if (isset($_REQUEST['op'])) {
                 1 : 0
             )
         );
+        
         saveSetting(
             'set-hts',  
-                $_REQUEST['set-hts']
-                          );
+            $_REQUEST['set-hts']
+        );
     
         saveSetting(
             'set-archivedtexts-per-page',
