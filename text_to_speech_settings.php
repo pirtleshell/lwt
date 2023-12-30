@@ -107,7 +107,9 @@ style="background-color: #f0f0f0; padding: 10px; border: 1px solid #ccc;"
             <th class="th1 center">Voice API Request</th>
             <td class="td1 center">
                 <textarea id="voice-api" name="LgTPVoiceAPI" class="respinput" rows="10" 
-                cols="200" style="width: 378px; height: 211px;"></textarea>
+                cols="200" style="width: 378px; height: 211px;"><?php 
+                echo tohtml(getSetting('tts-third-party-api')); 
+                ?></textarea>
             </td>
             <td class="td1 center">
                 <img src="<?php print_file_path("icn/status.png") ?>" />
@@ -115,7 +117,7 @@ style="background-color: #f0f0f0; padding: 10px; border: 1px solid #ccc;"
         </tr>
         <tr>
             <td class="td1 right" colspan="4">
-                <input type="submit" name="op" value="Save Third-Party Voice" />
+                <input type="button" onclick="tts_settings.saveTPVoiceAPI" />
             </td>
         </tr>
     </table>
@@ -215,7 +217,7 @@ function tts_demo()
     >Lorem ipsum dolor sit amet...</textarea>
 </td>
 <td class="td1 right">
-    <input type="button" onclick="readingDemo();" value="Read"/>
+    <input type="button" onclick="tts_settings.readingDemo();" value="Read"/>
 </td>
     <?php
 }
@@ -230,10 +232,91 @@ function tts_js()
     $lid = (int) getSetting('currentlanguage');
     ?>
 <script type="text/javascript" charset="utf-8">
-    /** @var Current language being learnt. */
-    const CURRENT_LANGUAGE = <?php 
-    echo json_encode(getLanguageCode($lid, LWT_LANGUAGES_ARRAY)); 
-    ?>;
+    const tts_settings = {
+        /** @var string current_language Current language being learnt. */
+        current_language: <?php 
+            echo json_encode(getLanguageCode($lid, LWT_LANGUAGES_ARRAY)); 
+        ?>,
+
+        /**
+         * Get the language country code from the page. 
+         * 
+         * @returns {string} Language code (e. g. "en")
+         */
+        getLanguageCode: function() {
+            return $('#get-language').val();
+        },
+
+        /** 
+         * Gather data in the page to read the demo.
+         * 
+         * @returns {undefined}
+         */
+        readingDemo: function() {
+            const lang = getLanguageCode();
+            readTextAloud(
+                $('#tts-demo').val(),
+                lang,
+                parseFloat($('#rate').val()),
+                parseFloat($('#pitch').val()),
+                $('#voice').val()
+            );
+        },
+
+
+        /**
+         * Set the Text-to-Speech data using cookies
+         */
+        presetTTSData: function() {
+            $('#get-language').val(tts_settings.current_language);
+            $('#voice').val(
+                getCookie(
+                    'tts[' + tts_settings.current_language + 'RegName]'
+                )
+            );
+            $('#rate').val(getCookie('tts[' + tts_settings.current_language + 'Rate]'));
+            $('#pitch').val(getCookie('tts[' + tts_settings.current_language + 'Pitch]'));
+        },
+
+        /**
+         * Populate the languages region list.
+         * 
+         * @returns {undefined}
+         */
+        populateVoiceList: function() {
+            let voices = window.speechSynthesis.getVoices();
+            $('#voice').empty();
+            const languageCode = getLanguageCode();
+            for (i = 0; i < voices.length ; i++) {
+                if (voices[i].lang != languageCode && !voices[i].default)
+                    continue;
+                let option = document.createElement('option');
+                option.textContent = voices[i].name;
+
+                if (voices[i].default) {
+                    option.textContent += ' -- DEFAULT';
+                }
+
+                option.setAttribute('data-lang', voices[i].lang);
+                option.setAttribute('data-name', voices[i].name);
+                $('#voice')[0].appendChild(option);
+            }
+        },
+
+        
+        /**
+         * SAve voice API settings.
+         * 
+         * @returns {undefined}
+         */
+        saveTPVoiceAPI: function() {
+            const voice_api = $('#voice-api').val();
+            do_ajax_save_setting('tts-third-party-api', voice_api)
+        }
+    };
+
+    const CURRENT_LANGUAGE = tts_settings.current_language;
+
 
     /**
      * Get the language country code from the page. 
@@ -242,7 +325,7 @@ function tts_js()
      */
     function getLanguageCode()
     {
-        return $('#get-language').val();
+        return tts_settings.getLanguageCode();
     }
 
     /** 
@@ -252,14 +335,7 @@ function tts_js()
      */
     function readingDemo()
     {
-        const lang = getLanguageCode();
-        readTextAloud(
-            $('#tts-demo').val(),
-            lang,
-            parseFloat($('#rate').val()),
-            parseFloat($('#pitch').val()),
-            $('#voice').val()
-        );
+        return tts_settings.readingDemo();
     }
 
     /**
@@ -267,15 +343,7 @@ function tts_js()
      */
     function presetTTSData()
     {
-        $('#get-language').val(CURRENT_LANGUAGE);
-        $('#voice').val(
-            getCookie(
-                'tts[' + CURRENT_LANGUAGE + 'RegName]'
-            )
-        );
-        $('#rate').val(getCookie('tts[' + CURRENT_LANGUAGE + 'Rate]'));
-        $('#pitch').val(getCookie('tts[' + CURRENT_LANGUAGE + 'Pitch]'));
-        $('#voice-api').val(getCookie('tts[' + CURRENT_LANGUAGE + 'TPVoiceAPI]'));
+        return tts_settings.presetTTSData()
     }
 
     /**
@@ -284,33 +352,17 @@ function tts_js()
      * @returns {undefined}
      */
     function populateVoiceList() {
-        voices = window.speechSynthesis.getVoices();
-        $('#voice').empty();
-        const languageCode = getLanguageCode();
-        for (i = 0; i < voices.length ; i++) {
-            if (voices[i].lang != languageCode && !voices[i].default)
-                continue;
-            let option = document.createElement('option');
-            option.textContent = voices[i].name;
-
-            if (voices[i].default) {
-                option.textContent += ' -- DEFAULT';
-            }
-
-            option.setAttribute('data-lang', voices[i].lang);
-            option.setAttribute('data-name', voices[i].name);
-            $('#voice')[0].appendChild(option);
-        }
+        return tts_settings.populateVoiceList();
     }
 
-    $(presetTTSData);
-    $(populateVoiceList);
+    $(tts_settings.presetTTSData);
+    $(tts_settings.populateVoiceList);
 </script>
     <?php
 }
 
 /**
- * Make only a partial, embadable page for text-to-speech settings.
+ * Make only a partial, embedable page for text-to-speech settings.
  * 
  * @return void
  */
@@ -369,34 +421,10 @@ function tts_save_settings($form): void
     setcookie($prefix . 'Pitch]', $form['LgPitch'], $cookie_options);
 }
 
-/**
- * Save the third-party voice API setting as cookies.
- *
- * @param array $form Inputs from the main form.
- * 
- * @return void
- */
-function tts_saveVoiceAPI($form): void
-{
-    //$lgname = $form['LgName'];
-    $lgname = '';
-    $prefix = 'tts[' . $lgname;
-    $cookie_options = array(
-        'expires' => strtotime('+5 years'),
-        'path' => '/',
-        'samesite' => 'Strict' // None || Lax || Strict
-    );
-    setcookie($prefix. 'TPVoiceAPI]', $form['LgTPVoiceAPI'], $cookie_options);
-}
-
 $message = '';
-if (array_key_exists('op', $_REQUEST)) {
-    if ($_REQUEST['op'] == 'Save') {
-        tts_save_settings($_REQUEST);
-        $message = "Settings saved!";
-    } else if ($_REQUEST['op'] == 'Save Third-Party Voice') {
-        $message = tts_saveVoiceAPI($_REQUEST);
-    }
+if (array_key_exists('op', $_REQUEST) && $_REQUEST['op'] == 'Save') {
+    tts_save_settings($_REQUEST);
+    $message = "Settings saved!";
 }
 tts_settings_full_page($message);
 
