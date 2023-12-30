@@ -61,7 +61,7 @@ function translate_term($text, $file, $sl, $tl): void
     global $tbpref;
     $lg_id = getSetting('currentlangage');
     $voiceApi = get_first_value(
-        "SELECT LgTTSVoiceApi AS value FROM {$tbpref}languages 
+        "SELECT LgTTSVoiceAPI AS value FROM {$tbpref}languages 
         WHERE LgID = $lg_id"
     );
     ?>

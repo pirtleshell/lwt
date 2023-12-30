@@ -17,6 +17,8 @@
  * A language represented as an object.
  * 
  * This structure is experimental and subject to change.
+ * 
+ * @since 2.10.0-fork Get a new ttsvoiceapi method
  */
 class Language
 {
@@ -82,6 +84,11 @@ class Language
     public $rightoleft;
 
     /**
+     * @var string $ttsVoiceAPI An external API for voice
+     */
+    public $ttsvoiceapi;
+
+    /**
      * Export word data as a JSON dictionnary.
      * 
      * @return string JSON disctionnary. 
@@ -102,7 +109,8 @@ class Language
                 "regexpwordchar"     => $this->regexpwordchar,
                 "removespaces"       => $this->removespaces,
                 "spliteachchar"      => $this->spliteachchar,
-                "rightoleft"         => $this->rightoleft
+                "rightoleft"         => $this->rightoleft,
+                "ttsvoiceapi"        => $this->ttsvoiceapi
             )
         );
     }

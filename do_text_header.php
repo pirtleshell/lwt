@@ -187,7 +187,7 @@ function browser_tts($text, $languageName): void
     // Phonetic reading for this text
     $phoneticText = phonetic_reading($text, $languageCode);
     $voiceApi = get_first_value(
-        "SELECT LgTTSVoiceApi AS value FROM {$tbpref}languages 
+        "SELECT LgTTSVoiceAPI AS value FROM {$tbpref}languages 
         WHERE LgID = $lg_id"
     );
     ?>

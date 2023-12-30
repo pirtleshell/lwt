@@ -1784,7 +1784,7 @@ function update_database($dbname)
         // Since 2.10.0, you can add a third-party voice API
         runsql(
             "ALTER TABLE `{$tbpref}languages` 
-            ADD COLUMN `LgTTSVoiceApi` varchar(2048) DEFAULT NULL",
+            ADD COLUMN `LgTTSVoiceAPI` varchar(2048) NOT NULL",
             '', false
         );
 

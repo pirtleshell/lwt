@@ -86,7 +86,7 @@ function tts_displayThirdPartyVoiceAPI()
     global $tbpref;
     $lg_id = (int) getSetting('currentlanguage');
     $voiceApi = get_first_value(
-        "SELECT LgTTSVoiceApi AS value FROM {$tbpref}languages 
+        "SELECT LgTTSVoiceAPI AS value FROM {$tbpref}languages 
         WHERE LgID = $lg_id"
     );
     ?>
@@ -112,8 +112,8 @@ style="background-color: #f0f0f0; padding: 10px; border: 1px solid #ccc;"
         <tr>
             <th class="th1 center">Voice API Request</th>
             <td class="td1 center">
-                <textarea id="voice-api" name="LgTTSVoiceApi" class="respinput" rows="10" 
-                cols="200" style="width: 378px; height: 211px;"><?php 
+                <textarea id="voice-api" name="LgTTSVoiceAPI" class="respinput"
+                maxlength="2048" rows="10"><?php 
                 echo tohtml($voiceApi);
                 ?></textarea>
             </td>
@@ -238,7 +238,7 @@ function tts_js()
     $lid = (int) getSetting('currentlanguage');
     $lg_code = getLanguageCode($lid, LWT_LANGUAGES_ARRAY);
     $voiceApi = get_first_value(
-        "SELECT LgTTSVoiceApi AS value FROM {$tbpref}languages 
+        "SELECT LgTTSVoiceAPI AS value FROM {$tbpref}languages 
         WHERE LgID = $lid"
     );
     ?>

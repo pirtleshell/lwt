@@ -707,7 +707,7 @@ function do_test_test_javascript_clickable($wo_record, $solution)
     $abbr = getLanguageCode($wo_record['WoLgID'], LWT_LANGUAGES_ARRAY);
     $phoneticText = phonetic_reading($wo_record['WoText'], $abbr);
     $voiceApi = get_first_value(
-        "SELECT LgTTSVoiceApi AS value FROM {$tbpref}languages 
+        "SELECT LgTTSVoiceAPI AS value FROM {$tbpref}languages 
         WHERE LgID = " . $wo_record['WoLgID']
     );
     ?>

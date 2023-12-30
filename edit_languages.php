@@ -176,7 +176,7 @@ function edit_languages_op_save(): string
                 LgExportTemplate, LgTextSize, LgCharacterSubstitutions, 
                 LgRegexpSplitSentences, LgExceptionsSplitSentences, 
                 LgRegexpWordCharacters, LgRemoveSpaces, LgSplitEachChar, 
-                LgRightToLeft
+                LgRightToLeft, LgTTSVoiceAPI
             ) VALUES(" . 
                 convert_string_to_sqlsyntax($_REQUEST["LgName"]) . ', ' .
                 convert_string_to_sqlsyntax($_REQUEST["LgDict1URI"]) . ', '. 
@@ -190,7 +190,8 @@ function edit_languages_op_save(): string
                 convert_string_to_sqlsyntax($_REQUEST["LgRegexpWordCharacters"]) . ', '.
                 ((int)isset($_REQUEST["LgRemoveSpaces"])) . ', '.
                 ((int)isset($_REQUEST["LgSplitEachChar"])) . ', '.
-                ((int)isset($_REQUEST["LgRightToLeft"])) . 
+                ((int)isset($_REQUEST["LgRightToLeft"])) . ', ' .
+                convert_string_to_sqlsyntax($_REQUEST["LgTTSVoiceAPI"]) . 
             ')', 
             'Saved'
         );
@@ -209,7 +210,8 @@ function edit_languages_op_save(): string
             'LgRegexpWordCharacters = ' . convert_string_to_sqlsyntax($_REQUEST["LgRegexpWordCharacters"]) . ', ' .
             'LgRemoveSpaces = ' . ((int)isset($_REQUEST["LgRemoveSpaces"])) . ', ' .
             'LgSplitEachChar = ' . ((int)isset($_REQUEST["LgSplitEachChar"])) . ', ' . 
-            'LgRightToLeft = ' . ((int)isset($_REQUEST["LgRightToLeft"])) . 
+            'LgRightToLeft = ' . ((int)isset($_REQUEST["LgRightToLeft"])) . ', ' .
+            "LgTTSVoiceAPI = " . convert_string_to_sqlsyntax($_REQUEST["LgTTSVoiceAPI"]) . 
             " WHERE LgID = $val", 
             'Saved'
         );
@@ -269,7 +271,8 @@ function edit_languages_op_change($lid): string
         'LgRegexpWordCharacters = ' . convert_string_to_sqlsyntax($_REQUEST["LgRegexpWordCharacters"]) . ', ' .
         'LgRemoveSpaces = ' . ((int)isset($_REQUEST["LgRemoveSpaces"])) . ', ' .
         'LgSplitEachChar = ' . ((int)isset($_REQUEST["LgSplitEachChar"])) . ', ' . 
-        'LgRightToLeft = ' . ((int)isset($_REQUEST["LgRightToLeft"])) . 
+        'LgRightToLeft = ' . ((int)isset($_REQUEST["LgRightToLeft"])) . ', ' .
+        'LgTTSVoiceAPI = ' . convert_string_to_sqlsyntax($_REQUEST["LgTTSVoiceAPI"]) . 
         " WHERE LgID = $lid", 
         'Updated'
     );
@@ -357,6 +360,27 @@ function load_language($lgid)
         mysqli_free_result($res);
     }
     return $language;
+}
+
+function edit_languages_displayThirdPartyVoiceAPI() {
+    ?>
+<h2>Third-Party Voice API</h2>
+<p>
+    You can customize the voice API using an external service. 
+    You have to use the following JSON format.
+</p>
+<pre 
+style="background-color: #f0f0f0; padding: 10px; border: 1px solid #ccc;"
+><code lang="json"
+>{
+    "input": ...,
+    "options": ...
+}</code></pre>
+<p>
+    LWT will insert text in <code>lwt_text</code> (required), 
+    you can specify the language with <code>lwt_lang</code> (optional).
+</p>
+    <?php
 }
 
 
@@ -643,6 +667,13 @@ function edit_language_form($language): void
         document.forms.lg_form.LgRegexpAlt.value = method_option;
     }
 
+    function checkVoiceAPI(api_value) {
+        const query = JSON.parse(api_value);
+        if (query === null) 
+            return false;
+        return true;
+    }
+
     /**
      * Check if the help field are coherent with the input fields.
      * 
@@ -654,6 +685,15 @@ function edit_language_form($language): void
         checkDictionaryChanged(l_form.LgDict2URI);
         checkTranslatorChanged(l_form.LgGoogleTranslateURI);
         checkWordChar(l_form.LgRegexpWordCharacters.value);
+    }
+
+    function testVoiceAPI() {
+        const api_value = document.forms.lg_form.LgTTSVoiceAPI.value;
+        const prevApi = LWT_LANG_DATA.tpVoiceApi;
+        LWT_LANG_DATA.tpVoiceApi = api_value;
+        const lang = <?php echo json_encode($sourceLg); ?>;
+        readTextAloud("This is a test string.", lang);
+        LWT_LANG_DATA.tpVoiceApi = prevApi;
     }
 
     $(function () { checkLanguageForm(document.forms.lg_form); });
@@ -854,6 +894,20 @@ function edit_language_form($language): void
         </td>
     </tr>
     <tr>
+        <td class="td1 right">
+            Third-Party Text-to-Speech Voice API
+        </td>
+        <td class="td1">
+            <textarea class="checkoutsidebmp respinput" 
+            data_info="Third-Party Text-to-Speech API" 
+            name="LgTTSVoiceAPI" class="respinput"
+            value="<?php echo tohtml($language->ttsvoiceapi); ?>" 
+            maxlength="2048" rows="10"></textarea>
+            <hr style="color: transparent;" />
+            <input type="button" onclick="testVoiceAPI();" value="Test Voice API"/>
+        </td>
+    </tr>
+    <tr>
         <td class="td1 right" colspan="2">
             <input type="button" value="Cancel" 
             onclick="{lwt_form_check.resetDirty(); location.href='edit_languages.php';}" /> 
@@ -1033,8 +1087,9 @@ function edit_languages_new()
         <a href="docs/info.html#howtolang" target="_blank">Please read the documentation</a>. 
         Languages with a <b>non-Latin alphabet need special attention</b>, 
         <a href="docs/info.html#langsetup" target="_blank">see also here</a>.
-    </p>    
+    </p>
     <?php
+    edit_languages_displayThirdPartyVoiceAPI();
 }
 
 /**
@@ -1073,6 +1128,7 @@ function edit_languages_change($lid)
         may cause partial or complete loss of improved annotated texts!
     </p>
         <?php
+        edit_languages_displayThirdPartyVoiceAPI();
     }
     mysqli_free_result($res);
 }
