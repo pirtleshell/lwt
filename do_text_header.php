@@ -186,6 +186,10 @@ function browser_tts($text, $languageName): void
     $languageCode = getLanguageCode($lg_id, LWT_LANGUAGES_ARRAY);
     // Phonetic reading for this text
     $phoneticText = phonetic_reading($text, $languageCode);
+    $voiceApi = get_first_value(
+        "SELECT LgTTSVoiceApi AS value FROM {$tbpref}languages 
+        WHERE LgID = $lg_id"
+    );
     ?>
 <script type="text/javascript">
 
@@ -201,9 +205,7 @@ function browser_tts($text, $languageName): void
         rate: 0.8
     };
 
-    LWT_LANG_DATA.tpVoiceApi = <?php echo 
-    json_encode(getSetting('tts-third-party-api')); 
-    ?>;
+    LWT_LANG_DATA.tpVoiceApi = <?php echo json_encode($voiceApi); ?>;
 
     /** 
      * Check browser compatibility before reading 

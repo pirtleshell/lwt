@@ -1780,6 +1780,14 @@ function update_database($dbname)
             MODIFY COLUMN `AtID` smallint(5) unsigned NOT NULL AUTO_INCREMENT", 
             '', false
         );
+
+        // Since 2.10.0, you can add a third-party voice API
+        runsql(
+            "ALTER TABLE `{$tbpref}languages` 
+            ADD COLUMN `LgTTSVoiceApi` varchar(2048) DEFAULT NULL",
+            '', false
+        );
+
         
         // set to current.
         saveSetting('dbversion', $currversion);

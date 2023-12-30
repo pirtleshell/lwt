@@ -58,6 +58,12 @@ function translate_sentence($text, $translation): void
  */
 function translate_term($text, $file, $sl, $tl): void
 {
+    global $tbpref;
+    $lg_id = getSetting('currentlangage');
+    $voiceApi = get_first_value(
+        "SELECT LgTTSVoiceApi AS value FROM {$tbpref}languages 
+        WHERE LgID = $lg_id"
+    );
     ?>
 <h2 title="Translate with Google Translate">
     Word translation: <?php echo tohtml($text) ?> 
@@ -70,9 +76,7 @@ function translate_term($text, $file, $sl, $tl): void
 </h2>
 
 <script type="text/javascript">
-    LWT_LANG_DATA.tpVoiceApi = <?php 
-    echo json_encode(getSetting('tts-third-party-api')); 
-    ?>;
+    LWT_LANG_DATA.tpVoiceApi = <?php echo json_encode($voiceApi); ?>;
 
     $('#textToSpeech').on('click', function () {
             const txt = <?php echo json_encode($text); ?>;

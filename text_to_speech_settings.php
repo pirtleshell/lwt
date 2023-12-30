@@ -83,6 +83,12 @@ function tts_language_options()
  */
 function tts_displayThirdPartyVoiceAPI()
 {
+    global $tbpref;
+    $lg_id = (int) getSetting('currentlanguage');
+    $voiceApi = get_first_value(
+        "SELECT LgTTSVoiceApi AS value FROM {$tbpref}languages 
+        WHERE LgID = $lg_id"
+    );
     ?>
 
 <h3>Third-Party Voice API</h3>
@@ -106,9 +112,9 @@ style="background-color: #f0f0f0; padding: 10px; border: 1px solid #ccc;"
         <tr>
             <th class="th1 center">Voice API Request</th>
             <td class="td1 center">
-                <textarea id="voice-api" name="LgTPVoiceAPI" class="respinput" rows="10" 
+                <textarea id="voice-api" name="LgTTSVoiceApi" class="respinput" rows="10" 
                 cols="200" style="width: 378px; height: 211px;"><?php 
-                echo tohtml(getSetting('tts-third-party-api')); 
+                echo tohtml($voiceApi);
                 ?></textarea>
             </td>
             <td class="td1 center">
@@ -118,7 +124,6 @@ style="background-color: #f0f0f0; padding: 10px; border: 1px solid #ccc;"
         <tr>
             <td class="td1 right" colspan="4">
                 <input type="button" onclick="tts_settings.testTPVoiceAPI()" value="Test!" />
-                <input type="button" onclick="tts_settings.saveTPVoiceAPI()" value="Save" />
             </td>
         </tr>
     </table>
@@ -229,11 +234,16 @@ function tts_demo()
  */
 function tts_js()
 {
+    global $tbpref;
     $lid = (int) getSetting('currentlanguage');
-    $lg_code = getLanguageCode($lid, LWT_LANGUAGES_ARRAY)
+    $lg_code = getLanguageCode($lid, LWT_LANGUAGES_ARRAY);
+    $voiceApi = get_first_value(
+        "SELECT LgTTSVoiceApi AS value FROM {$tbpref}languages 
+        WHERE LgID = $lid"
+    );
     ?>
 <script type="text/javascript" charset="utf-8">
-    LWT_LANG_DATA.tpVoiceApi = <?php echo json_encode(getSetting('tts-third-party-api')); ?>;
+    LWT_LANG_DATA.tpVoiceApi = <?php echo json_encode($voiceApi); ?>;
 
     const tts_settings = {
         /** @var string current_language Current language being learnt. */
@@ -324,16 +334,6 @@ function tts_js()
             LWT_LANG_DATA.tpVoiceApi = $('#voice-api').val();
             tts_settings.readingDemo();
             LWT_LANG_DATA.tpVoiceApi = prevApi;
-        },
-        
-        /**
-         * Save third-party voice API settings.
-         * 
-         * @returns {undefined}
-         */
-        saveTPVoiceAPI: function() {
-            const voice_api = $('#voice-api').val();
-            do_ajax_save_setting('tts-third-party-api', voice_api)
         },
     };
 
