@@ -466,15 +466,16 @@ async function getPhoneticTextAsync(text,lang){return $.getJSON('api.php/v1/phon
 function deepReplace(obj,searchValue,replaceValue){for(let key in obj){if(typeof obj[key]==='object'){deepReplace(obj[key],searchValue,replaceValue)}else if(typeof obj[key]==='string'&&obj[key].includes(searchValue)){obj[key]=obj[key].replace(searchValue,replaceValue)}}}
 function deepFindValue(obj,searchValue){for(const key in obj){if(obj.hasOwnProperty(key)){if(typeof obj[key]==='string'&&obj[key].startsWith(searchValue)){return obj[key]}else if(typeof obj[key]==='object'){const result=deepFindValue(obj[key],searchValue);if(result){return result}}}}
 return null}
-function readRawTextAloud(text,lang,rate,pitch,voice){let msg=new SpeechSynthesisUtterance();const trimmed=lang.substring(0,2);const prefix='tts['+trimmed;msg.text=text;if(lang){msg.lang=lang}
-const useVoice=voice||getCookie(prefix+'Voice]');if(useVoice){const voices=window.speechSynthesis.getVoices();for(let i=0;i<voices.length;i++){if(voices[i].name===useVoice){msg.voice=voices[i]}}}
-if(rate){msg.rate=rate}else if(getCookie(prefix+'Rate]')){msg.rate=parseInt(getCookie(prefix+'Rate]'),10)}
-if(pitch){msg.pitch=pitch}else if(getCookie(prefix+'Pitch]')){msg.pitch=parseInt(getCookie(prefix+'Pitch]'),10)}
-if(LWT_LANG_DATA.tpVoiceApi){let fetchRequest=JSON.parse(LWT_LANG_DATA.tpVoiceApi);deepReplace(fetchRequest,'lwt_term',text)
+function readTextWithExternalApp(text,lang){let fetchRequest=JSON.parse(LWT_LANG_DATA.tpVoiceApi);deepReplace(fetchRequest,'lwt_term',text)
 deepReplace(fetchRequest,'lwt_lang',lang)
 fetchRequest.options.body=JSON.stringify(fetchRequest.options.body)
 fetch(fetchRequest.input,fetchRequest.options).then(response=>response.json()).then(data=>{const encodeString=deepFindValue(data,'data:')
 const utter=new Audio(encodeString)
-utter.play()}).catch(error=>{console.error(error)})}else{window.speechSynthesis.speak(msg)}
+utter.play()}).catch(error=>{console.error(error)})}
+function readRawTextAloud(text,lang,rate,pitch,voice){let msg=new SpeechSynthesisUtterance();const trimmed=lang.substring(0,2);const prefix='tts['+trimmed;msg.text=text;if(lang){msg.lang=lang}
+const useVoice=voice||getCookie(prefix+'Voice]');if(useVoice){const voices=window.speechSynthesis.getVoices();for(let i=0;i<voices.length;i++){if(voices[i].name===useVoice){msg.voice=voices[i]}}}
+if(rate){msg.rate=rate}else if(getCookie(prefix+'Rate]')){msg.rate=parseInt(getCookie(prefix+'Rate]'),10)}
+if(pitch){msg.pitch=pitch}else if(getCookie(prefix+'Pitch]')){msg.pitch=parseInt(getCookie(prefix+'Pitch]'),10)}
+if(LWT_LANG_DATA.tpVoiceApi){readTextWithExternalApp(text,lang)}else{window.speechSynthesis.speak(msg)}
 return msg}
 function readTextAloud(text,lang,rate,pitch,voice){if(lang.startsWith('ja')){getPhoneticTextAsync(text,lang).then(function(data){readRawTextAloud(data.phonetic_reading,lang,rate,pitch,voice)})}else{readRawTextAloud(text,lang,rate,pitch,voice)}}

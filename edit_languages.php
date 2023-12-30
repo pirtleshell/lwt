@@ -482,6 +482,13 @@ function edit_language_form($language): void
             .css("display", uses_key ? "inherit" : "none");
         },
 
+        displayLibreTranslateError: function(error) {
+            $('#translator_status')
+            .html('<a href="https://libretranslate.com/">LibreTranslate</a> server seems to be unreachable.' + 
+            'You can install it on your server with the <a href="">LibreTranslate installation guide</a>.' + 
+            'Error: ' + error);
+        },
+
         /**
          * Check status of the requested translation API.
          */
@@ -503,7 +510,7 @@ function edit_language_form($language): void
         /**
          * Check LibreTranslate translator status.
          */
-        checkLibreTranslateStatus(url, { key = "" } = {}) {
+        checkLibreTranslateStatus(url, key = "") {
             const trans_url = new URL(url);
             trans_url.searchParams.append('lwt_key', key);
             getLibreTranslateTranslation(trans_url, 'ping', 'en', 'es')
@@ -515,12 +522,7 @@ function edit_language_form($language): void
                     .attr('class', 'msgblue'); 
                 }
                 },
-                function (error) {
-                    $('#translator_status')
-                    .html('<a href="https://libretranslate.com/">LibreTranslate</a> server seems to be unreachable.' + 
-                    'You can install it on your server with the <a href="">LibreTranslate installation guide</a>.' + 
-                    'Error: ' + error); 
-                }
+                this.displayLibreTranslateError
             );
         },
 
@@ -650,18 +652,33 @@ function edit_language_form($language): void
         },
 
         checkVoiceAPI: function (api_value) {
-            const query = JSON.parse(api_value);
             message_field = $('#voice-api-message-zone');
-            if (query === null) {
+            if (api_value == "") {
                 message_field.hide();
                 return;
             }
+            // Check if we have "lwt_term"
             if (!api_value.includes("lwt_term")) {
-                message_field.text("Should set lwt_term!")
+                message_field.text('"lwt_term" is missing!')
                 message_field.show();
                 return false
             }
-
+            // Check if query can be parsed as JSON
+            let query;
+            try {
+                query = JSON.parse(api_value);
+            } catch (error) {
+                message_field.text("Cannot parse as JSON! " +  error)
+                message_field.show();
+                return false;
+            }
+            // Check if we find "lwt_term" in JSON
+            if (deepFindValue(query, "lwt_term") === null) {
+                message_field.text("Cannot find 'lwt_term' in JSON!")
+                message_field.show();
+                return false;
+            }
+            message_field.hide();
             return true;
         },
 
@@ -1024,7 +1041,7 @@ function edit_language_form($language): void
         </td>
         <td class="td1">
             <input type="text" class="respinput" name="LgVoiceAPIDemo" 
-            title="Demo text to read." value="Read this text."  />
+            title="Input any text you want to read." value="Read this demo text."  />
             <textarea class="checkoutsidebmp respinput" 
             data_info="Third-Party Text-to-Speech API" 
             name="LgTTSVoiceAPI" class="respinput"
@@ -1033,8 +1050,12 @@ function edit_language_form($language): void
             onchange="edit_languages_js.checkVoiceAPI(this.value);"
             ><?php echo tohtml($language->ttsvoiceapi); ?></textarea>
             <hr style="color: transparent;" />
+
+            <input type="button" 
+            onclick="edit_languages_js.checkVoiceAPI(document.forms.lg_form.LgTTSVoiceAPI.value);" 
+            value="Check Voice API Errors"/>
             <input type="button" onclick="edit_languages_js.testVoiceAPI();" 
-            value="Test Voice API"/>
+            value="Test!"/>
             <p hidden class="error" id="voice-api-message-zone"></p>
         </td>
     </tr>

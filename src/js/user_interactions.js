@@ -248,6 +248,28 @@ function deepFindValue(obj, searchValue) {
     return null; // Return null if no matching string is found
 }
 
+function readTextWithExternalApp(text, lang) {
+    let fetchRequest = JSON.parse(LWT_LANG_DATA.tpVoiceApi);
+
+    // TODO: can expose more vars to Request
+    deepReplace(fetchRequest, 'lwt_term', text)
+    deepReplace(fetchRequest, 'lwt_lang', lang)
+
+
+    fetchRequest.options.body = JSON.stringify(fetchRequest.options.body)
+
+    fetch(fetchRequest.input, fetchRequest.options)
+    .then(response => response.json())
+    .then(data => {
+        const encodeString = deepFindValue(data, 'data:')
+        const utter = new Audio(encodeString)
+        utter.play()
+    })
+    .catch(error => {
+        console.error(error)
+    });
+}
+
 /**
  * Read a text aloud, works with a phonetic version only.
  * 
@@ -291,25 +313,7 @@ function deepFindValue(obj, searchValue) {
         msg.pitch = parseInt(getCookie(prefix + 'Pitch]'), 10);
     }
     if (LWT_LANG_DATA.tpVoiceApi) {
-        let fetchRequest = JSON.parse(LWT_LANG_DATA.tpVoiceApi);
-
-        // TODO: can expose more vars to Request
-        deepReplace(fetchRequest, 'lwt_term', text)
-        deepReplace(fetchRequest, 'lwt_lang', lang)
-
-
-        fetchRequest.options.body = JSON.stringify(fetchRequest.options.body)
-
-        fetch(fetchRequest.input, fetchRequest.options)
-        .then(response => response.json())
-        .then(data => {
-            const encodeString = deepFindValue(data, 'data:')
-            const utter = new Audio(encodeString)
-            utter.play()
-        })
-        .catch(error => {
-            console.error(error)
-        });
+        readTextWithExternalApp(text, lang);
     } else {
         window.speechSynthesis.speak(msg);
     }
