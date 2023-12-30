@@ -142,25 +142,40 @@ function tts_settings_form()
             <?php tts_demo(); ?>
         </tr>
         <tr>
-            <th class="th1 center" rowspan="1">Voice API Request</th>
-            <td class="td1 center">Enter Voice API Request   <pre style="text-align: left;background-color: #f0f0f0; font-family: monospace; padding: 10px; border: 1px solid #ccc; white-space: pre-wrap;"class="code-block">
-{
-"input": ...,
-"options": ...
-}</pre>;'lwt_text'(required),'lwt_lang"(optional)</td>
-            <td class="td1 center">
-            <textarea id="request" name="LgRequest" class="respinput" rows="10" cols="200" style="width: 378px; height: 211px;"></textarea>
-            </td>
-            <td class="td1 center">
-                <img src="<?php print_file_path("icn/status.png") ?>" />
-            </td>
-        </tr>
-        <tr>
             <td class="td1 right" colspan="4">
                 <input type="button" value="Cancel" 
                 onclick=
                 "{lwt_form_check.resetDirty(); location.href='text_to_speech_settings.php';}" /> 
                 <input type="submit" name="op" value="Save" />
+            </td>
+        </tr>
+    </table>
+    <h2>Advanced Settings</h2>
+    <h3>Third-Party Voice API</h3>
+    <p>
+        You can customize the voice API using an external service. 
+        You have to use the following format.
+    </p>
+    <pre 
+    style="text-align: left;background-color: #f0f0f0; font-family: monospace; padding: 10px; border: 1px solid #ccc; white-space: pre-wrap;"
+    class="code-block">
+{
+"input": ...,
+"options": ...
+}
+    </pre>
+    <p>
+        LWT will insert text in <code>lwt_text</code> (required), 
+        you can specify the language with <code>lwt_lang</code> (optional).
+    </p>
+    <table class="tab1" cellspacing="0" cellpadding="5">
+        <tr>
+            <th class="th1 center">Voice API Request</th>
+            <td class="td1 center">
+                <textarea id="request" name="LgRequest" class="respinput" rows="10" cols="200" style="width: 378px; height: 211px;"></textarea>
+            </td>
+            <td class="td1 center">
+                <img src="<?php print_file_path("icn/status.png") ?>" />
             </td>
         </tr>
     </table>

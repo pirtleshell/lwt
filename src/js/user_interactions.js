@@ -208,43 +208,44 @@ async function getPhoneticTextAsync(text, lang) {
   
 
 /**
- * Helper function used in readRawTextAloud
+ * Replace any searchValue on object value by replaceValue with deepth.
  * 
  * @param {dict} obj to search in
- * @param {string} string to find
- * @param {string} replacement variable
+ * @param {string} searchValue to find
+ * @param {string} replaceValue variable
  * */
-function deepReplace(obj, searchString, replaceVar) {
+function deepReplace(obj, searchValue, replaceValue) {
     for (let key in obj) {
-      if (typeof obj[key] === 'object') {
-        // Recursively search nested objects
-        deepReplace(obj[key], searchString, replaceVar);
-      } else if (typeof obj[key] === 'string' && obj[key].includes(searchString)) {
-        // If the property is a string and contains the searchString, replace it
-        obj[key] = obj[key].replace(searchString,replaceVar );
-      }
+        if (typeof obj[key] === 'object') {
+            // Recursively search nested objects
+            deepReplace(obj[key], searchValue, replaceValue);
+        } else if (typeof obj[key] === 'string' && obj[key].includes(searchValue)) {
+            // If the property is a string and contains the searchValue, replace it
+            obj[key] = obj[key].replace(searchValue, replaceValue);
+        }
     }
   }
   
 /**
- * Helper function used in readRawTextAloud
+ * Find the first string starting with searchValue in object.
  * 
- * @param {dict} obj object to search in
+ * @param {dict}   obj         Object to search in
+ * @param {string} searchValue Value to search
  */
-function findDataString(obj) {
-for (const key in obj) {
-if (obj.hasOwnProperty(key)) {
-if (typeof obj[key] === 'string' && obj[key].startsWith('data:')) {
-    return obj[key];
-} else if (typeof obj[key] === 'object') {
-    const result = findDataString(obj[key]);
-    if (result) {
-        return result;
+function findDataString(obj, searchValue) {
+    for (const key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            if (typeof obj[key] === 'string' && obj[key].startsWith(searchValue)) {
+                return obj[key];
+            } else if (typeof obj[key] === 'object') {
+                const result = findDataString(obj[key], searchValue);
+                if (result) {
+                    return result;
+                }
+            }
+        }
     }
-}
-}
-}
-return null; // Return null if no matching string is found
+    return null; // Return null if no matching string is found
 }
 
 /**
@@ -276,7 +277,7 @@ return null; // Return null if no matching string is found
             if (voices[i].name === useVoice) {
                 msg.voice = voices[i];
             }
-          }
+        }
     }
     if (rate) {
         msg.rate = rate;
@@ -288,31 +289,31 @@ return null; // Return null if no matching string is found
     } else if (getCookie(prefix + 'Pitch]')) {
         msg.pitch = parseInt(getCookie(prefix + 'Pitch]'), 10);
     }
-    if (getCookie(prefix + 'Request]') != "")
-    {
+    if (
+        getCookie(prefix + 'Request]') != "" &&
+        JSON.parse(getCookie(prefix+ 'Request]')) !== null
+    ) {
         let fetchRequest = JSON.parse(getCookie(prefix+ 'Request]'));
 
-    //TODO can expose more vars to Request
-    deepReplace(fetchRequest,'lwt_term',text)
-     deepReplace(fetchRequest,'lwt_lang',lang)
+        // TODO: can expose more vars to Request
+        deepReplace(fetchRequest,'lwt_term',text)
+        deepReplace(fetchRequest,'lwt_lang',lang)
 
 
-fetchRequest.options.body = JSON.stringify(fetchRequest.options.body)
+        fetchRequest.options.body = JSON.stringify(fetchRequest.options.body)
 
-fetch(fetchRequest.input, fetchRequest.options)
-.then(response => response.json())
-.then(data => {
-
-const encodeString = findDataString(data)
-const utter = new Audio(encodeString)
-utter.play()
-})
-.catch(error => {
-   console.error(error)
-});
-    }
-    else {
-    window.speechSynthesis.speak(msg);
+        fetch(fetchRequest.input, fetchRequest.options)
+        .then(response => response.json())
+        .then(data => {
+            const encodeString = findDataString(data, 'data:')
+            const utter = new Audio(encodeString)
+            utter.play()
+        })
+        .catch(error => {
+            console.error(error)
+        });
+    } else {
+        window.speechSynthesis.speak(msg);
     }
     return msg;
 }
