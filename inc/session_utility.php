@@ -2409,16 +2409,23 @@ function get_annotation_position_selectoptions($v): string
 }
 // -------------------------------------------------------------
 
-function get_hts_selectoptions($v): string
+function get_hts_selectoptions($current_setting): string
 {
-    if (! isset($v) ) { $v = 1; 
+    if (!isset($current_setting)) { 
+        $current_setting = 1; 
     }
-    $r = "<option value=\"1\"" . get_selected($v, 1);
-    $r .= ">Never</option>";
-    $r .= "<option value=\"2\"" . get_selected($v, 2);
-    $r .= ">On Click</option>";
-    $r .= "<option value=\"3\"" . get_selected($v, 3);
-    $r .= ">On Hover</option>";
+    $options = array(
+        1 => "Never",
+        2 => "On Click",
+        3 => "On Hover"
+    );
+    $r = "";
+    foreach ($options as $key => $value) {
+        $r .= sprintf(
+            '<option value="%d"%s>%s</option>', 
+            $key, get_selected($current_setting, $key), $value
+        );
+    }
     return $r;
 }
 

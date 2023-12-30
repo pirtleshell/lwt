@@ -642,6 +642,8 @@ function word_dblclick_event_do_text_text () {
 /**
  * Do a word edition window. Usually called when the user clicks on a word.
  * 
+ * @since 2.9.10-fork Read word aloud if HTS equals 2.
+ * 
  * @returns {bool} false
  */
 function word_click_event_do_text_text () {
@@ -693,6 +695,10 @@ function word_click_event_do_text_text () {
       $(this).text(), $(this).attr('data_wid'), status, multi_words, RTL, ann
     );
   }
+  if (HTS == 2) {
+    const lg = getLangFromDict(WBLINK3);
+    readTextAloud($(this).text(), lg);
+  }
   return false;
 }
 
@@ -715,10 +721,10 @@ function mword_click_event_do_text_text () {
       $(this).attr('data_wid'), status, $(this).attr('data_code'), ann
     );
   }
-  if (HTS == 2) { 
+  if (HTS == 2) {
     const lg = getLangFromDict(WBLINK3);
     readTextAloud($(this).text(), lg);
-    }
+  }
   return false;
 }
 

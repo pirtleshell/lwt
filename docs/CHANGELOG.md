@@ -13,6 +13,17 @@ ones are marked like "v1.0.0-fork".
 * New globals ([#163](https://github.com/HugoFara/lwt/issues/163)):
   * On `inc/kernel_utility.php`: `LWT_APP_VERSION` and `LWT_RELEASE_DATE`.
   * On `api.php`: `LWT_API_VERSION` and `LWT_API_RELEASE_DATE`.
+* Word reading can be allowed on hover or on click. 
+Pull request [#147](https://github.com/HugoFara/lwt/pull/147) by 
+[@ProgramComputer](https://github.com/ProgramComputer).
+
+
+### Added
+
+* `unloadformcheck.js` no declares a new object `lwt_form_check` that contains all the functions needed.
+* New globals ([#163](https://github.com/HugoFara/lwt/issues/163)):
+  * On `inc/kernel_utility.php`: `LWT_APP_VERSION` and `LWT_RELEASE_DATE`.
+  * On `api.php`: `LWT_API_VERSION` and `LWT_API_RELEASE_DATE`.
 
 ### Fixed
 
