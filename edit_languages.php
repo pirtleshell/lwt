@@ -377,7 +377,7 @@ style="background-color: #f0f0f0; padding: 10px; border: 1px solid #ccc;"
     "options": ...
 }</code></pre>
 <p>
-    LWT will insert text in <code>lwt_text</code> (required), 
+    LWT will insert text in <code>lwt_term</code> (required), 
     you can specify the language with <code>lwt_lang</code> (optional).
 </p>
     <?php
@@ -414,58 +414,51 @@ function edit_language_form($language): void
     }
     ?>
 <script type="text/javascript">
+    const edit_languages_js = {
+        reloadDictURLs: function(sourceLg='auto', targetLg='en') {
+            let base_url = window.location.href;
+            base_url = base_url.substring(0, base_url.lastIndexOf('/'));
 
-    const new_language = <?php echo json_encode($language->name == null); ?>;
+            GGTRANSLATE = 'https://translate.google.com/?' + $.param({
+                    ie: "UTF-8",
+                    sl: sourceLg,
+                    tl: targetLg,
+                    text: 'lwt_term'
+            });
 
-    function reloadDictURLs(sourceLg='auto', targetLg='en') {
+            LIBRETRANSLATE = 'http://localhost:5000/?' + $.param({
+                lwt_translator: 'libretranslate',
+                source: sourceLg,
+                target: targetLg,
+                q: "lwt_term"
+            });
 
-        let base_url = window.location.href;
-        base_url = base_url.substring(0, base_url.lastIndexOf('/'));
+            GGL = base_url + '/ggl.php/?' + $.param({
+                sl: sourceLg, tl: targetLg, text: 'lwt_term'
+            });
+        },
 
-        GGTRANSLATE = 'https://translate.google.com/?' + $.param({
-                ie: "UTF-8",
-                sl: sourceLg,
-                tl: targetLg,
-                text: 'lwt_term'
-        });
 
-        LIBRETRANSLATE = 'http://localhost:5000/?' + $.param({
-            lwt_translator: 'libretranslate',
-            source: sourceLg,
-            target: targetLg,
-            q: "lwt_term"
-        });
+        /**
+         * Check for specific language option based on language name 
+         */
+        checkLanguageChanged: function(value) {
+            if (value == "Japanese") {
+                $(document.forms.lg_form.LgRegexpAlt).css("display", "block");
+            } else {
+                $(document.forms.lg_form.LgRegexpAlt).css("display", "none");
+            }
+        },
 
-        GGL = base_url + '/ggl.php/?' + $.param({
-            sl: sourceLg, tl: targetLg, text: 'lwt_term'
-        });
-    }
-
-    reloadDictURLs(
-        <?php echo json_encode($sourceLg); ?>, 
-        <?php echo json_encode($targetLg); ?>
-    );
-
-    /**
-     * Check for specific language option based on language name 
-     */
-    function checkLanguageChanged(value) {
-        if (value == "Japanese") {
-            $(document.forms.lg_form.LgRegexpAlt).css("display", "block");
-        } else {
-            $(document.forms.lg_form.LgRegexpAlt).css("display", "none");
-        }
-    }
-
-    /**
-     * Handles any change on multi-words translate mode.
-     */
-    function multiWordsTranslateChange(value) {
-        let result;
-        let uses_key = false;
-        let base_url = window.location.href;
-        base_url = base_url.replace('/edit_languages.php', '/');
-        switch (value) {
+        /**
+         * Handles any change on multi-words translate mode.
+         */
+        multiWordsTranslateChange: function(value) {
+            let result;
+            let uses_key = false;
+            let base_url = window.location.href;
+            base_url = base_url.replace('/edit_languages.php', '/');
+            switch (value) {
             case "google_translate":
                 result = GGTRANSLATE;
                 break;
@@ -479,113 +472,111 @@ function edit_language_form($language): void
             case "glosbe":
                 result = base_url + "glosbe.php";
                 break;
-        }
-        if (result) {
-            document.forms.lg_form.LgGoogleTranslateURI.value = result;
-        }
-        $('#LgTranslatorKeyWrapper')
-        .css("display", uses_key ? "inherit" : "none");
-    }
-
-    /**
-     * Check status of the requested translation API.
-     */
-    function checkTranslatorStatus(url) {
-        if (url.startsWith('*')) {
-            url = url.substring(1);
-        }
-        const url_obj = new URL(url);
-        const params = url_obj.searchParams;
-        if (params.get('lwt_translator') == 'libretranslate') {
-            try {
-                checkLibreTranslateStatus(url_obj, key=params.key);
-            } catch (error) {
-                $('#translator_status')
-                .html('<a href="https://libretranslate.com/">LibreTranslate</a> server seems to be unreachable.' + 
-                'You can install it on your server with the <a href="">LibreTranslate installation guide</a>.' + 
-                'Error: ' + error); 
             }
-        }
-    }
+            if (result) {
+                document.forms.lg_form.LgGoogleTranslateURI.value = result;
+            }
+            $('#LgTranslatorKeyWrapper')
+            .css("display", uses_key ? "inherit" : "none");
+        },
 
-    /**
-     * Check LibreTranslate translator status.
-     */
-    function checkLibreTranslateStatus(url, key="") {
-        const trans_url = new URL(url);
-        trans_url.searchParams.append('lwt_key', key);
-        getLibreTranslateTranslation(trans_url, 'ping', 'en', 'es')
-        .then(
-            function (translation) {
+        /**
+         * Check status of the requested translation API.
+         */
+        checkTranslatorStatus(url) {
+            if (url.startsWith('*')) {
+            url = url.substring(1);
+            }
+            const url_obj = new URL(url);
+            const params = url_obj.searchParams;
+            if (params.get('lwt_translator') == 'libretranslate') {
+            try {
+                this.checkLibreTranslateStatus(url_obj, { key: params.key });
+            } catch (error) {
+                this.displayLibreTranslateError(error);
+            }
+            }
+        },
+
+        /**
+         * Check LibreTranslate translator status.
+         */
+        checkLibreTranslateStatus(url, { key = "" } = {}) {
+            const trans_url = new URL(url);
+            trans_url.searchParams.append('lwt_key', key);
+            getLibreTranslateTranslation(trans_url, 'ping', 'en', 'es')
+            .then(
+                function (translation) {
                 if (typeof translation === "string") {
                     $('#translator_status')
                     .html('<a href="https://libretranslate.com/">LibreTranslate</a> online!')
                     .attr('class', 'msgblue'); 
-                } 
-            },
-            function (error) {
-                $('#translator_status')
-                .html('<a href="https://libretranslate.com/">LibreTranslate</a> server seems to be unreachable.' + 
-                'You can install it on your server with the <a href="">LibreTranslate installation guide</a>.' + 
-                'Error: ' + error); 
-            }
-        );
-    }
+                }
+                },
+                function (error) {
+                    $('#translator_status')
+                    .html('<a href="https://libretranslate.com/">LibreTranslate</a> server seems to be unreachable.' + 
+                    'You can install it on your server with the <a href="">LibreTranslate installation guide</a>.' + 
+                    'Error: ' + error); 
+                }
+            );
+        },
 
-    /**
-     * Change the size of demo text.
-     */
-    function changeLanguageTextSize(value) {
-        $('#LgTextSizeExample').css("font-size", value + "%");
-    }
+        /**
+         * Change the size of demo text.
+         */
+        changeLanguageTextSize(value) {
+            $('#LgTextSizeExample').css("font-size", value + "%");
+        },
 
-    /**
-     * Handle changes to the words split method.
-     */
-    function wordCharChange(value) {
-        const regex = LANGDEFS[<?php echo json_encode($language->name); ?>][3];
-        const mecab = "mecab";
+        /**
+         * Handle changes to the words split method.
+         */
+        wordCharChange(value) {
+            const regex = LANGDEFS[<?php echo json_encode($language->name); ?>][3];
+            const mecab = "mecab";
 
-        let result;
-        switch (value) {
+            let result;
+            switch (value) {
             case "regexp":
                 result = regex;
                 break;
             case "mecab":
                 result = mecab;
                 break;
-        }
-        if (result) {
+            }
+            if (result) {
             document.forms.lg_form.LgRegexpWordCharacters.value = result;
-        }
-    }
+            }
+        },
 
-    /**
-     * Build a dictionary/translator URL with the pop-up option
-     */
-    function addPopUpOption(url, checked) {
-        if (url.startsWith('*')) {
-            url = url.substring(1);
-        }
-        const built_url = new URL(url);
-        // Remove trivial cases
-        if (checked && built_url.searchParams.has('lwt_popup'))
+        /**
+         * Build a dictionary/translator URL with the pop-up option
+         */
+        addPopUpOption: function(url, checked) {
+            if (url.startsWith('*')) {
+                url = url.substring(1);
+            }
+            const built_url = new URL(url);
+            // Remove trivial cases
+            if (checked && built_url.searchParams.has('lwt_popup'))
+                return built_url.href;
+            if (!checked && !built_url.searchParams.has('lwt_popup'))
+                return built_url.href;
+            // Now we should change status
+            if (checked) {
+                built_url.searchParams.append('lwt_popup', 'true');
+                return built_url.href;
+            }
+            built_url.searchParams.delete('lwt_popup');
             return built_url.href;
-        if (!checked && !built_url.searchParams.has('lwt_popup'))
-            return built_url.href;
-        // Now we should change status
-        if (checked) {
-            built_url.searchParams.append('lwt_popup', 'true');
-            return built_url.href;
-        }
-        built_url.searchParams.delete('lwt_popup');
-        return built_url.href;
-    }
+        },
+
 
     /**
      * Change the Pop-Up URL of dictionary.
      */
-    function changePopUpState(elem) {
+    changePopUpState: function (elem) {
         const l_form = document.forms.lg_form;
         let target;
         switch (elem.name) {
@@ -600,12 +591,12 @@ function edit_language_form($language): void
                 break;
         }
         target.value = addPopUpOption(target.value, elem.checked);
-    }
+    },
 
     /**
      * Change Pop-Up checkboxes based on input box value. 
      */
-    function checkDictionaryChanged(input_box) {
+    checkDictionaryChanged: function(input_box) {
         const l_form = document.forms.lg_form;
         if (input_box.value == '')
             return;
@@ -627,12 +618,12 @@ function edit_language_form($language): void
         }
         popup = popup || (new URL(input_box.value)).searchParams.has("lwt_popup");
         target.checked = popup;
-    }
+    },
 
     /**
      * Modify the value of the translator select box if not coherent with the URL.
      */
-    function checkTranslatorType(url, type_select) {
+    checkTranslatorType: function (url, type_select) {
         const parsed_url = new URL(url);
         let final_value;
         switch (parsed_url.searchParams.get("lwt_translator")) {
@@ -646,6 +637,133 @@ function edit_language_form($language): void
                 break;
         }
         type_select.value = final_value;
+    },
+
+    /**
+     * Check the word splitting method.
+     */
+    checkWordChar: function (method) {
+        const method_option = (method == "mecab") ? "mecab" : "regexp";
+        document.forms.lg_form.LgRegexpAlt.value = method_option;
+    },
+
+    checkVoiceAPI: function (api_value) {
+        const query = JSON.parse(api_value);
+        if (query === null) 
+            return false;
+        return true;
+    },
+
+
+    testVoiceAPI: function () {
+        const api_value = document.forms.lg_form.LgTTSVoiceAPI.value;
+        const prevApi = LWT_LANG_DATA.tpVoiceApi;
+        LWT_LANG_DATA.tpVoiceApi = api_value;
+        const lang = <?php echo json_encode($sourceLg); ?>;
+        readTextAloud("This is a test string.", lang);
+        LWT_LANG_DATA.tpVoiceApi = prevApi;
+    }
+
+
+    }
+
+    function reloadDictURLs(sourceLg='auto', targetLg='en') {
+        return edit_languages_js.reloadDictURLs(sourceLg, targetLg)
+    }
+
+    edit_languages_js.reloadDictURLs(
+        <?php echo json_encode($sourceLg); ?>, 
+        <?php echo json_encode($targetLg); ?>
+    );
+
+    /**
+     * Check for specific language option based on language name.
+     * 
+     * @deprecated Since 2.10.0, use edit_languages_js.checkLanguageChanged.
+     */
+    function checkLanguageChanged(value) {
+        return edit_languages_js.checkLanguageChanged(value);
+    }
+
+    /**
+     * Handles any change on multi-words translate mode.
+     * 
+     * @deprecated Since 2.10.0, use edit_languages_js.multiWordsTranslateChange.
+     */
+    function multiWordsTranslateChange(value) {
+        return edit_languages_js.multiWordsTranslateChange(value);
+    }
+
+    /**
+     * Check status of the requested translation API.
+     * 
+     * @deprecated Since 2.10.0, use edit_languages_js.checkTranslatorStatus
+     */
+    function checkTranslatorStatus(url) {
+        return edit_languages_js.checkTranslatorStatus(url);
+    }
+
+    /**
+     * Check LibreTranslate translator status.
+     * 
+     * @deprecated Since 2.10.0, use edit_languages_js.checkLibreTranslateStatus
+     */
+    function checkLibreTranslateStatus(url, key="") {
+        return edit_languages_js.checkLibreTranslateStatus(url, key);
+    }
+
+    /**
+     * Change the size of demo text.
+     * 
+     * @deprecated Since 2.10.0, use edit_languages_js.changeLanguageTextSize
+     */
+    function changeLanguageTextSize(value) {
+        return edit_languages_js.changeLanguageTextSize(value);
+    }
+
+    /**
+     * Handle changes to the words split method.
+     * 
+     * @deprecated Since 2.10.0, use edit_languages_js.wordCharChange
+     */
+    function wordCharChange(value) {
+        return edit_languages_js.wordCharChange(value);
+    }
+
+    /**
+     * Build a dictionary/translator URL with the pop-up option
+     * 
+     * @deprecated Since 2.10.0, use edit_languages_js.addPopUpOption
+     */
+    function addPopUpOption(url, checked) {
+        return edit_languages_js.addPopUpOption(url, checked);
+    }
+
+    /**
+     * Change the Pop-Up URL of dictionary.
+     * 
+     * @deprecated Since 2.10.0, use edit_languages_js.changePopUpState
+     */
+    function changePopUpState(elem) {
+        return edit_languages_js.changePopUpState(elem);
+    }
+
+    /**
+     * Change Pop-Up checkboxes based on input box value. 
+     * 
+     * @deprecated Since 2.10.0, use edit_languages_js.checkDictionaryChanged
+     */
+    function checkDictionaryChanged(input_box) {
+        return edit_languages_js.checkDictionaryChanged(input_box);
+    }
+
+    /**
+     * Modify the value of the translator select box if not coherent with the URL.
+     * 
+     * @deprecated Since 2.10.0, use edit_languages_js.checkTranslatorType
+     */
+    function checkTranslatorType(url, type_select) {
+        return edit_languages_js.checkTranslatorType(url, type_select);
     }
 
     /**
@@ -661,17 +779,15 @@ function edit_language_form($language): void
 
     /**
      * Check the word splitting method.
+     * 
+     * @deprecated Since 2.10.0, use edit_languages_js.checkWordChar
      */
     function checkWordChar(method) {
-        const method_option = (method == "mecab") ? "mecab" : "regexp";
-        document.forms.lg_form.LgRegexpAlt.value = method_option;
+        return edit_languages_js.checkWordChar(method);
     }
 
     function checkVoiceAPI(api_value) {
-        const query = JSON.parse(api_value);
-        if (query === null) 
-            return false;
-        return true;
+        return edit_languages_js.checkVoiceAPI(api_value);
     }
 
     /**
@@ -688,12 +804,7 @@ function edit_language_form($language): void
     }
 
     function testVoiceAPI() {
-        const api_value = document.forms.lg_form.LgTTSVoiceAPI.value;
-        const prevApi = LWT_LANG_DATA.tpVoiceApi;
-        LWT_LANG_DATA.tpVoiceApi = api_value;
-        const lang = <?php echo json_encode($sourceLg); ?>;
-        readTextAloud("This is a test string.", lang);
-        LWT_LANG_DATA.tpVoiceApi = prevApi;
+        return edit_languages_js.testVoiceAPI();
     }
 
     $(function () { checkLanguageForm(document.forms.lg_form); });
