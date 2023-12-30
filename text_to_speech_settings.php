@@ -86,29 +86,36 @@ function tts_displayThirdPartyVoiceAPI()
     ?>
 
 <h3>Third-Party Voice API</h3>
-    <p>
-        You can customize the voice API using an external service. 
-        You have to use the following JSON format.
-    </p>
-    <pre 
-    style="background-color: #f0f0f0; padding: 10px; border: 1px solid #ccc;"
-    ><code lang="json"
-    >{
+<p>
+    You can customize the voice API using an external service. 
+    You have to use the following JSON format.
+</p>
+<pre 
+style="background-color: #f0f0f0; padding: 10px; border: 1px solid #ccc;"
+><code lang="json"
+>{
     "input": ...,
     "options": ...
 }</code></pre>
-    <p>
-        LWT will insert text in <code>lwt_text</code> (required), 
-        you can specify the language with <code>lwt_lang</code> (optional).
-    </p>
+<p>
+    LWT will insert text in <code>lwt_text</code> (required), 
+    you can specify the language with <code>lwt_lang</code> (optional).
+</p>
+<form class="validate" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
     <table class="tab1" cellspacing="0" cellpadding="5">
         <tr>
             <th class="th1 center">Voice API Request</th>
             <td class="td1 center">
-                <textarea id="request" name="LgRequest" class="respinput" rows="10" cols="200" style="width: 378px; height: 211px;"></textarea>
+                <textarea id="voice-api" name="LgTPVoiceAPI" class="respinput" rows="10" 
+                cols="200" style="width: 378px; height: 211px;"></textarea>
             </td>
             <td class="td1 center">
                 <img src="<?php print_file_path("icn/status.png") ?>" />
+            </td>
+        </tr>
+        <tr>
+            <td class="td1 right" colspan="4">
+                <input type="submit" name="op" value="Save Third-Party Voice" />
             </td>
         </tr>
     </table>
@@ -122,7 +129,7 @@ function tts_displayThirdPartyVoiceAPI()
  */
 function tts_settings_form()
 {
-    ?>    
+    ?>
 <form class="validate" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
     <table class="tab1" cellspacing="0" cellpadding="5">
         <tr>
@@ -188,9 +195,9 @@ function tts_settings_form()
             </td>
         </tr>
     </table>
-    <h2>Advanced Settings</h2>
-    <?php tts_displayThirdPartyVoiceAPI(); ?>
 </form>
+<h2>Advanced Settings</h2>
+<?php tts_displayThirdPartyVoiceAPI(); ?>
     <?php
 }
 
@@ -268,7 +275,7 @@ function tts_js()
         );
         $('#rate').val(getCookie('tts[' + CURRENT_LANGUAGE + 'Rate]'));
         $('#pitch').val(getCookie('tts[' + CURRENT_LANGUAGE + 'Pitch]'));
-        $('#request').val(getCookie('tts[' + CURRENT_LANGUAGE + 'Request]'));
+        $('#voice-api').val(getCookie('tts[' + CURRENT_LANGUAGE + 'TPVoiceAPI]'));
     }
 
     /**
@@ -357,17 +364,39 @@ function tts_save_settings($form): void
         'path' => '/',
         'samesite' => 'Strict' // None || Lax || Strict
     );
-    //setcookie($prefix . ']', $record['LgID'], $cookie_options);
     setcookie($prefix . 'Voice]', $form['LgVoice'], $cookie_options);
     setcookie($prefix . 'Rate]', $form['LgTTSRate'], $cookie_options);
     setcookie($prefix . 'Pitch]', $form['LgPitch'], $cookie_options);
-    setcookie($prefix. 'Request]',$form['LgRequest'],$cookie_options);
+}
+
+/**
+ * Save the third-party voice API setting as cookies.
+ *
+ * @param array $form Inputs from the main form.
+ * 
+ * @return void
+ */
+function tts_saveVoiceAPI($form): void
+{
+    //$lgname = $form['LgName'];
+    $lgname = '';
+    $prefix = 'tts[' . $lgname;
+    $cookie_options = array(
+        'expires' => strtotime('+5 years'),
+        'path' => '/',
+        'samesite' => 'Strict' // None || Lax || Strict
+    );
+    setcookie($prefix. 'TPVoiceAPI]', $form['LgTPVoiceAPI'], $cookie_options);
 }
 
 $message = '';
-if (array_key_exists('op', $_REQUEST) && $_REQUEST['op'] == 'Save') {
-    tts_save_settings($_REQUEST);
-    $message = "Settings saved!";
+if (array_key_exists('op', $_REQUEST)) {
+    if ($_REQUEST['op'] == 'Save') {
+        tts_save_settings($_REQUEST);
+        $message = "Settings saved!";
+    } else if ($_REQUEST['op'] == 'Save Third-Party Voice') {
+        $message = tts_saveVoiceAPI($_REQUEST);
+    }
 }
 tts_settings_full_page($message);
 
