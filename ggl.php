@@ -70,6 +70,10 @@ function translate_term($text, $file, $sl, $tl): void
 </h2>
 
 <script type="text/javascript">
+    LWT_LANG_DATA.tpVoiceApi = <?php 
+    echo json_encode(getSetting('tts-third-party-api')); 
+    ?>;
+
     $('#textToSpeech').on('click', function () {
             const txt = <?php echo json_encode($text); ?>;
             readTextAloud(txt, <?php echo json_encode($sl); ?>);

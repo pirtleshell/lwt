@@ -197,10 +197,13 @@ function browser_tts($text, $languageName): void
         /// {string} ISO code for the language
         lang: getLangFromDict(WBLINK3) || <?php echo json_encode($languageCode); ?>,
 
-        /// {string} Rate at wich the speech is done
+        /// {string} Rate at wich the speech is done, deprecated since 2.10.0
         rate: 0.8
-
     };
+
+    LWT_LANG_DATA.tpVoiceApi = <?php echo 
+    json_encode(getSetting('tts-third-party-api')); 
+    ?>;
 
     /** 
      * Check browser compatibility before reading 

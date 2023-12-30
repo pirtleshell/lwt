@@ -54,6 +54,7 @@ $(document).on('click','.delete_selection',lwt_feed_wizard.deleteSelection);$(do
  * @author  andreask7 <andreasks7@users.noreply.github.com>
  * @since   1.6.16-fork
  */
+LWT_LANG_DATA={wblink1:'',whlink2:'',wblink3:'',delimiter:'',rtl:!1,tpVoiceApi:''}
 TEXTPOS=-1;OPENED=0;WID=0;TID=0;WBLINK1='';WBLINK2='';WBLINK3='';SOLUTION='';ADDFILTER='';RTL=0;ANN_ARRAY={};DELIMITER='';JQ_TOOLTIP=0;HTS=0;function setTransRoman(tra,rom){let form_changed=!1;if($('textarea[name="WoTranslation"]').length==1){$('textarea[name="WoTranslation"]').val(tra);form_changed|=!0}
 if($('input[name="WoRomanization"]').length==1){$('input[name="WoRomanization"]').val(rom);form_changed|=!0}
 if(form_changed)
@@ -469,7 +470,7 @@ function readRawTextAloud(text,lang,rate,pitch,voice){let msg=new SpeechSynthesi
 const useVoice=voice||getCookie(prefix+'Voice]');if(useVoice){const voices=window.speechSynthesis.getVoices();for(let i=0;i<voices.length;i++){if(voices[i].name===useVoice){msg.voice=voices[i]}}}
 if(rate){msg.rate=rate}else if(getCookie(prefix+'Rate]')){msg.rate=parseInt(getCookie(prefix+'Rate]'),10)}
 if(pitch){msg.pitch=pitch}else if(getCookie(prefix+'Pitch]')){msg.pitch=parseInt(getCookie(prefix+'Pitch]'),10)}
-if(getCookie(prefix+'Request]')!=""&&JSON.parse(getCookie(prefix+'Request]'))!==null){let fetchRequest=JSON.parse(getCookie(prefix+'Request]'));deepReplace(fetchRequest,'lwt_term',text)
+if(LWT_LANG_DATA.tpVoiceApi){let fetchRequest=JSON.parse(LWT_LANG_DATA.tpVoiceApi);deepReplace(fetchRequest,'lwt_term',text)
 deepReplace(fetchRequest,'lwt_lang',lang)
 fetchRequest.options.body=JSON.stringify(fetchRequest.options.body)
 fetch(fetchRequest.input,fetchRequest.options).then(response=>response.json()).then(data=>{const encodeString=deepFindValue(data,'data:')

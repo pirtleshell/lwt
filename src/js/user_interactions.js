@@ -249,7 +249,7 @@ function deepFindValue(obj, searchValue) {
 }
 
 /**
- * Read a text aloud, only work with a phonetic version.
+ * Read a text aloud, works with a phonetic version only.
  * 
  * @param {string} text  Text to read, won't be parsed further.
  * @param {string} lang  Language code with BCP 47 convention  
@@ -260,6 +260,7 @@ function deepFindValue(obj, searchValue) {
  * @return {SpeechSynthesisUtterance} The spoken message object
  * 
  * @since 2.9.0 Accepts "voice" as a new optional argument
+ * @since 2.10.0 Can use third-party applications to read text
  */
  function readRawTextAloud(text, lang, rate, pitch, voice) {
     let msg = new SpeechSynthesisUtterance();
@@ -289,15 +290,12 @@ function deepFindValue(obj, searchValue) {
     } else if (getCookie(prefix + 'Pitch]')) {
         msg.pitch = parseInt(getCookie(prefix + 'Pitch]'), 10);
     }
-    if (
-        getCookie(prefix + 'Request]') != "" &&
-        JSON.parse(getCookie(prefix+ 'Request]')) !== null
-    ) {
-        let fetchRequest = JSON.parse(getCookie(prefix+ 'Request]'));
+    if (LWT_LANG_DATA.tpVoiceApi) {
+        let fetchRequest = JSON.parse(LWT_LANG_DATA.tpVoiceApi);
 
         // TODO: can expose more vars to Request
-        deepReplace(fetchRequest,'lwt_term',text)
-        deepReplace(fetchRequest,'lwt_lang',lang)
+        deepReplace(fetchRequest, 'lwt_term', text)
+        deepReplace(fetchRequest, 'lwt_lang', lang)
 
 
         fetchRequest.options.body = JSON.stringify(fetchRequest.options.body)
