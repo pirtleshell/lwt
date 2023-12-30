@@ -2407,6 +2407,20 @@ function get_annotation_position_selectoptions($v): string
     $r .= ">Above</option>";
     return $r;
 }
+// -------------------------------------------------------------
+
+function get_hts_selectoptions($v): string
+{
+    if (! isset($v) ) { $v = 1; 
+    }
+    $r = "<option value=\"1\"" . get_selected($v, 1);
+    $r .= ">Never</option>";
+    $r .= "<option value=\"2\"" . get_selected($v, 2);
+    $r .= ">On Click</option>";
+    $r .= "<option value=\"3\"" . get_selected($v, 3);
+    $r .= ">On Hover</option>";
+    return $r;
+}
 
 // -------------------------------------------------------------
 

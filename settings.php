@@ -111,6 +111,10 @@ if (isset($_REQUEST['op'])) {
                 1 : 0
             )
         );
+        saveSetting(
+            'set-hts',  
+                $_REQUEST['set-hts']
+                          );
     
         saveSetting(
             'set-archivedtexts-per-page',
@@ -568,7 +572,7 @@ echo error_message_with_hide($message, true);
     </tr>
     <!-- ******************************************************* -->
     <tr>
-        <th class="th1 center">Text to Speech</th>
+        <th class="th1 center" rowspan="2">Text to Speech</th>
         <td class="td1 center">Save Audio Files to Disk</td>
         <td class="td1 center">
             <input type="checkbox" name="set-tts" value="1" 
@@ -577,6 +581,22 @@ echo error_message_with_hide($message, true);
         <td class="td1 center">
             <img src="icn/status-busy.png" title="Field must not be empty" 
             alt="Field must not be empty" />
+        </td>
+    </tr>
+    <!-- ******************************************************* -->
+    <tr>
+        <td class="td1 center">Read word aloud</td>
+        <td class="td1 center">
+            <select name="set-hts" class="notempty respinput">
+            <?php
+            echo get_hts_selectoptions(
+                getSettingWithDefault('set-hts')
+            );
+            ?>
+            </select>
+        </td>
+        <td class="td1 center">
+            <img src="icn/status-busy.png" title="Field must not be empty" alt="Field must not be empty" />
         </td>
     </tr>
     <!-- ******************************************************* -->

@@ -18,6 +18,7 @@ ones are marked like "v1.0.0-fork".
 
 * The database wizard was broken since 2.9.0.
 * It was impossible to change a word status on hover since 2.9.1.
+* Avoids JavaScript error on editing a language when on dictionary field is empty.
 
 ### Deprecated
 

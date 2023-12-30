@@ -583,6 +583,8 @@ function edit_language_form($language): void
      */
     function checkDictionaryChanged(input_box) {
         const l_form = document.forms.lg_form;
+        if (input_box.value == '')
+            return;
         switch (input_box.name) {
             case "LgDict1URI":
                 target = l_form.LgDict1PopUp;
