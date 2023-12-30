@@ -144,7 +144,7 @@ function tts_settings_form()
             <td class="td1 center">Language code</td>
             <td class="td1 center">
             <select name="LgName" id="get-language" class="notempty respinput" 
-            onchange="populateVoiceList();">
+            onchange="tts_settings.changeLanguage();">
                 <?php echo tts_language_options(); ?>
             </select>
             </td>
@@ -191,8 +191,7 @@ function tts_settings_form()
         <tr>
             <td class="td1 right" colspan="4">
                 <input type="button" value="Cancel" 
-                onclick=
-                "{lwt_form_check.resetDirty(); location.href='text_to_speech_settings.php';}" /> 
+                onclick="tts_settings.clickCancel();" /> 
                 <input type="submit" name="op" value="Save" />
             </td>
         </tr>
@@ -230,13 +229,19 @@ function tts_demo()
 function tts_js()
 {
     $lid = (int) getSetting('currentlanguage');
+    $lg_code = getLanguageCode($lid, LWT_LANGUAGES_ARRAY)
     ?>
 <script type="text/javascript" charset="utf-8">
     const tts_settings = {
         /** @var string current_language Current language being learnt. */
-        current_language: <?php 
-            echo json_encode(getLanguageCode($lid, LWT_LANGUAGES_ARRAY)); 
-        ?>,
+        current_language: <?php echo json_encode($lg_code); ?>,
+
+        autoSetCurrentLanguage: function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('lang')) {
+                tts_settings.current_language = urlParams.get('lang');
+            }
+        },
 
         /**
          * Get the language country code from the page. 
@@ -268,14 +273,11 @@ function tts_js()
          * Set the Text-to-Speech data using cookies
          */
         presetTTSData: function() {
-            $('#get-language').val(tts_settings.current_language);
-            $('#voice').val(
-                getCookie(
-                    'tts[' + tts_settings.current_language + 'RegName]'
-                )
-            );
-            $('#rate').val(getCookie('tts[' + tts_settings.current_language + 'Rate]'));
-            $('#pitch').val(getCookie('tts[' + tts_settings.current_language + 'Pitch]'));
+            const lang_name = tts_settings.current_language;
+            $('#get-language').val(lang_name);
+            $('#voice').val(getCookie('tts[' + lang_name + 'RegName]'));
+            $('#rate').val(getCookie('tts[' + lang_name + 'Rate]'));
+            $('#pitch').val(getCookie('tts[' + lang_name + 'Pitch]'));
         },
 
         /**
@@ -312,6 +314,17 @@ function tts_js()
         saveTPVoiceAPI: function() {
             const voice_api = $('#voice-api').val();
             do_ajax_save_setting('tts-third-party-api', voice_api)
+        },
+
+        clickCancel: function() {
+            lwt_form_check.resetDirty(); 
+            location.href = 'text_to_speech_settings.php';
+        },
+
+        changeLanguage: function() {
+            location.href = 'text_to_speech_settings.php?' + $.param(
+                {lang: $('#get-language').val()}
+            );
         }
     };
 
@@ -355,6 +368,7 @@ function tts_js()
         return tts_settings.populateVoiceList();
     }
 
+    $(tts_settings.autoSetCurrentLanguage);
     $(tts_settings.presetTTSData);
     $(tts_settings.populateVoiceList);
 </script>
