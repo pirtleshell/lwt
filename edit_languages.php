@@ -339,6 +339,7 @@ function load_language($lgid)
         $language->removespaces = null;
         $language->spliteachchar = null;
         $language->rightoleft = null;
+        $language->ttsvoiceapi = "";
     } else {
         // Load data from database
         $sql = "SELECT * FROM {$tbpref}languages WHERE LgID = $lgid";
@@ -357,6 +358,7 @@ function load_language($lgid)
         $language->removespaces = (bool) $record["LgRemoveSpaces"];
         $language->spliteachchar = (bool) $record["LgSplitEachChar"];
         $language->rightoleft = (bool) $record["LgRightToLeft"];
+        $language->ttsvoiceapi =  $record["LgTTSVoiceAPI"];
         mysqli_free_result($res);
     }
     return $language;
@@ -573,96 +575,110 @@ function edit_language_form($language): void
         },
 
 
-    /**
-     * Change the Pop-Up URL of dictionary.
-     */
-    changePopUpState: function (elem) {
-        const l_form = document.forms.lg_form;
-        let target;
-        switch (elem.name) {
-            case "LgDict1PopUp":
-                target = l_form.LgDict1URI;
-                break;
-            case "LgDict2PopUp":
-                target = l_form.LgDict2URI;
-                break;
-            case "LgGoogleTranslatePopUp":
-                target = l_form.LgGoogleTranslateURI;
-                break;
+        /**
+         * Change the Pop-Up URL of dictionary.
+         */
+        changePopUpState: function (elem) {
+            const l_form = document.forms.lg_form;
+            let target;
+            switch (elem.name) {
+                case "LgDict1PopUp":
+                    target = l_form.LgDict1URI;
+                    break;
+                case "LgDict2PopUp":
+                    target = l_form.LgDict2URI;
+                    break;
+                case "LgGoogleTranslatePopUp":
+                    target = l_form.LgGoogleTranslateURI;
+                    break;
+            }
+            target.value = addPopUpOption(target.value, elem.checked);
+        },
+
+        /**
+         * Change Pop-Up checkboxes based on input box value. 
+         */
+        checkDictionaryChanged: function(input_box) {
+            const l_form = document.forms.lg_form;
+            if (input_box.value == '')
+                return;
+            switch (input_box.name) {
+                case "LgDict1URI":
+                    target = l_form.LgDict1PopUp;
+                    break;
+                case "LgDict2URI":
+                    target = l_form.LgDict2PopUp;
+                    break;
+                case "LgGoogleTranslateURI":
+                    target = l_form.LgGoogleTranslatePopUp;
+                    break;
+            }
+            let popup = false;
+            if (input_box.value.startsWith('*')) {
+                input_box.value = input_box.value.substring(1);
+                popup = true;
+            }
+            popup = popup || (new URL(input_box.value)).searchParams.has("lwt_popup");
+            target.checked = popup;
+        },
+
+        /**
+         * Modify the value of the translator select box if not coherent with the URL.
+         */
+        checkTranslatorType: function (url, type_select) {
+            const parsed_url = new URL(url);
+            let final_value;
+            switch (parsed_url.searchParams.get("lwt_translator")) {
+                case "libretranslate":
+                    // Using LibreTranslate
+                    final_value = "libretranslate";
+                    break;
+                default:
+                    // Defaulting to Google
+                    final_value = "google_translate";
+                    break;
+            }
+            type_select.value = final_value;
+        },
+
+        /**
+         * Check the word splitting method.
+         */
+        checkWordChar: function (method) {
+            const method_option = (method == "mecab") ? "mecab" : "regexp";
+            document.forms.lg_form.LgRegexpAlt.value = method_option;
+        },
+
+        checkVoiceAPI: function (api_value) {
+            const query = JSON.parse(api_value);
+            message_field = $('#voice-api-message-zone');
+            if (query === null) {
+                message_field.hide();
+                return;
+            }
+            if (!api_value.includes("lwt_term")) {
+                message_field.text("Should set lwt_term!")
+                message_field.show();
+                return false
+            }
+
+            return true;
+        },
+
+
+        testVoiceAPI: function () {
+            const api_value = document.forms.lg_form.LgTTSVoiceAPI.value;
+            const prevApi = LWT_LANG_DATA.tpVoiceApi;
+            LWT_LANG_DATA.tpVoiceApi = api_value;
+            const text = document.forms.lg_form.LgVoiceAPIDemo.value;
+            const lang = <?php echo json_encode($sourceLg); ?>;
+            readTextAloud(text, lang);
+            LWT_LANG_DATA.tpVoiceApi = prevApi;
+        },
+
+        fullFormCheck: function () { 
+            checkLanguageForm(document.forms.lg_form);
         }
-        target.value = addPopUpOption(target.value, elem.checked);
-    },
-
-    /**
-     * Change Pop-Up checkboxes based on input box value. 
-     */
-    checkDictionaryChanged: function(input_box) {
-        const l_form = document.forms.lg_form;
-        if (input_box.value == '')
-            return;
-        switch (input_box.name) {
-            case "LgDict1URI":
-                target = l_form.LgDict1PopUp;
-                break;
-            case "LgDict2URI":
-                target = l_form.LgDict2PopUp;
-                break;
-            case "LgGoogleTranslateURI":
-                target = l_form.LgGoogleTranslatePopUp;
-                break;
-        }
-        let popup = false;
-        if (input_box.value.startsWith('*')) {
-            input_box.value = input_box.value.substring(1);
-            popup = true;
-        }
-        popup = popup || (new URL(input_box.value)).searchParams.has("lwt_popup");
-        target.checked = popup;
-    },
-
-    /**
-     * Modify the value of the translator select box if not coherent with the URL.
-     */
-    checkTranslatorType: function (url, type_select) {
-        const parsed_url = new URL(url);
-        let final_value;
-        switch (parsed_url.searchParams.get("lwt_translator")) {
-            case "libretranslate":
-                // Using LibreTranslate
-                final_value = "libretranslate";
-                break;
-            default:
-                // Defaulting to Google
-                final_value = "google_translate";
-                break;
-        }
-        type_select.value = final_value;
-    },
-
-    /**
-     * Check the word splitting method.
-     */
-    checkWordChar: function (method) {
-        const method_option = (method == "mecab") ? "mecab" : "regexp";
-        document.forms.lg_form.LgRegexpAlt.value = method_option;
-    },
-
-    checkVoiceAPI: function (api_value) {
-        const query = JSON.parse(api_value);
-        if (query === null) 
-            return false;
-        return true;
-    },
-
-
-    testVoiceAPI: function () {
-        const api_value = document.forms.lg_form.LgTTSVoiceAPI.value;
-        const prevApi = LWT_LANG_DATA.tpVoiceApi;
-        LWT_LANG_DATA.tpVoiceApi = api_value;
-        const lang = <?php echo json_encode($sourceLg); ?>;
-        readTextAloud("This is a test string.", lang);
-        LWT_LANG_DATA.tpVoiceApi = prevApi;
-    }
 
 
     }
@@ -770,9 +786,9 @@ function edit_language_form($language): void
      * Check if all fields are coherent with translator URL.
      */
     function checkTranslatorChanged(translator_input) {
-        checkTranslatorStatus(translator_input.value);
-        checkDictionaryChanged(translator_input);
-        checkTranslatorType(
+        edit_languages_js.checkTranslatorStatus(translator_input.value);
+        edit_languages_js.checkDictionaryChanged(translator_input);
+        edit_languages_js.checkTranslatorType(
             translator_input.value, document.forms.lg_form.LgTranslatorName
         );
     }
@@ -796,18 +812,14 @@ function edit_language_form($language): void
      * param {element} l_form Language form.
      */
     function checkLanguageForm(l_form) {
-        checkLanguageChanged(l_form.LgName.value);
-        checkDictionaryChanged(l_form.LgDict1URI);
-        checkDictionaryChanged(l_form.LgDict2URI);
+        edit_languages_js.checkLanguageChanged(l_form.LgName.value);
+        edit_languages_js.checkDictionaryChanged(l_form.LgDict1URI);
+        edit_languages_js.checkDictionaryChanged(l_form.LgDict2URI);
         checkTranslatorChanged(l_form.LgGoogleTranslateURI);
-        checkWordChar(l_form.LgRegexpWordCharacters.value);
+        edit_languages_js.checkWordChar(l_form.LgRegexpWordCharacters.value);
     }
 
-    function testVoiceAPI() {
-        return edit_languages_js.testVoiceAPI();
-    }
-
-    $(function () { checkLanguageForm(document.forms.lg_form); });
+    $(edit_languages_js.fullFormCheck);
 </script>
 <form class="validate" action="<?php echo $_SERVER['PHP_SELF']; ?>" 
     method="post" onsubmit="return check_dupl_lang(<?php echo $language->id; ?>);" 
@@ -893,7 +905,8 @@ function edit_language_form($language): void
             </div>
             <br />
             <input type="checkbox" name="LgGoogleTranslatePopUp" 
-            id="LgGoogleTranslatePopUp" onchange="changePopUpState(this);"/>
+            id="LgGoogleTranslatePopUp" 
+            onchange="edit_languages_js.changePopUpState(this);"/>
             <label for="LgGoogleTranslatePopUp"
             title="Open in a new window. Some translators cannot be displayed in iframes">
                 Open in Pop-Up
@@ -906,7 +919,8 @@ function edit_language_form($language): void
         <td class="td1">
             <input name="LgTextSize" defaultValue="100" type="number" min="100" max="250" 
             value="<?php echo $language->textsize; ?>" step="50" 
-            onchange="changeLanguageTextSize(this.value);" class="respinput" />
+            onchange="edit_languages_js.changeLanguageTextSize(this.value);" 
+            class="respinput" />
             <input type="text" class="respinput"
             style="font-size: <?php echo $language->textsize ?>%;" 
             id="LgTextSizeExample" 
@@ -1009,13 +1023,19 @@ function edit_language_form($language): void
             Third-Party Text-to-Speech Voice API
         </td>
         <td class="td1">
+            <input type="text" class="respinput" name="LgVoiceAPIDemo" 
+            title="Demo text to read." value="Read this text."  />
             <textarea class="checkoutsidebmp respinput" 
             data_info="Third-Party Text-to-Speech API" 
             name="LgTTSVoiceAPI" class="respinput"
             value="<?php echo tohtml($language->ttsvoiceapi); ?>" 
-            maxlength="2048" rows="10"></textarea>
+            maxlength="2048" rows="10" 
+            onchange="edit_languages_js.checkVoiceAPI(this.value);"
+            ><?php echo tohtml($language->ttsvoiceapi); ?></textarea>
             <hr style="color: transparent;" />
-            <input type="button" onclick="testVoiceAPI();" value="Test Voice API"/>
+            <input type="button" onclick="edit_languages_js.testVoiceAPI();" 
+            value="Test Voice API"/>
+            <p hidden class="error" id="voice-api-message-zone"></p>
         </td>
     </tr>
     <tr>
