@@ -79,58 +79,6 @@ function tts_language_options()
 
 
 /**
- * Display a form to add new reading voices through any compatible API.
- */
-function tts_displayThirdPartyVoiceAPI()
-{
-    global $tbpref;
-    $lg_id = (int) getSetting('currentlanguage');
-    $voiceApi = get_first_value(
-        "SELECT LgTTSVoiceAPI AS value FROM {$tbpref}languages 
-        WHERE LgID = $lg_id"
-    );
-    ?>
-
-<h3>Third-Party Voice API</h3>
-<p>
-    You can customize the voice API using an external service. 
-    You have to use the following JSON format.
-</p>
-<pre 
-style="background-color: #f0f0f0; padding: 10px; border: 1px solid #ccc;"
-><code lang="json"
->{
-    "input": ...,
-    "options": ...
-}</code></pre>
-<p>
-    LWT will insert text in <code>lwt_text</code> (required), 
-    you can specify the language with <code>lwt_lang</code> (optional).
-</p>
-<form class="validate" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-    <table class="tab1" cellspacing="0" cellpadding="5">
-        <tr>
-            <th class="th1 center">Voice API Request</th>
-            <td class="td1 center">
-                <textarea id="voice-api" name="LgTTSVoiceAPI" class="respinput"
-                maxlength="2048" rows="10"><?php 
-                echo tohtml($voiceApi);
-                ?></textarea>
-            </td>
-            <td class="td1 center">
-                <img src="<?php print_file_path("icn/status.png") ?>" />
-            </td>
-        </tr>
-        <tr>
-            <td class="td1 right" colspan="4">
-                <input type="button" onclick="tts_settings.testTPVoiceAPI()" value="Test!" />
-            </td>
-        </tr>
-    </table>
-    <?php
-}
-
-/**
  * Prepare a from for all the TTS settings.
  * 
  * @return void
@@ -203,8 +151,6 @@ function tts_settings_form()
         </tr>
     </table>
 </form>
-<h2>Advanced Settings</h2>
-<?php tts_displayThirdPartyVoiceAPI(); ?>
     <?php
 }
 
@@ -234,16 +180,10 @@ function tts_demo()
  */
 function tts_js()
 {
-    global $tbpref;
     $lid = (int) getSetting('currentlanguage');
     $lg_code = getLanguageCode($lid, LWT_LANGUAGES_ARRAY);
-    $voiceApi = get_first_value(
-        "SELECT LgTTSVoiceAPI AS value FROM {$tbpref}languages 
-        WHERE LgID = $lid"
-    );
     ?>
 <script type="text/javascript" charset="utf-8">
-    LWT_LANG_DATA.tpVoiceApi = <?php echo json_encode($voiceApi); ?>;
 
     const tts_settings = {
         /** @var string current_language Current language being learnt. */
@@ -327,16 +267,12 @@ function tts_js()
             location.href = 'text_to_speech_settings.php?' + $.param(
                 {lang: $('#get-language').val()}
             );
-        },
-
-        testTPVoiceAPI: function() {
-            const prevApi = LWT_LANG_DATA.tpVoiceApi;
-            LWT_LANG_DATA.tpVoiceApi = $('#voice-api').val();
-            tts_settings.readingDemo();
-            LWT_LANG_DATA.tpVoiceApi = prevApi;
-        },
+        }
     };
 
+    /**
+     * @deprecated Since 2.10.0-fork
+     */
     const CURRENT_LANGUAGE = tts_settings.current_language;
 
 
@@ -344,6 +280,8 @@ function tts_js()
      * Get the language country code from the page. 
      * 
      * @returns {string} Language code (e. g. "en")
+     * 
+     * @deprecated Since 2.10.0-fork
      */
     function getLanguageCode()
     {
@@ -354,6 +292,8 @@ function tts_js()
      * Gather data in the page to read the demo.
      * 
      * @returns {undefined}
+     * 
+     * @deprecated Since 2.10.0-fork
      */
     function readingDemo()
     {
@@ -362,6 +302,8 @@ function tts_js()
 
     /**
      * Set the Text-to-Speech data using cookies
+     * 
+     * @deprecated Since 2.10.0-fork
      */
     function presetTTSData()
     {
@@ -372,6 +314,8 @@ function tts_js()
      * Populate the languages region list.
      * 
      * @returns {undefined}
+     * 
+     * @deprecated Since 2.10.0-fork
      */
     function populateVoiceList() {
         return tts_settings.populateVoiceList();
