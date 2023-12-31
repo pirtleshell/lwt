@@ -118,7 +118,7 @@ function prepareTextInteractions() {
  */
 function goToLastPosition() {
     // Last registered position to go to
-    const lookPos = POS;
+    const lookPos = LWT_DATA.text.reading_position;
     // Position to scroll to
     let pos = 0;
     if (lookPos > 0) {
