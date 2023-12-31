@@ -10,6 +10,22 @@
 Global variables used in LWT jQuery functions
 ***************************************************************/
 
+LWT_LANG_DATA = {
+  /** First dictionary URL */
+  wblink1: '',
+  /** Second dictionary URL */
+  whlink2: '',
+  /** Translator URL */
+  wblink3: '',
+
+  delimiter: '',
+
+  rtl: false,
+  /** Third-party voice API */
+  tpVoiceApi: ''
+
+}
+
 TEXTPOS = -1;
 OPENED = 0;
 /** @var {int} WID - Word ID */
@@ -20,7 +36,7 @@ TID = 0;
 WBLINK1 = '';
 /** Second dictionary URL */
 WBLINK2 = '';
-/** Google Translate */
+/** Translator URL */
 WBLINK3 = '';
 SOLUTION = '';
 ADDFILTER = '';

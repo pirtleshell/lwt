@@ -205,9 +205,73 @@ async function getPhoneticTextAsync(text, lang) {
         }
     );
 }
+  
 
 /**
- * Read a text aloud, only work with a phonetic version.
+ * Replace any searchValue on object value by replaceValue with deepth.
+ * 
+ * @param {dict} obj Object to search in
+ * @param {string} searchValue Value to find
+ * @param {string} replaceValue Value to replace with
+ * */
+function deepReplace(obj, searchValue, replaceValue) {
+    for (let key in obj) {
+        if (typeof obj[key] === 'object') {
+            // Recursively search nested objects
+            deepReplace(obj[key], searchValue, replaceValue);
+        } else if (typeof obj[key] === 'string' && obj[key].includes(searchValue)) {
+            // If the property is a string and contains the searchValue, replace it
+            obj[key] = obj[key].replace(searchValue, replaceValue);
+        }
+    }
+  }
+  
+/**
+ * Find the first string starting with searchValue in object.
+ * 
+ * @param {dict}   obj         Object to search in
+ * @param {string} searchValue Value to search
+ */
+function deepFindValue(obj, searchValue) {
+    for (const key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            if (typeof obj[key] === 'string' && obj[key].startsWith(searchValue)) {
+                return obj[key];
+            } else if (typeof obj[key] === 'object') {
+                const result = deepFindValue(obj[key], searchValue);
+                if (result) {
+                    return result;
+                }
+            }
+        }
+    }
+    return null; // Return null if no matching string is found
+}
+
+function readTextWithExternalApp(text, lang) {
+    let fetchRequest = JSON.parse(LWT_LANG_DATA.tpVoiceApi);
+
+    // TODO: can expose more vars to Request
+    deepReplace(fetchRequest, 'lwt_term', text)
+    deepReplace(fetchRequest, 'lwt_lang', lang)
+
+
+    fetchRequest.options.body = JSON.stringify(fetchRequest.options.body)
+
+    fetch(fetchRequest.input, fetchRequest.options)
+    .then(response => response.json())
+    .then(data => {
+        const encodeString = deepFindValue(data, 'data:')
+        const utter = new Audio(encodeString)
+        utter.play()
+    })
+    .catch(error => {
+        console.error(error)
+    });
+}
+
+/**
+ * Read a text aloud, works with a phonetic version only.
  * 
  * @param {string} text  Text to read, won't be parsed further.
  * @param {string} lang  Language code with BCP 47 convention  
@@ -218,6 +282,7 @@ async function getPhoneticTextAsync(text, lang) {
  * @return {SpeechSynthesisUtterance} The spoken message object
  * 
  * @since 2.9.0 Accepts "voice" as a new optional argument
+ * @since 2.10.0 Can use third-party applications to read text
  */
  function readRawTextAloud(text, lang, rate, pitch, voice) {
     let msg = new SpeechSynthesisUtterance();
@@ -235,7 +300,7 @@ async function getPhoneticTextAsync(text, lang) {
             if (voices[i].name === useVoice) {
                 msg.voice = voices[i];
             }
-          }
+        }
     }
     if (rate) {
         msg.rate = rate;
@@ -247,7 +312,11 @@ async function getPhoneticTextAsync(text, lang) {
     } else if (getCookie(prefix + 'Pitch]')) {
         msg.pitch = parseInt(getCookie(prefix + 'Pitch]'), 10);
     }
-    window.speechSynthesis.speak(msg);
+    if (LWT_LANG_DATA.tpVoiceApi) {
+        readTextWithExternalApp(text, lang);
+    } else {
+        window.speechSynthesis.speak(msg);
+    }
     return msg;
 }
 
