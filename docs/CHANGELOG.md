@@ -21,6 +21,7 @@ A courtesy of [@ProgramComputer](https://github.com/ProgramComputer) on pull req
 [#153](https://github.com/HugoFara/lwt/pull/153). 
 A feature first requested on [#143](https://github.com/HugoFara/lwt/issues/143). 
 Discussion in open on [#174](https://github.com/HugoFara/lwt/discussions/174).
+* Starts a cleaner database management. Database schema is defined in `db/schema/baseline.sql` and no longer in PHP code.
 
 ### Changed
 
@@ -39,6 +40,7 @@ Solves [#129](https://github.com/HugoFara/lwt/issues/129), thanks to the help of
 ### Deprecated
 
 * Using any function from `unloadformcheck.js` without using `lwt_form_check` is deprecated.
+* `get_database_prefixes` is deprecated, superseded by `getDatabasePrefix` which is much cleaner.
 
 ## 2.9.1-fork (December 29 2023)
 

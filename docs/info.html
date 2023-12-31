@@ -2201,6 +2201,7 @@ A courtesy of <a href="https://github.com/ProgramComputer">@ProgramComputer</a> 
 <a href="https://github.com/HugoFara/lwt/pull/153">#153</a>.
 A feature first requested on <a href="https://github.com/HugoFara/lwt/issues/143">#143</a>.
 Discussion in open on <a href="https://github.com/HugoFara/lwt/discussions/174">#174</a>.</li>
+<li>Starts a cleaner database management. Database schema is defined in <code>db/schema/baseline.sql</code> and no longer in PHP code.</li>
 </ul>
 <h4>Changed</h4>
 <ul>
@@ -2219,6 +2220,8 @@ Solves <a href="https://github.com/HugoFara/lwt/issues/129">#129</a>, thanks to 
 <h4>Deprecated</h4>
 <ul>
 <li>Using any function from <code>unloadformcheck.js</code> without using <code>lwt_form_check</code> is deprecated.</li>
+<li>
+<code>get_database_prefixes</code> is deprecated, superseded by <code>getDatabasePrefix</code> which is much cleaner.</li>
 </ul>
 <h3>2.9.1-fork (December 29 2023)</h3>
 <h4>Added in 2.9.1-fork</h4>
