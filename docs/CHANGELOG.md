@@ -9,21 +9,18 @@ ones are marked like "v1.0.0-fork".
 
 ### Added
 
-* `unloadformcheck.js` no declares a new object `lwt_form_check` that contains all the functions needed.
+* `unloadformcheck.js` now declares a new object `lwt_form_check` that contains all the functions needed.
 * New globals ([#163](https://github.com/HugoFara/lwt/issues/163)):
   * On `inc/kernel_utility.php`: `LWT_APP_VERSION` and `LWT_RELEASE_DATE`.
   * On `api.php`: `LWT_API_VERSION` and `LWT_API_RELEASE_DATE`.
 * Word reading can be allowed on hover or on click. 
 Pull request [#147](https://github.com/HugoFara/lwt/pull/147) by 
 [@ProgramComputer](https://github.com/ProgramComputer).
-
-
-### Added
-
-* `unloadformcheck.js` no declares a new object `lwt_form_check` that contains all the functions needed.
-* New globals ([#163](https://github.com/HugoFara/lwt/issues/163)):
-  * On `inc/kernel_utility.php`: `LWT_APP_VERSION` and `LWT_RELEASE_DATE`.
-  * On `api.php`: `LWT_API_VERSION` and `LWT_API_RELEASE_DATE`.
+* You can add a custom text reader with the new voice API feature! 
+A courtesy of [@ProgramComputer](https://github.com/ProgramComputer) on pull request 
+[#153](https://github.com/HugoFara/lwt/pull/153). 
+A feature first requested on [#143](https://github.com/HugoFara/lwt/issues/143). 
+Discussion in open on [#174](https://github.com/HugoFara/lwt/discussions/174). 
 
 ### Fixed
 
