@@ -673,11 +673,11 @@ function do_test_test_interaction_globals($wb1, $wb2, $wb3)
 {
     ?>
 <script type="text/javascript">
-    WBLINK1 = <?php echo json_encode($wb1); ?>;
-    WBLINK2 = <?php echo json_encode($wb2); ?>;
-    WBLINK3 = <?php echo json_encode($wb3); ?>;
-    LANG = getLangFromDict(WBLINK3);
-    if (LANG && LANG != WBLINK3) {
+    LWT_DATA.language.dict_link1 = <?php echo json_encode($wb1); ?>;
+    LWT_DATA.language.dict_link2 = <?php echo json_encode($wb2); ?>;
+    LWT_DATA.language.translator_link = <?php echo json_encode($wb3); ?>;
+    LANG = getLangFromDict(LWT_DATA.language.translator_link);
+    if (LANG && LANG != LWT_DATA.language.translator_link) {
         $("html").attr('lang', LANG);
     }
     OPENED = 0;
@@ -726,7 +726,7 @@ function do_test_test_javascript_clickable($wo_record, $solution)
 
     SOLUTION = <?php echo prepare_textdata_js($solution); ?>;
     WID = <?php echo $wid; ?>;
-    LWT_LANG_DATA.tpVoiceApi = <?php echo json_encode($voiceApi); ?>;
+    LWT_DATA.language.tpVoiceApi = <?php echo json_encode($voiceApi); ?>;
 
     $(document).on('keydown', keydown_event_do_test_test);
     $('.word')

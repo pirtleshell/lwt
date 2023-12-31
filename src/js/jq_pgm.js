@@ -10,20 +10,22 @@
 Global variables used in LWT jQuery functions
 ***************************************************************/
 
-LWT_LANG_DATA = {
-  /** First dictionary URL */
-  wblink1: '',
-  /** Second dictionary URL */
-  whlink2: '',
-  /** Translator URL */
-  wblink3: '',
-
-  delimiter: '',
-
-  rtl: false,
-  /** Third-party voice API */
-  tpVoiceApi: ''
-
+LWT_DATA = {
+  /** Language data */
+  language: {
+    /** First dictionary URL */
+    dict_link1: '',
+    /** Second dictionary URL */
+    dict_link2: '',
+    /** Translator URL */
+    translator_link: '',
+  
+    delimiter: '',
+  
+    rtl: false,
+    /** Third-party voice API */
+    tpVoiceApi: ''
+  }
 }
 
 TEXTPOS = -1;
@@ -32,15 +34,15 @@ OPENED = 0;
 WID = 0;
 /** Text ID (int) */
 TID = 0;
-/** First dictionary URL */
+/** First dictionary URL, deprecated in 2.10.0 use LWT_DATA.language.dict_link1 */
 WBLINK1 = '';
-/** Second dictionary URL */
+/** Second dictionary URL, deprecated in 2.10.0 use LWT_DATA.language.dict_link2 */
 WBLINK2 = '';
-/** Translator URL */
+/** Translator URL, deprecated in 2.10.0 use LWT_DATA.language.translator_link */
 WBLINK3 = '';
 SOLUTION = '';
 ADDFILTER = '';
-/** Right-to-left indicator */
+/** Right-to-left indicator, deprecated in 2.10.0 use LWT_DATA.language.rtl */
 RTL = 0;
 ANN_ARRAY = {};
 DELIMITER = '';
@@ -500,7 +502,7 @@ function setTheFocus () {
  */
 function word_click_event_do_test_test () {
   run_overlib_test(
-    WBLINK1, WBLINK2, WBLINK3,
+    LWT_DATA.language.dict_link1, LWT_DATA.language.dict_link2, LWT_DATA.language.translator_link,
     $(this).attr('data_wid'),
     $(this).attr('data_text'),
     $(this).attr('data_trans'),
@@ -686,7 +688,7 @@ function word_click_event_do_text_text () {
   }
   if (status < 1) {
     run_overlib_status_unknown(
-      WBLINK1, WBLINK2, WBLINK3, hints,
+      LWT_DATA.language.dict_link1, LWT_DATA.language.dict_link2, LWT_DATA.language.translator_link, hints,
       TID, $(this).attr('data_order'), $(this).text(), multi_words, RTL
     );
     showRightFrames(
@@ -694,25 +696,25 @@ function word_click_event_do_text_text () {
     );
   } else if (status == 99) {
     run_overlib_status_99(
-      WBLINK1, WBLINK2, WBLINK3, hints,
+      LWT_DATA.language.dict_link1, LWT_DATA.language.dict_link2, LWT_DATA.language.translator_link, hints,
       TID, $(this).attr('data_order'), 
       $(this).text(), $(this).attr('data_wid'), multi_words, RTL, ann
     );
   } else if (status == 98) {
     run_overlib_status_98(
-      WBLINK1, WBLINK2, WBLINK3, hints,
+      LWT_DATA.language.dict_link1, LWT_DATA.language.dict_link2, LWT_DATA.language.translator_link, hints,
       TID, $(this).attr('data_order'), 
       $(this).text(), $(this).attr('data_wid'), multi_words, RTL, ann
     );
   } else {
     run_overlib_status_1_to_5(
-      WBLINK1, WBLINK2, WBLINK3, hints,
+      LWT_DATA.language.dict_link1, LWT_DATA.language.dict_link2, LWT_DATA.language.translator_link, hints,
       TID, $(this).attr('data_order'), 
       $(this).text(), $(this).attr('data_wid'), status, multi_words, RTL, ann
     );
   }
   if (HTS == 2) {
-    const lg = getLangFromDict(WBLINK3);
+    const lg = getLangFromDict(LWT_DATA.language.translator_link);
     readTextAloud($(this).text(), lg);
   }
   return false;
@@ -726,7 +728,7 @@ function mword_click_event_do_text_text () {
       ann = $(this).attr('data_ann'); 
     }
     run_overlib_multiword(
-      WBLINK1, WBLINK2, WBLINK3, 
+      LWT_DATA.language.dict_link1, LWT_DATA.language.dict_link2, LWT_DATA.language.translator_link, 
       JQ_TOOLTIP ? make_tooltip(
         $(this).text(), 
         $(this).attr('data_trans'), 
@@ -738,7 +740,7 @@ function mword_click_event_do_text_text () {
     );
   }
   if (HTS == 2) {
-    const lg = getLangFromDict(WBLINK3);
+    const lg = getLangFromDict(LWT_DATA.language.translator_link);
     readTextAloud($(this).text(), lg);
   }
   return false;
@@ -903,7 +905,7 @@ function word_hover_over () {
       $(this).trigger('mouseover');
     }
     if (HTS == 3) { 
-      const lg = getLangFromDict(WBLINK3);
+      const lg = getLangFromDict(LWT_DATA.language.translator_link);
       readTextAloud($(this).text(), lg);
       }
   }
@@ -1114,9 +1116,9 @@ function keydown_event_do_text_text (e) {
       if (stat == '0') {
         if (i == 1) {
           /** @var {string} sl Source language */
-          const sl = getLangFromDict(WBLINK3);
-          const tl = WBLINK3.replace(/.*[?&]tl=([a-zA-Z\-]*)(&.*)*$/, '$1');
-          if (sl != WBLINK3 && tl != WBLINK3)
+          const sl = getLangFromDict(LWT_DATA.language.translator_link);
+          const tl = LWT_DATA.language.translator_link.replace(/.*[?&]tl=([a-zA-Z\-]*)(&.*)*$/, '$1');
+          if (sl != LWT_DATA.language.translator_link && tl != LWT_DATA.language.translator_link)
             i = i + '&sl=' + sl + '&tl=' + tl;
         }
         showRightFrames(
@@ -1159,14 +1161,14 @@ function keydown_event_do_text_text (e) {
     return false;
   }
   if (e.which == 80) { // P : pronounce term
-    const lg = getLangFromDict(WBLINK3);
+    const lg = getLangFromDict(LWT_DATA.language.translator_link);
     readTextAloud(txt, lg);
     return false;
   }
   if (e.which == 84) { // T : translate sentence
     let popup = false;
-    let dict_link = WBLINK3;
-    if (WBLINK3.startsWith('*')) {
+    let dict_link = LWT_DATA.language.translator_link;
+    if (LWT_DATA.language.translator_link.startsWith('*')) {
       popup = true;
       dict_link = substring(dict_link, 1);
     }
@@ -1207,7 +1209,7 @@ function keydown_event_do_text_text (e) {
   if (e.which == 71) { //  G : edit term and open GTr
     dict = '&nodict';
     setTimeout(function () {
-      let target_url = WBLINK3;
+      let target_url = LWT_DATA.language.translator_link;
       let popup = false;
       popup = target_url.startsWith('*');
       try {

@@ -76,7 +76,7 @@ var ol_closecolor = '#FFFFFF';
 function run_overlib_status_98(
   wblink1, wblink2, wblink3, hints, txid, torder, txt, wid, multi_words, rtl, ann
 ) {
-  const lang = getLangFromDict(WBLINK3);
+  const lang = getLangFromDict(wblink3);
   return overlib(
     make_overlib_audio(txt, lang) + 
     '<b>' + escape_html_chars_2(hints, ann) + '</b><br/>' +
@@ -108,7 +108,7 @@ function run_overlib_status_98(
 function run_overlib_status_99 (
   wblink1, wblink2, wblink3, hints, txid, torder, txt, wid, multi_words, rtl, ann
   ) {
-  const lang = getLangFromDict(WBLINK3);
+  const lang = getLangFromDict(wblink3);
   return overlib(
     make_overlib_audio(txt, lang) + 
     '<b>' + escape_html_chars_2(hints, ann) + '</b><br/> ' +
@@ -142,7 +142,7 @@ function run_overlib_status_1_to_5 (
   wblink1, wblink2, wblink3, hints, txid, 
   torder, txt, wid, stat, multi_words, rtl, ann
   ) {
-  const lang = getLangFromDict(WBLINK3);
+  const lang = getLangFromDict(wblink3);
   return overlib(
     '<div>' + make_overlib_audio(txt, lang) + '<span>(Read)</span></div>' +
     make_overlib_link_change_status_all(txid, torder, wid, stat) + ' <br /> ' +
@@ -175,7 +175,7 @@ function run_overlib_status_1_to_5 (
 function run_overlib_status_unknown (
   wblink1, wblink2, wblink3, hints, txid, torder, txt, multi_words, rtl
   ) {
-  const lang = getLangFromDict(WBLINK3);
+  const lang = getLangFromDict(wblink3);
   return overlib(
     make_overlib_audio(txt, lang) + '<b>' + escape_html_chars(hints) + '</b><br /> ' +
 		make_overlib_link_wellknown_word(txid, torder) + ' <br /> ' +
@@ -204,7 +204,7 @@ function run_overlib_status_unknown (
 function run_overlib_multiword (
   wblink1, wblink2, wblink3, hints, txid, torder, txt, wid, stat, wcnt, ann
   ) {
-  const lang = getLangFromDict(WBLINK3);
+  const lang = getLangFromDict(wblink3);
   return overlib(
     make_overlib_audio(txt, lang) + '<b>' + escape_html_chars_2(hints, ann) + '</b><br /> ' +
 		make_overlib_link_change_status_all(txid, torder, wid, stat) + ' <br /> ' +

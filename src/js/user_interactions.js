@@ -249,7 +249,7 @@ function deepFindValue(obj, searchValue) {
 }
 
 function readTextWithExternalApp(text, lang) {
-    let fetchRequest = JSON.parse(LWT_LANG_DATA.tpVoiceApi);
+    let fetchRequest = JSON.parse(LWT_DATA.language.tpVoiceApi);
 
     // TODO: can expose more vars to Request
     deepReplace(fetchRequest, 'lwt_term', text)
@@ -312,7 +312,7 @@ function readTextWithExternalApp(text, lang) {
     } else if (getCookie(prefix + 'Pitch]')) {
         msg.pitch = parseInt(getCookie(prefix + 'Pitch]'), 10);
     }
-    if (LWT_LANG_DATA.tpVoiceApi) {
+    if (LWT_DATA.language.tpVoiceApi) {
         readTextWithExternalApp(text, lang);
     } else {
         window.speechSynthesis.speak(msg);

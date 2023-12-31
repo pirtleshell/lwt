@@ -636,14 +636,26 @@ function do_text_text_javascript($var_array): void
     const new_globals = <?php echo json_encode($var_array); ?>;
 
     // Set global variables
-    for (const key in new_globals) {
-        window[key] = new_globals[key];
+    for (let key in new_globals) {
+        if (typeof new_globals[key] !== 'string') {
+            for (let subkey1 in new_globals[key]) {
+                if (typeof new_globals[key] !== 'string') {
+                    for (let subkey2 in new_globals[key][subkey1]) {
+                        window[key][subkey1][subkey2] = new_globals[key][subkey1][subkey2];
+                    }
+                } else {
+                    window[key][subkey1] = new_globals[key][subkey1];
+                }
+            }
+        } else {
+            window[key] = new_globals[key];
+        }
     }
-    LANG = getLangFromDict(WBLINK3);
+    LANG = getLangFromDict(LWT_DATA.language.translator_link);
     TEXTPOS = -1;
     OPENED = 0;
     // Change the language of the current frame
-    if (LANG && LANG != WBLINK3) {
+    if (LANG && LANG != LWT_DATA.language.translator_link) {
         $("html").attr('lang', LANG);
     }
 
@@ -754,9 +766,13 @@ function do_text_text_content($textid, $only_body=true): void
                 getSettingWithDefault('set-term-translation-delimiters')
             )
         ),
-        'WBLINK1' => $wb1,
-        'WBLINK2' => $wb2,
-        'WBLINK3' => $wb3,
+        'LWT_DATA' => array(
+            'language' => array(
+                'dict_link1' => $wb1,
+                'dict_link2' => $wb2,
+                'translator_link' => $wb3
+            )
+        ),
         'RTL' => $rtlScript,
         'TID' => $textid,
         'ADDFILTER' => makeStatusClassFilter((int)$visit_status),

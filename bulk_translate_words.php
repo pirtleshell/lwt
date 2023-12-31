@@ -163,18 +163,18 @@ function bulk_do_content($tid, $sl, $tl, $pos): void
     }
 </style>
 <script type="text/javascript">
-    WBLINK1 = '<?php echo $wb1; ?>';
-    WBLINK2 = '<?php echo $wb2; ?>';
-    WBLINK3 = '<?php echo $wb3; ?>';
+    LWT_DATA.language.dict_link1 = '<?php echo $wb1; ?>';
+    LWT_DATA.language.dict_link2 = '<?php echo $wb2; ?>';
+    LWT_DATA.language.translator_link = '<?php echo $wb3; ?>';
     $('h3,h4,title').addClass('notranslate');
 
     function clickDictionary() {
         if ($(this).hasClass( "dict1" )) 
-            WBLINK = WBLINK1;
+            WBLINK = LWT_DATA.language.dict_link1;
         if ($(this).hasClass( "dict2" ))
-            WBLINK = WBLINK2;
+            WBLINK = LWT_DATA.language.dict_link2;
         if ($(this).hasClass( "dict3" ))
-            WBLINK = WBLINK3;
+            WBLINK = LWT_DATA.language.translator_link;
         let dict_link = WBLINK;
         let popup;
         if (dict_link.startsWith('*')) {
@@ -240,9 +240,9 @@ function bulk_do_content($tid, $sl, $tl, $pos): void
                     $(this).parent().css('position', 'relative');
                     $(this).after(
                         '<div class="dict">' +
-                        (WBLINK1 ? '<span class="dict1">D1</span>' : '') +
-                        (WBLINK2 ? '<span class="dict2">D2</span>' : '') +
-                        (WBLINK3 ? '<span class="dict3">Tr</span>' : '') +
+                        (LWT_DATA.language.dict_link1 ? '<span class="dict1">D1</span>' : '') +
+                        (LWT_DATA.language.dict_link2 ? '<span class="dict2">D2</span>' : '') +
+                        (LWT_DATA.language.translator_link ? '<span class="dict3">Tr</span>' : '') +
                         '</div>'
                     );
                 });

@@ -2191,6 +2191,8 @@ ones are marked like "v1.0.0-fork".</p>
 <ul>
 <li>On <code>inc/kernel_utility.php</code>: <code>LWT_APP_VERSION</code> and <code>LWT_RELEASE_DATE</code>.</li>
 <li>On <code>api.php</code>: <code>LWT_API_VERSION</code> and <code>LWT_API_RELEASE_DATE</code>.</li>
+<li>
+<code>src/js/jq_pgm.js</code>: <code>LWT_DATA</code>.</li>
 </ul>
 </li>
 <li>Word reading can be allowed on hover or on click.
@@ -2228,6 +2230,7 @@ Solves <a href="https://github.com/HugoFara/lwt/issues/129">#129</a>, thanks to 
 <li>Using any function from <code>unloadformcheck.js</code> without using <code>lwt_form_check</code> is deprecated.</li>
 <li>
 <code>get_database_prefixes</code> is deprecated, superseded by <code>getDatabasePrefix</code> which is much cleaner.</li>
+<li>Globals defined in <code>jq_pgm.js</code> are going into a single global <code>LWT_DATA</code>.</li>
 </ul>
 <h3>2.9.1-fork (December 29 2023)</h3>
 <h4>Added in 2.9.1-fork</h4>

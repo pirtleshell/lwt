@@ -76,7 +76,7 @@ function translate_term($text, $file, $sl, $tl): void
 </h2>
 
 <script type="text/javascript">
-    LWT_LANG_DATA.tpVoiceApi = <?php echo json_encode($voiceApi); ?>;
+    LWT_DATA.language.tpVoiceApi = <?php echo json_encode($voiceApi); ?>;
 
     $('#textToSpeech').on('click', function () {
             const txt = <?php echo json_encode($text); ?>;
