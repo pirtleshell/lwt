@@ -687,12 +687,12 @@ function edit_language_form($language): void
 
         testVoiceAPI: function () {
             const api_value = document.forms.lg_form.LgTTSVoiceAPI.value;
-            const prevApi = LWT_DATA.language.tpVoiceApi;
-            LWT_DATA.language.tpVoiceApi = api_value;
+            const prevApi = LWT_DATA.language.ttsVoiceApi;
+            LWT_DATA.language.ttsVoiceApi = api_value;
             const text = document.forms.lg_form.LgVoiceAPIDemo.value;
             const lang = <?php echo json_encode($sourceLg); ?>;
             readTextAloud(text, lang);
-            LWT_DATA.language.tpVoiceApi = prevApi;
+            LWT_DATA.language.ttsVoiceApi = prevApi;
         },
 
         fullFormCheck: function () { 

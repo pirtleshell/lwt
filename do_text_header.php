@@ -205,7 +205,7 @@ function browser_tts($text, $languageName): void
         rate: 0.8
     };
 
-    LWT_DATA.language.tpVoiceApi = <?php echo json_encode($voiceApi); ?>;
+    LWT_DATA.language.ttsVoiceApi = <?php echo json_encode($voiceApi); ?>;
 
     /** 
      * Check browser compatibility before reading 

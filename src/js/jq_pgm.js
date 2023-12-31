@@ -24,7 +24,7 @@ LWT_DATA = {
   
     rtl: false,
     /** Third-party voice API */
-    tpVoiceApi: ''
+    ttsVoiceApi: ''
   },
   text: {
     id: 0,

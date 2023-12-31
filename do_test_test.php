@@ -726,7 +726,7 @@ function do_test_test_javascript_clickable($wo_record, $solution)
 
     LWT_DATA.test.solution = <?php echo prepare_textdata_js($solution); ?>;
     LWT_DATA.word.id = <?php echo $wid; ?>;
-    LWT_DATA.language.tpVoiceApi = <?php echo json_encode($voiceApi); ?>;
+    LWT_DATA.language.ttsVoiceApi = <?php echo json_encode($voiceApi); ?>;
 
     $(document).on('keydown', keydown_event_do_test_test);
     $('.word')
