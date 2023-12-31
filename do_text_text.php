@@ -775,6 +775,7 @@ function do_text_text_content($textid, $only_body=true): void
             ),
             'text' => array(
                 'id' => $textid,
+                'reading_position' => $pos
             ),
             'settings' => array(
                 'jQuery_tooltip' => (getSettingWithDefault('set-tooltip-mode') == 2 ? 1 : 0),
@@ -782,8 +783,7 @@ function do_text_text_content($textid, $only_body=true): void
             ),
         ),
         'ADDFILTER' => makeStatusClassFilter((int)$visit_status),
-        'ANNOTATIONS_MODE' => $mode_trans,
-        'POS' => $pos
+        'ANNOTATIONS_MODE' => $mode_trans
     );
     do_text_text_javascript($var_array);
     do_text_text_style($showLearning, $mode_trans, $textsize, strlen($ann) > 0);

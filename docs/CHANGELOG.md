@@ -40,6 +40,7 @@ Discussion in open on [#174](https://github.com/HugoFara/lwt/discussions/174).
 * For some feeds, feed wizard session was not working due to ill-configured session.
 Solves [#129](https://github.com/HugoFara/lwt/issues/129), thanks to the help of PR 
 [#168](https://github.com/HugoFara/lwt/pull/168).
+* Text reading position was not initialized on opening text.
 
 ### Deprecated
 
