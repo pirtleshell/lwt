@@ -586,9 +586,9 @@ function word_each_do_text_text(_) {
       if (wid == ANN_ARRAY[order][1]) {
         const ann = ANN_ARRAY[order][2];
         const re = new RegExp(
-          '([' + DELIMITER + '][ ]{0,1}|^)(' + 
+          '([' + LWT_DATA.language.delimiter + '][ ]{0,1}|^)(' + 
           ann.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + ')($|[ ]{0,1}[' + 
-          DELIMITER + '])', 
+          LWT_DATA.language.delimiter + '])', 
           ''
         );
         if (!re.test($(this).attr('data_trans').replace(/ \[.*$/, ''))) {
@@ -620,9 +620,9 @@ function mword_each_do_text_text(_) {
           if (wid == ANN_ARRAY[index][1]) {
             const ann = ANN_ARRAY[index][2];
             const re = new RegExp(
-              '([' + DELIMITER + '][ ]{0,1}|^)(' + 
+              '([' + LWT_DATA.language.delimiter + '][ ]{0,1}|^)(' + 
               ann.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + ')($|[ ]{0,1}[' + 
-              DELIMITER + '])', 
+              LWT_DATA.language.delimiter + '])', 
               ''
             );
             if (!re.test($(this).attr('data_trans').replace(/ \[.*$/, ''))) {
@@ -689,7 +689,7 @@ function word_click_event_do_text_text () {
   if (status < 1) {
     run_overlib_status_unknown(
       LWT_DATA.language.dict_link1, LWT_DATA.language.dict_link2, LWT_DATA.language.translator_link, hints,
-      TID, $(this).attr('data_order'), $(this).text(), multi_words, RTL
+      TID, $(this).attr('data_order'), $(this).text(), multi_words, LWT_DATA.language.rtl
     );
     showRightFrames(
       'edit_word.php?tid=' + TID + '&ord=' + $(this).attr('data_order') + '&wid='
@@ -698,19 +698,19 @@ function word_click_event_do_text_text () {
     run_overlib_status_99(
       LWT_DATA.language.dict_link1, LWT_DATA.language.dict_link2, LWT_DATA.language.translator_link, hints,
       TID, $(this).attr('data_order'), 
-      $(this).text(), $(this).attr('data_wid'), multi_words, RTL, ann
+      $(this).text(), $(this).attr('data_wid'), multi_words, LWT_DATA.language.rtl, ann
     );
   } else if (status == 98) {
     run_overlib_status_98(
       LWT_DATA.language.dict_link1, LWT_DATA.language.dict_link2, LWT_DATA.language.translator_link, hints,
       TID, $(this).attr('data_order'), 
-      $(this).text(), $(this).attr('data_wid'), multi_words, RTL, ann
+      $(this).text(), $(this).attr('data_wid'), multi_words, LWT_DATA.language.rtl, ann
     );
   } else {
     run_overlib_status_1_to_5(
       LWT_DATA.language.dict_link1, LWT_DATA.language.dict_link2, LWT_DATA.language.translator_link, hints,
       TID, $(this).attr('data_order'), 
-      $(this).text(), $(this).attr('data_wid'), status, multi_words, RTL, ann
+      $(this).text(), $(this).attr('data_wid'), status, multi_words, LWT_DATA.language.rtl, ann
     );
   }
   if (HTS == 2) {
@@ -918,7 +918,7 @@ function word_hover_out () {
 
 jQuery.fn.extend({
   tooltip_wsty_content: function () {
-    var re = new RegExp('([' + DELIMITER + '])(?! )', 'g');
+    var re = new RegExp('([' + LWT_DATA.language.delimiter + '])(?! )', 'g');
     let title = '';
     if ($(this).hasClass('mwsty')) {
       title = "<p><b style='font-size:120%'>" + $(this).attr('data_text') + 
@@ -943,9 +943,9 @@ jQuery.fn.extend({
         const ann = $(this).attr('data_ann');
         if (ann != '' && ann != '*') {
           var re = new RegExp(
-            '(.*[' + DELIMITER + '][ ]{0,1}|^)(' + 
+            '(.*[' + LWT_DATA.language.delimiter + '][ ]{0,1}|^)(' + 
             ann.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + ')($|[ ]{0,1}[' + 
-            DELIMITER + '].*$| \\[.*$)', 
+            LWT_DATA.language.delimiter + '].*$| \\[.*$)', 
             ''
           );
           trans = trans.replace(re, '$1<span style="color:red">$2</span>$3');

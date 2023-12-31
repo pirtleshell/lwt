@@ -759,26 +759,25 @@ function do_text_text_content($textid, $only_body=true): void
     $var_array = array(
         // Change globals from jQuery hover
         'ANN_ARRAY' => json_decode(annotation_to_json($ann)),
-        'DELIMITER' => tohtml(
-            str_replace(
-                array('\\',']','-','^'), 
-                array('\\\\','\\]','\\-','\\^'), 
-                getSettingWithDefault('set-term-translation-delimiters')
-            )
-        ),
         'LWT_DATA' => array(
             'language' => array(
                 'dict_link1' => $wb1,
                 'dict_link2' => $wb2,
-                'translator_link' => $wb3
+                'translator_link' => $wb3,
+                'delimiter' => tohtml(
+                        str_replace(
+                            array('\\',']','-','^'), 
+                            array('\\\\','\\]','\\-','\\^'), 
+                            getSettingWithDefault('set-term-translation-delimiters')
+                        )
+                    ),
+                'rtl' => $rtlScript
             )
         ),
-        'RTL' => $rtlScript,
         'TID' => $textid,
         'ADDFILTER' => makeStatusClassFilter((int)$visit_status),
         'JQ_TOOLTIP' => getSettingWithDefault('set-tooltip-mode') == 2 ? 1 : 0,
         'HTS' => getSettingWithDefault('set-hts'),
-        // Add new globals
         'ANNOTATIONS_MODE' => $mode_trans,
         'POS' => $pos
     );
