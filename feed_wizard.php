@@ -1,11 +1,12 @@
 <?php
-
 namespace Lwt\Interface\Feed_Wizard;
 
 require_once 'inc/session_utility.php';
 
 function feed_wizard_insert_uri(): void
-{
+{    session_start();
+
+
     if (isset($_REQUEST['select_mode'])) { 
         $_SESSION['wizard']['select_mode'] = $_REQUEST['select_mode']; 
     }
@@ -55,6 +56,7 @@ function feed_wizard_insert_uri(): void
 
 function feed_wizard_select_text(): void
 {
+    session_start();
     global $tbpref;
     if (isset($_REQUEST['edit_feed']) && !isset($_SESSION['wizard'])) {
         $_SESSION['wizard']['edit_feed']=$_REQUEST['edit_feed'];
@@ -111,7 +113,7 @@ function feed_wizard_select_text(): void
         ) {
             $source=get_nf_option($_SESSION['wizard']['options'], 'article_source');
             $_SESSION['wizard']['feed']['feed_text'] = $source;
-            $feed_len=count($_SESSION['wizard']['feed'])-2;
+            $feed_len = count(array_filter(array_keys($_SESSION['wizard']['feed']), 'is_numeric'));
             for ($i=0;$i<$feed_len;$i++){
                 $_SESSION['wizard']['feed'][$i]['text'] = $_SESSION['wizard']['feed'][$i][$source];
             }
@@ -186,17 +188,23 @@ function feed_wizard_select_text(): void
         $host_name=$_REQUEST['host_name'];
         $_SESSION['wizard']['host'][$host_name]=$_REQUEST['host_status'];
     }
-    $feed_len = count($_SESSION['wizard']['feed'])-2;
+   
     if (isset($_REQUEST['NfName'])) { 
         $_SESSION['wizard']['feed']['feed_title']=$_REQUEST['NfName']; 
     }
+   
+    $feed_len = count(array_filter(array_keys($_SESSION['wizard']['feed']), 'is_numeric'));
+
+
     if (
         isset($_REQUEST['NfArticleSection']) && 
         ($_REQUEST['NfArticleSection'] != $_SESSION['wizard']['feed']['feed_text'])
     ) {
         $_SESSION['wizard']['feed']['feed_text'] = $_REQUEST['NfArticleSection'];
         $source = $_SESSION['wizard']['feed']['feed_text'];
+
         for ($i = 0; $i < $feed_len; $i++) {
+
             if ($_SESSION['wizard']['feed']['feed_text'] != '') {
                 $_SESSION['wizard']['feed'][$i]['text'] = $_SESSION['wizard']['feed'][$i][$source];
             } else { 
@@ -515,6 +523,8 @@ function feed_wizard_select_text(): void
 
 function feed_wizard_filter_text(): void
 {
+    session_start();
+
     if (isset($_REQUEST['NfName'])) { 
         $_SESSION['wizard']['feed']['feed_title'] = $_REQUEST['NfName']; 
     }
@@ -564,7 +574,7 @@ function feed_wizard_filter_text(): void
         $_SESSION['wizard']['selected_feed']=0; 
     }
     if(!isset($_SESSION['wizard']['host2'])) { 
-        $_SESSION['wizard']['host2']=''; 
+        $_SESSION['wizard']['host2']= array(); 
     }
     if (isset($_REQUEST['host_status']) and isset($_REQUEST['host_name'])) {
         $host_name=$_REQUEST['host_name'];
@@ -574,7 +584,7 @@ function feed_wizard_filter_text(): void
         $host_name=$_REQUEST['host_name'];
         $_SESSION['wizard']['host2'][$host_name]=$_REQUEST['host_status2'];
     }
-    $feed_len=count($_SESSION['wizard']['feed'])-2;
+    $feed_len = count(array_filter(array_keys($_SESSION['wizard']['feed']), 'is_numeric'));
     pagestart_nobody("Feed Wizard");
 ?>
 <script type="text/javascript" src="js/jquery.xpath.min.js" charset="utf-8"></script>
@@ -589,7 +599,6 @@ function feed_wizard_filter_text(): void
             if (articleSection == '') {
                 alert("Article section is empty!")
             }
-            console.log("Article section: " + articleSection);
             $('#lwt_header')
                 .nextAll()
                 .find('*')
@@ -762,13 +771,15 @@ function feed_wizard_filter_text(): void
                             <?php
     $current_host='';
     $current_status='';
+
     for($i=0;$i<$feed_len;$i++){
+
         $feed_host=parse_url($_SESSION['wizard']['feed'][$i]['link']);
         $feed_host=$feed_host['host'];
         if(!isset($_SESSION['wizard']['host2'][$feed_host])) { 
             $_SESSION['wizard']['host2'][$feed_host]='-'; 
         }
-        echo '<option value="'.$i.'" title="'. $_SESSION['wizard']['feed'][$i]['title'] .'"';
+        echo "<option value=".$i." title=". $_SESSION['wizard']['feed'][$i]['title'];
         if($i==$_SESSION['wizard']['selected_feed']) {
             echo ' selected="selected"';
             $current_host=$feed_host;
@@ -858,6 +869,7 @@ function feed_wizard_filter_text(): void
 
 function feed_wizard_edit_options(): void
 {
+    session_start();
     global $tbpref;
     pagestart('Feed Wizard', false);
     if (isset($_REQUEST['filter_tags'])) { 
@@ -1113,9 +1125,7 @@ function feed_wizard_edit_options(): void
 
 switch ((int)$_REQUEST['step'])
 {
-    case 1:
-        feed_wizard_insert_uri();
-        break;
+    
     case 2:
         feed_wizard_select_text();
         break;
@@ -1124,9 +1134,13 @@ switch ((int)$_REQUEST['step'])
         break;
     case 4:
         feed_wizard_edit_options();
+        unset($_SESSION['wizard']);
         break;
+    case 1:
     default:
-        my_die("Unknown step: " . (int)$_REQUEST['step']);
+    feed_wizard_insert_uri();
+        break;
+       
 }
 
 pageend();
