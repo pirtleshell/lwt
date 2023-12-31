@@ -1014,7 +1014,6 @@ function keydown_event_do_text_text (e) {
     ',span.mword:not(.hide)' + ADDFILTER
   );
   const l_knownwordlist = knownwordlist.size();
-  // console.log(knownwordlist);
   if (l_knownwordlist == 0) return true;
 
   // the following only for a non-zero known words list
@@ -1056,18 +1055,14 @@ function keydown_event_do_text_text (e) {
       ? (100000000)
       : get_position_from_id(marked.attr('id'));
     $('span.kwordmarked').removeClass('kwordmarked');
-    // console.log(currid);
     LWT_DATA.text.reading_position = l_knownwordlist - 1;
     for (var i = l_knownwordlist - 1; i >= 0; i--) {
       var iid = get_position_from_id(knownwordlist.eq(i).attr('id'));
-      // console.log(iid);
       if (iid < currid) {
         LWT_DATA.text.reading_position = i;
         break;
       }
     }
-    // TEXTPOS--;
-    // if (TEXTPOS < 0) TEXTPOS = l_knownwordlist - 1;
     curr = knownwordlist.eq(LWT_DATA.text.reading_position);
     curr.addClass('kwordmarked');
     $(window).scrollTo(curr, { axis: 'y', offset: -150 });
@@ -1087,18 +1082,15 @@ function keydown_event_do_text_text (e) {
       ? (-1)
       : get_position_from_id(marked.attr('id'));
     $('span.kwordmarked').removeClass('kwordmarked');
-    // console.log(currid);
     LWT_DATA.text.reading_position = 0;
     for (var i = 0; i < l_knownwordlist; i++) {
       var iid = get_position_from_id(knownwordlist.eq(i).attr('id'));
-      // console.log(iid);
       if (iid > currid) {
         LWT_DATA.text.reading_position = i;
         break;
       }
     }
-    // TEXTPOS++;
-    // if (TEXTPOS >= l_knownwordlist) TEXTPOS = 0;
+    
     curr = knownwordlist.eq(LWT_DATA.text.reading_position);
     curr.addClass('kwordmarked');
     $(window).scrollTo(curr, { axis: 'y', offset: -150 });
@@ -1585,7 +1577,6 @@ function set_word_counts () {
     $('#todo_' + key).html(todo);
 
     // added unknown percent
-    // console.log(SUW);
     if (SUW & 8) {
       unknowncount = parseInt(value) + parseInt(WORDCOUNTS.expru[key] || 0) - parseInt(knownu);
       unknownpercent = Math.round(unknowncount * 10000 / (knownu + unknowncount)) / 100;
