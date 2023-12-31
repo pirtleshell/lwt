@@ -25,8 +25,11 @@ Discussion in open on [#174](https://github.com/HugoFara/lwt/discussions/174).
 
 ### Changed
 
-* MarkDown files in the root folder are now included in the Docker image. See 
-[#160](https://github.com/HugoFara/lwt/issues/160). It adds `README.md` and `UNLICENSE.md`.
+* Adds missing documentation in the Docker image:
+  * MarkDown files in the root folder are now included. 
+  See [#160](https://github.com/HugoFara/lwt/issues/160). 
+  It adds `README.md` and `UNLICENSE.md`.
+  * Adds `docs/info.html` and `docs/index.html` from [#146](https://github.com/HugoFara/lwt/pull/146).
 
 ### Fixed
 
