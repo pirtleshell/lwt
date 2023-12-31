@@ -138,7 +138,7 @@ function change_term_display($wid, $translation, $hex): void
     ?>;
     const roman = <?php echo prepare_textdata_js($_REQUEST["WoRomanization"]); ?>;
     let title;
-    if (window.parent.document.getElementById('frame-l').JQ_TOOLTIP) {
+    if (window.parent.document.getElementById('frame-l').LWT_DATA.settings.jQuery_tooltip) {
         title = '';
     } else {
         title = make_tooltip(

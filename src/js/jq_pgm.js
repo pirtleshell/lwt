@@ -25,8 +25,22 @@ LWT_DATA = {
     rtl: false,
     /** Third-party voice API */
     tpVoiceApi: ''
+  },
+  text: {
+    id: 0,
+    reading_position: -1,
+  },
+  word: {
+    id: 0
+  },
+  test: {
+    solution: ''
+  },
+  settings: {
+    jQuery_tooltip: false,
+    hts: 0
   }
-}
+};
 
 TEXTPOS = -1;
 OPENED = 0;
@@ -511,7 +525,7 @@ function word_click_event_do_test_test () {
     $(this).attr('data_sent'),
     $(this).attr('data_todo')
   );
-  $('.todo').text(SOLUTION);
+  $('.todo').text(LWT_DATA.test.solution);
   return false;
 }
 
@@ -532,41 +546,41 @@ function keydown_event_do_test_test (e) {
   }
   if (e.which == 38) { 
     // up : status+1
-		showRightFrames('set_test_status.php?wid=' + WID + '&stchange=1');
+		showRightFrames('set_test_status.php?wid=' + LWT_DATA.word.id + '&stchange=1');
     return false;
   }
   if (e.which == 27) { 
     // esc : dont change status
 		showRightFrames(
-      'set_test_status.php?wid=' + WID + '&status=' + $('.word').attr('data_status')
+      'set_test_status.php?wid=' + LWT_DATA.word.id + '&status=' + $('.word').attr('data_status')
     );
     return false;
   }
   if (e.which == 73) { 
     // I : status=98
-		showRightFrames('set_test_status.php?wid=' + WID + '&status=98');
+		showRightFrames('set_test_status.php?wid=' + LWT_DATA.word.id + '&status=98');
     return false;
   }
   if (e.which == 87) { 
     // W : status=99
-		showRightFrames('set_test_status.php?wid=' + WID + '&status=99');
+		showRightFrames('set_test_status.php?wid=' + LWT_DATA.word.id + '&status=99');
     return false;
   }
   if (e.which == 69) { 
     // E : EDIT
-		showRightFrames('edit_tword.php?wid=' + WID);
+		showRightFrames('edit_tword.php?wid=' + LWT_DATA.word.id);
     return false;
   }
   if (OPENED == 0) return true;
   if (e.which == 40) { 
     // down : status-1
-		showRightFrames('set_test_status.php?wid=' + WID + '&stchange=-1');
+		showRightFrames('set_test_status.php?wid=' + LWT_DATA.word.id + '&stchange=-1');
     return false;
   }
   for (let i = 1; i <= 5; i++) {
     if (e.which == (48 + i) || e.which == (96 + i)) { 
       // 1,.. : status=i
-			showRightFrames('set_test_status.php?wid=' + WID + '&status=' + i);
+			showRightFrames('set_test_status.php?wid=' + LWT_DATA.word.id + '&status=' + i);
       return false;
     }
   }
@@ -599,7 +613,7 @@ function word_each_do_text_text(_) {
       }
     }
   }
-  if (!JQ_TOOLTIP) {
+  if (!LWT_DATA.settings.jQuery_tooltip) {
     this.title = make_tooltip(
       $(this).text(), 
       $(this).attr('data_trans'), 
@@ -635,7 +649,7 @@ function mword_each_do_text_text(_) {
         }
       }
     }
-    if (!JQ_TOOLTIP) {
+    if (!LWT_DATA.settings.jQuery_tooltip) {
       this.title = make_tooltip(
         $(this).attr('data_text'),
         $(this).attr('data_trans'), $(this).attr('data_rom'),
@@ -660,7 +674,7 @@ function word_dblclick_event_do_text_text () {
 /**
  * Do a word edition window. Usually called when the user clicks on a word.
  * 
- * @since 2.9.10-fork Read word aloud if HTS equals 2.
+ * @since 2.9.10-fork Read word aloud if LWT_DATA.settings.hts equals 2.
  * 
  * @returns {bool} false
  */
@@ -672,7 +686,7 @@ function word_click_event_do_text_text () {
   }
 
   let hints;
-  if (JQ_TOOLTIP) { 
+  if (LWT_DATA.settings.jQuery_tooltip) { 
     hints = make_tooltip(
       $(this).text(), $(this).attr('data_trans'), $(this).attr('data_rom'), status
     ); 
@@ -689,31 +703,31 @@ function word_click_event_do_text_text () {
   if (status < 1) {
     run_overlib_status_unknown(
       LWT_DATA.language.dict_link1, LWT_DATA.language.dict_link2, LWT_DATA.language.translator_link, hints,
-      TID, $(this).attr('data_order'), $(this).text(), multi_words, LWT_DATA.language.rtl
+      LWT_DATA.text.id, $(this).attr('data_order'), $(this).text(), multi_words, LWT_DATA.language.rtl
     );
     showRightFrames(
-      'edit_word.php?tid=' + TID + '&ord=' + $(this).attr('data_order') + '&wid='
+      'edit_word.php?tid=' + LWT_DATA.text.id + '&ord=' + $(this).attr('data_order') + '&wid='
     );
   } else if (status == 99) {
     run_overlib_status_99(
       LWT_DATA.language.dict_link1, LWT_DATA.language.dict_link2, LWT_DATA.language.translator_link, hints,
-      TID, $(this).attr('data_order'), 
+      LWT_DATA.text.id, $(this).attr('data_order'), 
       $(this).text(), $(this).attr('data_wid'), multi_words, LWT_DATA.language.rtl, ann
     );
   } else if (status == 98) {
     run_overlib_status_98(
       LWT_DATA.language.dict_link1, LWT_DATA.language.dict_link2, LWT_DATA.language.translator_link, hints,
-      TID, $(this).attr('data_order'), 
+      LWT_DATA.text.id, $(this).attr('data_order'), 
       $(this).text(), $(this).attr('data_wid'), multi_words, LWT_DATA.language.rtl, ann
     );
   } else {
     run_overlib_status_1_to_5(
       LWT_DATA.language.dict_link1, LWT_DATA.language.dict_link2, LWT_DATA.language.translator_link, hints,
-      TID, $(this).attr('data_order'), 
+      LWT_DATA.text.id, $(this).attr('data_order'), 
       $(this).text(), $(this).attr('data_wid'), status, multi_words, LWT_DATA.language.rtl, ann
     );
   }
-  if (HTS == 2) {
+  if (LWT_DATA.settings.hts == 2) {
     const lg = getLangFromDict(LWT_DATA.language.translator_link);
     readTextAloud($(this).text(), lg);
   }
@@ -729,17 +743,17 @@ function mword_click_event_do_text_text () {
     }
     run_overlib_multiword(
       LWT_DATA.language.dict_link1, LWT_DATA.language.dict_link2, LWT_DATA.language.translator_link, 
-      JQ_TOOLTIP ? make_tooltip(
+      LWT_DATA.settings.jQuery_tooltip ? make_tooltip(
         $(this).text(), 
         $(this).attr('data_trans'), 
         $(this).attr('data_rom'), 
         status
       ) : $(this).attr('title'),
-      TID, $(this).attr('data_order'), $(this).attr('data_text'),
+      LWT_DATA.text.id, $(this).attr('data_order'), $(this).attr('data_text'),
       $(this).attr('data_wid'), status, $(this).attr('data_code'), ann
     );
   }
-  if (HTS == 2) {
+  if (LWT_DATA.settings.hts == 2) {
     const lg = getLangFromDict(LWT_DATA.language.translator_link);
     readTextAloud($(this).text(), lg);
   }
@@ -747,7 +761,7 @@ function mword_click_event_do_text_text () {
 }
 
 function mword_drag_n_drop_select (event) {
-  if (JQ_TOOLTIP)$('.ui-tooltip').remove();
+  if (LWT_DATA.settings.jQuery_tooltip)$('.ui-tooltip').remove();
   const context = $(this).parent();
   context.one('mouseup mouseout', $(this), function () {
     clearTimeout(to);
@@ -853,13 +867,13 @@ function mword_drag_n_drop_select (event) {
                 alert('selected text is too long!!!');
               } else {
                 showRightFrames(
-                  'edit_mword.php?tid=' + TID + '&len=' + len + '&ord=' + g + 
+                  'edit_mword.php?tid=' + LWT_DATA.text.id + '&len=' + len + '&ord=' + g + 
                   '&txt=' + text
                 );
               }
             } else {
               showRightFrames(
-                'edit_word.php?tid=' + TID + '&ord=' + g + '&txt=' + 
+                'edit_word.php?tid=' + LWT_DATA.text.id + '&ord=' + g + '&txt=' + 
                 $('#ID-' + g + '-1').text()
               );
             }
@@ -901,10 +915,10 @@ function word_hover_over () {
   if (!$('.tword')[0]) {
     const v = $(this).attr('class').replace(/.*(TERM[^ ]*)( .*)*/, '$1');
     $('.' + v).addClass('hword');
-    if (JQ_TOOLTIP) {
+    if (LWT_DATA.settings.jQuery_tooltip) {
       $(this).trigger('mouseover');
     }
-    if (HTS == 3) { 
+    if (LWT_DATA.settings.hts == 3) { 
       const lg = getLangFromDict(LWT_DATA.language.translator_link);
       readTextAloud($(this).text(), lg);
       }
@@ -913,7 +927,7 @@ function word_hover_over () {
 
 function word_hover_out () {
   $('.hword').removeClass('hword');
-  if (JQ_TOOLTIP)$('.ui-helper-hidden-accessible>div[style]').remove();
+  if (LWT_DATA.settings.jQuery_tooltip)$('.ui-helper-hidden-accessible>div[style]').remove();
 }
 
 jQuery.fn.extend({
@@ -978,7 +992,7 @@ function get_position_from_id (id_string) {
 
 function keydown_event_do_text_text (e) {
   if (e.which == 27) { // esc = reset all
-    TEXTPOS = -1;
+    LWT_DATA.text.reading_position = -1;
     $('span.uwordmarked').removeClass('uwordmarked');
     $('span.kwordmarked').removeClass('kwordmarked');
     cClick();
@@ -1006,8 +1020,8 @@ function keydown_event_do_text_text (e) {
   // the following only for a non-zero known words list
   if (e.which == 36) { // home : known word navigation -> first
     $('span.kwordmarked').removeClass('kwordmarked');
-    TEXTPOS = 0;
-    curr = knownwordlist.eq(TEXTPOS);
+    LWT_DATA.text.reading_position = 0;
+    curr = knownwordlist.eq(LWT_DATA.text.reading_position);
     curr.addClass('kwordmarked');
     $(window).scrollTo(curr, { axis: 'y', offset: -150 });
     var ann = '';
@@ -1022,8 +1036,8 @@ function keydown_event_do_text_text (e) {
   }
   if (e.which == 35) { // end : known word navigation -> last
     $('span.kwordmarked').removeClass('kwordmarked');
-    TEXTPOS = l_knownwordlist - 1;
-    curr = knownwordlist.eq(TEXTPOS);
+    LWT_DATA.text.reading_position = l_knownwordlist - 1;
+    curr = knownwordlist.eq(LWT_DATA.text.reading_position);
     curr.addClass('kwordmarked');
     $(window).scrollTo(curr, { axis: 'y', offset: -150 });
     var ann = '';
@@ -1043,18 +1057,18 @@ function keydown_event_do_text_text (e) {
       : get_position_from_id(marked.attr('id'));
     $('span.kwordmarked').removeClass('kwordmarked');
     // console.log(currid);
-    TEXTPOS = l_knownwordlist - 1;
+    LWT_DATA.text.reading_position = l_knownwordlist - 1;
     for (var i = l_knownwordlist - 1; i >= 0; i--) {
       var iid = get_position_from_id(knownwordlist.eq(i).attr('id'));
       // console.log(iid);
       if (iid < currid) {
-        TEXTPOS = i;
+        LWT_DATA.text.reading_position = i;
         break;
       }
     }
     // TEXTPOS--;
     // if (TEXTPOS < 0) TEXTPOS = l_knownwordlist - 1;
-    curr = knownwordlist.eq(TEXTPOS);
+    curr = knownwordlist.eq(LWT_DATA.text.reading_position);
     curr.addClass('kwordmarked');
     $(window).scrollTo(curr, { axis: 'y', offset: -150 });
     var ann = '';
@@ -1074,18 +1088,18 @@ function keydown_event_do_text_text (e) {
       : get_position_from_id(marked.attr('id'));
     $('span.kwordmarked').removeClass('kwordmarked');
     // console.log(currid);
-    TEXTPOS = 0;
+    LWT_DATA.text.reading_position = 0;
     for (var i = 0; i < l_knownwordlist; i++) {
       var iid = get_position_from_id(knownwordlist.eq(i).attr('id'));
       // console.log(iid);
       if (iid > currid) {
-        TEXTPOS = i;
+        LWT_DATA.text.reading_position = i;
         break;
       }
     }
     // TEXTPOS++;
     // if (TEXTPOS >= l_knownwordlist) TEXTPOS = 0;
-    curr = knownwordlist.eq(TEXTPOS);
+    curr = knownwordlist.eq(LWT_DATA.text.reading_position);
     curr.addClass('kwordmarked');
     $(window).scrollTo(curr, { axis: 'y', offset: -150 });
     var ann = '';
@@ -1102,8 +1116,8 @@ function keydown_event_do_text_text (e) {
   if ((!$('.kwordmarked, .uwordmarked')[0]) && $('.hword:hover')[0]) {
     curr = $('.hword:hover');
   } else {
-    if (TEXTPOS < 0 || TEXTPOS >= l_knownwordlist) return true;
-    curr = knownwordlist.eq(TEXTPOS);
+    if (LWT_DATA.text.reading_position < 0 || LWT_DATA.text.reading_position >= l_knownwordlist) return true;
+    curr = knownwordlist.eq(LWT_DATA.text.reading_position);
   }
   const wid = curr.attr('data_wid');
   const ord = curr.attr('data_order');
@@ -1122,11 +1136,11 @@ function keydown_event_do_text_text (e) {
             i = i + '&sl=' + sl + '&tl=' + tl;
         }
         showRightFrames(
-          'set_word_on_hover.php?text=' + txt + '&tid=' + TID + '&status=' + i
+          'set_word_on_hover.php?text=' + txt + '&tid=' + LWT_DATA.text.id + '&status=' + i
         );
       } else {
 				showRightFrames(
-          'set_word_status.php?wid=' + wid + '&tid=' + TID + '&ord=' + ord + 
+          'set_word_status.php?wid=' + wid + '&tid=' + LWT_DATA.text.id + '&ord=' + ord + 
           '&status=' + i
         );
         return false;
@@ -1136,12 +1150,12 @@ function keydown_event_do_text_text (e) {
   if (e.which == 73) { // I : status=98
     if (stat == '0') {
 			showRightFrames(
-        'set_word_on_hover.php?text=' + txt + '&tid=' + TID + 
+        'set_word_on_hover.php?text=' + txt + '&tid=' + LWT_DATA.text.id + 
         '&status=98'
       );
     } else {
 			showRightFrames(
-        'set_word_status.php?wid=' + wid + '&tid=' + TID + 
+        'set_word_status.php?wid=' + wid + '&tid=' + LWT_DATA.text.id + 
         '&ord=' + ord + '&status=98'
       );
       return false;
@@ -1150,11 +1164,11 @@ function keydown_event_do_text_text (e) {
   if (e.which == 87) { // W : status=99
     if (stat == '0') {
 			showRightFrames(
-        'set_word_on_hover.php?text=' + txt + '&tid=' + TID + '&status=99'
+        'set_word_on_hover.php?text=' + txt + '&tid=' + LWT_DATA.text.id + '&status=99'
       );
     } else {
 			showRightFrames(
-        'set_word_status.php?wid=' + wid + '&tid=' + TID + '&ord=' + ord + 
+        'set_word_status.php?wid=' + wid + '&tid=' + LWT_DATA.text.id + '&ord=' + ord + 
         '&status=99'
       );
     }
@@ -1186,9 +1200,9 @@ function keydown_event_do_text_text (e) {
       }
     }
     if (popup) {
-      owin('trans.php?x=1&i=' + ord + '&t=' + TID);
+      owin('trans.php?x=1&i=' + ord + '&t=' + LWT_DATA.text.id);
     } else if (open_url) {
-      showRightFrames(undefined, 'trans.php?x=1&i=' + ord + '&t=' + TID);
+      showRightFrames(undefined, 'trans.php?x=1&i=' + ord + '&t=' + LWT_DATA.text.id);
     }
     return false;
   }
@@ -1231,11 +1245,11 @@ function keydown_event_do_text_text (e) {
     let url = '';
     if (curr.hasClass('mword')) {
       url = 'edit_mword.php?wid=' + wid + '&len=' + curr.attr('data_code') + 
-      '&tid=' + TID + '&ord=' + ord + dict;
+      '&tid=' + LWT_DATA.text.id + '&ord=' + ord + dict;
     } else if (stat == '0') {
-			url =	'edit_word.php?wid=&tid=' + TID + '&ord=' + ord + dict;
+			url =	'edit_word.php?wid=&tid=' + LWT_DATA.text.id + '&ord=' + ord + dict;
     } else {
-			url =	'edit_word.php?wid=' + wid + '&tid=' + TID + '&ord=' + ord + dict;
+			url =	'edit_word.php?wid=' + wid + '&tid=' + LWT_DATA.text.id + '&ord=' + ord + dict;
     }
     showRightFrames(url);
     return false;

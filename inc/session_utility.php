@@ -4430,7 +4430,7 @@ function new_expression_interactable2($hex, $appendtext, $wid, $len): void
     let term = <?php echo json_encode($attrs); ?>;
 
     let title = '';
-    if (window.parent.JQ_TOOLTIP) 
+    if (window.parent.LWT_DATA.settings.jQuery_tooltip) 
         title = make_tooltip(
             <?php echo json_encode($appendtext); ?>, term.data_trans, term.data_rom, 
             parseInt(term.data_status, 10)

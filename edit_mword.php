@@ -217,7 +217,7 @@ function edit_mword_do_update($term, $newstatus)
         function update_mword(mword, oldstatus) {
             const context = window.parent.document;
             let title = '';
-            if (window.parent.JQ_TOOLTIP) 
+            if (window.parent.LWT_DATA.settings.jQuery_tooltip) 
                 title = make_tooltip(
                     mword.text, mword.trans, mword.roman, mword.status
                 );

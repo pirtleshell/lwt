@@ -73,7 +73,7 @@ if (isset($_REQUEST['op'])) {
     var status = <?php echo prepare_textdata_js($_REQUEST["WoStatus"]); ?>;
     var trans = <?php echo prepare_textdata_js($translation . getWordTagList($wid, ' ', 1, 0)); ?>;
     var roman = <?php echo prepare_textdata_js($_REQUEST["WoRomanization"]); ?>;
-    var title = window.parent.JQ_TOOLTIP?'':make_tooltip(<?php echo prepare_textdata_js($_REQUEST["WoText"]); ?>,trans,roman,status);
+    var title = window.parent.LWT_DATA.settings.jQuery_tooltip?'':make_tooltip(<?php echo prepare_textdata_js($_REQUEST["WoText"]); ?>,trans,roman,status);
     //]]>
 </script>
             <?php

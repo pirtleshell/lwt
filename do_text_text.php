@@ -652,14 +652,14 @@ function do_text_text_javascript($var_array): void
         }
     }
     LANG = getLangFromDict(LWT_DATA.language.translator_link);
-    TEXTPOS = -1;
+    LWT_DATA.text.reading_position = -1;
     OPENED = 0;
     // Change the language of the current frame
     if (LANG && LANG != LWT_DATA.language.translator_link) {
         $("html").attr('lang', LANG);
     }
 
-    if (JQ_TOOLTIP) {
+    if (LWT_DATA.settings.jQuery_tooltip) {
         $(function () {
             $('#overDiv').tooltip();
             $('#thetext').tooltip_wsty_init();
@@ -669,7 +669,7 @@ function do_text_text_javascript($var_array): void
 
     /**
      * Save the current reading position.
-     * @global {string} TID Text ID
+     * @global {string} LWT_DATA.text.id Text ID
      * 
      * @since 2.0.3-fork
      */
@@ -683,7 +683,7 @@ function do_text_text_javascript($var_array): void
                 return;
             }
         });
-        saveReadingPosition(TID, pos);
+        saveReadingPosition(LWT_DATA.text.id, pos);
     }
 
     $(document).ready(prepareTextInteractions);
@@ -772,12 +772,16 @@ function do_text_text_content($textid, $only_body=true): void
                         )
                     ),
                 'rtl' => $rtlScript
-            )
+            ),
+            'text' => array(
+                'id' => $textid,
+            ),
+            'settings' => array(
+                'jQuery_tooltip' => (getSettingWithDefault('set-tooltip-mode') == 2 ? 1 : 0),
+                'hts' => getSettingWithDefault('set-hts')
+            ),
         ),
-        'TID' => $textid,
         'ADDFILTER' => makeStatusClassFilter((int)$visit_status),
-        'JQ_TOOLTIP' => getSettingWithDefault('set-tooltip-mode') == 2 ? 1 : 0,
-        'HTS' => getSettingWithDefault('set-hts'),
         'ANNOTATIONS_MODE' => $mode_trans,
         'POS' => $pos
     );

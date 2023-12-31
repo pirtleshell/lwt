@@ -87,7 +87,7 @@ function delete_word_javascript($wid, $tid)
         const context = window.parent.document;
         const elem = $('.word' + wid, context);
         let title = "";
-        if (!window.parent.document.getElementById('frame-l').JQ_TOOLTIP) { 
+        if (!window.parent.document.getElementById('frame-l').LWT_DATA.settings.jQuery_tooltip) { 
             const ann = elem.attr('data_ann');
             title = make_tooltip(
                 <?php echo prepare_textdata_js(get_term($wid)); ?>, 
