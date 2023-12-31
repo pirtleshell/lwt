@@ -4,9 +4,9 @@ namespace Lwt\Interface\Feed_Wizard;
 require_once 'inc/session_utility.php';
 
 function feed_wizard_insert_uri(): void
-{    session_start();
-
-
+{    
+    session_start();
+    
     if (isset($_REQUEST['select_mode'])) { 
         $_SESSION['wizard']['select_mode'] = $_REQUEST['select_mode']; 
     }
@@ -56,8 +56,8 @@ function feed_wizard_insert_uri(): void
 
 function feed_wizard_select_text(): void
 {
-    session_start();
     global $tbpref;
+    session_start();
     if (isset($_REQUEST['edit_feed']) && !isset($_SESSION['wizard'])) {
         $_SESSION['wizard']['edit_feed']=$_REQUEST['edit_feed'];
         $result = do_mysqli_query(
@@ -123,7 +123,8 @@ function feed_wizard_select_text(): void
             isset($_SESSION['wizard']) && !empty($_SESSION['wizard']['feed']) && 
             $_REQUEST['rss_url'] === $_SESSION['wizard']['rss_url']
         ) {
-            my_die("Something went wrong with the feed wizard!");
+            session_destroy();
+            my_die("Your session seems to have an issue, please reload the page.");
         }
         $_SESSION['wizard']['feed']=get_links_from_new_feed($_REQUEST['rss_url']);
         $_SESSION['wizard']['rss_url']=$_REQUEST['rss_url'];
@@ -869,8 +870,8 @@ function feed_wizard_filter_text(): void
 
 function feed_wizard_edit_options(): void
 {
-    session_start();
     global $tbpref;
+    session_start();
     pagestart('Feed Wizard', false);
     if (isset($_REQUEST['filter_tags'])) { 
         $_SESSION['wizard']['filter_tags']=$_REQUEST['filter_tags']; 
@@ -1125,7 +1126,6 @@ function feed_wizard_edit_options(): void
 
 switch ((int)$_REQUEST['step'])
 {
-    
     case 2:
         feed_wizard_select_text();
         break;
@@ -1138,9 +1138,8 @@ switch ((int)$_REQUEST['step'])
         break;
     case 1:
     default:
-    feed_wizard_insert_uri();
+        feed_wizard_insert_uri();
         break;
-       
 }
 
 pageend();
