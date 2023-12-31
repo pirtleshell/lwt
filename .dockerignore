@@ -4,6 +4,8 @@
 docker/*
 # Documentation
 docs/*
+!docs/**/index.html
+!docs/**/info.html
 # NPM, for debugging only
 node_modules/*
 # Phive products
@@ -16,6 +18,7 @@ tools/*
 .dockerignore
 .git
 .gitignore
+
 # MarkDown and PHP documentation generation
 Doxyfile
 
