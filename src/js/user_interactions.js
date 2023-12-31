@@ -94,7 +94,7 @@ function prepareTextInteractions() {
     $('.word').on('click', word_click_event_do_text_text);
     $('#thetext').on('selectstart','span',false).on(
         'mousedown','.wsty',
-        {annotation: ANNOTATIONS_MODE}, 
+        {annotation: LWT_DATA.settings.annotations_mode}, 
         mword_drag_n_drop_select);
     $('#thetext').on('click', '.mword', mword_click_event_do_text_text);
     $('.word').on('dblclick', word_dblclick_event_do_text_text);

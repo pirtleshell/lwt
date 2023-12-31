@@ -758,7 +758,6 @@ function do_text_text_content($textid, $only_body=true): void
     }
     $var_array = array(
         // Change globals from jQuery hover
-        'ANN_ARRAY' => json_decode(annotation_to_json($ann)),
         'LWT_DATA' => array(
             'language' => array(
                 'dict_link1' => $wb1,
@@ -775,15 +774,18 @@ function do_text_text_content($textid, $only_body=true): void
             ),
             'text' => array(
                 'id' => $textid,
-                'reading_position' => $pos
+                'reading_position' => $pos,
+                'annotations' => json_decode(annotation_to_json($ann))
             ),
             'settings' => array(
-                'jQuery_tooltip' => (getSettingWithDefault('set-tooltip-mode') == 2 ? 1 : 0),
-                'hts' => getSettingWithDefault('set-hts')
+                'jQuery_tooltip' => (
+                    getSettingWithDefault('set-tooltip-mode') == 2 ? 1 : 0
+                ),
+                'hts' => getSettingWithDefault('set-hts'),
+                'word_status_filter' => makeStatusClassFilter((int)$visit_status),
+                'annotations_mode' => $mode_trans
             ),
-        ),
-        'ADDFILTER' => makeStatusClassFilter((int)$visit_status),
-        'ANNOTATIONS_MODE' => $mode_trans
+        )
     );
     do_text_text_javascript($var_array);
     do_text_text_style($showLearning, $mode_trans, $textsize, strlen($ann) > 0);

@@ -29,6 +29,7 @@ LWT_DATA = {
   text: {
     id: 0,
     reading_position: -1,
+    annotations: {}
   },
   word: {
     id: 0
@@ -38,7 +39,8 @@ LWT_DATA = {
   },
   settings: {
     jQuery_tooltip: false,
-    hts: 0
+    hts: 0,
+    word_status_filter: ''
   }
 };
 
@@ -596,9 +598,9 @@ function word_each_do_text_text(_) {
   const wid = $(this).attr('data_wid');
   if (wid != '') {
     const order = $(this).attr('data_order');
-    if (order in ANN_ARRAY) {
-      if (wid == ANN_ARRAY[order][1]) {
-        const ann = ANN_ARRAY[order][2];
+    if (order in LWT_DATA.text.annotations) {
+      if (wid == LWT_DATA.text.annotations[order][1]) {
+        const ann = LWT_DATA.text.annotations[order][2];
         const re = new RegExp(
           '([' + LWT_DATA.language.delimiter + '][ ]{0,1}|^)(' + 
           ann.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + ')($|[ ]{0,1}[' + 
@@ -630,9 +632,9 @@ function mword_each_do_text_text(_) {
       const order = parseInt($(this).attr('data_order'));
       for (let j = 2; j <= 16; j = j + 2) {
         const index = (order + j).toString();
-        if (index in ANN_ARRAY) {
-          if (wid == ANN_ARRAY[index][1]) {
-            const ann = ANN_ARRAY[index][2];
+        if (index in LWT_DATA.text.annotations) {
+          if (wid == LWT_DATA.text.annotations[index][1]) {
+            const ann = LWT_DATA.text.annotations[index][2];
             const re = new RegExp(
               '([' + LWT_DATA.language.delimiter + '][ ]{0,1}|^)(' + 
               ann.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + ')($|[ ]{0,1}[' + 
@@ -1010,8 +1012,8 @@ function keydown_event_do_text_text (e) {
   }
 
   const knownwordlist = $(
-    'span.word:not(.hide):not(.status0)' + ADDFILTER + 
-    ',span.mword:not(.hide)' + ADDFILTER
+    'span.word:not(.hide):not(.status0)' + LWT_DATA.settings.word_status_filter + 
+    ',span.mword:not(.hide)' + LWT_DATA.settings.word_status_filter
   );
   const l_knownwordlist = knownwordlist.size();
   if (l_knownwordlist == 0) return true;
