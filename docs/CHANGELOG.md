@@ -20,7 +20,12 @@ Pull request [#147](https://github.com/HugoFara/lwt/pull/147) by
 A courtesy of [@ProgramComputer](https://github.com/ProgramComputer) on pull request 
 [#153](https://github.com/HugoFara/lwt/pull/153). 
 A feature first requested on [#143](https://github.com/HugoFara/lwt/issues/143). 
-Discussion in open on [#174](https://github.com/HugoFara/lwt/discussions/174). 
+Discussion in open on [#174](https://github.com/HugoFara/lwt/discussions/174).
+
+### Changed
+
+* MarkDown files in the root folder are now included in the Docker image. See 
+[#160](https://github.com/HugoFara/lwt/issues/160). It adds `README.md` and `UNLICENSE.md`.
 
 ### Fixed
 

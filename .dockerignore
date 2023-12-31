@@ -13,11 +13,11 @@ tools/*
 # phpDocumentor cache
 .phpdoc/*
 
-*.md
 .dockerignore
 .git
 .gitignore
 # MarkDown and PHP documentation generation
 Doxyfile
+
 # Media files for LWT
 media/*
