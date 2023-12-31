@@ -751,7 +751,44 @@ function targetLangFromDict($url)
     }
     // Fallback to Google Translate
     return $parsed_query["tl"] ?? "";
-} 
+}
+
+/**
+ * Parse a SQL file by returning an array of the different queries it contains.
+ * 
+ * @param string $filename File name
+ * 
+ * @return array
+ */
+function SQLParser($filename)
+{  
+    $handle = fopen($filename, 'r');
+    if ($handle === false) {
+        return array();
+    }
+    $curr_content = '';
+    while ($stream = fgets($handle)) {
+        // Skip comments
+        if (str_starts_with($stream, '-- ')) {
+            continue;
+        }
+        // Add stream to accumulator
+        $curr_content .= $stream;
+        // Get queries
+        $queries = explode(';' . PHP_EOL, $curr_content);
+        // Replace line by remainders of the last element (incomplete line)
+        $curr_content = array_pop($queries);
+        //var_dump("queries", $queries);
+        foreach ($queries as $query) {
+            $queries_list[] = trim($query);
+        }
+    }
+    if (!feof($handle)) {
+        // Throw error
+    }
+    fclose($handle);
+    return $queries_list;
+}
 
 /*****************
  * Wrappers for PHP <8.0  

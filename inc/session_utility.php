@@ -4593,7 +4593,7 @@ function restore_file($handle, $title): string
             if ($sql_line != "") {
                 if (!str_starts_with($query, '-- ')) {
                     $res = mysqli_query(
-                        $GLOBALS['DBCONNECTION'], insert_prefix_in_sql($query)
+                        $GLOBALS['DBCONNECTION'], prefixSQLQuery($query, $tbpref)
                     );
                     $install_status["queries"]++;
                     if ($res == false) {
@@ -4750,28 +4750,6 @@ function create_ann($textid): string
     }
     mysqli_free_result($res);
     return $ann;
-}
-
-
-// -------------------------------------------------------------
-
-function insert_prefix_in_sql($sql_line) 
-{
-    global $tbpref;
-    //                                 123456789012345678901
-    if (substr($sql_line, 0, 12) == "INSERT INTO ") {
-        return substr($sql_line, 0, 12) . $tbpref . substr($sql_line, 12); 
-    }
-    if (substr($sql_line, 0, 21) == "DROP TABLE IF EXISTS ") {
-        return substr($sql_line, 0, 21) . $tbpref . substr($sql_line, 21);
-    } 
-    if (substr($sql_line, 0, 14) == "CREATE TABLE `") {
-        return substr($sql_line, 0, 14) . $tbpref . substr($sql_line, 14);
-    } 
-    if (substr($sql_line, 0, 13) == "CREATE TABLE ") {
-        return substr($sql_line, 0, 13) . $tbpref . substr($sql_line, 13);
-    } 
-    return $sql_line; 
 }
 
 // -------------------------------------------------------------
