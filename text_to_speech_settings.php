@@ -70,9 +70,9 @@ function tts_language_options()
     $output = '';
     foreach (get_languages() as $language => $language_id) {
         $languageCode = getLanguageCode($language_id, LWT_LANGUAGES_ARRAY);
-        $output .= '<option value="' . $languageCode . '">' . 
-        $language . 
-        '</option>';
+        $output .= sprintf(
+            '<option value="%s">%s</option>', $languageCode, $language
+        );
     }
     return $output;
 }
@@ -98,7 +98,7 @@ function tts_settings_form()
             <td class="td1 center">Language code</td>
             <td class="td1 center">
             <select name="LgName" id="get-language" class="notempty respinput" 
-            onchange="tts_settings.changeLanguage();">
+            onchange="tts_settings.populateVoiceList();">
                 <?php echo tts_language_options(); ?>
             </select>
             </td>
@@ -261,12 +261,6 @@ function tts_js()
         clickCancel: function() {
             lwt_form_check.resetDirty(); 
             location.href = 'text_to_speech_settings.php';
-        },
-
-        changeLanguage: function() {
-            location.href = 'text_to_speech_settings.php?' + $.param(
-                {lang: $('#get-language').val()}
-            );
         }
     };
 
@@ -336,6 +330,13 @@ function tts_js()
 function tts_settings_minimal_page()
 {
     tts_settings_form();
+    ?>
+    <p>
+        <b>Note</b>: language settings depend on your web browser, as different web
+        browser have different ways to read languages. Saving anything here will save
+        it as a cookie on your browser and will not be accessible by the LWT database. 
+    </p>
+    <?php
     tts_js();
 }
 
