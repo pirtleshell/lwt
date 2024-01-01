@@ -65,18 +65,8 @@ if (isset($_REQUEST['op'])) {
    <p><?php echo $message; ?></p>
 
         <?php
-        if (substr($message, 0, 5) != 'Error') {?>
-<script type="text/javascript">
-    //<![CDATA[
-    var context = window.parent.document;
-    var woid = <?php echo prepare_textdata_js($wid); ?>;
-    var status = <?php echo prepare_textdata_js($_REQUEST["WoStatus"]); ?>;
-    var trans = <?php echo prepare_textdata_js($translation . getWordTagList($wid, ' ', 1, 0)); ?>;
-    var roman = <?php echo prepare_textdata_js($_REQUEST["WoRomanization"]); ?>;
-    var title = window.parent.LWT_DATA.settings.jQuery_tooltip?'':make_tooltip(<?php echo prepare_textdata_js($_REQUEST["WoText"]); ?>,trans,roman,status);
-    //]]>
-</script>
-            <?php
+        if (substr($message, 0, 5) != 'Error') {
+            
             $len = get_first_value('select WoWordCount as value from ' . $tbpref . 'words where WoID = ' . $wid);
             if ($len > 1) {
                 insertExpressions($textlc, $_REQUEST["WoLgID"], $wid, $len, 0);
@@ -88,7 +78,19 @@ if (isset($_REQUEST['op'])) {
                 );
                 ?>
 <script type="text/javascript">
-    //<![CDATA[
+    var context = window.parent.document;
+    var woid = <?php echo prepare_textdata_js($wid); ?>;
+    var status = <?php echo prepare_textdata_js($_REQUEST["WoStatus"]); ?>;
+    var trans = <?php echo prepare_textdata_js($translation . getWordTagList($wid, ' ', 1, 0)); ?>;
+    var roman = <?php echo prepare_textdata_js($_REQUEST["WoRomanization"]); ?>;
+    var title = ''; 
+    if (window.parent.LWT_DATA.settings.jQuery_tooltip) {
+        title = make_tooltip(
+            <?php echo prepare_textdata_js($_REQUEST["WoText"]); ?>,
+            trans, roman, status
+        );
+    }
+
     if($('.TERM<?php echo $hex; ?>', context).length){
         $('.TERM<?php echo $hex; ?>', context)
         .removeClass('status0')
@@ -100,7 +102,6 @@ if (isset($_REQUEST['op'])) {
         .attr('title',title);
         $('#learnstatus', context).html('<?php echo addslashes(texttodocount2($_REQUEST['tid'])); ?>');
     }
-    //]]>
 </script>
                 <?php
                 flush();
