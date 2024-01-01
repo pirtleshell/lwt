@@ -166,7 +166,9 @@ function saveAudioPosition(text_id, pos) {
  * Get the phonetic version of a text.
  * 
  * @param {string} text Text to convert to phonetics.
- * @param {string} lang Language, either two letters code or four letters (BCP 47)
+ * @param {string} lang Language, either two letters code or four letters (BCP 47).
+ * 
+ * @deprecated Since 2.10.0 use getPhoneticTextAsync
  */
 function getPhoneticText(text, lang) {
     let phoneticText;
@@ -270,6 +272,18 @@ function readTextWithExternalApp(text, lang) {
     });
 }
 
+function cookieTTSSettings(language) {
+    const prefix = 'tts[' + language;
+    let lang_settings = {};
+    let cookies = ['Rate', 'Pitch', 'Voice'];
+    for (let cook in cookies) {
+        if (getCookie(prefix + cook + ']')) {
+            lang_settings[cook.toLowerCase()] = getCookie(prefix + cook + ']');
+        }
+    }
+    return lang_settings;
+} 
+
 /**
  * Read a text aloud, works with a phonetic version only.
  * 
@@ -332,8 +346,8 @@ function readTextWithExternalApp(text, lang) {
  * 
  * @since 2.9.0 Accepts "voice" as a new optional argument
  */
-function readTextAloud(text, lang, rate, pitch, voice) {
-    if (lang.startsWith('ja')) {
+function readTextAloud(text, lang, rate, pitch, voice, convert_to_phonetic) {
+    if (convert_to_phonetic) {
         getPhoneticTextAsync(text, lang)
             .then(
                 function (data) {
@@ -344,5 +358,21 @@ function readTextAloud(text, lang, rate, pitch, voice) {
             );
     } else {
         readRawTextAloud(text, lang, rate, pitch, voice);
+    }
+}
+
+
+function speechDispatcher(term, lang_abbr, lang_data) {
+    const loc_data = lang_data ?? LWT_DATA.language;
+    const loc_lang_abbr = lang_abbr ?? loc_data.abbr;
+    if (loc_data.ttsVoiceApi) {
+        readTextWithExternalApp(term, loc_lang_abbr);
+    } else {
+        const convert_to_phonetic = loc_data.word_parsing == 'mecab';
+        const lang_settings = cookieTTSSettings(loc_lang_abbr.substring(0, 2));
+        readTextAloud(
+            term, loc_lang_abbr, lang_settings.rate, lang_settings.pitch, 
+            lang_settings.voice, convert_to_phonetic
+        );
     }
 }

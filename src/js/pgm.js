@@ -655,7 +655,7 @@ function make_overlib_audio(txt, lang) {
   img.style.cursor = "pointer";
   img.setAttribute(
     "onclick", 
-    "readTextAloud('" + escape_html_chars(txt) + "', '" + (lang || "") + "')"
+    "speechDispatcher('" + escape_html_chars(txt) + "', '" + (lang || "") + "')"
   );
   return img.outerHTML;
 }

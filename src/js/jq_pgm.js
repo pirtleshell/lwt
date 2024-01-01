@@ -21,6 +21,9 @@ LWT_DATA = {
     translator_link: '',
   
     delimiter: '',
+
+    /** Word parsing strategy, usually regular expression or 'mecab' */
+    word_parsing: '',
   
     rtl: false,
     /** Third-party voice API */
@@ -731,7 +734,7 @@ function word_click_event_do_text_text () {
   }
   if (LWT_DATA.settings.hts == 2) {
     const lg = getLangFromDict(LWT_DATA.language.translator_link);
-    readTextAloud($(this).text(), lg);
+    speechDispatcher($(this).text(), lg);
   }
   return false;
 }
@@ -757,7 +760,7 @@ function mword_click_event_do_text_text () {
   }
   if (LWT_DATA.settings.hts == 2) {
     const lg = getLangFromDict(LWT_DATA.language.translator_link);
-    readTextAloud($(this).text(), lg);
+    speechDispatcher($(this).text(), lg);
   }
   return false;
 }
@@ -922,7 +925,7 @@ function word_hover_over () {
     }
     if (LWT_DATA.settings.hts == 3) { 
       const lg = getLangFromDict(LWT_DATA.language.translator_link);
-      readTextAloud($(this).text(), lg);
+      speechDispatcher($(this).text(), lg);
       }
   }
 }
@@ -1170,7 +1173,7 @@ function keydown_event_do_text_text (e) {
   }
   if (e.which == 80) { // P : pronounce term
     const lg = getLangFromDict(LWT_DATA.language.translator_link);
-    readTextAloud(txt, lg);
+    speechDispatcher(txt, lg);
     return false;
   }
   if (e.which == 84) { // T : translate sentence

@@ -80,7 +80,7 @@ function translate_term($text, $file, $sl, $tl): void
 
     $('#textToSpeech').on('click', function () {
             const txt = <?php echo json_encode($text); ?>;
-            readTextAloud(txt, <?php echo json_encode($sl); ?>);
+            speechDispatcher(txt, <?php echo json_encode($sl); ?>);
     });
 
     $(document).ready(function() {

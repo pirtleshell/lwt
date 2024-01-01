@@ -691,7 +691,7 @@ function edit_language_form($language): void
             LWT_DATA.language.ttsVoiceApi = api_value;
             const text = document.forms.lg_form.LgVoiceAPIDemo.value;
             const lang = <?php echo json_encode($sourceLg); ?>;
-            readTextAloud(text, lang);
+            speechDispatcher(text, lang);
             LWT_DATA.language.ttsVoiceApi = prevApi;
         },
 

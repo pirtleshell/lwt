@@ -68,7 +68,8 @@ function getTextData($textid)
  * 
  * @return array{LgName: string, LgDict1URI: string, 
  * LgDict2URI: string, LgGoogleTranslateURI: string, LgTextSize: int, 
- * LgRemoveSpaces: int, LgRightToLeft: int}|false|null Record corresponding to this language.
+ * LgRegexpWordCharacters: string, LgRemoveSpaces: int, 
+ * LgRightToLeft: int, Lg}|false|null Record corresponding to this language.
  * 
  * @global string $tbpref Table name prefix
  *
@@ -79,7 +80,7 @@ function get_language_settings($langid)
     global $tbpref;
     $sql = 
     'SELECT LgName, LgDict1URI, LgDict2URI, LgGoogleTranslateURI, 
-    LgTextSize, LgRemoveSpaces, LgRightToLeft
+    LgTextSize, LgRegexpWordCharacters, LgRemoveSpaces, LgRightToLeft
     FROM ' . $tbpref . 'languages
     WHERE LgID = ' . $langid;
     $res = do_mysqli_query($sql);
@@ -759,24 +760,28 @@ function do_text_text_content($textid, $only_body=true): void
     $var_array = array(
         // Change globals from jQuery hover
         'LWT_DATA' => array(
+
             'language' => array(
                 'dict_link1' => $wb1,
                 'dict_link2' => $wb2,
                 'translator_link' => $wb3,
                 'delimiter' => tohtml(
-                        str_replace(
-                            array('\\',']','-','^'), 
-                            array('\\\\','\\]','\\-','\\^'), 
-                            getSettingWithDefault('set-term-translation-delimiters')
-                        )
-                    ),
+                    str_replace(
+                        array('\\',']','-','^'), 
+                        array('\\\\','\\]','\\-','\\^'), 
+                        getSettingWithDefault('set-term-translation-delimiters')
+                    )
+                ),
+                'word_parsing' => $record['LgRegexpWordCharacters'],
                 'rtl' => $rtlScript
             ),
+
             'text' => array(
                 'id' => $textid,
                 'reading_position' => $pos,
                 'annotations' => json_decode(annotation_to_json($ann))
             ),
+
             'settings' => array(
                 'jQuery_tooltip' => (
                     getSettingWithDefault('set-tooltip-mode') == 2 ? 1 : 0
