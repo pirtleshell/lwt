@@ -14,15 +14,20 @@ ones are marked like "v1.0.0-fork".
   * On `inc/kernel_utility.php`: `LWT_APP_VERSION` and `LWT_RELEASE_DATE`.
   * On `api.php`: `LWT_API_VERSION` and `LWT_API_RELEASE_DATE`.
   * `src/js/jq_pgm.js`: `LWT_DATA`.
-* Word reading can be allowed on hover or on click. 
-Pull request [#147](https://github.com/HugoFara/lwt/pull/147) by 
-[@ProgramComputer](https://github.com/ProgramComputer).
-* You can add a custom text reader with the new voice API feature! 
-A courtesy of [@ProgramComputer](https://github.com/ProgramComputer) on pull request 
-[#153](https://github.com/HugoFara/lwt/pull/153). 
-A feature first requested on [#143](https://github.com/HugoFara/lwt/issues/143). 
-Discussion in open on [#174](https://github.com/HugoFara/lwt/discussions/174).
-* Starts a cleaner database management. Database schema is defined in `db/schema/baseline.sql` and no longer in PHP code.
+* Imprtant additions to Text-To-Speech (TTS):
+  * Word can be read on hover or on click. 
+  Pull request [#147](https://github.com/HugoFara/lwt/pull/147) by 
+  [@ProgramComputer](https://github.com/ProgramComputer).
+  * You can add a custom text reader with the new voice API feature! 
+  A courtesy of [@ProgramComputer](https://github.com/ProgramComputer) on pull request 
+  [#153](https://github.com/HugoFara/lwt/pull/153). 
+  A feature first requested on [#143](https://github.com/HugoFara/lwt/issues/143). 
+  Discussion in open on [#174](https://github.com/HugoFara/lwt/discussions/174).
+  * New JS functions: `readTextWithExternal` to read a text with an external 
+  application and `speechDispatcher` that can choose a text reader 
+  (browser or third party). 
+* Starts a cleaner database management. Database schema is defined in 
+`db/schema/baseline.sql` and no longer in PHP code.
 
 ### Changed
 

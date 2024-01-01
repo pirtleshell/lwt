@@ -2195,7 +2195,9 @@ ones are marked like "v1.0.0-fork".</p>
 <code>src/js/jq_pgm.js</code>: <code>LWT_DATA</code>.</li>
 </ul>
 </li>
-<li>Word reading can be allowed on hover or on click.
+<li>Imprtant additions to Text-To-Speech (TTS):
+<ul>
+<li>Word can be read on hover or on click.
 Pull request <a href="https://github.com/HugoFara/lwt/pull/147">#147</a> by
 <a href="https://github.com/ProgramComputer">@ProgramComputer</a>.</li>
 <li>You can add a custom text reader with the new voice API feature!
@@ -2203,7 +2205,13 @@ A courtesy of <a href="https://github.com/ProgramComputer">@ProgramComputer</a> 
 <a href="https://github.com/HugoFara/lwt/pull/153">#153</a>.
 A feature first requested on <a href="https://github.com/HugoFara/lwt/issues/143">#143</a>.
 Discussion in open on <a href="https://github.com/HugoFara/lwt/discussions/174">#174</a>.</li>
-<li>Starts a cleaner database management. Database schema is defined in <code>db/schema/baseline.sql</code> and no longer in PHP code.</li>
+<li>New JS functions: <code>readTextWithExternal</code> to read a text with an external
+application and <code>speechDispatcher</code> that can choose a text reader
+(browser or third party).</li>
+</ul>
+</li>
+<li>Starts a cleaner database management. Database schema is defined in
+<code>db/schema/baseline.sql</code> and no longer in PHP code.</li>
 </ul>
 <h4>Changed</h4>
 <ul>
