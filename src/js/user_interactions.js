@@ -250,8 +250,9 @@ function deepFindValue(obj, searchValue) {
     return null; // Return null if no matching string is found
 }
 
-function readTextWithExternalApp(text, lang) {
-    let fetchRequest = JSON.parse(LWT_DATA.language.ttsVoiceApi);
+
+function readTextWithExternal(text, voice_api, lang) {
+    let fetchRequest = JSON.parse(voice_api);
 
     // TODO: can expose more vars to Request
     deepReplace(fetchRequest, 'lwt_term', text)
@@ -275,10 +276,17 @@ function readTextWithExternalApp(text, lang) {
 function cookieTTSSettings(language) {
     const prefix = 'tts[' + language;
     let lang_settings = {};
-    let cookies = ['Rate', 'Pitch', 'Voice'];
+    const num_vals = ['Rate', 'Pitch'];
+    const cookies = ['Rate', 'Pitch', 'Voice'];
+    let cookie_val;
     for (let cook in cookies) {
-        if (getCookie(prefix + cook + ']')) {
-            lang_settings[cook.toLowerCase()] = getCookie(prefix + cook + ']');
+        cookie_val = getCookie(prefix + cook + ']');
+        if (cookie_val) {
+            if (num_vals.includes(cook)) {
+                lang_settings[cook.toLowerCase()] = parseFloat(cookie_val);
+            } else {
+                lang_settings[cook.toLowerCase()] = cookie_val;
+            }
         }
     }
     return lang_settings;
@@ -296,18 +304,16 @@ function cookieTTSSettings(language) {
  * @return {SpeechSynthesisUtterance} The spoken message object
  * 
  * @since 2.9.0 Accepts "voice" as a new optional argument
- * @since 2.10.0 Can use third-party applications to read text
  */
  function readRawTextAloud(text, lang, rate, pitch, voice) {
     let msg = new SpeechSynthesisUtterance();
-    const trimmed = lang.substring(0, 2);
-    const prefix = 'tts[' + trimmed;
+    const tts_settings = cookieTTSSettings(lang.substring(0, 2));
     msg.text = text;
     if (lang) {
         msg.lang = lang;
     }
     // Voice is a string but we have to assign a SpeechSynthesysVoice
-    const useVoice = voice || getCookie(prefix + 'Voice]');
+    const useVoice = voice || tts_settings.voice;
     if (useVoice) {
         const voices = window.speechSynthesis.getVoices();
         for (let i = 0; i < voices.length; i++) {
@@ -318,19 +324,15 @@ function cookieTTSSettings(language) {
     }
     if (rate) {
         msg.rate = rate;
-    } else if (getCookie(prefix + 'Rate]')) {
-        msg.rate = parseInt(getCookie(prefix + 'Rate]'), 10);
+    } else if (tts_settings.rate) {
+        msg.rate = tts_settings.rate;
     }
     if (pitch) {
         msg.pitch = pitch;
-    } else if (getCookie(prefix + 'Pitch]')) {
-        msg.pitch = parseInt(getCookie(prefix + 'Pitch]'), 10);
+    } else if (tts_settings.pitch) {
+        msg.pitch = tts_settings.pitch;
     }
-    if (LWT_DATA.language.ttsVoiceApi) {
-        readTextWithExternalApp(text, lang);
-    } else {
-        window.speechSynthesis.speak(msg);
-    }
+    window.speechSynthesis.speak(msg);
     return msg;
 }
 
@@ -366,7 +368,7 @@ function speechDispatcher(term, lang_abbr, lang_data) {
     const loc_data = lang_data ?? LWT_DATA.language;
     const loc_lang_abbr = lang_abbr ?? loc_data.abbr;
     if (loc_data.ttsVoiceApi) {
-        readTextWithExternalApp(term, loc_lang_abbr);
+        readTextWithExternal(term, loc_data.ttsVoiceApi, loc_lang_abbr);
     } else {
         const convert_to_phonetic = loc_data.word_parsing == 'mecab';
         const lang_settings = cookieTTSSettings(loc_lang_abbr.substring(0, 2));

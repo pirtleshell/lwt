@@ -54,7 +54,7 @@ $(document).on('click','.delete_selection',lwt_feed_wizard.deleteSelection);$(do
  * @author  andreask7 <andreasks7@users.noreply.github.com>
  * @since   1.6.16-fork
  */
-LWT_DATA={language:{dict_link1:'',dict_link2:'',translator_link:'',delimiter:'',word_characters:'',rtl:!1,ttsVoiceApi:''},text:{id:0,reading_position:-1,annotations:{}},word:{id:0},test:{solution:''},settings:{jQuery_tooltip:!1,hts:0,word_status_filter:''}};TEXTPOS=-1;OPENED=0;WID=0;TID=0;WBLINK1='';WBLINK2='';WBLINK3='';SOLUTION='';ADDFILTER='';RTL=0;ANN_ARRAY={};DELIMITER='';JQ_TOOLTIP=0;HTS=0;function setTransRoman(tra,rom){let form_changed=!1;if($('textarea[name="WoTranslation"]').length==1){$('textarea[name="WoTranslation"]').val(tra);form_changed|=!0}
+LWT_DATA={language:{dict_link1:'',dict_link2:'',translator_link:'',delimiter:'',word_parsing:'',rtl:!1,ttsVoiceApi:''},text:{id:0,reading_position:-1,annotations:{}},word:{id:0},test:{solution:''},settings:{jQuery_tooltip:!1,hts:0,word_status_filter:''}};TEXTPOS=-1;OPENED=0;WID=0;TID=0;WBLINK1='';WBLINK2='';WBLINK3='';SOLUTION='';ADDFILTER='';RTL=0;ANN_ARRAY={};DELIMITER='';JQ_TOOLTIP=0;HTS=0;function setTransRoman(tra,rom){let form_changed=!1;if($('textarea[name="WoTranslation"]').length==1){$('textarea[name="WoTranslation"]').val(tra);form_changed|=!0}
 if($('input[name="WoRomanization"]').length==1){$('input[name="WoRomanization"]').val(rom);form_changed|=!0}
 if(form_changed)
 lwt_form_check.makeDirty();}
@@ -465,19 +465,18 @@ async function getPhoneticTextAsync(text,lang){return $.getJSON('api.php/v1/phon
 function deepReplace(obj,searchValue,replaceValue){for(let key in obj){if(typeof obj[key]==='object'){deepReplace(obj[key],searchValue,replaceValue)}else if(typeof obj[key]==='string'&&obj[key].includes(searchValue)){obj[key]=obj[key].replace(searchValue,replaceValue)}}}
 function deepFindValue(obj,searchValue){for(const key in obj){if(obj.hasOwnProperty(key)){if(typeof obj[key]==='string'&&obj[key].startsWith(searchValue)){return obj[key]}else if(typeof obj[key]==='object'){const result=deepFindValue(obj[key],searchValue);if(result){return result}}}}
 return null}
-function readTextWithExternalApp(text,lang){let fetchRequest=JSON.parse(LWT_DATA.language.ttsVoiceApi);deepReplace(fetchRequest,'lwt_term',text)
+function readTextWithExternal(text,voice_api,lang){let fetchRequest=JSON.parse(voice_api);deepReplace(fetchRequest,'lwt_term',text)
 deepReplace(fetchRequest,'lwt_lang',lang)
 fetchRequest.options.body=JSON.stringify(fetchRequest.options.body)
 fetch(fetchRequest.input,fetchRequest.options).then(response=>response.json()).then(data=>{const encodeString=deepFindValue(data,'data:')
 const utter=new Audio(encodeString)
 utter.play()}).catch(error=>{console.error(error)})}
-function cookieTTSSettings(language){const prefix='tts['+language;let lang_settings={};let cookies=['Rate','Pitch','Voice'];for(let cook in cookies){if(getCookie(prefix+cook+']')){lang_settings[cook.toLowerCase()]=getCookie(prefix+cook+']')}}
+function cookieTTSSettings(language){const prefix='tts['+language;let lang_settings={};const num_vals=['Rate','Pitch'];const cookies=['Rate','Pitch','Voice'];let cookie_val;for(let cook in cookies){cookie_val=getCookie(prefix+cook+']');if(cookie_val){if(num_vals.includes(cook)){lang_settings[cook.toLowerCase()]=parseFloat(cookie_val)}else{lang_settings[cook.toLowerCase()]=cookie_val}}}
 return lang_settings}
-function readRawTextAloud(text,lang,rate,pitch,voice){let msg=new SpeechSynthesisUtterance();const trimmed=lang.substring(0,2);const prefix='tts['+trimmed;msg.text=text;if(lang){msg.lang=lang}
-const useVoice=voice||getCookie(prefix+'Voice]');if(useVoice){const voices=window.speechSynthesis.getVoices();for(let i=0;i<voices.length;i++){if(voices[i].name===useVoice){msg.voice=voices[i]}}}
-if(rate){msg.rate=rate}else if(getCookie(prefix+'Rate]')){msg.rate=parseInt(getCookie(prefix+'Rate]'),10)}
-if(pitch){msg.pitch=pitch}else if(getCookie(prefix+'Pitch]')){msg.pitch=parseInt(getCookie(prefix+'Pitch]'),10)}
-if(LWT_DATA.language.ttsVoiceApi){readTextWithExternalApp(text,lang)}else{window.speechSynthesis.speak(msg)}
-return msg}
+function readRawTextAloud(text,lang,rate,pitch,voice){let msg=new SpeechSynthesisUtterance();const tts_settings=cookieTTSSettings(lang.substring(0,2));msg.text=text;if(lang){msg.lang=lang}
+const useVoice=voice||tts_settings.voice;if(useVoice){const voices=window.speechSynthesis.getVoices();for(let i=0;i<voices.length;i++){if(voices[i].name===useVoice){msg.voice=voices[i]}}}
+if(rate){msg.rate=rate}else if(tts_settings.rate){msg.rate=tts_settings.rate}
+if(pitch){msg.pitch=pitch}else if(tts_settings.pitch){msg.pitch=tts_settings.pitch}
+window.speechSynthesis.speak(msg);return msg}
 function readTextAloud(text,lang,rate,pitch,voice,convert_to_phonetic){if(convert_to_phonetic){getPhoneticTextAsync(text,lang).then(function(data){readRawTextAloud(data.phonetic_reading,lang,rate,pitch,voice)})}else{readRawTextAloud(text,lang,rate,pitch,voice)}}
-function speechDispatcher(term,lang_abbr,lang_data){const loc_data=lang_data??LWT_DATA.language;const loc_lang_abbr=lang_abbr??loc_data.abbr;if(loc_data.ttsVoiceApi){readTextWithExternalApp(term,loc_lang_abbr)}else{const convert_to_phonetic=loc_data.regexp=='mecab';const lang_settings=cookieTTSSettings(loc_lang_abbr.substring(0,2));readTextAloud(term,loc_lang_abbr,lang_settings.rate,lang_settings.pitch,lang_settings.voice,convert_to_phonetic)}}
+function speechDispatcher(term,lang_abbr,lang_data){const loc_data=lang_data??LWT_DATA.language;const loc_lang_abbr=lang_abbr??loc_data.abbr;if(loc_data.ttsVoiceApi){readTextWithExternal(term,loc_data.ttsVoiceApi,loc_lang_abbr)}else{const convert_to_phonetic=loc_data.word_parsing=='mecab';const lang_settings=cookieTTSSettings(loc_lang_abbr.substring(0,2));readTextAloud(term,loc_lang_abbr,lang_settings.rate,lang_settings.pitch,lang_settings.voice,convert_to_phonetic)}}
