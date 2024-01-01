@@ -55,6 +55,8 @@ Solves [#129](https://github.com/HugoFara/lwt/issues/129), thanks to the help of
   multi-word was always displayed before the text it encompasses, 
   without removing this text.
   * Tootltip title was not properly saved, normally without incidence on user display.
+  * Fixes [#69](https://github.com/HugoFara/lwt/issues/69): having the same 
+  multi-word on multiple texts was displaying it at many positions on creation. 
 * Parsing Japanese texts with MeCab was creating warnings when the text was not finishing by a punctation mark.
 * Multi-words were not saved with MeCab parsing on Japanese.
 
