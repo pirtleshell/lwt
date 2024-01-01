@@ -2235,8 +2235,13 @@ Solves <a href="https://github.com/HugoFara/lwt/issues/129">#129</a>, thanks to 
 <li>Text reading position was not working consistently when adding several known words.</li>
 <li>Japanese was always requiring MeCab for TTS, even if it was not used
 (<a href="https://github.com/HugoFara/lwt/pull/155">#155</a>).</li>
-<li>On multi-words, tooltip was not properly saved (<a href="https://github.com/HugoFara/lwt/pull/170">#170</a>).</li>
-<li>On multi-words, translation may be escaped two times (<a href="https://github.com/HugoFara/lwt/pull/170">#170</a>).</li>
+<li>Fixes on multi-words:
+<ul>
+<li>Tooltip was not properly saved (<a href="https://github.com/HugoFara/lwt/pull/170">#170</a>).</li>
+<li>Translation may be escaped two times (<a href="https://github.com/HugoFara/lwt/pull/170">#170</a>).</li>
+<li>Tootltip title was not properly saved, normally without incidence on user display.</li>
+</ul>
+</li>
 <li>Parsing Japanese texts with MeCab was creating warnings when the text was not finishing by a punctation mark.</li>
 <li>Multi-words were not saved with MeCab parsing on Japanese.</li>
 </ul>

@@ -41,27 +41,36 @@ function quickMenuRedirection(value) {
 function newExpressionInteractable(text, attrs, length, hex, showallwords) {
 
     const context = window.parent.document;
+    // From each multi-word group
     for (key in text) {
-        const words = $('span[id^="ID-'+ key +'-"]', context).not(".hide"); 
+        // Select words that are not hidden
+        const words = $('span[id^="ID-'+ key +'-"]', context).not(".hide");
+        // Mark necessary page if these words are displayed
         const text_refresh = (
             words.attr('data_code') !== undefined 
-            && words.attr('data_code') <= length);
+            && words.attr('data_code') <= length
+        );
         $('#ID-' + key + '-' + length, context).remove();
-        let i = '';
+        // From text, select first word of multi-word group
+        let word_selector = '';
         for (let j = length - 1; j > 0; j--) {
             if (j==1)
-                i = '#ID-' + key + '-1';
+                word_selector = '#ID-' + key + '-1';
             if ($('#ID-' + key + '-' + j, context).length) {
-                i = '#ID-' + key + '-' + j;
+                word_selector = '#ID-' + key + '-' + j;
                 break;
             }
         }
-        $(i, context)
-        .before('<span id="ID-' + key + '-' + length + '"' + attrs + '>' 
-        + text[key] + '</span>');
-        const el = $('#ID-' + key + '-' + length, context);
-        el.addClass('order' + key).attr('data_order', key);
-        const txt = el
+        // Add the multi-word marker before
+        $(word_selector, context)
+        .before(
+            '<span id="ID-' + key + '-' + length + '"' + attrs + '>' + text[key] + 
+            '</span>'
+        );
+        // Change multi-word properties
+        const multi_word = $('#ID-' + key + '-' + length, context);
+        multi_word.addClass('order' + key).attr('data_order', key);
+        const txt = multi_word
             .nextUntil(
                 $('#ID-' + (parseInt(key) + length * 2 - 1) + '-1', context),
                 '[id$="-1"]'
@@ -71,12 +80,14 @@ function newExpressionInteractable(text, attrs, length, hex, showallwords) {
             })
             .get().join("");
         const pos = $('#ID-' + key + '-1', context).attr('data_pos');
-        el.attr('data_text', txt).attr('data_pos', pos);
+        multi_word.attr('data_text', txt).attr('data_pos', pos);
+
+        // Show/hide multi-word on need
         if (!showallwords) {
-            if (true || text_refresh) {
-                //refresh_text(el);
+            if (text_refresh) {
+                // refresh_text(multi_word); // replace by JS style
             } else {
-                el.addClass('hide');
+                multi_word.addClass('hide');
             }
         }
     }

@@ -4403,6 +4403,8 @@ function new_expression_interactable($hex, $appendtext, $sid, $len): void
  * @return void
  * 
  * @global string $tbpref Database table prefix.
+ * 
+ * @since 2.10.0-fork Fixes a bug inserting wrong title in tooltip
  */
 function new_expression_interactable2($hex, $appendtext, $wid, $len): void 
 {
@@ -4425,16 +4427,20 @@ function new_expression_interactable2($hex, $appendtext, $wid, $len): void
     ); 
     mysqli_free_result($res);
 
+    $term = array_values($appendtext)[0];
+
     ?>
 <script type="text/javascript">
     let term = <?php echo json_encode($attrs); ?>;
 
     let title = '';
-    if (window.parent.LWT_DATA.settings.jQuery_tooltip) 
+    if (window.parent.LWT_DATA.settings.jQuery_tooltip) {
+        // make_tooltip takes string as first arg
         title = make_tooltip(
-            <?php echo json_encode($appendtext); ?>, term.data_trans, term.data_rom, 
+            <?php echo json_encode($term); ?>, term.data_trans, term.data_rom, 
             parseInt(term.data_status, 10)
         );
+    }
     term['title'] = title;
     let attrs = ""; 
     Object.entries(term).forEach(([k, v]) => attrs += " " + k + '="' + v + '"');
@@ -4490,6 +4496,10 @@ function insertExpressions($textlc, $lid, $wid, $len, $mode): null|string
             $textlc, $lid, $wid, $len, null
         );
     }
+    if ($mode == 0) {
+        $hex = strToClassName(prepare_textdata($textlc));
+        new_expression_interactable2($hex, $appendtext, $wid, $len);
+    }
     $sqltext = null;
     if (!empty($sqlarr)) {
         $sqltext = '';
@@ -4503,10 +4513,6 @@ function insertExpressions($textlc, $lid, $wid, $len, $mode): null|string
         unset($sqlarr);
     }
 
-    if ($mode == 0) {
-        $hex = strToClassName(prepare_textdata($textlc));
-        new_expression_interactable2($hex, $appendtext, $wid, $len);
-    }
     if ($mode == 2) { 
         return $sqltext; 
     }
