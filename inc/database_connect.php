@@ -809,6 +809,9 @@ function parse_japanese_text($text, $id): ?array
     $count = 0;
     $row = array(0, 0, 0, "", 0);
     foreach (explode(PHP_EOL, $mecabed) as $line) {
+        if (trim($line) == "") {
+            continue;
+        }
         list($term, $node_type, $third) = explode(mb_chr(9), $line);
         if ($term_type == 2 || $term == 'EOP' && $third == '7') {
             $sid += 1;
@@ -1043,6 +1046,9 @@ function parse_standard_text($text, $id, $lid): ?array
         $count = 0;
         $row = array(0, 0, 0, "", 0);
         foreach (explode("\n", $text) as $line) {
+            if (trim($line) == "") {
+                continue;
+            }
             list($word_count, $term) = explode("\t", $line);
             $row[0] = $sid; // TiSeID
             $row[1] = $count + 1; // TiCount
