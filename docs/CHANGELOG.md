@@ -48,6 +48,8 @@ Solves [#129](https://github.com/HugoFara/lwt/issues/129), thanks to the help of
 * Text reading position was not working consistently when adding several known words.
 * Japanese was always requiring MeCab for TTS, even if it was not used 
 ([#155](https://github.com/HugoFara/lwt/pull/155)).
+* On multi-words, tooltip was not properly saved ([#170](https://github.com/HugoFara/lwt/pull/170)).
+* On multi-words, translation may be escaped two times ([#170](https://github.com/HugoFara/lwt/pull/170)).
 
 ### Deprecated
 
