@@ -51,6 +51,9 @@ Solves [#129](https://github.com/HugoFara/lwt/issues/129), thanks to the help of
 * Fixes on multi-words:
   * Tooltip was not properly saved ([#170](https://github.com/HugoFara/lwt/pull/170)).
   * Translation may be escaped two times ([#170](https://github.com/HugoFara/lwt/pull/170)).
+  * Fixes [#170](https://github.com/HugoFara/lwt/pull/170): on creation, 
+  multi-word was always displayed before the text it encompasses, 
+  without removing this text.
   * Tootltip title was not properly saved, normally without incidence on user display.
 * Parsing Japanese texts with MeCab was creating warnings when the text was not finishing by a punctation mark.
 * Multi-words were not saved with MeCab parsing on Japanese.

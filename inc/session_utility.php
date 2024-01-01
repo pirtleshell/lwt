@@ -4371,20 +4371,21 @@ function insert_standard_expression($textlc, $lid, $wid, $len, $mode): array
  */
 function new_expression_interactable($hex, $appendtext, $sid, $len): void 
 {
-    $showAll = getSettingZeroOrOne('showallwords', 1) ? "m" : "";
+    $showAll = (bool) getSettingZeroOrOne('showallwords', 1);
+    $showType = $showAll ? "m" : '';
 
     ?>
 <script type="text/javascript">
     newExpressionInteractable(
         <?php echo json_encode($appendtext); ?>, 
-        ' class="click mword <?php echo $showAll; ?>wsty TERM<?php echo $hex; ?> word' + 
+        ' class="click mword <?php echo $showType; ?>wsty TERM<?php echo $hex; ?> word' + 
     woid + ' status' + status + '" data_trans="' + trans + '" data_rom="' + 
     roman + '" data_code="<?php echo $len; ?>" data_status="' + 
     status + '" data_wid="' + woid + 
     '" title="' + title + '"' ,
         <?php echo json_encode($len); ?>, 
         <?php echo json_encode($hex); ?>,
-        <?php echo json_encode(!$showAll); ?>
+        <?php echo json_encode($showAll); ?>
     );
  </script>
     <?php
@@ -4409,7 +4410,8 @@ function new_expression_interactable($hex, $appendtext, $sid, $len): void
 function new_expression_interactable2($hex, $appendtext, $wid, $len): void 
 {
     global $tbpref;
-    $showAll = (bool)getSettingZeroOrOne('showallwords', 1) ? "m" : "";
+    $showAll = (bool)getSettingZeroOrOne('showallwords', 1);
+    $showType = $showAll ? "m" : "";
     
     $sql = "SELECT * FROM {$tbpref}words WHERE WoID=$wid";
     $res = do_mysqli_query($sql);
@@ -4417,7 +4419,7 @@ function new_expression_interactable2($hex, $appendtext, $wid, $len): void
     $record = mysqli_fetch_assoc($res);
 
     $attrs = array(
-        "class" => "click mword {$showAll}wsty TERM$hex word$wid status" . 
+        "class" => "click mword {$showType}wsty TERM$hex word$wid status" . 
         $record["WoStatus"],
         "data_trans" => $record["WoTranslation"],
         "data_rom" => $record["WoRomanization"],
@@ -4451,7 +4453,7 @@ function new_expression_interactable2($hex, $appendtext, $wid, $len): void
         attrs,
         <?php echo json_encode($len); ?>, 
         <?php echo json_encode($hex); ?>,
-        <?php echo json_encode(!$showAll); ?>
+        <?php echo json_encode($showAll); ?>
     );
  </script>
     <?php
