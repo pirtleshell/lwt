@@ -4471,7 +4471,8 @@ function insertExpressions($textlc, $lid, $wid, $len, $mode): null|string
 {
     global $tbpref;
     $regexp = (string)get_first_value(
-        "SELECT LgRegexpWordCharacters FROM {$tbpref}languages WHERE LgID=$lid"
+        "SELECT LgRegexpWordCharacters AS value 
+        FROM {$tbpref}languages WHERE LgID=$lid"
     );
 
     /*
