@@ -50,6 +50,7 @@ Solves [#129](https://github.com/HugoFara/lwt/issues/129), thanks to the help of
 ([#155](https://github.com/HugoFara/lwt/pull/155)).
 * On multi-words, tooltip was not properly saved ([#170](https://github.com/HugoFara/lwt/pull/170)).
 * On multi-words, translation may be escaped two times ([#170](https://github.com/HugoFara/lwt/pull/170)).
+* Parsing Japanese texts with MeCab was creating warnings when the text was not finishing by a punctation mark. 
 
 ### Deprecated
 
