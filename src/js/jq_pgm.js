@@ -38,7 +38,8 @@ LWT_DATA = {
     id: 0
   },
   test: {
-    solution: ''
+    solution: '',
+    answer_opened: false
   },
   settings: {
     jQuery_tooltip: false,
@@ -47,11 +48,9 @@ LWT_DATA = {
   }
 };
 
-TEXTPOS = -1;
-OPENED = 0;
-/** @var {int} WID - Word ID */
+/** Word ID, deprecated Since 2.10.0, use LWT_DATA.word.id instead */
 WID = 0;
-/** Text ID (int) */
+/** Text ID (int), deprecated Since 2.10.0, use LWT_DATA.text.id */
 TID = 0;
 /** First dictionary URL, deprecated in 2.10.0 use LWT_DATA.language.dict_link1 */
 WBLINK1 = '';
@@ -59,14 +58,8 @@ WBLINK1 = '';
 WBLINK2 = '';
 /** Translator URL, deprecated in 2.10.0 use LWT_DATA.language.translator_link */
 WBLINK3 = '';
-SOLUTION = '';
-ADDFILTER = '';
 /** Right-to-left indicator, deprecated in 2.10.0 use LWT_DATA.language.rtl */
 RTL = 0;
-ANN_ARRAY = {};
-DELIMITER = '';
-JQ_TOOLTIP = 0;
-HTS = 0;
 
 /**************************************************************
 LWT jQuery functions
@@ -541,12 +534,12 @@ function word_click_event_do_test_test () {
  * @returns {bool} true if nothing was done, false otherwise
  */
 function keydown_event_do_test_test (e) {
-  if ((e.key == 'Space' || e.which == 32) && OPENED == 0) { 
+  if ((e.key == 'Space' || e.which == 32) && !LWT_DATA.test.answer_opened) { 
     // space : show solution
     $('.word').trigger('click');
     cleanupRightFrames();
     showRightFrames('show_word.php?wid=' + $('.word').attr('data_wid') + '&ann=');
-    OPENED = 1;
+    LWT_DATA.test.answer_opened = true;
     return false;
   }
   if (e.key == "Escape" || e.which == 27) { 
@@ -572,7 +565,9 @@ function keydown_event_do_test_test (e) {
 		showRightFrames('edit_tword.php?wid=' + LWT_DATA.word.id);
     return false;
   }
-  if (OPENED == 0) return true;
+  // The next interactions should only be available with displayed solution
+  if (!LWT_DATA.test.answer_opened) 
+    return true;
   if (e.key == "ArrowUp" || e.which == 38) { 
     // up : status+1
 		showRightFrames('set_test_status.php?wid=' + LWT_DATA.word.id + '&stchange=1');

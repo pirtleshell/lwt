@@ -54,7 +54,7 @@ $(document).on('click','.delete_selection',lwt_feed_wizard.deleteSelection);$(do
  * @author  andreask7 <andreasks7@users.noreply.github.com>
  * @since   1.6.16-fork
  */
-LWT_DATA={language:{dict_link1:'',dict_link2:'',translator_link:'',delimiter:'',word_parsing:'',rtl:!1,ttsVoiceApi:''},text:{id:0,reading_position:-1,annotations:{}},word:{id:0},test:{solution:''},settings:{jQuery_tooltip:!1,hts:0,word_status_filter:''}};TEXTPOS=-1;OPENED=0;WID=0;TID=0;WBLINK1='';WBLINK2='';WBLINK3='';SOLUTION='';ADDFILTER='';RTL=0;ANN_ARRAY={};DELIMITER='';JQ_TOOLTIP=0;HTS=0;function setTransRoman(tra,rom){let form_changed=!1;if($('textarea[name="WoTranslation"]').length==1){$('textarea[name="WoTranslation"]').val(tra);form_changed|=!0}
+LWT_DATA={language:{dict_link1:'',dict_link2:'',translator_link:'',delimiter:'',word_parsing:'',rtl:!1,ttsVoiceApi:''},text:{id:0,reading_position:-1,annotations:{}},word:{id:0},test:{solution:'',answer_opened:!1},settings:{jQuery_tooltip:!1,hts:0,word_status_filter:''}};WID=0;TID=0;WBLINK1='';WBLINK2='';WBLINK3='';RTL=0;function setTransRoman(tra,rom){let form_changed=!1;if($('textarea[name="WoTranslation"]').length==1){$('textarea[name="WoTranslation"]').val(tra);form_changed|=!0}
 if($('input[name="WoRomanization"]').length==1){$('input[name="WoRomanization"]').val(rom);form_changed|=!0}
 if(form_changed)
 lwt_form_check.makeDirty();}
@@ -92,12 +92,13 @@ $('input:submit').last().trigger('click');return!1}else{return!0}}
 function noShowAfter3Secs(){$('#hide3').slideUp()}
 function setTheFocus(){$('.setfocus').trigger('focus').trigger('select')}
 function word_click_event_do_test_test(){run_overlib_test(LWT_DATA.language.dict_link1,LWT_DATA.language.dict_link2,LWT_DATA.language.translator_link,$(this).attr('data_wid'),$(this).attr('data_text'),$(this).attr('data_trans'),$(this).attr('data_rom'),$(this).attr('data_status'),$(this).attr('data_sent'),$(this).attr('data_todo'));$('.todo').text(LWT_DATA.test.solution);return!1}
-function keydown_event_do_test_test(e){if((e.key=='Space'||e.which==32)&&OPENED==0){$('.word').trigger('click');cleanupRightFrames();showRightFrames('show_word.php?wid='+$('.word').attr('data_wid')+'&ann=');OPENED=1;return!1}
+function keydown_event_do_test_test(e){if((e.key=='Space'||e.which==32)&&!LWT_DATA.test.answer_opened){$('.word').trigger('click');cleanupRightFrames();showRightFrames('show_word.php?wid='+$('.word').attr('data_wid')+'&ann=');LWT_DATA.test.answer_opened=!0;return!1}
 if(e.key=="Escape"||e.which==27){showRightFrames('set_test_status.php?wid='+LWT_DATA.word.id+'&status='+$('.word').attr('data_status'));return!1}
 if(e.key=="I"||e.which==73){showRightFrames('set_test_status.php?wid='+LWT_DATA.word.id+'&status=98');return!1}
 if(e.key=="W"||e.which==87){showRightFrames('set_test_status.php?wid='+LWT_DATA.word.id+'&status=99');return!1}
 if(e.key=="E"||e.which==69){showRightFrames('edit_tword.php?wid='+LWT_DATA.word.id);return!1}
-if(OPENED==0)return!0;if(e.key=="ArrowUp"||e.which==38){showRightFrames('set_test_status.php?wid='+LWT_DATA.word.id+'&stchange=1');return!1}
+if(!LWT_DATA.test.answer_opened)
+return!0;if(e.key=="ArrowUp"||e.which==38){showRightFrames('set_test_status.php?wid='+LWT_DATA.word.id+'&stchange=1');return!1}
 if(e.key=="ArrowDown"||e.which==40){showRightFrames('set_test_status.php?wid='+LWT_DATA.word.id+'&stchange=-1');return!1}
 for(let i=0;i<5;i++){if(e.which==(49+i)||e.which==(97+i)){showRightFrames('set_test_status.php?wid='+LWT_DATA.word.id+'&status='+(i+1));return!1}}
 return!0}

@@ -680,7 +680,7 @@ function do_test_test_interaction_globals($wb1, $wb2, $wb3)
     if (LANG && LANG != LWT_DATA.language.translator_link) {
         $("html").attr('lang', LANG);
     }
-    OPENED = 0;
+    LWT_DATA.test.answer_opened = false;
 </script>
     <?php
 }

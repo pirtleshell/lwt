@@ -654,7 +654,8 @@ function do_text_text_javascript($var_array): void
     }
     LANG = getLangFromDict(LWT_DATA.language.translator_link);
     LWT_DATA.text.reading_position = -1;
-    OPENED = 0;
+    // Note from 2.10.0: is the next line necessary on text?
+    LWT_DATA.test.answer_opened = false;
     // Change the language of the current frame
     if (LANG && LANG != LWT_DATA.language.translator_link) {
         $("html").attr('lang', LANG);
