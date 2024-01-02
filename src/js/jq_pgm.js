@@ -541,49 +541,49 @@ function word_click_event_do_test_test () {
  * @returns {bool} true if nothing was done, false otherwise
  */
 function keydown_event_do_test_test (e) {
-  if (e.key == 'Space'  && OPENED == 0) { 
-    // space : show sol.
+  if ((e.key == 'Space' || e.which == 32) && OPENED == 0) { 
+    // space : show solution
     $('.word').trigger('click');
     cleanupRightFrames();
     showRightFrames('show_word.php?wid=' + $('.word').attr('data_wid') + '&ann=');
     OPENED = 1;
     return false;
   }
-  if (e.which == 38) { 
-    // up : status+1
-		showRightFrames('set_test_status.php?wid=' + LWT_DATA.word.id + '&stchange=1');
-    return false;
-  }
-  if (e.which == 27) { 
-    // esc : dont change status
+  if (e.key == "Escape" || e.which == 27) { 
+    // esc : skip term, don't change status
 		showRightFrames(
       'set_test_status.php?wid=' + LWT_DATA.word.id + '&status=' + $('.word').attr('data_status')
     );
     return false;
   }
-  if (e.which == 73) { 
-    // I : status=98
+  if (e.key == "I" || e.which == 73) { 
+    // I : ignore, status=98
 		showRightFrames('set_test_status.php?wid=' + LWT_DATA.word.id + '&status=98');
     return false;
   }
-  if (e.which == 87) { 
-    // W : status=99
+  if (e.key == "W" || e.which == 87) { 
+    // W : well known, status=99
 		showRightFrames('set_test_status.php?wid=' + LWT_DATA.word.id + '&status=99');
     return false;
   }
-  if (e.which == 69) { 
-    // E : EDIT
+  if (e.key == "E" || e.which == 69) { 
+    // E : edit
 		showRightFrames('edit_tword.php?wid=' + LWT_DATA.word.id);
     return false;
   }
   if (OPENED == 0) return true;
-  if (e.which == 40) { 
+  if (e.key == "ArrowUp" || e.which == 38) { 
+    // up : status+1
+		showRightFrames('set_test_status.php?wid=' + LWT_DATA.word.id + '&stchange=1');
+    return false;
+  }
+  if (e.key == "ArrowDown" || e.which == 40) { 
     // down : status-1
 		showRightFrames('set_test_status.php?wid=' + LWT_DATA.word.id + '&stchange=-1');
     return false;
   }
-  for (let i = 1; i <= 5; i++) {
-    if (e.which == (48 + i) || e.which == (96 + i)) { 
+  for (let i = 0; i < 5; i++) {
+    if (e.which == (49 + i) || e.which == (97 + i)) { 
       // 1,.. : status=i
 			showRightFrames('set_test_status.php?wid=' + LWT_DATA.word.id + '&status=' + i);
       return false;

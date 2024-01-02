@@ -2224,6 +2224,9 @@ It adds <code>README.md</code> and <code>UNLICENSE.md</code>.</li>
 </ul>
 </li>
 <li>Multi-word creation was reviewed to use a simpler code.</li>
+<li>On word review, status + 1 can be set only after word display. Before, you could
+press key up at any time to increase term status, but keydown was effective only
+after solution display (<a href="https://github.com/HugoFara/lwt/issues/159">#159</a>).</li>
 </ul>
 <h4>Fixed</h4>
 <ul>

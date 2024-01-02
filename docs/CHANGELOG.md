@@ -36,7 +36,10 @@ ones are marked like "v1.0.0-fork".
   See [#160](https://github.com/HugoFara/lwt/issues/160). 
   It adds `README.md` and `UNLICENSE.md`.
   * Adds `docs/info.html` and `docs/index.html` from [#146](https://github.com/HugoFara/lwt/pull/146).
-* Multi-word creation was reviewed to use a simpler code. 
+* Multi-word creation was reviewed to use a simpler code.
+* On word review, status + 1 can be set only after word display. Before, you could 
+press key up at any time to increase term status, but keydown was effective only 
+after solution display ([#159](https://github.com/HugoFara/lwt/issues/159)).
 
 ### Fixed
 

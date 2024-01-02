@@ -92,14 +92,14 @@ $('input:submit').last().trigger('click');return!1}else{return!0}}
 function noShowAfter3Secs(){$('#hide3').slideUp()}
 function setTheFocus(){$('.setfocus').trigger('focus').trigger('select')}
 function word_click_event_do_test_test(){run_overlib_test(LWT_DATA.language.dict_link1,LWT_DATA.language.dict_link2,LWT_DATA.language.translator_link,$(this).attr('data_wid'),$(this).attr('data_text'),$(this).attr('data_trans'),$(this).attr('data_rom'),$(this).attr('data_status'),$(this).attr('data_sent'),$(this).attr('data_todo'));$('.todo').text(LWT_DATA.test.solution);return!1}
-function keydown_event_do_test_test(e){if(e.key=='Space'&&OPENED==0){$('.word').trigger('click');cleanupRightFrames();showRightFrames('show_word.php?wid='+$('.word').attr('data_wid')+'&ann=');OPENED=1;return!1}
-if(e.which==38){showRightFrames('set_test_status.php?wid='+LWT_DATA.word.id+'&stchange=1');return!1}
-if(e.which==27){showRightFrames('set_test_status.php?wid='+LWT_DATA.word.id+'&status='+$('.word').attr('data_status'));return!1}
-if(e.which==73){showRightFrames('set_test_status.php?wid='+LWT_DATA.word.id+'&status=98');return!1}
-if(e.which==87){showRightFrames('set_test_status.php?wid='+LWT_DATA.word.id+'&status=99');return!1}
-if(e.which==69){showRightFrames('edit_tword.php?wid='+LWT_DATA.word.id);return!1}
-if(OPENED==0)return!0;if(e.which==40){showRightFrames('set_test_status.php?wid='+LWT_DATA.word.id+'&stchange=-1');return!1}
-for(let i=1;i<=5;i++){if(e.which==(48+i)||e.which==(96+i)){showRightFrames('set_test_status.php?wid='+LWT_DATA.word.id+'&status='+i);return!1}}
+function keydown_event_do_test_test(e){if((e.key=='Space'||e.which==32)&&OPENED==0){$('.word').trigger('click');cleanupRightFrames();showRightFrames('show_word.php?wid='+$('.word').attr('data_wid')+'&ann=');OPENED=1;return!1}
+if(e.key=="Escape"||e.which==27){showRightFrames('set_test_status.php?wid='+LWT_DATA.word.id+'&status='+$('.word').attr('data_status'));return!1}
+if(e.key=="I"||e.which==73){showRightFrames('set_test_status.php?wid='+LWT_DATA.word.id+'&status=98');return!1}
+if(e.key=="W"||e.which==87){showRightFrames('set_test_status.php?wid='+LWT_DATA.word.id+'&status=99');return!1}
+if(e.key=="E"||e.which==69){showRightFrames('edit_tword.php?wid='+LWT_DATA.word.id);return!1}
+if(OPENED==0)return!0;if(e.key=="ArrowUp"||e.which==38){showRightFrames('set_test_status.php?wid='+LWT_DATA.word.id+'&stchange=1');return!1}
+if(e.key=="ArrowDown"||e.which==40){showRightFrames('set_test_status.php?wid='+LWT_DATA.word.id+'&stchange=-1');return!1}
+for(let i=0;i<5;i++){if(e.which==(49+i)||e.which==(97+i)){showRightFrames('set_test_status.php?wid='+LWT_DATA.word.id+'&status='+i);return!1}}
 return!0}
 function word_each_do_text_text(_){const wid=$(this).attr('data_wid');if(wid!=''){const order=$(this).attr('data_order');if(order in LWT_DATA.text.annotations){if(wid==LWT_DATA.text.annotations[order][1]){const ann=LWT_DATA.text.annotations[order][2];const re=new RegExp('(['+LWT_DATA.language.delimiter+'][ ]{0,1}|^)('+ann.replace(/[-\/\\^$*+?.()|[\]{}]/g,'\\$&')+')($|[ ]{0,1}['+LWT_DATA.language.delimiter+'])','');if(!re.test($(this).attr('data_trans').replace(/ \[.*$/,''))){const trans=ann+' / '+$(this).attr('data_trans');$(this).attr('data_trans',trans.replace(' / *',''))}
 $(this).attr('data_ann',ann)}}}
