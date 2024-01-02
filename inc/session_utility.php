@@ -4254,10 +4254,31 @@ function insertMecabExpression($text, $lid, $wid, $len): array
  */
 function insert_expression_from_mecab($text, $lid, $wid, $len): array
 {
-    list($mwords, $sqlarr) = insertMecabExpression($text, $lid, $wid, $len);
+    $occurences = insertStandardExpression($text, $lid, $wid, $len);
+
+    $mwords = array();
+    foreach ($occurences as $occ) {
+        $mwords[$occ['SeTxID']] = array();
+        if (getSettingZeroOrOne('showallwords', 1)) {
+            $mwords[$occ['SeTxID']][$occ['position']] = "&nbsp;$len&nbsp";
+        } else {
+            $mwords[$occ['SeTxID']][$occ['position']] = $occ['term'];
+        }
+    }
     $flat_mwords = array_reduce($mwords, function ($carry, $item) {
         return $carry + $item;
     }, []);
+
+    $sqlarr = array();
+    foreach ($occurences as $occ) {
+        $sqlarr[] = "(" . implode(",", 
+        [
+            $wid, $lid, $occ["SeTxID"], $occ["SeID"], 
+            $occ["position"], $len, 
+            convert_string_to_sqlsyntax_notrim_nonull($occ["term"])
+        ]) . ")";
+    }
+
     return array($flat_mwords, array(), $sqlarr);
 }
 
@@ -4416,10 +4437,31 @@ function insertStandardExpression($textlc, $lid, $wid, $len): array
  */
 function insert_standard_expression($textlc, $lid, $wid, $len, $mode): array
 {
-    list($mwords, $sqlarr) = insertStandardExpression($textlc, $lid, $wid, $len);
+    $occurences = insertStandardExpression($textlc, $lid, $wid, $len);
+
+    $mwords = array();
+    foreach ($occurences as $occ) {
+        $mwords[$occ['SeTxID']] = array();
+        if (getSettingZeroOrOne('showallwords', 1)) {
+            $mwords[$occ['SeTxID']][$occ['position']] = "&nbsp;$len&nbsp";
+        } else {
+            $mwords[$occ['SeTxID']][$occ['position']] = $occ['display_term'];
+        }
+    }
     $flat_mwords = array_reduce($mwords, function ($carry, $item) {
         return $carry + $item;
     }, []);
+
+    $sqlarr = array();
+    foreach ($occurences as $occ) {
+        $sqlarr[] = "(" . implode(",", 
+        [
+            $wid, $lid, $occ["SeTxID"], $occ["SeID"], 
+            $occ["position"], $len, 
+            convert_string_to_sqlsyntax_notrim_nonull($occ["term"])
+        ]) . ")";
+    }
+
     return array($flat_mwords, array(), $sqlarr);
 }
 
@@ -4616,12 +4658,6 @@ function insertExpressions($textlc, $lid, $wid, $len, $mode): null|string
         FROM {$tbpref}languages WHERE LgID=$lid"
     );
 
-    /*
-    * TODO:
-    * $appendtext: text to append to the current text
-    * $sqlarr: Expression to append to the database (text independent)
-    * Should separate the two
-    */ 
     if ('MECAB' == strtoupper(trim($regexp))) {
         $occurences = insertMecabExpression(
             $textlc, $lid, $wid, $len
@@ -4635,16 +4671,11 @@ function insertExpressions($textlc, $lid, $wid, $len, $mode): null|string
         $appendtext = array();
         foreach ($occurences as $occ) {
             $appendtext[$occ['SeTxID']] = array();
-            // MeCab
-            if ('MECAB' == strtoupper(trim($regexp))) {
-                if (getSettingZeroOrOne('showallwords', 1)) {
-                    $appendtext[$occ['SeTxID']][$occ['position']] = "&nbsp;$len&nbsp";
-                } else { 
-                    $appendtext[$occ['SeTxID']][$occ['position']] = $occ['term'];
-                }
+            if (getSettingZeroOrOne('showallwords', 1)) {
+                $appendtext[$occ['SeTxID']][$occ['position']] = "&nbsp;$len&nbsp";
             } else {
-                if (getSettingZeroOrOne('showallwords', 1)) {
-                    $appendtext[$occ['SeTxID']][$occ['position']] = "&nbsp;$len&nbsp";
+                if ('MECAB' == strtoupper(trim($regexp))) {
+                    $appendtext[$occ['SeTxID']][$occ['position']] = $occ['term'];
                 } else {
                     $appendtext[$occ['SeTxID']][$occ['position']] = $occ['display_term'];
                 }
@@ -4654,16 +4685,16 @@ function insertExpressions($textlc, $lid, $wid, $len, $mode): null|string
         newMultiWordInteractable($hex, $appendtext, $wid, $len);
     }
     $sqltext = null;
-    $sqlarr = array();
-    foreach ($occurences as $occ) {
-        $sqlarr[] = "(" . implode(",", 
-        [
-            $wid, $lid, $occ["SeTxID"], $occ["SeID"], 
-            $occ["position"], $len, 
-            convert_string_to_sqlsyntax_notrim_nonull($occ["term"])
-        ]) . ")";
-    }
-    if (!empty($sqlarr)) {
+    if (!empty($occurences)) {
+        $sqlarr = array();
+        foreach ($occurences as $occ) {
+            $sqlarr[] = "(" . implode(",", 
+            [
+                $wid, $lid, $occ["SeTxID"], $occ["SeID"], 
+                $occ["position"], $len, 
+                convert_string_to_sqlsyntax_notrim_nonull($occ["term"])
+            ]) . ")";
+        }
         $sqltext = '';
         if ($mode != 2) {
             $sqltext .= 
