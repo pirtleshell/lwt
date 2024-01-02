@@ -99,7 +99,7 @@ if(e.key=="W"||e.which==87){showRightFrames('set_test_status.php?wid='+LWT_DATA.
 if(e.key=="E"||e.which==69){showRightFrames('edit_tword.php?wid='+LWT_DATA.word.id);return!1}
 if(OPENED==0)return!0;if(e.key=="ArrowUp"||e.which==38){showRightFrames('set_test_status.php?wid='+LWT_DATA.word.id+'&stchange=1');return!1}
 if(e.key=="ArrowDown"||e.which==40){showRightFrames('set_test_status.php?wid='+LWT_DATA.word.id+'&stchange=-1');return!1}
-for(let i=0;i<5;i++){if(e.which==(49+i)||e.which==(97+i)){showRightFrames('set_test_status.php?wid='+LWT_DATA.word.id+'&status='+i);return!1}}
+for(let i=0;i<5;i++){if(e.which==(49+i)||e.which==(97+i)){showRightFrames('set_test_status.php?wid='+LWT_DATA.word.id+'&status='+(i+1));return!1}}
 return!0}
 function word_each_do_text_text(_){const wid=$(this).attr('data_wid');if(wid!=''){const order=$(this).attr('data_order');if(order in LWT_DATA.text.annotations){if(wid==LWT_DATA.text.annotations[order][1]){const ann=LWT_DATA.text.annotations[order][2];const re=new RegExp('(['+LWT_DATA.language.delimiter+'][ ]{0,1}|^)('+ann.replace(/[-\/\\^$*+?.()|[\]{}]/g,'\\$&')+')($|[ ]{0,1}['+LWT_DATA.language.delimiter+'])','');if(!re.test($(this).attr('data_trans').replace(/ \[.*$/,''))){const trans=ann+' / '+$(this).attr('data_trans');$(this).attr('data_trans',trans.replace(' / *',''))}
 $(this).attr('data_ann',ann)}}}

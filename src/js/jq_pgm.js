@@ -552,7 +552,8 @@ function keydown_event_do_test_test (e) {
   if (e.key == "Escape" || e.which == 27) { 
     // esc : skip term, don't change status
 		showRightFrames(
-      'set_test_status.php?wid=' + LWT_DATA.word.id + '&status=' + $('.word').attr('data_status')
+      'set_test_status.php?wid=' + LWT_DATA.word.id + 
+      '&status=' + $('.word').attr('data_status')
     );
     return false;
   }
@@ -585,7 +586,9 @@ function keydown_event_do_test_test (e) {
   for (let i = 0; i < 5; i++) {
     if (e.which == (49 + i) || e.which == (97 + i)) { 
       // 1,.. : status=i
-			showRightFrames('set_test_status.php?wid=' + LWT_DATA.word.id + '&status=' + i);
+			showRightFrames(
+        'set_test_status.php?wid=' + LWT_DATA.word.id + '&status=' + (i + 1)
+      );
       return false;
     }
   }
