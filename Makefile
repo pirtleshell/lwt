@@ -14,7 +14,7 @@ doc: $(ONE_FILE_DOC) Doxyfile
 	php docs/info.php > docs/info.html
 	doxygen Doxyfile
 	./node_modules/.bin/jsdoc -c jsdoc.json
-	php tools/phpDocumentor"
+	php tools/phpDocumentor
 
 # Regenerate code documentation
 code_doc: Doxyfile
