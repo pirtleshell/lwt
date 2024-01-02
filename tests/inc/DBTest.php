@@ -1,15 +1,15 @@
 <?php
 
-require __DIR__ . "/../connect.inc.php";
+require __DIR__ . "/../../connect.inc.php";
 $dbname = "test_lwt_db";
-require_once __DIR__ . '/../inc/database_connect.php';
+require_once __DIR__ . '/../../inc/database_connect.php';
 
 use PHPUnit\Framework\TestCase;
 
 function user_logging()
 {
-    include __DIR__ . "/../connect.inc.php";
-    $db_schema = __DIR__ . "../db/schema/baseline.sql";
+    include __DIR__ . "/../../connect.inc.php";
+    $db_schema = __DIR__ . "../../db/schema/baseline.sql";
     $command = "mysql -u $userid -p$passwd -h $server -e 'USE $dbname'";
     exec($command, $output, $returnValue);
     if ($returnValue == 1049) {
