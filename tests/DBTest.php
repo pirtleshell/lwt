@@ -6,25 +6,35 @@ require_once __DIR__ . '/../inc/database_connect.php';
 
 use PHPUnit\Framework\TestCase;
 
+function user_logging()
+{
+    include __DIR__ . "/../connect.inc.php";
+    $db_schema = __DIR__ . "../db/schema/baseline.sql";
+    $command = "mysql -u $userid -p$passwd -h $server -e 'USE $dbname'";
+    exec($command, $output, $returnValue);
+    if ($returnValue == 1049) {
+        // Execute the SQL file to install the database
+        $command = "mysql -u $userid -p$passwd -h $server $dbname < $db_schema";
+        exec($command, $output, $returnValue);
+
+        if ($returnValue != 0) {
+            die("Cannot login!");
+        }
+    }
+    return array($userid, $passwd, $server, $dbname);
+
+}
+
 class DBTest extends TestCase
 {
+
     public function testDatabaseInstallation()
     {
-        include __DIR__ . "/../connect.inc.php";
-        $db_schema = "db/schema/baseline.sql";
-        $command = "mysql -u $userid -p$passwd -h $server -e 'USE $dbname'";
-        exec($command, $output, $returnValue);
-        if ($returnValue == 1049) {
-            // Execute the SQL file to install the database
-            $command = "mysql -u $userid -p$passwd -h $server $dbname < $db_schema";
-            exec($command, $output, $returnValue);
-    
-            // Check if installation worked
-            $this->assertEquals(0, $returnValue, 'Database installation failed');
-        }
+        global $DBCONNECTION;
+        list($userid, $passwd, $server, $dbname) = user_logging();
 
-        // Connect to the database and check if necessary tables are created
-        $conn = connect_to_database(
+        // Connect to the database
+        $DBCONNECTION = connect_to_database(
             $server, $userid, $passwd, $dbname, $socket ?? ""
         );
         $this->assertTrue(
