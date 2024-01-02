@@ -40,8 +40,11 @@ ones are marked like "v1.0.0-fork".
 * On word review, status + 1 can be set only after word display. Before, you could 
 press key up at any time to increase term status, but keydown was effective only 
 after solution display ([#159](https://github.com/HugoFara/lwt/issues/159)).
-* New files: `inc/feeds.php` and `inc/tags.php`, stemmed from `inc/session_utility.php`. 
-It should not lead to any code or behaviour change.
+* New files:
+  * `inc/feeds.php` and `inc/tags.php`, stemmed from `inc/session_utility.php`. 
+  It should not lead to any code or behaviour change.
+  * `src/js/overlib_interface.js`, stemmed from `src/js/pgm.js`. It contains all the 
+  overlib interactions.
 
 ### Fixed
 

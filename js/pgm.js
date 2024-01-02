@@ -256,37 +256,8 @@ window.setTimeout(noShowAfter3Secs,3000)}
 $(window).on('load',wrapRadioButtons);$(document).ready(prepareMainAreas);/**
  * LWT Javascript functions
  * 
- * @author  andreask7 <andreasks7@users.noreply.github.com>
+ * @author  HugoFara <HugoFara@users.noreply.github.com>
  * @license Unlicense <http://unlicense.org/>
- * @since   1.6.16-fork
- * 
- * "Learning with Texts" (LWT) is free and unencumbered software
- * released into the PUBLIC DOMAIN.
- * 
- * Anyone is free to copy, modify, publish, use, compile, sell, or
- * distribute this software, either in source code form or as a
- * compiled binary, for any purpose, commercial or non-commercial,
- * and by any means.
- * 
- * In jurisdictions that recognize copyright laws, the author or
- * authors of this software dedicate any and all copyright
- * interest in the software to the public domain. We make this
- * dedication for the benefit of the public at large and to the
- * detriment of our heirs and successors. We intend this
- * dedication to be an overt act of relinquishment in perpetuity
- * of all present and future rights to this software under
- * copyright law.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
- * WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE
- * AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS BE LIABLE
- * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
- * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- * 
- * For more information, please refer to [http://unlicense.org/].
  */
 var ol_textfont='"Lucida Grande",Arial,sans-serif,STHeiti,"Arial Unicode MS",MingLiu';var ol_textsize=3;var ol_sticky=1;var ol_captionfont='"Lucida Grande",Arial,sans-serif,STHeiti,"Arial Unicode MS",MingLiu';var ol_captionsize=3;var ol_width=260;var ol_close='Close';var ol_offsety=30;var ol_offsetx=3;var ol_fgcolor='#FFFFE8';var ol_closecolor='#FFFFFF';function run_overlib_status_98(wblink1,wblink2,wblink3,hints,txid,torder,txt,wid,multi_words,rtl,ann){const lang=getLangFromDict(wblink3);return overlib(make_overlib_audio(txt,lang)+'<b>'+escape_html_chars_2(hints,ann)+'</b><br/>'+make_overlib_link_new_word(txid,torder,wid)+' | '+make_overlib_link_delete_word(txid,wid)+make_overlib_link_new_multiword(txid,torder,multi_words,rtl)+' <br /> '+make_overlib_link_wb(wblink1,wblink2,wblink3,txt,txid,torder),CAPTION,'Word')}
 function run_overlib_status_99(wblink1,wblink2,wblink3,hints,txid,torder,txt,wid,multi_words,rtl,ann){const lang=getLangFromDict(wblink3);return overlib(make_overlib_audio(txt,lang)+'<b>'+escape_html_chars_2(hints,ann)+'</b><br/> '+make_overlib_link_new_word(txid,torder,wid)+' | '+make_overlib_link_delete_word(txid,wid)+make_overlib_link_new_multiword(txid,torder,multi_words,rtl)+' <br /> '+make_overlib_link_wb(wblink1,wblink2,wblink3,txt,txid,torder),CAPTION,'Word')}
@@ -323,7 +294,41 @@ function make_overlib_link_delete_word(txid,wid){return' <a onclick="showRightFr
 function make_overlib_link_delete_multiword(txid,wid){return' <a onclick="showRightFrames(); return confirmDelete();" '+'href="delete_mword.php?wid='+wid+'&amp;tid='+txid+'" target="ro">Delete term</a> '}
 function make_overlib_link_wellknown_word(txid,torder){return' <a href="insert_word_wellknown.php?tid='+txid+'&amp;ord='+torder+'" target="ro" onclick="showRightFrames();">I know this term well</a> '}
 function make_overlib_link_ignore_word(txid,torder){return' <a href="insert_word_ignore.php?tid='+txid+'&amp;ord='+torder+'" target="ro" onclick="showRightFrames();">Ignore this term</a> '}
-function make_overlib_audio(txt,lang){let img=document.createElement("img");img.title="Click to read!";img.src="icn/speaker-volume.png";img.style.cursor="pointer";img.setAttribute("onclick","speechDispatcher('"+escape_html_chars(txt)+"', '"+(lang||"")+"')");return img.outerHTML}
+function make_overlib_audio(txt,lang){let img=document.createElement("img");img.title="Click to read!";img.src="icn/speaker-volume.png";img.style.cursor="pointer";img.setAttribute("onclick","speechDispatcher('"+escape_html_chars(txt)+"', '"+(lang||"")+"')");return img.outerHTML};/**
+ * LWT Javascript functions
+ * 
+ * @author  andreask7 <andreasks7@users.noreply.github.com>
+ * @license Unlicense <http://unlicense.org/>
+ * @since   1.6.16-fork
+ * 
+ * "Learning with Texts" (LWT) is free and unencumbered software
+ * released into the PUBLIC DOMAIN.
+ * 
+ * Anyone is free to copy, modify, publish, use, compile, sell, or
+ * distribute this software, either in source code form or as a
+ * compiled binary, for any purpose, commercial or non-commercial,
+ * and by any means.
+ * 
+ * In jurisdictions that recognize copyright laws, the author or
+ * authors of this software dedicate any and all copyright
+ * interest in the software to the public domain. We make this
+ * dedication for the benefit of the public at large and to the
+ * detriment of our heirs and successors. We intend this
+ * dedication to be an overt act of relinquishment in perpetuity
+ * of all present and future rights to this software under
+ * copyright law.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+ * WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE
+ * AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS BE LIABLE
+ * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ * 
+ * For more information, please refer to [http://unlicense.org/].
+ */
 function getStatusName(status){return STATUSES[status]?STATUSES[status].name:'Unknown'}
 function getStatusAbbr(status){return STATUSES[status]?STATUSES[status].abbr:'?'}
 function translateSentence(url,sentctl){if(sentctl!==undefined&&url!=''){const text=sentctl.value;if(typeof text==='string'){showRightFrames(undefined,createTheDictUrl(url,text.replace(/[{}]/g,'')))}}}
