@@ -1857,9 +1857,8 @@ function check_update_db($debug, $tbpref, $dbname): void
     $queries = SQLParser(__DIR__ . "/../db/schema/baseline.sql");
     foreach ($queries as $query) {
         $prefixed_query = prefixSQLQuery($query, $tbpref);
-        runsql($prefixed_query, "");
-        // Increment for new tables only
-        $count++;
+        // Increment count for new tables only
+        $count += runsql($prefixed_query, "");
     }
     
     if (!in_array("{$tbpref}textitems2", $tables)) {
@@ -1890,7 +1889,7 @@ function check_update_db($debug, $tbpref, $dbname): void
     runsql(
         "ALTER TABLE `{$tbpref}sentences` ADD SeFirstPos smallint(5) NOT NULL", 
         '', 
-        $sqlerrdie = false
+        false
     );
     
     if ($count > 0) {        
