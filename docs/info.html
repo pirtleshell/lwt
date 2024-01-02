@@ -2258,7 +2258,13 @@ finishing by a punctation mark.</li>
 <li>Multi-words were not saved with MeCab parsing on Japanese.</li>
 </ul>
 </li>
-<li>On word review (test), the space keyboard shortcut may be inoperating.</li>
+<li>On word review (test):
+<ul>
+<li>the space keyboard shortcut may have been inoperating.</li>
+<li>On <code>api.php</code>, tests were always set to "multi-word" due to a missing variable
+type conversion. Pull request <a href="https://github.com/HugoFara/lwt/pull/175">#175</a>.</li>
+</ul>
+</li>
 </ul>
 <h4>Deprecated</h4>
 <ul>
