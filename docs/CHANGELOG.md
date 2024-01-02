@@ -65,6 +65,7 @@ Solves [#129](https://github.com/HugoFara/lwt/issues/129), thanks to the help of
   * Parsing Japanese texts with MeCab was creating warnings when the text was not 
   finishing by a punctation mark.
   * Multi-words were not saved with MeCab parsing on Japanese.
+* On word review (test), the space keyboard shortcut may be inoperating.
 
 ### Deprecated
 
