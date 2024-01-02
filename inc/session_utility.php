@@ -1056,6 +1056,10 @@ function get_links_from_new_feed($NfSourceURI): array|false
             }
         }
     }
+    else{
+        $rss_data['feed_text'] = '';
+
+    }
     $rss_data['feed_title'] = $rss->getElementsByTagName('title')->item(0)->nodeValue;
     return $rss_data;
 }

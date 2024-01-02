@@ -303,14 +303,14 @@ function feed_wizard_select_text(): void
 <div id="lwt_header">
     <form name="lwt_form1" class="validate" action="feed_wizard.php" method="post">
         <div id="adv" style="display: none;">
-        <button onclick="lwt_wiz_select_test.clickCancel">Cancel</button>
+        <button onclick="lwt_wiz_select_test.clickCancel()">Cancel</button>
         <button id="adv_get_button">Get</button>
     </div>
     <div id="settings" style="display: none;">
         <p><b>Feed Wizard | Settings</b></p>
         <div style="margin-left:150px;text-align:left">
             Selection Mode: 
-            <select name="select_mode" onchange="lwt_wiz_select_test.changeSelectMode">
+            <select name="select_mode" onchange="lwt_wiz_select_test.changeSelectMode()">
                 <option value="0"<?php if($_SESSION['wizard']['select_mode'] == '0') {
                     echo ' selected';
                 }?>>Smart Selection</option>
@@ -321,7 +321,7 @@ function feed_wizard_select_text(): void
                     echo ' selected';
                 }?>>Advanced Selection</option>
                 </select><br />
-                Hide Images: <select name="hide_images" onchange="lwt_wiz_select_test.changeHideImage">
+                Hide Images: <select name="hide_images" onchange="lwt_wiz_select_test.changeHideImage()">
                 <option value="yes"<?php if($_SESSION['wizard']['hide_images'] == 'yes') {
                     echo ' selected';
                 }?>>Yes</option>
@@ -370,7 +370,7 @@ function feed_wizard_select_text(): void
                 <td class="td1" style="text-align:left">Article Source: </td>
                 <td class="td1" style="text-align:left">
                     <select name="NfArticleSection" 
-                    onchange="lwt_wiz_select_test.changeArticleSection">
+                    onchange="lwt_wiz_select_test.changeArticleSection()">
                         <option value="" <?php
     if (
         !array_key_exists('feed_text', $_SESSION['wizard']['feed']) ||
@@ -414,7 +414,7 @@ function feed_wizard_select_text(): void
                         <span>
                             <select name="selected_feed" 
                             style="width:250px;max-width:200px;" 
-                            onchange="lwt_wiz_select_test.changeSelectedFeed">
+                            onchange="lwt_wiz_select_test.changeSelectedFeed()">
                                 <?php
     $current_host = '';
     $current_status = '';
@@ -484,7 +484,7 @@ function feed_wizard_select_text(): void
                 <td>
                     <span>
                         <input type="button" value="Back" 
-                        onclick="lwt_wiz_select_test.clickBack" />
+                        onclick="lwt_wiz_select_test.clickBack()" />
                         <button id="next">Next</button>
                     </span>
                 </td>
@@ -492,7 +492,7 @@ function feed_wizard_select_text(): void
             </tr>
         </table>
         <button style="position:absolute;right:10px;top:10px" 
-        onclick="lwt_wiz_select_test.clickMinMax">
+        onclick="lwt_wiz_select_test.clickMinMax()">
             min/max
         </button>
         <input type="hidden" name="step" value="2" />
@@ -697,14 +697,14 @@ function feed_wizard_filter_text(): void
 <div id="lwt_header">
     <form name="lwt_form1" class="validate" action="feed_wizard.php" method="post">
     <div id="adv" style="display: none;">
-    <button onclick="lwt_wizard_filter.clickCancel">Cancel</button>
+    <button onclick="lwt_wizard_filter.clickCancel()">Cancel</button>
     <button id="adv_get_button">Get</button>
 </div>
 <div id="settings" style="display: none;">
     <p><b>Feed Wizard | Settings</b></p>
     <div style="margin-left:150px;text-align:left">
         Selection Mode: 
-        <select name="select_mode" onchange="lwt_wizard_filter.changeSelectMode">
+        <select name="select_mode" onchange="lwt_wizard_filter.changeSelectMode()">
             <option value="0"<?php if($_SESSION['wizard']['select_mode'] == '0') {
                 echo ' selected';
             }?>>Smart Selection</option>
@@ -716,7 +716,7 @@ function feed_wizard_filter_text(): void
             }?>>Advanced Selection</option>
         </select><br />
         Hide Images: 
-        <select name="hide_images" onchange="lwt_wizard_filter.changeHideImage">
+        <select name="hide_images" onchange="lwt_wizard_filter.changeHideImage()">
             <option value="yes"<?php if($_SESSION['wizard']['hide_images'] == 'yes') {
                 echo ' selected';
             }?>>Yes</option>
@@ -776,7 +776,7 @@ function feed_wizard_filter_text(): void
                 <td>
                     <span>
                         <select name="selected_feed" style="width:250px;max-width:200px;" 
-                        onchange="lwt_wizard_filter.changeSelectedFeed">
+                        onchange="lwt_wizard_filter.changeSelectedFeed()">
                             <?php
     $current_host = '';
     $current_status = '';
@@ -836,7 +836,7 @@ function feed_wizard_filter_text(): void
                 <td>
                     <span>
                         <input type="button" value="Back" 
-                        onclick="lwt_wizard_filter.clickBack" />
+                        onclick="lwt_wizard_filter.clickBack()" />
                         <button id="next">Next</button>
                     </span>
                 </td>
@@ -844,7 +844,7 @@ function feed_wizard_filter_text(): void
             </tr>
         </table>
         <button style="position:absolute;right:10px;top:10px" 
-        onclick="lwt_wizard_filter.clickMinMax">
+        onclick="lwt_wizard_filter.clickMinMax()">
             min/max
         </button>
         <input type="hidden" id="filter_tags" name="filter_tags" disabled />
