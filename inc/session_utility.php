@@ -4143,13 +4143,11 @@ function getScriptDirectionTag($lid): string
  *
  * @return string[][] Append text and values to insert to the database
  *
- * @since 2.5.0-fork Function added.
- *
  * @global string $tbpref Table name prefix
  *
  * @psalm-return list{array<int, string>, list{0?: string,...}}
  */
-function insert_expression_from_mecab($text, $lid, $wid, $len): array
+function insertMecabExpression($text, $lid, $wid, $len): array
 {
     global $tbpref;
 
@@ -4183,6 +4181,9 @@ function insert_expression_from_mecab($text, $lid, $wid, $len): array
     $sqlarray = array();
     // For each sentence in database containing $text
     while ($record = mysqli_fetch_assoc($res)) {
+        if (!array_key_exists((int) $record['SeTxID'], $mwords)) {
+            $mwords[(int) $record['SeTxID']] = array();
+        }
         $sent = trim((string) $record['SeText']);
         $fp = fopen($db_to_mecab, 'w');
         fwrite($fp, $sent . "\n");
@@ -4213,9 +4214,9 @@ function insert_expression_from_mecab($text, $lid, $wid, $len): array
             $sqlarray[] = "($wid, $lid, {$record['SeTxID']}, {$record['SeID']}, 
             $pos, $len, " . convert_string_to_sqlsyntax_notrim_nonull($text) . ")";
             if (getSettingZeroOrOne('showallwords', 1)) {
-                $mwords[$pos] = "&nbsp;$len&nbsp";
+                $mwords[(int) $record['SeTxID']][$pos] = "&nbsp;$len&nbsp";
             } else { 
-                $mwords[$pos] = $text;
+                $mwords[(int) $record['SeTxID']][$pos] = $text;
             }
             $seek = mb_strpos($parsed_sentence, $parsed_text, $seek + 1);
         }
@@ -4225,6 +4226,33 @@ function insert_expression_from_mecab($text, $lid, $wid, $len): array
     unlink($db_to_mecab);
 
     return array($mwords, $sqlarray);
+}
+
+/**
+ * Insert an expression to the database using MeCab.
+ *
+ * @param string     $text Text to insert
+ * @param string|int $lid  Language ID
+ * @param string|int $wid  Word ID
+ * @param int        $len  Number of words in the expression
+ *
+ * @return string[][] Append text and values to insert to the database
+ *
+ * @since 2.5.0-fork Function added.
+ * 
+ * @deprecated Since 2.10.0 Use insertMecabExpression
+ *
+ * @global string $tbpref Table name prefix
+ *
+ * @psalm-return list{array<int, string>, list{0?: string,...}}
+ */
+function insert_expression_from_mecab($text, $lid, $wid, $len): array
+{
+    list($mwords, $sqlarr) = insertMecabExpression($text, $lid, $wid, $len);
+    $flat_mwords = array_reduce($mwords, function ($carry, $item) {
+        return $carry + $item;
+    }, []);
+    return array($flat_mwords, array(), $sqlarr);
 }
 
 /**
@@ -4242,7 +4270,7 @@ function insert_expression_from_mecab($text, $lid, $wid, $len): array
  *                   $mode is unnused, data are always returned.
  *                   The second return argument is always empty array.
  *
- * @deprecated Use insert_expression_from_mecab instead.
+ * @deprecated Use insertMecabExpression instead.
  *
  * @global string $tbpref Table name prefix
  *
@@ -4266,7 +4294,7 @@ function insertExpressionFromMeCab($textlc, $lid, $wid, $len, $mode): array
  *
  * @global string $tbpref Table name prefix
  */
-function standardInsertMultiWord($textlc, $lid, $wid, $len): array
+function insertStandardExpression($textlc, $lid, $wid, $len): array
 {
     global $tbpref;
     $mwords = array();
@@ -4372,13 +4400,13 @@ function standardInsertMultiWord($textlc, $lid, $wid, $len): array
  * @since 2.5.0-fork Mode is unnused and data are always added to the output.
  * @since 2.5.2-fork Fixed multi-words insertion for languages using no space.
  * 
- * @deprecated Since 2.10.0-fork, use standardInsertMultiWord
+ * @deprecated Since 2.10.0-fork, use insertStandardExpression
  *
  * @psalm-return list{array<int, null|string>, array<never, never>, list{0?: string,...}}
  */
 function insert_standard_expression($textlc, $lid, $wid, $len, $mode): array
 {
-    list($mwords, $sqlarr) = standardInsertMultiWord($textlc, $lid, $wid, $len);
+    list($mwords, $sqlarr) = insertStandardExpression($textlc, $lid, $wid, $len);
     $flat_mwords = array_reduce($mwords, function ($carry, $item) {
         return $carry + $item;
     }, []);
@@ -4525,29 +4553,31 @@ function newMultiWordInteractable($hex, $multiwords, $wid, $len): void
 
     ?>
 <script type="text/javascript">
-    let term = <?php echo json_encode($attrs); ?>;
+    (function () {
+        let term = <?php echo json_encode($attrs); ?>;
 
-    const multiWords = <?php echo json_encode($multiwords); ?>;
+        const multiWords = <?php echo json_encode($multiwords); ?>;
 
-    let title = '';
-    if (window.parent.LWT_DATA.settings.jQuery_tooltip) {
-        title = make_tooltip(
-            multiWords[window.parent.LWT_DATA.text.id][0], term.data_trans, 
-            term.data_rom, parseInt(term.data_status, 10)
+        let title = '';
+        if (window.parent.LWT_DATA.settings.jQuery_tooltip) {
+            title = make_tooltip(
+                multiWords[window.parent.LWT_DATA.text.id][0], term.data_trans, 
+                term.data_rom, parseInt(term.data_status, 10)
+            );
+        }
+        term['title'] = title;
+        let attrs = ""; 
+        Object.entries(term).forEach(([k, v]) => attrs += " " + k + '="' + v + '"');
+        // keys(term).map((k) => k + '="' + term[k] + '"').join(" ");
+        
+        newExpressionInteractable(
+            multiWords[window.parent.LWT_DATA.text.id],
+            attrs,
+            term.data_code,
+            <?php echo json_encode($hex); ?>,
+            <?php echo json_encode($showAll); ?>
         );
-    }
-    term['title'] = title;
-    let attrs = ""; 
-    Object.entries(term).forEach(([k, v]) => attrs += " " + k + '="' + v + '"');
-    // keys(term).map((k) => k + '="' + term[k] + '"').join(" ");
-    
-    newExpressionInteractable(
-        multiWords[window.parent.LWT_DATA.text.id],
-        attrs,
-        term.data_code,
-        <?php echo json_encode($hex); ?>,
-        <?php echo json_encode($showAll); ?>
-    );
+    })()
  </script>
     <?php
     flush();
@@ -4583,11 +4613,11 @@ function insertExpressions($textlc, $lid, $wid, $len, $mode): null|string
     * Should separate the two
     */ 
     if ('MECAB' == strtoupper(trim($regexp))) {
-        list($appendtext, $sqlarr) = insert_expression_from_mecab(
+        list($appendtext, $sqlarr) = insertMecabExpression(
             $textlc, $lid, $wid, $len
         );
     } else {
-        list($appendtext, $sqlarr) = standardInsertMultiWord(
+        list($appendtext, $sqlarr) = insertStandardExpression(
             $textlc, $lid, $wid, $len
         );
     }
