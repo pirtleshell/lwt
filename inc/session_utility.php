@@ -4179,6 +4179,7 @@ function insertMecabExpression($text, $lid, $wid, $len): array
 
     $mwords = array();
     $sqlarray = array();
+    $occurences = array();
     // For each sentence in database containing $text
     while ($record = mysqli_fetch_assoc($res)) {
         if (!array_key_exists((int) $record['SeTxID'], $mwords)) {
@@ -4211,8 +4212,12 @@ function insertMecabExpression($text, $lid, $wid, $len): array
             $pos = preg_match_all('/ /', mb_substr($parsed_sentence, 0, $seek)) * 2 + 
             (int) $record['SeFirstPos'];
             // Ti2WoID,Ti2LgID,Ti2TxID,Ti2SeID,Ti2Order,Ti2WordCount,Ti2Text
-            $sqlarray[] = "($wid, $lid, {$record['SeTxID']}, {$record['SeID']}, 
-            $pos, $len, " . convert_string_to_sqlsyntax_notrim_nonull($text) . ")";
+            $occurences[] = [
+                "SeID" => (int) $record['SeID'],
+                "TxID" => (int) $record['SeTxID'], 
+                "position" => $pos,
+                "term" => $text
+            ];
             if (getSettingZeroOrOne('showallwords', 1)) {
                 $mwords[(int) $record['SeTxID']][$pos] = "&nbsp;$len&nbsp";
             } else { 
@@ -4225,6 +4230,7 @@ function insertMecabExpression($text, $lid, $wid, $len): array
     mysqli_free_result($res);
     unlink($db_to_mecab);
 
+    return $occurences;
     return array($mwords, $sqlarray);
 }
 
@@ -4299,6 +4305,7 @@ function insertStandardExpression($textlc, $lid, $wid, $len): array
     global $tbpref;
     $mwords = array();
     $sqlarr = array();
+    $occurences = array();
     $res = do_mysqli_query("SELECT * FROM {$tbpref}languages WHERE LgID=$lid");
     $record = mysqli_fetch_assoc($res);
     $removeSpaces = $record["LgRemoveSpaces"] == 1;
@@ -4366,16 +4373,18 @@ function insertStandardExpression($textlc, $lid, $wid, $len): array
                 if ($matches[1] != $textlc) {
                     $txt = $splitEachChar ? $wis : $matches[1]; 
                 }
-                $sqlarr[] = "($wid, $lid, {$record['SeTxID']},
-                {$record['SeID']}, $pos, $len, " . 
-                convert_string_to_sqlsyntax_notrim_nonull($txt) . ')';
-                if (getSettingZeroOrOne('showallwords', 1)) {
-                    $mwords[(int) $record["SeTxID"]][$pos] = "&nbsp;$len&nbsp";
-                } else if ($splitEachChar || $removeSpaces) {
-                    $mwords[(int) $record["SeTxID"]][$pos] = $wis;
+                if ($splitEachChar || $removeSpaces) {
+                    $display = $wis;
                 } else {
-                    $mwords[(int) $record["SeTxID"]][$pos] = $matches[1];
+                    $display = $matches[1];
                 }
+                $occurences[] = [
+                    "SeID" => (int) $record['SeID'],
+                    "SeTxID" => (int) $record['SeTxID'], 
+                    "position" => $pos,
+                    "term" => $txt,
+                    "display_term" => $display
+                ];
             }
             // Cut the sentence to before the right-most term starts
             $string = mb_substr($string, 0, $last_pos, 'UTF-8');
@@ -4383,6 +4392,7 @@ function insertStandardExpression($textlc, $lid, $wid, $len): array
         }
     }
     mysqli_free_result($res);
+    return $occurences;
     return array($mwords, $sqlarr);
 }
 
@@ -4613,19 +4623,46 @@ function insertExpressions($textlc, $lid, $wid, $len, $mode): null|string
     * Should separate the two
     */ 
     if ('MECAB' == strtoupper(trim($regexp))) {
-        list($appendtext, $sqlarr) = insertMecabExpression(
+        $occurences = insertMecabExpression(
             $textlc, $lid, $wid, $len
         );
     } else {
-        list($appendtext, $sqlarr) = insertStandardExpression(
+        $occurences = insertStandardExpression(
             $textlc, $lid, $wid, $len
         );
     }
     if ($mode == 0) {
+        $appendtext = array();
+        foreach ($occurences as $occ) {
+            $appendtext[$occ['SeTxID']] = array();
+            // MeCab
+            if ('MECAB' == strtoupper(trim($regexp))) {
+                if (getSettingZeroOrOne('showallwords', 1)) {
+                    $appendtext[$occ['SeTxID']][$occ['position']] = "&nbsp;$len&nbsp";
+                } else { 
+                    $appendtext[$occ['SeTxID']][$occ['position']] = $occ['term'];
+                }
+            } else {
+                if (getSettingZeroOrOne('showallwords', 1)) {
+                    $appendtext[$occ['SeTxID']][$occ['position']] = "&nbsp;$len&nbsp";
+                } else {
+                    $appendtext[$occ['SeTxID']][$occ['position']] = $occ['display_term'];
+                }
+            }
+        }
         $hex = strToClassName(prepare_textdata($textlc));
         newMultiWordInteractable($hex, $appendtext, $wid, $len);
     }
     $sqltext = null;
+    $sqlarr = array();
+    foreach ($occurences as $occ) {
+        $sqlarr[] = "(" . implode(",", 
+        [
+            $wid, $lid, $occ["SeTxID"], $occ["SeID"], 
+            $occ["position"], $len, 
+            convert_string_to_sqlsyntax_notrim_nonull($occ["term"])
+        ]) . ")";
+    }
     if (!empty($sqlarr)) {
         $sqltext = '';
         if ($mode != 2) {
