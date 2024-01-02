@@ -11,12 +11,13 @@ ones are marked like "v1.0.0-fork".
 
 * Support for Japanese with MeCab on Mac! This was added thanks to 
 [quopquai](https://github.com/quopquai) on [#135](https://github.com/HugoFara/lwt/issues/135).
-* `unloadformcheck.js` now declares a new object `lwt_form_check` that contains all the functions needed.
 * New globals ([#163](https://github.com/HugoFara/lwt/issues/163)):
   * On `inc/kernel_utility.php`: `LWT_APP_VERSION` and `LWT_RELEASE_DATE`.
   * On `api.php`: `LWT_API_VERSION` and `LWT_API_RELEASE_DATE`.
   * `src/js/jq_pgm.js`: `LWT_DATA`.
-* Imprtant additions to Text-To-Speech (TTS):
+  * `unloadformcheck.js` now declares a new object `lwt_form_check` that contains 
+  all the functions needed.
+* Important additions to Text-To-Speech (TTS):
   * Word can be read on hover or on click. 
   Pull request [#147](https://github.com/HugoFara/lwt/pull/147) by 
   [@ProgramComputer](https://github.com/ProgramComputer).
