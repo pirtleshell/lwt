@@ -722,7 +722,7 @@ function request_handler($method, $requestUri, $post_param)
                         $endpoint_fragments[1]]
                     );
                 }
-                // no break
+                break;
             case 'version':
                 $answer = rest_api_version($req_param);
                 send_response(200, $answer);
