@@ -4134,20 +4134,19 @@ function getScriptDirectionTag($lid): string
 }
 
 /**
- * Insert an expression to the database using MeCab.
+ * Find all occurences of an expression using MeCab.
  *
  * @param string     $text Text to insert
  * @param string|int $lid  Language ID
- * @param string|int $wid  Word ID
  * @param int        $len  Number of words in the expression
  *
- * @return string[][] Append text and values to insert to the database
+ * @return (string|int)[] Each found multi-word details
  *
  * @global string $tbpref Table name prefix
  *
  * @psalm-return list{array<int, string>, list{0?: string,...}}
  */
-function insertMecabExpression($text, $lid, $wid, $len): array
+function findMecabExpression($text, $lid): array
 {
     global $tbpref;
 
@@ -4176,15 +4175,9 @@ function insertMecabExpression($text, $lid, $wid, $len): array
         }
     }
 
-
-    $mwords = array();
-    $sqlarray = array();
     $occurences = array();
     // For each sentence in database containing $text
     while ($record = mysqli_fetch_assoc($res)) {
-        if (!array_key_exists((int) $record['SeTxID'], $mwords)) {
-            $mwords[(int) $record['SeTxID']] = array();
-        }
         $sent = trim((string) $record['SeText']);
         $fp = fopen($db_to_mecab, 'w');
         fwrite($fp, $sent . "\n");
@@ -4218,11 +4211,6 @@ function insertMecabExpression($text, $lid, $wid, $len): array
                 "position" => $pos,
                 "term" => $text
             ];
-            if (getSettingZeroOrOne('showallwords', 1)) {
-                $mwords[(int) $record['SeTxID']][$pos] = "&nbsp;$len&nbsp";
-            } else { 
-                $mwords[(int) $record['SeTxID']][$pos] = $text;
-            }
             $seek = mb_strpos($parsed_sentence, $parsed_text, $seek + 1);
         }
         pclose($handle);
@@ -4231,7 +4219,6 @@ function insertMecabExpression($text, $lid, $wid, $len): array
     unlink($db_to_mecab);
 
     return $occurences;
-    return array($mwords, $sqlarray);
 }
 
 /**
@@ -4254,7 +4241,7 @@ function insertMecabExpression($text, $lid, $wid, $len): array
  */
 function insert_expression_from_mecab($text, $lid, $wid, $len): array
 {
-    $occurences = insertStandardExpression($text, $lid, $wid, $len);
+    $occurences = findMecabExpression($text, $lid);
 
     $mwords = array();
     foreach ($occurences as $occ) {
@@ -4310,22 +4297,18 @@ function insertExpressionFromMeCab($textlc, $lid, $wid, $len, $mode): array
 
 
 /**
- * Get the data to insert a multi-word without using a tool like MeCab.
+ * Find all occurences of an expression, do not use parsers like MeCab.
  *
  * @param string     $textlc Text to insert in lower case
  * @param string|int $lid    Language ID
- * @param string|int $wid    Word ID
- * @param int        $len    Number of words in the expression
  *
- * @return (string|int)[][][] Appended text in format [text_id][position][term], and sentence id
+ * @return (string|int)[] Each inserted mutli-word details
  *
  * @global string $tbpref Table name prefix
  */
-function insertStandardExpression($textlc, $lid, $wid, $len): array
+function findStandardExpression($textlc, $lid): array
 {
     global $tbpref;
-    $mwords = array();
-    $sqlarr = array();
     $occurences = array();
     $res = do_mysqli_query("SELECT * FROM {$tbpref}languages WHERE LgID=$lid");
     $record = mysqli_fetch_assoc($res);
@@ -4374,9 +4357,6 @@ function insertStandardExpression($textlc, $lid, $wid, $len): array
             }
         }
         $last_pos = mb_strripos($string, $textlc, 0, 'UTF-8');
-        if ($last_pos !== false) {
-            $mwords[(int) $record["SeTxID"]] = array();
-        }
         // For each occurence of query in sentence
         while ($last_pos !== false) {
             if (
@@ -4404,7 +4384,7 @@ function insertStandardExpression($textlc, $lid, $wid, $len): array
                     "SeTxID" => (int) $record['SeTxID'], 
                     "position" => $pos,
                     "term" => $txt,
-                    "display_term" => $display
+                    "term_display" => $display
                 ];
             }
             // Cut the sentence to before the right-most term starts
@@ -4414,7 +4394,6 @@ function insertStandardExpression($textlc, $lid, $wid, $len): array
     }
     mysqli_free_result($res);
     return $occurences;
-    return array($mwords, $sqlarr);
 }
 
 /**
@@ -4437,7 +4416,7 @@ function insertStandardExpression($textlc, $lid, $wid, $len): array
  */
 function insert_standard_expression($textlc, $lid, $wid, $len, $mode): array
 {
-    $occurences = insertStandardExpression($textlc, $lid, $wid, $len);
+    $occurences = findStandardExpression($textlc, $lid);
 
     $mwords = array();
     foreach ($occurences as $occ) {
@@ -4445,7 +4424,7 @@ function insert_standard_expression($textlc, $lid, $wid, $len, $mode): array
         if (getSettingZeroOrOne('showallwords', 1)) {
             $mwords[$occ['SeTxID']][$occ['position']] = "&nbsp;$len&nbsp";
         } else {
-            $mwords[$occ['SeTxID']][$occ['position']] = $occ['display_term'];
+            $mwords[$occ['SeTxID']][$occ['position']] = $occ['term_display'];
         }
     }
     $flat_mwords = array_reduce($mwords, function ($carry, $item) {
@@ -4659,14 +4638,12 @@ function insertExpressions($textlc, $lid, $wid, $len, $mode): null|string
     );
 
     if ('MECAB' == strtoupper(trim($regexp))) {
-        $occurences = insertMecabExpression(
-            $textlc, $lid, $wid, $len
-        );
+        $occurences = findMecabExpression($textlc, $lid);
     } else {
-        $occurences = insertStandardExpression(
-            $textlc, $lid, $wid, $len
-        );
+        $occurences = findStandardExpression($textlc, $lid);
     }
+
+    // Update the term visually through JS
     if ($mode == 0) {
         $appendtext = array();
         foreach ($occurences as $occ) {
@@ -4677,7 +4654,7 @@ function insertExpressions($textlc, $lid, $wid, $len, $mode): null|string
                 if ('MECAB' == strtoupper(trim($regexp))) {
                     $appendtext[$occ['SeTxID']][$occ['position']] = $occ['term'];
                 } else {
-                    $appendtext[$occ['SeTxID']][$occ['position']] = $occ['display_term'];
+                    $appendtext[$occ['SeTxID']][$occ['position']] = $occ['term_display'];
                 }
             }
         }

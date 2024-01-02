@@ -36,6 +36,7 @@ ones are marked like "v1.0.0-fork".
   See [#160](https://github.com/HugoFara/lwt/issues/160). 
   It adds `README.md` and `UNLICENSE.md`.
   * Adds `docs/info.html` and `docs/index.html` from [#146](https://github.com/HugoFara/lwt/pull/146).
+* Multi-word creation was reviewed to use a simpler code. 
 
 ### Fixed
 
