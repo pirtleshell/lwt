@@ -1166,23 +1166,45 @@ $tbpref = "setname";   // only the table set "setname"
 <h3>Site Unreachable</h3>
 <p>If you see "The webpage is not available", "We have trouble finding that site".</p>
 <p><img src="../img/prob1.png" alt="Image"></p>
-<p>Answer: Your local webserver (Apache) is not running. Please start it via EasyPHP or MAMP control program/panel.</p>
+<p>Answer: Your local webserver (Apache) is not running.
+Please start it via EasyPHP or MAMP control program/panel.</p>
+<h3>Blank page</h3>
+<p>You PHP version is probably too low. Try to use PHP 8 at least.</p>
 <h3>URL not found (404)</h3>
 <p><img src="../img/prob2.png" alt="Image"></p>
-<p>Answer: The server is running, but the application is not found. Maybe the Uniform Resource Identifier (URI) is wrong or misspelled. Please check/correct it. Or the URI is correct, and the application is installed, but not in the correct directory <em>lwt</em> below <em>htdocs</em>. Please install/copy/move it into the correct directory.</p>
+<p>Answer: The server is running, but the application is not found.
+Maybe the Uniform Resource Identifier (URI) is wrong or misspelled.
+Please check/correct it. Or the URI is correct, and the application is installed,
+but not in the correct directory <em>lwt</em> below <em>htdocs</em>.
+Please install/copy/move it into the correct directory.</p>
 <h3>Database connection error</h3>
 <p><img src="../img/prob3.png" alt="Image"></p>
-<p>Answer: Either the database (MySQL) is not running, or the database connection parameters in <em>../htlwt/connect.inc.php</em> are wrong. Please check/correct the database connection parameters and/or start MySQL via the MAMP or EasyPHP control program/panel.</p>
+<p>Answer: Either the database (MySQL) is not running, or the database connection
+parameters in <em>../htlwt/connect.inc.php</em> are wrong.
+Please check/correct the database connection parameters and/or start MySQL via the MAMP or EasyPHP control program/panel.</p>
 <h3>Cannot find connect.inc.php</h3>
 <p><img src="../img/prob4.png" alt="Image"></p>
-<p>Answer: The Webserver and the database is running, but the database connection parameter file <em>../htlwt/connect.inc.php</em> is not found. Please rename one of the connection files (according to your server) to <em>../htlwt/connect.inc.php</em>.</p>
+<p>Answer: The Webserver and the database is running, but the database connection parameter file <em>../htlwt/connect.inc.php</em> is not found.
+Please rename one of the connection files (according to your server) to <em>../htlwt/connect.inc.php</em>.</p>
 <h3>Do not run on Linux after installation/update</h3>
 <p>If LWT installed or updated LWT on Linux, but the application does not run as expected.</p>
-<p>Answer 1: The Webserver does not have full access to all LWT files (insufficient rights). Open a terminal window, go to the directory where the directory "lwt" has been created with all LWT files, e. g.<br>
+<p>Answer 1: The Webserver does not have full access to all LWT files (insufficient rights).
+Open a terminal window, go to the directory where the directory "lwt" has been created with all LWT files, e. g.<br>
 <strong>cd /var/www/html</strong><br>
 Now execute:
 <strong>sudo chmod -R 755 lwt</strong>.</p>
-<p>Answer 2: The PHP "mbstring" extension is not installed. Please install it: <a href="https://askubuntu.com/questions/491629/how-to-install-php-mbstring-extension-in-ubuntu">see this article</a>.</p>
+<p>Answer 2: The PHP "mbstring" extension is not installed.
+Please install it: <a href="https://askubuntu.com/questions/491629/how-to-install-php-mbstring-extension-in-ubuntu">see this article</a>.</p>
+<h3>MeCab not detected!</h3>
+<p>LWT cannot find MeCab, you can do the following steps:</p>
+<p>On Linux or Mac:</p>
+<ol>
+<li>Open a terminal.</li>
+<li>Type <code>mecab -v</code> to get the current MeCab version. If nothing is displayed MeCab is not installed.</li>
+<li>If MeCab is already installed, the path may be missing. If you are using MAMP type</li>
+</ol>
+<pre><code class="language-bash">printf 'export PATH="/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"' &gt;&gt; /Applications/MAMP/Library/bin/envvars
+</code></pre>
 
 			<h2 id="ipad" name="ipad">▶ Setup for Tablets - <a href="#">[↑]</a></h2>
 <blockquote>
@@ -2197,6 +2219,8 @@ ones are marked like "v1.0.0-fork".</p>
 <h3>[Unreleased]</h3>
 <h4>Added</h4>
 <ul>
+<li>Support for Japanese with MeCab on Mac! This was added thanks to
+<a href="https://github.com/quopquai">quopquai</a> on <a href="https://github.com/HugoFara/lwt/issues/135">#135</a>.</li>
 <li>
 <code>unloadformcheck.js</code> now declares a new object <code>lwt_form_check</code> that contains all the functions needed.</li>
 <li>New globals (<a href="https://github.com/HugoFara/lwt/issues/163">#163</a>):
