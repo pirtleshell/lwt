@@ -1,15 +1,17 @@
-<?php
+<?php declare(strict_types=1);
 
 require __DIR__ . "/../../connect.inc.php";
-$dbname = "test_lwt_db";
+$GLOBALS['dbname'] = "test_" . $dbname;
 require_once __DIR__ . '/../../inc/database_connect.php';
 
 use PHPUnit\Framework\TestCase;
+
 
 function user_logging()
 {
     include __DIR__ . "/../../connect.inc.php";
     $db_schema = __DIR__ . "../../db/schema/baseline.sql";
+    $dbname = "test_" . $dbname;
     $command = "mysql -u $userid -p$passwd -h $server -e 'USE $dbname'";
     exec($command, $output, $returnValue);
     if ($returnValue == 1049) {
@@ -25,7 +27,8 @@ function user_logging()
 
 }
 
-class DBTest extends TestCase
+
+class DatabaseConnectTest extends TestCase
 {
 
     public function testDatabaseInstallation()
@@ -42,5 +45,6 @@ class DBTest extends TestCase
             'Could not connect to the database: ' . mysqli_connect_error()
         );
     }
+
 }
 ?>
