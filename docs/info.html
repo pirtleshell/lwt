@@ -981,7 +981,7 @@ Actions: You can edit, update, delete a feed or follow the link to the newsfeed.
 <li>Name: the name is limited to 40 characters, this field must not be empty.</li>
 <li>Newsfeed url: URL of your RSS/Atom-Feed, this field must not be empty.</li>
 <li>Article Section: <a href="http://www.w3.org/TR/xpath20/">xpath expression</a> (i.e.: //div[@id="content-to-read"]/p), the <a href="info.html#feed_wizard">feed wizard</a> can be used to get the right sections, this field must not be empty.</li>
-<li>Filter Tags: <a href="http://www.w3.org/TR/xpath20/">xpath expression</a>, the <a href="info.html#feed_wizard">feed wizard</a> can be used to get the right sections.</li>
+<li>Filter Tags: <a href="http://www.w3.org/TR/xpath20/">xpath expression</a>, the <a href="info.html#feed_wizard">feed wizard</a> removes sections to include in the text.</li>
 <li>Options:
 <ul>
 <li>
@@ -1027,7 +1027,7 @@ Actions: You can edit, update, delete a feed or follow the link to the newsfeed.
 <p><img src="../img/39.jpg" alt="Image"></p>
 </li>
 <li>
-<p>This works like step 2. Only the selected sections from step 2 are clickable. Marked text will appear grey, filtered texts will have a red font.</p>
+<p>This works like step 2. Only the selected sections from step 2 are clickable. Marked text will appear grey, excluded texts will have a red font.</p>
 <p><img src="../img/40.jpg" alt="Image"></p>
 </li>
 <li>
@@ -2265,6 +2265,9 @@ finishing by a punctation mark.</li>
 type conversion. Pull request <a href="https://github.com/HugoFara/lwt/pull/175">#175</a>.</li>
 </ul>
 </li>
+<li>An explicit dependency to <a href="https://www.php.net/manual/en/book.dom.php">php-dom</a> was
+missing in <code>INSTALL.sh</code> (and <code>composer.json</code>), as stated in
+<a href="https://github.com/HugoFara/lwt/pull/178">#178</a>.</li>
 </ul>
 <h4>Deprecated</h4>
 <ul>
