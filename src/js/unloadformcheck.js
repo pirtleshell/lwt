@@ -13,14 +13,14 @@
  * Set to 1 if a form was altered (set "dirty"),
  * ask for confirmation before leaving.
  *
- * @deprecated Since 2.10.0, use lwt_form_check instead
+ * @deprecated Since 2.10.0, use lwtFormCheck instead
  */
 let DIRTY = 0;
 
 /**
  * Keeps track of a modified form.
  */
-const lwt_form_check = {
+const lwtFormCheck = {
 
   dirty: false,
 
@@ -30,7 +30,7 @@ const lwt_form_check = {
    * @returns {string} Confirmation string
    */
   isDirtyMessage: function () {
-    if (lwt_form_check.dirty) {
+    if (lwtFormCheck.dirty) {
       return '** You have unsaved changes! **';
     }
   },
@@ -39,14 +39,14 @@ const lwt_form_check = {
    * Set the DIRTY variable to 1.
    */
   makeDirty: function () {
-    lwt_form_check.dirty = true;
+    lwtFormCheck.dirty = true;
   },
 
   /**
    * Set the DIRTY variable to 0.
    */
   resetDirty: function () {
-    lwt_form_check.dirty = false;
+    lwtFormCheck.dirty = false;
   },
 
   /**
@@ -58,7 +58,7 @@ const lwt_form_check = {
    */
   tagChanged: function (_, ui) {
     if (!ui.duringInitialization) {
-      lwt_form_check.dirty = true;
+      lwtFormCheck.dirty = true;
     }
     return true;
   },
@@ -71,17 +71,17 @@ const lwt_form_check = {
    */
   askBeforeExit: function () {
     $('#termtags').tagit({
-      afterTagAdded: lwt_form_check.tagChanged,
-      afterTagRemoved: lwt_form_check.tagChanged
+      afterTagAdded: lwtFormCheck.tagChanged,
+      afterTagRemoved: lwtFormCheck.tagChanged
     });
     $('#texttags').tagit({
-      afterTagAdded: lwt_form_check.tagChanged,
-      afterTagRemoved: lwt_form_check.tagChanged
+      afterTagAdded: lwtFormCheck.tagChanged,
+      afterTagRemoved: lwtFormCheck.tagChanged
     });
     $('input,checkbox,textarea,radio,select')
-      .not('#quickmenu').on('change', lwt_form_check.makeDirty);
-    $(':reset,:submit').on('click', lwt_form_check.resetDirty);
-    $(window).on('beforeunload', lwt_form_check.isDirtyMessage);
+      .not('#quickmenu').on('change', lwtFormCheck.makeDirty);
+    $(':reset,:submit').on('click', lwtFormCheck.resetDirty);
+    $(window).on('beforeunload', lwtFormCheck.isDirtyMessage);
   }
 };
 
@@ -89,26 +89,26 @@ const lwt_form_check = {
  * Check the DIRTY status and ask before leaving.
  *
  * @returns {string} Confirmation string
- * @deprecated Since 2.10.0, use return lwt_form_check.isDirtyMessage instead
+ * @deprecated Since 2.10.0, use return lwtFormCheck.isDirtyMessage instead
  */
 function askConfirmIfDirty () {
-  return lwt_form_check.askConfirmIfDirty();
+  return lwtFormCheck.askConfirmIfDirty();
 }
 
 /**
  * Set the DIRTY variable to 1.
- * @deprecated Since 2.10.0, use return lwt_form_check.makeDirty instead
+ * @deprecated Since 2.10.0, use return lwtFormCheck.makeDirty instead
  */
 function makeDirty () {
-  return lwt_form_check.makeDirty();
+  return lwtFormCheck.makeDirty();
 }
 
 /**
  * Set the DIRTY variable to 0.
- * @deprecated Since 2.10.0, use return lwt_form_check.resetDirty instead
+ * @deprecated Since 2.10.0, use return lwtFormCheck.resetDirty instead
  */
 function resetDirty () {
-  return lwt_form_check.resetDirty();
+  return lwtFormCheck.resetDirty();
 }
 
 /**
@@ -117,10 +117,10 @@ function resetDirty () {
  * @param {*}      _  An event, unused
  * @param {object} ui UI object
  * @returns {true} Always return true
- * @deprecated Since 2.10.0, use return lwt_form_check.tagChanged instead
+ * @deprecated Since 2.10.0, use return lwtFormCheck.tagChanged instead
  */
 function tagChanged (_, ui) {
-  return lwt_form_check.tagChanged(_, ui);
+  return lwtFormCheck.tagChanged(_, ui);
 }
 
 /**
@@ -128,8 +128,8 @@ function tagChanged (_, ui) {
  * before exiting the form.
  *
  * @returns {undefined}
- * @deprecated Since 2.10.0, use return lwt_form_check.askBeforeExit instead
+ * @deprecated Since 2.10.0, use return lwtFormCheck.askBeforeExit instead
  */
 function ask_before_exiting () {
-  return lwt_form_check.askBeforeExit();
+  return lwtFormCheck.askBeforeExit();
 }
