@@ -52,6 +52,8 @@ after solution display ([#159](https://github.com/HugoFara/lwt/issues/159)).
   overlib interactions.
 * For audio URI, raises the characters length limit from 200 to 2048 
 ([#144](https://github.com/HugoFara/lwt/issues/144)).
+* Database creation and migration is now handled directly in SQL, for a safer 
+behavior.
 
 ### Fixed
 
