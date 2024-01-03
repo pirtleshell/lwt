@@ -1607,20 +1607,15 @@ function prefixSQLQuery($sql_line, $prefix)
     if (substr($sql_line, 0, 12) == "INSERT INTO ") {
         return substr($sql_line, 0, 12) . $prefix . substr($sql_line, 12); 
     }
-    if (substr($sql_line, 0, 21) == "DROP TABLE IF EXISTS ") {
-        return substr($sql_line, 0, 21) . $prefix . substr($sql_line, 21);
-    } 
-    if (substr($sql_line, 0, 14) == "CREATE TABLE `") {
-        return substr($sql_line, 0, 14) . $prefix . substr($sql_line, 14);
-    } 
-    if (substr($sql_line, 0, 13) == "CREATE TABLE ") {
-        return substr($sql_line, 0, 13) . $prefix . substr($sql_line, 13);
-    }
-    if (str_starts_with("CREATE TABLE IF NOT EXISTS `", $sql_line)) {
-        return substr($sql_line, 0, 28) . $prefix . substr($sql_line, 28);
-    }
-    if (str_starts_with("CREATE TABLE IF NOT EXISTS ", $sql_line)) {
-        return substr($sql_line, 0, 27) . $prefix . substr($sql_line, 27);
+    if (
+        preg_match(
+            '/^(?:DROP|CREATE|ALTER) TABLE (?:IF NOT EXISTS )?`?/', 
+            $sql_line, 
+            $matches
+        )
+    ) {
+        return $matches[0] . $prefix . 
+        substr($sql_line, strlen($matches[0]));
     }
     return $sql_line; 
 }
@@ -1658,6 +1653,9 @@ function check_update_db($debug, $tbpref, $dbname): void
         // Increment count for new tables only
         $count += runsql($prefixed_query, "");
     }
+
+    // Update the database (if necessary)
+    update_database($dbname);
     
     if (!in_array("{$tbpref}textitems2", $tables)) {
         // Add data from the old database system
@@ -1698,8 +1696,6 @@ function check_update_db($debug, $tbpref, $dbname): void
         reparse_all_texts();
     }
     
-    // Update the database
-    update_database($dbname);
 
     // Do Scoring once per day, clean Word/Texttags, and optimize db
     $lastscorecalc = getSetting('lastscorecalc');
