@@ -9,5 +9,10 @@
         "sourceType": "module"
     },
     "rules": {
+        "semi": 0
+    },
+    "globals": {
+        "$": true,
+        "LWT_DATA": true
     }
 }
