@@ -1710,53 +1710,53 @@ function update_database($dbname)
             '', false
         );
         runsql(
-            'ALTER TABLE `' . $tbpref . 'words` 
+            "ALTER TABLE `{$tbpref}words` 
             DROP INDEX WoLgIDTextLC, 
-            ADD UNIQUE INDEX WoTextLCLgID (WoTextLC, WoLgID)', 
+            ADD UNIQUE INDEX WoTextLCLgID (WoTextLC, WoLgID)", 
             '', false
         );
         runsql(
-            'ALTER TABLE `' . $tbpref . 'words` 
-            ADD INDEX WoWordCount (WoWordCount)', 
+            "ALTER TABLE `{$tbpref}words` 
+            ADD INDEX WoWordCount (WoWordCount)",
             '', false
         );
         runsql(
-            'ALTER TABLE `' . $tbpref . 'archtexttags` 
+            "ALTER TABLE `{$tbpref}archtexttags` 
             MODIFY COLUMN `AgAtID` smallint(5) unsigned NOT NULL, 
-            MODIFY COLUMN `AgT2ID` smallint(5) unsigned NOT NULL', 
+            MODIFY COLUMN `AgT2ID` smallint(5) unsigned NOT NULL", 
             '', false
         );
         runsql(
-            'ALTER TABLE `' . $tbpref . 'tags` 
-            MODIFY COLUMN `TgID` smallint(5) unsigned NOT NULL AUTO_INCREMENT', 
+            "ALTER TABLE `{$tbpref}tags` 
+            MODIFY COLUMN `TgID` smallint(5) unsigned NOT NULL AUTO_INCREMENT", 
             '', false
         );
         runsql(
-            'ALTER TABLE `' . $tbpref . 'tags2` 
-            MODIFY COLUMN `T2ID` smallint(5) unsigned NOT NULL AUTO_INCREMENT', 
+            "ALTER TABLE `{$tbpref}tags2` 
+            MODIFY COLUMN `T2ID` smallint(5) unsigned NOT NULL AUTO_INCREMENT", 
             '', false
         );
         runsql(
-            'ALTER TABLE `' . $tbpref . 'wordtags` 
-            MODIFY COLUMN `WtTgID` smallint(5) unsigned NOT NULL AUTO_INCREMENT', 
+            "ALTER TABLE `{$tbpref}wordtags` 
+            MODIFY COLUMN `WtTgID` smallint(5) unsigned NOT NULL AUTO_INCREMENT", 
             '', false
         );
         runsql(
-            'ALTER TABLE `' . $tbpref . 'texttags` 
+            "ALTER TABLE `{$tbpref}texttags` 
             MODIFY COLUMN `TtTxID` smallint(5) unsigned NOT NULL, 
-            MODIFY COLUMN `TtT2ID` smallint(5) unsigned NOT NULL', 
+            MODIFY COLUMN `TtT2ID` smallint(5) unsigned NOT NULL", 
             '', false
         );
         runsql(
-            'ALTER TABLE `' . $tbpref . 'temptextitems` 
+            "ALTER TABLE `{$tbpref}temptextitems` 
             ADD TiCount smallint(5) unsigned NOT NULL, 
             DROP TiLgID, 
-            DROP TiTxID',
+            DROP TiTxID",
             '', false
         );
         runsql(
-            'ALTER TABLE `' . $tbpref . 'temptextitems` 
-            ADD TiCount smallint(5) unsigned NOT NULL', 
+            "ALTER TABLE `{$tbpref}temptextitems` 
+            ADD TiCount smallint(5) unsigned NOT NULL", 
             '', false
         );
         runsql(
@@ -1780,22 +1780,29 @@ function update_database($dbname)
             ''
         );
 
-        // Since 2.9.0, fixes the missing auto incrementation of texts
+        // Since 2.9.0-fork, fixes the missing auto incrementation of texts
         runsql(
             "ALTER TABLE `{$tbpref}archivedtexts` 
-            MODIFY COLUMN `AtID` smallint(5) unsigned NOT NULL AUTO_INCREMENT", 
+            MODIFY COLUMN `AtID` SMALLINT(5) unsigned NOT NULL AUTO_INCREMENT", 
             '', false
         );
 
-        // Since 2.10.0, you can add a third-party voice API
+        // Since 2.10.0-fork
+        
+        // You can add a third-party voice API, and set romanization at will
         runsql(
             "ALTER TABLE `{$tbpref}languages` 
-            ADD COLUMN `LgTTSVoiceAPI` varchar(2048) NOT NULL",
+            ADD COLUMN `LgTTSVoiceAPI` VARCHAR(2048) NOT NULL",
             '', false
         );
 
+        runsql(
+            "ALTER TABLE `{$tbpref}languages` 
+            ADD COLUMN `LgShowRomanization` TINYINT(1) DEFAULT TRUE",
+            '', false
+        );
         
-        // set to current.
+        // Set database to current version
         saveSetting('dbversion', $currversion);
         saveSetting('lastscorecalc', '');  // do next section, too
     }

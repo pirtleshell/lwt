@@ -31,6 +31,8 @@ ones are marked like "v1.0.0-fork".
   (browser or third party). 
 * Starts a cleaner database management. Database schema is defined in 
 `db/schema/baseline.sql` and no longer in PHP code.
+* You can choose to add romanization for languages that don't need it in the language 
+settings ([#119](https://github.com/HugoFara/lwt/issues/119)).
 
 ### Changed
 

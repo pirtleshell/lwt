@@ -672,7 +672,13 @@ if (isset($_REQUEST['allaction'])) {
 
 if (isset($_REQUEST['new']) && isset($_REQUEST['lang'])) {
     // NEW
-    $scrdir = getScriptDirectionTag((int) $_REQUEST['lang']);
+    $lgid = (int) $_REQUEST['lang'];
+    $scrdir = getScriptDirectionTag($lgid);
+    $showRoman = (bool) get_first_value(
+        "SELECT LgShowRomanization AS value
+        FROM {$tbpref}languages 
+        WHERE LgID = $lgid"
+    );    
     
     ?>
 
@@ -706,7 +712,7 @@ if (isset($_REQUEST['new']) && isset($_REQUEST['lang'])) {
     <?php echo getWordTags(0); ?>
     </td>
     </tr>
-    <tr>
+    <tr class="<?php echo ($showRoman ? '' : 'hide'); ?>">
     <td class="td1 right">Romaniz.:</td>
     <td class="td1"><input type="text" class="checkoutsidebmp" data_info="Romanization" name="WoRomanization" value="" maxlength="100" size="40" /></td>
     </tr>
@@ -747,6 +753,7 @@ if (isset($_REQUEST['new']) && isset($_REQUEST['lang'])) {
             $transl=''; 
         }
         $scrdir = ($record['LgRightToLeft'] ? ' dir="rtl" ' : '');
+        $showRoman = $record['LgShowRomanization'];
     
         ?>
     
@@ -781,7 +788,7 @@ if (isset($_REQUEST['new']) && isset($_REQUEST['lang'])) {
             <?php echo getWordTags($record['WoID']); ?>
         </td>
      </tr>
-     <tr>
+     <tr class="<?php echo ($showRoman ? '' : 'hide'); ?>">
         <td class="td1 right">Romaniz.:</td>
         <td class="td1">
             <input type="text" class="checkoutsidebmp" data_info="Romanization" name="WoRomanization" maxlength="100" size="40" 
