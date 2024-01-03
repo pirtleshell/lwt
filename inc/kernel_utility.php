@@ -767,7 +767,7 @@ function targetLangFromDict($url)
  * 
  * @return array
  */
-function SQLParser($filename)
+function parseSQLFile($filename)
 {  
     $handle = fopen($filename, 'r');
     if ($handle === false) {

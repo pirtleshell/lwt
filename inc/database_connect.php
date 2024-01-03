@@ -1571,7 +1571,7 @@ function update_database($dbname)
         $changes = 0;
         $res = do_mysqli_query("SELECT filename FROM _migrations");
         while ($record = mysqli_fetch_assoc($res)) {
-            $queries = SQLParser(
+            $queries = parseSQLFile(
                 __DIR__ . '/../db/migrations/' . $record["filename"]
             );
             foreach ($queries as $sql_query) {
@@ -1643,11 +1643,11 @@ function check_update_db($debug, $tbpref, $dbname): void
     }
     mysqli_free_result($res);
     
-    $count = 0;  /// counter for cache rebuild
+    /// counter for cache rebuild
+    $count = 0;
 
-    // Rebuild Tables if missing (current versions!)
-
-    $queries = SQLParser(__DIR__ . "/../db/schema/baseline.sql");
+    // Rebuild in missing table
+    $queries = parseSQLFile(__DIR__ . "/../db/schema/baseline.sql");
     foreach ($queries as $query) {
         $prefixed_query = prefixSQLQuery($query, $tbpref);
         // Increment count for new tables only
@@ -1682,12 +1682,6 @@ function check_update_db($debug, $tbpref, $dbname): void
         $count++;
     }
 
-    runsql(
-        "ALTER TABLE `{$tbpref}sentences` ADD SeFirstPos smallint(5) NOT NULL", 
-        '', 
-        false
-    );
-    
     if ($count > 0) {        
         // Rebuild Text Cache if cache tables new
         if ($debug) { 

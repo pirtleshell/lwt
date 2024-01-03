@@ -1,5 +1,8 @@
 -- Migrations from the original LWT to this
 
+ALTER TABLE `sentences` 
+    ADD SeFirstPos smallint(5) NOT NULL
+
 ALTER TABLE `archivedtexts` 
     MODIFY COLUMN `AtLgID` tinyint(3) unsigned NOT NULL, 
     MODIFY COLUMN `AtID` smallint(5) unsigned NOT NULL,
