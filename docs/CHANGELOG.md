@@ -50,6 +50,8 @@ after solution display ([#159](https://github.com/HugoFara/lwt/issues/159)).
   It should not lead to any code or behaviour change.
   * `src/js/overlib_interface.js`, stemmed from `src/js/pgm.js`. It contains all the 
   overlib interactions.
+* For audio URI, raises the characters length limit from 200 to 2048 
+([#144](https://github.com/HugoFara/lwt/issues/144)).
 
 ### Fixed
 

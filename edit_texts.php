@@ -699,7 +699,7 @@ function edit_texts_form($text, $annotated)
                 </td>
                 <td class="td1">
                     <input type="text" class="checkoutsidebmp respinput" 
-                    data_info="Audio-URI" name="TxAudioURI" maxlength="200"
+                    data_info="Audio-URI" name="TxAudioURI" maxlength="2048"
                     value="<?php echo tohtml($text->media_uri); ?>"  /> 
                     <span id="mediaselect">
                         <?php echo selectmediapath('TxAudioURI'); ?>

@@ -1801,6 +1801,14 @@ function update_database($dbname)
             ADD COLUMN `LgShowRomanization` TINYINT(1) DEFAULT TRUE",
             '', false
         );
+
+        // URI should be at least 2048 characters long: 
+        /// https://stackoverflow.com/questions/417142/what-is-the-maximum-length-of-a-url-in-different-browsers
+        runsql(
+            "ALTER TABLE `{$tbpref}texts` 
+            MODIFY COLUMN `TxAudioURI` VARCHAR(2048) NOT NULL",
+            '', false
+        );
         
         // Set database to current version
         saveSetting('dbversion', $currversion);
