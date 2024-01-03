@@ -3,16 +3,16 @@
 /**
  * \file
  * \brief Translate groups of words
- * 
+ *
  * Call: bulk_translate_words.php?....
  *      ... tid=[textid] ... Vocabulary from this text
  *      ... sl=[sourcelg] ... Source language (usually two letters)
  *      ... tl=[targetlg] ... Target language (usually two letters)
  *      ... term=[term]   ... Term to translate
  *      ... offset=[pos]  ... An optional offset position
- * 
+ *
  * PHP version 8.1
- * 
+ *
  * @category Helper_Frame
  * @package Lwt
  * @author  LWT Project <lwt-project@hotmail.com>
@@ -30,26 +30,26 @@ function bulk_save_terms($terms, $tid, $cleanUp): void
     $sqlarr = array();
     $max = get_first_value("SELECT max(WoID) AS value FROM {$tbpref}words");
     foreach ($terms as $row) {
-        $sqlarr[] =  '(' . 
-        convert_string_to_sqlsyntax($row['lg']) . ',' . 
-        convert_string_to_sqlsyntax(mb_strtolower($row['text'], 'UTF-8')) . ',' . 
-        convert_string_to_sqlsyntax($row['text']) . ',' . 
-        convert_string_to_sqlsyntax($row['status']) . ',' . 
+        $sqlarr[] =  '(' .
+        convert_string_to_sqlsyntax($row['lg']) . ',' .
+        convert_string_to_sqlsyntax(mb_strtolower($row['text'], 'UTF-8')) . ',' .
+        convert_string_to_sqlsyntax($row['text']) . ',' .
+        convert_string_to_sqlsyntax($row['status']) . ',' .
         (
-            (!isset($row['trans']) || $row['trans']=='') ?  
-            '"*"' : 
+            (!isset($row['trans']) || $row['trans'] == '') ?
+            '"*"' :
             convert_string_to_sqlsyntax($row['trans'])
-        ) . 
+        ) .
         ', 
         "", 
         "", 
-        NOW(), ' . 
-        make_score_random_insert_update('id') . 
+        NOW(), ' .
+        make_score_random_insert_update('id') .
         ')';
     }
     $sqltext = "INSERT INTO {$tbpref}words (
         WoLgID, WoTextLC, WoText, WoStatus, WoTranslation, WoSentence, 
-        WoRomanization, WoStatusChanged," .  
+        WoRomanization, WoStatusChanged," .
         make_score_random_insert_update('iv') . "
     ) VALUES " . rtrim(implode(',', $sqlarr), ',');
     runsql($sqltext, '');
@@ -118,7 +118,7 @@ function bulk_save_terms($terms, $tid, $cleanUp): void
 }
 
 
-function bulk_do_content($tid, $sl, $tl, $pos): void 
+function bulk_do_content($tid, $sl, $tl, $pos): void
 {
     global $tbpref;
     $cnt = 0;
@@ -131,7 +131,7 @@ function bulk_do_content($tid, $sl, $tl, $pos): void
     $record = mysqli_fetch_assoc($res);
     $wb1 = isset($record['LgDict1URI']) ? $record['LgDict1URI'] : "";
     $wb2 = isset($record['LgDict2URI']) ? $record['LgDict2URI'] : "";
-    $wb3 = isset($record['LgGoogleTranslateURI']) ? 
+    $wb3 = isset($record['LgGoogleTranslateURI']) ?
     $record['LgGoogleTranslateURI'] : "";
     ?>
 <style>
@@ -163,18 +163,18 @@ function bulk_do_content($tid, $sl, $tl, $pos): void
     }
 </style>
 <script type="text/javascript">
-    WBLINK1 = '<?php echo $wb1; ?>';
-    WBLINK2 = '<?php echo $wb2; ?>';
-    WBLINK3 = '<?php echo $wb3; ?>';
+    LWT_DATA.language.dict_link1 = '<?php echo $wb1; ?>';
+    LWT_DATA.language.dict_link2 = '<?php echo $wb2; ?>';
+    LWT_DATA.language.translator_link = '<?php echo $wb3; ?>';
     $('h3,h4,title').addClass('notranslate');
 
     function clickDictionary() {
         if ($(this).hasClass( "dict1" )) 
-            WBLINK = WBLINK1;
+            WBLINK = LWT_DATA.language.dict_link1;
         if ($(this).hasClass( "dict2" ))
-            WBLINK = WBLINK2;
+            WBLINK = LWT_DATA.language.dict_link2;
         if ($(this).hasClass( "dict3" ))
-            WBLINK = WBLINK3;
+            WBLINK = LWT_DATA.language.translator_link;
         let dict_link = WBLINK;
         let popup;
         if (dict_link.startsWith('*')) {
@@ -240,9 +240,9 @@ function bulk_do_content($tid, $sl, $tl, $pos): void
                     $(this).parent().css('position', 'relative');
                     $(this).after(
                         '<div class="dict">' +
-                        (WBLINK1 ? '<span class="dict1">D1</span>' : '') +
-                        (WBLINK2 ? '<span class="dict2">D2</span>' : '') +
-                        (WBLINK3 ? '<span class="dict3">Tr</span>' : '') +
+                        (LWT_DATA.language.dict_link1 ? '<span class="dict1">D1</span>' : '') +
+                        (LWT_DATA.language.dict_link2 ? '<span class="dict2">D2</span>' : '') +
+                        (LWT_DATA.language.translator_link ? '<span class="dict3">Tr</span>' : '') +
                         '</div>'
                     );
                 });
@@ -411,11 +411,11 @@ function bulk_do_content($tid, $sl, $tl, $pos): void
             </td>
             </tr>
             <?php
-        } else { 
-            $offset = '<input type="hidden" name="offset" value="' . 
+        } else {
+            $offset = '<input type="hidden" name="offset" value="' .
             ($pos + $limit - 1) . '" />
             <input type="hidden" name="sl" value="' . $sl . '" />
-            <input type="hidden" name="tl" value="' . $tl . '" />'; 
+            <input type="hidden" name="tl" value="' . $tl . '" />';
         }
     }
     mysqli_free_result($res);
@@ -429,8 +429,8 @@ function bulk_do_content($tid, $sl, $tl, $pos): void
 
 
 $tid = $_REQUEST['tid'];
-if (isset($_REQUEST["offset"])) { 
-    $pos = $_REQUEST["offset"]; 
+if (isset($_REQUEST["offset"])) {
+    $pos = $_REQUEST["offset"];
 }
 if (isset($_REQUEST['term'])) {
     $cnt = sizeof($_REQUEST['term']);

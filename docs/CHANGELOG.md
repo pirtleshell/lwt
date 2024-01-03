@@ -5,13 +5,93 @@ other versions come from the canonical LWT ("official" branch on Git).
 For git tags, official releases are marked like "v1.0.0", while unofficial
 ones are marked like "v1.0.0-fork".
 
-## [Unreleased] 
+## [Unreleased]
+
+### Added
+
+* Support for Japanese with MeCab on Mac! This was added thanks to 
+[quopquai](https://github.com/quopquai) on [#135](https://github.com/HugoFara/lwt/issues/135).
+* New globals ([#163](https://github.com/HugoFara/lwt/issues/163)):
+  * On `inc/kernel_utility.php`: `LWT_APP_VERSION` and `LWT_RELEASE_DATE`.
+  * On `api.php`: `LWT_API_VERSION` and `LWT_API_RELEASE_DATE`.
+  * `src/js/jq_pgm.js`: `LWT_DATA`.
+  * `unloadformcheck.js` now declares a new object `lwt_form_check` that contains 
+  all the functions needed.
+* Important additions to Text-To-Speech (TTS):
+  * Word can be read on hover or on click. 
+  Pull request [#147](https://github.com/HugoFara/lwt/pull/147) by 
+  [@ProgramComputer](https://github.com/ProgramComputer).
+  * You can add a custom text reader with the new voice API feature! 
+  A courtesy of [@ProgramComputer](https://github.com/ProgramComputer) on pull request 
+  [#153](https://github.com/HugoFara/lwt/pull/153). 
+  A feature first requested on [#143](https://github.com/HugoFara/lwt/issues/143). 
+  Discussion in open on [#174](https://github.com/HugoFara/lwt/discussions/174).
+  * New JS functions: `readTextWithExternal` to read a text with an external 
+  application and `speechDispatcher` that can choose a text reader 
+  (browser or third party). 
+* Starts a cleaner database management. Database schema is defined in 
+`db/schema/baseline.sql` and no longer in PHP code.
+* You can choose to add romanization for languages that don't need it in the language 
+settings ([#119](https://github.com/HugoFara/lwt/issues/119)).
+
+### Changed
+
+* Adds missing documentation in the Docker image:
+  * MarkDown files in the root folder are now included. 
+  See [#160](https://github.com/HugoFara/lwt/issues/160). 
+  It adds `README.md` and `UNLICENSE.md`.
+  * Adds `docs/info.html` and `docs/index.html` from [#146](https://github.com/HugoFara/lwt/pull/146).
+* Multi-word creation was reviewed to use a simpler code.
+* On word review, status + 1 can be set only after word display. Before, you could 
+press key up at any time to increase term status, but keydown was effective only 
+after solution display ([#159](https://github.com/HugoFara/lwt/issues/159)).
+* New files:
+  * `inc/feeds.php` and `inc/tags.php`, stemmed from `inc/session_utility.php`. 
+  It should not lead to any code or behaviour change.
+  * `src/js/overlib_interface.js`, stemmed from `src/js/pgm.js`. It contains all the 
+  overlib interactions.
+* For audio URI, raises the characters length limit from 200 to 2048 
+([#144](https://github.com/HugoFara/lwt/issues/144)).
+* Database creation and migration is now handled directly in SQL, for a safer 
+behavior.
 
 ### Fixed
 
 * The database wizard was broken since 2.9.0.
 * It was impossible to change a word status on hover since 2.9.1.
 * Avoids JavaScript error on editing a language when on dictionary field is empty.
+* For some feeds, feed wizard session was not working due to ill-configured session.
+Solves [#129](https://github.com/HugoFara/lwt/issues/129), thanks to the help of PR 
+[#168](https://github.com/HugoFara/lwt/pull/168).
+* Text reading position was not working consistently when adding several known words.
+* Japanese was always requiring MeCab for TTS, even if it was not used 
+([#155](https://github.com/HugoFara/lwt/pull/155)).
+* Multi-words:
+  * Tooltip was not properly saved ([#170](https://github.com/HugoFara/lwt/pull/170)).
+  * Translation may be escaped two times ([#170](https://github.com/HugoFara/lwt/pull/170)).
+  * Fixes [#170](https://github.com/HugoFara/lwt/pull/170): on creation, 
+  multi-word was always displayed before the text it encompasses, 
+  without removing this text.
+  * Tootltip title was not properly saved, normally without incidence on user display.
+  * Fixes [#69](https://github.com/HugoFara/lwt/issues/69): having the same 
+  multi-word on multiple texts was displaying it at many positions on creation.
+* Japanese:
+  * Parsing Japanese texts with MeCab was creating warnings when the text was not 
+  finishing by a punctation mark.
+  * Multi-words were not saved with MeCab parsing on Japanese.
+* On word review (test): 
+  * the space keyboard shortcut may have been inoperating.
+  * On `api.php`, tests were always set to "multi-word" due to a missing variable 
+  type conversion. Pull request [#175](https://github.com/HugoFara/lwt/pull/175).
+* An explicit dependency to [php-dom](https://www.php.net/manual/en/book.dom.php) was 
+missing in `INSTALL.sh` (and `composer.json`), as stated in 
+[#178](https://github.com/HugoFara/lwt/pull/178).
+
+### Deprecated
+
+* Using any function from `unloadformcheck.js` without using `lwt_form_check` is deprecated.
+* `get_database_prefixes` is deprecated, superseded by `getDatabasePrefix` which is much cleaner.
+* Globals defined in `jq_pgm.js` are going into a single global `LWT_DATA`.
 
 ## 2.9.1-fork (December 29 2023)
 

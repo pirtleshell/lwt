@@ -122,7 +122,7 @@ function set_word_status_javascript($tid, $wid, $status, $word, $trans, $roman)
         let context = window.parent.document.getElementById('frame-l');
         let contexth = window.parent.document.getElementById('frame-h');
         let title = '';
-        if (!window.parent.JQ_TOOLTIP) {
+        if (!window.parent.LWT_DATA.settings.jQuery_tooltip) {
             title = make_tooltip(word, trans, roman, status);
         }
         $('.word' + wid, context)
