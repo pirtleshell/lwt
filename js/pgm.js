@@ -408,15 +408,15 @@ return getLibreTranslateTranslationBase(text,lang,dest,key=search_params.get('lw
  * @author  andreask7 <andreasks7@users.noreply.github.com>
  * @since   1.6.16-fork
  * @since   2.3.1-fork You should not only include this script to check before unload
- * 					but also call ask_before_exiting once.
+ *          but also call ask_before_exiting once.
  * @since   2.10.0-fork This file was refactored in a single object, use it instead
  */
-var DIRTY=0;const lwt_form_check={dirty:!1,isDirtyMessage:function(){if(lwt_form_check.dirty){return'** You have unsaved changes! **'}},makeDirty:function(){lwt_form_check.dirty=!0},resetDirty:function(){lwt_form_check.dirty=!1},tagChanged:function(_,ui){if(!ui.duringInitialization){lwt_form_check.dirty=!0}
+let DIRTY=0;const lwt_form_check={dirty:!1,isDirtyMessage:function(){if(lwt_form_check.dirty){return'** You have unsaved changes! **'}},makeDirty:function(){lwt_form_check.dirty=!0},resetDirty:function(){lwt_form_check.dirty=!1},tagChanged:function(_,ui){if(!ui.duringInitialization){lwt_form_check.dirty=!0}
 return!0},askBeforeExit:function(){$('#termtags').tagit({afterTagAdded:lwt_form_check.tagChanged,afterTagRemoved:lwt_form_check.tagChanged});$('#texttags').tagit({afterTagAdded:lwt_form_check.tagChanged,afterTagRemoved:lwt_form_check.tagChanged});$('input,checkbox,textarea,radio,select').not('#quickmenu').on('change',lwt_form_check.makeDirty);$(':reset,:submit').on('click',lwt_form_check.resetDirty);$(window).on('beforeunload',lwt_form_check.isDirtyMessage)}};function askConfirmIfDirty(){return lwt_form_check.askConfirmIfDirty()}
 function makeDirty(){return lwt_form_check.makeDirty()}
 function resetDirty(){return lwt_form_check.resetDirty()}
 function tagChanged(_,ui){return lwt_form_check.tagChanged(_,ui)}
-function ask_before_exiting(){return lwt_form_check.askBeforeExiting()};var stIsIE=!1;sorttable={init:function(){if(arguments.callee.done)return;arguments.callee.done=!0;if(_timer)clearInterval(_timer);if(!document.createElement||!document.getElementsByTagName)return;sorttable.DATE_RE=/^(\d\d?)[\/\.-](\d\d?)[\/\.-]((\d\d)?\d\d)$/;forEach(document.getElementsByTagName('table'),function(table){if(table.className.search(/\bsortable\b/)!=-1){sorttable.makeSortable(table)}})},makeSortable:function(table){if(table.getElementsByTagName('thead').length==0){the=document.createElement('thead');the.appendChild(table.rows[0]);table.insertBefore(the,table.firstChild)}
+function ask_before_exiting(){return lwt_form_check.askBeforeExit()};var stIsIE=!1;sorttable={init:function(){if(arguments.callee.done)return;arguments.callee.done=!0;if(_timer)clearInterval(_timer);if(!document.createElement||!document.getElementsByTagName)return;sorttable.DATE_RE=/^(\d\d?)[\/\.-](\d\d?)[\/\.-]((\d\d)?\d\d)$/;forEach(document.getElementsByTagName('table'),function(table){if(table.className.search(/\bsortable\b/)!=-1){sorttable.makeSortable(table)}})},makeSortable:function(table){if(table.getElementsByTagName('thead').length==0){the=document.createElement('thead');the.appendChild(table.rows[0]);table.insertBefore(the,table.firstChild)}
 if(table.tHead==null)table.tHead=table.getElementsByTagName('thead')[0];if(table.tHead.rows.length!=1)return;sortbottomrows=[];for(var i=0;i<table.rows.length;i++){if(table.rows[i].className.search(/\bsortbottom\b/)!=-1){sortbottomrows[sortbottomrows.length]=table.rows[i]}}
 if(sortbottomrows){if(table.tFoot==null){tfo=document.createElement('tfoot');table.appendChild(tfo)}
 for(var i=0;i<sortbottomrows.length;i++){tfo.appendChild(sortbottomrows[i])}
