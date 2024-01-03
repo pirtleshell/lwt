@@ -234,7 +234,7 @@
 			</h2>
 
 			<p>
-				The current version is 2.9.1-fork (December 29 2023).
+				The current version is 2.10.0-fork (December 29 2023).
 				<br>
 				<a href="#CHANGELOG">View the Changelog.</a>
 			</p>
@@ -423,11 +423,12 @@ The local webserver (MAMP) will be automatically stopped by quitting the MAMP ap
 <li>
 <p>Installation of LAMP:</p>
 <pre><code class="language-bash">sudo apt-get update
-sudo apt-get install apache2 libapache2-mod-php php php-mbstring php-mysql mysql-server
+sudo apt-get install apache2 libapache2-mod-php php php-mbstring php-mysql php-xml mysql-server
 </code></pre>
+<p>Note: if MySQL is unavailable for your Linux distribution, you can also use MariaDB.</p>
 </li>
 <li>
-<p>(Optional) Check if everything is okay:</p>
+<p>Check if everything is okay:</p>
 <ul>
 <li>
 <code>php -v</code> should show a PHP version equal or above to 8.0.0.</li>
@@ -498,15 +499,16 @@ sudo service mysql restart
 </ol>
 <p>If you want to use LWT again, just do step 7.</p>
 <h3>Run in a Docker container</h3>
-<p><a href="https://docs.docker.com/get-docker/">Docker</a> is the easiest way to install LWT, but it will use more or less 1 GB
-on your system.</p>
+<p><a href="https://docs.docker.com/get-docker/">Docker</a> is the easiest way to install LWT,
+but it will use more or less 1 GB on your system.</p>
 <h4>Using the installer</h4>
-<p>For an light-weight installation, you may use <a href="https://github.com/HugoFara/lwt-docker-installer">HugoFara/lwt-docker-installer</a>.</p>
+<p>For an light-weight installer, you may use
+<a href="https://github.com/HugoFara/lwt-docker-installer">HugoFara/lwt-docker-installer</a>.</p>
 <h4>Build image from source</h4>
 <p>Download the lwt, open a terminal inside it, then type</p>
 <pre><code class="language-bash">docker compose up
 </code></pre>
-<p>By default the server can be accessed on port 8010 (<a href="http://localhost:8010">http://localhost:8010</a>).</p>
+<p>By default the server can be accessed on port 8010 (<a href="http://localhost:8010/lwt">http://localhost:8010/lwt</a>).</p>
 <p>To remove the created containers run</p>
 <pre><code class="language-bash">docker compose down
 </code></pre>
@@ -535,6 +537,7 @@ The official repository is at <a href="https://packagist.org/packages/hugofara/l
 </ol>
 <h3>Something Went Wrong</h3>
 <p>Need more help? You can contact us through  <a href="https://github.com/HugoFara/lwt/issues">GitHub</a> and <a href="https://discord.gg/xrkRZR2jtt">Discord</a>!</p>
+<p>You can also consult the troubleshooting section of the documentation at <a href="https://hugofara.github.io/lwt/docs/info.html#faq">https://hugofara.github.io/lwt/docs/info.html#faq</a>.</p>
 <p>Please note that <em>PHP below version 8.0 is no longer supported</em>.</p>
 
 			<h2 id="postinstall" name="postinstall">▶ Optional Post-Installation Steps - <a href="#">[↑]</a></h2>
@@ -2280,6 +2283,14 @@ overlib interactions.</li>
 (<a href="https://github.com/HugoFara/lwt/issues/144">#144</a>).</li>
 <li>Database creation and migration is now handled directly in SQL, for a safer
 behavior.</li>
+<li>Docker changes:
+<ul>
+<li>By default, the images now runs at localhot/lwt and no longer in the
+root folder (<a href="https://github.com/HugoFara/lwt-docker-installer/pull/4">installer #4</a>
+and <a href="https://github.com/HugoFara/lwt/pull/169">#169</a>).</li>
+<li>Image updated from <code>apache-buster</code> to <code>apache-bullseye</code>.</li>
+</ul>
+</li>
 </ul>
 <h4>Fixed</h4>
 <ul>
