@@ -49,13 +49,13 @@ $('input[name=\'step\']').val(++val);document.lwt_form1.submit();return!1},chang
 function feedwizard_prepare_interaction(){return lwt_feed_wizard.prepareInteractions()}
 $(document).on('click','.delete_selection',lwt_feed_wizard.deleteSelection);$(document).on('change','.xpath',lwt_feed_wizard.changeXPath);$(document).on('click','#adv_get_button',lwt_feed_wizard.clickAdvGetButton);$(document).on('click','#lwt_sel li',lwt_feed_wizard.clickSelectLi);$(document).on('change','#mark_action',lwt_feed_wizard.changeMarkAction);$(document).on('click','#get_button,#filter_button',lwt_feed_wizard.clickGetOrFilter);$(document).on('click','#next',lwt_feed_wizard.clickNextButton);$(document).on('change','#host_status',lwt_feed_wizard.changeHostStatus);function word_each_do_text_text(_){const wid=$(this).attr('data_wid');if(wid!=''){const order=$(this).attr('data_order');if(order in LWT_DATA.text.annotations){if(wid==LWT_DATA.text.annotations[order][1]){const ann=LWT_DATA.text.annotations[order][2];const re=new RegExp('(['+LWT_DATA.language.delimiter+'][ ]{0,1}|^)('+ann.replace(/[-\/\\^$*+?.()|[\]{}]/g,'\\$&')+')($|[ ]{0,1}['+LWT_DATA.language.delimiter+'])','');if(!re.test($(this).attr('data_trans').replace(/ \[.*$/,''))){const trans=ann+' / '+$(this).attr('data_trans');$(this).attr('data_trans',trans.replace(' / *',''))}
 $(this).attr('data_ann',ann)}}}
-if(!LWT_DATA.settings.jQuery_tooltip){this.title=make_tooltip($(this).text(),$(this).attr('data_trans'),$(this).attr('data_rom'),$(this).attr('data_status'))}}
+if(!LWT_DATA.settings.jQuery_tooltip){$(this).prop('title',make_tooltip($(this).text(),$(this).attr('data_trans'),$(this).attr('data_rom'),$(this).attr('data_status')))}}
 function mword_each_do_text_text(_){if($(this).attr('data_status')!=''){const wid=$(this).attr('data_wid');if(wid!=''){const order=parseInt($(this).attr('data_order'));for(let j=2;j<=16;j=j+2){const index=(order+j).toString();if(index in LWT_DATA.text.annotations){if(wid==LWT_DATA.text.annotations[index][1]){const ann=LWT_DATA.text.annotations[index][2];const re=new RegExp('(['+LWT_DATA.language.delimiter+'][ ]{0,1}|^)('+ann.replace(/[-\/\\^$*+?.()|[\]{}]/g,'\\$&')+')($|[ ]{0,1}['+LWT_DATA.language.delimiter+'])','');if(!re.test($(this).attr('data_trans').replace(/ \[.*$/,''))){const trans=ann+' / '+$(this).attr('data_trans');$(this).attr('data_trans',trans.replace(' / *',''))}
 $(this).attr('data_ann',ann);break}}}}
-if(!LWT_DATA.settings.jQuery_tooltip){this.title=make_tooltip($(this).attr('data_text'),$(this).attr('data_trans'),$(this).attr('data_rom'),$(this).attr('data_status'))}}}
-function word_dblclick_event_do_text_text(){const t=parseInt($('#totalcharcount').text(),10);if(t==0)
-return;let p=100*($(this).attr('data_pos')-5)/t;if(p<0)
-p=0;if(typeof(window.parent.frames.h.lwt_audio_controller.newPosition)==='function'){window.parent.frames.h.lwt_audio_controller.newPosition(p)}}
+if(!LWT_DATA.settings.jQuery_tooltip){$(this).prop('title',make_tooltip($(this).attr('data_text'),$(this).attr('data_trans'),$(this).attr('data_rom'),$(this).attr('data_status')))}}}
+function word_dblclick_event_do_text_text(){const t=parseInt($('#totalcharcount').text(),10);if(t==0){return}
+let p=100*($(this).attr('data_pos')-5)/t;if(p<0){p=0}
+if(typeof(window.parent.frames.h.lwt_audio_controller.newPosition)==='function'){window.parent.frames.h.lwt_audio_controller.newPosition(p)}}
 function word_click_event_do_text_text(){const status=$(this).attr('data_status');let ann='';if($(this).attr('data_ann')!==undefined){ann=$(this).attr('data_ann')}
 let hints;if(LWT_DATA.settings.jQuery_tooltip){hints=make_tooltip($(this).text(),$(this).attr('data_trans'),$(this).attr('data_rom'),status)}else{hints=$(this).attr('title')}
 const multi_words=Array(7);for(let i=0;i<7;i++){multi_words[i]=$(this).attr('data_mw'+(i+2))}
@@ -85,27 +85,26 @@ if(e.which==39||e.which==32){var marked=$('span.kwordmarked');var currid=(marked
 curr=knownwordlist.eq(LWT_DATA.text.reading_position);curr.addClass('kwordmarked');$(window).scrollTo(curr,{axis:'y',offset:-150});var ann='';if((typeof curr.attr('data_ann'))!=='undefined'){ann=curr.attr('data_ann')}
 showRightFrames('show_word.php?wid='+curr.attr('data_wid')+'&ann='+encodeURIComponent(ann));return!1}
 if((!$('.kwordmarked, .uwordmarked')[0])&&$('.hword:hover')[0]){curr=$('.hword:hover')}else{if(LWT_DATA.text.reading_position<0||LWT_DATA.text.reading_position>=l_knownwordlist)return!0;curr=knownwordlist.eq(LWT_DATA.text.reading_position)}
-const wid=curr.attr('data_wid');const ord=curr.attr('data_order');const stat=curr.attr('data_status');const txt=(curr.hasClass('mwsty'))?curr.attr('data_text'):curr.text();let dict='';for(var i=1;i<=5;i++){if(e.which==(48+i)||e.which==(96+i)){if(stat=='0'){if(i==1){const sl=getLangFromDict(LWT_DATA.language.translator_link);const tl=LWT_DATA.language.translator_link.replace(/.*[?&]tl=([a-zA-Z\-]*)(&.*)*$/,'$1');if(sl!=LWT_DATA.language.translator_link&&tl!=LWT_DATA.language.translator_link)
-i=i+'&sl='+sl+'&tl='+tl}
+const wid=curr.attr('data_wid');const ord=curr.attr('data_order');const stat=curr.attr('data_status');const txt=(curr.hasClass('mwsty'))?curr.attr('data_text'):curr.text();let dict='';for(var i=1;i<=5;i++){if(e.which==(48+i)||e.which==(96+i)){if(stat=='0'){if(i==1){const sl=getLangFromDict(LWT_DATA.language.translator_link);const tl=LWT_DATA.language.translator_link.replace(/.*[?&]tl=([a-zA-Z\-]*)(&.*)*$/,'$1');if(sl!=LWT_DATA.language.translator_link&&tl!=LWT_DATA.language.translator_link){i=i+'&sl='+sl+'&tl='+tl}}
 showRightFrames('set_word_on_hover.php?text='+txt+'&tid='+LWT_DATA.text.id+'&status='+i)}else{showRightFrames('set_word_status.php?wid='+wid+'&tid='+LWT_DATA.text.id+'&ord='+ord+'&status='+i);return!1}}}
 if(e.which==73){if(stat=='0'){showRightFrames('set_word_on_hover.php?text='+txt+'&tid='+LWT_DATA.text.id+'&status=98')}else{showRightFrames('set_word_status.php?wid='+wid+'&tid='+LWT_DATA.text.id+'&ord='+ord+'&status=98');return!1}}
 if(e.which==87){if(stat=='0'){showRightFrames('set_word_on_hover.php?text='+txt+'&tid='+LWT_DATA.text.id+'&status=99')}else{showRightFrames('set_word_status.php?wid='+wid+'&tid='+LWT_DATA.text.id+'&ord='+ord+'&status=99')}
 return!1}
 if(e.which==80){const lg=getLangFromDict(LWT_DATA.language.translator_link);speechDispatcher(txt,lg);return!1}
 if(e.which==84){let popup=!1;let dict_link=LWT_DATA.language.translator_link;if(LWT_DATA.language.translator_link.startsWith('*')){popup=!0;dict_link=substring(dict_link,1)}
-if(dict_link.startsWith('ggl.php')){dict_link="http://"+dict_link}
-let open_url=!0;let final_url;try{final_url=new URL(dict_link);popup|=final_url.searchParams.has("lwt_popup")}catch(err){if(err instanceof TypeError){open_url=!1}}
+if(dict_link.startsWith('ggl.php')){dict_link='http://'+dict_link}
+let open_url=!0;let final_url;try{final_url=new URL(dict_link);popup|=final_url.searchParams.has('lwt_popup')}catch(err){if(err instanceof TypeError){open_url=!1}}
 if(popup){owin('trans.php?x=1&i='+ord+'&t='+LWT_DATA.text.id)}else if(open_url){showRightFrames(undefined,'trans.php?x=1&i='+ord+'&t='+LWT_DATA.text.id)}
 return!1}
-if(e.which==65){let p=curr.attr('data_pos');const t=parseInt($('#totalcharcount').text(),10);if(t==0)
-return!0;p=100*(p-5)/t;if(p<0)p=0;if(typeof(window.parent.frames.h.lwt_audio_controller.newPosition)==='function'){window.parent.frames.h.lwt_audio_controller.newPosition(p)}else{return!0}
+if(e.which==65){let p=curr.attr('data_pos');const t=parseInt($('#totalcharcount').text(),10);if(t==0){return!0}
+p=100*(p-5)/t;if(p<0)p=0;if(typeof(window.parent.frames.h.lwt_audio_controller.newPosition)==='function'){window.parent.frames.h.lwt_audio_controller.newPosition(p)}else{return!0}
 return!1}
-if(e.which==71){dict='&nodict';setTimeout(function(){let target_url=LWT_DATA.language.translator_link;let popup=!1;popup=target_url.startsWith('*');try{const final_url=new URL(target_url);popup|=final_url.searchParams.has('lwt_popup')}catch(err){if(!(err instanceof TypeError)){throw err}}
+if(e.which==71){dict='&nodict';setTimeout(function(){const target_url=LWT_DATA.language.translator_link;let popup=!1;popup=target_url.startsWith('*');try{const final_url=new URL(target_url);popup|=final_url.searchParams.has('lwt_popup')}catch(err){if(!(err instanceof TypeError)){throw err}}
 if(popup){owin(createTheDictUrl(target_url,txt))}else{showRightFrames(undefined,createTheDictUrl(target_url,txt))}},10)}
 if(e.which==69||e.which==71){let url='';if(curr.hasClass('mword')){url='edit_mword.php?wid='+wid+'&len='+curr.attr('data_code')+'&tid='+LWT_DATA.text.id+'&ord='+ord+dict}else if(stat=='0'){url='edit_word.php?wid=&tid='+LWT_DATA.text.id+'&ord='+ord+dict}else{url='edit_word.php?wid='+wid+'&tid='+LWT_DATA.text.id+'&ord='+ord+dict}
 showRightFrames(url);return!1}
 return!0}
-function prepareTextInteractions(){$('.word').each(word_each_do_text_text);$('.mword').each(mword_each_do_text_text);$('.word').on('click',word_click_event_do_text_text);$('#thetext').on('selectstart','span',!1).on('mousedown','.wsty',{annotation:LWT_DATA.settings.annotations_mode},mword_drag_n_drop_select);$('#thetext').on('click','.mword',mword_click_event_do_text_text);$('.word').on('dblclick',word_dblclick_event_do_text_text);$('#thetext').on('dblclick','.mword',word_dblclick_event_do_text_text);$(document).on('keydown',keydown_event_do_text_text);$('#thetext').hoverIntent({over:word_hover_over,out:word_hover_out,interval:150,selector:".wsty,.mwsty"})};/**
+function prepareTextInteractions(){$('.word').each(word_each_do_text_text);$('.mword').each(mword_each_do_text_text);$('.word').on('click',word_click_event_do_text_text);$('#thetext').on('selectstart','span',!1).on('mousedown','.wsty',{annotation:LWT_DATA.settings.annotations_mode},mword_drag_n_drop_select);$('#thetext').on('click','.mword',mword_click_event_do_text_text);$('.word').on('dblclick',word_dblclick_event_do_text_text);$('#thetext').on('dblclick','.mword',word_dblclick_event_do_text_text);$(document).on('keydown',keydown_event_do_text_text);$('#thetext').hoverIntent({over:word_hover_over,out:word_hover_out,interval:150,selector:'.wsty,.mwsty'})};/**
  * Interaction between LWT and jQuery
  * 
  * @license unlicense
