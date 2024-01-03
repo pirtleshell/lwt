@@ -285,7 +285,7 @@ function edit_word_do_form($wid, $text_id, $ord, $fromAnn)
     pagestart_nobody($titletext);
     ?>
 <script type="text/javascript">
-    $(document).ready(lwt_form_check.askBeforeExit);
+    $(document).ready(lwtFormCheck.askBeforeExit);
     $(window).on('beforeunload',function() {
         setTimeout(function() {window.parent.frames['ru'].location.href = 'empty.html';}, 0);
     });

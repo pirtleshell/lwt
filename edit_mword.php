@@ -339,7 +339,7 @@ function edit_mword_display_new($term, $tid, $ord, $len)
     ?>
 
     <script type="text/javascript">
-        $(document).ready(lwt_form_check.askBeforeExit);
+        $(document).ready(lwtFormCheck.askBeforeExit);
         $(window).on('beforeunload',function() {
             setTimeout(function() {
                 window.parent.frames['ru'].location.href = 'empty.html';
@@ -458,7 +458,7 @@ function edit_mword_display_change($term, $tid, $ord)
         ?>
     
     <script type="text/javascript">
-        $(document).ready(lwt_form_check.askBeforeExit);
+        $(document).ready(lwtFormCheck.askBeforeExit);
         $(window).on('beforeunload',function() {
             setTimeout(function() {
                 window.parent.frames['ru'].location.href = 'empty.html';

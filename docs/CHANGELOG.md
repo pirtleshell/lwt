@@ -15,7 +15,7 @@ ones are marked like "v1.0.0-fork".
   * On `inc/kernel_utility.php`: `LWT_APP_VERSION` and `LWT_RELEASE_DATE`.
   * On `api.php`: `LWT_API_VERSION` and `LWT_API_RELEASE_DATE`.
   * `src/js/jq_pgm.js`: `LWT_DATA`.
-  * `unloadformcheck.js` now declares a new object `lwt_form_check` that contains 
+  * `unloadformcheck.js` now declares a new object `lwtFormCheck` that contains 
   all the functions needed.
 * Important additions to Text-To-Speech (TTS):
   * Word can be read on hover or on click. 
@@ -96,7 +96,7 @@ missing in `INSTALL.sh` (and `composer.json`), as stated in
 
 ### Deprecated
 
-* Using any function from `unloadformcheck.js` without using `lwt_form_check` is deprecated.
+* Using any function from `unloadformcheck.js` without using `lwtFormCheck` is deprecated.
 * `get_database_prefixes` is deprecated, superseded by `getDatabasePrefix` which is much cleaner.
 * Globals defined in `jq_pgm.js` are going into a single global `LWT_DATA`.
 
