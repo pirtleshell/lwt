@@ -50,10 +50,17 @@ after solution display ([#159](https://github.com/HugoFara/lwt/issues/159)).
   It should not lead to any code or behaviour change.
   * `src/js/overlib_interface.js`, stemmed from `src/js/pgm.js`. It contains all the 
   overlib interactions.
+  * `src/js/src/js/text_events.js`, stemmed from `src/js/jq_pgm.js`. 
+  It defines interactions with a text on reading.
 * For audio URI, raises the characters length limit from 200 to 2048 
 ([#144](https://github.com/HugoFara/lwt/issues/144)).
 * Database creation and migration is now handled directly in SQL, for a safer 
 behavior.
+* Docker changes:
+  * By default, the images now runs at localhot/lwt and no longer in the 
+  root folder ([installer #4](https://github.com/HugoFara/lwt-docker-installer/pull/4) 
+  and [#169](https://github.com/HugoFara/lwt/pull/169)).
+  * Image updated from `apache-buster` to `apache-bullseye`.
 
 ### Fixed
 
