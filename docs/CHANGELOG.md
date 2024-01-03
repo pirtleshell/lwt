@@ -33,6 +33,10 @@ ones are marked like "v1.0.0-fork".
 `db/schema/baseline.sql` and no longer in PHP code.
 * You can choose to add romanization for languages that don't need it in the language 
 settings ([#119](https://github.com/HugoFara/lwt/issues/119)).
+* Docker images are now built for multiple platforms, see PR 
+[#169](https://github.com/HugoFara/lwt/pull/169), closing discussion 
+[#141](https://github.com/HugoFara/lwt/discussions/141). 
+Many thanks to [@ProgramComputer](https://github.com/ProgramComputer)!
 
 ### Changed
 
