@@ -1,3 +1,7 @@
+/**
+ * Interactions and user events on text reading only.
+ */
+
 
 /**
  * Add annotations to a word.
@@ -26,11 +30,14 @@ function word_each_do_text_text(_) {
         }
     }
     if (!LWT_DATA.settings.jQuery_tooltip) {
-        this.title = make_tooltip(
-            $(this).text(), 
-            $(this).attr('data_trans'), 
-            $(this).attr('data_rom'), 
-            $(this).attr('data_status')
+        $(this).prop(
+            'title',
+            make_tooltip(
+                $(this).text(), 
+                $(this).attr('data_trans'), 
+                $(this).attr('data_rom'), 
+                $(this).attr('data_status')
+            )
         );
     }
 }
@@ -62,10 +69,14 @@ function mword_each_do_text_text(_) {
         }
       }
       if (!LWT_DATA.settings.jQuery_tooltip) {
-        this.title = make_tooltip(
-          $(this).attr('data_text'),
-          $(this).attr('data_trans'), $(this).attr('data_rom'),
-          $(this).attr('data_status')
+        $(this).prop(
+            'title', 
+            make_tooltip(
+                $(this).attr('data_text'),
+                $(this).attr('data_trans'), 
+                $(this).attr('data_rom'),
+                $(this).attr('data_status')
+            )
         );
       }
     }
@@ -630,3 +641,4 @@ function keydown_event_do_text_text (e) {
         }
     );
   }
+  
