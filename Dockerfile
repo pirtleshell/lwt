@@ -1,6 +1,12 @@
 FROM php:8.1-apache-bullseye
 
-LABEL org.opencontainers.image.source = "https://github.com/HugoFara/lwt"
+LABEL org.opencontainers.image.title="LWT Community"
+LABEL org.opencontainers.image.description="This image contains an image for LWT."
+LABEL org.opencontainers.image.documentation="https://hugofara.github.io/lwt/docs/"
+LABEL org.opencontainers.image.url="https://hugofara.github.io/lwt/"
+LABEL org.opencontainers.image.author="HugoFara <hugofara@users.noreply.github.com>"
+LABEL org.opencontainers.image.license="Unlicense"
+LABEL org.opencontainers.image.source="https://github.com/HugoFara/lwt"
 
 
 # creating config file php.ini 
