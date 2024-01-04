@@ -183,30 +183,84 @@ function mword_click_event_do_text_text () {
 }
 
 const mwordDragNDrop = {
+
+  event: undefined,
+
+  pos: undefined,
+
+  timeout: undefined,
+
+  context: undefined,
+
+  /**
+   * Multi-word selection is finished
+   * 
+   * @param {*} ev 
+   */
+  finish: function (ev) {
+    const context = mwordDragNDrop.context;
+    if (ev.handled !== true) {
+      const len = $('.lword.tword', context).length;
+      if (len > 0) {
+        const word_ord = $('.lword', context).first().attr('data_order');
+        if (len > 1) {
+          const text = $('.lword', context)
+            .map(function () { return $(this).text(); }).get().join('');
+          if (text.length > 250) {
+            alert('Selected text is too long!!!');
+          } else {
+            showRightFrames(
+              'edit_mword.php?' + $.param({
+                tid: LWT_DATA.text.id,
+                len: len,
+                ord: word_ord,
+                txt: text
+              })
+            );
+          }
+        } else {
+          // Create only a normal word
+          showRightFrames(
+            'edit_word.php?' + $.param({
+              tid: LWT_DATA.text.id,
+              ord: word_ord,
+              txt: $('#ID-' + word_ord + '-1').text()
+            })
+          );
+        }
+      }
+      $('span', context).removeClass('tword nword');
+      ev.handled = true;
+    }
+  },
+
+  /**
+   * Start creating a multi-word.
+   */
   startInteraction: function () {
-    let pos;
     const context = mwordDragNDrop.context;
     context.off('mouseout');
-    // 
+    // Add .tword (term word) and .nword (not word) subelements 
     $('.wsty', context).css('background-color', 'inherit')
       .css('border-bottom-color', 'rgba(0,0,0,0)').not('.hide,.word')
       .each(function () {
-        f = parseInt($(this).attr('data_code')) * 2 +
+        let f = parseInt($(this).attr('data_code')) * 2 +
         parseInt($(this).attr('data_order')) - 1;
-        h = '';
+        let childr_html = '';
         $(this).nextUntil($('[id^="ID-' + f + '-"]', context), '[id$="-1"]')
           .each(function () {
-            l = $(this).attr('data_order');
-            if (typeof l !== 'undefined') {
-              h += '<span class="tword" data_order="' + l + '">' + $(this).text() +
-            '</span>';
+            let w_order = $(this).attr('data_order');
+            if (w_order !== undefined) {
+              childr_html += '<span class="tword" data_order="' + w_order + '">' + 
+              $(this).text() + '</span>';
             } else {
-              h += '<span class="nword" data_order="' +
+              childr_html += '<span class="nword" data_order="' +
             $(this).attr('id').split('-')[1] + '">' + $(this).text() + '</span>';
             }
           });
-        $(this).html(h);
+        $(this).html(childr_html);
       });
+
     // Replace '#pe' element
     $('#pe').remove();
     $('body')
@@ -215,11 +269,12 @@ const mwordDragNDrop = {
         context.attr('id') + ' .wsty:before{opacity:0}</style>'
       );
 
-    // Create the "nword" elements
+    // Add class ".nword" (not word), and set attribute "data_order"
     $('[id$="-1"]', context).not('.hide,.wsty').addClass('nword').each(function () {
       $(this).attr('data_order', $(this).attr('id').split('-')[1]);
     });
-    // Attach children as "tword"
+
+    // Attach children ".tword" (term) to ".word"
     $('.word', context).not('.hide').each(function () {
       $(this).html(
         '<span class="tword" data_order="' + $(this).attr('data_order') + '">' +
@@ -269,7 +324,7 @@ const mwordDragNDrop = {
           $('#pe').remove();
         }
       });
-      pos = parseInt($(this).attr('data_order'));
+      mwordDragNDrop.pos = parseInt($(this).attr('data_order'));
 
       // Add ".lword" class on this element
       $('.lword', context).removeClass('lword');
@@ -277,40 +332,7 @@ const mwordDragNDrop = {
       $(context).on('mouseleave', function () {
         $('.lword', context).removeClass('lword');
       });
-      $(context).one('mouseup', '.nword,.tword', function (ev) {
-        if (ev.handled !== true) {
-          const len = $('.lword.tword', context).length;
-          if (len > 0) {
-            const word_ord = $('.lword', context).first().attr('data_order');
-            if (len > 1) {
-              const text = $('.lword', context)
-                .map(function () { return $(this).text(); }).get().join('');
-              if (text.length > 250) {
-                alert('Selected text is too long!!!');
-              } else {
-                showRightFrames(
-                  'edit_mword.php?' + $.param({
-                    tid: LWT_DATA.text.id,
-                    len: len,
-                    ord: word_ord,
-                    txt: text
-                  })
-                );
-              }
-            } else {
-              showRightFrames(
-                'edit_word.php?' + $.param({
-                  tid: LWT_DATA.text.id,
-                  ord: word_ord,
-                  txt: $('#ID-' + word_ord + '-1').text()
-                })
-              );
-            }
-          }
-          $('span', context).removeClass('tword nword');
-          ev.handled = true;
-        }
-      });
+      $(context).one('mouseup', '.nword,.tword', mwordDragNDrop.finish);
     });
 
     // Prepare a hover intent interaction
@@ -319,15 +341,15 @@ const mwordDragNDrop = {
         $('.lword', context).removeClass('lword');
         const lpos = parseInt($(this).attr('data_order'));
         $(this).addClass('lword');
-        if (lpos > pos) {
-          for (var i = pos; i < lpos; i++) {
+        if (lpos > mwordDragNDrop.pos) {
+          for (var i = mwordDragNDrop.pos; i < lpos; i++) {
             $(
               '.tword[data_order="' + i + '"],.nword[data_order="' + i + '"]',
               context
             ).addClass('lword');
           }
         } else {
-          for (var i = pos; i > lpos; i--) {
+          for (var i = mwordDragNDrop.pos; i > lpos; i--) {
             $(
               '.tword[data_order="' + i + '"],.nword[data_order="' + i + '"]',
               context
@@ -341,6 +363,9 @@ const mwordDragNDrop = {
     });
   },
 
+  /**
+   * Stop the multi-word creation interaction
+   */
   stopInteraction: function () {
     clearTimeout(mwordDragNDrop.timeout);
     $('.nword').removeClass('nword');
