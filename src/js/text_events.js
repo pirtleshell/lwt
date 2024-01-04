@@ -182,40 +182,138 @@ function mword_click_event_do_text_text () {
   return false;
 }
 
-function mword_drag_n_drop_select (event) {
-  if (LWT_DATA.settings.jQuery_tooltip)$('.ui-tooltip').remove();
-  const context = $(this).parent();
-  context.one('mouseup mouseout', $(this), function () {
-    clearTimeout(to);
-    $('.nword').removeClass('nword');
-    $('.tword').removeClass('tword');
-    $('.lword').removeClass('lword');
-    $('.wsty', context).css('background-color', '').css('border-bottom-color', '');
-    $('#pe').remove();
-  });
+const mwordDragNDrop = {
 
-  to = setTimeout(function () {
-    let pos;
+  event: undefined,
+
+  pos: undefined,
+
+  timeout: undefined,
+
+  context: undefined,
+
+  /**
+   * Multi-word selection is finished
+   * 
+   * @param {*} ev 
+   */
+  finish: function (ev) {
+    const context = mwordDragNDrop.context;
+    if (ev.handled !== true) {
+      const len = $('.lword.tword', context).length;
+      if (len > 0) {
+        const word_ord = $('.lword', context).first().attr('data_order');
+        if (len > 1) {
+          const text = $('.lword', context)
+            .map(function () { return $(this).text(); }).get().join('');
+          if (text.length > 250) {
+            alert('Selected text is too long!!!');
+          } else {
+            showRightFrames(
+              'edit_mword.php?' + $.param({
+                tid: LWT_DATA.text.id,
+                len: len,
+                ord: word_ord,
+                txt: text
+              })
+            );
+          }
+        } else {
+          // Create only a normal word
+          showRightFrames(
+            'edit_word.php?' + $.param({
+              tid: LWT_DATA.text.id,
+              ord: word_ord,
+              txt: $('#ID-' + word_ord + '-1').text()
+            })
+          );
+        }
+      }
+      $('span', context).removeClass('tword nword');
+      ev.handled = true;
+    }
+  },
+
+  /**
+   * Function to trigger above a term word
+   */
+  twordMouseOver: function () {
+    const context = mwordDragNDrop.context;
+    $('html').one('mouseup', function () {
+      $('.wsty', context).each(function () {
+        $(this).addClass('status' + $(this).attr('data_status'));
+      });
+      if (!$(this).hasClass('tword')) {
+        $('span', context).removeClass('nword tword lword');
+        $('.wsty', context).css('background-color', '')
+          .css('border-bottom-color', '');
+        $('#pe').remove();
+      }
+    });
+    mwordDragNDrop.pos = parseInt($(this).attr('data_order'));
+
+    // Add ".lword" class on this element
+    $('.lword', context).removeClass('lword');
+    $(this).addClass('lword');
+    $(context).on('mouseleave', function () {
+      $('.lword', context).removeClass('lword');
+    });
+    $(context).one('mouseup', '.nword,.tword', mwordDragNDrop.finish);
+  },
+
+  /**
+   * When having the cursor over the sentence.
+   */
+  sentenceOver: function () {
+    const context = mwordDragNDrop.context;
+    $('.lword', context).removeClass('lword');
+    const lpos = parseInt($(this).attr('data_order'));
+    $(this).addClass('lword');
+    if (lpos > mwordDragNDrop.pos) {
+      for (var i = mwordDragNDrop.pos; i < lpos; i++) {
+        $(
+          '.tword[data_order="' + i + '"],.nword[data_order="' + i + '"]',
+          context
+        ).addClass('lword');
+      }
+    } else {
+      for (var i = mwordDragNDrop.pos; i > lpos; i--) {
+        $(
+          '.tword[data_order="' + i + '"],.nword[data_order="' + i + '"]',
+          context
+        ).addClass('lword');
+      }
+    }
+  },
+
+  /**
+   * Start creating a multi-word.
+   */
+  startInteraction: function () {
+    const context = mwordDragNDrop.context;
     context.off('mouseout');
+    // Add .tword (term word) and .nword (not word) subelements 
     $('.wsty', context).css('background-color', 'inherit')
       .css('border-bottom-color', 'rgba(0,0,0,0)').not('.hide,.word')
       .each(function () {
-        f = parseInt($(this).attr('data_code')) * 2 +
+        let f = parseInt($(this).attr('data_code')) * 2 +
         parseInt($(this).attr('data_order')) - 1;
-        h = '';
+        let childr_html = '';
         $(this).nextUntil($('[id^="ID-' + f + '-"]', context), '[id$="-1"]')
           .each(function () {
-            l = $(this).attr('data_order');
-            if (typeof l !== 'undefined') {
-              h += '<span class="tword" data_order="' + l + '">' + $(this).text() +
-            '</span>';
+            let w_order = $(this).attr('data_order');
+            if (w_order !== undefined) {
+              childr_html += '<span class="tword" data_order="' + w_order + '">' + 
+              $(this).text() + '</span>';
             } else {
-              h += '<span class="nword" data_order="' +
+              childr_html += '<span class="nword" data_order="' +
             $(this).attr('id').split('-')[1] + '">' + $(this).text() + '</span>';
             }
           });
-        $(this).html(h);
+        $(this).html(childr_html);
       });
+
+    // Replace '#pe' element
     $('#pe').remove();
     $('body')
       .append(
@@ -223,114 +321,81 @@ function mword_drag_n_drop_select (event) {
         context.attr('id') + ' .wsty:before{opacity:0}</style>'
       );
 
+    // Add class ".nword" (not word), and set attribute "data_order"
     $('[id$="-1"]', context).not('.hide,.wsty').addClass('nword').each(function () {
       $(this).attr('data_order', $(this).attr('id').split('-')[1]);
     });
+
+    // Attach children ".tword" (term) to ".word"
     $('.word', context).not('.hide').each(function () {
       $(this).html(
         '<span class="tword" data_order="' + $(this).attr('data_order') + '">' +
           $(this).text() + '</span>'
       );
     });
-    if (event.data.annotation == 1) {
+
+    // Edit "tword" elements by filling their attributes
+    if (mwordDragNDrop.event.data.annotation == 1) {
       $('.wsty', context)
         .not('.hide')
         .each(function () {
           $(this).children('.tword').last()
             .attr('data_ann', $(this).attr('data_ann'))
             .attr('data_trans', $(this).attr('data_trans'))
-            .addClass(
-              'content' + $(this)
-                .removeClass('status1 status2 status3 status4 status5 status98 status99')
-                .attr('data_status')
-            );
+            .addClass('content' + $(this).attr('data_status'));
+          $(this).removeClass(
+            'status1 status2 status3 status4 status5 status98 status99'
+          );
         });
-    } else if (event.data.annotation == 3) {
+    } else if (mwordDragNDrop.event.data.annotation == 3) {
       $('.wsty', context)
         .not('.hide')
         .each(function () {
           $(this).children('.tword').first()
             .attr('data_ann', $(this).attr('data_ann'))
             .attr('data_trans', $(this).attr('data_trans'))
-            .addClass(
-              'content' + $(this)
-                .removeClass('status1 status2 status3 status4 status5 status98 status99')
-                .attr('data_status')
-            );
+            .addClass('content' + $(this).attr('data_status'));
+          $(this).removeClass(
+            'status1 status2 status3 status4 status5 status98 status99'
+          );
         });
     }
-    $(context).one('mouseover', '.tword', function () {
-      $('html').one('mouseup', function () {
-        $('.wsty', context).each(function () {
-          $(this).addClass('status' + $(this).attr('data_status'));
-        });
-        if (!$(this).hasClass('tword')) {
-          $('span', context).removeClass('nword tword lword');
-          $('.wsty', context).css('background-color', '')
-            .css('border-bottom-color', '');
-          $('#pe').remove();
-        }
-      });
-      pos = parseInt($(this).attr('data_order'));
-      $('.lword', context).removeClass('lword');
-      $(this).addClass('lword');
-      $(context).on('mouseleave', function () {
-        $('.lword', context).removeClass('lword');
-      });
-      $(context).one('mouseup', '.nword,.tword', function (ev) {
-        if (ev.handled !== true) {
-          const len = $('.lword.tword', context).length;
-          if (len > 0) {
-            g = $('.lword', context).first().attr('data_order');
-            if (len > 1) {
-              const text = $('.lword', context)
-                .map(function () { return $(this).text(); }).get().join('');
-              if (text.length > 250) {
-                alert('selected text is too long!!!');
-              } else {
-                showRightFrames(
-                  'edit_mword.php?tid=' + LWT_DATA.text.id + '&len=' + len + '&ord=' + g +
-                    '&txt=' + text
-                );
-              }
-            } else {
-              showRightFrames(
-                'edit_word.php?tid=' + LWT_DATA.text.id + '&ord=' + g + '&txt=' +
-                  $('#ID-' + g + '-1').text()
-              );
-            }
-          }
-          $('span', context).removeClass('tword nword');
-          ev.handled = true;
-        }
-      });
-    });
+
+    // Prepare interaction on ".tword" to mouseover
+    $(context).one('mouseover', '.tword', mwordDragNDrop.twordMouseOver);
+
+    // Prepare a hover intent interaction
     $(context).hoverIntent({
-      over: function () {
-        $('.lword', context).removeClass('lword');
-        const lpos = parseInt($(this).attr('data_order'));
-        $(this).addClass('lword');
-        if (lpos > pos) {
-          for (var i = pos; i < lpos; i++) {
-            $(
-              '.tword[data_order="' + i + '"],.nword[data_order="' + i + '"]',
-              context
-            ).addClass('lword');
-          }
-        } else {
-          for (var i = pos; i > lpos; i--) {
-            $(
-              '.tword[data_order="' + i + '"],.nword[data_order="' + i + '"]',
-              context
-            ).addClass('lword');
-          }
-        }
-      },
+      over: mwordDragNDrop.sentenceOver,
       out: function () {},
       sensitivity: 18,
       selector: '.tword'
     });
-  }, 300);
+  },
+
+  /**
+   * Stop the multi-word creation interaction
+   */
+  stopInteraction: function () {
+    clearTimeout(mwordDragNDrop.timeout);
+    $('.nword').removeClass('nword');
+    $('.tword').removeClass('tword');
+    $('.lword').removeClass('lword');
+    $('.wsty', mwordDragNDrop.context)
+    .css('background-color', '')
+    .css('border-bottom-color', '');
+    $('#pe').remove();
+  }
+}
+
+function mword_drag_n_drop_select (event) {
+  if (LWT_DATA.settings.jQuery_tooltip) $('.ui-tooltip').remove();
+  const sentence = $(this).parent();
+  mwordDragNDrop.context = sentence;
+  mwordDragNDrop.event = event;
+  sentence.one('mouseup mouseout', $(this), mwordDragNDrop.stopInteraction);
+
+  mwordDragNDrop.timeout = setTimeout(mwordDragNDrop.startInteraction, 300);
 }
 
 function word_hover_over () {
