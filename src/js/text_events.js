@@ -182,20 +182,10 @@ function mword_click_event_do_text_text () {
   return false;
 }
 
-function mword_drag_n_drop_select (event) {
-  if (LWT_DATA.settings.jQuery_tooltip)$('.ui-tooltip').remove();
-  const context = $(this).parent();
-  context.one('mouseup mouseout', $(this), function () {
-    clearTimeout(to);
-    $('.nword').removeClass('nword');
-    $('.tword').removeClass('tword');
-    $('.lword').removeClass('lword');
-    $('.wsty', context).css('background-color', '').css('border-bottom-color', '');
-    $('#pe').remove();
-  });
-
-  to = setTimeout(function () {
+const mwordDragNDrop = {
+  startInteraction: function () {
     let pos;
+    const context = mwordDragNDrop.context;
     context.off('mouseout');
     $('.wsty', context).css('background-color', 'inherit')
       .css('border-bottom-color', 'rgba(0,0,0,0)').not('.hide,.word')
@@ -232,7 +222,7 @@ function mword_drag_n_drop_select (event) {
           $(this).text() + '</span>'
       );
     });
-    if (event.data.annotation == 1) {
+    if (mwordDragNDrop.event.data.annotation == 1) {
       $('.wsty', context)
         .not('.hide')
         .each(function () {
@@ -245,7 +235,7 @@ function mword_drag_n_drop_select (event) {
                 .attr('data_status')
             );
         });
-    } else if (event.data.annotation == 3) {
+    } else if (mwordDragNDrop.event.data.annotation == 3) {
       $('.wsty', context)
         .not('.hide')
         .each(function () {
@@ -330,7 +320,26 @@ function mword_drag_n_drop_select (event) {
       sensitivity: 18,
       selector: '.tword'
     });
-  }, 300);
+  },
+
+  stopInteraction: function () {
+    clearTimeout(mwordDragNDrop.timeout);
+    $('.nword').removeClass('nword');
+    $('.tword').removeClass('tword');
+    $('.lword').removeClass('lword');
+    $('.wsty', mwordDragNDrop.context).css('background-color', '').css('border-bottom-color', '');
+    $('#pe').remove();
+  }
+}
+
+function mword_drag_n_drop_select (event) {
+  if (LWT_DATA.settings.jQuery_tooltip) $('.ui-tooltip').remove();
+  const context = $(this).parent();
+  mwordDragNDrop.context = context;
+  mwordDragNDrop.event = event;
+  context.one('mouseup mouseout', $(this), mwordDragNDrop.stopInteraction);
+
+  mwordDragNDrop.timeout = setTimeout(mwordDragNDrop.startInteraction, 300);
 }
 
 function word_hover_over () {
