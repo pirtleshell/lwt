@@ -235,6 +235,58 @@ const mwordDragNDrop = {
   },
 
   /**
+   * Function to trigger above a term word
+   */
+  twordMouseOver: function () {
+    const context = mwordDragNDrop.context;
+    $('html').one('mouseup', function () {
+      $('.wsty', context).each(function () {
+        $(this).addClass('status' + $(this).attr('data_status'));
+      });
+      if (!$(this).hasClass('tword')) {
+        $('span', context).removeClass('nword tword lword');
+        $('.wsty', context).css('background-color', '')
+          .css('border-bottom-color', '');
+        $('#pe').remove();
+      }
+    });
+    mwordDragNDrop.pos = parseInt($(this).attr('data_order'));
+
+    // Add ".lword" class on this element
+    $('.lword', context).removeClass('lword');
+    $(this).addClass('lword');
+    $(context).on('mouseleave', function () {
+      $('.lword', context).removeClass('lword');
+    });
+    $(context).one('mouseup', '.nword,.tword', mwordDragNDrop.finish);
+  },
+
+  /**
+   * When having the cursor over the sentence.
+   */
+  sentenceOver: function () {
+    const context = mwordDragNDrop.context;
+    $('.lword', context).removeClass('lword');
+    const lpos = parseInt($(this).attr('data_order'));
+    $(this).addClass('lword');
+    if (lpos > mwordDragNDrop.pos) {
+      for (var i = mwordDragNDrop.pos; i < lpos; i++) {
+        $(
+          '.tword[data_order="' + i + '"],.nword[data_order="' + i + '"]',
+          context
+        ).addClass('lword');
+      }
+    } else {
+      for (var i = mwordDragNDrop.pos; i > lpos; i--) {
+        $(
+          '.tword[data_order="' + i + '"],.nword[data_order="' + i + '"]',
+          context
+        ).addClass('lword');
+      }
+    }
+  },
+
+  /**
    * Start creating a multi-word.
    */
   startInteraction: function () {
@@ -290,11 +342,10 @@ const mwordDragNDrop = {
           $(this).children('.tword').last()
             .attr('data_ann', $(this).attr('data_ann'))
             .attr('data_trans', $(this).attr('data_trans'))
-            .addClass(
-              'content' + $(this)
-                .removeClass('status1 status2 status3 status4 status5 status98 status99')
-                .attr('data_status')
-            );
+            .addClass('content' + $(this).attr('data_status'));
+          $(this).removeClass(
+            'status1 status2 status3 status4 status5 status98 status99'
+          );
         });
     } else if (mwordDragNDrop.event.data.annotation == 3) {
       $('.wsty', context)
@@ -303,60 +354,19 @@ const mwordDragNDrop = {
           $(this).children('.tword').first()
             .attr('data_ann', $(this).attr('data_ann'))
             .attr('data_trans', $(this).attr('data_trans'))
-            .addClass(
-              'content' + $(this)
-                .removeClass('status1 status2 status3 status4 status5 status98 status99')
-                .attr('data_status')
-            );
+            .addClass('content' + $(this).attr('data_status'));
+          $(this).removeClass(
+            'status1 status2 status3 status4 status5 status98 status99'
+          );
         });
     }
 
     // Prepare interaction on ".tword" to mouseover
-    $(context).one('mouseover', '.tword', function () {
-      $('html').one('mouseup', function () {
-        $('.wsty', context).each(function () {
-          $(this).addClass('status' + $(this).attr('data_status'));
-        });
-        if (!$(this).hasClass('tword')) {
-          $('span', context).removeClass('nword tword lword');
-          $('.wsty', context).css('background-color', '')
-            .css('border-bottom-color', '');
-          $('#pe').remove();
-        }
-      });
-      mwordDragNDrop.pos = parseInt($(this).attr('data_order'));
-
-      // Add ".lword" class on this element
-      $('.lword', context).removeClass('lword');
-      $(this).addClass('lword');
-      $(context).on('mouseleave', function () {
-        $('.lword', context).removeClass('lword');
-      });
-      $(context).one('mouseup', '.nword,.tword', mwordDragNDrop.finish);
-    });
+    $(context).one('mouseover', '.tword', mwordDragNDrop.twordMouseOver);
 
     // Prepare a hover intent interaction
     $(context).hoverIntent({
-      over: function () {
-        $('.lword', context).removeClass('lword');
-        const lpos = parseInt($(this).attr('data_order'));
-        $(this).addClass('lword');
-        if (lpos > mwordDragNDrop.pos) {
-          for (var i = mwordDragNDrop.pos; i < lpos; i++) {
-            $(
-              '.tword[data_order="' + i + '"],.nword[data_order="' + i + '"]',
-              context
-            ).addClass('lword');
-          }
-        } else {
-          for (var i = mwordDragNDrop.pos; i > lpos; i--) {
-            $(
-              '.tword[data_order="' + i + '"],.nword[data_order="' + i + '"]',
-              context
-            ).addClass('lword');
-          }
-        }
-      },
+      over: mwordDragNDrop.sentenceOver,
       out: function () {},
       sensitivity: 18,
       selector: '.tword'
@@ -380,10 +390,10 @@ const mwordDragNDrop = {
 
 function mword_drag_n_drop_select (event) {
   if (LWT_DATA.settings.jQuery_tooltip) $('.ui-tooltip').remove();
-  const context = $(this).parent();
-  mwordDragNDrop.context = context;
+  const sentence = $(this).parent();
+  mwordDragNDrop.context = sentence;
   mwordDragNDrop.event = event;
-  context.one('mouseup mouseout', $(this), mwordDragNDrop.stopInteraction);
+  sentence.one('mouseup mouseout', $(this), mwordDragNDrop.stopInteraction);
 
   mwordDragNDrop.timeout = setTimeout(mwordDragNDrop.startInteraction, 300);
 }
