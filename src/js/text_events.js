@@ -187,6 +187,7 @@ const mwordDragNDrop = {
     let pos;
     const context = mwordDragNDrop.context;
     context.off('mouseout');
+    // 
     $('.wsty', context).css('background-color', 'inherit')
       .css('border-bottom-color', 'rgba(0,0,0,0)').not('.hide,.word')
       .each(function () {
@@ -206,6 +207,7 @@ const mwordDragNDrop = {
           });
         $(this).html(h);
       });
+    // Replace '#pe' element
     $('#pe').remove();
     $('body')
       .append(
@@ -213,15 +215,19 @@ const mwordDragNDrop = {
         context.attr('id') + ' .wsty:before{opacity:0}</style>'
       );
 
+    // Create the "nword" elements
     $('[id$="-1"]', context).not('.hide,.wsty').addClass('nword').each(function () {
       $(this).attr('data_order', $(this).attr('id').split('-')[1]);
     });
+    // Attach children as "tword"
     $('.word', context).not('.hide').each(function () {
       $(this).html(
         '<span class="tword" data_order="' + $(this).attr('data_order') + '">' +
           $(this).text() + '</span>'
       );
     });
+
+    // Edit "tword" elements by filling their attributes
     if (mwordDragNDrop.event.data.annotation == 1) {
       $('.wsty', context)
         .not('.hide')
@@ -249,6 +255,8 @@ const mwordDragNDrop = {
             );
         });
     }
+
+    // Prepare interaction on ".tword" to mouseover
     $(context).one('mouseover', '.tword', function () {
       $('html').one('mouseup', function () {
         $('.wsty', context).each(function () {
@@ -262,6 +270,8 @@ const mwordDragNDrop = {
         }
       });
       pos = parseInt($(this).attr('data_order'));
+
+      // Add ".lword" class on this element
       $('.lword', context).removeClass('lword');
       $(this).addClass('lword');
       $(context).on('mouseleave', function () {
@@ -271,22 +281,29 @@ const mwordDragNDrop = {
         if (ev.handled !== true) {
           const len = $('.lword.tword', context).length;
           if (len > 0) {
-            g = $('.lword', context).first().attr('data_order');
+            const word_ord = $('.lword', context).first().attr('data_order');
             if (len > 1) {
               const text = $('.lword', context)
                 .map(function () { return $(this).text(); }).get().join('');
               if (text.length > 250) {
-                alert('selected text is too long!!!');
+                alert('Selected text is too long!!!');
               } else {
                 showRightFrames(
-                  'edit_mword.php?tid=' + LWT_DATA.text.id + '&len=' + len + '&ord=' + g +
-                    '&txt=' + text
+                  'edit_mword.php?' + $.param({
+                    tid: LWT_DATA.text.id,
+                    len: len,
+                    ord: word_ord,
+                    txt: text
+                  })
                 );
               }
             } else {
               showRightFrames(
-                'edit_word.php?tid=' + LWT_DATA.text.id + '&ord=' + g + '&txt=' +
-                  $('#ID-' + g + '-1').text()
+                'edit_word.php?' + $.param({
+                  tid: LWT_DATA.text.id,
+                  ord: word_ord,
+                  txt: $('#ID-' + word_ord + '-1').text()
+                })
               );
             }
           }
@@ -295,6 +312,8 @@ const mwordDragNDrop = {
         }
       });
     });
+
+    // Prepare a hover intent interaction
     $(context).hoverIntent({
       over: function () {
         $('.lword', context).removeClass('lword');
@@ -327,7 +346,9 @@ const mwordDragNDrop = {
     $('.nword').removeClass('nword');
     $('.tword').removeClass('tword');
     $('.lword').removeClass('lword');
-    $('.wsty', mwordDragNDrop.context).css('background-color', '').css('border-bottom-color', '');
+    $('.wsty', mwordDragNDrop.context)
+    .css('background-color', '')
+    .css('border-bottom-color', '');
     $('#pe').remove();
   }
 }
