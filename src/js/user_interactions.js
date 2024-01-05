@@ -171,16 +171,21 @@ function getPhoneticText (text, lang) {
 /**
  * Get the phonetic version of a text, asynchronous.
  *
- * @param {string} text Text to convert to phonetics.
- * @param {string} lang Language, either two letters code or four letters (BCP 47)
+ * @param {string}     text Text to convert to phonetics.
+ * @param {string|int} lang Language, either two letters code or four letters (BCP 47), or language ID
  */
 async function getPhoneticTextAsync (text, lang) {
+  const parameters = {
+    text: text
+  };
+  if (typeof lang == 'int') {
+    parameters.lgid = lang;
+  } else {
+    parameters.lang = lang;
+  }
   return $.getJSON(
     'api.php/v1/phonetic-reading',
-    {
-      text: text,
-      lang: lang
-    }
+    parameters
   );
 }
 
@@ -336,17 +341,43 @@ function readTextAloud (text, lang, rate, pitch, voice, convert_to_phonetic) {
   }
 }
 
-function speechDispatcher (term, lang_abbr, lang_data) {
-  const loc_data = lang_data ?? LWT_DATA.language;
-  const loc_lang_abbr = lang_abbr ?? loc_data.abbr;
-  if (loc_data.ttsVoiceApi) {
-    readTextWithExternal(term, loc_data.ttsVoiceApi, loc_lang_abbr);
-  } else {
-    const convert_to_phonetic = loc_data.word_parsing == 'mecab';
-    const lang_settings = cookieTTSSettings(loc_lang_abbr.substring(0, 2));
-    readTextAloud(
-      term, loc_lang_abbr, lang_settings.rate, lang_settings.pitch,
-      lang_settings.voice, convert_to_phonetic
-    );
-  }
+function speechDispatcher (term, lang_id) {
+  return $.getJSON(
+    'api.php/v1/languages/' + lang_id + '/reading-configuration',
+    {
+      lgid: lang_id
+    },
+    function (data) {
+      if (data.readingMode == "direct" || data.readingMode == "internal") {
+        const lang_settings = cookieTTSSettings(data.language);
+        if (data.readingMode == "direct") {
+          // No reparsing needed
+          readRawTextAloud(
+            term, 
+            data.abbreviation, 
+            lang_settings.rate, 
+            lang_settings.pitch,
+            lang_settings.voice
+          );
+        } else if (data.readingMode == "internal") {
+          // Server handled reparsing
+          getPhoneticTextAsync(text, lang_id)
+            .then(
+              function (reparsed_text) {
+                readRawTextAloud(
+                  reparsed_text.phonetic_reading, 
+                  data.abbreviation,
+                  lang_settings.rate, 
+                  lang_settings.pitch, 
+                  lang_settings.voice
+                );
+              }
+            );
+        }
+      } else if (data.readingMode == "external") {
+        // Use external API
+        readTextWithExternal(term, data.voiceApi, data.language);
+      }
+    }
+  );
 }

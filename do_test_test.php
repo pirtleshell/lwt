@@ -722,8 +722,6 @@ function do_test_test_javascript_clickable($wo_record, $solution)
 {
     global $tbpref;
     $wid = $wo_record['WoID'];
-    $abbr = getLanguageCode($wo_record['WoLgID'], LWT_LANGUAGES_ARRAY);
-    $phoneticText = phonetic_reading($wo_record['WoText'], $abbr);
     $voiceApi = get_first_value(
         "SELECT LgTTSVoiceAPI AS value FROM {$tbpref}languages 
         WHERE LgID = " . $wo_record['WoLgID']
@@ -734,14 +732,13 @@ function do_test_test_javascript_clickable($wo_record, $solution)
      * Read the word aloud
      */
     function read_word() {
-        if (('speechSynthesis' in window) && 
-        document.getElementById('utterance-allowed').checked) {
-            const text = <?php echo json_encode($phoneticText); ?>;
-            const lang = <?php echo json_encode($abbr); ?>;
-            readRawTextAloud(text, lang);
-        }
+        speechDispatcher(
+            <?php echo json_encode($wo_record['WoText']); ?>, 
+            <?php echo json_encode($wo_record['WoLgID']); ?>
+        );
     }
 
+    LWT_DATA.language.id = <?php echo json_encode($wo_record['WoLgID']); ?>;
     LWT_DATA.test.solution = <?php echo prepare_textdata_js($solution); ?>;
     LWT_DATA.word.id = <?php echo $wid; ?>;
     LWT_DATA.language.ttsVoiceApi = <?php echo json_encode($voiceApi); ?>;

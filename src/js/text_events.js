@@ -148,8 +148,7 @@ function word_click_event_do_text_text () {
     );
   }
   if (LWT_DATA.settings.hts == 2) {
-    const lg = getLangFromDict(LWT_DATA.language.translator_link);
-    speechDispatcher($(this).text(), lg);
+    speechDispatcher($(this).text(), LWT_DATA.language.id);
   }
   return false;
 }
@@ -176,8 +175,7 @@ function mword_click_event_do_text_text () {
     );
   }
   if (LWT_DATA.settings.hts == 2) {
-    const lg = getLangFromDict(LWT_DATA.language.translator_link);
-    speechDispatcher($(this).text(), lg);
+    speechDispatcher($(this).text(), LWT_DATA.language.id);
   }
   return false;
 }
@@ -406,8 +404,7 @@ function word_hover_over () {
       $(this).trigger('mouseover');
     }
     if (LWT_DATA.settings.hts == 3) {
-      const lg = getLangFromDict(LWT_DATA.language.translator_link);
-      speechDispatcher($(this).text(), lg);
+      speechDispatcher($(this).text(), LWT_DATA.language.id);
     }
   }
 }
@@ -593,8 +590,7 @@ function keydown_event_do_text_text (e) {
     return false;
   }
   if (e.which == 80) { // P : pronounce term
-    const lg = getLangFromDict(LWT_DATA.language.translator_link);
-    speechDispatcher(txt, lg);
+    speechDispatcher(txt, LWT_DATA.language.id);
     return false;
   }
   if (e.which == 84) { // T : translate sentence
