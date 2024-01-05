@@ -418,16 +418,16 @@ function edit_word_do_form($wid, $text_id, $ord, $fromAnn)
         /**
          * Sets the romanization of a term.
          */
-        const autoRomanization = function () {
+        const autoRomanization = function (lgid) {
             const term = $('#wordfield').val();
-            getPhoneticTextAsync(term, LANG_SHORT)
+            getPhoneticTextAsync(term, lgid)
             .then(function (phonetic) {
                 newword.WoRomanization.value = phonetic["phonetic_reading"];
             });
         }
 
         autoTranslate();
-        autoRomanization();
+        autoRomanization(<?php echo json_encode($lang); ?>);
 
     </script>
         <?php

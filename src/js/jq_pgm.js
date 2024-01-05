@@ -13,6 +13,7 @@ Global variables used in LWT jQuery functions
 LWT_DATA = {
   /** Language data */
   language: {
+    id: undefined,
     /** First dictionary URL */
     dict_link1: '',
     /** Second dictionary URL */
