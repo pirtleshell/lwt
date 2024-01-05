@@ -45,7 +45,7 @@ Many thanks to [@ProgramComputer](https://github.com/ProgramComputer)!
   See [#160](https://github.com/HugoFara/lwt/issues/160). 
   It adds `README.md` and `UNLICENSE.md`.
   * Adds `docs/info.html` and `docs/index.html` from [#146](https://github.com/HugoFara/lwt/pull/146).
-* Multi-word creation was reviewed to use a simpler code.
+* Multi-word creation was reviewed to use a simpler JS code.
 * On word review, status + 1 can be set only after word display. Before, you could 
 press key up at any time to increase term status, but keydown was effective only 
 after solution display ([#159](https://github.com/HugoFara/lwt/issues/159)).
@@ -58,8 +58,10 @@ after solution display ([#159](https://github.com/HugoFara/lwt/issues/159)).
   It defines interactions with a text on reading.
 * For audio URI, raises the characters length limit from 200 to 2048 
 ([#144](https://github.com/HugoFara/lwt/issues/144)).
-* Database creation and migration is now handled directly in SQL, for a safer 
+* Database:
+  * Database creation and migration is now handled directly in SQL, for a safer 
 behavior.
+  * You do no longer need to give to LWT SYSTEM_VARIABLES_ADMIN for text reparsing. (new function `checkTextWithExpressions`) ([#167](https://github.com/HugoFara/lwt/issues/167)). It is still necessary for words import.
 * Docker changes:
   * By default, the images now runs at localhot/lwt and no longer in the 
   root folder ([installer #4](https://github.com/HugoFara/lwt-docker-installer/pull/4) 
