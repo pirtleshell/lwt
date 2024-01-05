@@ -1538,12 +1538,15 @@ function splitCheckText($text, $lid, $id)
         check_text_valid($lid);
     }
 
+    // Get multi-word count
     $res = do_mysqli_query(
-        "SELECT WoWordCount AS word_count, count(WoWordCount) AS cnt 
-        FROM {$tbpref}words 
-        WHERE WoLgID = $lid AND WoWordCount > 1 
-        GROUP BY WoWordCount"
+        "SELECT DISTINCT(WoWordCount) 
+        FROM {$tbpref}words
+        WHERE WoLgID = $lid AND WoWordCount > 1"
     );
+    while ($record = mysqli_fetch_assoc($res)){
+        $wl[] = (int)$record['WoWordCount'];
+    }
     mysqli_free_result($res);
     $sql = '';
     // Text has multi-words
@@ -1552,15 +1555,17 @@ function splitCheckText($text, $lid, $id)
         $sql = checkTextWithExpressions($lid, $wl);
     }
     if ($id > 0) {
-        $sql = 'SELECT straight_join WoID, sent, TiOrder - (2*(n-1)) TiOrder, 
-        n TiWordCount,word' . $sql . ' UNION ALL ';
+        $sql = "SELECT straight_join WoID, sent, TiOrder - (2*(n-1)) TiOrder, 
+        n TiWordCount, word $sql 
+        UNION ALL ";
         update_default_values($id, $lid, $sql);
     }
     
     // Check text
     if ($id == -1) {
-        $sql = 'SELECT straight_join count(WoID) cnt, n as len, 
-        lower(WoText) as word, WoTranslation' . $sql . ' GROUP BY WoID ORDER BY WoTextLC';
+        $sql = "SELECT straight_join count(WoID) cnt, n as len, 
+        lower(WoText) AS word, WoTranslation $sql 
+        GROUP BY WoID ORDER BY WoTextLC";
         check_text($sql, (bool)$rtlScript, $wl);
     }
     
