@@ -1284,14 +1284,13 @@ function check_text($sql, $rtlScript, $wl)
 /**
  * Check a language that contains expressions.
  *
- * @param int    $lid    Language ID
- * @param int[]  $wl     Word length
+ * @param int[]  $wl     All the different expression length in the language.
  *
  * @return string SQL-formatted query string
  *
  * @global string $tbpref Database table prefix
  */
-function checkTextWithExpressions($lid, $wl): string
+function checkExpressions($wl): void
 {
     global $tbpref;
 
@@ -1330,7 +1329,7 @@ function checkTextWithExpressions($lid, $wl): string
     );
     // Store garbage
     do_mysqli_query(
-        "CREATE TEMPORARY TABLE IF NOT EXISTS {$tbpref}tempexprs (
+        "CREATE TABLE IF NOT EXISTS {$tbpref}tempexprs (
             sent mediumint unsigned,
             word varchar(250),
             lword varchar(250),
@@ -1392,13 +1391,6 @@ function checkTextWithExpressions($lid, $wl): string
         n 
         FROM {$tbpref}numbers , {$tbpref}temptextitems"
     );
-    $sql = 
-    " FROM {$tbpref}tempexprs, 
-    {$tbpref}words 
-    WHERE lword IS NOT NULL AND WoLgID=$lid AND 
-    WoTextLC=lword AND WoWordCount=n";
-
-    return $sql;
 }
 
 /**
@@ -1414,8 +1406,7 @@ function checkTextWithExpressions($lid, $wl): string
  *
  * @global string $tbpref Database table prefix
  * 
- * @deprecated Since 2.10.0-fork use checkTextWithExpressions. 
- * It does not modify SQL globals.
+ * @deprecated Since 2.10.0-fork use checkExpressions. It does not modify SQL globals.
  */
 function check_text_with_expressions($id, $lid, $wl, $wl_max, $mw_sql): string
 {
@@ -1572,16 +1563,21 @@ function splitCheckText($text, $lid, $id)
     $sql = '';
     // Text has multi-words
     if (!empty($wl)) {
-        $sql = checkTextWithExpressions($lid, $wl);
+        checkExpressions($wl);
         if ($id > 0) {
             $sql = "SELECT straight_join WoID, sent, TiOrder - (2*(n-1)) TiOrder, 
-            n TiWordCount, word 
-            $sql 
+            n TiWordCount, word FROM {$tbpref}tempexprs, 
+            {$tbpref}words 
+            WHERE lword IS NOT NULL AND WoLgID=$lid AND 
+            WoTextLC=lword AND WoWordCount=n
             UNION ALL ";
         } else {
             $sql = "SELECT straight_join COUNT(WoID) cnt, n as len, 
             LOWER(WoText) AS word, WoTranslation 
-            $sql 
+            FROM {$tbpref}tempexprs, 
+            {$tbpref}words 
+            WHERE lword IS NOT NULL AND WoLgID=$lid AND 
+            WoTextLC=lword AND WoWordCount=n
             GROUP BY WoID ORDER BY WoTextLC";
         }
     }
@@ -1696,7 +1692,7 @@ function update_database($dbname)
         }
         
         $changes = 0;
-        $res = do_mysqli_query("SELECT filename FROM _migrations");
+        $res = do_mysqli_query("SELECT filename FROM {$tbpref}_migrations");
         while ($record = mysqli_fetch_assoc($res)) {
             $queries = parseSQLFile(
                 __DIR__ . '/../db/migrations/' . $record["filename"]
@@ -1778,12 +1774,14 @@ function check_update_db($debug, $tbpref, $dbname): void
     foreach ($queries as $query) {
         $prefixed_query = prefixSQLQuery($query, $tbpref);
         // Increment count for new tables only
-        $count += runsql($prefixed_query, "");
+        if (!str_starts_with($query, "INSERT INTO _migrations")) {
+            $count += runsql($prefixed_query, "");
+        }
     }
 
     // Update the database (if necessary)
     update_database($dbname);
-    
+
     if (!in_array("{$tbpref}textitems2", $tables)) {
         // Add data from the old database system
         if (in_array("{$tbpref}textitems", $tables)) {
@@ -1798,7 +1796,7 @@ function check_update_db($debug, $tbpref, $dbname): void
                     WHEN STRCMP(TiText COLLATE utf8_bin,TiTextLC)!=0 OR TiWordCount=1 
                     THEN TiText 
                     ELSE '' 
-                END as Text 
+                END AS Text 
                 FROM {$tbpref}textitems 
                 LEFT JOIN {$tbpref}words ON TiTextLC=WoTextLC AND TiLgID=WoLgID 
                 WHERE TiWordCount<2 OR WoID IS NOT NULL",
