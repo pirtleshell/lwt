@@ -341,43 +341,44 @@ function readTextAloud (text, lang, rate, pitch, voice, convert_to_phonetic) {
   }
 }
 
+function handleReadingConfiguration(language, term, lang_id) {
+  if (language.reading_mode == "direct" || language.reading_mode == "internal") {
+    const lang_settings = cookieTTSSettings(language.name);
+    if (language.reading_mode == "direct") {
+      // No reparsing needed
+      readRawTextAloud(
+        term, 
+        language.abbreviation, 
+        lang_settings.rate, 
+        lang_settings.pitch,
+        lang_settings.voice
+      );
+    } else {
+      // Server handled reparsing
+      getPhoneticTextAsync(term, parseInt(lang_id, 10))
+        .then(
+          function (reparsed_text) {
+            readRawTextAloud(
+              reparsed_text.phonetic_reading, 
+              language.abbreviation,
+              lang_settings.rate, 
+              lang_settings.pitch, 
+              lang_settings.voice
+            );
+          }
+        );
+    }
+  } else if (language.reading_mode == "external") {
+    // Use external API
+    readTextWithExternal(term, language.voiceapi, language.name);
+  }
+
+}
+
 function speechDispatcher (term, lang_id) {
   return $.getJSON(
     'api.php/v1/languages/' + lang_id + '/reading-configuration',
-    {
-      lgid: lang_id
-    },
-    function (data) {
-      if (data.reading_mode == "direct" || data.reading_mode == "internal") {
-        const lang_settings = cookieTTSSettings(data.language);
-        if (data.reading_mode == "direct") {
-          // No reparsing needed
-          readRawTextAloud(
-            term, 
-            data.abbreviation, 
-            lang_settings.rate, 
-            lang_settings.pitch,
-            lang_settings.voice
-          );
-        } else if (data.reading_mode == "internal") {
-          // Server handled reparsing
-          getPhoneticTextAsync(term, parseInt(lang_id, 10))
-            .then(
-              function (reparsed_text) {
-                readRawTextAloud(
-                  reparsed_text.phonetic_reading, 
-                  data.abbreviation,
-                  lang_settings.rate, 
-                  lang_settings.pitch, 
-                  lang_settings.voice
-                );
-              }
-            );
-        }
-      } else if (data.reading_mode == "external") {
-        // Use external API
-        readTextWithExternal(term, data.voiceApi, data.language);
-      }
-    }
+    { lang_id },
+    (data) => handleReadingConfiguration(data, term, parseInt(lang_id, 10))
   );
 }
