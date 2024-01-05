@@ -2303,7 +2303,7 @@ It defines interactions with a text on reading.</li>
 <ul>
 <li>Database creation and migration is now handled directly in SQL, for a safer
 behavior.</li>
-<li>You do no longer need to give to LWT SYSTEM_VARIABLES_ADMIN for text reparsing. (new function <code>checkTextWithExpressions</code>) (<a href="https://github.com/HugoFara/lwt/issues/167">#167</a>). It is still necessary for words import.</li>
+<li>You do no longer need to give to LWT SYSTEM_VARIABLES_ADMIN for text reparsing. (new function <code>checkExpressions</code>) (<a href="https://github.com/HugoFara/lwt/issues/167">#167</a>). It is still necessary for words import.</li>
 </ul>
 </li>
 <li>Docker changes:
@@ -2324,8 +2324,6 @@ and <a href="https://github.com/HugoFara/lwt/pull/169">#169</a>).</li>
 Solves <a href="https://github.com/HugoFara/lwt/issues/129">#129</a>, thanks to the help of PR
 <a href="https://github.com/HugoFara/lwt/pull/168">#168</a>.</li>
 <li>Text reading position was not working consistently when adding several known words.</li>
-<li>Japanese was always requiring MeCab for TTS, even if it was not used
-(<a href="https://github.com/HugoFara/lwt/pull/155">#155</a>).</li>
 <li>Multi-words:
 <ul>
 <li>Tooltip was not properly saved (<a href="https://github.com/HugoFara/lwt/pull/170">#170</a>).</li>
@@ -2343,6 +2341,8 @@ multi-word on multiple texts was displaying it at many positions on creation.</l
 <li>Parsing Japanese texts with MeCab was creating warnings when the text was not
 finishing by a punctation mark.</li>
 <li>Multi-words were not saved with MeCab parsing on Japanese.</li>
+<li>Japanese was always requiring MeCab for TTS, even if it was not used
+(<a href="https://github.com/HugoFara/lwt/pull/155">#155</a>) and <a href="https://github.com/HugoFara/lwt/pull/182">#182</a>.</li>
 </ul>
 </li>
 <li>On word review (test):

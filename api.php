@@ -200,7 +200,7 @@ function readingConfiguration($get_req): array
  */
 function get_phonetic_reading($get_req): array
 {
-    if (array_key_exists("lgid", $get_req)) {
+    if (array_key_exists("lang_id", $get_req)) {
         $data = phoneticReading($get_req['text'], $get_req['lang_id']);
     } else {
         $data = phonetic_reading($get_req['text'], $get_req['lang']);

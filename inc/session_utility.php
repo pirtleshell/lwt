@@ -3644,7 +3644,7 @@ function phoneticReading($text, $lgid)
 {
     global $tbpref;
     $sentence_split = get_first_value(
-        "SELECT LgRegexpSplitSentences AS value FROM {$tbpref}languages
+        "SELECT LgRegexpWordCharacters AS value FROM {$tbpref}languages
         WHERE LgID = $lgid"
     );
 

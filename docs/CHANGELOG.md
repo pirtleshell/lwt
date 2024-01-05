@@ -61,7 +61,7 @@ after solution display ([#159](https://github.com/HugoFara/lwt/issues/159)).
 * Database:
   * Database creation and migration is now handled directly in SQL, for a safer 
 behavior.
-  * You do no longer need to give to LWT SYSTEM_VARIABLES_ADMIN for text reparsing. (new function `checkTextWithExpressions`) ([#167](https://github.com/HugoFara/lwt/issues/167)). It is still necessary for words import.
+  * You do no longer need to give to LWT SYSTEM_VARIABLES_ADMIN for text reparsing. (new function `checkExpressions`) ([#167](https://github.com/HugoFara/lwt/issues/167)). It is still necessary for words import.
 * Docker changes:
   * By default, the images now runs at localhot/lwt and no longer in the 
   root folder ([installer #4](https://github.com/HugoFara/lwt-docker-installer/pull/4) 
@@ -77,8 +77,6 @@ behavior.
 Solves [#129](https://github.com/HugoFara/lwt/issues/129), thanks to the help of PR 
 [#168](https://github.com/HugoFara/lwt/pull/168).
 * Text reading position was not working consistently when adding several known words.
-* Japanese was always requiring MeCab for TTS, even if it was not used 
-([#155](https://github.com/HugoFara/lwt/pull/155)).
 * Multi-words:
   * Tooltip was not properly saved ([#170](https://github.com/HugoFara/lwt/pull/170)).
   * Translation may be escaped two times ([#170](https://github.com/HugoFara/lwt/pull/170)).
@@ -92,6 +90,8 @@ Solves [#129](https://github.com/HugoFara/lwt/issues/129), thanks to the help of
   * Parsing Japanese texts with MeCab was creating warnings when the text was not 
   finishing by a punctation mark.
   * Multi-words were not saved with MeCab parsing on Japanese.
+  * Japanese was always requiring MeCab for TTS, even if it was not used 
+  ([#155](https://github.com/HugoFara/lwt/pull/155)) and [#182](https://github.com/HugoFara/lwt/pull/182).
 * On word review (test): 
   * the space keyboard shortcut may have been inoperating.
   * On `api.php`, tests were always set to "multi-word" due to a missing variable 

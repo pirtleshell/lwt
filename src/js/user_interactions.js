@@ -171,15 +171,15 @@ function getPhoneticText (text, lang) {
 /**
  * Get the phonetic version of a text, asynchronous.
  *
- * @param {string}     text Text to convert to phonetics.
- * @param {string|int} lang Language, either two letters code or four letters (BCP 47), or language ID
+ * @param {string}        text Text to convert to phonetics.
+ * @param {string|number} lang Language, either two letters code or four letters (BCP 47), or language ID
  */
 async function getPhoneticTextAsync (text, lang) {
   const parameters = {
     text: text
   };
-  if (typeof lang == 'int') {
-    parameters.lgid = lang;
+  if (typeof lang == 'number') {
+    parameters.lang_id = lang;
   } else {
     parameters.lang = lang;
   }
@@ -348,9 +348,9 @@ function speechDispatcher (term, lang_id) {
       lgid: lang_id
     },
     function (data) {
-      if (data.readingMode == "direct" || data.readingMode == "internal") {
+      if (data.reading_mode == "direct" || data.reading_mode == "internal") {
         const lang_settings = cookieTTSSettings(data.language);
-        if (data.readingMode == "direct") {
+        if (data.reading_mode == "direct") {
           // No reparsing needed
           readRawTextAloud(
             term, 
@@ -359,9 +359,9 @@ function speechDispatcher (term, lang_id) {
             lang_settings.pitch,
             lang_settings.voice
           );
-        } else if (data.readingMode == "internal") {
+        } else if (data.reading_mode == "internal") {
           // Server handled reparsing
-          getPhoneticTextAsync(text, lang_id)
+          getPhoneticTextAsync(term, parseInt(lang_id, 10))
             .then(
               function (reparsed_text) {
                 readRawTextAloud(
@@ -374,7 +374,7 @@ function speechDispatcher (term, lang_id) {
               }
             );
         }
-      } else if (data.readingMode == "external") {
+      } else if (data.reading_mode == "external") {
         // Use external API
         readTextWithExternal(term, data.voiceApi, data.language);
       }
