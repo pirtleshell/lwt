@@ -1181,9 +1181,9 @@ function update_default_values($id, $lid, $sql)
 {
     global $tbpref;
     do_mysqli_query(
-        'ALTER TABLE ' . $tbpref . 'textitems2 
-        ALTER Ti2LgID SET DEFAULT ' . $lid . ', 
-        ALTER Ti2TxID SET DEFAULT ' . $id
+        "ALTER TABLE {$tbpref}textitems2 
+        ALTER Ti2LgID SET DEFAULT $lid, 
+        ALTER Ti2TxID SET DEFAULT $id"
     );
     do_mysqli_query(
         "INSERT INTO {$tbpref}textitems2 (
@@ -1200,16 +1200,16 @@ function update_default_values($id, $lid, $sql)
         ALTER SeLgID SET DEFAULT ' . $lid . ', 
         ALTER SeTxID SET DEFAULT ' . $id
     );
-    do_mysqli_query('set @a=0;');
+    do_mysqli_query('SET @i=0;');
     do_mysqli_query(
-        'INSERT INTO ' . $tbpref . 'sentences (
+        "INSERT INTO {$tbpref}sentences (
             SeOrder, SeFirstPos, SeText
         ) SELECT 
-        @a:=@a+1, 
-        min(if(TiWordCount=0,TiOrder+1,TiOrder)),
-        GROUP_CONCAT(TiText order by TiOrder SEPARATOR "") 
-        FROM ' . $tbpref . 'temptextitems 
-        group by TiSeID'
+        @i:=@i+1, 
+        MIN(IF(TiWordCount=0, TiOrder+1, TiOrder)),
+        GROUP_CONCAT(TiText ORDER BY TiOrder SEPARATOR \"\") 
+        FROM {$tbpref}temptextitems 
+        GROUP BY TiSeID"
     );
     do_mysqli_query(
         'ALTER TABLE ' . $tbpref . 'textitems2 
@@ -1281,6 +1281,100 @@ function check_text($sql, $rtlScript, $wl)
     <?php
 }
 
+function checkTextWithExpressions($lid, $wl): string
+{
+    global $tbpref;
+
+    $wl_max = 0;
+    $mw_sql = '';
+    foreach ($wl as $word_length){
+        if ($wl_max < $word_length) { 
+            $wl_max = $word_length;
+        }
+        $mw_sql .= ' WHEN ' . $word_length . 
+        ' THEN @a' . ($word_length * 2 - 1);
+    }
+    $set_wo_sql = $set_wo_sql_2 = $del_wo_sql = $init_var = '';
+    do_mysqli_query('SET GLOBAL max_heap_table_size = 1024 * 1024 * 1024 * 2');
+    do_mysqli_query('SET GLOBAL tmp_table_size = 1024 * 1024 * 1024 * 2');
+    // For all possible multi-words length,  
+    for ($i=$wl_max*2 -1; $i>1; $i--) {
+        $set_wo_sql .= "WHEN (@a$i := @a".($i-1) . ") IS NULL THEN NULL ";
+        $set_wo_sql_2 .= "WHEN (@a$i := @a".($i-2) .") IS NULL THEN NULL ";
+        $del_wo_sql .= "WHEN (@a$i := @a0) IS NULL THEN NULL ";
+        $init_var .= "@a$i=0,";
+    }
+    // 2.8.1-fork: @a0 is always 0? @f always '' but necessary to force code execution
+    do_mysqli_query(
+        "SET $init_var@a1=0, @a0=0, @se_id=0, @c='', @d=0, @f='', @ti_or=0;"
+    );
+    // Create a table to store length of each terms
+    do_mysqli_query(
+        "CREATE TEMPORARY TABLE IF NOT EXISTS {$tbpref}numbers( 
+            n  tinyint(3) unsigned NOT NULL
+        );"
+    );
+    do_mysqli_query("TRUNCATE TABLE {$tbpref}numbers");
+    do_mysqli_query(
+        "INSERT IGNORE INTO {$tbpref}numbers(n) VALUES (" . 
+        implode('),(', $wl) . 
+        ');'
+    );
+    $sql = 
+    " FROM (
+        SELECT straight_join 
+        if(@se_id=TiSeID and @ti_or=TiOrder,
+            if((@ti_or:=TiOrder+@a0) is null,TiSeID,TiSeID),
+            if(
+                @se_id=TiSeID, 
+                IF(
+                    (@d=1) and (0<>TiWordCount), 
+                    CASE $set_wo_sql_2  
+                        WHEN (@a1:=TiCount+@a0) IS NULL THEN NULL 
+                        WHEN (@se_id:=TiSeID+@a0) IS NULL THEN NULL 
+                        WHEN (@ti_or:=TiOrder+@a0) IS NULL THEN NULL 
+                        WHEN (@c:=concat(@c,TiText)) IS NULL THEN NULL 
+                        WHEN (@d:=(0<>TiWordCount)+@a0) IS NULL THEN NULL 
+                        ELSE TiSeID 
+                    END, 
+                    CASE $set_wo_sql
+                        WHEN (@a1:=TiCount+@a0) IS NULL THEN NULL 
+                        WHEN (@se_id:=TiSeID+@a0) IS NULL THEN NULL 
+                        WHEN (@ti_or:=TiOrder+@a0) IS NULL THEN NULL 
+                        WHEN (@c:=concat(@c,TiText)) IS NULL THEN NULL 
+                        WHEN (@d:=(0<>TiWordCount)+@a0) IS NULL THEN NULL 
+                        ELSE TiSeID 
+                    END
+                ), 
+                CASE $del_wo_sql 
+                    WHEN (@a1:=TiCount+@a0) IS NULL THEN NULL 
+                    WHEN (@se_id:=TiSeID+@a0) IS NULL THEN NULL 
+                    WHEN (@ti_or:=TiOrder+@a0) IS NULL THEN NULL 
+                    WHEN (@c:=concat(TiText,@f)) IS NULL THEN NULL 
+                    WHEN (@d:=(0<>TiWordCount)+@a0) IS NULL THEN NULL 
+                    ELSE TiSeID 
+                END
+            )
+        ) sent, 
+        if(
+            @d=0, 
+            NULL, 
+            if(
+                CRC32(@z:=substr(@c,CASE n$mw_sql END))<>CRC32(LOWER(@z)),
+                @z,
+                ''
+            )
+        ) word,
+        if(@d=0 or ''=@z, NULL, lower(@z)) lword, 
+        TiOrder,
+        n FROM {$tbpref}numbers , {$tbpref}temptextitems
+    ) ti, 
+    {$tbpref}words 
+    WHERE lword IS NOT NULL AND WoLgID=$lid AND 
+    WoTextLC=lword AND WoWordCount=n";
+    return $sql;
+}
+
 /**
  * Check a text that contains expressions.
  *
@@ -1298,6 +1392,14 @@ function check_text_with_expressions($id, $lid, $wl, $wl_max, $mw_sql): string
 {
     global $tbpref;
 
+    $mw_sql = '';
+    foreach ($wl as $word_length){
+        if ($wl_max < $word_length) { 
+            $wl_max = $word_length;
+        }
+        $mw_sql .= ' WHEN ' . $word_length . 
+        ' THEN @a' . ($word_length * 2 - 1);
+    }
     $set_wo_sql = $set_wo_sql_2 = $del_wo_sql = $init_var = '';
     do_mysqli_query('SET GLOBAL max_heap_table_size = 1024 * 1024 * 1024 * 2');
     do_mysqli_query('SET GLOBAL tmp_table_size = 1024 * 1024 * 1024 * 2');
@@ -1407,8 +1509,6 @@ function splitCheckText($text, $lid, $id)
 {
     global $tbpref;
     $wl = array();
-    $wl_max = 0;
-    $mw_sql = '';
     $lid = (int) $lid;
     $sql = "SELECT LgRightToLeft FROM {$tbpref}languages WHERE LgID = $lid";
     $res = do_mysqli_query($sql);
@@ -1444,26 +1544,23 @@ function splitCheckText($text, $lid, $id)
         WHERE WoLgID = $lid AND WoWordCount > 1 
         GROUP BY WoWordCount"
     );
-    while ($record = mysqli_fetch_assoc($res)){
-        if ($wl_max < (int)$record['word_count']) { 
-            $wl_max = (int)$record['word_count'];
-        }
-        $wl[] = (int)$record['word_count'];
-        $mw_sql .= ' WHEN ' . $record['word_count'] . 
-        ' THEN @a' . (intval($record['word_count']) * 2 - 1);
-    }
     mysqli_free_result($res);
     $sql = '';
     // Text has multi-words
     if (!empty($wl)) {
-        $sql = check_text_with_expressions($id, $lid, $wl, $wl_max, $mw_sql);
+        //$sql = check_text_with_expressions($id, $lid, $wl, null, null);
+        $sql = checkTextWithExpressions($lid, $wl);
     }
     if ($id > 0) {
+        $sql = 'SELECT straight_join WoID, sent, TiOrder - (2*(n-1)) TiOrder, 
+        n TiWordCount,word' . $sql . ' UNION ALL ';
         update_default_values($id, $lid, $sql);
     }
     
     // Check text
     if ($id == -1) {
+        $sql = 'SELECT straight_join count(WoID) cnt, n as len, 
+        lower(WoText) as word, WoTranslation' . $sql . ' GROUP BY WoID ORDER BY WoTextLC';
         check_text($sql, (bool)$rtlScript, $wl);
     }
     
@@ -1479,19 +1576,19 @@ function splitCheckText($text, $lid, $id)
 function reparse_all_texts(): void 
 {
     global $tbpref;
-    runsql('TRUNCATE ' . $tbpref . 'sentences', '');
-    runsql('TRUNCATE ' . $tbpref . 'textitems2', '');
+    runsql("TRUNCATE {$tbpref}sentences", '');
+    runsql("TRUNCATE {$tbpref}textitems2", '');
     adjust_autoincr('sentences', 'SeID');
     init_word_count();
-    $sql = "select TxID, TxLgID from {$tbpref}texts";
+    $sql = "SELECT TxID, TxLgID FROM {$tbpref}texts";
     $res = do_mysqli_query($sql);
     while ($record = mysqli_fetch_assoc($res)) {
         $id = (int) $record['TxID'];
         splitCheckText(
             (string)get_first_value(
-                "SELECT TxText as value 
-                from {$tbpref}texts 
-                where TxID = $id"
+                "SELECT TxText AS value 
+                FROM {$tbpref}texts 
+                WHERE TxID = $id"
             ), 
             (string)$record['TxLgID'], $id 
         );
