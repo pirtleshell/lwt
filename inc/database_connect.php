@@ -1281,6 +1281,16 @@ function check_text($sql, $rtlScript, $wl)
     <?php
 }
 
+/**
+ * Check a language that contains expressions.
+ *
+ * @param int    $lid    Language ID
+ * @param int[]  $wl     Word length
+ *
+ * @return string SQL-formatted query string
+ *
+ * @global string $tbpref Database table prefix
+ */
 function checkTextWithExpressions($lid, $wl): string
 {
     global $tbpref;
@@ -1295,9 +1305,7 @@ function checkTextWithExpressions($lid, $wl): string
         ' THEN @a' . ($word_length * 2 - 1);
     }
     $set_wo_sql = $set_wo_sql_2 = $del_wo_sql = $init_var = '';
-    do_mysqli_query('SET GLOBAL max_heap_table_size = 1024 * 1024 * 1024 * 2');
-    do_mysqli_query('SET GLOBAL tmp_table_size = 1024 * 1024 * 1024 * 2');
-    // For all possible multi-words length,  
+    // For all possible multi-words length
     for ($i=$wl_max*2 -1; $i>1; $i--) {
         $set_wo_sql .= "WHEN (@a$i := @a".($i-1) . ") IS NULL THEN NULL ";
         $set_wo_sql_2 .= "WHEN (@a$i := @a".($i-2) .") IS NULL THEN NULL ";
@@ -1311,7 +1319,7 @@ function checkTextWithExpressions($lid, $wl): string
     // Create a table to store length of each terms
     do_mysqli_query(
         "CREATE TEMPORARY TABLE IF NOT EXISTS {$tbpref}numbers( 
-            n  tinyint(3) unsigned NOT NULL
+            n tinyint(3) unsigned NOT NULL
         );"
     );
     do_mysqli_query("TRUNCATE TABLE {$tbpref}numbers");
@@ -1320,12 +1328,26 @@ function checkTextWithExpressions($lid, $wl): string
         implode('),(', $wl) . 
         ');'
     );
-    $sql = 
-    " FROM (
+    // Store garbage
+    do_mysqli_query(
+        "CREATE TEMPORARY TABLE IF NOT EXISTS {$tbpref}tempexprs (
+            sent mediumint unsigned,
+            word varchar(250),
+            lword varchar(250),
+            TiOrder smallint unsigned,
+            n tinyint(3) unsigned NOT NULL
+        )"
+    );
+    do_mysqli_query("TRUNCATE TABLE {$tbpref}tempexprs");
+    do_mysqli_query(
+        "INSERT IGNORE INTO {$tbpref}tempexprs
+        (sent, word, lword, TiOrder, n)
+        -- 2.10.0-fork: straight_join may be irrelevant as the query is less skewed
         SELECT straight_join 
-        if(@se_id=TiSeID and @ti_or=TiOrder,
-            if((@ti_or:=TiOrder+@a0) is null,TiSeID,TiSeID),
-            if(
+        IF(
+            @se_id=TiSeID and @ti_or=TiOrder,
+            IF((@ti_or:=TiOrder+@a0) is null,TiSeID,TiSeID),
+            IF(
                 @se_id=TiSeID, 
                 IF(
                     (@d=1) and (0<>TiWordCount), 
@@ -1367,16 +1389,20 @@ function checkTextWithExpressions($lid, $wl): string
         ) word,
         if(@d=0 or ''=@z, NULL, lower(@z)) lword, 
         TiOrder,
-        n FROM {$tbpref}numbers , {$tbpref}temptextitems
-    ) ti, 
+        n 
+        FROM {$tbpref}numbers , {$tbpref}temptextitems"
+    );
+    $sql = 
+    " FROM {$tbpref}tempexprs, 
     {$tbpref}words 
     WHERE lword IS NOT NULL AND WoLgID=$lid AND 
     WoTextLC=lword AND WoWordCount=n";
+
     return $sql;
 }
 
 /**
- * Check a text that contains expressions.
+ * Check a language that contains expressions.
  *
  * @param int    $id     Text ID
  * @param int    $lid    Language ID
@@ -1387,19 +1413,14 @@ function checkTextWithExpressions($lid, $wl): string
  * @return string SQL-formatted query string
  *
  * @global string $tbpref Database table prefix
+ * 
+ * @deprecated Since 2.10.0-fork use checkTextWithExpressions. 
+ * It does not modify SQL globals.
  */
 function check_text_with_expressions($id, $lid, $wl, $wl_max, $mw_sql): string
 {
     global $tbpref;
 
-    $mw_sql = '';
-    foreach ($wl as $word_length){
-        if ($wl_max < $word_length) { 
-            $wl_max = $word_length;
-        }
-        $mw_sql .= ' WHEN ' . $word_length . 
-        ' THEN @a' . ($word_length * 2 - 1);
-    }
     $set_wo_sql = $set_wo_sql_2 = $del_wo_sql = $init_var = '';
     do_mysqli_query('SET GLOBAL max_heap_table_size = 1024 * 1024 * 1024 * 2');
     do_mysqli_query('SET GLOBAL tmp_table_size = 1024 * 1024 * 1024 * 2');
@@ -1417,7 +1438,7 @@ function check_text_with_expressions($id, $lid, $wl, $wl_max, $mw_sql): string
     // Create a table to store length of each terms
     do_mysqli_query(
         "CREATE TEMPORARY TABLE IF NOT EXISTS {$tbpref}numbers( 
-            n  tinyint(3) unsigned NOT NULL
+            n tinyint(3) unsigned NOT NULL
         );"
     );
     do_mysqli_query("TRUNCATE TABLE {$tbpref}numbers");
@@ -1551,21 +1572,25 @@ function splitCheckText($text, $lid, $id)
     $sql = '';
     // Text has multi-words
     if (!empty($wl)) {
-        //$sql = check_text_with_expressions($id, $lid, $wl, null, null);
         $sql = checkTextWithExpressions($lid, $wl);
+        if ($id > 0) {
+            $sql = "SELECT straight_join WoID, sent, TiOrder - (2*(n-1)) TiOrder, 
+            n TiWordCount, word 
+            $sql 
+            UNION ALL ";
+        } else {
+            $sql = "SELECT straight_join COUNT(WoID) cnt, n as len, 
+            LOWER(WoText) AS word, WoTranslation 
+            $sql 
+            GROUP BY WoID ORDER BY WoTextLC";
+        }
     }
     if ($id > 0) {
-        $sql = "SELECT straight_join WoID, sent, TiOrder - (2*(n-1)) TiOrder, 
-        n TiWordCount, word $sql 
-        UNION ALL ";
         update_default_values($id, $lid, $sql);
     }
     
     // Check text
     if ($id == -1) {
-        $sql = "SELECT straight_join count(WoID) cnt, n as len, 
-        lower(WoText) AS word, WoTranslation $sql 
-        GROUP BY WoID ORDER BY WoTextLC";
         check_text($sql, (bool)$rtlScript, $wl);
     }
     
