@@ -37,6 +37,7 @@ settings ([#119](https://github.com/HugoFara/lwt/issues/119)).
 [#169](https://github.com/HugoFara/lwt/pull/169), closing discussion 
 [#141](https://github.com/HugoFara/lwt/discussions/141). 
 Many thanks to [@ProgramComputer](https://github.com/ProgramComputer)!
+* On word review, the "Read words aloud" setting is now saved, PR [#185](https://github.com/HugoFara/lwt/pull/185).
 
 ### Changed
 

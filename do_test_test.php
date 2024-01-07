@@ -485,15 +485,16 @@ function do_test_prepare_ajax_test_area($selector, $selection, $count, $testtype
 
     ?>
     <script type="text/javascript">
-                window.onload = (event) => {
-            var utterancecheckbox = document.getElementById('utterance-allowed')
+        function saveUtteranceSetting () {
+            const utterancechecked = JSON.parse(localStorage.getItem('review-utterance-allowed'));
+            const utterancecheckbox = document.getElementById('utterance-allowed');
 
-            var utterancechecked = JSON.parse(localStorage.getItem('utterance-allowed'));
             utterancecheckbox.checked = utterancechecked;
             utterancecheckbox.addEventListener('change', function () {
-                localStorage.setItem('utterance-allowed', utterancecheckbox.checked);
+                localStorage.setItem('review-utterance-allowed', utterancecheckbox.checked);
             });
-        };
+        }
+
         /**
          * Get a new word test.
          */
@@ -516,6 +517,7 @@ function do_test_prepare_ajax_test_area($selector, $selection, $count, $testtype
         }
 
         $(get_new_word);
+        $(saveUtteranceSetting);
     </script>
 
     <p id="term-test" dir="<?php echo($lang['rtlScript'] ? 'rtl' : 'ltr'); ?>" 
@@ -846,21 +848,21 @@ function do_test_footer($notyettested, $wrong, $correct)
         title="Correct" alt="Correct" height="10" width="<?php echo $l_correct; ?>" />
     </span>
     <span style="margin-left: 15px; margin-right: 15px;">
-        <span title="Total number of tests" id="total_tests"><?php 
-        echo $totaltests; 
-        ?></span> 
+        <span title="Total number of tests" id="total_tests">
+            <?php echo $totaltests; ?>
+        </span> 
         =
-        <span class="todosty" title="Not yet tested" id="not-tested"><?php 
-        echo $notyettested; 
-        ?></span>
+        <span class="todosty" title="Not yet tested" id="not-tested">
+            <?php echo $notyettested; ?>
+        </span>
         +
-        <span class="donewrongsty" title="Wrong" id="wrong-tests"><?php 
-        echo $wrong; 
-        ?></span>
+        <span class="donewrongsty" title="Wrong" id="wrong-tests">
+            <?php echo $wrong; ?>
+        </span>
         +
-        <span class="doneoksty" title="Correct" id="correct-tests"><?php 
-        echo $correct; 
-        ?></span>
+        <span class="doneoksty" title="Correct" id="correct-tests">
+            <?php echo $correct; ?>
+        </span>
     </span>
 </footer>
     <?php
