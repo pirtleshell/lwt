@@ -24,7 +24,7 @@ require_once 'inc/langdefs.php';
 /**
  * Get the SQL string to perform tests.
  *
- * @param int|null   $selection    Test is of type selection
+ * @param int|null    $selection    Test is of type selection
  * @param string|null $sess_testsql SQL string for test
  * @param int|null    $lang         Test is of type language, for the language $lang ID
  * @param int|null    $text         Testing text with ID $text
@@ -39,25 +39,25 @@ function do_test_get_identifier($selection, $sess_testsql, $lang, $text): array
         $data_string_array = explode(",", trim($sess_testsql, "()"));
         $data_int_array = array_map('intval', $data_string_array);
         switch ((int)$selection) {
-            case 2:
-                return array('words', $data_int_array);
+        case 2:
+            return array('words', $data_int_array);
                 break;
-            case 3:
-                return array('texts', $data_int_array);
+        case 3:
+            return array('texts', $data_int_array);
                 break;
-            default:
-                // Deprecated behavior in 2.9.0, to be removed on 3.0.0
-                $test_sql = $sess_testsql;
-                $cntlang = get_first_value(
-                    "SELECT COUNT(DISTINCT WoLgID) AS value 
+        default:
+            // Deprecated behavior in 2.9.0, to be removed on 3.0.0
+            $test_sql = $sess_testsql;
+            $cntlang = get_first_value(
+                "SELECT COUNT(DISTINCT WoLgID) AS value 
                     FROM $test_sql"
-                );
-                if ($cntlang > 1) {
-                    echo "<p>Sorry - The selected terms are in $cntlang languages," .
-                    " but tests are only possible in one language at a time.</p>";
-                    exit();
-                }
-                return array('raw_sql', $test_sql);
+            );
+            if ($cntlang > 1) {
+                echo "<p>Sorry - The selected terms are in $cntlang languages," .
+                " but tests are only possible in one language at a time.</p>";
+                exit();
+            }
+            return array('raw_sql', $test_sql);
                 break;
         }
     } elseif (isset($lang) && is_numeric($lang)) {
@@ -436,10 +436,10 @@ function get_test_solution($testtype, $wo_record, $nosent, $wo_text)
 /**
  * Preforms the HTML of the test area, to update through AJAX.
  *
- * @param string    $selector   Type of test to run.
- * @param array|int $selection  Items to run the test on.
- * @param int       $count      Number of tests left.
- * @param int       $testtype   Type of test.
+ * @param string    $selector  Type of test to run.
+ * @param array|int $selection Items to run the test on.
+ * @param int       $count     Number of tests left.
+ * @param int       $testtype  Type of test.
  *
  * @return int Number of tests left to do.
  *
@@ -522,9 +522,9 @@ function do_test_prepare_ajax_test_area($selector, $selection, $count, $testtype
     <?php
 
     do_test_test_interaction_globals(
-        $lang['wb1'], 
-        $lang['wb2'], 
-        $lang['wb3'], 
+        $lang['wb1'],
+        $lang['wb2'],
+        $lang['wb3'],
         $lgid
     );
 
@@ -681,15 +681,15 @@ function prepare_test_area($testsql, $totaltests, $count, $testtype): int
 /**
  * Prepare JavaScript code globals so that you can click on words.
  *
- * @param string $wb1       URL of the first dictionary.
- * @param string $wb2       URL of the secondary dictionary.
- * @param string $wb3       URL of the google translate dictionary.
- * @param int    $lg_id     Language ID (since 2.10.0-fork)
+ * @param string $wb1   URL of the first dictionary.
+ * @param string $wb2   URL of the secondary dictionary.
+ * @param string $wb3   URL of the google translate dictionary.
+ * @param int    $lg_id Language ID (since 2.10.0-fork)
  *
  * @return void
  *
  * @global string $tbpref
- * 
+ *
  * @since 2.10.0-fork Takes a language ID as the fourth argument
  */
 function do_test_test_interaction_globals($wb1, $wb2, $wb3, $lg_id)
@@ -715,12 +715,7 @@ function do_test_test_interaction_globals($wb1, $wb2, $wb3, $lg_id)
  *
  * @param array  $wo_record Word record. Associative array with keys 'WoID',
  *                          'WoTranslation'.
- * @param string $wb1       URL of the first dictionary.
- * @param string $wb2       URL of the secondary dictionary.
- * @param string $wb3       URL of the google translate dictionary.
- * @param int    $testtype  Type of test
- * @param int    $nosent    1 to use single word instead of sentence.
- * @param string $save      Word or sentence to use for the test
+ * @param string $solution Solution to the test (as HTML)
  *
  * @return void
  */
@@ -840,7 +835,8 @@ function do_test_footer($notyettested, $wrong, $correct)
         /><img 
         id="correct-tests-box" class="borderr" 
         src="<?php print_file_path('icn/test_correct.png');?>" 
-        title="Correct" alt="Correct" height="10" width="<?php echo $l_correct; ?>" />
+        title="Correct" alt="Correct" height="10" 
+        width="<?php echo $l_correct; ?>" />
     </span>
     <span style="margin-left: 15px; margin-right: 15px;">
         <span title="Total number of tests" id="total_tests">
@@ -873,7 +869,9 @@ function do_test_footer($notyettested, $wrong, $correct)
 function do_test_test_javascript($count)
 {
     $time_data = array(
-        "wait_time" => (int)getSettingWithDefault('set-test-edit-frame-waiting-time'),
+        "wait_time" => (int) getSettingWithDefault(
+            'set-test-edit-frame-waiting-time'
+        ),
         "time" => time(),
         "start_time" => $_SESSION['teststart'],
         "show_timer" => ($count ? 0 : 1)
