@@ -485,16 +485,6 @@ function do_test_prepare_ajax_test_area($selector, $selection, $count, $testtype
 
     ?>
     <script type="text/javascript">
-        function saveUtteranceSetting () {
-            const utterancechecked = JSON.parse(localStorage.getItem('review-utterance-allowed'));
-            const utterancecheckbox = document.getElementById('utterance-allowed');
-
-            utterancecheckbox.checked = utterancechecked;
-            utterancecheckbox.addEventListener('change', function () {
-                localStorage.setItem('review-utterance-allowed', utterancecheckbox.checked);
-            });
-        }
-
         /**
          * Get a new word test.
          */
@@ -517,7 +507,6 @@ function do_test_prepare_ajax_test_area($selector, $selection, $count, $testtype
         }
 
         $(get_new_word);
-        $(saveUtteranceSetting);
     </script>
 
     <p id="term-test" dir="<?php echo($lang['rtlScript'] ? 'rtl' : 'ltr'); ?>" 

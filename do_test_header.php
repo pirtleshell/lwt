@@ -186,6 +186,23 @@ function do_test_header_js()
 {
     ?>
 <script type="text/javascript">
+    
+    function setUtteranceSetting () {
+        const utterancechecked = JSON.parse(
+            localStorage.getItem('review-utterance-allowed')
+        );
+        const utterancecheckbox = document.getElementById('utterance-allowed');
+
+        utterancecheckbox.checked = utterancechecked;
+        utterancecheckbox.addEventListener('change', function () {
+            localStorage.setItem(
+                'review-utterance-allowed', 
+                utterancecheckbox.checked
+            );
+        });
+    }
+
+
     /**
      * Reset frames location
      */
@@ -209,6 +226,8 @@ function do_test_header_js()
         resetFrames();
         window.location.href = 'do_test.php?type=table&' + property;
     }
+
+    $(setUtteranceSetting)
     </script>
     <?php
 }
