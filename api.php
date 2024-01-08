@@ -97,7 +97,7 @@ function endpoint_exits($method, $requestUri)
 
     // Extract requested endpoint from URI
     $uri_query = parse_url($requestUri, PHP_URL_PATH);
-    $matching = preg_match('/(.+?\/api.php\/v\d\/).+/', $uri_query, $matches);
+    $matching = preg_match('/(.*?\/api\.php\/v\d\/).+/', $uri_query, $matches);
     if (!$matching) {
         send_response(400, ['error' => 'Unrecognized URL format ' . $uri_query]);
     }
