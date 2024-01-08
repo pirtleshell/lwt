@@ -1,23 +1,37 @@
-name: Build and push Docker images
+name: Add Docker images to release
 
 on:
+  release:
+    types: [ published ]
   push:
-    branches: [ 'master' ]
+    tags:
+       # Release attempt
+      - '*.*.*'
 
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  build-and-push-image:
+  build-and-upload-image-to-release:
     permissions:
+      contents: write
       packages: write
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-
+      matrix:
+        # For platform support change, change here and below
+        platform:
+          - linux/amd64
+          - linux/386
+          - linux/arm/v5
+          - linux/arm/v7
+          - linux/arm64
+          - linux/mips64le
+          - linux/ppc64le
+          - linux/s390x
     steps:
-
       - name: Checkout repository
         uses: actions/checkout@v3
 
@@ -38,12 +52,20 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-
-      - name: Build and push Docker images
+      - name: Build  Docker images
         uses: docker/build-push-action@v3
         with:
           context: .
-          push: true
-          platforms: linux/amd64,linux/arm/v7,linux/arm64,linux/mips64le,linux/s390x
+          platforms: ${{ matrix.platform }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          outputs: type=oci,dest=/tmp/image.tar
+        if: ${{ github.event_name == 'release'}}
+      - name: Upload binaries to release
+        if: ${{ github.event_name == 'release'}}
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{secrets.GITHUB_TOKEN }}
+          file: /tmp/image.tar
+          asset_name: ${{ github.ref_name }}-${{ matrix.platform }}
+          tag: ${{ github.ref }}
