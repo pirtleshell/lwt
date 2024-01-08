@@ -26,7 +26,8 @@ require_once 'inc/langdefs.php';
  *
  * @param int|null    $selection    Test is of type selection
  * @param string|null $sess_testsql SQL string for test
- * @param int|null    $lang         Test is of type language, for the language $lang ID
+ * @param int|null    $lang         Test is of type language, for the language
+ *                                  $lang ID
  * @param int|null    $text         Testing text with ID $text
  *
  * @return (int|int[]|string)[] Test identifier as an array(key, value)
@@ -39,25 +40,25 @@ function do_test_get_identifier($selection, $sess_testsql, $lang, $text): array
         $data_string_array = explode(",", trim($sess_testsql, "()"));
         $data_int_array = array_map('intval', $data_string_array);
         switch ((int)$selection) {
-        case 2:
-            return array('words', $data_int_array);
+            case 2:
+                return array('words', $data_int_array);
                 break;
-        case 3:
-            return array('texts', $data_int_array);
+            case 3:
+                return array('texts', $data_int_array);
                 break;
-        default:
-            // Deprecated behavior in 2.9.0, to be removed on 3.0.0
-            $test_sql = $sess_testsql;
-            $cntlang = get_first_value(
-                "SELECT COUNT(DISTINCT WoLgID) AS value 
+            default:
+                // Deprecated behavior in 2.9.0, to be removed on 3.0.0
+                $test_sql = $sess_testsql;
+                $cntlang = get_first_value(
+                    "SELECT COUNT(DISTINCT WoLgID) AS value 
                     FROM $test_sql"
-            );
-            if ($cntlang > 1) {
-                echo "<p>Sorry - The selected terms are in $cntlang languages," .
-                " but tests are only possible in one language at a time.</p>";
-                exit();
-            }
-            return array('raw_sql', $test_sql);
+                );
+                if ($cntlang > 1) {
+                    echo "<p>Sorry - The selected terms are in $cntlang languages," .
+                    " but tests are only possible in one language at a time.</p>";
+                    exit();
+                }
+                return array('raw_sql', $test_sql);
                 break;
         }
     } elseif (isset($lang) && is_numeric($lang)) {
@@ -74,7 +75,8 @@ function do_test_get_identifier($selection, $sess_testsql, $lang, $text): array
  *
  * @param bool|null   $selection    Test is of type selection
  * @param string|null $sess_testsql SQL string for test
- * @param int|null    $lang         Test is of type language, for the language $lang ID
+ * @param int|null    $lang         Test is of type language, for the language
+ *                                  $lang ID
  * @param int|null    $text         Testing text with ID $text
  *
  * @return string SQL projection (selection) string
@@ -89,7 +91,7 @@ function do_test_get_test_sql($selection, $sess_testsql, $lang, $text)
 /**
  * Get the test type clamped between 1 and 5 (included)
  *
- * @param int $testype Initial test type value
+ * @param int $testtype Initial test type value
  *
  * @return int Clamped $testtype
  *                     - 1: Test type is ..[L2]..
@@ -219,7 +221,8 @@ function do_test_test_finished($testsql, $totaltests, $ajax = false)
  * @global string $tbpref Table prefix
  * @global int    $debug  Echo the passage number if 1.
  *
- * @return (int|null|string)[] Sentence with escaped word and not a 0 if sentence was found.
+ * @return (int|null|string)[] Sentence with escaped word and not a 0 if sentence
+ *                             was found.
  *
  * @since 2.5.3-fork Properly return sentences with at least 70% of known words.
  *                   Previously, it was supposed to be 100%, but buggy.
@@ -287,8 +290,13 @@ function do_test_test_sentence($wid, $lang, $wordlc): array
  *
  * @psalm-return list{string, string}
  */
-function do_test_get_term_test($wo_record, $sent, $testtype, $nosent, $regexword): array
-{
+function do_test_get_term_test(
+    $wo_record,
+    $sent,
+    $testtype,
+    $nosent,
+    $regexword
+): array {
     $wid = $wo_record['WoID'];
     $word = $wo_record['WoText'];
     $trans = repl_tab_nl($wo_record['WoTranslation']) .
@@ -448,8 +456,12 @@ function get_test_solution($testtype, $wo_record, $nosent, $wo_text)
  *
  * @psalm-return int<0, max>
  */
-function do_test_prepare_ajax_test_area($selector, $selection, $count, $testtype): int
-{
+function do_test_prepare_ajax_test_area(
+    $selector,
+    $selection,
+    $count,
+    $testtype
+): int {
     global $tbpref;
 
     $nosent = false;
@@ -474,7 +486,8 @@ function do_test_prepare_ajax_test_area($selector, $selection, $count, $testtype
     $lang = array(
         'wb1' => isset($record['LgDict1URI']) ? $record['LgDict1URI'] : "",
         'wb2' => isset($record['LgDict2URI']) ? $record['LgDict2URI'] : "",
-        'wb3' => isset($record['LgGoogleTranslateURI']) ? $record['LgGoogleTranslateURI'] : "",
+        'wb3' => isset($record['LgGoogleTranslateURI'])
+        ? $record['LgGoogleTranslateURI'] : "",
         'textsize' => $record['LgTextSize'],
         'removeSpaces' => $record['LgRemoveSpaces'],
         'regexword' => $record['LgRegexpWordCharacters'],
@@ -572,7 +585,8 @@ function prepare_test_area($testsql, $totaltests, $count, $testtype): int
     $record = mysqli_fetch_assoc($res);
     $wb1 = isset($record['LgDict1URI']) ? $record['LgDict1URI'] : "";
     $wb2 = isset($record['LgDict2URI']) ? $record['LgDict2URI'] : "";
-    $wb3 = isset($record['LgGoogleTranslateURI']) ? $record['LgGoogleTranslateURI'] : "";
+    $wb3 = isset($record['LgGoogleTranslateURI']) ?
+    $record['LgGoogleTranslateURI'] : "";
     $textsize = $record['LgTextSize'];
     $removeSpaces = $record['LgRemoveSpaces'];
     $regexword = $record['LgRegexpWordCharacters'];
@@ -688,19 +702,18 @@ function prepare_test_area($testsql, $totaltests, $count, $testtype): int
  *
  * @return void
  *
- * @global string $tbpref
- *
  * @since 2.10.0-fork Takes a language ID as the fourth argument
  */
 function do_test_test_interaction_globals($wb1, $wb2, $wb3, $lg_id)
 {
+    $lang_code = getLanguageCode($lg_id, LWT_LANGUAGES_ARRAY);
     ?>
 <script type="text/javascript">
     LWT_DATA.language.id = <?php echo json_encode($lg_id); ?>;
     LWT_DATA.language.dict_link1 = <?php echo json_encode($wb1); ?>;
     LWT_DATA.language.dict_link2 = <?php echo json_encode($wb2); ?>;
     LWT_DATA.language.translator_link = <?php echo json_encode($wb3); ?>;
-    LANG = getLangFromDict(LWT_DATA.language.translator_link);
+    LANG = <?php echo json_encode($lang_code); ?>;
     if (LANG && LANG != LWT_DATA.language.translator_link) {
         $("html").attr('lang', LANG);
     }
@@ -715,7 +728,7 @@ function do_test_test_interaction_globals($wb1, $wb2, $wb3, $lg_id)
  *
  * @param array  $wo_record Word record. Associative array with keys 'WoID',
  *                          'WoTranslation'.
- * @param string $solution Solution to the test (as HTML)
+ * @param string $solution  Solution to the test (as HTML)
  *
  * @return void
  */
@@ -1023,6 +1036,8 @@ function do_test_test_javascript($count)
  * @global int $debug Show debug informations
  *
  * @return void
+ *
+ * @deprecated Since 2.10.0-fork, use do_test_test_content_ajax instead
  */
 function do_test_test_content()
 {
