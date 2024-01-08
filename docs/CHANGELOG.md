@@ -99,6 +99,7 @@ Solves [#129](https://github.com/HugoFara/lwt/issues/129), thanks to the help of
   * the space keyboard shortcut may have been inoperating.
   * On `api.php`, tests were always set to "multi-word" due to a missing variable 
   type conversion. Pull request [#175](https://github.com/HugoFara/lwt/pull/175).
+  * Text-To-Speech was not working (suggested by [#187](https://github.com/HugoFara/lwt/pull/187)).
 * An explicit dependency to [php-dom](https://www.php.net/manual/en/book.dom.php) was 
 missing in `INSTALL.sh` (and `composer.json`), as stated in 
 [#178](https://github.com/HugoFara/lwt/pull/178).
