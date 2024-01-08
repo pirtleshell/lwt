@@ -191,7 +191,7 @@ function edit_languages_op_save(): string
                 ((int)isset($_REQUEST["LgRemoveSpaces"])) . ', '.
                 ((int)isset($_REQUEST["LgSplitEachChar"])) . ', '.
                 ((int)isset($_REQUEST["LgRightToLeft"])) . ', ' .
-                convert_string_to_sqlsyntax($_REQUEST["LgTTSVoiceAPI"]) . ', ' .
+                convert_string_to_sqlsyntax_nonull($_REQUEST["LgTTSVoiceAPI"]) . ', ' .
                 ((int)isset($_REQUEST["LgShowRomanization"])) .
             ')', 
             'Saved'
@@ -212,7 +212,7 @@ function edit_languages_op_save(): string
             'LgRemoveSpaces = ' . ((int)isset($_REQUEST["LgRemoveSpaces"])) . ', ' .
             'LgSplitEachChar = ' . ((int)isset($_REQUEST["LgSplitEachChar"])) . ', ' . 
             'LgRightToLeft = ' . ((int)isset($_REQUEST["LgRightToLeft"])) . ', ' .
-            "LgTTSVoiceAPI = " . convert_string_to_sqlsyntax($_REQUEST["LgTTSVoiceAPI"]) . ', ' . 
+            "LgTTSVoiceAPI = " . convert_string_to_sqlsyntax_nonull($_REQUEST["LgTTSVoiceAPI"]) . ', ' . 
             "LgShowRomanization = " . ((int)isset($_REQUEST["LgShowRomanization"])) .
             " WHERE LgID = $val", 
             'Saved'
@@ -274,7 +274,7 @@ function edit_languages_op_change($lid): string
         'LgRemoveSpaces = ' . ((int)isset($_REQUEST["LgRemoveSpaces"])) . ', ' .
         'LgSplitEachChar = ' . ((int)isset($_REQUEST["LgSplitEachChar"])) . ', ' . 
         'LgRightToLeft = ' . ((int)isset($_REQUEST["LgRightToLeft"])) . ', ' .
-        'LgTTSVoiceAPI = ' . convert_string_to_sqlsyntax($_REQUEST["LgTTSVoiceAPI"]) . ', ' .
+        'LgTTSVoiceAPI = ' . convert_string_to_sqlsyntax_nonull($_REQUEST["LgTTSVoiceAPI"]) . ', ' .
         'LgShowRomanization = ' . ((int)isset($_REQUEST["LgShowRomanization"])) .
         " WHERE LgID = $lid", 
         'Updated'
