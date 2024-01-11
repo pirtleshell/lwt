@@ -104,6 +104,9 @@ Solves [#129](https://github.com/HugoFara/lwt/issues/129), thanks to the help of
 missing in `INSTALL.sh` (and `composer.json`), as stated in 
 [#178](https://github.com/HugoFara/lwt/pull/178).
 * API: the REST API was not accessible for users running LWT in a root folder.
+* On audio, the replay button is fixed: 
+[issue #138](https://github.com/HugoFara/lwt/issues/138) and 
+[PR #191](https://github.com/HugoFara/lwt/pull/191).
 
 ### Deprecated
 
