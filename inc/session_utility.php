@@ -3946,13 +3946,13 @@ function makeAudioPlayer($audio, $offset=0)
     <tr>
         <td class="center borderleft" style="padding-left:10px;">
             <span id="do-single" class="click<?php echo ($repeatMode ? '' : ' hide'); ?>" 
-                style="color:#09F;font-weight: bold;" title="Toggle Repeat (Now ON)">↻
+                style="color:#09F;font-weight: bold;" title="Toggle Repeat (Now ON)">
+                <img src="icn/arrow-repeat.png" alt="Toggle Repeat (Now ON)" title="Toogle Repeat (Now ON)" style="width:24px;height:24px;">
             </span>
             <span id="do-repeat" class="click<?php echo ($repeatMode ? ' hide' : ''); ?>"
-                style="color:grey;font-weight: bold;" title="Toggle Repeat (Now OFF)">↻</span>
-            <div id="playbackrateContainer" 
-                style="font-size: 80%;position:relative;-webkit-touch-callout: none;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;">
-            </div>
+                style="color:grey;font-weight: bold;" title="Toggle Repeat (Now OFF)">
+                <img src="icn/arrow-norepeat.png" alt="Toggle Repeat (Now OFF)" title="Toggle Repeat (Now OFF)" style="width:24px;height:24px;">
+            </span>
         </td>
         <td class="center bordermiddle">&nbsp;</td>
         <td class="bordermiddle">
@@ -4069,28 +4069,6 @@ function makeAudioPlayer($audio, $offset=0)
         $(this)
         .jPlayer("setMedia", media_obj)
         .jPlayer("pause", MEDIA_OFFSET);
-        if ($('#jquery_jplayer_1').data().jPlayer.status.playbackRateEnabled) {
-            $("#playbackrateContainer").css("margin-top",".2em")
-            .html(
-                `<span id="pbSlower" 
-                style="position:absolute;top: 0; left: 0; bottom: 0; right: 50%;" 
-                title="Slower" onclick="lwt_audio_controller.clickSlower();">
-                    &nbsp;
-                </span>
-                <span id="pbFaster" 
-                style="position:absolute;top: 0; left: 50%; bottom: 0; right: 0;" 
-                title="Faster" onclick="lwt_audio_controller.clickFaster();">
-                    &nbsp;
-                </span>
-                <span class="ui-widget ui-state-default ui-corner-all" 
-                style="padding-left: 0.2em;padding-right: 0.2em;color:grey">
-                    <span id="playbackSlower" style="padding-right: 0.15em;">≪</span>
-                    <span id="pbvalue">1.0</span>
-                    <span id="playbackFaster" style="padding-left: 0.15em;">≫</span>
-                </span>`
-            )
-            .css("cursor", "pointer");
-        }
     }
 
     /**
@@ -4112,12 +4090,12 @@ function makeAudioPlayer($audio, $offset=0)
         });
 
         $("#jquery_jplayer_1")
-        .on('bind', $.jPlayer.event.timeupdate, function(event) { 
+        .on($.jPlayer.event.timeupdate, function(event) { 
             $("#playTime").text(Math.floor(event.jPlayer.status.currentTime));
         });
         
         $("#jquery_jplayer_1")
-        .on('bind', $.jPlayer.event.play, function(event) { 
+        .on($.jPlayer.event.play, function(event) { 
             lwt_audio_controller.setCurrentPlaybackRate();
         });
         

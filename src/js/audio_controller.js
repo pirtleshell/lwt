@@ -34,7 +34,7 @@ const lwt_audio_controller = {
   },
 
   clickSingle: function () {
-    $('#jquery_jplayer_1').off('bind', $.jPlayer.event.ended + '.jp-repeat');
+    $('#jquery_jplayer_1').off($.jPlayer.event.ended + '.jp-repeat');
     $('#do-single').addClass('hide');
     $('#do-repeat').removeClass('hide');
     do_ajax_save_setting('currentplayerrepeatmode', '0');
@@ -42,7 +42,7 @@ const lwt_audio_controller = {
 
   clickRepeat: function () {
     $('#jquery_jplayer_1')
-      .on('bind', $.jPlayer.event.ended + '.jp-repeat', function () {
+      .on($.jPlayer.event.ended + '.jp-repeat', function () {
         $('#jquery_jplayer_1').jPlayer('play');
       });
     $('#do-repeat').addClass('hide');
