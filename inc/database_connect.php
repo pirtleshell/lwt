@@ -7,10 +7,10 @@
  * PHP version 8.1
  * 
  * @category Database
- * @package Lwt
- * @author HugoFara <hugo.farajallah@protonmail.com>
- * @license Unlicense <http://unlicense.org/>
- * @link    https://hugofara.github.io/lwt/docs/php/files/inc-database-connect.html
+ * @package  Lwt
+ * @author   HugoFara <hugo.farajallah@protonmail.com>
+ * @license  Unlicense <http://unlicense.org/>
+ * @link     https://hugofara.github.io/lwt/docs/php/files/inc-database-connect.html
  */
 
 require_once __DIR__ . "/kernel_utility.php";
@@ -390,17 +390,15 @@ function getSetting($key)
     );
     if (isset($val)) {
         $val = trim((string) $val);
-        if ($key == 'currentlanguage' ) { 
+        if ($key == 'currentlanguage') { 
             $val = validateLang($val); 
         }
-        if ($key == 'currenttext' ) { 
+        if ($key == 'currenttext') { 
             $val = validateText($val); 
         }
         return $val;
     }
-    else { 
-        return ''; 
-    }
+    return '';
 }
 
 /**
@@ -1196,9 +1194,9 @@ function update_default_values($id, $lid, $sql)
         ORDER BY TiOrder, TiWordCount"
     );
     do_mysqli_query(
-        'ALTER TABLE ' . $tbpref . 'sentences 
-        ALTER SeLgID SET DEFAULT ' . $lid . ', 
-        ALTER SeTxID SET DEFAULT ' . $id
+        "ALTER TABLE {$tbpref}sentences 
+        ALTER SeLgID SET DEFAULT $lid, 
+        ALTER SeTxID SET DEFAULT $id"
     );
     do_mysqli_query('SET @i=0;');
     do_mysqli_query(
@@ -1212,14 +1210,14 @@ function update_default_values($id, $lid, $sql)
         GROUP BY TiSeID"
     );
     do_mysqli_query(
-        'ALTER TABLE ' . $tbpref . 'textitems2 
+        "ALTER TABLE {$tbpref}textitems2 
         ALTER Ti2LgID DROP DEFAULT, 
-        ALTER Ti2TxID DROP DEFAULT'
+        ALTER Ti2TxID DROP DEFAULT"
     );
     do_mysqli_query(
-        'ALTER TABLE ' . $tbpref . 'sentences 
+        "ALTER TABLE {$tbpref}sentences 
         ALTER SeLgID DROP DEFAULT, 
-        ALTER SeTxID DROP DEFAULT'
+        ALTER SeTxID DROP DEFAULT"
     );
 }
 
@@ -1284,7 +1282,7 @@ function check_text($sql, $rtlScript, $wl)
 /**
  * Check a language that contains expressions.
  *
- * @param int[]  $wl     All the different expression length in the language.
+ * @param int[] $wl All the different expression length in the language.
  *
  * @return string SQL-formatted query string
  *
@@ -1730,13 +1728,12 @@ function prefixSQLQuery($sql_line, $prefix)
     if (substr($sql_line, 0, 12) == "INSERT INTO ") {
         return substr($sql_line, 0, 12) . $prefix . substr($sql_line, 12); 
     }
-    if (
-        preg_match(
-            '/^(?:DROP|CREATE|ALTER) TABLE (?:IF NOT EXISTS )?`?/', 
-            $sql_line, 
-            $matches
-        )
-    ) {
+    $res = preg_match(
+        '/^(?:DROP|CREATE|ALTER) TABLE (?:IF NOT EXISTS )?`?/', 
+        $sql_line, 
+        $matches
+    );
+    if ($res) {
         return $matches[0] . $prefix . 
         substr($sql_line, strlen($matches[0]));
     }
@@ -1918,13 +1915,13 @@ function connect_to_database($server, $userid, $passwd, $dbname, $socket="")
     @mysqli_options($dbconnection, MYSQLI_OPT_LOCAL_INFILE, 1);
 
     if ($socket != "") {
-	    $success = @mysqli_real_connect(
-		    $dbconnection, $server, $userid, $passwd, $dbname, socket: $socket
-	    );
+        $success = @mysqli_real_connect(
+            $dbconnection, $server, $userid, $passwd, $dbname, socket: $socket
+        );
     } else {
-	    $success = @mysqli_real_connect(
-		    $dbconnection, $server, $userid, $passwd, $dbname
-	    );
+        $success = @mysqli_real_connect(
+            $dbconnection, $server, $userid, $passwd, $dbname
+        );
     }
 
     if (!$success && mysqli_connect_errno() == 1049) {

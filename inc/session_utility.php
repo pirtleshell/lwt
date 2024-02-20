@@ -582,10 +582,10 @@ function get_themes_selectoptions($v): string
 /**
  * Get a session value and update it if necessary.
  * 
- * @param string      $reqkey  If in $_REQUEST, update the session with $_REQUEST[$reqkey]
- * @param string      $sesskey Field of the session to get or update
- * @param string|int  $default Default value to return
- * @param bool        $isnum   If true, convert the result to an int
+ * @param string     $reqkey  If in $_REQUEST, update the session with $_REQUEST[$reqkey]
+ * @param string     $sesskey Field of the session to get or update
+ * @param string|int $default Default value to return
+ * @param bool       $isnum   If true, convert the result to an int
  * 
  * @return string|int The required data unless $isnum is specified
  */
@@ -2284,8 +2284,8 @@ function texttodocount2($textid): string
 /**
  * Return a SQL string to find sentences containing a word.
  *
- * @param string   $wordlc Word to look for in lowercase
- * @param int      $lid    Language ID
+ * @param string $wordlc Word to look for in lowercase
+ * @param int    $lid    Language ID
  *
  * @return string Query in SQL format
  */
@@ -2638,7 +2638,7 @@ function get_languages(): array
 /**
  * Get language name from its ID 
  * 
- * @param  string|int $lid Language ID
+ * @param string|int $lid Language ID
  * 
  * @return string Language name
  * @global string $tbpref Table name prefix
@@ -2791,7 +2791,7 @@ function findMecabExpression($text, $lid): array
             $arr = explode("\t", $row, 4);
             // Not a word (punctuation)
             if (!empty($arr[0]) && $arr[0] != "EOP" 
-            && in_array($arr[1], ["2", "6", "7"])
+                && in_array($arr[1], ["2", "6", "7"])
             ) {
                 $parsed_sentence .= $arr[0] . ' ';
             }
@@ -2852,18 +2852,22 @@ function insert_expression_from_mecab($text, $lid, $wid, $len): array
             $mwords[$occ['SeTxID']][$occ['position']] = $occ['term'];
         }
     }
-    $flat_mwords = array_reduce($mwords, function ($carry, $item) {
-        return $carry + $item;
-    }, []);
+    $flat_mwords = array_reduce(
+        $mwords, function ($carry, $item) {
+            return $carry + $item;
+        }, []
+    );
 
     $sqlarr = array();
     foreach ($occurences as $occ) {
-        $sqlarr[] = "(" . implode(",", 
-        [
+        $sqlarr[] = "(" . implode(
+            ",", 
+            [
             $wid, $lid, $occ["SeTxID"], $occ["SeID"], 
             $occ["position"], $len, 
             convert_string_to_sqlsyntax_notrim_nonull($occ["term"])
-        ]) . ")";
+            ]
+        ) . ")";
     }
 
     return array($flat_mwords, array(), $sqlarr);
@@ -2959,8 +2963,7 @@ function findStandardExpression($textlc, $lid): array
         $last_pos = mb_strripos($string, $textlc, 0, 'UTF-8');
         // For each occurence of query in sentence
         while ($last_pos !== false) {
-            if (
-                $splitEachChar || $removeSpaces  
+            if ($splitEachChar || $removeSpaces  
                 || preg_match($notermchar, " $string ", $matches, 0, $last_pos - 1)
             ) {
                 // Number of terms before group
@@ -3027,18 +3030,22 @@ function insert_standard_expression($textlc, $lid, $wid, $len, $mode): array
             $mwords[$occ['SeTxID']][$occ['position']] = $occ['term_display'];
         }
     }
-    $flat_mwords = array_reduce($mwords, function ($carry, $item) {
-        return $carry + $item;
-    }, []);
+    $flat_mwords = array_reduce(
+        $mwords, function ($carry, $item) {
+            return $carry + $item;
+        }, []
+    );
 
     $sqlarr = array();
     foreach ($occurences as $occ) {
-        $sqlarr[] = "(" . implode(",", 
-        [
+        $sqlarr[] = "(" . implode(
+            ",", 
+            [
             $wid, $lid, $occ["SeTxID"], $occ["SeID"], 
             $occ["position"], $len, 
             convert_string_to_sqlsyntax_notrim_nonull($occ["term"])
-        ]) . ")";
+            ]
+        ) . ")";
     }
 
     return array($flat_mwords, array(), $sqlarr);
@@ -3221,9 +3228,9 @@ function newMultiWordInteractable($hex, $multiwords, $wid, $len): void
  * @param string|int $lid    Language ID
  * @param int        $len    Number of words in the expression
  * @param int        $mode   Function mode
- *                       - 0: Default mode, do nothing special
- *                       - 1: Runs an expresion inserter interactable 
- *                       - 2: Return the sql output
+ *                           - 0: Default mode, do nothing special
+ *                           - 1: Runs an expresion inserter interactable 
+ *                           - 2: Return the sql output
  *
  * @return null|string If $mode == 2 return values to insert in textitems2, nothing otherwise.
  *
@@ -3265,12 +3272,14 @@ function insertExpressions($textlc, $lid, $wid, $len, $mode): null|string
     if (!empty($occurences)) {
         $sqlarr = array();
         foreach ($occurences as $occ) {
-            $sqlarr[] = "(" . implode(",", 
-            [
+            $sqlarr[] = "(" . implode(
+                ",", 
+                [
                 $wid, $lid, $occ["SeTxID"], $occ["SeID"], 
                 $occ["position"], $len, 
                 convert_string_to_sqlsyntax_notrim_nonull($occ["term"])
-            ]) . ")";
+                ]
+            ) . ")";
         }
         $sqltext = '';
         if ($mode != 2) {
@@ -3557,20 +3566,20 @@ function create_save_ann($textid): string
 function truncateUserDatabase()
 {
     global $tbpref;
-    runsql('TRUNCATE ' . $tbpref . 'archivedtexts', '');
-    runsql('TRUNCATE ' . $tbpref . 'archtexttags', '');
-    runsql('TRUNCATE ' . $tbpref . 'feedlinks', '');
-    runsql('TRUNCATE ' . $tbpref . 'languages', '');
-    runsql('TRUNCATE ' . $tbpref . 'textitems2', '');
-    runsql('TRUNCATE ' . $tbpref . 'newsfeeds', '');
-    runsql('TRUNCATE ' . $tbpref . 'sentences', '');
-    runsql('TRUNCATE ' . $tbpref . 'tags', '');
-    runsql('TRUNCATE ' . $tbpref . 'tags2', '');
-    runsql('TRUNCATE ' . $tbpref . 'texts', '');
-    runsql('TRUNCATE ' . $tbpref . 'texttags', '');
-    runsql('TRUNCATE ' . $tbpref . 'words', '');
-    runsql('TRUNCATE ' . $tbpref . 'wordtags', '');
-    runsql('DELETE FROM ' . $tbpref . 'settings where StKey = \'currenttext\'', '');
+    runsql("TRUNCATE {$tbpref}archivedtexts", '');
+    runsql("TRUNCATE {$tbpref}archtexttags", '');
+    runsql("TRUNCATE {$tbpref}feedlinks", '');
+    runsql("TRUNCATE {$tbpref}languages", '');
+    runsql("TRUNCATE {$tbpref}textitems2", '');
+    runsql("TRUNCATE {$tbpref}newsfeeds", '');
+    runsql("TRUNCATE {$tbpref}sentences", '');
+    runsql("TRUNCATE {$tbpref}tags", '');
+    runsql("TRUNCATE {$tbpref}tags2", '');
+    runsql("TRUNCATE {$tbpref}texts", '');
+    runsql("TRUNCATE {$tbpref}texttags", '');
+    runsql("TRUNCATE {$tbpref}words", '');
+    runsql("TRUNCATE {$tbpref}wordtags", '');
+    runsql("DELETE FROM {$tbpref}settings where StKey = 'currenttext'", '');
     optimizedb();
     get_tags(1);
     get_texttags(1);
