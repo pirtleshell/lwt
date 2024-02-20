@@ -2380,6 +2380,8 @@ resulting in failed installation the first time.</li>
 <li>
 <code>get_database_prefixes</code> is deprecated, superseded by <code>getDatabasePrefix</code> which is much cleaner.</li>
 <li>Globals defined in <code>jq_pgm.js</code> are going into a single global <code>LWT_DATA</code>.</li>
+<li>New text creation workflow simplified in <code>inc/database_connect.php</code>: <code>update_default_values</code> replaced by
+<code>registerSentencesTextItems</code> and <code>check_text</code> by <code>displayTextStatistics</code>.</li>
 </ul>
 <h3>2.9.1-fork (December 29 2023)</h3>
 <h4>Added in 2.9.1-fork</h4>

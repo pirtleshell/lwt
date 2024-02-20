@@ -1220,7 +1220,7 @@ function registerSentencesTextItems($tid, $lid, $hasmultiword)
 }
 
 /**
- * Change the default values for default language, default text, etc...
+ * Append sentences and text items in the database.
  * 
  * @param int    $id   New default text ID
  * @param int    $lid  New default language ID
@@ -1229,6 +1229,8 @@ function registerSentencesTextItems($tid, $lid, $hasmultiword)
  * @return void
  * 
  * @global string $tbpref Database table prefix
+ * 
+ * @deprecated Since 2.10.0, use registerSentencesTextItems instead
  */
 function update_default_values($id, $lid, $_sql)
 {
@@ -1646,7 +1648,7 @@ function splitCheckText($text, $lid, $id)
         Replacement code not created yet 
 
         trigger_error(
-            "Using splitCheckText with \$id == -2 is deprectad and won't work in 
+            "Using splitCheckText with \$id == -2 is deprecated and won't work in 
             LWT 3.0.0. Use format_text instead.", 
             E_USER_WARNING
         );*/
@@ -1673,6 +1675,7 @@ function splitCheckText($text, $lid, $id)
     if (!empty($wl)) {
         checkExpressions($wl);
     }
+    // Add sentences and text items to database for a new text
     if ($id > 0) {
         registerSentencesTextItems($id, $lid, !empty($wl));
     }
