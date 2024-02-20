@@ -278,6 +278,7 @@ CREATE TABLE `sentences` (
   `SeTxID` int(11) unsigned NOT NULL, 
   `SeOrder` int(11) unsigned NOT NULL, 
   `SeText` text, 
+  `SeFirstPos` smallint(5) unsigned NOT NULL,
   PRIMARY KEY (`SeID`), 
   KEY `SeLgID` (`SeLgID`), 
   KEY `SeTxID` (`SeTxID`), 

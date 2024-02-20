@@ -112,6 +112,8 @@ missing in `INSTALL.sh` (and `composer.json`), as stated in
 * On audio, the replay button is fixed: 
 [issue #138](https://github.com/HugoFara/lwt/issues/138) and 
 [PR #191](https://github.com/HugoFara/lwt/pull/191).
+* The field `SeFirstPos` was missing in table `sentences` of demo database,
+resulting in failed installation the first time.
 
 ### Deprecated
 
