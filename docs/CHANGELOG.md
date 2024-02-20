@@ -64,12 +64,15 @@ after solution display ([#159](https://github.com/HugoFara/lwt/issues/159)).
 * Database:
   * Database creation and migration is now handled directly in SQL, for a safer 
 behavior.
-  * You do no longer need to give to LWT SYSTEM_VARIABLES_ADMIN for text reparsing. (new function `checkExpressions`) ([#167](https://github.com/HugoFara/lwt/issues/167)). It is still necessary for words import.
+  * You do no longer need to give to LWT SYSTEM_VARIABLES_ADMIN for text reparsing. 
+  (new function `checkExpressions`) ([#167](https://github.com/HugoFara/lwt/issues/167)). 
+  It is still necessary for words import.
 * Docker changes:
   * By default, the images now runs at localhot/lwt and no longer in the 
   root folder ([installer #4](https://github.com/HugoFara/lwt-docker-installer/pull/4) 
   and [#169](https://github.com/HugoFara/lwt/pull/169)).
   * Image updated from `apache-buster` to `apache-bullseye`.
+* Composer dependencies up to date 2024-02-20. 
 
 ### Fixed
 
