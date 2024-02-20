@@ -1165,44 +1165,54 @@ function check_text_valid($lid)
 
 
 /**
- * Change the default values for default language, default text, etc...
+ * Append sentences and text items in the database.
  * 
- * @param int    $id  New default text ID
- * @param int    $lid New default language ID
- * @param string $sql 
+ * @param int    $tid          ID of text from which insert data 
+ * @param int    $lid          ID of the language of the text
+ * @param bool   $hasmultiword Set to true to insert multi-words as well.
  * 
  * @return void
  * 
  * @global string $tbpref Database table prefix
  */
-function update_default_values($id, $lid, $sql)
+function registerSentencesTextItems($tid, $lid, $hasmultiword)
 {
     global $tbpref;
+
+    $sql = '';
+    // Text has multi-words
+    if ($hasmultiword) {
+        $sql = "SELECT straight_join WoID, sent, TiOrder - (2*(n-1)) TiOrder, 
+        n TiWordCount, word FROM {$tbpref}tempexprs, 
+        {$tbpref}words 
+        WHERE lword IS NOT NULL AND WoLgID=$lid AND 
+        WoTextLC=lword AND WoWordCount=n
+        UNION ALL ";
+    }
+
+
     do_mysqli_query(
         "ALTER TABLE {$tbpref}textitems2 
         ALTER Ti2LgID SET DEFAULT $lid, 
-        ALTER Ti2TxID SET DEFAULT $id"
+        ALTER Ti2TxID SET DEFAULT $tid"
     );
     do_mysqli_query(
         "INSERT INTO {$tbpref}textitems2 (
             Ti2WoID, Ti2SeID, Ti2Order, Ti2WordCount, Ti2Text
         ) $sql
-        SELECT  WoID, TiSeID, TiOrder, TiWordCount, TiText 
+        SELECT WoID, TiSeID, TiOrder, TiWordCount, TiText 
         FROM {$tbpref}temptextitems 
         LEFT JOIN {$tbpref}words 
         ON LOWER(TiText) = WoTextLC AND TiWordCount=1 AND WoLgID = $lid 
         ORDER BY TiOrder, TiWordCount"
     );
-    do_mysqli_query(
-        "ALTER TABLE {$tbpref}sentences 
-        ALTER SeLgID SET DEFAULT $lid, 
-        ALTER SeTxID SET DEFAULT $id"
-    );
     do_mysqli_query('SET @i=0;');
     do_mysqli_query(
         "INSERT INTO {$tbpref}sentences (
-            SeOrder, SeFirstPos, SeText
+            SeLgID, SeTxID, SeOrder, SeFirstPos, SeText
         ) SELECT 
+        $lid,
+        $tid,
         @i:=@i+1, 
         MIN(IF(TiWordCount=0, TiOrder+1, TiOrder)),
         GROUP_CONCAT(TiText ORDER BY TiOrder SEPARATOR \"\") 
@@ -1214,11 +1224,111 @@ function update_default_values($id, $lid, $sql)
         ALTER Ti2LgID DROP DEFAULT, 
         ALTER Ti2TxID DROP DEFAULT"
     );
-    do_mysqli_query(
-        "ALTER TABLE {$tbpref}sentences 
-        ALTER SeLgID DROP DEFAULT, 
-        ALTER SeTxID DROP DEFAULT"
+}
+
+/**
+ * Change the default values for default language, default text, etc...
+ * 
+ * @param int    $id   New default text ID
+ * @param int    $lid  New default language ID
+ * @param string $_sql Unnused since 2.10.0. Will be removed in 3.0.0.
+ * 
+ * @return void
+ * 
+ * @global string $tbpref Database table prefix
+ */
+function update_default_values($id, $lid, $_sql)
+{
+    global $tbpref;
+    $hasmultiword = false;
+
+    // Get multi-word count
+    $res = do_mysqli_query(
+        "SELECT DISTINCT(WoWordCount) 
+        FROM {$tbpref}words
+        WHERE WoLgID = $lid AND WoWordCount > 1"
     );
+    // Text has multi-words
+    if (mysqli_fetch_assoc($res)){
+        $hasmultiword = true;
+    }
+    mysqli_free_result($res);
+    return registerSentencesTextItems($id, $lid, $hasmultiword);
+}
+
+
+/**
+ * Display statistics about a text.
+ * 
+ * @param int  $lid        Language ID
+ * @param bool $rtlScript  true if language is right-to-left
+ * @param bool $multiwords Display if text has multi-words
+ * 
+ * @return void
+ * 
+ * @global $tbpref
+ */
+function displayTextStatistics($lid, $rtlScript, $multiwords)
+{
+    global $tbpref;
+
+    $mw = array();
+    if ($multiwords) {
+        $res = do_mysqli_query(
+            "SELECT straight_join COUNT(WoID) cnt, n as len, 
+            LOWER(WoText) AS word, WoTranslation 
+            FROM {$tbpref}tempexprs, 
+            {$tbpref}words 
+            WHERE lword IS NOT NULL AND WoLgID=$lid AND 
+            WoTextLC=lword AND WoWordCount=n
+            GROUP BY WoID ORDER BY WoTextLC"
+        );
+        while ($record = mysqli_fetch_assoc($res)){
+            $mw[] = array(
+                tohtml((string)$record['word']),
+                $record['cnt'],
+                tohtml((string)$record['WoTranslation'])
+            );
+        }
+        mysqli_free_result($res);
+    }
+    ?>
+<script type="text/javascript">
+    MWORDS = <?php echo json_encode($mw) ?>;
+    if (<?php echo json_encode($rtlScript); ?>) {
+        $(function() {
+            $("li").attr("dir", "rtl");
+        });
+    }
+    function displayStatistics() {
+        let h = '<h4>Word List <span class="red2">(red = already saved)</span></h4>' + 
+        '<ul class="wordlist">';
+        $.each(
+            WORDS, 
+            function (k,v) {
+                h += '<li><span' + (v[2]==""?"":' class="red2"') + '>[' + v[0] + '] — ' 
+                + v[1] + (v[2]==""?"":' — ' + v[2]) + '</span></li>';
+            }
+        );
+        h += '</ul><p>TOTAL: ' + WORDS.length 
+        + '</p><h4>Expression List</span></h4><ul class="expressionlist">';
+        $.each(MWORDS, function (k,v) {
+            h+= '<li><span>[' + v[0] + '] — ' + v[1] + 
+            (v[2]==""?"":' — ' + v[2]) + '</span></li>';
+        });
+        h += '</ul><p>TOTAL: ' + MWORDS.length + 
+        '</p><h4>Non-Word List</span></h4><ul class="nonwordlist">';
+        $.each(NOWORDS, function(k,v) {
+            h+= '<li>[' + v[0] + '] — ' + v[1] + '</li>';
+        });
+        h += '</ul><p>TOTAL: ' + NOWORDS.length + '</p>'
+        $('#check_text').append(h);
+    }
+
+    displayStatistics();
+</script>
+
+    <?php
 }
 
 /**
@@ -1229,6 +1339,8 @@ function update_default_values($id, $lid, $sql)
  * @param int[]  $wl        Words lengths
  * 
  * @return void
+ * 
+ * @deprecated Use displayTextStatistics instead. Will be removed in 3.0.0.
  */
 function check_text($sql, $rtlScript, $wl)
 {
@@ -1252,28 +1364,34 @@ function check_text($sql, $rtlScript, $wl)
             $("li").attr("dir", "rtl");
         });
     }
-    let h='<h4>Word List <span class="red2">(red = already saved)</span></h4>' + 
-    '<ul class="wordlist">';
-    $.each(
-        WORDS, 
-        function (k,v) {
-            h += '<li><span' + (v[2]==""?"":' class="red2"') + '>[' + v[0] + '] — ' 
-            + v[1] + (v[2]==""?"":' — ' + v[2]) + '</span></li>';
-        }
-        );
-    h += '</ul><p>TOTAL: ' + WORDS.length 
-    + '</p><h4>Expression List</span></h4><ul class="expressionlist">';
-    $.each(MWORDS, function (k,v) {
-        h+= '<li><span>[' + v[0] + '] — ' + v[1] + 
-        (v[2]==""?"":' — ' + v[2]) + '</span></li>';
-    });
-    h += '</ul><p>TOTAL: ' + MWORDS.length + 
-    '</p><h4>Non-Word List</span></h4><ul class="nonwordlist">';
-    $.each(NOWORDS, function(k,v) {
-        h+= '<li>[' + v[0] + '] — ' + v[1] + '</li>';
-    });
-    h += '</ul><p>TOTAL: ' + NOWORDS.length + '</p>'
-    $('#check_text').append(h);
+
+    function displayStatistics() {
+        let h='<h4>Word List <span class="red2">(red = already saved)</span></h4>' + 
+        '<ul class="wordlist">';
+        $.each(
+            WORDS, 
+            function (k,v) {
+                h += '<li><span' + (v[2]==""?"":' class="red2"') + '>[' + v[0] + '] — ' 
+                + v[1] + (v[2]==""?"":' — ' + v[2]) + '</span></li>';
+            }
+            );
+        h += '</ul><p>TOTAL: ' + WORDS.length 
+        + '</p><h4>Expression List</span></h4><ul class="expressionlist">';
+        $.each(MWORDS, function (k,v) {
+            h+= '<li><span>[' + v[0] + '] — ' + v[1] + 
+            (v[2]==""?"":' — ' + v[2]) + '</span></li>';
+        });
+        h += '</ul><p>TOTAL: ' + MWORDS.length + 
+        '</p><h4>Non-Word List</span></h4><ul class="nonwordlist">';
+        $.each(NOWORDS, function(k,v) {
+            h+= '<li>[' + v[0] + '] — ' + v[1] + '</li>';
+        });
+        h += '</ul><p>TOTAL: ' + NOWORDS.length + '</p>'
+        $('#check_text').append(h);
+
+    }
+
+    displayStatistics();
 </script>
 
     <?php
@@ -1558,34 +1676,17 @@ function splitCheckText($text, $lid, $id)
         $wl[] = (int)$record['WoWordCount'];
     }
     mysqli_free_result($res);
-    $sql = '';
     // Text has multi-words
     if (!empty($wl)) {
         checkExpressions($wl);
-        if ($id > 0) {
-            $sql = "SELECT straight_join WoID, sent, TiOrder - (2*(n-1)) TiOrder, 
-            n TiWordCount, word FROM {$tbpref}tempexprs, 
-            {$tbpref}words 
-            WHERE lword IS NOT NULL AND WoLgID=$lid AND 
-            WoTextLC=lword AND WoWordCount=n
-            UNION ALL ";
-        } else {
-            $sql = "SELECT straight_join COUNT(WoID) cnt, n as len, 
-            LOWER(WoText) AS word, WoTranslation 
-            FROM {$tbpref}tempexprs, 
-            {$tbpref}words 
-            WHERE lword IS NOT NULL AND WoLgID=$lid AND 
-            WoTextLC=lword AND WoWordCount=n
-            GROUP BY WoID ORDER BY WoTextLC";
-        }
     }
     if ($id > 0) {
-        update_default_values($id, $lid, $sql);
+        registerSentencesTextItems($id, $lid, !empty($wl));
     }
     
     // Check text
     if ($id == -1) {
-        check_text($sql, (bool)$rtlScript, $wl);
+        displayTextStatistics($lid, (bool)$rtlScript, $wl);
     }
     
     do_mysqli_query("TRUNCATE TABLE {$tbpref}temptextitems");
@@ -1721,8 +1822,12 @@ function update_database($dbname)
 }
 
 
-// -------------------------------------------------------------
-
+/*
+ * Add a prefix to table in a SQL query string.
+ * 
+ * @param string $sql_line SQL string to prefix.
+ * @param string $prefix   Prefix to add
+ */
 function prefixSQLQuery($sql_line, $prefix) 
 {
     if (substr($sql_line, 0, 12) == "INSERT INTO ") {
