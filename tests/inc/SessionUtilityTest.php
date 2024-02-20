@@ -10,7 +10,15 @@ class SessionUtilityTest extends TestCase
 {
     public function testInstallDemoDB()
     {
-        truncateUserDatabase();
+        // Truncate the database if not empty
+        $result = do_mysqli_query("SHOW TABLES LIKE 'texts'");
+        $res = mysqli_fetch_assoc($result);
+
+        if ($res && $res["num_rows"] > 0) {
+            truncateUserDatabase();
+        }
+
+        // Install the demo DB
         $filename = getcwd() . '/install_demo_db.sql';
         $this->assertFileExists($filename);
         $this->assertFileIsReadable($filename);
