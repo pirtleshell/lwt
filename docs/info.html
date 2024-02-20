@@ -2353,10 +2353,12 @@ finishing by a punctation mark.</li>
 </li>
 <li>On word review (test):
 <ul>
-<li>the space keyboard shortcut may have been inoperating.</li>
+<li>Space keyboard shortcut may have been inoperating.</li>
 <li>On <code>api.php</code>, tests were always set to "multi-word" due to a missing variable
 type conversion. Pull request <a href="https://github.com/HugoFara/lwt/pull/175">#175</a>.</li>
 <li>Text-To-Speech was not working (suggested by <a href="https://github.com/HugoFara/lwt/pull/187">#187</a>).</li>
+<li>Testing terms (<code>Terms &gt; Multi Actions &gt; Test ALL Terms</code>) was broken since 2.9.0.
+<a href="https://github.com/HugoFara/lwt/issues/192">#192</a>.</li>
 </ul>
 </li>
 <li>An explicit dependency to <a href="https://www.php.net/manual/en/book.dom.php">php-dom</a> was

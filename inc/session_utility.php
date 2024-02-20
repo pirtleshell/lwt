@@ -744,7 +744,7 @@ function do_test_test_get_projection($key, $value)
     $testsql = null;
     switch ($key)
     {
-    case 'word':
+    case 'words':
         $id_string = implode(",", $value);
         $testsql = " {$tbpref}words WHERE WoID IN ($id_string) ";
         $cntlang = get_first_value(

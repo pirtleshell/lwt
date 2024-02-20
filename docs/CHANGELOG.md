@@ -96,10 +96,12 @@ Solves [#129](https://github.com/HugoFara/lwt/issues/129), thanks to the help of
   * Japanese was always requiring MeCab for TTS, even if it was not used 
   ([#155](https://github.com/HugoFara/lwt/pull/155)) and [#182](https://github.com/HugoFara/lwt/pull/182).
 * On word review (test): 
-  * the space keyboard shortcut may have been inoperating.
+  * Space keyboard shortcut may have been inoperating.
   * On `api.php`, tests were always set to "multi-word" due to a missing variable 
   type conversion. Pull request [#175](https://github.com/HugoFara/lwt/pull/175).
   * Text-To-Speech was not working (suggested by [#187](https://github.com/HugoFara/lwt/pull/187)).
+  * Testing terms (`Terms > Multi Actions > Test ALL Terms`) was broken since 2.9.0. 
+  [#192](https://github.com/HugoFara/lwt/issues/192).
 * An explicit dependency to [php-dom](https://www.php.net/manual/en/book.dom.php) was 
 missing in `INSTALL.sh` (and `composer.json`), as stated in 
 [#178](https://github.com/HugoFara/lwt/pull/178).
