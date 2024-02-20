@@ -1180,32 +1180,30 @@ function registerSentencesTextItems($tid, $lid, $hasmultiword)
     global $tbpref;
 
     $sql = '';
-    // Text has multi-words
+    // Text has multi-words, add them to the query
     if ($hasmultiword) {
-        $sql = "SELECT straight_join WoID, sent, TiOrder - (2*(n-1)) TiOrder, 
-        n TiWordCount, word FROM {$tbpref}tempexprs, 
-        {$tbpref}words 
-        WHERE lword IS NOT NULL AND WoLgID=$lid AND 
-        WoTextLC=lword AND WoWordCount=n
+        $sql = "SELECT WoID, $lid, $tid, sent, TiOrder - (2*(n-1)) TiOrder, 
+        n TiWordCount, word 
+        FROM {$tbpref}tempexprs
+        JOIN {$tbpref}words
+        ON WoTextLC = lword AND WoWordCount = n
+        WHERE lword IS NOT NULL AND WoLgID = $lid 
         UNION ALL ";
     }
 
-
-    do_mysqli_query(
-        "ALTER TABLE {$tbpref}textitems2 
-        ALTER Ti2LgID SET DEFAULT $lid, 
-        ALTER Ti2TxID SET DEFAULT $tid"
-    );
+    // Insert text items (and eventual multi-words)
     do_mysqli_query(
         "INSERT INTO {$tbpref}textitems2 (
-            Ti2WoID, Ti2SeID, Ti2Order, Ti2WordCount, Ti2Text
+            Ti2WoID, Ti2LgID, Ti2TxID, Ti2SeID, Ti2Order, Ti2WordCount, Ti2Text
         ) $sql
-        SELECT WoID, TiSeID, TiOrder, TiWordCount, TiText 
+        SELECT WoID, $lid, $tid, TiSeID, TiOrder, TiWordCount, TiText 
         FROM {$tbpref}temptextitems 
         LEFT JOIN {$tbpref}words 
         ON LOWER(TiText) = WoTextLC AND TiWordCount=1 AND WoLgID = $lid 
         ORDER BY TiOrder, TiWordCount"
     );
+
+    // Add new sentences
     do_mysqli_query('SET @i=0;');
     do_mysqli_query(
         "INSERT INTO {$tbpref}sentences (
@@ -1218,11 +1216,6 @@ function registerSentencesTextItems($tid, $lid, $hasmultiword)
         GROUP_CONCAT(TiText ORDER BY TiOrder SEPARATOR \"\") 
         FROM {$tbpref}temptextitems 
         GROUP BY TiSeID"
-    );
-    do_mysqli_query(
-        "ALTER TABLE {$tbpref}textitems2 
-        ALTER Ti2LgID DROP DEFAULT, 
-        ALTER Ti2TxID DROP DEFAULT"
     );
 }
 
@@ -1275,12 +1268,12 @@ function displayTextStatistics($lid, $rtlScript, $multiwords)
     $mw = array();
     if ($multiwords) {
         $res = do_mysqli_query(
-            "SELECT straight_join COUNT(WoID) cnt, n as len, 
+            "SELECT COUNT(WoID) cnt, n as len, 
             LOWER(WoText) AS word, WoTranslation 
-            FROM {$tbpref}tempexprs, 
-            {$tbpref}words 
-            WHERE lword IS NOT NULL AND WoLgID=$lid AND 
-            WoTextLC=lword AND WoWordCount=n
+            FROM {$tbpref}tempexprs
+            JOIN {$tbpref}words
+            ON WoTextLC = lword AND WoWordCount = n
+            WHERE lword IS NOT NULL AND WoLgID = $lid
             GROUP BY WoID ORDER BY WoTextLC"
         );
         while ($record = mysqli_fetch_assoc($res)){
