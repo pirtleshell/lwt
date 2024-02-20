@@ -23,11 +23,11 @@
  * PHP version 8.1
  * 
  * @category User_Interface
- * @package Lwt
- * @author  LWT Project <lwt-project@hotmail.com>
- * @license Unlicense <http://unlicense.org/>
- * @link    https://hugofara.github.io/lwt/docs/php/files/edit-texts.html
- * @since   1.0.3
+ * @package  Lwt
+ * @author   LWT Project <lwt-project@hotmail.com>
+ * @license  Unlicense <http://unlicense.org/>
+ * @link     https://hugofara.github.io/lwt/docs/php/files/edit-texts.html
+ * @since    1.0.3
  */
 
 require_once 'inc/session_utility.php';
@@ -411,7 +411,7 @@ function edit_texts_archive($txid): string
         "DELETE FROM {$tbpref}texts WHERE TxID = $txid", 
         "Texts deleted"
     );
-    $message = $message4 . " / " . $message1 . " / " . $message2 . " / " . $message3;
+    $message =  "$message4 / $message1 / $message2 / $message3";
     adjust_autoincr('texts', 'TxID');
     adjust_autoincr('sentences', 'SeID');
     runsql(
@@ -469,65 +469,58 @@ function edit_texts_do_operation($op, $message1, $no_pagestart): string
         </p>';
         pageend();
         exit();
-    } elseif (substr($op, 0, 4) == 'Save') {
+    }
+    if (str_starts_with($op, 'Save')) {
         // INSERT
         runsql(
-            'insert into ' . $tbpref . 'texts (
+            "INSERT INTO {$tbpref}texts (
                 TxLgID, TxTitle, TxText, TxAnnotatedText, 
                 TxAudioURI, TxSourceURI
-            ) values( ' . 
+            ) values( " . 
             $_REQUEST["TxLgID"] . ', ' . 
             convert_string_to_sqlsyntax($_REQUEST["TxTitle"]) . ', ' . 
-            convert_string_to_sqlsyntax(remove_soft_hyphens($_REQUEST["TxText"])) . ", '', " .
-            convert_string_to_sqlsyntax($_REQUEST["TxAudioURI"]) . ', ' .
+            convert_string_to_sqlsyntax(remove_soft_hyphens($_REQUEST["TxText"])) . ",
+            '', " .
+            convert_string_to_sqlsyntax_nonull($_REQUEST["TxAudioURI"]) . ', ' .
             convert_string_to_sqlsyntax($_REQUEST["TxSourceURI"]) . ')', 
             "Saved"
         );
         $id = get_last_key();
-        saveTextTags($id);
-    } elseif (substr($op, 0, 6) == 'Change') {
+    } else if (str_starts_with($op, 'Change')) {
         // UPDATE
-        /*
-        $oldtext = get_first_value(
-            'SELECT TxText AS value 
-            FROM ' . $tbpref . 'texts 
-            WHERE TxID = ' . $_REQUEST["TxID"]
-        );
-        (convert_string_to_sqlsyntax(remove_soft_hyphens($_REQUEST["TxText"])) 
-        != convert_string_to_sqlsyntax($oldtext));
-        */
         runsql(
-            'update ' . $tbpref . 'texts set ' .
+            "UPDATE {$tbpref}texts SET " .
             'TxLgID = ' . $_REQUEST["TxLgID"] . ', ' .
             'TxTitle = ' . convert_string_to_sqlsyntax($_REQUEST["TxTitle"]) . ', ' .
             'TxText = ' . convert_string_to_sqlsyntax(remove_soft_hyphens($_REQUEST["TxText"])) . ', ' .
-            'TxAudioURI = ' . convert_string_to_sqlsyntax($_REQUEST["TxAudioURI"]) . ', ' .
+            'TxAudioURI = ' . convert_string_to_sqlsyntax_nonull($_REQUEST["TxAudioURI"]) . ', ' .
             'TxSourceURI = ' . convert_string_to_sqlsyntax($_REQUEST["TxSourceURI"]) . ' ' .
             'where TxID = ' . $_REQUEST["TxID"], "Updated"
         );
         $id = (int) $_REQUEST["TxID"];
-        saveTextTags($id);
     }
+    saveTextTags($id);
 
     $message1 = runsql(
-        'delete from ' . $tbpref . 'sentences where SeTxID = ' . $id,
+        "DELETE FROM {$tbpref}sentences WHERE SeTxID = $id",
         "Sentences deleted"
     );
     $message2 = runsql(
-        'delete from ' . $tbpref . 'textitems2 where Ti2TxID = ' . $id,
+        "DELETE FROM {$tbpref}textitems2 WHERE Ti2TxID = $id",
         "Textitems deleted"
     );
     adjust_autoincr('sentences', 'SeID');
 
     splitCheckText(
         get_first_value(
-            'SELECT TxText AS value FROM ' . $tbpref . 'texts 
-            WHERE TxID = ' . $id
+            "SELECT TxText AS value FROM {$tbpref}texts 
+            WHERE TxID = $id"
         ),
-        $_REQUEST["TxLgID"], $id 
+        $_REQUEST["TxLgID"], 
+        $id 
     );
 
-    $message = $message1 . " / " . $message2 . 
+    $message =  "$message1 / $message2" . 
     " / Sentences added: " . get_first_value(
         "SELECT COUNT(*) AS value 
         FROM {$tbpref}sentences 
@@ -539,7 +532,7 @@ function edit_texts_do_operation($op, $message1, $no_pagestart): string
         WHERE Ti2TxID = $id"
     );
 
-    if (substr($op, -8) == "and Open") {
+    if (str_ends_with($op, "and Open")) {
         header('Location: do_text.php?start=' . $id);
         exit();
     }

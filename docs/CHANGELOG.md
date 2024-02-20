@@ -120,6 +120,8 @@ resulting in failed installation the first time.
 * Using any function from `unloadformcheck.js` without using `lwtFormCheck` is deprecated.
 * `get_database_prefixes` is deprecated, superseded by `getDatabasePrefix` which is much cleaner.
 * Globals defined in `jq_pgm.js` are going into a single global `LWT_DATA`.
+* New text creation workflow simplified in `inc/database_connect.php`: `update_default_values` replaced by 
+`registerSentencesTextItems` and `check_text` by `displayTextStatistics`.
 
 ## 2.9.1-fork (December 29 2023)
 
