@@ -15,7 +15,11 @@
 
 You feel that you won't learn much by translating dumb sentences or using grammar books? Learning With Texts offers you the possibility to learn by reading texts in your target language. Concept: when you don't know a word in a text, just click it. We show you the translation, and you will have regular tests to remember it. Ready to go?
 
-**THIS IS A THIRD PARTY VERSION**. This version is not the
+> [!NOTE]  
+> HugoFara: I don't plan to continue developping LWT on a regular basis. While I may keep maintaining for fun, I recommend [jzohrab/lute-v3](https://github.com/jzohrab/lute-v3) as the main target for development effort in the LWT software family.
+
+> [!IMPORTANT]  
+> **THIS IS A THIRD PARTY VERSION**. This version is not the
 official one, and brings many improvements and new features.
 It is quicker, has smaller database size,
 and is open for contributions. The official version is on
@@ -161,9 +165,12 @@ Any other branch if considered under development.
 
 * *See also*: [docs/links.md](docs/links.md)
 
-* [LUTE](https://github.com/jzohrab/lute) is another great project with the same philosophy. It is a rewrite of LWT with modern tools such as Symfony.
-* [FLTR ◆ Foreign Language Text Reader](https://sourceforge.net/projects/foreign-language-text-reader/), a Java clone, by the same
-author as LWT ([lang-learn-guy](https://sourceforge.net/u/lang-learn-guy/profile/)), it is a standalone installation.
+* [jzohrab/LUTE](https://github.com/jzohrab/lute) is a rewrite of LWT with modern tools such as Symfony.
+* [FLTR ◆ Foreign Language Text Reader](https://sourceforge.net/projects/foreign-language-text-reader/), 
+a Java clone, by [lang-learn-guy](https://sourceforge.net/u/lang-learn-guy/profile/) 
+(original author of LWT), it is a standalone installation.
+* [simjanos-dev/LinguaCafe](https://github.com/simjanos-dev/LinguaCafe): a beautiful
+equivalent in Vue.js and PHP.
 
 ## Unlicense
 
