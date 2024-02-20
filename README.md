@@ -15,9 +15,6 @@
 
 You feel that you won't learn much by translating dumb sentences or using grammar books? Learning With Texts offers you the possibility to learn by reading texts in your target language. Concept: when you don't know a word in a text, just click it. We show you the translation, and you will have regular tests to remember it. Ready to go?
 
-> [!NOTE]  
-> HugoFara: I don't plan to continue developping LWT on a regular basis. While I may keep maintaining for fun, I recommend [jzohrab/lute-v3](https://github.com/jzohrab/lute-v3) as the main target for development effort in the LWT software family.
-
 > [!IMPORTANT]  
 > **THIS IS A THIRD PARTY VERSION**. This version is not the
 official one, and brings many improvements and new features.
@@ -25,34 +22,37 @@ It is quicker, has smaller database size,
 and is open for contributions. The official version is on
 [source forge](https://sourceforge.net/projects/learning-with-texts)
 
+> [!NOTE]  
+> HugoFara: I don't plan to continue developping LWT on a regular basis. While I may keep maintaining for fun, I recommend [jzohrab/lute-v3](https://github.com/jzohrab/lute-v3) as the main target for development effort in the LWT software family.
+
 ## Installation
 
-As it is self-hosted, you will need a server, which can be your computer.
-
-* Get the [latest GitHub release](https://github.com/HugoFara/lwt/releases).
-  * You can also try to download the [latest stable version](https://github.com/HugoFara/lwt/archive/refs/heads/master.zip) if you want the cutting-edge updates (that may include some bugs).
-
-### Linux
-
-Start a shell in the downloaded folder an run: ``./INSTALL.sh``. You may need to run ``chmod +x ./INSTALL.sh`` first.
+As LWT is self-hosted, you will need a server, which can be your computer. 
+You can either use Docker (recommended), or install it on your machine.
 
 ### Docker (any OS)
 
 Install [Docker](https://docs.docker.com/get-docker/) (if not already done).
 
-For an light-weight installation, you may use [HugoFara/lwt-docker-installer](https://github.com/HugoFara/lwt-docker-installer).
+* For an light-weight installation, you may use [HugoFara/lwt-docker-installer](https://github.com/HugoFara/lwt-docker-installer).
 
-To build from source, download the latest release and do:
+* To build from source, download the latest release and run:
 
-```bash
-cd lwt
-docker compose up
-```
+  ```bash
+  cd lwt
+  docker compose up
+  ```
+
+### Linux
+
+1. Get the [latest GitHub release](https://github.com/HugoFara/lwt/releases). You can also try to download the [latest stable version](https://github.com/HugoFara/lwt/archive/refs/heads/master.zip) if you want the cutting-edge updates (that may include some bugs).
+2. Start a shell in the downloaded folder an run: ``./INSTALL.sh``. You may need to run ``chmod +x ./INSTALL.sh`` first.
+
 
 ### Other Systems
 
-* **Please see**: [docs/install.md](docs/install.md) for detailed instructions.
-* Create ``connect.inc.php`` with an existing database user. Everything is explained at [docs/info.html](https://hugofara.github.io/lwt/docs/info.html#install).
+1. **Please follow**: [docs/install.md](docs/install.md) for setup  instructions.
+2. Create ``connect.inc.php`` with an existing database user. Everything is explained at [docs/info.html](https://hugofara.github.io/lwt/docs/info.html#install).
 
 And you are ready to go!
 
@@ -83,7 +83,7 @@ an Anki exporter.
 
 ## Features
 
-* **Full list**: [docs/features.md](docs/features.md)
+> **Full features list**: [docs/features.md](docs/features.md)
 
 Features included from the official LWT software:
 
@@ -97,7 +97,7 @@ and East-Asian ideogram systems
 
 ### Features not in the official LWT
 
-* **Full list**: [docs/newfeatures.md](docs/newfeatures.md)
+> **Full new features list**: [docs/newfeatures.md](docs/newfeatures.md)
 
 Features that were added by the community:
 
@@ -129,7 +129,7 @@ Features that were added by the community:
 
 ## Contribute
 
-* **Complete explanation**: [docs/contribute.md](docs/contribute.md)
+> **Complete explanation**: [docs/contribute.md](docs/contribute.md)
 
 To contribute, you need to clone or fork this repository, and [Composer](https://getcomposer.org/download/).
 The composer package is at [hugofara/lwt](https://packagist.org/packages/hugofara/lwt).
@@ -163,7 +163,7 @@ Any other branch if considered under development.
 
 ## Alternatives
 
-* *See also*: [docs/links.md](docs/links.md)
+> *See also*: [docs/links.md](docs/links.md)
 
 * [jzohrab/LUTE](https://github.com/jzohrab/lute) is a rewrite of LWT with modern tools such as Symfony.
 * [FLTR ◆ Foreign Language Text Reader](https://sourceforge.net/projects/foreign-language-text-reader/), 
@@ -174,6 +174,6 @@ equivalent in Vue.js and PHP.
 
 ## Unlicense
 
-Under unlicense, view [UNLICENSE.md](UNLICENSE.md), please look at [http://unlicense.org/].
+Under unlicense, view [UNLICENSE.md](UNLICENSE.md), please look at <http://unlicense.org/>.
 
 **Let's learn new languages!**
