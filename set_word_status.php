@@ -101,8 +101,8 @@ function set_word_status_database($wid, $status)
  * Do the JavaScript action for changing display of the word.
  * 
  * @param string $tid    Text ID
- * @param string $wid    ID of the word that changed status
- * @param string $status New status
+ * @param string $wid    ID of the word that changed status, unnused
+ * @param string $status New status, unnused
  * @param string $word   Word in plain text
  * @param string $trans  Translation of the word
  * @param string $roman  Romanization of the word
@@ -111,6 +111,7 @@ function set_word_status_database($wid, $status)
  */
 function set_word_status_javascript($tid, $wid, $status, $word, $trans, $roman)
 {
+    $todo_content = todo_words_content((int) $tid);
     ?>
 <script type="text/javascript">
     function word_update_error() {
@@ -140,7 +141,7 @@ function set_word_status_javascript($tid, $wid, $status, $word, $trans, $roman)
             <?php echo json_encode($word); ?>, 
             <?php echo json_encode($trans); ?>, 
             <?php echo json_encode($roman); ?>,
-            <?php echo json_encode(texttodocount2($tid)); ?>
+            <?php echo json_encode($todo_content); ?>
         );
         cleanupRightFrames();
     }
