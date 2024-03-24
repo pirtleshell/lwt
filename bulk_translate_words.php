@@ -106,7 +106,7 @@ function bulk_save_terms($terms, $tid, $cleanUp): void
     ?>
 
     $('#learnstatus', context)
-    .html('<?php echo addslashes(texttodocount2($tid)); ?>');
+    .html('<?php echo addslashes(todo_words_content((int) $tid)); ?>');
     $('#displ_message').remove();
     if (<?php echo json_encode($cleanUp); ?>) {
         cleanupRightFrames();

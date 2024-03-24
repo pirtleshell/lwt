@@ -197,13 +197,13 @@ function all_words_wellknown_count_terms($status, $count)
  */
 function all_words_wellknown_javascript($txid, $javascript)
 {
+    $content = todo_words_content($txid);
     ?>
 <script type="text/javascript">
     //<![CDATA[
     const context = window.parent.document;
     <?php echo $javascript; ?> 
-    $('#learnstatus', context)
-    .html('<?php echo addslashes(texttodocount2($txid)); ?>');
+    $('#learnstatus', context).html('<?php echo addslashes($content); ?>');
     window.parent.setTimeout(window.parent.cClick, 1000);
     //]]>
 </script>
