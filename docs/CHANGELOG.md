@@ -72,7 +72,7 @@ behavior.
   root folder ([installer #4](https://github.com/HugoFara/lwt-docker-installer/pull/4)
   and [#169](https://github.com/HugoFara/lwt/pull/169)).
   * Image updated from `apache-buster` to `apache-bullseye`.
-* Composer dependencies up to date 2024-02-20.
+* Composer dependencies up to date 2024-03-24.
 
 ### Fixed
 
