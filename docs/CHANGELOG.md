@@ -116,6 +116,7 @@ missing in `INSTALL.sh` (and `composer.json`), as stated in
 [PR #191](https://github.com/HugoFara/lwt/pull/191).
 * The field `SeFirstPos` was missing in table `sentences` of demo database,
 resulting in failed installation the first time.
+* Editing test annotation would not display since 2.9.1 [#193](https://github.com/HugoFara/lwt/issues/193).
 
 ### Deprecated
 
