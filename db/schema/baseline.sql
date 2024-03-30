@@ -2,14 +2,17 @@
 
 -- Migration files to update the database
 DROP TABLE IF EXISTS _migrations;
-CREATE TABLE _migrations (
+-- Redundant but necessary "IF NOT EXISTS" because this file will be read line by line.
+-- Another process my have recreated _migrations
+CREATE TABLE IF NOT EXISTS _migrations (
 	filename VARCHAR(255) NOT NULL,
 	PRIMARY KEY (filename)
 );
-INSERT INTO _migrations VALUES('19700101_000001_lwt_original.sql');
-INSERT INTO _migrations VALUES('19700102_000001_lwt_fork.sql');
-INSERT INTO _migrations VALUES('20231224_131202_missing_auto_increment.sql');
-INSERT INTO _migrations VALUES('20240103_120316_2.10.0-fork.sql');
+INSERT INTO _migrations VALUES
+('19700101_000001_lwt_original.sql'),
+('19700102_000001_lwt_fork.sql'),
+('20231224_131202_missing_auto_increment.sql'),
+('20240103_120316_2.10.0-fork.sql');
 
 -- Database definition
 

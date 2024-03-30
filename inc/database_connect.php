@@ -1787,7 +1787,7 @@ function update_database($dbname)
         }
         
         $changes = 0;
-        $res = do_mysqli_query("SELECT filename FROM {$tbpref}_migrations");
+        $res = do_mysqli_query("SELECT filename FROM _migrations");
         while ($record = mysqli_fetch_assoc($res)) {
             $queries = parseSQLFile(
                 __DIR__ . '/../db/migrations/' . $record["filename"]
@@ -1870,11 +1870,13 @@ function check_update_db($debug, $tbpref, $dbname): void
     // Rebuild in missing table
     $queries = parseSQLFile(__DIR__ . "/../db/schema/baseline.sql");
     foreach ($queries as $query) {
-        $prefixed_query = prefixSQLQuery($query, $tbpref);
-        // Increment count for new tables only
-        $pre_row_count = runsql($prefixed_query, "");
-        if (!str_starts_with($query, "INSERT INTO _migrations")) {
-            $count += $pre_row_count;
+        if (str_contains($query, "_migrations")) {
+            // Do not prefix meta tables
+            runsql($query, "");
+        } else {
+            $prefixed_query = prefixSQLQuery($query, $tbpref);
+            // Increment count for new tables only
+            $count += runsql($prefixed_query, "");
         }
     }
 

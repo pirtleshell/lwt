@@ -2192,47 +2192,51 @@ function textwordcount($textID): void
     echo json_encode(return_textwordcount($textID));
 }
 
-// -------------------------------------------------------------
-
-function texttodocount($text): string 
-{
-    global $tbpref;
-    return '<span title="To Do" class="status0">&nbsp;' . 
-    (get_first_value(
-        'SELECT count(DISTINCT LOWER(Ti2Text)) as value 
-        FROM ' . $tbpref . 'textitems2 
-        WHERE Ti2WordCount=1 and Ti2WoID=0 and Ti2TxID=' . $text
-    )
-    ) . '&nbsp;</span>';
-}
 
 /**
  * Return the number of words left to do in this text.
  *
- * @param string|int $textid Text ID
+ * @param int $textid Text ID
  *
  * @return string HTML result
  *
- * @global string $tbpref Database table prefix
- *
- * @since 2.7.0-fork Adapted to use LibreTranslate dictionary as well.
+ * @global string $tbpref
  */
-function texttodocount2($textid): string
+function todo_words_count($textid): int 
 {
     global $tbpref;
-    if (is_string($textid)) {
-        $textid = (int) $textid;
-    }
-    $c = get_first_value(
+    $count = get_first_value(
         "SELECT COUNT(DISTINCT LOWER(Ti2Text)) AS value 
         FROM {$tbpref}textitems2 
         WHERE Ti2WordCount=1 AND Ti2WoID=0 AND Ti2TxID=$textid"
     );
+    if ($count === null) {
+        return 0;
+    }
+    return (int) $count;
+}
+
+
+
+/**
+ * Prepare HTML interactions for the words left to do in this text.
+ *
+ * @param int $textid Text ID
+ *
+ * @return string HTML result
+ *
+ * @global string $tbpref
+ *
+ * @since 2.7.0-fork Adapted to use LibreTranslate dictionary as well.
+ */
+function todo_words_content($textid): string
+{
+    global $tbpref;
+    $c = todo_words_count($textid);
     if ($c <= 0) {
         return '<span title="No unknown word remaining" class="status0" ' . 
         'style="padding: 0 5px; margin: 0 5px;">' . $c . '</span>'; 
     }
-    $show_buttons = getSettingWithDefault('set-words-to-do-buttons');
     
     $dict = (string) get_first_value(
         "SELECT LgGoogleTranslateURI AS value 
@@ -2241,7 +2245,7 @@ function texttodocount2($textid): string
     );
     $tl = $sl = "";
     if ($dict) {
-        // (2.5.2-fork) For future version of LWT: do not use translator uri 
+        // @deprecated(2.5.2-fork) For future version of LWT: do not use translator uri 
         // to find language code
         if (str_starts_with($dict, '*')) {
             $dict = substr($dict, 1);
@@ -2270,6 +2274,8 @@ function texttodocount2($textid): string
     '&offset=0&sl=' . $sl . '&tl=' . $tl . '\');" ' . 
     'style="cursor: pointer; vertical-align:middle" title="Lookup New Words" ' .
     'alt="Lookup New Words" />';
+
+    $show_buttons = (int) getSettingWithDefault('set-words-to-do-buttons');
     if ($show_buttons != 2) {
         $res .= '<input type="button" onclick="iknowall(' . $textid . 
         ');" value="Set All to Known" />'; 
@@ -2279,6 +2285,25 @@ function texttodocount2($textid): string
         ');" value="Ignore All" />'; 
     }
     return $res;
+}
+
+/**
+ * Prepare HTML interactions for the words left to do in this text.
+ *
+ * @param string|int $textid Text ID
+ *
+ * @return string HTML result
+ *
+ * @since 2.7.0-fork Adapted to use LibreTranslate dictionary as well.
+ * 
+ * @deprecated Since 2.10.0, use todo_words_content instead
+ */
+function texttodocount2($textid): string
+{
+    if (is_string($textid)) {
+        $textid = (int) $textid;
+    }
+    return todo_words_content($textid);
 }
 
 /**

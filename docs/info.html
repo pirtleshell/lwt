@@ -2322,13 +2322,18 @@ and <a href="https://github.com/HugoFara/lwt/pull/169">#169</a>).</li>
 <li>Image updated from <code>apache-buster</code> to <code>apache-bullseye</code>.</li>
 </ul>
 </li>
-<li>Composer dependencies up to date 2024-02-20.</li>
+<li>Composer dependencies up to date 2024-03-24.</li>
 </ul>
 <h4>Fixed</h4>
 <ul>
 <li>The database wizard was broken since 2.9.0.</li>
+<li>Word status:
+<ul>
 <li>It was impossible to change a word status on hover since 2.9.1.</li>
-<li>Avoids JavaScript error on editing a language when on dictionary field is empty.</li>
+<li>Having wrong dictionary link and error reporting enabled prevented word status from being changed.</li>
+</ul>
+</li>
+<li>Avoids JavaScript error on editing a language when the dictionary field is empty.</li>
 <li>For some feeds, feed wizard session was not working due to ill-configured session.
 Solves <a href="https://github.com/HugoFara/lwt/issues/129">#129</a>, thanks to the help of PR
 <a href="https://github.com/HugoFara/lwt/pull/168">#168</a>.</li>
@@ -2373,6 +2378,7 @@ missing in <code>INSTALL.sh</code> (and <code>composer.json</code>), as stated i
 <a href="https://github.com/HugoFara/lwt/pull/191">PR #191</a>.</li>
 <li>The field <code>SeFirstPos</code> was missing in table <code>sentences</code> of demo database,
 resulting in failed installation the first time.</li>
+<li>Editing test annotation would not display since 2.9.1 <a href="https://github.com/HugoFara/lwt/issues/193">#193</a>.</li>
 </ul>
 <h4>Deprecated</h4>
 <ul>

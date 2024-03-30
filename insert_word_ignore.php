@@ -108,7 +108,7 @@ function do_javascript_action($word, $wid, $hex, $textid)
     .attr('data_status','98')
     .attr('data_wid','<?php echo $wid; ?>')
     .attr('title',title);
-    $('#learnstatus', contexth).html('<?php echo addslashes(texttodocount2($textid)); ?>');
+    $('#learnstatus', contexth).html('<?php echo addslashes(todo_words_content((int) $textid)); ?>');
 
     cleanupRightFrames();
     //]]>

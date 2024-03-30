@@ -84,7 +84,7 @@ if ($translation != '*') {
     .attr('title', title)
     .attr('data_trans','<?php echo tohtml($translation); ?>');
     $('#learnstatus', context)
-    .html('<?php echo addslashes(texttodocount2($_REQUEST['tid'])); ?>');
+    .html('<?php echo addslashes(todo_words_content((int) $_REQUEST['tid'])); ?>');
     cleanupRightFrames();
 </script>
 <?php

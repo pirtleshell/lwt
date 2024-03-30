@@ -104,7 +104,7 @@ function insert_word_wellknown_javascript($word, $wid, $hex, $textid)
     .attr('data_status','99')
     .attr('data_wid','<?php echo $wid; ?>')
     .attr('title',title);
-    $('#learnstatus', contexth).html('<?php echo addslashes(texttodocount2($textid)); ?>');
+    $('#learnstatus', contexth).html('<?php echo addslashes(todo_words_content((int) $textid)); ?>');
 
     cleanupRightFrames();
     //]]>

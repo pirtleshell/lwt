@@ -341,7 +341,7 @@ function edit_term_form($textid): string
                     $temp_wid = (int)get_first_value(
                         "SELECT COUNT(WoID) AS value 
                         FROM {$tbpref}words 
-                        WHERE WoID = $wid"
+                        WHERE WoID = $str_wid"
                     );
                     if ($temp_wid < 1) { 
                         $wid = null; 

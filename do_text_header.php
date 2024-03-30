@@ -144,7 +144,7 @@ function do_settings($textid): void
 <div class="flex-spaced">
     <div>
         Unknown words:
-        <span id="learnstatus"><?php echo texttodocount2($textid); ?></span>
+        <span id="learnstatus"><?php echo todo_words_content((int) $textid); ?></span>
     </div>
     <div 
     title="[Show All] = ON: ALL terms are shown, and all multi-word terms are shown as superscripts before the first word. The superscript indicates the number of words in the multi-word term.

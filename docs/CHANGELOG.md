@@ -9,118 +9,121 @@ ones are marked like "v1.0.0-fork".
 
 ### Added
 
-* Support for Japanese with MeCab on Mac! This was added thanks to 
+* Support for Japanese with MeCab on Mac! This was added thanks to
 [quopquai](https://github.com/quopquai) on [#135](https://github.com/HugoFara/lwt/issues/135).
 * New globals ([#163](https://github.com/HugoFara/lwt/issues/163)):
   * On `inc/kernel_utility.php`: `LWT_APP_VERSION` and `LWT_RELEASE_DATE`.
   * On `api.php`: `LWT_API_VERSION` and `LWT_API_RELEASE_DATE`.
   * `src/js/jq_pgm.js`: `LWT_DATA`.
-  * `unloadformcheck.js` now declares a new object `lwtFormCheck` that contains 
+  * `unloadformcheck.js` now declares a new object `lwtFormCheck` that contains
   all the functions needed.
 * Important additions to Text-To-Speech (TTS):
-  * Word can be read on hover or on click. 
-  Pull request [#147](https://github.com/HugoFara/lwt/pull/147) by 
+  * Word can be read on hover or on click.
+  Pull request [#147](https://github.com/HugoFara/lwt/pull/147) by
   [@ProgramComputer](https://github.com/ProgramComputer).
-  * You can add a custom text reader with the new voice API feature! 
-  A courtesy of [@ProgramComputer](https://github.com/ProgramComputer) on pull request 
-  [#153](https://github.com/HugoFara/lwt/pull/153). 
-  A feature first requested on [#143](https://github.com/HugoFara/lwt/issues/143). 
+  * You can add a custom text reader with the new voice API feature!
+  A courtesy of [@ProgramComputer](https://github.com/ProgramComputer) on pull request
+  [#153](https://github.com/HugoFara/lwt/pull/153).
+  A feature first requested on [#143](https://github.com/HugoFara/lwt/issues/143).
   Discussion in open on [#174](https://github.com/HugoFara/lwt/discussions/174).
-  * New JS functions: `readTextWithExternal` to read a text with an external 
-  application and `speechDispatcher` that can choose a text reader 
-  (browser or third party). 
-* Starts a cleaner database management. Database schema is defined in 
+  * New JS functions: `readTextWithExternal` to read a text with an external
+  application and `speechDispatcher` that can choose a text reader
+  (browser or third party).
+* Starts a cleaner database management. Database schema is defined in
 `db/schema/baseline.sql` and no longer in PHP code.
-* You can choose to add romanization for languages that don't need it in the language 
+* You can choose to add romanization for languages that don't need it in the language
 settings ([#119](https://github.com/HugoFara/lwt/issues/119)).
-* Docker images are now built for multiple platforms, see PR 
-[#169](https://github.com/HugoFara/lwt/pull/169), closing discussion 
-[#141](https://github.com/HugoFara/lwt/discussions/141). 
+* Docker images are now built for multiple platforms, see PR
+[#169](https://github.com/HugoFara/lwt/pull/169), closing discussion
+[#141](https://github.com/HugoFara/lwt/discussions/141).
 Many thanks to [@ProgramComputer](https://github.com/ProgramComputer)!
-* On word review: 
+* On word review:
   * The "Read words aloud" setting is now saved, PR [#185](https://github.com/HugoFara/lwt/pull/185).
   * UX change: You can click on "Read words aloud" text to check the checkbox.
 
 ### Changed
 
 * Adds missing documentation in the Docker image:
-  * MarkDown files in the root folder are now included. 
-  See [#160](https://github.com/HugoFara/lwt/issues/160). 
+  * MarkDown files in the root folder are now included.
+  See [#160](https://github.com/HugoFara/lwt/issues/160).
   It adds `README.md` and `UNLICENSE.md`.
   * Adds `docs/info.html` and `docs/index.html` from [#146](https://github.com/HugoFara/lwt/pull/146).
 * Multi-word creation was reviewed to use a simpler JS code.
-* On word review, status + 1 can be set only after word display. Before, you could 
-press key up at any time to increase term status, but keydown was effective only 
+* On word review, status + 1 can be set only after word display. Before, you could
+press key up at any time to increase term status, but keydown was effective only
 after solution display ([#159](https://github.com/HugoFara/lwt/issues/159)).
 * New files:
-  * `inc/feeds.php` and `inc/tags.php`, stemmed from `inc/session_utility.php`. 
+  * `inc/feeds.php` and `inc/tags.php`, stemmed from `inc/session_utility.php`.
   It should not lead to any code or behaviour change.
-  * `src/js/overlib_interface.js`, stemmed from `src/js/pgm.js`. It contains all the 
+  * `src/js/overlib_interface.js`, stemmed from `src/js/pgm.js`. It contains all the
   overlib interactions.
-  * `src/js/src/js/text_events.js`, stemmed from `src/js/jq_pgm.js`. 
+  * `src/js/src/js/text_events.js`, stemmed from `src/js/jq_pgm.js`.
   It defines interactions with a text on reading.
-* For audio URI, raises the characters length limit from 200 to 2048 
+* For audio URI, raises the characters length limit from 200 to 2048
 ([#144](https://github.com/HugoFara/lwt/issues/144)).
 * Database:
-  * Database creation and migration is now handled directly in SQL, for a safer 
+  * Database creation and migration is now handled directly in SQL, for a safer
 behavior.
-  * You do no longer need to give to LWT SYSTEM_VARIABLES_ADMIN for text reparsing. 
-  (new function `checkExpressions`) ([#167](https://github.com/HugoFara/lwt/issues/167)). 
+  * You do no longer need to give to LWT SYSTEM_VARIABLES_ADMIN for text reparsing.
+  (new function `checkExpressions`) ([#167](https://github.com/HugoFara/lwt/issues/167)).
   It is still necessary for words import.
 * Docker changes:
-  * By default, the images now runs at localhot/lwt and no longer in the 
-  root folder ([installer #4](https://github.com/HugoFara/lwt-docker-installer/pull/4) 
+  * By default, the images now runs at localhot/lwt and no longer in the
+  root folder ([installer #4](https://github.com/HugoFara/lwt-docker-installer/pull/4)
   and [#169](https://github.com/HugoFara/lwt/pull/169)).
   * Image updated from `apache-buster` to `apache-bullseye`.
-* Composer dependencies up to date 2024-02-20. 
+* Composer dependencies up to date 2024-03-24.
 
 ### Fixed
 
 * The database wizard was broken since 2.9.0.
-* It was impossible to change a word status on hover since 2.9.1.
-* Avoids JavaScript error on editing a language when on dictionary field is empty.
+* Word status:
+  * It was impossible to change a word status on hover since 2.9.1.
+  * Having wrong dictionary link and error reporting enabled prevented word status from being changed.
+* Avoids JavaScript error on editing a language when the dictionary field is empty.
 * For some feeds, feed wizard session was not working due to ill-configured session.
-Solves [#129](https://github.com/HugoFara/lwt/issues/129), thanks to the help of PR 
+Solves [#129](https://github.com/HugoFara/lwt/issues/129), thanks to the help of PR
 [#168](https://github.com/HugoFara/lwt/pull/168).
 * Text reading position was not working consistently when adding several known words.
 * Multi-words:
   * Tooltip was not properly saved ([#170](https://github.com/HugoFara/lwt/pull/170)).
   * Translation may be escaped two times ([#170](https://github.com/HugoFara/lwt/pull/170)).
-  * Fixes [#170](https://github.com/HugoFara/lwt/pull/170): on creation, 
-  multi-word was always displayed before the text it encompasses, 
+  * Fixes [#170](https://github.com/HugoFara/lwt/pull/170): on creation,
+  multi-word was always displayed before the text it encompasses,
   without removing this text.
   * Tootltip title was not properly saved, normally without incidence on user display.
-  * Fixes [#69](https://github.com/HugoFara/lwt/issues/69): having the same 
+  * Fixes [#69](https://github.com/HugoFara/lwt/issues/69): having the same
   multi-word on multiple texts was displaying it at many positions on creation.
 * Japanese:
-  * Parsing Japanese texts with MeCab was creating warnings when the text was not 
+  * Parsing Japanese texts with MeCab was creating warnings when the text was not
   finishing by a punctation mark.
   * Multi-words were not saved with MeCab parsing on Japanese.
-  * Japanese was always requiring MeCab for TTS, even if it was not used 
+  * Japanese was always requiring MeCab for TTS, even if it was not used
   ([#155](https://github.com/HugoFara/lwt/pull/155)) and [#182](https://github.com/HugoFara/lwt/pull/182).
-* On word review (test): 
+* On word review (test):
   * Space keyboard shortcut may have been inoperating.
-  * On `api.php`, tests were always set to "multi-word" due to a missing variable 
+  * On `api.php`, tests were always set to "multi-word" due to a missing variable
   type conversion. Pull request [#175](https://github.com/HugoFara/lwt/pull/175).
   * Text-To-Speech was not working (suggested by [#187](https://github.com/HugoFara/lwt/pull/187)).
-  * Testing terms (`Terms > Multi Actions > Test ALL Terms`) was broken since 2.9.0. 
+  * Testing terms (`Terms > Multi Actions > Test ALL Terms`) was broken since 2.9.0.
   [#192](https://github.com/HugoFara/lwt/issues/192).
-* An explicit dependency to [php-dom](https://www.php.net/manual/en/book.dom.php) was 
-missing in `INSTALL.sh` (and `composer.json`), as stated in 
+* An explicit dependency to [php-dom](https://www.php.net/manual/en/book.dom.php) was
+missing in `INSTALL.sh` (and `composer.json`), as stated in
 [#178](https://github.com/HugoFara/lwt/pull/178).
 * API: the REST API was not accessible for users running LWT in a root folder.
-* On audio, the replay button is fixed: 
-[issue #138](https://github.com/HugoFara/lwt/issues/138) and 
+* On audio, the replay button is fixed:
+[issue #138](https://github.com/HugoFara/lwt/issues/138) and
 [PR #191](https://github.com/HugoFara/lwt/pull/191).
 * The field `SeFirstPos` was missing in table `sentences` of demo database,
 resulting in failed installation the first time.
+* Editing test annotation would not display since 2.9.1 [#193](https://github.com/HugoFara/lwt/issues/193).
 
 ### Deprecated
 
 * Using any function from `unloadformcheck.js` without using `lwtFormCheck` is deprecated.
 * `get_database_prefixes` is deprecated, superseded by `getDatabasePrefix` which is much cleaner.
 * Globals defined in `jq_pgm.js` are going into a single global `LWT_DATA`.
-* New text creation workflow simplified in `inc/database_connect.php`: `update_default_values` replaced by 
+* New text creation workflow simplified in `inc/database_connect.php`: `update_default_values` replaced by
 `registerSentencesTextItems` and `check_text` by `displayTextStatistics`.
 
 ## 2.9.1-fork (December 29 2023)
@@ -130,50 +133,50 @@ resulting in failed installation the first time.
 * New tools for documentation:
   * New JavaScript documentation with [JSDoc](https://jsdoc.app/)! You will find it under `docs/js/`.
   * Better PHP documentation using [phpDocumentor](https://phpdoc.org/). The new documentation is at `docs/php/`.
-* New constant `LWT_LANGUAGES_ARRAY`, that replaces `$langDefs` (in `inc/langdefs.php`). 
-Part of [#163](https://github.com/HugoFara/lwt/issues/163). 
+* New constant `LWT_LANGUAGES_ARRAY`, that replaces `$langDefs` (in `inc/langdefs.php`).
+Part of [#163](https://github.com/HugoFara/lwt/issues/163).
 
 ### Changed in 2.9.1-fork
 
 * PHP files header docblocks are expanded, notably with a PHP version, package and category name.
-* Japanese number are now parsed by MeCab. Big thanks to 
-[@ProgramComputer](https://github.com/ProgramComputer) for his pull request 
+* Japanese number are now parsed by MeCab. Big thanks to
+[@ProgramComputer](https://github.com/ProgramComputer) for his pull request
 [#149](https://github.com/HugoFara/lwt/pull/149)!
-* Removes dead feeds from the demo database, as signaled in 
+* Removes dead feeds from the demo database, as signaled in
 [#148](https://github.com/HugoFara/lwt/issues/148).
-* Patch update to the REST API to 0.1.1: requests on GET with empty payload were 
+* Patch update to the REST API to 0.1.1: requests on GET with empty payload were
 resulting in error.
 
 ### Fixed in 2.9.1-fork
 
-* Fixes [#113](https://github.com/HugoFara/lwt/issues/113): changing a language name 
+* Fixes [#113](https://github.com/HugoFara/lwt/issues/113): changing a language name
 was making text-to-speech unusable and may prompt a warning.
 * Since 2.9.0, tests may be unable to run due to a missing key in an AJAX request ("type").
 * Since 2.9.0, audio position was not saved properly.
 * On `upload_words.php`, "update only empty fields" was broken.
 * Translation were not set by default properly when editing terms translations table.
-* The field MeCab was set for Japanese even when not asked for. 
-Signaled on PR [#155](https://github.com/HugoFara/lwt/pull/155), thanks to 
+* The field MeCab was set for Japanese even when not asked for.
+Signaled on PR [#155](https://github.com/HugoFara/lwt/pull/155), thanks to
 [@ProgramComputer](https://github.com/ProgramComputer).
-* Since 2.8.1, Japanese word romanization was not displayed any more. 
+* Since 2.8.1, Japanese word romanization was not displayed any more.
 Thanks to 아르노 for signalling the bug on Discord!
-* The go slower/faster feature on audio was broken 
-([#138](https://github.com/HugoFara/lwt/issues/138)), as functions `click_slower` 
+* The go slower/faster feature on audio was broken
+([#138](https://github.com/HugoFara/lwt/issues/138)), as functions `click_slower`
 and `click_faster` were declared two times in `src/js/audio_controller.js`.
-* When opening a text, text position was not saved and a `text_id is unknown` error was triggered. 
-* Do not display an error on step 2 of feed wizard at first initialization 
+* When opening a text, text position was not saved and a `text_id is unknown` error was triggered.
+* Do not display an error on step 2 of feed wizard at first initialization
 ([#129](https://github.com/HugoFara/lwt/issues/129)).
 * It was impossible to install the demo database if they was more or less than one instruction a line.
 This is fixed, and the SQL file was made more readable.
-* Changes `WoStatusChange` default value to '1970-01-01 01:00:01', it was impossible 
+* Changes `WoStatusChange` default value to '1970-01-01 01:00:01', it was impossible
 to install the demo DB out of LWT (related to [#78](https://github.com/HugoFara/lwt/issues/78)).
-* Deleting a language deletes the language ([#151](https://github.com/HugoFara/lwt/issues/151)). 
+* Deleting a language deletes the language ([#151](https://github.com/HugoFara/lwt/issues/151)).
 Before it was setting the language to empty values.
-* On media select, the lwt folder name was prepended to the media folder, 
+* On media select, the lwt folder name was prepended to the media folder,
 resulting in broken path ([#161](https://github.com/HugoFara/lwt/issues/161)).
 * With the REST API, requests with an empty query were resulting in an error.
-* `no-minify` composer command was fixed, suggested as a part of 
-PR [#154](https://github.com/HugoFara/lwt/pull/154/files) by 
+* `no-minify` composer command was fixed, suggested as a part of
+PR [#154](https://github.com/HugoFara/lwt/pull/154/files) by
 [@ProgramComputer](https://github.com/ProgramComputer).
 
 ### Deprecated in 2.9.1-fork

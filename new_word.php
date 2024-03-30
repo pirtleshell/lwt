@@ -100,7 +100,7 @@ if (isset($_REQUEST['op'])) {
         .attr('data_status',status)
         .attr('data_wid',woid)
         .attr('title',title);
-        $('#learnstatus', context).html('<?php echo addslashes(texttodocount2($_REQUEST['tid'])); ?>');
+        $('#learnstatus', context).html('<?php echo addslashes(todo_words_content((int) $_REQUEST['tid'])); ?>');
     }
 </script>
                 <?php

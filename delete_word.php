@@ -105,7 +105,7 @@ function delete_word_javascript($wid, $tid)
         .attr('data_wid', '')
         .attr('title', title)
         .removeAttr("data_img");
-        $('#learnstatus', context).html('<?php echo addslashes(texttodocount2($tid)); ?>');
+        $('#learnstatus', context).html('<?php echo addslashes(todo_words_content($tid)); ?>');
 
         cleanupRightFrames();
     }

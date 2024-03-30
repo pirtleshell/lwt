@@ -171,7 +171,7 @@ function change_term_display($wid, $translation, $hex): void
     }
     ?>
     $('#learnstatus', contexth)
-    .html('<?php echo addslashes(texttodocount2($_REQUEST['tid'])); ?>');
+    .html('<?php echo addslashes(todo_words_content((int) $_REQUEST['tid'])); ?>');
 
     cleanupRightFrames();
 </script>
