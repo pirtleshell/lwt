@@ -18,8 +18,10 @@ describe('Random API call', function() {
       .expect(400)
       .expect('Content-Type', 'application/json')
       .end(function(err, res) {
-        if (err) throw err;
-        //console.log(res.body);
+        if (err) {
+          console.log(res.body)
+          throw err
+        }
         done();
       });
   });
@@ -28,7 +30,7 @@ describe('Random API call', function() {
 
 describe('Calls on GET', function() {
 
-  it('GET /media-files', function(done) {
+  it('/media-files', function(done) {
     supertest(host)
       .get(api_path + '/media-files')
       .expect('Content-Type', 'application/json')
@@ -38,13 +40,15 @@ describe('Calls on GET', function() {
       .expect(200, done)
   });
 
-  it('GET /phonetic-reading', function(done) {
+  it('/phonetic-reading, language ID', function(done) {
     supertest(host)
       .get(api_path + '/phonetic-reading')
       .query({text: 'test', lgid: '1'})
       .expect('Content-Type', 'application/json')
       .expect(200, done)
+  });
 
+  it('/phonetic-reading, language name', function(done) {
     supertest(host)
       .get(api_path + '/phonetic-reading')
       .query({text: 'test', lang: 'en'})
@@ -55,7 +59,7 @@ describe('Calls on GET', function() {
       .expect(200, done)
   });
 
-  it('GET /sentences-with-term, normal search', function(done) {
+  it('/sentences-with-term, normal search', function(done) {
     supertest(host)
       .get(api_path + '/sentences-with-term/1')
       .query({lg_id: 1, word_lc: 'test'})
@@ -63,7 +67,7 @@ describe('Calls on GET', function() {
       .expect(200, done)
   });
 
-  it('GET /sentences-with-term, advanced search', function(done) {
+  it('/sentences-with-term, advanced search', function(done) {
     supertest(host)
       .get(api_path + '/sentences-with-term/1')
       .query({lg_id: 1, word_lc: 'test', advanced_search: -1})
@@ -71,7 +75,7 @@ describe('Calls on GET', function() {
       .expect(200, done)
   });
 
-  it('GET /sentences-with-term/{term-id}', function(done) {
+  it('/sentences-with-term/{term-id}', function(done) {
     supertest(host)
       .get(api_path + '/sentences-with-term/1')
       .query({lg_id: 1, word_lc: 'test'})
@@ -79,7 +83,7 @@ describe('Calls on GET', function() {
       .expect(200, done)
   });
 
-  it('GET /settings/theme-path', function(done) {
+  it('/settings/theme-path', function(done) {
     supertest(host)
       .get(api_path + '/settings/theme-path')
       .query({path: 'css/styles.css'})
@@ -97,7 +101,7 @@ describe('Calls on GET', function() {
       });
   });
 
-  it('GET /terms/imported', function(done) {
+  it('/terms/imported', function(done) {
     supertest(host)
       .get(api_path + '/terms/imported')
       .query({last_update : '', page: 0, count: 10})
@@ -113,7 +117,7 @@ describe('Calls on GET', function() {
   });
 
 
-  it('GET /terms/{term-id}/translations', function(done) {
+  it('/terms/{term-id}/translations', function(done) {
     supertest(host)
       .get(api_path + '/terms/1/translations')
       .expect('Content-Type', 'application/json')
@@ -124,7 +128,7 @@ describe('Calls on GET', function() {
   });
 
   
-  it('GET /review/next-word', function(done) {
+  it('/review/next-word', function(done) {
     supertest(host)
       .get(api_path + '/review/next-word')
       .query({
@@ -135,7 +139,7 @@ describe('Calls on GET', function() {
       .expect(200, done)
   });
 
-  it('GET /review/tomorrow-count', function(done) {
+  it('/review/tomorrow-count', function(done) {
     supertest(host)
       .get(api_path + '/review/tomorrow-count')
       .query({
@@ -146,7 +150,7 @@ describe('Calls on GET', function() {
   });
   
 
-  it('GET /texts/statistics', function(done) {
+  it('/texts/statistics', function(done) {
     supertest(host)
       .get(api_path + '/texts/statistics')
       .query({texts_id: '1,2'})
@@ -159,7 +163,7 @@ describe('Calls on GET', function() {
   });
   
 
-  it('GET /version', function(done) {
+  it('/version', function(done) {
     supertest(host)
       .get(api_path + '/version')
       .expect('Content-Type', 'application/json')
