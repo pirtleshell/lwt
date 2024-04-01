@@ -73,7 +73,7 @@ function do_test_get_identifier($selection, $sess_testsql, $lang, $text): array
 /**
  * Get the SQL string to perform tests.
  *
- * @param bool|null   $selection    Test is of type selection
+ * @param int|null    $selection    Test is of type selection
  * @param string|null $sess_testsql SQL string for test
  * @param int|null    $lang         Test is of type language, for the language
  *                                  $lang ID
@@ -219,62 +219,55 @@ function do_test_test_finished($testsql, $totaltests, $ajax = false)
  * @param string $wordlc Word in lowercase
  *
  * @global string $tbpref Table prefix
- * @global int    $debug  Echo the passage number if 1.
  *
- * @return (int|null|string)[] Sentence with escaped word and not a 0 if sentence
- *                             was found.
+ * @return (int|null|string)[] Sentence with escaped word and 1.
  *
- * @since 2.5.3-fork Properly return sentences with at least 70% of known words.
- *                   Previously, it was supposed to be 100%, but buggy.
+ * @since 2.5.3-fork  Properly return sentences with at least 70% of known words.
+ *                    Previously, it was supposed to be 100%, but buggy.
+ * @since 2.10.0-fork Always return a sentence, even the 70% known words ratio is not matched
  *
  * @psalm-return list{null|string, 0|1}
  */
 function do_test_test_sentence($wid, $lang, $wordlc): array
 {
-    global $debug, $tbpref;
-    $num = 0;
+    global $tbpref;
     $sent = null;
 
-    // Select sentences where at least 70 % of words are known
-    $sql = "SELECT DISTINCT ti.Ti2SeID AS SeID
+    // Select sentences where at least 70 % of words are known in priority. Otherwise take any sentence
+    $sql = "SELECT DISTINCT ti.Ti2SeID AS SeID, 1 - IFNULL(sUnknownCount.c, 0) / sWordCount.c AS KnownRatio
     FROM {$tbpref}textitems2 ti
     JOIN (
-      SELECT t.Ti2SeID, COUNT(*) AS c
-      FROM {$tbpref}textitems2 t
-      WHERE t.Ti2WordCount = 1
-      GROUP BY t.Ti2SeID
+        -- All words in the sentence
+        SELECT t.Ti2SeID, COUNT(*) AS c
+        FROM {$tbpref}textitems2 t
+        WHERE t.Ti2WordCount = 1
+        GROUP BY t.Ti2SeID
     ) AS sWordCount ON sWordCount.Ti2SeID = ti.Ti2SeID
     LEFT JOIN (
-      SELECT t.Ti2SeID, COUNT(*) AS c
-      FROM {$tbpref}textitems2 t
-      WHERE t.Ti2WordCount = 1 AND t.Ti2WoID = 0
-      GROUP BY t.Ti2SeID
+        -- All unknown words in the sentence
+        SELECT t.Ti2SeID, COUNT(*) AS c
+        FROM {$tbpref}textitems2 t
+        WHERE t.Ti2WordCount = 1 AND t.Ti2WoID = 0
+        GROUP BY t.Ti2SeID
     ) AS sUnknownCount ON sUnknownCount.Ti2SeID = ti.Ti2SeID
     WHERE ti.Ti2WoID = $wid
-    AND IFNULL(sUnknownCount.c, 0) / sWordCount.c < 0.3
-    ORDER BY RAND() LIMIT 1";
+    -- Sort words with known ratio above 70%, then random
+    ORDER BY KnownRatio < 0.7, RAND() 
+    LIMIT 1";
     $res = do_mysqli_query($sql);
     $record = mysqli_fetch_assoc($res);
     // If sentence found
     if ($record) {
-        $num = 1;
         $seid = $record['SeID'];
         list($_, $sent) = getSentence(
             $seid,
             $wordlc,
             (int)getSettingWithDefault('set-test-sentence-count')
         );
-        if ($debug) {
-            echo "DEBUG sent: $seid OK: $sent <br />";
-        }
-    } else {
-        if ($debug) {
-            echo "DEBUG no random sent found<br />";
-        }
     }
     mysqli_free_result($res);
 
-    return array($sent, $num);
+    return array($sent, 1);
 }
 
 /**
@@ -324,6 +317,7 @@ function do_test_get_term_test(
     if ($testtype == 2) {
         // Show translation
         if ($nosent) {
+            // Individual word testing (no sentence)
             $preppend .= tohtml($trans);
         } else {
             $preppend .= '<span dir="ltr">[' . tohtml($trans) . ']</span>';
@@ -444,10 +438,10 @@ function get_test_solution($testtype, $wo_record, $nosent, $wo_text)
 /**
  * Preforms the HTML of the test area, to update through AJAX.
  *
- * @param string    $selector  Type of test to run.
- * @param array|int $selection Items to run the test on.
+ * @param string    $selector  On which set to run the test.
+ * @param array|int $selection ID of the elements of the set to use.
  * @param int       $count     Number of tests left.
- * @param int       $testtype  Type of test.
+ * @param int       $testtype  Type of test (words, sentences, etc...).
  *
  * @return int Number of tests left to do.
  *
@@ -464,10 +458,10 @@ function do_test_prepare_ajax_test_area(
 ): int {
     global $tbpref;
 
-    $nosent = false;
+    $word_mode = false;
     if ($testtype > 3) {
         $testtype -= 3;
-        $nosent = true;
+        $word_mode = true;
     }
     $testsql = do_test_test_get_projection($selector, $selection);
 
@@ -499,7 +493,7 @@ function do_test_prepare_ajax_test_area(
         "total_tests" => $count,
         "test_key" => $selector,
         "selection" => $selection,
-        "word_mode" => $nosent,
+        "word_mode" => $word_mode,
         "lg_id" => $lgid,
         "word_regex" => (string)$lang['regexword'],
         "type" => $testtype

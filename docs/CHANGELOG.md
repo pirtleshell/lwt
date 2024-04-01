@@ -49,9 +49,12 @@ Many thanks to [@ProgramComputer](https://github.com/ProgramComputer)!
   It adds `README.md` and `UNLICENSE.md`.
   * Adds `docs/info.html` and `docs/index.html` from [#146](https://github.com/HugoFara/lwt/pull/146).
 * Multi-word creation was reviewed to use a simpler JS code.
-* On word review, status + 1 can be set only after word display. Before, you could
-press key up at any time to increase term status, but keydown was effective only
-after solution display ([#159](https://github.com/HugoFara/lwt/issues/159)).
+* Word review:
+  * Status + 1 can be set only after word display. Before, you could
+  press key up at any time to increase term status, but keydown was effective only
+  after solution display ([#159](https://github.com/HugoFara/lwt/issues/159)).
+  * When testing sentences, sentences are always displayed, even when less than 70% of words in the sentence are known.
+  See [#194](https://github.com/HugoFara/lwt/issues/194).
 * New files:
   * `inc/feeds.php` and `inc/tags.php`, stemmed from `inc/session_utility.php`.
   It should not lead to any code or behaviour change.

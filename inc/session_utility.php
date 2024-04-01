@@ -745,6 +745,7 @@ function do_test_test_get_projection($key, $value)
     switch ($key)
     {
     case 'words':
+        // Test words in a list of words ID
         $id_string = implode(",", $value);
         $testsql = " {$tbpref}words WHERE WoID IN ($id_string) ";
         $cntlang = get_first_value(
@@ -758,12 +759,13 @@ function do_test_test_get_projection($key, $value)
         }
         break;
     case 'texts':
+        // Test text items from a list of texts ID
         $id_string = implode(",", $value);
         $testsql = " {$tbpref}words, {$tbpref}textitems2 
             WHERE Ti2LgID = WoLgID AND Ti2WoID = WoID AND Ti2TxID IN ($id_string) ";
         $cntlang = get_first_value(
             "SELECT COUNT(DISTINCT WoLgID) AS value 
-                FROM $testsql"
+            FROM $testsql"
         );
         if ($cntlang > 1) {
             echo "<p>Sorry - The selected terms are in $cntlang languages," . 
@@ -772,9 +774,11 @@ function do_test_test_get_projection($key, $value)
         }
         break;
     case 'lang':
+        // Test words from a specific language
         $testsql = " {$tbpref}words WHERE WoLgID = $value ";
         break;
     case 'text':
+        // Test text items from a specific text ID
         $testsql = " {$tbpref}words, {$tbpref}textitems2 
             WHERE Ti2LgID = WoLgID AND Ti2WoID = WoID AND Ti2TxID = $value ";
         break;

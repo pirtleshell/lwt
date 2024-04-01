@@ -234,9 +234,10 @@ function get_word_test_ajax($testsql, $word_mode, $lgid, $wordregex, $testtype):
         return $output;
     }
     if ($word_mode) {
+        // Word alone
         $sent = "{" . $word_record['WoText'] . "}";
     } else {
-        // $nosent == FALSE, mode 1-3
+        // Word surrounded by sentence
         list($sent, $_) = do_test_test_sentence(
             $word_record['WoID'],
             $lgid,

@@ -2287,9 +2287,15 @@ It adds <code>README.md</code> and <code>UNLICENSE.md</code>.</li>
 </ul>
 </li>
 <li>Multi-word creation was reviewed to use a simpler JS code.</li>
-<li>On word review, status + 1 can be set only after word display. Before, you could
+<li>Word review:
+<ul>
+<li>Status + 1 can be set only after word display. Before, you could
 press key up at any time to increase term status, but keydown was effective only
 after solution display (<a href="https://github.com/HugoFara/lwt/issues/159">#159</a>).</li>
+<li>When testing sentences, sentences are always displayed, even when less than 70% of words in the sentence are known.
+See <a href="https://github.com/HugoFara/lwt/issues/194">#194</a>.</li>
+</ul>
+</li>
 <li>New files:
 <ul>
 <li>
