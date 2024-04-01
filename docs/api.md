@@ -1,24 +1,24 @@
 # LWT REST API Documentation
 
-This documentation provides an overview of the REST API endpoints available for LWT-community. 
-The LWT API allows developers to interact with various features of the application, 
-such as retrieving media paths, getting sentences containing a specific term, 
-managing settings, and more. 
+This documentation provides an overview of the REST API endpoints available for LWT-community.
+The LWT API allows developers to interact with various features of the application,
+such as retrieving media paths, getting sentences containing a specific term,
+managing settings, and more.
 
 ## Base URL
 
-The base URL for all API endpoints is: `http://[base_url]/api/v1`, 
-where `base_url` is your instance URL (e. g. `localhost:8080`). 
+The base URL for all API endpoints is: `http://[base_url]/api/v1`,
+where `base_url` is your instance URL (e. g. `localhost:8080`).
 
 ## Authentication
 
-Currently, the LWT API does not require authentication. However, authentication 
-might be implemented in the future. Ensure that appropriate security measures are 
+Currently, the LWT API does not require authentication. However, authentication
+might be implemented in the future. Ensure that appropriate security measures are
 implemented on the client-side to protect user data.
 
 ## Versioning
 
-The REST API should follow [semantic versioning](https://semver.org/). 
+The REST API should follow [semantic versioning](https://semver.org/).
 In the API URL, `v1` indicates "MAJOR version 1", and so on for the future versions.
 A track of all changes is kept in the [CHANGELOG.md](./CHANGELOG.md).
 
@@ -47,7 +47,6 @@ Retrieves the phonetic reading for any specified term.
 - **Endpoint**: `/phonetic-reading`
 - **Method**: GET
 - **Arguments**: `text` and (`lang` or `lg_id`).
-
 
 ### Get Next Word to Review
 
@@ -81,7 +80,6 @@ Retrieves sentences that contain the specified term.
 - **Method**: GET
 - **Arguments**: `lg_id` and `word_lc`
 
-
 ### Get Terms Similar to Another
 
 Retrieves terms similar to the specified term.
@@ -113,7 +111,6 @@ Retrieves the translations for a specific term.
 - **Endpoint**: `/terms/{term-id}/translations`
 - **Method**: GET
 - **Arguments**: `text_id` and `term_lc`
-
 
 ### Get Texts Statistics
 

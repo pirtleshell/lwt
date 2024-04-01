@@ -125,27 +125,27 @@ You can also import a longer text into LWT with the possibility to split it up i
 ### Newsfeed Import
 
 Here you can download the articles of your newsfeeds (see the section New/Edit Feeds
-for an explanation on how To add a new newsfeed). 
-If you've set up multiple newsfeeds for your selected language, the link 
-"update multiple feeds" will appear. By clicking that link you can update one or 
-more feeds at once. 
-If you've selected a newsfeed, a blue circle-arrow will appear as well as the date 
-of your last update. 
-A click on the circle-arrow will update your selected newsfeed. 
-All downloaded articles will be marked by a bookmark-icon instead of the checkbox, 
-so you can access them immediately. If a downloaded article is archived, 
-a red mark will appear. An error may occur, when you try to download an article and 
-the link or the text-section of the article is not found. 
-Then a yellow warning sign appears, which can be removed temporarily by clicking on 
-it or permanently in "Manage Feeds" (see next section). 
-If you hover over an article title, a description of the article will be shown. 
+for an explanation on how To add a new newsfeed).
+If you've set up multiple newsfeeds for your selected language, the link
+"update multiple feeds" will appear. By clicking that link you can update one or
+more feeds at once.
+If you've selected a newsfeed, a blue circle-arrow will appear as well as the date
+of your last update.
+A click on the circle-arrow will update your selected newsfeed.
+All downloaded articles will be marked by a bookmark-icon instead of the checkbox,
+so you can access them immediately. If a downloaded article is archived,
+a red mark will appear. An error may occur, when you try to download an article and
+the link or the text-section of the article is not found.
+Then a yellow warning sign appears, which can be removed temporarily by clicking on
+it or permanently in "Manage Feeds" (see next section).
+If you hover over an article title, a description of the article will be shown.
 You can open the article and, if available, the audio in a new window.  
 
 ![Image](../img/37.jpg)  
 
 ### Manage Feeds
 
-Multi Actions for marked newsfeeds: You can update feeds, unset unloadable articles 
+Multi Actions for marked newsfeeds: You can update feeds, unset unloadable articles
 (see [Newsfeed Import](info.html#Newsfeed%20Import)), delete all articles or delete feeds.  
 Actions: You can edit, update, delete a feed or follow the link to the newsfeed.  
 

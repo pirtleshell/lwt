@@ -198,12 +198,12 @@ If you want to use LWT again, just do step 7.
 
 ## Run in a Docker container
 
-[Docker](https://docs.docker.com/get-docker/) is the easiest way to install LWT, 
+[Docker](https://docs.docker.com/get-docker/) is the easiest way to install LWT,
 but it will use more or less 1 GB on your system.
 
 ### Using the installer
 
-For an light-weight installer, you may use 
+For an light-weight installer, you may use
 [HugoFara/lwt-docker-installer](https://github.com/HugoFara/lwt-docker-installer).
 
 ### Build image from source
