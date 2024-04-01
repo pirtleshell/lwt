@@ -234,7 +234,7 @@
 			</h2>
 
 			<p>
-				The current version is 2.10.0-fork (December 29 2023).
+				The current version is 2.10.0-fork (April 01 2024).
 				<br>
 				<a href="#CHANGELOG">View the Changelog.</a>
 			</p>
@@ -1696,7 +1696,7 @@ This section is mainly intended for the maintainers, but feel free to take a pea
 <p>The steps to publish a new version are:</p>
 <ol>
 <li>In the <a href="./CHANGELOG.md">CHANGELOG</a>, add the latest release number and date.</li>
-<li>Update <code>get_version</code> in <code>inc/kernel_utility.php</code> with the release number and date.</li>
+<li>In <code>inc/kernel_utility.php</code>, update <code>LWT_APP_VERSION</code> and <code>LWT_RELEASE_DATE</code>.</li>
 <li>Update <code>PROJECT_NUMBER</code> in <code>Doxyfile</code> to the latest release number.</li>
 <li>Regenerate documentation with <code>composer doc</code>.</li>
 <li>Commit your changes, <code>git commit -m "Regenerates documentation for release []."</code>
@@ -2230,7 +2230,7 @@ KEY NfUpdate (NfUpdate)
 other versions come from the canonical LWT ("official" branch on Git).
 For git tags, official releases are marked like "v1.0.0", while unofficial
 ones are marked like "v1.0.0-fork".</p>
-<h3>[Unreleased]</h3>
+<h3>[2.10.0-fork] (April 1 2024)</h3>
 <h4>Added</h4>
 <ul>
 <li>Support for Japanese with MeCab on Mac! This was added thanks to
@@ -2360,7 +2360,7 @@ multi-word on multiple texts was displaying it at many positions on creation.</l
 <li>Japanese:
 <ul>
 <li>Parsing Japanese texts with MeCab was creating warnings when the text was not
-finishing by a punctation mark.</li>
+finishing by a punctuation mark.</li>
 <li>Multi-words were not saved with MeCab parsing on Japanese.</li>
 <li>Japanese was always requiring MeCab for TTS, even if it was not used
 (<a href="https://github.com/HugoFara/lwt/pull/155">#155</a>) and <a href="https://github.com/HugoFara/lwt/pull/182">#182</a>.</li>
@@ -2368,7 +2368,7 @@ finishing by a punctation mark.</li>
 </li>
 <li>On word review (test):
 <ul>
-<li>Space keyboard shortcut may have been inoperating.</li>
+<li>Space keyboard shortcut may have been inoperative.</li>
 <li>On <code>api.php</code>, tests were always set to "multi-word" due to a missing variable
 type conversion. Pull request <a href="https://github.com/HugoFara/lwt/pull/175">#175</a>.</li>
 <li>Text-To-Speech was not working (suggested by <a href="https://github.com/HugoFara/lwt/pull/187">#187</a>).</li>
@@ -2395,6 +2395,12 @@ resulting in failed installation the first time.</li>
 <li>Globals defined in <code>jq_pgm.js</code> are going into a single global <code>LWT_DATA</code>.</li>
 <li>New text creation workflow simplified in <code>inc/database_connect.php</code>: <code>update_default_values</code> replaced by
 <code>registerSentencesTextItems</code> and <code>check_text</code> by <code>displayTextStatistics</code>.</li>
+</ul>
+<h4>Full Changelog for 2.10.0-fork</h4>
+<ul>
+<li>
+<a href="https://github.com/HugoFara/lwt/compare/2.9.1...2.10.0">2.9.1...2.10.0</a>
+</li>
 </ul>
 <h3>2.9.1-fork (December 29 2023)</h3>
 <h4>Added in 2.9.1-fork</h4>

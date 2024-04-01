@@ -5,7 +5,7 @@ other versions come from the canonical LWT ("official" branch on Git).
 For git tags, official releases are marked like "v1.0.0", while unofficial
 ones are marked like "v1.0.0-fork".
 
-## [Unreleased]
+## [2.10.0-fork] (April 1 2024)
 
 ### Added
 
@@ -100,12 +100,12 @@ Solves [#129](https://github.com/HugoFara/lwt/issues/129), thanks to the help of
   multi-word on multiple texts was displaying it at many positions on creation.
 * Japanese:
   * Parsing Japanese texts with MeCab was creating warnings when the text was not
-  finishing by a punctation mark.
+  finishing by a punctuation mark.
   * Multi-words were not saved with MeCab parsing on Japanese.
   * Japanese was always requiring MeCab for TTS, even if it was not used
   ([#155](https://github.com/HugoFara/lwt/pull/155)) and [#182](https://github.com/HugoFara/lwt/pull/182).
 * On word review (test):
-  * Space keyboard shortcut may have been inoperating.
+  * Space keyboard shortcut may have been inoperative.
   * On `api.php`, tests were always set to "multi-word" due to a missing variable
   type conversion. Pull request [#175](https://github.com/HugoFara/lwt/pull/175).
   * Text-To-Speech was not working (suggested by [#187](https://github.com/HugoFara/lwt/pull/187)).
@@ -129,6 +129,10 @@ resulting in failed installation the first time.
 * Globals defined in `jq_pgm.js` are going into a single global `LWT_DATA`.
 * New text creation workflow simplified in `inc/database_connect.php`: `update_default_values` replaced by
 `registerSentencesTextItems` and `check_text` by `displayTextStatistics`.
+
+### Full Changelog for 2.10.0-fork
+
+* [2.9.1...2.10.0](https://github.com/HugoFara/lwt/compare/2.9.1...2.10.0)
 
 ## 2.9.1-fork (December 29 2023)
 

@@ -22,7 +22,7 @@
  /**
   * @var string Date of the lastest published release of LWT 
   */
- define('LWT_RELEASE_DATE', "2023-12-29");
+ define('LWT_RELEASE_DATE', "2024-04-01");
 
 /**
  * Return LWT version for humans
