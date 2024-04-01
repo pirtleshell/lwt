@@ -264,7 +264,7 @@ An easy way to install a local web server are preconfigured packages like
 <a href="http://www.easyphp.org/">EasyPHP</a> or <a href="https://www.apachefriends.org/download.html">XAMPP</a> (Windows), or</li>
 <li>
 <a href="http://mamp.info/en/index.html">MAMP</a> (macOS), or</li>
-<li>a <a href="http://en.wikipedia.org/wiki/LAMP_%28software_bundle%29">LAMP (Linux-Apache-MySQL-PHP) server</a> (Linux).</li>
+<li>a <a href="http://en.wikipedia.org/wiki/LAMP_%28software_bundle%29">LAMP (Linux-Apache-MariaDB-PHP) server</a> (Linux).</li>
 </ul>
 </li>
 <li>
@@ -423,9 +423,9 @@ The local webserver (MAMP) will be automatically stopped by quitting the MAMP ap
 <li>
 <p>Installation of LAMP:</p>
 <pre><code class="language-bash">sudo apt-get update
-sudo apt-get install apache2 libapache2-mod-php php php-mbstring php-mysql php-xml mysql-server
+sudo apt-get install apache2 libapache2-mod-php php php-mbstring php-mysql php-xml mariadb-server
 </code></pre>
-<p>Note: if MySQL is unavailable for your Linux distribution, you can also use MariaDB.</p>
+<p>Note: you should be able to freely switch between MySQL and MariaDB.</p>
 </li>
 <li>
 <p>Check if everything is okay:</p>
@@ -620,7 +620,7 @@ workaround is to download a Text-To-Speech (TTS) plugin such as <a href="https:/
 <hr>
 <ul>
 <li>The application is 100 % free, open source, and in the Public Domain. Do with it what you like!</li>
-<li>Prerequisites: a local webserver (Apache, PHP, mySQL), e.g. EasyPHP or XAMPP (Windows), MAMP (macOS), or a LAMP server (Linux).</li>
+<li>Prerequisites: a local webserver (Apache, PHP, MySQL/MariaDB), e.g. EasyPHP or XAMPP (Windows), MAMP (macOS), or a LAMP server (Linux).</li>
 <li>Enjoy your language learning!</li>
 </ul>
 
@@ -1182,7 +1182,7 @@ but not in the correct directory <em>lwt</em> below <em>htdocs</em>.
 Please install/copy/move it into the correct directory.</p>
 <h3>Database connection error</h3>
 <p><img src="../img/prob3.png" alt="Image"></p>
-<p>Answer: Either the database (MySQL) is not running, or the database connection
+<p>Answer: Either the database (MySQL/MariaDB) is not running, or the database connection
 parameters in <em>../htlwt/connect.inc.php</em> are wrong.
 Please check/correct the database connection parameters and/or start MySQL via the MAMP or EasyPHP control program/panel.</p>
 <h3>Cannot find connect.inc.php</h3>
@@ -1198,7 +1198,7 @@ Now execute:
 <strong>sudo chmod -R 755 lwt</strong>.</p>
 <p>Answer 2: The PHP "mbstring" extension is not installed.
 Please install it: <a href="https://askubuntu.com/questions/491629/how-to-install-php-mbstring-extension-in-ubuntu">see this article</a>.</p>
-<h3>MeCab not detected!</h3>
+<h3>MeCab not detected</h3>
 <p>LWT cannot find MeCab, you can do the following steps:</p>
 <p>On Linux or Mac:</p>
 <ol>
@@ -2313,6 +2313,7 @@ It defines interactions with a text on reading.</li>
 (<a href="https://github.com/HugoFara/lwt/issues/144">#144</a>).</li>
 <li>Database:
 <ul>
+<li>For Linux users, the official database RDBMS recommended is now MariaDB as a drop-in replacement of MySQL.</li>
 <li>Database creation and migration is now handled directly in SQL, for a safer
 behavior.</li>
 <li>You do no longer need to give to LWT SYSTEM_VARIABLES_ADMIN for text reparsing.

@@ -27,7 +27,7 @@ Please install/copy/move it into the correct directory.
 
 ![Image](../img/prob3.png)  
 
-Answer: Either the database (MySQL) is not running, or the database connection 
+Answer: Either the database (MySQL/MariaDB) is not running, or the database connection 
 parameters in _../htlwt/connect.inc.php_ are wrong. 
 Please check/correct the database connection parameters and/or start MySQL via the MAMP or EasyPHP control program/panel.  
 
@@ -51,12 +51,12 @@ Now execute:
 Answer 2: The PHP "mbstring" extension is not installed. 
 Please install it: [see this article](https://askubuntu.com/questions/491629/how-to-install-php-mbstring-extension-in-ubuntu).
 
-## MeCab not detected!
+## MeCab not detected
 
 LWT cannot find MeCab, you can do the following steps:
 
-
 On Linux or Mac:
+
 1. Open a terminal.
 2. Type `mecab -v` to get the current MeCab version. If nothing is displayed MeCab is not installed.
 3. If MeCab is already installed, the path may be missing. If you are using MAMP type  

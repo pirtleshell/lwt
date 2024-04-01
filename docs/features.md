@@ -18,5 +18,5 @@
 ----
 
 * The application is 100 % free, open source, and in the Public Domain. Do with it what you like!
-* Prerequisites: a local webserver (Apache, PHP, mySQL), e.g. EasyPHP or XAMPP (Windows), MAMP (macOS), or a LAMP server (Linux).
+* Prerequisites: a local webserver (Apache, PHP, MySQL/MariaDB), e.g. EasyPHP or XAMPP (Windows), MAMP (macOS), or a LAMP server (Linux).
 * Enjoy your language learning!

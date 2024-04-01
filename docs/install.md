@@ -127,10 +127,10 @@ The following instruction were tested on Raspbian Stretch.
 
       ```bash
       sudo apt-get update
-      sudo apt-get install apache2 libapache2-mod-php php php-mbstring php-mysql php-xml mysql-server
+      sudo apt-get install apache2 libapache2-mod-php php php-mbstring php-mysql php-xml mariadb-server
       ```
 
-      Note: if MySQL is unavailable for your Linux distribution, you can also use MariaDB.
+      Note: you should be able to freely switch between MySQL and MariaDB.
 
    2. Check if everything is okay:
       * ``php -v`` should show a PHP version equal or above to 8.0.0.

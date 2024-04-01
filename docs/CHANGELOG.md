@@ -65,6 +65,7 @@ Many thanks to [@ProgramComputer](https://github.com/ProgramComputer)!
 * For audio URI, raises the characters length limit from 200 to 2048
 ([#144](https://github.com/HugoFara/lwt/issues/144)).
 * Database:
+  * For Linux users, the official database RDBMS recommended is now MariaDB as a drop-in replacement of MySQL.
   * Database creation and migration is now handled directly in SQL, for a safer
 behavior.
   * You do no longer need to give to LWT SYSTEM_VARIABLES_ADMIN for text reparsing.
