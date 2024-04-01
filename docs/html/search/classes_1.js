@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['kernelutilitytest_0',['KernelUtilityTest',['../class_kernel_utility_test.html',1,'']]]
+  ['googletranslate_519',['GoogleTranslate',['../class_lwt_1_1_classes_1_1_google_translate.html',1,'Lwt::Classes']]]
 ];

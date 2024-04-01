@@ -406,11 +406,25 @@
 <dd>Echo the sentences in a text. Prepare JS data for words and word count.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a href="namespaces/default.html#function_registerSentencesTextItems">registerSentencesTextItems()</a>
+    <span>
+                                &nbsp;: void    </span>
+</dt>
+<dd>Append sentences and text items in the database.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
     <a href="namespaces/default.html#function_update_default_values">update_default_values()</a>
     <span>
                                 &nbsp;: void    </span>
 </dt>
-<dd>Change the default values for default language, default text, etc.</dd>
+<dd>Append sentences and text items in the database.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a href="namespaces/default.html#function_displayTextStatistics">displayTextStatistics()</a>
+    <span>
+                                &nbsp;: void    </span>
+</dt>
+<dd>Display statistics about a text.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -function -">
     <a href="namespaces/default.html#function_check_text">check_text()</a>
@@ -420,11 +434,18 @@
 <dd>Check a text and display statistics about it.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a href="namespaces/default.html#function_checkExpressions">checkExpressions()</a>
+    <span>
+                                &nbsp;: void    </span>
+</dt>
+<dd>Check a language that contains expressions.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
     <a href="namespaces/default.html#function_check_text_with_expressions">check_text_with_expressions()</a>
     <span>
                                 &nbsp;: string    </span>
 </dt>
-<dd>Check a text that contains expressions.</dd>
+<dd>Check a language that contains expressions.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -function -">
     <a href="namespaces/default.html#function_splitCheckText">splitCheckText()</a>
@@ -448,6 +469,13 @@
 <dd>Update the database if it is using an outdate version.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a href="namespaces/default.html#function_prefixSQLQuery">prefixSQLQuery()</a>
+    <span>
+                                &nbsp;: mixed    </span>
+</dt>
+<dd>Add a prefix to table in a SQL query string.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
     <a href="namespaces/default.html#function_check_update_db">check_update_db()</a>
     <span>
                                 &nbsp;: void    </span>
@@ -460,6 +488,13 @@
                                 &nbsp;: <abbr title="\mysqli">mysqli</abbr>    </span>
 </dt>
 <dd>Make the connection to the database.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -function -">
+    <a href="namespaces/default.html#function_getDatabasePrefix">getDatabasePrefix()</a>
+    <span>
+                                &nbsp;: array&lt;string|int, mixed&gt;    </span>
+</dt>
+<dd>Get the prefixes for the database.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -function -">
     <a href="namespaces/default.html#function_get_database_prefixes">get_database_prefixes()</a>
@@ -1323,7 +1358,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/database_connect.php"><a href="files/inc-database-connect.html"><abbr title="inc/database_connect.php">database_connect.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">415</span>
+    <span class="phpdocumentor-element-found-in__line">413</span>
 
     </aside>
 
@@ -1384,7 +1419,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/database_connect.php"><a href="files/inc-database-connect.html"><abbr title="inc/database_connect.php">database_connect.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">446</span>
+    <span class="phpdocumentor-element-found-in__line">444</span>
 
     </aside>
 
@@ -1464,7 +1499,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/database_connect.php"><a href="files/inc-database-connect.html"><abbr title="inc/database_connect.php">database_connect.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">485</span>
+    <span class="phpdocumentor-element-found-in__line">483</span>
 
     </aside>
 
@@ -1489,7 +1524,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/database_connect.php"><a href="files/inc-database-connect.html"><abbr title="inc/database_connect.php">database_connect.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">507</span>
+    <span class="phpdocumentor-element-found-in__line">505</span>
 
     </aside>
 
@@ -1530,7 +1565,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/database_connect.php"><a href="files/inc-database-connect.html"><abbr title="inc/database_connect.php">database_connect.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">521</span>
+    <span class="phpdocumentor-element-found-in__line">519</span>
 
     </aside>
 
@@ -1568,7 +1603,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/database_connect.php"><a href="files/inc-database-connect.html"><abbr title="inc/database_connect.php">database_connect.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">536</span>
+    <span class="phpdocumentor-element-found-in__line">534</span>
 
     </aside>
 
@@ -1626,7 +1661,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/database_connect.php"><a href="files/inc-database-connect.html"><abbr title="inc/database_connect.php">database_connect.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">554</span>
+    <span class="phpdocumentor-element-found-in__line">552</span>
 
     </aside>
 
@@ -1667,7 +1702,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/database_connect.php"><a href="files/inc-database-connect.html"><abbr title="inc/database_connect.php">database_connect.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">593</span>
+    <span class="phpdocumentor-element-found-in__line">591</span>
 
     </aside>
 
@@ -1720,7 +1755,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/database_connect.php"><a href="files/inc-database-connect.html"><abbr title="inc/database_connect.php">database_connect.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">673</span>
+    <span class="phpdocumentor-element-found-in__line">671</span>
 
     </aside>
 
@@ -1763,7 +1798,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/database_connect.php"><a href="files/inc-database-connect.html"><abbr title="inc/database_connect.php">database_connect.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">738</span>
+    <span class="phpdocumentor-element-found-in__line">736</span>
 
     </aside>
 
@@ -1816,7 +1851,7 @@ removed in version 3.0.0.</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/database_connect.php"><a href="files/inc-database-connect.html"><abbr title="inc/database_connect.php">database_connect.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">759</span>
+    <span class="phpdocumentor-element-found-in__line">757</span>
 
     </aside>
 
@@ -1916,7 +1951,7 @@ if $id = -2 return splitted texts</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/database_connect.php"><a href="files/inc-database-connect.html"><abbr title="inc/database_connect.php">database_connect.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">891</span>
+    <span class="phpdocumentor-element-found-in__line">892</span>
 
     </aside>
 
@@ -1978,7 +2013,7 @@ if $id = -2 return splitted texts</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/database_connect.php"><a href="files/inc-database-connect.html"><abbr title="inc/database_connect.php">database_connect.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">941</span>
+    <span class="phpdocumentor-element-found-in__line">942</span>
 
     </aside>
 
@@ -2076,7 +2111,7 @@ if $id = -2 return splitted texts</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/database_connect.php"><a href="files/inc-database-connect.html"><abbr title="inc/database_connect.php">database_connect.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1083</span>
+    <span class="phpdocumentor-element-found-in__line">1087</span>
 
     </aside>
 
@@ -2164,7 +2199,7 @@ if $id = -2 return splitted texts</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/database_connect.php"><a href="files/inc-database-connect.html"><abbr title="inc/database_connect.php">database_connect.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1120</span>
+    <span class="phpdocumentor-element-found-in__line">1124</span>
 
     </aside>
 
@@ -2209,6 +2244,77 @@ if $id = -2 return splitted texts</p>
     
 </article>
                     <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_registerSentencesTextItems">
+        registerSentencesTextItems()
+        <a href="namespaces/default.html#function_registerSentencesTextItems" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="inc/database_connect.php"><a href="files/inc-database-connect.html"><abbr title="inc/database_connect.php">database_connect.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">1178</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Append sentences and text items in the database.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">registerSentencesTextItems</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$tid</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$lid</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$hasmultiword</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$tid</span>
+                : <span class="phpdocumentor-signature__argument__return-type">int</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>ID of text from which insert data</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$lid</span>
+                : <span class="phpdocumentor-signature__argument__return-type">int</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>ID of the language of the text</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$hasmultiword</span>
+                : <span class="phpdocumentor-signature__argument__return-type">bool</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Set to true to insert multi-words as well.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="namespaces/default.html#function_registerSentencesTextItems#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">global</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                                
+                                                 <section class="phpdocumentor-description"><p>string $tbpref Database table prefix</p>
+</section>
+
+                                    </dd>
+                                            </dl>
+
+    
+</article>
+                    <article class="phpdocumentor-element -function - -deprecated">
     <h4 class="phpdocumentor-element__name" id="function_update_default_values">
         update_default_values()
         <a href="namespaces/default.html#function_update_default_values" class="headerlink"><i class="fas fa-link"></i></a>
@@ -2217,19 +2323,17 @@ if $id = -2 return splitted texts</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/database_connect.php"><a href="files/inc-database-connect.html"><abbr title="inc/database_connect.php">database_connect.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1174</span>
+    <span class="phpdocumentor-element-found-in__line">1235</span>
 
     </aside>
 
-        <p class="phpdocumentor-summary">Change the default values for default language, default text, etc.</p>
+        <p class="phpdocumentor-summary">Append sentences and text items in the database.</p>
 
-    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <code class="phpdocumentor-code phpdocumentor-signature -deprecated">
     <span class="phpdocumentor-signature__visibility"></span>
-                    <span class="phpdocumentor-signature__name">update_default_values</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$lid</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$sql</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+                    <span class="phpdocumentor-signature__name">update_default_values</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$lid</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$_sql</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
 
-        <section class="phpdocumentor-description"><p>..</p>
-</section>
-
+    
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
@@ -2251,11 +2355,13 @@ if $id = -2 return splitted texts</p>
 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$sql</span>
+                <span class="phpdocumentor-signature__argument__name">$_sql</span>
                 : <span class="phpdocumentor-signature__argument__return-type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                
+                    <section class="phpdocumentor-description"><p>Unnused since 2.10.0. Will be removed in 3.0.0.</p>
+</section>
+
             </dd>
             </dl>
 
@@ -2275,11 +2381,91 @@ if $id = -2 return splitted texts</p>
 </section>
 
                                     </dd>
+                                                <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">deprecated</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                                
+                                                 <section class="phpdocumentor-description"><p>Since 2.10.0, use registerSentencesTextItems instead</p>
+</section>
+
+                                    </dd>
                                             </dl>
 
     
 </article>
                     <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_displayTextStatistics">
+        displayTextStatistics()
+        <a href="namespaces/default.html#function_displayTextStatistics" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="inc/database_connect.php"><a href="files/inc-database-connect.html"><abbr title="inc/database_connect.php">database_connect.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">1266</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Display statistics about a text.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">displayTextStatistics</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$lid</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$rtlScript</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$multiwords</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$lid</span>
+                : <span class="phpdocumentor-signature__argument__return-type">int</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Language ID</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$rtlScript</span>
+                : <span class="phpdocumentor-signature__argument__return-type">bool</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>true if language is right-to-left</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$multiwords</span>
+                : <span class="phpdocumentor-signature__argument__return-type">bool</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Display if text has multi-words</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="namespaces/default.html#function_displayTextStatistics#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">global</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                                
+                                                 <section class="phpdocumentor-description"><p>$tbpref</p>
+</section>
+
+                                    </dd>
+                                            </dl>
+
+    
+</article>
+                    <article class="phpdocumentor-element -function - -deprecated">
     <h4 class="phpdocumentor-element__name" id="function_check_text">
         check_text()
         <a href="namespaces/default.html#function_check_text" class="headerlink"><i class="fas fa-link"></i></a>
@@ -2288,13 +2474,13 @@ if $id = -2 return splitted texts</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/database_connect.php"><a href="files/inc-database-connect.html"><abbr title="inc/database_connect.php">database_connect.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1229</span>
+    <span class="phpdocumentor-element-found-in__line">1340</span>
 
     </aside>
 
         <p class="phpdocumentor-summary">Check a text and display statistics about it.</p>
 
-    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <code class="phpdocumentor-code phpdocumentor-signature -deprecated">
     <span class="phpdocumentor-signature__visibility"></span>
                     <span class="phpdocumentor-signature__name">check_text</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$sql</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$rtlScript</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, int&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$wl</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
 
@@ -2329,10 +2515,79 @@ if $id = -2 return splitted texts</p>
             </dl>
 
     
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="namespaces/default.html#function_check_text#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">deprecated</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                                
+                                                 <section class="phpdocumentor-description"><p>Use displayTextStatistics instead. Will be removed in 3.0.0.</p>
+</section>
+
+                                    </dd>
+                                            </dl>
 
     
 </article>
                     <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_checkExpressions">
+        checkExpressions()
+        <a href="namespaces/default.html#function_checkExpressions" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="inc/database_connect.php"><a href="files/inc-database-connect.html"><abbr title="inc/database_connect.php">database_connect.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">1402</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Check a language that contains expressions.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">checkExpressions</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, int&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$wl</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$wl</span>
+                : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, int&gt;</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>All the different expression length in the language.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="namespaces/default.html#function_checkExpressions#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">global</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                                
+                                                 <section class="phpdocumentor-description"><p>string $tbpref Database table prefix</p>
+</section>
+
+                                    </dd>
+                                            </dl>
+
+    
+</article>
+                    <article class="phpdocumentor-element -function - -deprecated">
     <h4 class="phpdocumentor-element__name" id="function_check_text_with_expressions">
         check_text_with_expressions()
         <a href="namespaces/default.html#function_check_text_with_expressions" class="headerlink"><i class="fas fa-link"></i></a>
@@ -2341,13 +2596,13 @@ if $id = -2 return splitted texts</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/database_connect.php"><a href="files/inc-database-connect.html"><abbr title="inc/database_connect.php">database_connect.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1291</span>
+    <span class="phpdocumentor-element-found-in__line">1520</span>
 
     </aside>
 
-        <p class="phpdocumentor-summary">Check a text that contains expressions.</p>
+        <p class="phpdocumentor-summary">Check a language that contains expressions.</p>
 
-    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <code class="phpdocumentor-code phpdocumentor-signature -deprecated">
     <span class="phpdocumentor-signature__visibility"></span>
                     <span class="phpdocumentor-signature__name">check_text_with_expressions</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$id</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$lid</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, int&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$wl</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$wl_max</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$mw_sql</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
 
@@ -2417,6 +2672,15 @@ if $id = -2 return splitted texts</p>
 </section>
 
                                     </dd>
+                                                <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">deprecated</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                                
+                                                 <section class="phpdocumentor-description"><p>Since 2.10.0-fork use checkExpressions. It does not modify SQL globals.</p>
+</section>
+
+                                    </dd>
                                             </dl>
 
             <section>
@@ -2438,7 +2702,7 @@ if $id = -2 return splitted texts</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/database_connect.php"><a href="files/inc-database-connect.html"><abbr title="inc/database_connect.php">database_connect.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1400</span>
+    <span class="phpdocumentor-element-found-in__line">1629</span>
 
     </aside>
 
@@ -2529,7 +2793,7 @@ $id = TextID =&gt; Split: insert sentences/textitems entries in DB</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/database_connect.php"><a href="files/inc-database-connect.html"><abbr title="inc/database_connect.php">database_connect.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1473</span>
+    <span class="phpdocumentor-element-found-in__line">1695</span>
 
     </aside>
 
@@ -2570,7 +2834,7 @@ $id = TextID =&gt; Split: insert sentences/textitems entries in DB</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/database_connect.php"><a href="files/inc-database-connect.html"><abbr title="inc/database_connect.php">database_connect.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1506</span>
+    <span class="phpdocumentor-element-found-in__line">1730</span>
 
     </aside>
 
@@ -2619,7 +2883,63 @@ $id = TextID =&gt; Split: insert sentences/textitems entries in DB</p>
 </section>
 
                                     </dd>
+                                                <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">since</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">2.10.0-fork</span>
+                                                                                
+                                                 <section class="phpdocumentor-description"><p>Migrations are defined thourgh SQL, and not directly here</p>
+</section>
+
+                                    </dd>
                                             </dl>
+
+    
+</article>
+                    <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_prefixSQLQuery">
+        prefixSQLQuery()
+        <a href="namespaces/default.html#function_prefixSQLQuery" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="inc/database_connect.php"><a href="files/inc-database-connect.html"><abbr title="inc/database_connect.php">database_connect.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">1825</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Add a prefix to table in a SQL query string.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">prefixSQLQuery</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$sql_line</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$prefix</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$sql_line</span>
+                : <span class="phpdocumentor-signature__argument__return-type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>SQL string to prefix.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$prefix</span>
+                : <span class="phpdocumentor-signature__argument__return-type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Prefix to add</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
 
     
 </article>
@@ -2632,7 +2952,7 @@ $id = TextID =&gt; Split: insert sentences/textitems entries in DB</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/database_connect.php"><a href="files/inc-database-connect.html"><abbr title="inc/database_connect.php">database_connect.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">1795</span>
+    <span class="phpdocumentor-element-found-in__line">1849</span>
 
     </aside>
 
@@ -2680,7 +3000,17 @@ $id = TextID =&gt; Split: insert sentences/textitems entries in DB</p>
                 </dt>
                 <dd class="phpdocumentor-tag-list__definition">
                                                                                 
-                                                 <section class="phpdocumentor-description"><p>mysqli $DBCONNECTION Connection to the database</p>
+                                                 <section class="phpdocumentor-description"><p>mysqli $DBCONNECTION Connection to the database.</p>
+</section>
+
+                                    </dd>
+                                                <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">since</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">2.10.0</span>
+                                                                                
+                                                 <section class="phpdocumentor-description"><p>Use confiduration files instead of containing all the data.</p>
 </section>
 
                                     </dd>
@@ -2697,7 +3027,7 @@ $id = TextID =&gt; Split: insert sentences/textitems entries in DB</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/database_connect.php"><a href="files/inc-database-connect.html"><abbr title="inc/database_connect.php">database_connect.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2255</span>
+    <span class="phpdocumentor-element-found-in__line">1997</span>
 
     </aside>
 
@@ -2816,6 +3146,53 @@ $id = TextID =&gt; Split: insert sentences/textitems entries in DB</p>
 
 </article>
                     <article class="phpdocumentor-element -function - ">
+    <h4 class="phpdocumentor-element__name" id="function_getDatabasePrefix">
+        getDatabasePrefix()
+        <a href="namespaces/default.html#function_getDatabasePrefix" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="inc/database_connect.php"><a href="files/inc-database-connect.html"><abbr title="inc/database_connect.php">database_connect.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">2087</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Get the prefixes for the database.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility"></span>
+                    <span class="phpdocumentor-signature__name">getDatabasePrefix</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$dbconnection</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
+
+        <section class="phpdocumentor-description"><p>Is $tbpref set in connect.inc.php? Take it and $fixed_tbpref=1.
+If not: $fixed_tbpref=0. Is it set in table &quot;_lwtgeneral&quot;? Take it.
+If not: Use $tbpref = '' (no prefix, old/standard behaviour).</p>
+</section>
+
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$dbconnection</span>
+                : <span class="phpdocumentor-signature__argument__return-type">mixed</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>Table prefix, and if table prefix should be fixed</p>
+</section>
+
+            </section>
+
+</article>
+                    <article class="phpdocumentor-element -function - -deprecated">
     <h4 class="phpdocumentor-element__name" id="function_get_database_prefixes">
         get_database_prefixes()
         <a href="namespaces/default.html#function_get_database_prefixes" class="headerlink"><i class="fas fa-link"></i></a>
@@ -2824,13 +3201,13 @@ $id = TextID =&gt; Split: insert sentences/textitems entries in DB</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/database_connect.php"><a href="files/inc-database-connect.html"><abbr title="inc/database_connect.php">database_connect.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">2345</span>
+    <span class="phpdocumentor-element-found-in__line">2146</span>
 
     </aside>
 
         <p class="phpdocumentor-summary">Get the prefixes for the database.</p>
 
-    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <code class="phpdocumentor-code phpdocumentor-signature -deprecated">
     <span class="phpdocumentor-signature__visibility"></span>
                     <span class="phpdocumentor-signature__name">get_database_prefixes</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string|null&nbsp;</span><span class="phpdocumentor-signature__argument__reference-operator">&amp;</span><span class="phpdocumentor-signature__argument__name">$tbpref</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">0|1</span></code>
 
@@ -2853,12 +3230,28 @@ If not: Use $tbpref = '' (no prefix, old/standard behaviour).</p>
             </dl>
 
     
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="namespaces/default.html#function_get_database_prefixes#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">deprecated</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                                
+                                                 <section class="phpdocumentor-description"><p>Since 2.10.0-fork, use getDatabasePrefix instead</p>
+</section>
+
+                                    </dd>
+                                            </dl>
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
         <span class="phpdocumentor-signature__response_type">0|1</span>
                     &mdash;
-                <section class="phpdocumentor-description"><p>Table Prefix is fixed, no changes possible</p>
+                <section class="phpdocumentor-description"><p>Table Prefix is fixed, no changes possible.</p>
 </section>
 
             </section>
@@ -2982,14 +3375,17 @@ If not: Use $tbpref = '' (no prefix, old/standard behaviour).</p>
                                                     <li><a href="namespaces/default.html#function_check_text_valid">check_text_valid()</a></li>
                                                     <li><a href="namespaces/default.html#function_check_text_with_expressions">check_text_with_expressions()</a></li>
                                                     <li><a href="namespaces/default.html#function_check_update_db">check_update_db()</a></li>
+                                                    <li><a href="namespaces/default.html#function_checkExpressions">checkExpressions()</a></li>
                                                     <li><a href="namespaces/default.html#function_connect_to_database">connect_to_database()</a></li>
                                                     <li><a href="namespaces/default.html#function_convert_regexp_to_sqlsyntax">convert_regexp_to_sqlsyntax()</a></li>
                                                     <li><a href="namespaces/default.html#function_convert_string_to_sqlsyntax">convert_string_to_sqlsyntax()</a></li>
                                                     <li><a href="namespaces/default.html#function_convert_string_to_sqlsyntax_nonull">convert_string_to_sqlsyntax_nonull()</a></li>
                                                     <li><a href="namespaces/default.html#function_convert_string_to_sqlsyntax_notrim_nonull">convert_string_to_sqlsyntax_notrim_nonull()</a></li>
+                                                    <li><a href="namespaces/default.html#function_displayTextStatistics">displayTextStatistics()</a></li>
                                                     <li><a href="namespaces/default.html#function_do_mysqli_query">do_mysqli_query()</a></li>
                                                     <li><a href="namespaces/default.html#function_get_database_prefixes">get_database_prefixes()</a></li>
                                                     <li><a href="namespaces/default.html#function_get_first_value">get_first_value()</a></li>
+                                                    <li><a href="namespaces/default.html#function_getDatabasePrefix">getDatabasePrefix()</a></li>
                                                     <li><a href="namespaces/default.html#function_getSetting">getSetting()</a></li>
                                                     <li><a href="namespaces/default.html#function_getSettingWithDefault">getSettingWithDefault()</a></li>
                                                     <li><a href="namespaces/default.html#function_getSettingZeroOrOne">getSettingZeroOrOne()</a></li>
@@ -3000,9 +3396,11 @@ If not: Use $tbpref = '' (no prefix, old/standard behaviour).</p>
                                                     <li><a href="namespaces/default.html#function_optimizedb">optimizedb()</a></li>
                                                     <li><a href="namespaces/default.html#function_parse_japanese_text">parse_japanese_text()</a></li>
                                                     <li><a href="namespaces/default.html#function_parse_standard_text">parse_standard_text()</a></li>
+                                                    <li><a href="namespaces/default.html#function_prefixSQLQuery">prefixSQLQuery()</a></li>
                                                     <li><a href="namespaces/default.html#function_prepare_text_parsing">prepare_text_parsing()</a></li>
                                                     <li><a href="namespaces/default.html#function_prepare_textdata">prepare_textdata()</a></li>
                                                     <li><a href="namespaces/default.html#function_prepare_textdata_js">prepare_textdata_js()</a></li>
+                                                    <li><a href="namespaces/default.html#function_registerSentencesTextItems">registerSentencesTextItems()</a></li>
                                                     <li><a href="namespaces/default.html#function_reparse_all_texts">reparse_all_texts()</a></li>
                                                     <li><a href="namespaces/default.html#function_runsql">runsql()</a></li>
                                                     <li><a href="namespaces/default.html#function_save_processed_text_with_sql">save_processed_text_with_sql()</a></li>

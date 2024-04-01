@@ -36,6 +36,16 @@ Search.appendIndex(
             "summary": "Make\u0020a\u0020full\u0020HTML\u0020page\u0020for\u0020all\u0020well\u002Dknown\u0020words.",
             "url": "namespaces/default.html#function_all_words_wellknown_full"
         },                {
+            "fqsen": "\\LWT_API_VERSION",
+            "name": "LWT_API_VERSION",
+            "summary": "",
+            "url": "namespaces/default.html#constant_LWT_API_VERSION"
+        },                {
+            "fqsen": "\\LWT_API_RELEASE_DATE",
+            "name": "LWT_API_RELEASE_DATE",
+            "summary": "",
+            "url": "namespaces/default.html#constant_LWT_API_RELEASE_DATE"
+        },                {
             "fqsen": "\\Lwt\\Ajax\\send_response\u0028\u0029",
             "name": "send_response",
             "summary": "Send\u0020JSON\u0020response\u0020and\u0020exit.",
@@ -55,6 +65,11 @@ Search.appendIndex(
             "name": "media_files",
             "summary": "List\u0020the\u0020audio\u0020and\u0020video\u0020files\u0020in\u0020the\u0020media\u0020folder.",
             "url": "namespaces/lwt-ajax.html#function_media_files"
+        },                {
+            "fqsen": "\\Lwt\\Ajax\\readingConfiguration\u0028\u0029",
+            "name": "readingConfiguration",
+            "summary": "The\u0020way\u0020text\u0020should\u0020be\u0020read",
+            "url": "namespaces/lwt-ajax.html#function_readingConfiguration"
         },                {
             "fqsen": "\\Lwt\\Ajax\\get_phonetic_reading\u0028\u0029",
             "name": "get_phonetic_reading",
@@ -816,6 +831,11 @@ Search.appendIndex(
             "summary": "Load\u0020a\u0020language\u0020object\u0020based\u0020in\u0020language\u0020ID.",
             "url": "namespaces/default.html#function_load_language"
         },                {
+            "fqsen": "\\edit_languages_displayThirdPartyVoiceAPI\u0028\u0029",
+            "name": "edit_languages_displayThirdPartyVoiceAPI",
+            "summary": "",
+            "url": "namespaces/default.html#function_edit_languages_displayThirdPartyVoiceAPI"
+        },                {
             "fqsen": "\\edit_language_form\u0028\u0029",
             "name": "edit_language_form",
             "summary": "Create\u0020the\u0020form\u0020for\u0020a\u0020language.",
@@ -1028,22 +1048,22 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Lwt\\Interface\\translate_sentence\u0028\u0029",
             "name": "translate_sentence",
-            "summary": "",
+            "summary": "Translate\u0020a\u0020single\u0020sentence\u0020using\u0020Google\u0020Translate.",
             "url": "namespaces/lwt-interface.html#function_translate_sentence"
         },                {
             "fqsen": "\\Lwt\\Interface\\translate_term\u0028\u0029",
             "name": "translate_term",
-            "summary": "",
+            "summary": "Translate\u0020input\u0020text\u0020using\u0020Google\u0020Translate.",
             "url": "namespaces/lwt-interface.html#function_translate_term"
         },                {
             "fqsen": "\\Lwt\\Interface\\translate_text\u0028\u0029",
             "name": "translate_text",
-            "summary": "",
+            "summary": "Translate\u0020input\u0020text\u0020using\u0020Google\u0020Translate.",
             "url": "namespaces/lwt-interface.html#function_translate_text"
         },                {
             "fqsen": "\\Lwt\\Interface\\do_content\u0028\u0029",
             "name": "do_content",
-            "summary": "",
+            "summary": "Translate\u0020input\u0020text\u0020using\u0020Google\u0020Translate.",
             "url": "namespaces/lwt-interface.html#function_do_content"
         },                {
             "fqsen": "\\add_new_term_transl\u0028\u0029",
@@ -1416,6 +1436,16 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/Language.html#property_rightoleft"
         },                {
+            "fqsen": "\\Language\u003A\u003A\u0024ttsvoiceapi",
+            "name": "ttsvoiceapi",
+            "summary": "",
+            "url": "classes/Language.html#property_ttsvoiceapi"
+        },                {
+            "fqsen": "\\Language\u003A\u003A\u0024showromanization",
+            "name": "showromanization",
+            "summary": "",
+            "url": "classes/Language.html#property_showromanization"
+        },                {
             "fqsen": "\\Term",
             "name": "Term",
             "summary": "A\u0020term\u0020\u0028word\u0020or\u0020mutli\u002Dword\u0029\u0020represented\u0020as\u0020an\u0020object.",
@@ -1681,19 +1711,34 @@ Search.appendIndex(
             "summary": "Echo\u0020the\u0020sentences\u0020in\u0020a\u0020text.\u0020Prepare\u0020JS\u0020data\u0020for\u0020words\u0020and\u0020word\u0020count.",
             "url": "namespaces/default.html#function_check_text_valid"
         },                {
+            "fqsen": "\\registerSentencesTextItems\u0028\u0029",
+            "name": "registerSentencesTextItems",
+            "summary": "Append\u0020sentences\u0020and\u0020text\u0020items\u0020in\u0020the\u0020database.",
+            "url": "namespaces/default.html#function_registerSentencesTextItems"
+        },                {
             "fqsen": "\\update_default_values\u0028\u0029",
             "name": "update_default_values",
-            "summary": "Change\u0020the\u0020default\u0020values\u0020for\u0020default\u0020language,\u0020default\u0020text,\u0020etc.",
+            "summary": "Append\u0020sentences\u0020and\u0020text\u0020items\u0020in\u0020the\u0020database.",
             "url": "namespaces/default.html#function_update_default_values"
+        },                {
+            "fqsen": "\\displayTextStatistics\u0028\u0029",
+            "name": "displayTextStatistics",
+            "summary": "Display\u0020statistics\u0020about\u0020a\u0020text.",
+            "url": "namespaces/default.html#function_displayTextStatistics"
         },                {
             "fqsen": "\\check_text\u0028\u0029",
             "name": "check_text",
             "summary": "Check\u0020a\u0020text\u0020and\u0020display\u0020statistics\u0020about\u0020it.",
             "url": "namespaces/default.html#function_check_text"
         },                {
+            "fqsen": "\\checkExpressions\u0028\u0029",
+            "name": "checkExpressions",
+            "summary": "Check\u0020a\u0020language\u0020that\u0020contains\u0020expressions.",
+            "url": "namespaces/default.html#function_checkExpressions"
+        },                {
             "fqsen": "\\check_text_with_expressions\u0028\u0029",
             "name": "check_text_with_expressions",
-            "summary": "Check\u0020a\u0020text\u0020that\u0020contains\u0020expressions.",
+            "summary": "Check\u0020a\u0020language\u0020that\u0020contains\u0020expressions.",
             "url": "namespaces/default.html#function_check_text_with_expressions"
         },                {
             "fqsen": "\\splitCheckText\u0028\u0029",
@@ -1711,6 +1756,11 @@ Search.appendIndex(
             "summary": "Update\u0020the\u0020database\u0020if\u0020it\u0020is\u0020using\u0020an\u0020outdate\u0020version.",
             "url": "namespaces/default.html#function_update_database"
         },                {
+            "fqsen": "\\prefixSQLQuery\u0028\u0029",
+            "name": "prefixSQLQuery",
+            "summary": "Add\u0020a\u0020prefix\u0020to\u0020table\u0020in\u0020a\u0020SQL\u0020query\u0020string.",
+            "url": "namespaces/default.html#function_prefixSQLQuery"
+        },                {
             "fqsen": "\\check_update_db\u0028\u0029",
             "name": "check_update_db",
             "summary": "Check\u0020and\/or\u0020update\u0020the\u0020database.",
@@ -1721,10 +1771,50 @@ Search.appendIndex(
             "summary": "Make\u0020the\u0020connection\u0020to\u0020the\u0020database.",
             "url": "namespaces/default.html#function_connect_to_database"
         },                {
+            "fqsen": "\\getDatabasePrefix\u0028\u0029",
+            "name": "getDatabasePrefix",
+            "summary": "Get\u0020the\u0020prefixes\u0020for\u0020the\u0020database.",
+            "url": "namespaces/default.html#function_getDatabasePrefix"
+        },                {
             "fqsen": "\\get_database_prefixes\u0028\u0029",
             "name": "get_database_prefixes",
             "summary": "Get\u0020the\u0020prefixes\u0020for\u0020the\u0020database.",
             "url": "namespaces/default.html#function_get_database_prefixes"
+        },                {
+            "fqsen": "\\load_feeds\u0028\u0029",
+            "name": "load_feeds",
+            "summary": "",
+            "url": "namespaces/default.html#function_load_feeds"
+        },                {
+            "fqsen": "\\write_rss_to_db\u0028\u0029",
+            "name": "write_rss_to_db",
+            "summary": "",
+            "url": "namespaces/default.html#function_write_rss_to_db"
+        },                {
+            "fqsen": "\\print_last_feed_update\u0028\u0029",
+            "name": "print_last_feed_update",
+            "summary": "",
+            "url": "namespaces/default.html#function_print_last_feed_update"
+        },                {
+            "fqsen": "\\get_nf_option\u0028\u0029",
+            "name": "get_nf_option",
+            "summary": "",
+            "url": "namespaces/default.html#function_get_nf_option"
+        },                {
+            "fqsen": "\\get_links_from_new_feed\u0028\u0029",
+            "name": "get_links_from_new_feed",
+            "summary": "",
+            "url": "namespaces/default.html#function_get_links_from_new_feed"
+        },                {
+            "fqsen": "\\get_links_from_rss\u0028\u0029",
+            "name": "get_links_from_rss",
+            "summary": "",
+            "url": "namespaces/default.html#function_get_links_from_rss"
+        },                {
+            "fqsen": "\\get_text_from_rsslink\u0028\u0029",
+            "name": "get_text_from_rsslink",
+            "summary": "",
+            "url": "namespaces/default.html#function_get_text_from_rsslink"
         },                {
             "fqsen": "\\Lwt\\Includes\\regenGoogleTimeToken\u0028\u0029",
             "name": "regenGoogleTimeToken",
@@ -1775,136 +1865,6 @@ Search.appendIndex(
             "name": "save",
             "summary": "Save\u0020settings\u0020and\u0020go\u0020to\u0020a\u0020page.",
             "url": "namespaces/savesetting.html#function_save"
-        },                {
-            "fqsen": "\\get_tags\u0028\u0029",
-            "name": "get_tags",
-            "summary": "Return\u0020the\u0020list\u0020of\u0020all\u0020tags.",
-            "url": "namespaces/default.html#function_get_tags"
-        },                {
-            "fqsen": "\\get_texttags\u0028\u0029",
-            "name": "get_texttags",
-            "summary": "Return\u0020the\u0020list\u0020of\u0020all\u0020text\u0020tags.",
-            "url": "namespaces/default.html#function_get_texttags"
-        },                {
-            "fqsen": "\\getTextTitle\u0028\u0029",
-            "name": "getTextTitle",
-            "summary": "",
-            "url": "namespaces/default.html#function_getTextTitle"
-        },                {
-            "fqsen": "\\get_tag_selectoptions\u0028\u0029",
-            "name": "get_tag_selectoptions",
-            "summary": "",
-            "url": "namespaces/default.html#function_get_tag_selectoptions"
-        },                {
-            "fqsen": "\\get_texttag_selectoptions\u0028\u0029",
-            "name": "get_texttag_selectoptions",
-            "summary": "",
-            "url": "namespaces/default.html#function_get_texttag_selectoptions"
-        },                {
-            "fqsen": "\\get_txtag_selectoptions\u0028\u0029",
-            "name": "get_txtag_selectoptions",
-            "summary": "",
-            "url": "namespaces/default.html#function_get_txtag_selectoptions"
-        },                {
-            "fqsen": "\\get_archivedtexttag_selectoptions\u0028\u0029",
-            "name": "get_archivedtexttag_selectoptions",
-            "summary": "",
-            "url": "namespaces/default.html#function_get_archivedtexttag_selectoptions"
-        },                {
-            "fqsen": "\\saveWordTags\u0028\u0029",
-            "name": "saveWordTags",
-            "summary": "Save\u0020the\u0020tags\u0020for\u0020words.",
-            "url": "namespaces/default.html#function_saveWordTags"
-        },                {
-            "fqsen": "\\saveTextTags\u0028\u0029",
-            "name": "saveTextTags",
-            "summary": "Save\u0020the\u0020tags\u0020for\u0020texts.",
-            "url": "namespaces/default.html#function_saveTextTags"
-        },                {
-            "fqsen": "\\saveArchivedTextTags\u0028\u0029",
-            "name": "saveArchivedTextTags",
-            "summary": "Save\u0020the\u0020tags\u0020for\u0020archived\u0020texts.",
-            "url": "namespaces/default.html#function_saveArchivedTextTags"
-        },                {
-            "fqsen": "\\getWordTags\u0028\u0029",
-            "name": "getWordTags",
-            "summary": "",
-            "url": "namespaces/default.html#function_getWordTags"
-        },                {
-            "fqsen": "\\getTextTags\u0028\u0029",
-            "name": "getTextTags",
-            "summary": "Return\u0020a\u0020HTML\u002Dformatted\u0020list\u0020of\u0020the\u0020text\u0020tags.",
-            "url": "namespaces/default.html#function_getTextTags"
-        },                {
-            "fqsen": "\\getArchivedTextTags\u0028\u0029",
-            "name": "getArchivedTextTags",
-            "summary": "Return\u0020a\u0020HTML\u002Dformatted\u0020list\u0020of\u0020the\u0020text\u0020tags\u0020for\u0020an\u0020archived\u0020text.",
-            "url": "namespaces/default.html#function_getArchivedTextTags"
-        },                {
-            "fqsen": "\\addtaglist\u0028\u0029",
-            "name": "addtaglist",
-            "summary": "",
-            "url": "namespaces/default.html#function_addtaglist"
-        },                {
-            "fqsen": "\\addarchtexttaglist\u0028\u0029",
-            "name": "addarchtexttaglist",
-            "summary": "",
-            "url": "namespaces/default.html#function_addarchtexttaglist"
-        },                {
-            "fqsen": "\\addtexttaglist\u0028\u0029",
-            "name": "addtexttaglist",
-            "summary": "",
-            "url": "namespaces/default.html#function_addtexttaglist"
-        },                {
-            "fqsen": "\\removetaglist\u0028\u0029",
-            "name": "removetaglist",
-            "summary": "",
-            "url": "namespaces/default.html#function_removetaglist"
-        },                {
-            "fqsen": "\\removearchtexttaglist\u0028\u0029",
-            "name": "removearchtexttaglist",
-            "summary": "",
-            "url": "namespaces/default.html#function_removearchtexttaglist"
-        },                {
-            "fqsen": "\\removetexttaglist\u0028\u0029",
-            "name": "removetexttaglist",
-            "summary": "",
-            "url": "namespaces/default.html#function_removetexttaglist"
-        },                {
-            "fqsen": "\\load_feeds\u0028\u0029",
-            "name": "load_feeds",
-            "summary": "",
-            "url": "namespaces/default.html#function_load_feeds"
-        },                {
-            "fqsen": "\\write_rss_to_db\u0028\u0029",
-            "name": "write_rss_to_db",
-            "summary": "",
-            "url": "namespaces/default.html#function_write_rss_to_db"
-        },                {
-            "fqsen": "\\print_last_feed_update\u0028\u0029",
-            "name": "print_last_feed_update",
-            "summary": "",
-            "url": "namespaces/default.html#function_print_last_feed_update"
-        },                {
-            "fqsen": "\\get_nf_option\u0028\u0029",
-            "name": "get_nf_option",
-            "summary": "",
-            "url": "namespaces/default.html#function_get_nf_option"
-        },                {
-            "fqsen": "\\get_links_from_new_feed\u0028\u0029",
-            "name": "get_links_from_new_feed",
-            "summary": "",
-            "url": "namespaces/default.html#function_get_links_from_new_feed"
-        },                {
-            "fqsen": "\\get_links_from_rss\u0028\u0029",
-            "name": "get_links_from_rss",
-            "summary": "",
-            "url": "namespaces/default.html#function_get_links_from_rss"
-        },                {
-            "fqsen": "\\get_text_from_rsslink\u0028\u0029",
-            "name": "get_text_from_rsslink",
-            "summary": "",
-            "url": "namespaces/default.html#function_get_text_from_rsslink"
         },                {
             "fqsen": "\\getPreviousAndNextTextLinks\u0028\u0029",
             "name": "getPreviousAndNextTextLinks",
@@ -2090,6 +2050,11 @@ Search.appendIndex(
             "name": "get_annotation_position_selectoptions",
             "summary": "",
             "url": "namespaces/default.html#function_get_annotation_position_selectoptions"
+        },                {
+            "fqsen": "\\get_hts_selectoptions\u0028\u0029",
+            "name": "get_hts_selectoptions",
+            "summary": "",
+            "url": "namespaces/default.html#function_get_hts_selectoptions"
         },                {
             "fqsen": "\\get_paging_selectoptions\u0028\u0029",
             "name": "get_paging_selectoptions",
@@ -2291,14 +2256,19 @@ Search.appendIndex(
             "summary": "Compute\u0020and\u0020echo\u0020word\u0020statistics\u0020about\u0020a\u0020list\u0020of\u0020text\u0020ID.",
             "url": "namespaces/default.html#function_textwordcount"
         },                {
-            "fqsen": "\\texttodocount\u0028\u0029",
-            "name": "texttodocount",
-            "summary": "",
-            "url": "namespaces/default.html#function_texttodocount"
+            "fqsen": "\\todo_words_count\u0028\u0029",
+            "name": "todo_words_count",
+            "summary": "Return\u0020the\u0020number\u0020of\u0020words\u0020left\u0020to\u0020do\u0020in\u0020this\u0020text.",
+            "url": "namespaces/default.html#function_todo_words_count"
+        },                {
+            "fqsen": "\\todo_words_content\u0028\u0029",
+            "name": "todo_words_content",
+            "summary": "Prepare\u0020HTML\u0020interactions\u0020for\u0020the\u0020words\u0020left\u0020to\u0020do\u0020in\u0020this\u0020text.",
+            "url": "namespaces/default.html#function_todo_words_content"
         },                {
             "fqsen": "\\texttodocount2\u0028\u0029",
             "name": "texttodocount2",
-            "summary": "Return\u0020the\u0020number\u0020of\u0020words\u0020left\u0020to\u0020do\u0020in\u0020this\u0020text.",
+            "summary": "Prepare\u0020HTML\u0020interactions\u0020for\u0020the\u0020words\u0020left\u0020to\u0020do\u0020in\u0020this\u0020text.",
             "url": "namespaces/default.html#function_texttodocount2"
         },                {
             "fqsen": "\\sentences_containing_word_lc_query\u0028\u0029",
@@ -2351,6 +2321,11 @@ Search.appendIndex(
             "summary": "Return\u0020a\u0020right\u002Dto\u002Dleft\u0020direction\u0020indication\u0020in\u0020HTML\u0020if\u0020language\u0020is\u0020right\u002Dto\u002Dleft.",
             "url": "namespaces/default.html#function_getScriptDirectionTag"
         },                {
+            "fqsen": "\\findMecabExpression\u0028\u0029",
+            "name": "findMecabExpression",
+            "summary": "Find\u0020all\u0020occurences\u0020of\u0020an\u0020expression\u0020using\u0020MeCab.",
+            "url": "namespaces/default.html#function_findMecabExpression"
+        },                {
             "fqsen": "\\insert_expression_from_mecab\u0028\u0029",
             "name": "insert_expression_from_mecab",
             "summary": "Insert\u0020an\u0020expression\u0020to\u0020the\u0020database\u0020using\u0020MeCab.",
@@ -2360,6 +2335,11 @@ Search.appendIndex(
             "name": "insertExpressionFromMeCab",
             "summary": "Insert\u0020an\u0020expression\u0020to\u0020the\u0020database\u0020using\u0020MeCab.",
             "url": "namespaces/default.html#function_insertExpressionFromMeCab"
+        },                {
+            "fqsen": "\\findStandardExpression\u0028\u0029",
+            "name": "findStandardExpression",
+            "summary": "Find\u0020all\u0020occurences\u0020of\u0020an\u0020expression,\u0020do\u0020not\u0020use\u0020parsers\u0020like\u0020MeCab.",
+            "url": "namespaces/default.html#function_findStandardExpression"
         },                {
             "fqsen": "\\insert_standard_expression\u0028\u0029",
             "name": "insert_standard_expression",
@@ -2375,6 +2355,11 @@ Search.appendIndex(
             "name": "new_expression_interactable2",
             "summary": "Prepare\u0020a\u0020JavaScript\u0020dialog\u0020to\u0020insert\u0020a\u0020new\u0020expression.",
             "url": "namespaces/default.html#function_new_expression_interactable2"
+        },                {
+            "fqsen": "\\newMultiWordInteractable\u0028\u0029",
+            "name": "newMultiWordInteractable",
+            "summary": "Prepare\u0020a\u0020JavaScript\u0020dialog\u0020to\u0020insert\u0020a\u0020new\u0020expression.",
+            "url": "namespaces/default.html#function_newMultiWordInteractable"
         },                {
             "fqsen": "\\insertExpressions\u0028\u0029",
             "name": "insertExpressions",
@@ -2396,15 +2381,15 @@ Search.appendIndex(
             "summary": "Create\u0020new\u0020annotations\u0020for\u0020a\u0020text.",
             "url": "namespaces/default.html#function_create_ann"
         },                {
-            "fqsen": "\\insert_prefix_in_sql\u0028\u0029",
-            "name": "insert_prefix_in_sql",
-            "summary": "",
-            "url": "namespaces/default.html#function_insert_prefix_in_sql"
-        },                {
             "fqsen": "\\create_save_ann\u0028\u0029",
             "name": "create_save_ann",
             "summary": "",
             "url": "namespaces/default.html#function_create_save_ann"
+        },                {
+            "fqsen": "\\truncateUserDatabase\u0028\u0029",
+            "name": "truncateUserDatabase",
+            "summary": "Truncate\u0020the\u0020database,\u0020remove\u0020all\u0020data\u0020belonging\u0020by\u0020the\u0020current\u0020user.",
+            "url": "namespaces/default.html#function_truncateUserDatabase"
         },                {
             "fqsen": "\\process_term\u0028\u0029",
             "name": "process_term",
@@ -2425,6 +2410,11 @@ Search.appendIndex(
             "name": "trim_value",
             "summary": "Like\u0020trim,\u0020but\u0020in\u0020place\u0020\u0028modify\u0020variable\u0029",
             "url": "namespaces/default.html#function_trim_value"
+        },                {
+            "fqsen": "\\phoneticReading\u0028\u0029",
+            "name": "phoneticReading",
+            "summary": "Parses\u0020text\u0020be\u0020read\u0020by\u0020an\u0020automatic\u0020audio\u0020player.",
+            "url": "namespaces/default.html#function_phoneticReading"
         },                {
             "fqsen": "\\phonetic_reading\u0028\u0029",
             "name": "phonetic_reading",
@@ -2520,6 +2510,101 @@ Search.appendIndex(
             "name": "start_session_main",
             "summary": "Launch\u0020a\u0020new\u0020session\u0020for\u0020WordPress.",
             "url": "namespaces/default.html#function_start_session_main"
+        },                {
+            "fqsen": "\\get_tags\u0028\u0029",
+            "name": "get_tags",
+            "summary": "Return\u0020the\u0020list\u0020of\u0020all\u0020tags.",
+            "url": "namespaces/default.html#function_get_tags"
+        },                {
+            "fqsen": "\\get_texttags\u0028\u0029",
+            "name": "get_texttags",
+            "summary": "Return\u0020the\u0020list\u0020of\u0020all\u0020text\u0020tags.",
+            "url": "namespaces/default.html#function_get_texttags"
+        },                {
+            "fqsen": "\\getTextTitle\u0028\u0029",
+            "name": "getTextTitle",
+            "summary": "",
+            "url": "namespaces/default.html#function_getTextTitle"
+        },                {
+            "fqsen": "\\get_tag_selectoptions\u0028\u0029",
+            "name": "get_tag_selectoptions",
+            "summary": "",
+            "url": "namespaces/default.html#function_get_tag_selectoptions"
+        },                {
+            "fqsen": "\\get_texttag_selectoptions\u0028\u0029",
+            "name": "get_texttag_selectoptions",
+            "summary": "",
+            "url": "namespaces/default.html#function_get_texttag_selectoptions"
+        },                {
+            "fqsen": "\\get_txtag_selectoptions\u0028\u0029",
+            "name": "get_txtag_selectoptions",
+            "summary": "",
+            "url": "namespaces/default.html#function_get_txtag_selectoptions"
+        },                {
+            "fqsen": "\\get_archivedtexttag_selectoptions\u0028\u0029",
+            "name": "get_archivedtexttag_selectoptions",
+            "summary": "",
+            "url": "namespaces/default.html#function_get_archivedtexttag_selectoptions"
+        },                {
+            "fqsen": "\\saveWordTags\u0028\u0029",
+            "name": "saveWordTags",
+            "summary": "Save\u0020the\u0020tags\u0020for\u0020words.",
+            "url": "namespaces/default.html#function_saveWordTags"
+        },                {
+            "fqsen": "\\saveTextTags\u0028\u0029",
+            "name": "saveTextTags",
+            "summary": "Save\u0020the\u0020tags\u0020for\u0020texts.",
+            "url": "namespaces/default.html#function_saveTextTags"
+        },                {
+            "fqsen": "\\saveArchivedTextTags\u0028\u0029",
+            "name": "saveArchivedTextTags",
+            "summary": "Save\u0020the\u0020tags\u0020for\u0020archived\u0020texts.",
+            "url": "namespaces/default.html#function_saveArchivedTextTags"
+        },                {
+            "fqsen": "\\getWordTags\u0028\u0029",
+            "name": "getWordTags",
+            "summary": "",
+            "url": "namespaces/default.html#function_getWordTags"
+        },                {
+            "fqsen": "\\getTextTags\u0028\u0029",
+            "name": "getTextTags",
+            "summary": "Return\u0020a\u0020HTML\u002Dformatted\u0020list\u0020of\u0020the\u0020text\u0020tags.",
+            "url": "namespaces/default.html#function_getTextTags"
+        },                {
+            "fqsen": "\\getArchivedTextTags\u0028\u0029",
+            "name": "getArchivedTextTags",
+            "summary": "Return\u0020a\u0020HTML\u002Dformatted\u0020list\u0020of\u0020the\u0020text\u0020tags\u0020for\u0020an\u0020archived\u0020text.",
+            "url": "namespaces/default.html#function_getArchivedTextTags"
+        },                {
+            "fqsen": "\\addtaglist\u0028\u0029",
+            "name": "addtaglist",
+            "summary": "",
+            "url": "namespaces/default.html#function_addtaglist"
+        },                {
+            "fqsen": "\\addarchtexttaglist\u0028\u0029",
+            "name": "addarchtexttaglist",
+            "summary": "",
+            "url": "namespaces/default.html#function_addarchtexttaglist"
+        },                {
+            "fqsen": "\\addtexttaglist\u0028\u0029",
+            "name": "addtexttaglist",
+            "summary": "",
+            "url": "namespaces/default.html#function_addtexttaglist"
+        },                {
+            "fqsen": "\\removetaglist\u0028\u0029",
+            "name": "removetaglist",
+            "summary": "",
+            "url": "namespaces/default.html#function_removetaglist"
+        },                {
+            "fqsen": "\\removearchtexttaglist\u0028\u0029",
+            "name": "removearchtexttaglist",
+            "summary": "",
+            "url": "namespaces/default.html#function_removearchtexttaglist"
+        },                {
+            "fqsen": "\\removetexttaglist\u0028\u0029",
+            "name": "removetexttaglist",
+            "summary": "",
+            "url": "namespaces/default.html#function_removetexttaglist"
         },                {
             "fqsen": "\\YT_API_KEY",
             "name": "YT_API_KEY",
@@ -2645,6 +2730,76 @@ Search.appendIndex(
             "name": "long_text_do_page",
             "summary": "Do\u0020the\u0020main\u0020page\u0020for\u0020the\u0020long\u0020text\u0020import.",
             "url": "namespaces/default.html#function_long_text_do_page"
+        },                {
+            "fqsen": "\\FlattedString",
+            "name": "FlattedString",
+            "summary": "",
+            "url": "classes/FlattedString.html"
+        },                {
+            "fqsen": "\\FlattedString\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "",
+            "url": "classes/FlattedString.html#method___construct"
+        },                {
+            "fqsen": "\\FlattedString\u003A\u003A\u0024value",
+            "name": "value",
+            "summary": "",
+            "url": "classes/FlattedString.html#property_value"
+        },                {
+            "fqsen": "\\Flatted",
+            "name": "Flatted",
+            "summary": "",
+            "url": "classes/Flatted.html"
+        },                {
+            "fqsen": "\\Flatted\u003A\u003Aparse\u0028\u0029",
+            "name": "parse",
+            "summary": "",
+            "url": "classes/Flatted.html#method_parse"
+        },                {
+            "fqsen": "\\Flatted\u003A\u003Astringify\u0028\u0029",
+            "name": "stringify",
+            "summary": "",
+            "url": "classes/Flatted.html#method_stringify"
+        },                {
+            "fqsen": "\\Flatted\u003A\u003AasString\u0028\u0029",
+            "name": "asString",
+            "summary": "",
+            "url": "classes/Flatted.html#method_asString"
+        },                {
+            "fqsen": "\\Flatted\u003A\u003Aindex\u0028\u0029",
+            "name": "index",
+            "summary": "",
+            "url": "classes/Flatted.html#method_index"
+        },                {
+            "fqsen": "\\Flatted\u003A\u003Akeys\u0028\u0029",
+            "name": "keys",
+            "summary": "",
+            "url": "classes/Flatted.html#method_keys"
+        },                {
+            "fqsen": "\\Flatted\u003A\u003Aloop\u0028\u0029",
+            "name": "loop",
+            "summary": "",
+            "url": "classes/Flatted.html#method_loop"
+        },                {
+            "fqsen": "\\Flatted\u003A\u003Arelate\u0028\u0029",
+            "name": "relate",
+            "summary": "",
+            "url": "classes/Flatted.html#method_relate"
+        },                {
+            "fqsen": "\\Flatted\u003A\u003Aref\u0028\u0029",
+            "name": "ref",
+            "summary": "",
+            "url": "classes/Flatted.html#method_ref"
+        },                {
+            "fqsen": "\\Flatted\u003A\u003Atransform\u0028\u0029",
+            "name": "transform",
+            "summary": "",
+            "url": "classes/Flatted.html#method_transform"
+        },                {
+            "fqsen": "\\Flatted\u003A\u003Awrap\u0028\u0029",
+            "name": "wrap",
+            "summary": "",
+            "url": "classes/Flatted.html#method_wrap"
         },                {
             "fqsen": "\\Lwt\\Interface\\Print_Impr_text\\edit_mode_display\u0028\u0029",
             "name": "edit_mode_display",
@@ -2816,6 +2971,26 @@ Search.appendIndex(
             "summary": "Do\u0020a\u0020short\u0020page\u0020to\u0020edit\u0020the\u0020database\u0020prefix.",
             "url": "namespaces/default.html#function_start_do_page"
         },                {
+            "fqsen": "\\user_logging\u0028\u0029",
+            "name": "user_logging",
+            "summary": "",
+            "url": "namespaces/default.html#function_user_logging"
+        },                {
+            "fqsen": "\\DatabaseConnectTest",
+            "name": "DatabaseConnectTest",
+            "summary": "",
+            "url": "classes/DatabaseConnectTest.html"
+        },                {
+            "fqsen": "\\DatabaseConnectTest\u003A\u003AtestDatabaseInstallation\u0028\u0029",
+            "name": "testDatabaseInstallation",
+            "summary": "",
+            "url": "classes/DatabaseConnectTest.html#method_testDatabaseInstallation"
+        },                {
+            "fqsen": "\\DatabaseConnectTest\u003A\u003AtestPrefixSQLQuery\u0028\u0029",
+            "name": "testPrefixSQLQuery",
+            "summary": "",
+            "url": "classes/DatabaseConnectTest.html#method_testPrefixSQLQuery"
+        },                {
             "fqsen": "\\KernelUtilityTest",
             "name": "KernelUtilityTest",
             "summary": "",
@@ -2835,6 +3010,16 @@ Search.appendIndex(
             "name": "testLangFromDict",
             "summary": "Test\u0020if\u0020the\u0020language\u0020from\u0020dictionary\u0020feature\u0020is\u0020properly\u0020working.",
             "url": "classes/KernelUtilityTest.html#method_testLangFromDict"
+        },                {
+            "fqsen": "\\SessionUtilityTest",
+            "name": "SessionUtilityTest",
+            "summary": "",
+            "url": "classes/SessionUtilityTest.html"
+        },                {
+            "fqsen": "\\SessionUtilityTest\u003A\u003AtestInstallDemoDB\u0028\u0029",
+            "name": "testInstallDemoDB",
+            "summary": "",
+            "url": "classes/SessionUtilityTest.html#method_testInstallDemoDB"
         },                {
             "fqsen": "\\MarkdownConverterTest",
             "name": "MarkdownConverterTest",
@@ -2878,7 +3063,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\tts_settings_minimal_page\u0028\u0029",
             "name": "tts_settings_minimal_page",
-            "summary": "Make\u0020only\u0020a\u0020partial,\u0020embadable\u0020page\u0020for\u0020text\u002Dto\u002Dspeech\u0020settings.",
+            "summary": "Make\u0020only\u0020a\u0020partial,\u0020embedable\u0020page\u0020for\u0020text\u002Dto\u002Dspeech\u0020settings.",
             "url": "namespaces/default.html#function_tts_settings_minimal_page"
         },                {
             "fqsen": "\\tts_settings_full_page\u0028\u0029",

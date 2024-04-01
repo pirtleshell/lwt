@@ -104,7 +104,7 @@
 
 
 <div class="description">
-    Set to 1 if a form was altered (set "dirty"), 
+    Set to 1 if a form was altered (set "dirty"),
 ask for confirmation before leaving.
 </div>
 
@@ -131,6 +131,8 @@ ask for confirmation before leaving.
     
 
     
+        <dt class="important tag-deprecated">Deprecated:</dt><dd><ul class="dummy"><li>Since 2.10.0, use lwtFormCheck instead</li></ul></dd>
+    
 
     
 
@@ -143,7 +145,7 @@ ask for confirmation before leaving.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="unloadformcheck.js.html">unloadformcheck.js</a>, <a href="unloadformcheck.js.html#line15">line 15</a>
+        <a href="unloadformcheck.js.html">unloadformcheck.js</a>, <a href="unloadformcheck.js.html#line18">line 18</a>
     </li></ul></dd>
     
 
@@ -167,7 +169,7 @@ ask for confirmation before leaving.
 
 
 <div class="description">
-    Right-to-left indicator
+    Right-to-left indicator, deprecated in 2.10.0 use LWT_DATA.language.rtl
 </div>
 
 
@@ -205,7 +207,7 @@ ask for confirmation before leaving.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line28">line 28</a>
+        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line63">line 63</a>
     </li></ul></dd>
     
 
@@ -229,7 +231,7 @@ ask for confirmation before leaving.
 
 
 <div class="description">
-    Text ID (int)
+    Text ID (int), deprecated Since 2.10.0, use LWT_DATA.text.id
 </div>
 
 
@@ -267,7 +269,7 @@ ask for confirmation before leaving.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line18">line 18</a>
+        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line55">line 55</a>
     </li></ul></dd>
     
 
@@ -291,7 +293,7 @@ ask for confirmation before leaving.
 
 
 <div class="description">
-    First dictionary URL
+    First dictionary URL, deprecated in 2.10.0 use LWT_DATA.language.dict_link1
 </div>
 
 
@@ -329,7 +331,7 @@ ask for confirmation before leaving.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line20">line 20</a>
+        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line57">line 57</a>
     </li></ul></dd>
     
 
@@ -353,7 +355,7 @@ ask for confirmation before leaving.
 
 
 <div class="description">
-    Second dictionary URL
+    Second dictionary URL, deprecated in 2.10.0 use LWT_DATA.language.dict_link2
 </div>
 
 
@@ -391,7 +393,7 @@ ask for confirmation before leaving.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line22">line 22</a>
+        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line59">line 59</a>
     </li></ul></dd>
     
 
@@ -415,7 +417,7 @@ ask for confirmation before leaving.
 
 
 <div class="description">
-    Google Translate
+    Translator URL, deprecated in 2.10.0 use LWT_DATA.language.translator_link
 </div>
 
 
@@ -453,7 +455,7 @@ ask for confirmation before leaving.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line24">line 24</a>
+        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line61">line 61</a>
     </li></ul></dd>
     
 
@@ -471,26 +473,16 @@ ask for confirmation before leaving.
 
         
             
-<h4 class="name" id="WID"><span class="type-signature"></span>WID<span class="type-signature"> :int</span></h4>
+<h4 class="name" id="WID"><span class="type-signature"></span>WID<span class="type-signature"></span></h4>
 
 
 
 
 <div class="description">
-    Word ID
+    Word ID, deprecated Since 2.10.0, use LWT_DATA.word.id instead
 </div>
 
 
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">int</span>
-
-
-        </li>
-    </ul>
 
 
 
@@ -525,7 +517,131 @@ ask for confirmation before leaving.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line15">line 15</a>
+        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line53">line 53</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="lwtFormCheck"><span class="type-signature">(constant) </span>lwtFormCheck<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    Keeps track of a modified form.
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="unloadformcheck.js.html">unloadformcheck.js</a>, <a href="unloadformcheck.js.html#line23">line 23</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="lwt_audio_controller"><span class="type-signature">(constant) </span>lwt_audio_controller<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    An audio controller.
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="audio_controller.js.html">audio_controller.js</a>, <a href="audio_controller.js.html#line10">line 10</a>
     </li></ul></dd>
     
 
@@ -587,7 +703,7 @@ ask for confirmation before leaving.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line44">line 44</a>
+        <a href="overlib_interface.js.html">overlib_interface.js</a>, <a href="overlib_interface.js.html#line15">line 15</a>
     </li></ul></dd>
     
 
@@ -659,7 +775,7 @@ ask for confirmation before leaving.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line1085">line 1085</a>
+        <a href="text_events.js.html">text_events.js</a>, <a href="text_events.js.html#line548">line 548</a>
     </li></ul></dd>
     
 
@@ -731,7 +847,7 @@ ask for confirmation before leaving.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line1471">line 1471</a>
+        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line905">line 905</a>
     </li></ul></dd>
     
 
@@ -906,7 +1022,7 @@ ask for confirmation before leaving.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line206">line 206</a>
+        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line237">line 237</a>
     </li></ul></dd>
     
 
@@ -1043,7 +1159,7 @@ ask for confirmation before leaving.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line75">line 75</a>
+        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line106">line 106</a>
     </li></ul></dd>
     
 
@@ -1153,7 +1269,7 @@ ask for confirmation before leaving.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line1147">line 1147</a>
+        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line519">line 519</a>
     </li></ul></dd>
     
 
@@ -1251,6 +1367,8 @@ ask for confirmation before leaving.
     
 
     
+        <dt class="important tag-deprecated">Deprecated:</dt><dd><ul class="dummy"><li>Since 2.10.0, use return lwtFormCheck.isDirtyMessage instead</li></ul></dd>
+    
 
     
 
@@ -1263,7 +1381,7 @@ ask for confirmation before leaving.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="unloadformcheck.js.html">unloadformcheck.js</a>, <a href="unloadformcheck.js.html#line22">line 22</a>
+        <a href="unloadformcheck.js.html">unloadformcheck.js</a>, <a href="unloadformcheck.js.html#line94">line 94</a>
     </li></ul></dd>
     
 
@@ -1292,7 +1410,7 @@ ask for confirmation before leaving.
 
         
 <div class="param-desc">
-    Confiramation string
+    Confirmation string
 </div>
 
 
@@ -1329,7 +1447,7 @@ ask for confirmation before leaving.
 
 
 <div class="description">
-    Call this function if you want to ask the user 
+    Call this function if you want to ask the user
 before exiting the form.
 </div>
 
@@ -1362,6 +1480,8 @@ before exiting the form.
     
 
     
+        <dt class="important tag-deprecated">Deprecated:</dt><dd><ul class="dummy"><li>Since 2.10.0, use return lwtFormCheck.askBeforeExit instead</li></ul></dd>
+    
 
     
 
@@ -1374,7 +1494,7 @@ before exiting the form.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="unloadformcheck.js.html">unloadformcheck.js</a>, <a href="unloadformcheck.js.html#line62">line 62</a>
+        <a href="unloadformcheck.js.html">unloadformcheck.js</a>, <a href="unloadformcheck.js.html#line133">line 133</a>
     </li></ul></dd>
     
 
@@ -1480,7 +1600,7 @@ before exiting the form.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line155">line 155</a>
+        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line187">line 187</a>
     </li></ul></dd>
     
 
@@ -1568,7 +1688,7 @@ before exiting the form.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line144">line 144</a>
+        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line176">line 176</a>
     </li></ul></dd>
     
 
@@ -1728,7 +1848,7 @@ before exiting the form.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line243">line 243</a>
+        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line274">line 274</a>
     </li></ul></dd>
     
 
@@ -1888,7 +2008,7 @@ before exiting the form.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line1360">line 1360</a>
+        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line794">line 794</a>
     </li></ul></dd>
     
 
@@ -1998,7 +2118,7 @@ before exiting the form.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line264">line 264</a>
+        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line295">line 295</a>
     </li></ul></dd>
     
 
@@ -2158,7 +2278,7 @@ Create an alert if not.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line1279">line 1279</a>
+        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line651">line 651</a>
     </li></ul></dd>
     
 
@@ -2271,7 +2391,7 @@ set_word_status.php, delete_word.php, etc.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line1769">line 1769</a>
+        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line1197">line 1197</a>
     </li></ul></dd>
     
 
@@ -2426,7 +2546,7 @@ set_word_status.php, delete_word.php, etc.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line65">line 65</a>
+        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line96">line 96</a>
     </li></ul></dd>
     
 
@@ -2654,7 +2774,7 @@ set_word_status.php, delete_word.php, etc.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line964">line 964</a>
+        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line336">line 336</a>
     </li></ul></dd>
     
 
@@ -2882,7 +3002,7 @@ set_word_status.php, delete_word.php, etc.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line920">line 920</a>
+        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line292">line 292</a>
     </li></ul></dd>
     
 
@@ -3072,7 +3192,7 @@ Case 2: url with one ### or "lwt_term": substitute term
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line880">line 880</a>
+        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line252">line 252</a>
     </li></ul></dd>
     
 
@@ -3119,6 +3239,349 @@ Case 2: url with one ### or "lwt_term": substitute term
 </dl>
 
     
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="deepFindValue"><span class="type-signature"></span>deepFindValue<span class="signature">(obj, searchValue)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Find the first string starting with searchValue in object.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>obj</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">dict</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Object to search in</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>searchValue</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Value to search</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="user_interactions.js.html">user_interactions.js</a>, <a href="user_interactions.js.html#line217">line 217</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="deepReplace"><span class="type-signature"></span>deepReplace<span class="signature">(obj, searchValue, replaceValue)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Replace any searchValue on object value by replaceValue with deepth.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>obj</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">dict</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Object to search in</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>searchValue</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Value to find</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>replaceValue</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Value to replace with</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="user_interactions.js.html">user_interactions.js</a>, <a href="user_interactions.js.html#line199">line 199</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -3277,7 +3740,7 @@ Case 2: url with one ### or "lwt_term": substitute term
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line1251">line 1251</a>
+        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line623">line 623</a>
     </li></ul></dd>
     
 
@@ -3556,7 +4019,7 @@ Case 2: url with one ### or "lwt_term": substitute term
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line1323">line 1323</a>
+        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line759">line 759</a>
     </li></ul></dd>
     
 
@@ -3764,7 +4227,7 @@ Case 2: url with one ### or "lwt_term": substitute term
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line1698">line 1698</a>
+        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line1127">line 1127</a>
     </li></ul></dd>
     
 
@@ -3924,7 +4387,7 @@ Case 2: url with one ### or "lwt_term": substitute term
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line1412">line 1412</a>
+        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line846">line 846</a>
     </li></ul></dd>
     
 
@@ -4088,7 +4551,7 @@ Case 2: url with one ### or "lwt_term": substitute term
 
             
 
-            <td class="description last">All the data from the form 
+            <td class="description last">All the data from the form
 (e. g. {"rg0": "foo", "rg1": "bar"})</td>
         </tr>
 
@@ -4130,7 +4593,7 @@ Case 2: url with one ### or "lwt_term": substitute term
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line119">line 119</a>
+        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line150">line 150</a>
     </li></ul></dd>
     
 
@@ -4290,7 +4753,7 @@ Case 2: url with one ### or "lwt_term": substitute term
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line1219">line 1219</a>
+        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line658">line 658</a>
     </li></ul></dd>
     
 
@@ -4496,7 +4959,7 @@ Case 2: url with one ### or "lwt_term": substitute term
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line1376">line 1376</a>
+        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line810">line 810</a>
     </li></ul></dd>
     
 
@@ -4602,7 +5065,7 @@ Case 2: url with one ### or "lwt_term": substitute term
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line1425">line 1425</a>
+        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line859">line 859</a>
     </li></ul></dd>
     
 
@@ -4690,7 +5153,7 @@ Case 2: url with one ### or "lwt_term": substitute term
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line1305">line 1305</a>
+        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line741">line 741</a>
     </li></ul></dd>
     
 
@@ -4778,7 +5241,7 @@ Case 2: url with one ### or "lwt_term": substitute term
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line1446">line 1446</a>
+        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line880">line 880</a>
     </li></ul></dd>
     
 
@@ -4956,7 +5419,7 @@ Case 2: url with one ### or "lwt_term": substitute term
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line1617">line 1617</a>
+        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line1047">line 1047</a>
     </li></ul></dd>
     
 
@@ -5093,7 +5556,7 @@ Case 2: url with one ### or "lwt_term": substitute term
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line1025">line 1025</a>
+        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line397">line 397</a>
     </li></ul></dd>
     
 
@@ -5254,7 +5717,7 @@ See https://stackoverflow.com/questions/1787322/what-is-the-htmlspecialchars-equ
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line1006">line 1006</a>
+        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line378">line 378</a>
     </li></ul></dd>
     
 
@@ -5436,7 +5899,7 @@ See https://stackoverflow.com/questions/1787322/what-is-the-htmlspecialchars-equ
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line828">line 828</a>
+        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line200">line 200</a>
     </li></ul></dd>
     
 
@@ -5634,7 +6097,7 @@ See https://stackoverflow.com/questions/1787322/what-is-the-htmlspecialchars-equ
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line1808">line 1808</a>
+        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line1234">line 1234</a>
     </li></ul></dd>
     
 
@@ -5886,7 +6349,7 @@ See https://stackoverflow.com/questions/1787322/what-is-the-htmlspecialchars-equ
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line1189">line 1189</a>
+        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line561">line 561</a>
     </li></ul></dd>
     
 
@@ -6051,7 +6514,7 @@ See https://stackoverflow.com/questions/1787322/what-is-the-htmlspecialchars-equ
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line773">line 773</a>
+        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line145">line 145</a>
     </li></ul></dd>
     
 
@@ -6279,7 +6742,7 @@ See https://stackoverflow.com/questions/1787322/what-is-the-htmlspecialchars-equ
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="translation_api.js.html">translation_api.js</a>, <a href="translation_api.js.html#line170">line 170</a>
+        <a href="translation_api.js.html">translation_api.js</a>, <a href="translation_api.js.html#line167">line 167</a>
     </li></ul></dd>
     
 
@@ -6557,7 +7020,7 @@ See https://stackoverflow.com/questions/1787322/what-is-the-htmlspecialchars-equ
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="translation_api.js.html">translation_api.js</a>, <a href="translation_api.js.html#line139">line 139</a>
+        <a href="translation_api.js.html">translation_api.js</a>, <a href="translation_api.js.html#line136">line 136</a>
     </li></ul></dd>
     
 
@@ -6698,7 +7161,7 @@ See https://stackoverflow.com/questions/1787322/what-is-the-htmlspecialchars-equ
 
             
 
-            <td class="description last">Language, either two letters code or four letters (BCP 47)</td>
+            <td class="description last">Language, either two letters code or four letters (BCP 47).</td>
         </tr>
 
     
@@ -6727,6 +7190,8 @@ See https://stackoverflow.com/questions/1787322/what-is-the-htmlspecialchars-equ
     
 
     
+        <dt class="important tag-deprecated">Deprecated:</dt><dd><ul class="dummy"><li>Since 2.10.0 use getPhoneticTextAsync</li></ul></dd>
+    
 
     
 
@@ -6739,7 +7204,7 @@ See https://stackoverflow.com/questions/1787322/what-is-the-htmlspecialchars-equ
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="user_interactions.js.html">user_interactions.js</a>, <a href="user_interactions.js.html#line171">line 171</a>
+        <a href="user_interactions.js.html">user_interactions.js</a>, <a href="user_interactions.js.html#line149">line 149</a>
     </li></ul></dd>
     
 
@@ -6849,6 +7314,9 @@ See https://stackoverflow.com/questions/1787322/what-is-the-htmlspecialchars-equ
             
                 
 <span class="param-type">string</span>
+|
+
+<span class="param-type">number</span>
 
 
             
@@ -6858,7 +7326,7 @@ See https://stackoverflow.com/questions/1787322/what-is-the-htmlspecialchars-equ
 
             
 
-            <td class="description last">Language, either two letters code or four letters (BCP 47)</td>
+            <td class="description last">Language, either two letters code or four letters (BCP 47), or language ID</td>
         </tr>
 
     
@@ -6899,7 +7367,7 @@ See https://stackoverflow.com/questions/1787322/what-is-the-htmlspecialchars-equ
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="user_interactions.js.html">user_interactions.js</a>, <a href="user_interactions.js.html#line199">line 199</a>
+        <a href="user_interactions.js.html">user_interactions.js</a>, <a href="user_interactions.js.html#line177">line 177</a>
     </li></ul></dd>
     
 
@@ -7036,7 +7504,7 @@ See https://stackoverflow.com/questions/1787322/what-is-the-htmlspecialchars-equ
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line684">line 684</a>
+        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line57">line 57</a>
     </li></ul></dd>
     
 
@@ -7195,7 +7663,7 @@ See https://stackoverflow.com/questions/1787322/what-is-the-htmlspecialchars-equ
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line674">line 674</a>
+        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line47">line 47</a>
     </li></ul></dd>
     
 
@@ -7350,7 +7818,7 @@ See https://stackoverflow.com/questions/1787322/what-is-the-htmlspecialchars-equ
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line98">line 98</a>
+        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line129">line 129</a>
     </li></ul></dd>
     
 
@@ -7463,7 +7931,7 @@ See https://stackoverflow.com/questions/1787322/what-is-the-htmlspecialchars-equ
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="user_interactions.js.html">user_interactions.js</a>, <a href="user_interactions.js.html#line119">line 119</a>
+        <a href="user_interactions.js.html">user_interactions.js</a>, <a href="user_interactions.js.html#line97">line 97</a>
     </li></ul></dd>
     
 
@@ -7551,7 +8019,7 @@ See https://stackoverflow.com/questions/1787322/what-is-the-htmlspecialchars-equ
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line1753">line 1753</a>
+        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line1181">line 1181</a>
     </li></ul></dd>
     
 
@@ -7710,7 +8178,7 @@ See https://stackoverflow.com/questions/1787322/what-is-the-htmlspecialchars-equ
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line1265">line 1265</a>
+        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line637">line 637</a>
     </li></ul></dd>
     
 
@@ -7847,7 +8315,7 @@ See https://stackoverflow.com/questions/1787322/what-is-the-htmlspecialchars-equ
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line505">line 505</a>
+        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line536">line 536</a>
     </li></ul></dd>
     
 
@@ -7945,6 +8413,8 @@ See https://stackoverflow.com/questions/1787322/what-is-the-htmlspecialchars-equ
     
 
     
+        <dt class="important tag-deprecated">Deprecated:</dt><dd><ul class="dummy"><li>Since 2.10.0, use return lwtFormCheck.makeDirty instead</li></ul></dd>
+    
 
     
 
@@ -7957,7 +8427,7 @@ See https://stackoverflow.com/questions/1787322/what-is-the-htmlspecialchars-equ
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="unloadformcheck.js.html">unloadformcheck.js</a>, <a href="unloadformcheck.js.html#line31">line 31</a>
+        <a href="unloadformcheck.js.html">unloadformcheck.js</a>, <a href="unloadformcheck.js.html#line102">line 102</a>
     </li></ul></dd>
     
 
@@ -8118,7 +8588,7 @@ See https://stackoverflow.com/questions/1787322/what-is-the-htmlspecialchars-equ
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line651">line 651</a>
+        <a href="overlib_interface.js.html">overlib_interface.js</a>, <a href="overlib_interface.js.html#line622">line 622</a>
     </li></ul></dd>
     
 
@@ -8369,7 +8839,7 @@ See https://stackoverflow.com/questions/1787322/what-is-the-htmlspecialchars-equ
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line432">line 432</a>
+        <a href="overlib_interface.js.html">overlib_interface.js</a>, <a href="overlib_interface.js.html#line403">line 403</a>
     </li></ul></dd>
     
 
@@ -8597,7 +9067,7 @@ See https://stackoverflow.com/questions/1787322/what-is-the-htmlspecialchars-equ
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line395">line 395</a>
+        <a href="overlib_interface.js.html">overlib_interface.js</a>, <a href="overlib_interface.js.html#line366">line 366</a>
     </li></ul></dd>
     
 
@@ -8779,7 +9249,7 @@ See https://stackoverflow.com/questions/1787322/what-is-the-htmlspecialchars-equ
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line412">line 412</a>
+        <a href="overlib_interface.js.html">overlib_interface.js</a>, <a href="overlib_interface.js.html#line383">line 383</a>
     </li></ul></dd>
     
 
@@ -8984,7 +9454,7 @@ See https://stackoverflow.com/questions/1787322/what-is-the-htmlspecialchars-equ
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line471">line 471</a>
+        <a href="overlib_interface.js.html">overlib_interface.js</a>, <a href="overlib_interface.js.html#line442">line 442</a>
     </li></ul></dd>
     
 
@@ -9189,7 +9659,7 @@ See https://stackoverflow.com/questions/1787322/what-is-the-htmlspecialchars-equ
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line453">line 453</a>
+        <a href="overlib_interface.js.html">overlib_interface.js</a>, <a href="overlib_interface.js.html#line424">line 424</a>
     </li></ul></dd>
     
 
@@ -9417,7 +9887,7 @@ See https://stackoverflow.com/questions/1787322/what-is-the-htmlspecialchars-equ
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line534">line 534</a>
+        <a href="overlib_interface.js.html">overlib_interface.js</a>, <a href="overlib_interface.js.html#line505">line 505</a>
     </li></ul></dd>
     
 
@@ -9641,7 +10111,7 @@ See https://stackoverflow.com/questions/1787322/what-is-the-htmlspecialchars-equ
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line551">line 551</a>
+        <a href="overlib_interface.js.html">overlib_interface.js</a>, <a href="overlib_interface.js.html#line522">line 522</a>
     </li></ul></dd>
     
 
@@ -9819,7 +10289,7 @@ See https://stackoverflow.com/questions/1787322/what-is-the-htmlspecialchars-equ
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line611">line 611</a>
+        <a href="overlib_interface.js.html">overlib_interface.js</a>, <a href="overlib_interface.js.html#line582">line 582</a>
     </li></ul></dd>
     
 
@@ -10001,7 +10471,7 @@ See https://stackoverflow.com/questions/1787322/what-is-the-htmlspecialchars-equ
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line598">line 598</a>
+        <a href="overlib_interface.js.html">overlib_interface.js</a>, <a href="overlib_interface.js.html#line569">line 569</a>
     </li></ul></dd>
     
 
@@ -10206,7 +10676,7 @@ See https://stackoverflow.com/questions/1787322/what-is-the-htmlspecialchars-equ
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line503">line 503</a>
+        <a href="overlib_interface.js.html">overlib_interface.js</a>, <a href="overlib_interface.js.html#line474">line 474</a>
     </li></ul></dd>
     
 
@@ -10430,7 +10900,7 @@ See https://stackoverflow.com/questions/1787322/what-is-the-htmlspecialchars-equ
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line518">line 518</a>
+        <a href="overlib_interface.js.html">overlib_interface.js</a>, <a href="overlib_interface.js.html#line489">line 489</a>
     </li></ul></dd>
     
 
@@ -10631,7 +11101,7 @@ See https://stackoverflow.com/questions/1787322/what-is-the-htmlspecialchars-equ
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line567">line 567</a>
+        <a href="overlib_interface.js.html">overlib_interface.js</a>, <a href="overlib_interface.js.html#line538">line 538</a>
     </li></ul></dd>
     
 
@@ -10855,7 +11325,7 @@ See https://stackoverflow.com/questions/1787322/what-is-the-htmlspecialchars-equ
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line584">line 584</a>
+        <a href="overlib_interface.js.html">overlib_interface.js</a>, <a href="overlib_interface.js.html#line555">line 555</a>
     </li></ul></dd>
     
 
@@ -11037,7 +11507,7 @@ See https://stackoverflow.com/questions/1787322/what-is-the-htmlspecialchars-equ
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line637">line 637</a>
+        <a href="overlib_interface.js.html">overlib_interface.js</a>, <a href="overlib_interface.js.html#line608">line 608</a>
     </li></ul></dd>
     
 
@@ -11268,7 +11738,7 @@ See https://stackoverflow.com/questions/1787322/what-is-the-htmlspecialchars-equ
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line296">line 296</a>
+        <a href="overlib_interface.js.html">overlib_interface.js</a>, <a href="overlib_interface.js.html#line267">line 267</a>
     </li></ul></dd>
     
 
@@ -11473,7 +11943,7 @@ See https://stackoverflow.com/questions/1787322/what-is-the-htmlspecialchars-equ
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line489">line 489</a>
+        <a href="overlib_interface.js.html">overlib_interface.js</a>, <a href="overlib_interface.js.html#line460">line 460</a>
     </li></ul></dd>
     
 
@@ -11743,7 +12213,7 @@ See https://stackoverflow.com/questions/1787322/what-is-the-htmlspecialchars-equ
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line331">line 331</a>
+        <a href="overlib_interface.js.html">overlib_interface.js</a>, <a href="overlib_interface.js.html#line302">line 302</a>
     </li></ul></dd>
     
 
@@ -12013,7 +12483,7 @@ See https://stackoverflow.com/questions/1787322/what-is-the-htmlspecialchars-equ
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line354">line 354</a>
+        <a href="overlib_interface.js.html">overlib_interface.js</a>, <a href="overlib_interface.js.html#line325">line 325</a>
     </li></ul></dd>
     
 
@@ -12264,7 +12734,7 @@ See https://stackoverflow.com/questions/1787322/what-is-the-htmlspecialchars-equ
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line375">line 375</a>
+        <a href="overlib_interface.js.html">overlib_interface.js</a>, <a href="overlib_interface.js.html#line346">line 346</a>
     </li></ul></dd>
     
 
@@ -12446,7 +12916,7 @@ See https://stackoverflow.com/questions/1787322/what-is-the-htmlspecialchars-equ
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line624">line 624</a>
+        <a href="overlib_interface.js.html">overlib_interface.js</a>, <a href="overlib_interface.js.html#line595">line 595</a>
     </li></ul></dd>
     
 
@@ -12512,7 +12982,7 @@ See https://stackoverflow.com/questions/1787322/what-is-the-htmlspecialchars-equ
 
 
 <div class="description">
-    Return a tooltip, a short string describing the word (word, translation, 
+    Return a tooltip, a short string describing the word (word, translation,
 romanization and learning status)
 </div>
 
@@ -12675,7 +13145,7 @@ romanization and learning status)
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line804">line 804</a>
+        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line176">line 176</a>
     </li></ul></dd>
     
 
@@ -12834,7 +13304,7 @@ romanization and learning status)
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line1279">line 1279</a>
+        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line715">line 715</a>
     </li></ul></dd>
     
 
@@ -13024,8 +13494,8 @@ WARNING! This function was not properly tested!
 
             
 
-            <td class="description last">Set to false if a group if multi-words should be 
-                               displayed as index</td>
+            <td class="description last">true: multi-word is a superscript, show mw index + words
+                               false: only show the multiword, hide the words</td>
         </tr>
 
     
@@ -13069,7 +13539,7 @@ WARNING! This function was not properly tested!
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="user_interactions.js.html">user_interactions.js</a>, <a href="user_interactions.js.html#line41">line 41</a>
+        <a href="user_interactions.js.html">user_interactions.js</a>, <a href="user_interactions.js.html#line40">line 40</a>
     </li></ul></dd>
     
 
@@ -13226,7 +13696,7 @@ WARNING! This function was not properly tested!
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="audio_controller.js.html">audio_controller.js</a>, <a href="audio_controller.js.html#line126">line 126</a>
+        <a href="audio_controller.js.html">audio_controller.js</a>, <a href="audio_controller.js.html#line122">line 122</a>
     </li></ul></dd>
     
 
@@ -13363,7 +13833,7 @@ WARNING! This function was not properly tested!
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line855">line 855</a>
+        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line227">line 227</a>
     </li></ul></dd>
     
 
@@ -13500,7 +13970,7 @@ WARNING! This function was not properly tested!
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line842">line 842</a>
+        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line214">line 214</a>
     </li></ul></dd>
     
 
@@ -13588,7 +14058,7 @@ WARNING! This function was not properly tested!
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line1886">line 1886</a>
+        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line1312">line 1312</a>
     </li></ul></dd>
     
 
@@ -13679,7 +14149,7 @@ WARNING! This function was not properly tested!
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="user_interactions.js.html">user_interactions.js</a>, <a href="user_interactions.js.html#line91">line 91</a>
+        <a href="text_events.js.html">text_events.js</a>, <a href="text_events.js.html#line678">line 678</a>
     </li></ul></dd>
     
 
@@ -13927,7 +14397,7 @@ WARNING! This function was not properly tested!
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line1235">line 1235</a>
+        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line674">line 674</a>
     </li></ul></dd>
     
 
@@ -13971,7 +14441,7 @@ WARNING! This function was not properly tested!
 
 
 <div class="description">
-    Read a text aloud, only work with a phonetic version.
+    Read a text aloud, works with a phonetic version only.
 </div>
 
 
@@ -14046,7 +14516,7 @@ WARNING! This function was not properly tested!
 
             
 
-            <td class="description last">Language code with BCP 47 convention  
+            <td class="description last">Language code with BCP 47 convention
                       (e. g. "en-US" for English with an American accent)</td>
         </tr>
 
@@ -14137,7 +14607,7 @@ WARNING! This function was not properly tested!
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="user_interactions.js.html">user_interactions.js</a>, <a href="user_interactions.js.html#line222">line 222</a>
+        <a href="user_interactions.js.html">user_interactions.js</a>, <a href="user_interactions.js.html#line286">line 286</a>
     </li></ul></dd>
     
 
@@ -14278,7 +14748,7 @@ WARNING! This function was not properly tested!
 
             
 
-            <td class="description last">Language code with BCP 47 convention  
+            <td class="description last">Language code with BCP 47 convention
                        (e. g. "en-US" for English with an American accent)</td>
         </tr>
 
@@ -14392,7 +14862,7 @@ WARNING! This function was not properly tested!
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="user_interactions.js.html">user_interactions.js</a>, <a href="user_interactions.js.html#line266">line 266</a>
+        <a href="user_interactions.js.html">user_interactions.js</a>, <a href="user_interactions.js.html#line329">line 329</a>
     </li></ul></dd>
     
 
@@ -14529,7 +14999,7 @@ WARNING! This function was not properly tested!
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line1177">line 1177</a>
+        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line549">line 549</a>
     </li></ul></dd>
     
 
@@ -14591,7 +15061,7 @@ WARNING! This function was not properly tested!
 
 
 <div class="description">
-    Set the DIRTY variable to 0
+    Set the DIRTY variable to 0.
 </div>
 
 
@@ -14623,6 +15093,8 @@ WARNING! This function was not properly tested!
     
 
     
+        <dt class="important tag-deprecated">Deprecated:</dt><dd><ul class="dummy"><li>Since 2.10.0, use return lwtFormCheck.resetDirty instead</li></ul></dd>
+    
 
     
 
@@ -14635,7 +15107,7 @@ WARNING! This function was not properly tested!
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="unloadformcheck.js.html">unloadformcheck.js</a>, <a href="unloadformcheck.js.html#line38">line 38</a>
+        <a href="unloadformcheck.js.html">unloadformcheck.js</a>, <a href="unloadformcheck.js.html#line110">line 110</a>
     </li></ul></dd>
     
 
@@ -14956,7 +15428,7 @@ WARNING! This function was not properly tested!
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line204">line 204</a>
+        <a href="overlib_interface.js.html">overlib_interface.js</a>, <a href="overlib_interface.js.html#line175">line 175</a>
     </li></ul></dd>
     
 
@@ -15364,7 +15836,7 @@ WARNING! This function was not properly tested!
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line141">line 141</a>
+        <a href="overlib_interface.js.html">overlib_interface.js</a>, <a href="overlib_interface.js.html#line112">line 112</a>
     </li></ul></dd>
     
 
@@ -15749,7 +16221,7 @@ WARNING! This function was not properly tested!
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line76">line 76</a>
+        <a href="overlib_interface.js.html">overlib_interface.js</a>, <a href="overlib_interface.js.html#line47">line 47</a>
     </li></ul></dd>
     
 
@@ -16134,7 +16606,7 @@ WARNING! This function was not properly tested!
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line108">line 108</a>
+        <a href="overlib_interface.js.html">overlib_interface.js</a>, <a href="overlib_interface.js.html#line79">line 79</a>
     </li></ul></dd>
     
 
@@ -16473,7 +16945,7 @@ WARNING! This function was not properly tested!
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line175">line 175</a>
+        <a href="overlib_interface.js.html">overlib_interface.js</a>, <a href="overlib_interface.js.html#line146">line 146</a>
     </li></ul></dd>
     
 
@@ -16858,7 +17330,7 @@ WARNING! This function was not properly tested!
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line237">line 237</a>
+        <a href="overlib_interface.js.html">overlib_interface.js</a>, <a href="overlib_interface.js.html#line208">line 208</a>
     </li></ul></dd>
     
 
@@ -16968,7 +17440,7 @@ WARNING! This function was not properly tested!
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="user_interactions.js.html">user_interactions.js</a>, <a href="user_interactions.js.html#line158">line 158</a>
+        <a href="user_interactions.js.html">user_interactions.js</a>, <a href="user_interactions.js.html#line134">line 134</a>
     </li></ul></dd>
     
 
@@ -17131,7 +17603,7 @@ WARNING! This function was not properly tested!
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="user_interactions.js.html">user_interactions.js</a>, <a href="user_interactions.js.html#line147">line 147</a>
+        <a href="user_interactions.js.html">user_interactions.js</a>, <a href="user_interactions.js.html#line124">line 124</a>
     </li></ul></dd>
     
 
@@ -17268,7 +17740,7 @@ WARNING! This function was not properly tested!
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line107">line 107</a>
+        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line138">line 138</a>
     </li></ul></dd>
     
 
@@ -17454,7 +17926,7 @@ WARNING! This function was not properly tested!
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line1254">line 1254</a>
+        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line691">line 691</a>
     </li></ul></dd>
     
 
@@ -17731,7 +18203,7 @@ WARNING! This function was not properly tested!
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line1229">line 1229</a>
+        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line601">line 601</a>
     </li></ul></dd>
     
 
@@ -17909,7 +18381,7 @@ WARNING! This function was not properly tested!
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line1165">line 1165</a>
+        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line537">line 537</a>
     </li></ul></dd>
     
 
@@ -18015,7 +18487,7 @@ WARNING! This function was not properly tested!
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line473">line 473</a>
+        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line504">line 504</a>
     </li></ul></dd>
     
 
@@ -18177,7 +18649,7 @@ Marj the form as edited if something was changed.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line45">line 45</a>
+        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line77">line 77</a>
     </li></ul></dd>
     
 
@@ -18265,7 +18737,7 @@ Marj the form as edited if something was changed.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line1469">line 1469</a>
+        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line903">line 903</a>
     </li></ul></dd>
     
 
@@ -18371,7 +18843,7 @@ Marj the form as edited if something was changed.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line1513">line 1513</a>
+        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line947">line 947</a>
     </li></ul></dd>
     
 
@@ -18433,7 +18905,7 @@ Marj the form as edited if something was changed.
 
 
 <div class="description">
-    Enable/disable words hint. 
+    Enable/disable words hint.
 Function called when clicking on "Show All".
 </div>
 
@@ -18478,7 +18950,7 @@ Function called when clicking on "Show All".
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line443">line 443</a>
+        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line474">line 474</a>
     </li></ul></dd>
     
 
@@ -18644,7 +19116,7 @@ Function called when clicking on "Show All".
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line1734">line 1734</a>
+        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line1162">line 1162</a>
     </li></ul></dd>
     
 
@@ -18754,7 +19226,7 @@ Function called when clicking on "Show All".
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line1797">line 1797</a>
+        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line1223">line 1223</a>
     </li></ul></dd>
     
 
@@ -18872,7 +19344,7 @@ Function called when clicking on "Show All".
 
             
 
-            <td class="description last">An event, unnused</td>
+            <td class="description last">An event, unused</td>
         </tr>
 
     
@@ -18924,6 +19396,8 @@ Function called when clicking on "Show All".
     
 
     
+        <dt class="important tag-deprecated">Deprecated:</dt><dd><ul class="dummy"><li>Since 2.10.0, use return lwtFormCheck.tagChanged instead</li></ul></dd>
+    
 
     
 
@@ -18936,7 +19410,7 @@ Function called when clicking on "Show All".
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="unloadformcheck.js.html">unloadformcheck.js</a>, <a href="unloadformcheck.js.html#line49">line 49</a>
+        <a href="unloadformcheck.js.html">unloadformcheck.js</a>, <a href="unloadformcheck.js.html#line122">line 122</a>
     </li></ul></dd>
     
 
@@ -19118,7 +19592,7 @@ Function called when clicking on "Show All".
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line696">line 696</a>
+        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line68">line 68</a>
     </li></ul></dd>
     
 
@@ -19296,7 +19770,7 @@ Function called when clicking on "Show All".
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line712">line 712</a>
+        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line84">line 84</a>
     </li></ul></dd>
     
 
@@ -19474,7 +19948,7 @@ Function called when clicking on "Show All".
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line729">line 729</a>
+        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line101">line 101</a>
     </li></ul></dd>
     
 
@@ -19652,7 +20126,7 @@ Function called when clicking on "Show All".
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line745">line 745</a>
+        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line117">line 117</a>
     </li></ul></dd>
     
 
@@ -19830,7 +20304,7 @@ Function called when clicking on "Show All".
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line761">line 761</a>
+        <a href="pgm.js.html">pgm.js</a>, <a href="pgm.js.html#line133">line 133</a>
     </li></ul></dd>
     
 
@@ -20008,7 +20482,7 @@ Function called when clicking on "Show All".
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line1591">line 1591</a>
+        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line1022">line 1022</a>
     </li></ul></dd>
     
 
@@ -20190,7 +20664,7 @@ Function called when clicking on "Show All".
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line169">line 169</a>
+        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line200">line 200</a>
     </li></ul></dd>
     
 
@@ -20278,7 +20752,7 @@ Function called when clicking on "Show All".
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line484">line 484</a>
+        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line515">line 515</a>
     </li></ul></dd>
     
 
@@ -20360,6 +20834,9 @@ Function called when clicking on "Show All".
     
 
     
+    <dt class="tag-since">Since:</dt>
+    <dd class="tag-since"><ul class="dummy"><li>2.9.10-fork Read word aloud if LWT_DATA.settings.hts equals 2.</li></ul></dd>
+    
 
     
 
@@ -20384,7 +20861,7 @@ Function called when clicking on "Show All".
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line646">line 646</a>
+        <a href="text_events.js.html">text_events.js</a>, <a href="text_events.js.html#line101">line 101</a>
     </li></ul></dd>
     
 
@@ -20450,7 +20927,7 @@ Function called when clicking on "Show All".
 
 
 <div class="description">
-    Handle the click event to switch between total and 
+    Handle the click event to switch between total and
 unique words count in edit_texts.php.
 </div>
 
@@ -20495,7 +20972,7 @@ unique words count in edit_texts.php.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line1568">line 1568</a>
+        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line999">line 999</a>
     </li></ul></dd>
     
 
@@ -20650,7 +21127,7 @@ unique words count in edit_texts.php.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line562">line 562</a>
+        <a href="text_events.js.html">text_events.js</a>, <a href="text_events.js.html#line10">line 10</a>
     </li></ul></dd>
     
 
@@ -20738,7 +21215,7 @@ unique words count in edit_texts.php.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line1870">line 1870</a>
+        <a href="jq_pgm.js.html">jq_pgm.js</a>, <a href="jq_pgm.js.html#line1296">line 1296</a>
     </li></ul></dd>
     
 
@@ -20784,13 +21261,13 @@ unique words count in edit_texts.php.
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#DIRTY">DIRTY</a></li><li><a href="global.html#RTL">RTL</a></li><li><a href="global.html#TID">TID</a></li><li><a href="global.html#WBLINK1">WBLINK1</a></li><li><a href="global.html#WBLINK2">WBLINK2</a></li><li><a href="global.html#WBLINK3">WBLINK3</a></li><li><a href="global.html#WID">WID</a></li><li><a href="global.html#addTermTranslation">addTermTranslation</a></li><li><a href="global.html#alertFirstCharacterOutsideBasicMultilingualPlane">alertFirstCharacterOutsideBasicMultilingualPlane</a></li><li><a href="global.html#areCookiesEnabled">areCookiesEnabled</a></li><li><a href="global.html#askConfirmIfDirty">askConfirmIfDirty</a></li><li><a href="global.html#ask_before_exiting">ask_before_exiting</a></li><li><a href="global.html#changeImprAnnRadio">changeImprAnnRadio</a></li><li><a href="global.html#changeImprAnnText">changeImprAnnText</a></li><li><a href="global.html#changeTableTestStatus">changeTableTestStatus</a></li><li><a href="global.html#change_example_sentences_zone">change_example_sentences_zone</a></li><li><a href="global.html#check">check</a></li><li><a href="global.html#check_table_prefix">check_table_prefix</a></li><li><a href="global.html#cleanupRightFrames">cleanupRightFrames</a></li><li><a href="global.html#containsCharacterOutsideBasicMultilingualPlane">containsCharacterOutsideBasicMultilingualPlane</a></li><li><a href="global.html#createSentLookupLink">createSentLookupLink</a></li><li><a href="global.html#createTheDictLink">createTheDictLink</a></li><li><a href="global.html#createTheDictUrl">createTheDictUrl</a></li><li><a href="global.html#deleteCookie">deleteCookie</a></li><li><a href="global.html#deleteTranslation">deleteTranslation</a></li><li><a href="global.html#display_example_sentences">display_example_sentences</a></li><li><a href="global.html#do_ajax_edit_impr_text">do_ajax_edit_impr_text</a></li><li><a href="global.html#do_ajax_req_sim_terms">do_ajax_req_sim_terms</a></li><li><a href="global.html#do_ajax_save_impr_text">do_ajax_save_impr_text</a></li><li><a href="global.html#do_ajax_save_setting">do_ajax_save_setting</a></li><li><a href="global.html#do_ajax_show_sentences">do_ajax_show_sentences</a></li><li><a href="global.html#do_ajax_show_similar_terms">do_ajax_show_similar_terms</a></li><li><a href="global.html#do_ajax_update_media_select">do_ajax_update_media_select</a></li><li><a href="global.html#do_ajax_word_counts">do_ajax_word_counts</a></li><li><a href="global.html#edit_term_ann_translations">edit_term_ann_translations</a></li><li><a href="global.html#escape_apostrophes">escape_apostrophes</a></li><li><a href="global.html#escape_html_chars">escape_html_chars</a></li><li><a href="global.html#escape_html_chars_2">escape_html_chars_2</a></li><li><a href="global.html#extend_adv_xpath">extend_adv_xpath</a></li><li><a href="global.html#failureSound">failureSound</a></li><li><a href="global.html#feedwizard_prepare_interaction">feedwizard_prepare_interaction</a></li><li><a href="global.html#getCookie">getCookie</a></li><li><a href="global.html#getLangFromDict">getLangFromDict</a></li><li><a href="global.html#getLibreTranslateTranslation">getLibreTranslateTranslation</a></li><li><a href="global.html#getLibreTranslateTranslationBase">getLibreTranslateTranslationBase</a></li><li><a href="global.html#getPhoneticText">getPhoneticText</a></li><li><a href="global.html#getPhoneticTextAsync">getPhoneticTextAsync</a></li><li><a href="global.html#getStatusAbbr">getStatusAbbr</a></li><li><a href="global.html#getStatusName">getStatusName</a></li><li><a href="global.html#getUTF8Length">getUTF8Length</a></li><li><a href="global.html#goToLastPosition">goToLastPosition</a></li><li><a href="global.html#hideRightFrames">hideRightFrames</a></li><li><a href="global.html#iknowall">iknowall</a></li><li><a href="global.html#keydown_event_do_test_test">keydown_event_do_test_test</a></li><li><a href="global.html#makeDirty">makeDirty</a></li><li><a href="global.html#make_overlib_audio">make_overlib_audio</a></li><li><a href="global.html#make_overlib_link_change_status">make_overlib_link_change_status</a></li><li><a href="global.html#make_overlib_link_change_status_all">make_overlib_link_change_status_all</a></li><li><a href="global.html#make_overlib_link_change_status_alltest">make_overlib_link_change_status_alltest</a></li><li><a href="global.html#make_overlib_link_change_status_test">make_overlib_link_change_status_test</a></li><li><a href="global.html#make_overlib_link_change_status_test2">make_overlib_link_change_status_test2</a></li><li><a href="global.html#make_overlib_link_create_edit_multiword">make_overlib_link_create_edit_multiword</a></li><li><a href="global.html#make_overlib_link_create_edit_multiword_rtl">make_overlib_link_create_edit_multiword_rtl</a></li><li><a href="global.html#make_overlib_link_delete_multiword">make_overlib_link_delete_multiword</a></li><li><a href="global.html#make_overlib_link_delete_word">make_overlib_link_delete_word</a></li><li><a href="global.html#make_overlib_link_edit_multiword">make_overlib_link_edit_multiword</a></li><li><a href="global.html#make_overlib_link_edit_multiword_title">make_overlib_link_edit_multiword_title</a></li><li><a href="global.html#make_overlib_link_edit_word">make_overlib_link_edit_word</a></li><li><a href="global.html#make_overlib_link_edit_word_title">make_overlib_link_edit_word_title</a></li><li><a href="global.html#make_overlib_link_ignore_word">make_overlib_link_ignore_word</a></li><li><a href="global.html#make_overlib_link_new_multiword">make_overlib_link_new_multiword</a></li><li><a href="global.html#make_overlib_link_new_word">make_overlib_link_new_word</a></li><li><a href="global.html#make_overlib_link_wb">make_overlib_link_wb</a></li><li><a href="global.html#make_overlib_link_wbnl">make_overlib_link_wbnl</a></li><li><a href="global.html#make_overlib_link_wbnl2">make_overlib_link_wbnl2</a></li><li><a href="global.html#make_overlib_link_wellknown_word">make_overlib_link_wellknown_word</a></li><li><a href="global.html#make_tooltip">make_tooltip</a></li><li><a href="global.html#media_select_receive_data">media_select_receive_data</a></li><li><a href="global.html#newExpressionInteractable">newExpressionInteractable</a></li><li><a href="global.html#new_pos">new_pos</a></li><li><a href="global.html#oewin">oewin</a></li><li><a href="global.html#ol_textfont">ol_textfont</a></li><li><a href="global.html#owin">owin</a></li><li><a href="global.html#prepareMainAreas">prepareMainAreas</a></li><li><a href="global.html#prepareTextInteractions">prepareTextInteractions</a></li><li><a href="global.html#quickMenuRedirection">quickMenuRedirection</a></li><li><a href="global.html#quick_select_to_input">quick_select_to_input</a></li><li><a href="global.html#readRawTextAloud">readRawTextAloud</a></li><li><a href="global.html#readTextAloud">readTextAloud</a></li><li><a href="global.html#resetAll">resetAll</a></li><li><a href="global.html#resetDirty">resetDirty</a></li><li><a href="global.html#run_overlib_multiword">run_overlib_multiword</a></li><li><a href="global.html#run_overlib_status_1_to_5">run_overlib_status_1_to_5</a></li><li><a href="global.html#run_overlib_status_98">run_overlib_status_98</a></li><li><a href="global.html#run_overlib_status_99">run_overlib_status_99</a></li><li><a href="global.html#run_overlib_status_unknown">run_overlib_status_unknown</a></li><li><a href="global.html#run_overlib_test">run_overlib_test</a></li><li><a href="global.html#saveAudioPosition">saveAudioPosition</a></li><li><a href="global.html#saveReadingPosition">saveReadingPosition</a></li><li><a href="global.html#scrollToAnchor">scrollToAnchor</a></li><li><a href="global.html#select_media_path">select_media_path</a></li><li><a href="global.html#setCookie">setCookie</a></li><li><a href="global.html#setLang">setLang</a></li><li><a href="global.html#setTheFocus">setTheFocus</a></li><li><a href="global.html#setTransRoman">setTransRoman</a></li><li><a href="global.html#set_barchart_item">set_barchart_item</a></li><li><a href="global.html#set_word_counts">set_word_counts</a></li><li><a href="global.html#showAllwordsClick">showAllwordsClick</a></li><li><a href="global.html#showRightFrames">showRightFrames</a></li><li><a href="global.html#sl">sl</a></li><li><a href="global.html#successSound">successSound</a></li><li><a href="global.html#tagChanged">tagChanged</a></li><li><a href="global.html#translateSentence">translateSentence</a></li><li><a href="global.html#translateSentence2">translateSentence2</a></li><li><a href="global.html#translateWord">translateWord</a></li><li><a href="global.html#translateWord2">translateWord2</a></li><li><a href="global.html#translateWord3">translateWord3</a></li><li><a href="global.html#translation_radio">translation_radio</a></li><li><a href="global.html#updateTermTranslation">updateTermTranslation</a></li><li><a href="global.html#v">v</a></li><li><a href="global.html#word_click_event_do_test_test">word_click_event_do_test_test</a></li><li><a href="global.html#word_click_event_do_text_text">word_click_event_do_text_text</a></li><li><a href="global.html#word_count_click">word_count_click</a></li><li><a href="global.html#word_each_do_text_text">word_each_do_text_text</a></li><li><a href="global.html#wrapRadioButtons">wrapRadioButtons</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#DIRTY">DIRTY</a></li><li><a href="global.html#RTL">RTL</a></li><li><a href="global.html#TID">TID</a></li><li><a href="global.html#WBLINK1">WBLINK1</a></li><li><a href="global.html#WBLINK2">WBLINK2</a></li><li><a href="global.html#WBLINK3">WBLINK3</a></li><li><a href="global.html#WID">WID</a></li><li><a href="global.html#addTermTranslation">addTermTranslation</a></li><li><a href="global.html#alertFirstCharacterOutsideBasicMultilingualPlane">alertFirstCharacterOutsideBasicMultilingualPlane</a></li><li><a href="global.html#areCookiesEnabled">areCookiesEnabled</a></li><li><a href="global.html#askConfirmIfDirty">askConfirmIfDirty</a></li><li><a href="global.html#ask_before_exiting">ask_before_exiting</a></li><li><a href="global.html#changeImprAnnRadio">changeImprAnnRadio</a></li><li><a href="global.html#changeImprAnnText">changeImprAnnText</a></li><li><a href="global.html#changeTableTestStatus">changeTableTestStatus</a></li><li><a href="global.html#change_example_sentences_zone">change_example_sentences_zone</a></li><li><a href="global.html#check">check</a></li><li><a href="global.html#check_table_prefix">check_table_prefix</a></li><li><a href="global.html#cleanupRightFrames">cleanupRightFrames</a></li><li><a href="global.html#containsCharacterOutsideBasicMultilingualPlane">containsCharacterOutsideBasicMultilingualPlane</a></li><li><a href="global.html#createSentLookupLink">createSentLookupLink</a></li><li><a href="global.html#createTheDictLink">createTheDictLink</a></li><li><a href="global.html#createTheDictUrl">createTheDictUrl</a></li><li><a href="global.html#deepFindValue">deepFindValue</a></li><li><a href="global.html#deepReplace">deepReplace</a></li><li><a href="global.html#deleteCookie">deleteCookie</a></li><li><a href="global.html#deleteTranslation">deleteTranslation</a></li><li><a href="global.html#display_example_sentences">display_example_sentences</a></li><li><a href="global.html#do_ajax_edit_impr_text">do_ajax_edit_impr_text</a></li><li><a href="global.html#do_ajax_req_sim_terms">do_ajax_req_sim_terms</a></li><li><a href="global.html#do_ajax_save_impr_text">do_ajax_save_impr_text</a></li><li><a href="global.html#do_ajax_save_setting">do_ajax_save_setting</a></li><li><a href="global.html#do_ajax_show_sentences">do_ajax_show_sentences</a></li><li><a href="global.html#do_ajax_show_similar_terms">do_ajax_show_similar_terms</a></li><li><a href="global.html#do_ajax_update_media_select">do_ajax_update_media_select</a></li><li><a href="global.html#do_ajax_word_counts">do_ajax_word_counts</a></li><li><a href="global.html#edit_term_ann_translations">edit_term_ann_translations</a></li><li><a href="global.html#escape_apostrophes">escape_apostrophes</a></li><li><a href="global.html#escape_html_chars">escape_html_chars</a></li><li><a href="global.html#escape_html_chars_2">escape_html_chars_2</a></li><li><a href="global.html#extend_adv_xpath">extend_adv_xpath</a></li><li><a href="global.html#failureSound">failureSound</a></li><li><a href="global.html#feedwizard_prepare_interaction">feedwizard_prepare_interaction</a></li><li><a href="global.html#getCookie">getCookie</a></li><li><a href="global.html#getLangFromDict">getLangFromDict</a></li><li><a href="global.html#getLibreTranslateTranslation">getLibreTranslateTranslation</a></li><li><a href="global.html#getLibreTranslateTranslationBase">getLibreTranslateTranslationBase</a></li><li><a href="global.html#getPhoneticText">getPhoneticText</a></li><li><a href="global.html#getPhoneticTextAsync">getPhoneticTextAsync</a></li><li><a href="global.html#getStatusAbbr">getStatusAbbr</a></li><li><a href="global.html#getStatusName">getStatusName</a></li><li><a href="global.html#getUTF8Length">getUTF8Length</a></li><li><a href="global.html#goToLastPosition">goToLastPosition</a></li><li><a href="global.html#hideRightFrames">hideRightFrames</a></li><li><a href="global.html#iknowall">iknowall</a></li><li><a href="global.html#keydown_event_do_test_test">keydown_event_do_test_test</a></li><li><a href="global.html#lwtFormCheck">lwtFormCheck</a></li><li><a href="global.html#lwt_audio_controller">lwt_audio_controller</a></li><li><a href="global.html#makeDirty">makeDirty</a></li><li><a href="global.html#make_overlib_audio">make_overlib_audio</a></li><li><a href="global.html#make_overlib_link_change_status">make_overlib_link_change_status</a></li><li><a href="global.html#make_overlib_link_change_status_all">make_overlib_link_change_status_all</a></li><li><a href="global.html#make_overlib_link_change_status_alltest">make_overlib_link_change_status_alltest</a></li><li><a href="global.html#make_overlib_link_change_status_test">make_overlib_link_change_status_test</a></li><li><a href="global.html#make_overlib_link_change_status_test2">make_overlib_link_change_status_test2</a></li><li><a href="global.html#make_overlib_link_create_edit_multiword">make_overlib_link_create_edit_multiword</a></li><li><a href="global.html#make_overlib_link_create_edit_multiword_rtl">make_overlib_link_create_edit_multiword_rtl</a></li><li><a href="global.html#make_overlib_link_delete_multiword">make_overlib_link_delete_multiword</a></li><li><a href="global.html#make_overlib_link_delete_word">make_overlib_link_delete_word</a></li><li><a href="global.html#make_overlib_link_edit_multiword">make_overlib_link_edit_multiword</a></li><li><a href="global.html#make_overlib_link_edit_multiword_title">make_overlib_link_edit_multiword_title</a></li><li><a href="global.html#make_overlib_link_edit_word">make_overlib_link_edit_word</a></li><li><a href="global.html#make_overlib_link_edit_word_title">make_overlib_link_edit_word_title</a></li><li><a href="global.html#make_overlib_link_ignore_word">make_overlib_link_ignore_word</a></li><li><a href="global.html#make_overlib_link_new_multiword">make_overlib_link_new_multiword</a></li><li><a href="global.html#make_overlib_link_new_word">make_overlib_link_new_word</a></li><li><a href="global.html#make_overlib_link_wb">make_overlib_link_wb</a></li><li><a href="global.html#make_overlib_link_wbnl">make_overlib_link_wbnl</a></li><li><a href="global.html#make_overlib_link_wbnl2">make_overlib_link_wbnl2</a></li><li><a href="global.html#make_overlib_link_wellknown_word">make_overlib_link_wellknown_word</a></li><li><a href="global.html#make_tooltip">make_tooltip</a></li><li><a href="global.html#media_select_receive_data">media_select_receive_data</a></li><li><a href="global.html#newExpressionInteractable">newExpressionInteractable</a></li><li><a href="global.html#new_pos">new_pos</a></li><li><a href="global.html#oewin">oewin</a></li><li><a href="global.html#ol_textfont">ol_textfont</a></li><li><a href="global.html#owin">owin</a></li><li><a href="global.html#prepareMainAreas">prepareMainAreas</a></li><li><a href="global.html#prepareTextInteractions">prepareTextInteractions</a></li><li><a href="global.html#quickMenuRedirection">quickMenuRedirection</a></li><li><a href="global.html#quick_select_to_input">quick_select_to_input</a></li><li><a href="global.html#readRawTextAloud">readRawTextAloud</a></li><li><a href="global.html#readTextAloud">readTextAloud</a></li><li><a href="global.html#resetAll">resetAll</a></li><li><a href="global.html#resetDirty">resetDirty</a></li><li><a href="global.html#run_overlib_multiword">run_overlib_multiword</a></li><li><a href="global.html#run_overlib_status_1_to_5">run_overlib_status_1_to_5</a></li><li><a href="global.html#run_overlib_status_98">run_overlib_status_98</a></li><li><a href="global.html#run_overlib_status_99">run_overlib_status_99</a></li><li><a href="global.html#run_overlib_status_unknown">run_overlib_status_unknown</a></li><li><a href="global.html#run_overlib_test">run_overlib_test</a></li><li><a href="global.html#saveAudioPosition">saveAudioPosition</a></li><li><a href="global.html#saveReadingPosition">saveReadingPosition</a></li><li><a href="global.html#scrollToAnchor">scrollToAnchor</a></li><li><a href="global.html#select_media_path">select_media_path</a></li><li><a href="global.html#setCookie">setCookie</a></li><li><a href="global.html#setLang">setLang</a></li><li><a href="global.html#setTheFocus">setTheFocus</a></li><li><a href="global.html#setTransRoman">setTransRoman</a></li><li><a href="global.html#set_barchart_item">set_barchart_item</a></li><li><a href="global.html#set_word_counts">set_word_counts</a></li><li><a href="global.html#showAllwordsClick">showAllwordsClick</a></li><li><a href="global.html#showRightFrames">showRightFrames</a></li><li><a href="global.html#sl">sl</a></li><li><a href="global.html#successSound">successSound</a></li><li><a href="global.html#tagChanged">tagChanged</a></li><li><a href="global.html#translateSentence">translateSentence</a></li><li><a href="global.html#translateSentence2">translateSentence2</a></li><li><a href="global.html#translateWord">translateWord</a></li><li><a href="global.html#translateWord2">translateWord2</a></li><li><a href="global.html#translateWord3">translateWord3</a></li><li><a href="global.html#translation_radio">translation_radio</a></li><li><a href="global.html#updateTermTranslation">updateTermTranslation</a></li><li><a href="global.html#v">v</a></li><li><a href="global.html#word_click_event_do_test_test">word_click_event_do_test_test</a></li><li><a href="global.html#word_click_event_do_text_text">word_click_event_do_text_text</a></li><li><a href="global.html#word_count_click">word_count_click</a></li><li><a href="global.html#word_each_do_text_text">word_each_do_text_text</a></li><li><a href="global.html#wrapRadioButtons">wrapRadioButtons</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri Dec 29 2023 12:26:52 GMT+0100 (Central European Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Mon Apr 01 2024 19:42:25 GMT+0200 (Central European Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>
