@@ -46,7 +46,9 @@
         ],
         "clean-doc": [
             "rm docs/info.html",
-            "rm -rf docs/html"
+            "rm -rf docs/html",
+            "rm -rf docs/js",
+            "rm -rf docs/php"
         ]
     },
     "scripts-descriptions": {

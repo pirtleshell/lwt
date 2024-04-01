@@ -159,7 +159,7 @@ This section is mainly intended for the maintainers, but feel free to take a pea
 The steps to publish a new version are:
 
 1. In the [CHANGELOG](./CHANGELOG.md), add the latest release number and date.
-2. Update `get_version` in `inc/kernel_utility.php` with the release number and date.
+2. In `inc/kernel_utility.php`, update `LWT_APP_VERSION` and `LWT_RELEASE_DATE`.
 3. Update `PROJECT_NUMBER` in `Doxyfile` to the latest release number.
 4. Regenerate documentation with `composer doc`.
 5. Commit your changes, `git commit -m "Regenerates documentation for release []."`
