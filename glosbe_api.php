@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * Call Glosbe Translation API, analyze and present JSON results
  * for easily filling the "new word form"
  * 

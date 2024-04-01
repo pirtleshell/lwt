@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * Install LWT Demo Database
  * 
  * Call: install_demo.php

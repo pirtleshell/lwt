@@ -179,10 +179,7 @@ function change_term_display($wid, $translation, $hex): void
 }
 
 // INS/UPD
-/*
- * @return void
- */
-function edit_word_do_operation($translation, $fromAnn)
+function edit_word_do_operation($translation, $fromAnn): void
 {
     $hex = null;
     $textlc = trim(prepare_textdata($_REQUEST["WoTextLC"]));

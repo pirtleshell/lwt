@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * Display statistics
  * 
  * Call: statistics.php

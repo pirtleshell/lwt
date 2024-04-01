@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * Call: inline_edit.php?...
  *  ...
  * 

@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * Manage archived texts
  * 
  * Call: edit_archivedtexts.php?....

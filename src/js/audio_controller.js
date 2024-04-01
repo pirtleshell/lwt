@@ -4,7 +4,7 @@
  * @license Unlicense
  */
 
-/*
+/**
  * An audio controller.
  */
 const lwt_audio_controller = {

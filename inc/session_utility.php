@@ -726,19 +726,19 @@ function get_selected($value, $selval): string
 
 /**
  * Create a projection operator do perform word test.
- * 
+ *
  * @param string    $key   Type of test. 
  *                         - 'words': selection from words
  *                         - 'texts': selection from texts
  *                         - 'lang': selection from language
  *                         - 'text': selection from single text
  * @param array|int $value Object to select.
- * 
+ *
  * @return string SQL projection necessary
- * 
+ *
  * @global string $tbpref
  */
-function do_test_test_get_projection($key, $value)
+function do_test_test_get_projection($key, $value): string
 {
     global $tbpref;
     $testsql = null;
@@ -2202,7 +2202,7 @@ function textwordcount($textID): void
  *
  * @param int $textid Text ID
  *
- * @return string HTML result
+ * @return int Number of words
  *
  * @global string $tbpref
  */
@@ -2769,11 +2769,11 @@ function getScriptDirectionTag($lid): string
  * @param string|int $lid  Language ID
  * @param int        $len  Number of words in the expression
  *
- * @return (string|int)[] Each found multi-word details
+ * @return (int|string)[][] Each found multi-word details
  *
  * @global string $tbpref Table name prefix
  *
- * @psalm-return list{array<int, string>, list{0?: string,...}}
+ * @psalm-return list{0?: array{SeID: int, TxID: int, position: int, term: string},...}
  */
 function findMecabExpression($text, $lid): array
 {
@@ -2935,9 +2935,11 @@ function insertExpressionFromMeCab($textlc, $lid, $wid, $len, $mode): array
  * @param string     $textlc Text to insert in lower case
  * @param string|int $lid    Language ID
  *
- * @return (string|int)[] Each inserted mutli-word details
+ * @return (int|null|string)[][] Each inserted mutli-word details
  *
  * @global string $tbpref Table name prefix
+ *
+ * @psalm-return list{0?: array{SeID: int, SeTxID: int, position: int, term: null|string, term_display: null|string},...}
  */
 function findStandardExpression($textlc, $lid): array
 {
@@ -3587,12 +3589,12 @@ function create_save_ann($textid): string
 
 /**
  * Truncate the database, remove all data belonging by the current user.
- * 
+ *
  * Keep settings.
- * 
+ *
  * @global $tbpref
  */
-function truncateUserDatabase()
+function truncateUserDatabase(): void
 {
     global $tbpref;
     runsql("TRUNCATE {$tbpref}archivedtexts", '');

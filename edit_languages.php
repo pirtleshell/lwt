@@ -369,7 +369,8 @@ function load_language($lgid)
     return $language;
 }
 
-function edit_languages_displayThirdPartyVoiceAPI() {
+function edit_languages_displayThirdPartyVoiceAPI(): void
+{
     ?>
 <h2>Third-Party Voice API</h2>
 <p>

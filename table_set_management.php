@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * Analyse DB tables, and manage Table Sets
  * 
  * Call: table_set_management.php

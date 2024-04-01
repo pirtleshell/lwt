@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * Preferences / Settings 
  * 
  * Call: settings.php?....

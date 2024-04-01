@@ -1397,8 +1397,6 @@ function check_text($sql, $rtlScript, $wl)
  *
  * @param int[] $wl All the different expression length in the language.
  *
- * @return string SQL-formatted query string
- *
  * @global string $tbpref Database table prefix
  */
 function checkExpressions($wl): void
@@ -1818,7 +1816,7 @@ function update_database($dbname)
 }
 
 
-/*
+/**
  * Add a prefix to table in a SQL query string.
  * 
  * @param string $sql_line SQL string to prefix.
@@ -2160,7 +2158,7 @@ if (!empty($dspltime)) {
 }
 
 /**
- * @var mysqli $DBCONNECTION Connection to the database
+ * @var \mysqli $DBCONNECTION Connection to the database
  */
 $DBCONNECTION = connect_to_database(
     $server, $userid, $passwd, $dbname, $socket ?? ""

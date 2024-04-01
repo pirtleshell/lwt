@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * Show term
  * 
  * Call: show_word.php?wid=...&ann=...

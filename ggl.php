@@ -1,8 +1,7 @@
 <?php
 
-/*
- * \file
- * \brief Google Translate interface
+/**
+ * Google Translate interface
  * 
  * Call: ggl.php?text=[text]&sl=[source language]&tl=[target language] ... translate text
  *     ... sent=[int] ... single sentence mode.
@@ -26,7 +25,7 @@ use Lwt\Classes\GoogleTranslate as GoogleTranslate;
 
 use function Lwt\Includes\getGoogleTimeToken;
 
-/*
+/**
  * Translate a single sentence using Google Translate.
  * 
  * @param string $text        Text to translate
@@ -46,7 +45,7 @@ function translate_sentence($text, $translation): void
     <?php
 }
 
-/*
+/**
  * Translate input text using Google Translate.
  * 
  * @param string $text   Text to translate
@@ -110,7 +109,7 @@ function translate_term($text, $file, $sl, $tl): void
     <?php
 }
 
-/*
+/**
  * Translate input text using Google Translate.
  * 
  * @param string $text Text to translate
@@ -147,7 +146,7 @@ function translate_text($text, $sl, $tl, $sentence_mode): void
     echo $gglink;
 }
 
-/*
+/**
  * Translate input text using Google Translate.
  * 
  * @param string $text Text to translate

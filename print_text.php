@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * Print a text
  * 
  * Call: print_text.php?text=[textid]&...

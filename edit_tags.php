@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * Manage tags
  * 
  * Call: edit_tags.php?....

@@ -851,8 +851,9 @@ function do_text_text_content($textid, $only_body = true): void
 }
 
 /*
- * Uncoment to use as a page, deprecated behavior in LWT-fork, will be removed in 3.0.0
-if (isset($_REQUEST['text'])) {
+Uncoment to use as a page, deprecated behavior in LWT-fork, will be removed in 3.0.0
+
+ if (isset($_REQUEST['text'])) {
     do_text_text_content($_REQUEST['text'], false);
 }
 */

@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * New word, created while reading or testing
  * 
  * Call: new_word.php?...

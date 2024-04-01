@@ -81,7 +81,7 @@ function do_test_get_identifier($selection, $sess_testsql, $lang, $text): array
  *
  * @return string SQL projection (selection) string
  */
-function do_test_get_test_sql($selection, $sess_testsql, $lang, $text)
+function do_test_get_test_sql($selection, $sess_testsql, $lang, $text): string
 {
     $identifier = do_test_get_identifier($selection, $sess_testsql, $lang, $text);
     $testsql = do_test_test_get_projection($identifier[0], $identifier[1]);
