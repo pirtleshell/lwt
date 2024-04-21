@@ -3,6 +3,8 @@ name: Build and push Docker images
 on:
   push:
     branches: [ 'master' ]
+  release:
+    types: [ published ]
 
 env:
   REGISTRY: ghcr.io
@@ -44,6 +46,12 @@ jobs:
         with:
           context: .
           push: true
-          platforms: linux/amd64,linux/arm/v7,linux/arm64,linux/mips64le,linux/s390x
+          platforms: 
+            linux/amd64,
+            linux/arm/v7,
+            linux/arm64,
+            linux/mips64le,
+            linux/s390x
+            ${{ github.event_name == 'release' && ',linux/386,linux/arm/v5,linux/ppc64le' || '' }} 
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
