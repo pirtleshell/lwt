@@ -40,7 +40,7 @@ Install [Docker](https://docs.docker.com/get-docker/) (if not already done).
 
   ```bash
   cd lwt
-  docker compose up
+  docker compose up # Now open http://localhost:8010/lwt/ in a browser
   ```
 
 ### Linux
