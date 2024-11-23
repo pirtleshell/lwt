@@ -211,7 +211,7 @@ For an light-weight installer, you may use
 Download the lwt, open a terminal inside it, then type
 
 ```bash
-docker compose up
+docker compose up -d
 ```
 
 By default the server can be accessed on port 8010 (<http://localhost:8010/lwt>).

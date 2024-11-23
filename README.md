@@ -10,7 +10,7 @@
 **Learning with Texts** (LWT) is a tool for language learning by reading. It is a self-hosted web application.
 
 <div style="text-align: center;">
-<img src="https://github.com/HugoFara/lwt/raw/master/img/lwt_icon_big.jpg" />
+<img src="https://github.com/HugoFara/lwt/raw/master/img/lwt_icon_big.jpg" alt="LWT icon of a book"/>
 </div>
 
 You feel that you won't learn much by translating dumb sentences or using grammar books? Learning With Texts offers you the possibility to learn by reading texts in your target language. Concept: when you don't know a word in a text, just click it. We show you the translation, and you will have regular tests to remember it. Ready to go?
@@ -27,7 +27,7 @@ and is open for contributions. The official version is on
 
 ## Installation
 
-As LWT is self-hosted, you will need a server, which can be your computer. 
+As LWT is self-hosted, you will need a server, which can be your computer.
 You can either use Docker (recommended), or install it on your machine.
 
 ### Docker (any OS)
@@ -40,14 +40,13 @@ Install [Docker](https://docs.docker.com/get-docker/) (if not already done).
 
   ```bash
   cd lwt
-  docker compose up # Now open http://localhost:8010/lwt/ in a browser
+  docker compose up  # Now open http://localhost:8010/lwt/ in a browser
   ```
 
 ### Linux
 
 1. Get the [latest GitHub release](https://github.com/HugoFara/lwt/releases). You can also try to download the [latest stable version](https://github.com/HugoFara/lwt/archive/refs/heads/master.zip) if you want the cutting-edge updates (that may include some bugs).
 2. Start a shell in the downloaded folder an run: ``./INSTALL.sh``. You may need to run ``chmod +x ./INSTALL.sh`` first.
-
 
 ### Other Systems
 
@@ -166,8 +165,8 @@ Any other branch if considered under development.
 > *See also*: [docs/links.md](docs/links.md)
 
 * [jzohrab/LUTE](https://github.com/jzohrab/lute) is a rewrite of LWT with modern tools such as Symfony.
-* [FLTR ◆ Foreign Language Text Reader](https://sourceforge.net/projects/foreign-language-text-reader/), 
-a Java clone, by [lang-learn-guy](https://sourceforge.net/u/lang-learn-guy/profile/) 
+* [FLTR ◆ Foreign Language Text Reader](https://sourceforge.net/projects/foreign-language-text-reader/),
+a Java clone, by [lang-learn-guy](https://sourceforge.net/u/lang-learn-guy/profile/)
 (original author of LWT), it is a standalone installation.
 * [simjanos-dev/LinguaCafe](https://github.com/simjanos-dev/LinguaCafe): a beautiful
 equivalent in Vue.js and PHP.
