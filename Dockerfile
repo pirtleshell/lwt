@@ -1,4 +1,4 @@
-FROM php:8.3-apache-bullseye
+FROM php:8.4-apache-bookworm
 
 LABEL org.opencontainers.image.title="LWT Community"
 LABEL org.opencontainers.image.description="An image for LWT"
